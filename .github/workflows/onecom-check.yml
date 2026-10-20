@@ -17,8 +17,8 @@ jobs:
 
       - name: Look around on one.com
         env:
-          # Not secret: the one.com SSH account name and host.
-          SSH_HOST: ${{ vars.ONECOM_SSH_HOST || 'ssh.cluk.live' }}
+          # Not secret: the one.com SSH host and account name.
+          SSH_HOST: ssh.cys6r88bx.service.one
           SSH_USER: cys6r88bx_ssh
           SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
           SSH_PORT: ${{ secrets.ONECOM_SSH_PORT || '22' }}
