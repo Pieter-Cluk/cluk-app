@@ -71,6 +71,20 @@ jobs:
           REMOTE
           echo "ssh exit code: $?" >> report.txt
 
+      - name: Check app.cluk.live from the internet
+        if: always()
+        run: |
+          {
+            echo "== DNS app.cluk.live: $(getent hosts app.cluk.live | head -2 | tr '\n' ' ')"
+            echo "== DNS cluk.live: $(getent hosts cluk.live | head -1)"
+            echo "== http://app.cluk.live/login"
+            curl -s -o /dev/null -m 20 -w 'HTTP %{http_code} redirect=%{redirect_url}\n' http://app.cluk.live/login || echo "no answer"
+            echo "== https://app.cluk.live/login"
+            curl -s -o /tmp/l.html -m 20 -w 'HTTP %{http_code}\n' https://app.cluk.live/login || echo "no answer"
+            curl -sv -o /dev/null -m 20 https://app.cluk.live/login 2>&1 | grep -E 'subject:|issuer:|expire|SSL|Connected|Could not|error' | head -8
+            grep -o 'Sign in with Microsoft' /tmp/l.html 2>/dev/null | head -1
+          } >> report.txt 2>&1
+
       - name: Show the report as an annotation
         if: always()
         run: |
