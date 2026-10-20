@@ -15,7 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\LogoutDisabledUsers::class,
+            \App\Http\Middleware\LogoutBlockedMembers::class,
         ]);
+        // Afrit 6 members and staff each have their own login page and home.
+        $middleware->redirectGuestsTo(fn (Request $request) => $request->is('afrit6', 'afrit6/*') ? route('afrit6.login') : route('login'));
+        $middleware->redirectUsersTo(fn (Request $request) => $request->is('afrit6', 'afrit6/*') ? route('afrit6.portal') : route('dashboard'));
         $middleware->alias([
             'nav' => \App\Http\Middleware\EnsureNavAccess::class,
             'level' => \App\Http\Middleware\EnsureModuleLevel::class,

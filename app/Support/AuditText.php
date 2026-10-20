@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\CompanyDetail;
+use App\Models\Member;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\VatRate;
@@ -29,6 +30,7 @@ class AuditText
             $subject instanceof Role => $subject->name,
             $subject instanceof VatRate => $subject->name,
             $subject instanceof Company => $subject->name,
+            $subject instanceof Member => $subject->name,
             $subject instanceof CompanyDetail => trim($subject->legal_name.' '.$subject->legal_form),
             $subject !== null => class_basename($subject).' #'.$subject->getKey(),
             default => '',
@@ -57,6 +59,8 @@ class AuditText
             'crm.company_updated' => implode(', ', array_map(fn ($f) => __('companies.fields.'.$f), $d['fields'] ?? [])),
             'crm.vat_regime_changed' => ($d['from'] ?? '').' → '.($d['to'] ?? '').(isset($d['code']) ? ' ('.$d['code'].')' : ''),
             'import.done' => trim(($d['file'] ?? '').' · '.collect($d)->except('file')->map(fn ($r, $k) => __('import.kinds.'.$k).' +'.($r['created'] ?? 0).' ~'.($r['updated'] ?? 0))->implode(' · '), ' ·'),
+            'afrit6.member_approved' => (string) ($d['company'] ?? ''),
+            'afrit6.member_declined' => (string) ($d['reason'] ?? ''),
             'auth.refused_unknown' => (string) ($d['email'] ?? ''),
             default => '',
         };

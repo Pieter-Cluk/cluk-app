@@ -91,6 +91,8 @@ jobs:
           CACHE_STORE=database
           QUEUE_CONNECTION=database
           MAIL_MAILER=log
+          MAIL_FROM_ADDRESS=noreply@cluk.live
+          MAIL_FROM_NAME=CLUK
           MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
           MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}
           MICROSOFT_CLIENT_SECRET="$(trim "$MICROSOFT_CLIENT_SECRET")"

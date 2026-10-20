@@ -26,7 +26,8 @@ class SetLocale
         $supported = array_keys(config('cluk.locales'));
 
         $candidates = [
-            $request->user()?->locale,
+            $request->user('web')?->locale,
+            $request->user('member')?->locale,
             $request->hasSession() ? $request->session()->get('locale') : null,
             $request->getPreferredLanguage($supported),
         ];

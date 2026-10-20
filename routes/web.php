@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Afrit6\MemberAdminController;
+use App\Http\Controllers\Afrit6\MemberAuthController;
+use App\Http\Controllers\Afrit6\PortalController;
 use App\Http\Controllers\Auth\MicrosoftLoginController;
 use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
@@ -15,13 +18,36 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard');
 
 // Staff login with Microsoft 365.
-Route::middleware('guest')->group(function () {
+Route::middleware('guest:web')->group(function () {
     Route::view('/login', 'auth.staff-login')->name('login');
     Route::get('/auth/microsoft/redirect', [MicrosoftLoginController::class, 'redirect'])->name('login.microsoft');
     Route::get('/auth/microsoft/callback', [MicrosoftLoginController::class, 'callback'])->name('login.microsoft.callback');
 });
 
-Route::middleware('auth')->group(function () {
+// Afrit 6 member portal (members have their own login, separate from staff).
+Route::prefix('afrit6')->name('afrit6.')->group(function () {
+    Route::middleware('guest:member')->group(function () {
+        Route::get('/', [MemberAuthController::class, 'showLogin'])->name('login');
+        Route::post('/login', [MemberAuthController::class, 'login'])->middleware('throttle:20,1')->name('login.attempt');
+        Route::get('/register', [MemberAuthController::class, 'showCompany'])->name('register');
+        Route::post('/register', [MemberAuthController::class, 'storeCompany'])->middleware('throttle:20,1')->name('register.company');
+        Route::get('/register/details', [MemberAuthController::class, 'showDetails'])->name('register.details');
+        Route::post('/register/details', [MemberAuthController::class, 'storeDetails'])->middleware('throttle:10,1')->name('register.store');
+        Route::get('/check-inbox', [MemberAuthController::class, 'checkInbox'])->name('check-inbox');
+        Route::post('/check-inbox/resend', [MemberAuthController::class, 'resend'])->middleware('throttle:6,1')->name('resend');
+        Route::get('/forgot-password', [MemberAuthController::class, 'showForgot'])->name('password.request');
+        Route::post('/forgot-password', [MemberAuthController::class, 'sendResetLink'])->middleware('throttle:5,1')->name('password.email');
+        Route::get('/reset-password/{token}', [MemberAuthController::class, 'showReset'])->name('password.reset');
+        Route::post('/reset-password', [MemberAuthController::class, 'reset'])->middleware('throttle:10,1')->name('password.update');
+    });
+    Route::get('/verify/{member}/{hash}', [MemberAuthController::class, 'verify'])->middleware(['signed', 'throttle:20,1'])->whereNumber('member')->name('verify');
+    Route::middleware('auth:member')->group(function () {
+        Route::get('/portal', [PortalController::class, 'home'])->name('portal');
+        Route::post('/logout', [MemberAuthController::class, 'logout'])->name('logout');
+    });
+});
+
+Route::middleware('auth:web')->group(function () {
     Route::post('/logout', [MicrosoftLoginController::class, 'logout'])->name('logout');
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
@@ -46,6 +72,19 @@ Route::middleware('auth')->group(function () {
         });
         Route::put('/companies/{company}/vat', [CompanyController::class, 'updateVat'])->whereNumber('company')->middleware('right:finance.vat_treatment')->name('companies.vat');
         Route::get('/companies/{company}', [CompanyController::class, 'show'])->whereNumber('company')->name('companies.show');
+    });
+
+    // Afrit 6 for staff: registrations to approve and members.
+    Route::middleware('nav:afrit6')->prefix('afrit6-staff')->name('afrit6.staff.')->group(function () {
+        Route::get('/', [MemberAdminController::class, 'index'])->name('index');
+        Route::get('/members/{member}', [MemberAdminController::class, 'show'])->whereNumber('member')->name('show');
+        Route::middleware('right:afrit6.approve_members')->group(function () {
+            Route::post('/members/{member}/approve', [MemberAdminController::class, 'approve'])->whereNumber('member')->name('approve');
+            Route::post('/members/{member}/decline', [MemberAdminController::class, 'decline'])->whereNumber('member')->name('decline');
+            Route::post('/members/{member}/block', [MemberAdminController::class, 'block'])->whereNumber('member')->name('block');
+            Route::post('/members/{member}/unblock', [MemberAdminController::class, 'unblock'])->whereNumber('member')->name('unblock');
+            Route::post('/members/{member}/reset-link', [MemberAdminController::class, 'sendReset'])->whereNumber('member')->name('reset');
+        });
     });
 
     // Settings › Users (people, roles & rights, activity log).
@@ -93,7 +132,7 @@ Route::middleware('auth')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'companies', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'companies', 'afrit6', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])
@@ -108,8 +147,11 @@ Route::post('/locale/{locale}', function (Request $request, string $locale) {
 
     $request->session()->put('locale', $locale);
 
-    if ($user = $request->user()) {
+    if ($user = $request->user('web')) {
         $user->forceFill(['locale' => $locale])->save();
+    }
+    if ($member = $request->user('member')) {
+        $member->forceFill(['locale' => $locale])->save();
     }
 
     return back();
