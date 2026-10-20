@@ -125,7 +125,7 @@ jobs:
           direct=$(curl -s -k -o /tmp/direct.html -w '%{http_code}' --resolve "app.cluk.live:443:$ONECOM_IP" "$APP_URL/login" || true)
           [ "$direct" = "000" ] && direct=$(curl -s -o /tmp/direct.html -w '%{http_code}' --resolve "app.cluk.live:80:$ONECOM_IP" "http://app.cluk.live/login" || true)
           echo "Direct to one.com: HTTP $direct"
-          grep -q 'Microsoft' /tmp/direct.html && echo "Direct: login page OK" || true
+          if grep -q 'Microsoft' /tmp/direct.html; then echo "Direct: login page OK"; echo "DIRECT_PAGE=login page OK" >> "$GITHUB_ENV"; fi
           echo "DIRECT=$direct" >> "$GITHUB_ENV"
           code=$(curl -s -o /tmp/login.html -w '%{http_code}' "$APP_URL/login" || true)
           echo "Public address: HTTP $code"
@@ -141,5 +141,5 @@ jobs:
       - name: Report
         if: always()
         run: |
-          body=$( (cat /tmp/install.log 2>/dev/null; echo; echo "Login page HTTP: public ${PUBLIC:-?}, direct to one.com ${DIRECT:-?}") | tail -c 30000 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
+          body=$( (cat /tmp/install.log 2>/dev/null; echo; echo "Login page HTTP: public ${PUBLIC:-?}, direct to one.com ${DIRECT:-?} ${DIRECT_PAGE:-}") | tail -c 30000 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
           echo "::notice title=Deploy report::${body}"
