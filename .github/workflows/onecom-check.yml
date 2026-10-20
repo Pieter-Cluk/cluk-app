@@ -17,8 +17,9 @@ jobs:
 
       - name: Look around on one.com
         env:
-          SSH_HOST: ${{ secrets.ONECOM_SSH_HOST }}
-          SSH_USER: ${{ secrets.ONECOM_SSH_USER }}
+          # Not secret: the one.com SSH account name and host.
+          SSH_HOST: ${{ vars.ONECOM_SSH_HOST || 'ssh.cluk.live' }}
+          SSH_USER: cys6r88bx_ssh
           SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
           SSH_PORT: ${{ secrets.ONECOM_SSH_PORT || '22' }}
         run: |
@@ -36,6 +37,7 @@ jobs:
           SSH_USER=$(printf '%s' "$SSH_USER" | tr -d '[:space:]')
           SSH_PORT=$(printf '%s' "$SSH_PORT" | tr -d '[:space:]')
           export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          echo "DNS check for $SSH_HOST: $(getent hosts "$SSH_HOST" | head -1 || true)" >> secrets.txt
           mkdir -p ~/.ssh
           ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           sshpass -e ssh -p "$SSH_PORT" -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
