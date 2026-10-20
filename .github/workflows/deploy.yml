@@ -117,13 +117,27 @@ jobs:
       - name: Check the site answers
         run: |
           sleep 5
-          code=$(curl -s -o /tmp/login.html -w '%{http_code}' "$APP_URL/login")
-          echo "HTTP $code"
-          grep -q 'Microsoft' /tmp/login.html && echo "Login page OK"
-          test "$code" = "200"
+          # Straight to the one.com web server, so the app can be checked before DNS points there.
+          ONECOM_IP=$(getent hosts 3e3535bb.website.cys6r88bx.service.one | awk '{print $1}' | head -1)
+          echo "one.com web server: $ONECOM_IP"
+          direct=$(curl -s -k -o /tmp/direct.html -w '%{http_code}' --resolve "app.cluk.live:443:$ONECOM_IP" "$APP_URL/login" || true)
+          [ "$direct" = "000" ] && direct=$(curl -s -o /tmp/direct.html -w '%{http_code}' --resolve "app.cluk.live:80:$ONECOM_IP" "http://app.cluk.live/login" || true)
+          echo "Direct to one.com: HTTP $direct"
+          grep -q 'Microsoft' /tmp/direct.html && echo "Direct: login page OK" || true
+          echo "DIRECT=$direct" >> "$GITHUB_ENV"
+          code=$(curl -s -o /tmp/login.html -w '%{http_code}' "$APP_URL/login" || true)
+          echo "Public address: HTTP $code"
+          echo "PUBLIC=$code" >> "$GITHUB_ENV"
+          if [ "$code" = "200" ]; then exit 0; fi
+          if [ "$code" = "000" ] && [ "$direct" = "200" ]; then
+            echo "::warning title=Not reachable yet::The app works on one.com, but app.cluk.live does not point to one.com yet (DNS)."
+            exit 0
+          fi
+          echo "::error title=Site check::app.cluk.live answered HTTP $code (direct to one.com: $direct)"
+          exit 1
 
       - name: Report
         if: always()
         run: |
-          body=$( (cat /tmp/install.log 2>/dev/null; echo; echo "Login page HTTP: $(curl -s -o /dev/null -w '%{http_code}' "$APP_URL/login")") | tail -c 30000 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
+          body=$( (cat /tmp/install.log 2>/dev/null; echo; echo "Login page HTTP: public ${PUBLIC:-?}, direct to one.com ${DIRECT:-?}") | tail -c 30000 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
           echo "::notice title=Deploy report::${body}"
