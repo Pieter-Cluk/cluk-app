@@ -5,6 +5,7 @@ use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Settings\AuditLogController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
+use App\Http\Controllers\Settings\ImportController;
 use App\Http\Controllers\Settings\VatRateController;
 use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\UserController;
@@ -70,6 +71,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/company', [CompanyDetailsController::class, 'edit'])->name('company.edit');
             Route::put('/company', [CompanyDetailsController::class, 'update'])->name('company.update');
         });
+        Route::middleware('nav:import')->group(function () {
+            Route::get('/import', [ImportController::class, 'index'])->name('import.index');
+            Route::get('/import/template', [ImportController::class, 'template'])->name('import.template');
+            Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
+            Route::post('/import/run', [ImportController::class, 'run'])->name('import.run');
+            Route::post('/import/vies', [ImportController::class, 'vies'])->name('import.vies');
+        });
         Route::middleware('nav:vat')->group(function () {
             Route::get('/vat-rates', [VatRateController::class, 'index'])->name('vat.index');
             Route::post('/vat-rates', [VatRateController::class, 'store'])->name('vat.store');
@@ -85,7 +93,7 @@ Route::middleware('auth')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'companies', 'users', 'company', 'vat'], true)) {
+        if (in_array($item['key'], ['dashboard', 'companies', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

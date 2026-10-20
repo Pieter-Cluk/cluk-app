@@ -117,6 +117,7 @@ return [
             'company' => 'Bedrijfsgegevens',
             'vat' => 'Btw',
             'crm' => 'Klanten & leveranciers',
+            'import' => 'Imports',
         ],
         'system' => 'Systeem',
         'empty' => 'Nog niets gelogd.',
@@ -151,6 +152,7 @@ return [
             'crm_vat_regime_changed' => 'Btw-behandeling van een bedrijf gewijzigd',
             'crm_company_archived' => 'Bedrijf gearchiveerd',
             'crm_company_restored' => 'Bedrijf teruggehaald',
+            'import_done' => 'Rekenblad geïmporteerd',
         ],
     ],
     'flash' => [

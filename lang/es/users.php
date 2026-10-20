@@ -117,6 +117,7 @@ return [
             'company' => 'Datos de la empresa',
             'vat' => 'IVA',
             'crm' => 'Clientes y proveedores',
+            'import' => 'Importaciones',
         ],
         'system' => 'Sistema',
         'empty' => 'Todavía no hay nada registrado.',
@@ -151,6 +152,7 @@ return [
             'crm_vat_regime_changed' => 'Cambió el tratamiento de IVA de una empresa',
             'crm_company_archived' => 'Archivó una empresa',
             'crm_company_restored' => 'Recuperó una empresa',
+            'import_done' => 'Importó una hoja de cálculo',
         ],
     ],
     'flash' => [

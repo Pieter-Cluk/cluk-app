@@ -117,6 +117,7 @@ return [
             'company' => 'Company details',
             'vat' => 'VAT',
             'crm' => 'Customers & suppliers',
+            'import' => 'Imports',
         ],
         'system' => 'System',
         'empty' => 'Nothing logged yet.',
@@ -151,6 +152,7 @@ return [
             'crm_vat_regime_changed' => 'Changed the VAT treatment of a company',
             'crm_company_archived' => 'Archived a company',
             'crm_company_restored' => 'Brought a company back',
+            'import_done' => 'Imported a spreadsheet',
         ],
     ],
     'flash' => [

@@ -117,6 +117,7 @@ return [
             'company' => 'Données de l\'entreprise',
             'vat' => 'TVA',
             'crm' => 'Clients & fournisseurs',
+            'import' => 'Imports',
         ],
         'system' => 'Système',
         'empty' => 'Rien d\'enregistré pour l\'instant.',
@@ -151,6 +152,7 @@ return [
             'crm_vat_regime_changed' => 'Traitement TVA d\'une entreprise modifié',
             'crm_company_archived' => 'Entreprise archivée',
             'crm_company_restored' => 'Entreprise restaurée',
+            'import_done' => 'Tableur importé',
         ],
     ],
     'flash' => [

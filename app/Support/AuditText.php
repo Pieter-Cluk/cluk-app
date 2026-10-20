@@ -56,6 +56,7 @@ class AuditText
             'vat.ended', 'vat.deleted' => (string) ($d['name'] ?? ''),
             'crm.company_updated' => implode(', ', array_map(fn ($f) => __('companies.fields.'.$f), $d['fields'] ?? [])),
             'crm.vat_regime_changed' => ($d['from'] ?? '').' → '.($d['to'] ?? '').(isset($d['code']) ? ' ('.$d['code'].')' : ''),
+            'import.done' => trim(($d['file'] ?? '').' · '.collect($d)->except('file')->map(fn ($r, $k) => __('import.kinds.'.$k).' +'.($r['created'] ?? 0).' ~'.($r['updated'] ?? 0))->implode(' · '), ' ·'),
             'auth.refused_unknown' => (string) ($d['email'] ?? ''),
             default => '',
         };
