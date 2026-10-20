@@ -27,7 +27,15 @@ jobs:
           php artisan key:generate
 
       - name: Run tests
-        run: php artisan test
+        run: |
+          set -o pipefail
+          php artisan test --colors=never 2>&1 | tee test-output.txt
+
+      - name: Report failures as an annotation
+        if: failure()
+        run: |
+          body=$(tail -c 60000 test-output.txt | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
+          echo "::error title=Test output::${body}"
 
       - name: Code style (report only)
         run: vendor/bin/pint --test
