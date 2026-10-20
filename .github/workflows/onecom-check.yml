@@ -77,6 +77,10 @@ jobs:
           {
             echo "== DNS app.cluk.live: $(getent hosts app.cluk.live | head -2 | tr '\n' ' ')"
             echo "== DNS cluk.live: $(getent hosts cluk.live | head -1)"
+            echo "== DNS one.com site for app: $(getent hosts 3e3535bb.website.cys6r88bx.service.one | head -2 | tr '\n' ' ')"
+            echo "== DNS one.com site for cluk.live: $(getent hosts 51e5a3f8.website.cys6r88bx.service.one | head -2 | tr '\n' ' ')"
+            echo "== nameservers: $(dig +short NS cluk.live 2>/dev/null | tr '\n' ' ')"
+            echo "== app CNAME: $(dig +short CNAME app.cluk.live 2>/dev/null)  wildcard test: $(dig +short A random123.cluk.live 2>/dev/null | tr '\n' ' ')"
             echo "== http://app.cluk.live/login"
             curl -s -o /dev/null -m 20 -w 'HTTP %{http_code} redirect=%{redirect_url}\n' http://app.cluk.live/login || echo "no answer"
             echo "== https://app.cluk.live/login"
