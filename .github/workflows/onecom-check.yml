@@ -1,0 +1,53 @@
+name: one.com check
+
+# Started by hand (Actions tab → "one.com check" → Run workflow).
+# Logs in to one.com over SSH with the repository secrets and reports what
+# the hosting offers: folders, PHP version and extensions, database client,
+# composer and scheduled tasks. It changes nothing on the server.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install sshpass
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+
+      - name: Look around on one.com
+        env:
+          SSH_HOST: ${{ secrets.ONECOM_SSH_HOST }}
+          SSH_USER: ${{ secrets.ONECOM_SSH_USER }}
+          SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
+          SSH_PORT: ${{ secrets.ONECOM_SSH_PORT || '22' }}
+        run: |
+          set +e
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          sshpass -e ssh -p "$SSH_PORT" -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
+          echo "== home: $(pwd)"
+          ls -la ~ 2>&1 | head -40
+          echo "== folders named app.cluk.live (3 levels deep)"
+          find ~ -maxdepth 3 -type d -name 'app.cluk.live' 2>/dev/null
+          echo "== php"
+          php -v 2>&1 | head -1
+          echo "== php extensions"
+          php -m 2>&1 | tr '\n' ' '
+          echo
+          echo "== composer"
+          command -v composer || echo "no composer"
+          echo "== database client"
+          (mariadb --version || mysql --version) 2>&1 | head -1
+          echo "== crontab"
+          command -v crontab && (crontab -l 2>&1 | head -5) || echo "no crontab command"
+          echo "== disk"
+          df -h ~ 2>&1 | tail -1
+          REMOTE
+          echo "ssh exit code: $?" >> report.txt
+
+      - name: Show the report as an annotation
+        if: always()
+        run: |
+          body=$(sed 's/%/%25/g' report.txt | sed ':a;N;$!ba;s/\n/%0A/g')
+          echo "::notice title=one.com report::${body}"
