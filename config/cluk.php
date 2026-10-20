@@ -57,6 +57,7 @@ return [
         'companies.see_health',
         'finance.see_margins',
         'finance.send_to_okioki',
+        'finance.vat_treatment',
         'gdpr.export_erase',
         'orders.approve',
         'sales.approve_low_margin',

@@ -29,6 +29,7 @@ return [
         'finance' => [
             'see_margins' => 'See purchase prices and margins',
             'send_to_okioki' => 'Approve proformas and send to OkiOki',
+            'vat_treatment' => 'Change the VAT treatment of a company',
         ],
         'gdpr' => [
             'export_erase' => 'GDPR export and erase',

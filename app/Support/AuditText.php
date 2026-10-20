@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\AuditLog;
+use App\Models\Company;
 use App\Models\CompanyDetail;
 use App\Models\Role;
 use App\Models\User;
@@ -27,6 +28,7 @@ class AuditText
             $subject instanceof User => $subject->name,
             $subject instanceof Role => $subject->name,
             $subject instanceof VatRate => $subject->name,
+            $subject instanceof Company => $subject->name,
             $subject instanceof CompanyDetail => trim($subject->legal_name.' '.$subject->legal_form),
             $subject !== null => class_basename($subject).' #'.$subject->getKey(),
             default => '',
@@ -52,6 +54,8 @@ class AuditText
             'vat.created' => trim(($d['name'] ?? '').' · '.($d['code'] ?? ''), ' ·'),
             'vat.scheduled' => ($d['from'] ?? '').' → '.($d['to'] ?? '').' · '.($d['date'] ?? ''),
             'vat.ended', 'vat.deleted' => (string) ($d['name'] ?? ''),
+            'crm.company_updated' => implode(', ', array_map(fn ($f) => __('companies.fields.'.$f), $d['fields'] ?? [])),
+            'crm.vat_regime_changed' => ($d['from'] ?? '').' → '.($d['to'] ?? '').(isset($d['code']) ? ' ('.$d['code'].')' : ''),
             'auth.refused_unknown' => (string) ($d['email'] ?? ''),
             default => '',
         };

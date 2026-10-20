@@ -20,7 +20,7 @@ class RoleSeeder extends Seeder
         'asset-manager' => ['Asset manager', [1, 1, 2, 3, 2, 0, 0, 0, 0], ['finance.see_margins', 'orders.approve']],
         'warehouse' => ['Warehouse', [1, 0, 1, 2, 2, 1, 1, 0, 0], ['warehouse.sign_delivery']],
         'workspace-host' => ['Workspace host', [1, 0, 0, 0, 1, 1, 2, 0, 0], ['afrit6.approve_members', 'afrit6.door_codes']],
-        'finance' => ['Finance', [2, 1, 2, 1, 1, 1, 1, 3, 0], ['companies.see_health', 'finance.see_margins', 'finance.send_to_okioki']],
+        'finance' => ['Finance', [2, 1, 2, 1, 1, 1, 1, 3, 0], ['companies.see_health', 'finance.see_margins', 'finance.send_to_okioki', 'finance.vat_treatment']],
         'read-only' => ['Read-only', [1, 1, 0, 1, 1, 1, 1, 0, 0], []],
     ];
 

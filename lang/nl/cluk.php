@@ -29,6 +29,7 @@ return [
         'finance' => [
             'see_margins' => 'Aankoopprijzen en marges bekijken',
             'send_to_okioki' => 'Proforma’s goedkeuren en naar OkiOki sturen',
+            'vat_treatment' => 'Btw-behandeling van een bedrijf wijzigen',
         ],
         'gdpr' => [
             'export_erase' => 'GDPR-export en wissen',

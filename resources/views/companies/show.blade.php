@@ -1,0 +1,193 @@
+@php($rel = $company->relationshipKey())
+@php($fmt = fn ($d) => $d?->timezone(config('app.timezone'))->format('d/m/Y'))
+<x-layouts.app :title="$company->name">
+    <div class="company-head rel-row-{{ $rel }}">
+        <span class="logo-ini logo-lg rel-{{ $rel }}">{{ $company->initials() }}</span>
+        <div class="company-id">
+            <div class="kicker"><a href="{{ route('companies.index') }}">{{ mb_strtoupper(__('nav.items.companies')) }}</a></div>
+            <h1>{{ $company->name }}@if ($company->legal_form) <span class="muted">{{ $company->legal_form }}</span>@endif</h1>
+            <div class="badges">
+                @if ($company->is_customer)<span class="badge badge-customer">{{ __('companies.relationship.customer') }}</span>@endif
+                @if ($company->is_supplier)<span class="badge badge-supplier">{{ __('companies.relationship.supplier') }}</span>@endif
+                @if ($company->archived_at)<span class="pill pill-off">{{ __('companies.show.archived') }}</span>@endif
+            </div>
+            <p class="muted">
+                @if ($company->vat_number)
+                    {{ $company->formattedVat() }} ·
+                    @if ($company->vies_status)
+                        <span @class(['vies', 'vies-'.$company->vies_status])>{{ __('companies.vies.status_'.$company->vies_status, ['date' => $fmt($company->vies_checked_at)]) }}</span>
+                    @elseif (\App\Services\Vies::appliesTo($company->vat_number))
+                        {{ __('companies.vies.not_checked') }}
+                    @else
+                        {{ __('companies.vies.outside_eu') }}
+                    @endif
+                @else
+                    {{ __('companies.show.no_vat') }}
+                @endif
+                · {{ __('companies.show.documents_in', ['language' => config('cluk.locales')[$company->language] ?? $company->language]) }}
+                · {{ __('companies.fields.account_owner_id') }}: {{ $company->accountOwner?->name ?? '—' }}
+            </p>
+        </div>
+        <div class="head-actions">
+            @if ($company->phone)<a class="btn" href="tel:{{ preg_replace('/[^0-9+]/', '', $company->phone) }}">{{ __('companies.show.call') }}</a>@endif
+            @if ($company->email)<a class="btn" href="mailto:{{ $company->email }}">{{ __('companies.show.email') }}</a>@endif
+            @if ($canEdit)<a class="primary" href="{{ route('companies.edit', $company) }}">{{ __('settings.edit') }}</a>@endif
+        </div>
+    </div>
+    @include('partials.flash')
+
+    <div class="split">
+        <div class="stack">
+            <section class="card">
+                <div class="card-head">
+                    <h2>{{ __('companies.contacts.title') }}</h2>
+                </div>
+                @forelse ($company->contacts as $c)
+                    <div class="contact">
+                        <span class="av">{{ $c->initials }}</span>
+                        <div class="contact-main">
+                            <b>{{ $c->name }}</b>
+                            <small class="muted">{{ $c->pivot->job_title }}@if ($c->pivot->is_main) · {{ __('companies.contacts.main') }}@endif @if ($c->pivot->is_billing) · {{ __('companies.contacts.billing') }}@endif</small>
+                            <div class="contact-lines">
+                                @if ($c->mobile)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $c->mobile) }}">{{ $c->mobile }}</a>@endif
+                                @if ($c->phone)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $c->phone) }}">{{ $c->phone }}</a>@endif
+                                @if ($c->email)<a href="mailto:{{ $c->email }}">{{ $c->email }}</a>@endif
+                            </div>
+                            <div class="badges">
+                                <span @class(['pill', 'pill-ok' => $c->newsletter, 'pill-off' => ! $c->newsletter])>{{ __('companies.contacts.newsletter') }}: {{ __($c->newsletter ? 'companies.yes' : 'companies.no') }}</span>
+                                @foreach ($c->companies->reject(fn ($o) => $o->id === $company->id) as $other)
+                                    <a class="pill pill-info" href="{{ route('companies.show', $other) }}">{{ __('companies.contacts.also_at', ['name' => $other->name]) }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                        @if ($canEdit)
+                            <details class="contact-edit">
+                                <summary class="linkbtn">{{ __('settings.edit') }}</summary>
+                                <form method="post" action="{{ route('companies.contacts.update', [$company, $c]) }}">
+                                    @csrf @method('put')
+                                    @include('companies._contact-fields', ['c' => $c, 'pivot' => $c->pivot])
+                                    <div class="form-actions"><button class="primary" type="submit">{{ __('settings.save') }}</button></div>
+                                </form>
+                                <form method="post" action="{{ route('companies.contacts.destroy', [$company, $c]) }}" onsubmit="return confirm(@js(__('companies.contacts.remove_confirm', ['name' => $c->name, 'company' => $company->name])))">
+                                    @csrf @method('delete')
+                                    <button class="linkbtn danger" type="submit">{{ __('companies.contacts.remove') }}</button>
+                                </form>
+                            </details>
+                        @endif
+                    </div>
+                @empty
+                    <p class="muted">{{ __('companies.contacts.none') }}</p>
+                @endforelse
+
+                @if ($canEdit)
+                    <details class="add-block" @if ($errors->any() && old('first_name')) open @endif>
+                        <summary class="btn">{{ __('companies.contacts.add') }}</summary>
+                        <form method="post" action="{{ route('companies.contacts.store', $company) }}">
+                            @csrf
+                            @include('companies._contact-fields', ['c' => new \App\Models\Contact(collect(old())->only(['first_name', 'last_name', 'email', 'phone', 'mobile', 'language'])->all()), 'pivot' => null])
+                            <p class="muted small">{{ __('companies.contacts.add_hint') }}</p>
+                            <div class="form-actions"><button class="primary" type="submit">{{ __('companies.contacts.add_save') }}</button></div>
+                        </form>
+                    </details>
+                @endif
+            </section>
+
+            <section class="card">
+                <h2>{{ __('companies.addresses.title') }}</h2>
+                <dl class="facts">
+                    <dt>{{ __('companies.addresses.main') }}</dt><dd>{{ $company->address() ?: '—' }}</dd>
+                    @foreach ($company->addresses as $a)
+                        <dt>{{ $a->label }}</dt>
+                        <dd>{{ $a->line() }}
+                            @if ($canEdit)
+                                <form method="post" action="{{ route('companies.addresses.destroy', [$company, $a]) }}" class="inline-form">@csrf @method('delete')<button class="linkbtn danger" type="submit">{{ __('companies.addresses.remove') }}</button></form>
+                            @endif
+                        </dd>
+                    @endforeach
+                </dl>
+                @if ($canEdit)
+                    <details class="add-block">
+                        <summary class="btn">{{ __('companies.addresses.add') }}</summary>
+                        <form method="post" action="{{ route('companies.addresses.store', $company) }}">
+                            @csrf
+                            <div class="form-grid">
+                                <label class="field"><span>{{ __('companies.addresses.label') }}</span><input name="label" required maxlength="80" placeholder="{{ __('companies.addresses.label_hint') }}"></label>
+                                <label class="field"><span>{{ __('companies.fields.street') }}</span><input name="street" required maxlength="160"></label>
+                                <label class="field"><span>{{ __('companies.fields.postcode') }}</span><input name="postcode" maxlength="20"></label>
+                                <label class="field"><span>{{ __('companies.fields.city') }}</span><input name="city" required maxlength="80"></label>
+                                <label class="field"><span>{{ __('companies.fields.country') }}</span><input name="country" value="{{ $company->country }}" required maxlength="2"></label>
+                            </div>
+                            <div class="form-actions"><button class="primary" type="submit">{{ __('companies.addresses.add') }}</button></div>
+                        </form>
+                    </details>
+                @endif
+            </section>
+
+            @if ($company->notes)
+                <section class="card"><h2>{{ __('companies.fields.notes') }}</h2><p class="prewrap">{{ $company->notes }}</p></section>
+            @endif
+        </div>
+
+        <aside class="stack">
+            <section class="card">
+                <h2>{{ __('companies.vat.title') }} · {{ $vatRate?->percent() ?? '—' }}</h2>
+                <p class="muted small">{{ __('companies.vat.intro') }}</p>
+                <dl class="facts">
+                    <dt>{{ __('companies.fields.country') }}</dt><dd>{{ $company->country }}</dd>
+                    <dt>{{ __('companies.vat.situation') }}</dt><dd>{{ __('companies.vat.situations.'.$company->vatSituation()) }}</dd>
+                    <dt>{{ __('companies.vat.applied') }}</dt><dd><b>{{ $vatRate?->name ?? $company->vatCode() }}</b> · {{ __('companies.vat.okioki', ['code' => $company->vatCode()]) }}
+                        <br><small class="muted">{{ $company->vat_regime === 'auto' ? __('companies.vat.automatic') : __('companies.vat.by_hand') }}</small></dd>
+                </dl>
+                @if ($vatRate && $vatRate->rate_bp === 0)<p class="muted small">{{ __('companies.vat.zero_note') }}</p>@endif
+                @if ($canVat)
+                    <form method="post" action="{{ route('companies.vat', $company) }}" class="vat-form">
+                        @csrf @method('put')
+                        <label class="field"><span>{{ __('companies.vat.regime') }}</span>
+                            <select name="vat_regime">
+                                <option value="auto" @selected($company->vat_regime === 'auto')>{{ __('companies.vat.auto_option') }}</option>
+                                @foreach ($vatChoices as $choice)<option value="{{ $choice->code }}" @selected($company->vat_regime === $choice->code)>{{ $choice->name }}</option>@endforeach
+                            </select></label>
+                        <button class="btn" type="submit">{{ __('settings.save') }}</button>
+                    </form>
+                @else
+                    <p class="muted small">{{ __('companies.vat.who_can_change') }}</p>
+                @endif
+                @if ($canEdit && \App\Services\Vies::appliesTo($company->vat_number))
+                    <form method="post" action="{{ route('companies.vies', $company) }}">@csrf<button class="linkbtn" type="submit">{{ __('companies.vies.check_again') }}</button></form>
+                @endif
+                @if ($company->vies_name || $company->vies_address)
+                    <p class="small muted">{{ __('companies.vies.registered_as') }}: {{ $company->vies_name }}@if ($company->vies_address)<br>{{ $company->vies_address }}@endif</p>
+                @endif
+            </section>
+
+            <section class="card">
+                <h2>{{ __('companies.show.relationship') }}</h2>
+                <dl class="facts">
+                    @if ($company->is_customer)
+                        <dt>{{ __('companies.fields.customer_payment_days') }}</dt>
+                        <dd>{{ __('companies.days', ['days' => $company->customer_payment_days ?? \App\Models\CompanyDetail::current()->payment_term_days]) }}@if ($company->customer_payment_days === null) <small class="muted">({{ __('companies.show.standard') }})</small>@endif</dd>
+                    @endif
+                    @if ($company->is_supplier)
+                        <dt>{{ __('companies.fields.supplier_payment_days') }}</dt><dd>{{ $company->supplier_payment_days !== null ? __('companies.days', ['days' => $company->supplier_payment_days]) : '—' }}</dd>
+                        <dt>{{ __('companies.fields.supplies') }}</dt><dd>{{ collect($company->supplies ?? [])->map(fn ($s) => __('companies.supplies.'.$s))->implode(', ') ?: '—' }}</dd>
+                    @endif
+                    <dt>{{ __('companies.fields.phone') }}</dt><dd>{{ $company->phone ?? '—' }}</dd>
+                    <dt>{{ __('companies.fields.email') }}</dt><dd>{{ $company->email ?? '—' }}</dd>
+                    <dt>{{ __('companies.fields.website') }}</dt><dd>{{ $company->website ?? '—' }}</dd>
+                </dl>
+                <p class="muted small">{{ __('companies.show.later') }}</p>
+            </section>
+
+            @if ($canArchive)
+                <section class="card">
+                    @if ($company->archived_at)
+                        <form method="post" action="{{ route('companies.restore', $company) }}">@csrf<button class="btn" type="submit">{{ __('companies.show.restore') }}</button></form>
+                    @else
+                        <form method="post" action="{{ route('companies.archive', $company) }}" onsubmit="return confirm(@js(__('companies.show.archive_confirm', ['name' => $company->name])))">@csrf<button class="btn btn-danger" type="submit">{{ __('companies.show.archive') }}</button></form>
+                        <p class="muted small">{{ __('companies.show.archive_hint') }}</p>
+                    @endif
+                </section>
+            @endif
+        </aside>
+    </div>
+</x-layouts.app>

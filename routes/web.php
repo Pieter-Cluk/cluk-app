@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\MicrosoftLoginController;
+use App\Http\Controllers\CompanyContactController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Settings\AuditLogController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
 use App\Http\Controllers\Settings\VatRateController;
@@ -21,6 +23,29 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [MicrosoftLoginController::class, 'logout'])->name('logout');
     Route::view('/dashboard', 'dashboard')->name('dashboard');
+
+    // Companies & contacts: view from level 1, change from level 2, archive at level 3.
+    Route::middleware('nav:companies')->group(function () {
+        Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
+        Route::middleware('level:companies,2')->group(function () {
+            Route::get('/companies/new', [CompanyController::class, 'create'])->name('companies.create');
+            Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
+            Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->whereNumber('company')->name('companies.edit');
+            Route::put('/companies/{company}', [CompanyController::class, 'update'])->whereNumber('company')->name('companies.update');
+            Route::post('/companies/{company}/vies', [CompanyController::class, 'vies'])->whereNumber('company')->name('companies.vies');
+            Route::post('/companies/{company}/contacts', [CompanyContactController::class, 'store'])->whereNumber('company')->name('companies.contacts.store');
+            Route::put('/companies/{company}/contacts/{contact}', [CompanyContactController::class, 'update'])->whereNumber(['company', 'contact'])->name('companies.contacts.update');
+            Route::delete('/companies/{company}/contacts/{contact}', [CompanyContactController::class, 'destroy'])->whereNumber(['company', 'contact'])->name('companies.contacts.destroy');
+            Route::post('/companies/{company}/addresses', [CompanyContactController::class, 'storeAddress'])->whereNumber('company')->name('companies.addresses.store');
+            Route::delete('/companies/{company}/addresses/{address}', [CompanyContactController::class, 'destroyAddress'])->whereNumber(['company', 'address'])->name('companies.addresses.destroy');
+        });
+        Route::middleware('level:companies,3')->group(function () {
+            Route::post('/companies/{company}/archive', [CompanyController::class, 'archive'])->whereNumber('company')->name('companies.archive');
+            Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'])->whereNumber('company')->name('companies.restore');
+        });
+        Route::put('/companies/{company}/vat', [CompanyController::class, 'updateVat'])->whereNumber('company')->middleware('right:finance.vat_treatment')->name('companies.vat');
+        Route::get('/companies/{company}', [CompanyController::class, 'show'])->whereNumber('company')->name('companies.show');
+    });
 
     // Settings › Users (people, roles & rights, activity log).
     Route::middleware('nav:users')->prefix('settings')->name('settings.')->group(function () {
@@ -60,7 +85,7 @@ Route::middleware('auth')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'users', 'company', 'vat'], true)) {
+        if (in_array($item['key'], ['dashboard', 'companies', 'users', 'company', 'vat'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

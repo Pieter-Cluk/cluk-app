@@ -29,6 +29,7 @@ return [
         'finance' => [
             'see_margins' => 'Voir les prix d’achat et les marges',
             'send_to_okioki' => 'Approuver les proformas et les envoyer à OkiOki',
+            'vat_treatment' => 'Modifier le traitement TVA d\'une entreprise',
         ],
         'gdpr' => [
             'export_erase' => 'Export et effacement RGPD',

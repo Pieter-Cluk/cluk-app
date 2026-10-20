@@ -170,3 +170,55 @@ a.btn,a.primary{display:inline-flex;align-items:center;text-decoration:none}
 .table input,.table select{min-height:38px;padding:6px 10px;width:100%;min-width:90px}
 .table input[type=checkbox],.table input[type=radio]{width:18px;height:18px;min-width:0;min-height:0;accent-color:var(--brand)}
 @media (max-width:700px){.form-grid-3{grid-template-columns:1fr}.span-3{grid-column:auto}}
+
+/* Companies: green = customer, blue = supplier, both = half/half */
+.tab .count{display:inline-block;margin-left:4px;font-size:12px;color:var(--muted);font-weight:400}
+.rel-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:0}
+.rel-customer.rel-dot{background:var(--brand)}
+.rel-supplier.rel-dot{background:var(--info-text)}
+.rel-both.rel-dot{background:linear-gradient(90deg,var(--brand) 50%,var(--info-text) 50%)}
+.logo-ini{display:inline-flex;width:36px;height:36px;border-radius:8px;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none}
+.logo-ini.rel-customer{background:var(--brand-tint);color:var(--brand-strong)}
+.logo-ini.rel-supplier{background:var(--info-bg);color:var(--info-text)}
+.logo-ini.rel-both{background:linear-gradient(135deg,var(--brand-tint) 50%,var(--info-bg) 50%);color:var(--ink)}
+.logo-lg{width:64px;height:64px;font-size:20px;border-radius:12px}
+.rel-row td:first-child{box-shadow:inset 3px 0 0 var(--brand)}
+.rel-row-supplier td:first-child{box-shadow:inset 3px 0 0 var(--info-text)}
+.rel-row-both td:first-child{box-shadow:inset 3px 0 0 var(--muted)}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;text-decoration:none}
+.badge-customer{background:var(--brand-tint);color:var(--brand-strong)}
+.badge-supplier{background:var(--info-bg);color:var(--info-text)}
+.badge-both{background:var(--surface-subtle);color:var(--ink);border:1px solid var(--line)}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.vies{font-weight:700}
+.vies-valid{color:var(--brand-strong)}
+.vies-invalid{color:var(--danger-text)}
+.vies-unavailable{color:var(--warning-text)}
+.rel-link{text-decoration:none;color:var(--ink)}
+.company-head{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.company-head h1{font-size:28px;line-height:34px;margin:4px 0 0;letter-spacing:-1px}
+.company-id{flex:1;min-width:260px}
+.company-id .muted{line-height:1.6}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap}
+.kicker a{color:inherit;text-decoration:none}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.contact{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.contact-main{flex:1;min-width:220px;display:flex;flex-direction:column;gap:2px}
+.contact-lines{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;margin-top:4px}
+.contact-edit{flex-basis:100%}
+.contact-edit[open]{padding:12px;background:var(--surface-subtle);border-radius:8px}
+.contact-edit summary,.add-block summary{list-style:none;cursor:pointer;display:inline-flex}
+.contact-edit summary::-webkit-details-marker,.add-block summary::-webkit-details-marker{display:none}
+.add-block{margin-top:16px}
+.add-block[open] summary{margin-bottom:12px}
+.facts{display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px 12px;margin:12px 0;font-size:14px}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0}
+.vat-form{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin:12px 0}
+.vat-form .field{flex:1;min-width:180px}
+.rel-pick{border:0;padding:0;margin:0 0 16px;display:flex;gap:24px;flex-wrap:wrap}
+.rel-pick legend{font-weight:700;font-size:13px;margin-bottom:8px}
+fieldset.plain{border:0;padding:0;margin:0}
+fieldset.plain legend{font-weight:700;font-size:13px;margin-bottom:6px;padding:0}
+.prewrap{white-space:pre-wrap;margin:0}
+textarea{width:100%;resize:vertical}

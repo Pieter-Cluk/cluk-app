@@ -18,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'nav' => \App\Http\Middleware\EnsureNavAccess::class,
+            'level' => \App\Http\Middleware\EnsureModuleLevel::class,
+            'right' => \App\Http\Middleware\EnsureRight::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
