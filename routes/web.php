@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\MicrosoftLoginController;
 use App\Http\Controllers\Settings\AuditLogController;
+use App\Http\Controllers\Settings\CompanyDetailsController;
+use App\Http\Controllers\Settings\VatRateController;
 use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\UserController;
 use Illuminate\Http\Request;
@@ -37,11 +39,28 @@ Route::middleware('auth')->group(function () {
         Route::get('/activity', [AuditLogController::class, 'index'])->name('audit.index');
     });
 
+    // Settings › Company details and VAT rates.
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::middleware('nav:company')->group(function () {
+            Route::get('/company', [CompanyDetailsController::class, 'edit'])->name('company.edit');
+            Route::put('/company', [CompanyDetailsController::class, 'update'])->name('company.update');
+        });
+        Route::middleware('nav:vat')->group(function () {
+            Route::get('/vat-rates', [VatRateController::class, 'index'])->name('vat.index');
+            Route::post('/vat-rates', [VatRateController::class, 'store'])->name('vat.store');
+            Route::put('/vat-rates/defaults', [VatRateController::class, 'updateDefaults'])->name('vat.defaults');
+            Route::put('/vat-rates/{rate}', [VatRateController::class, 'update'])->whereNumber('rate')->name('vat.update');
+            Route::post('/vat-rates/{rate}/schedule', [VatRateController::class, 'schedule'])->whereNumber('rate')->name('vat.schedule');
+            Route::post('/vat-rates/{rate}/end', [VatRateController::class, 'end'])->whereNumber('rate')->name('vat.end');
+            Route::delete('/vat-rates/{rate}', [VatRateController::class, 'destroy'])->whereNumber('rate')->name('vat.destroy');
+        });
+    });
+
     // Every menu item gets its address now; screens not built yet show
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'users'], true)) {
+        if (in_array($item['key'], ['dashboard', 'users', 'company', 'vat'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

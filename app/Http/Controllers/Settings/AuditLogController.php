@@ -10,7 +10,7 @@ use Illuminate\View\View;
 /** Settings › Users › Activity log: who changed what, newest first. */
 class AuditLogController extends Controller
 {
-    public const AREAS = ['user', 'role', 'auth'];
+    public const AREAS = ['user', 'role', 'auth', 'company', 'vat'];
 
     public function index(Request $request): View
     {

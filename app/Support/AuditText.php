@@ -3,8 +3,10 @@
 namespace App\Support;
 
 use App\Models\AuditLog;
+use App\Models\CompanyDetail;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\VatRate;
 
 /** Turns an audit log line into a short sentence in the reader's language. */
 class AuditText
@@ -24,6 +26,8 @@ class AuditText
         return match (true) {
             $subject instanceof User => $subject->name,
             $subject instanceof Role => $subject->name,
+            $subject instanceof VatRate => $subject->name,
+            $subject instanceof CompanyDetail => trim($subject->legal_name.' '.$subject->legal_form),
             $subject !== null => class_basename($subject).' #'.$subject->getKey(),
             default => '',
         };
@@ -43,6 +47,11 @@ class AuditText
             'role.updated' => self::roleChanges($d),
             'role.created' => isset($d['copied_from']) ? __('users.audit.copied_from', ['role' => $d['copied_from']]) : '',
             'role.deleted' => (string) ($d['name'] ?? ''),
+            'company.updated', 'vat.updated', 'vat.defaults_changed' => implode(', ', array_map(fn ($f) => __('settings.fields.'.$f), array_keys($d['changes'] ?? []))),
+            'company.bank_added', 'company.bank_changed', 'company.bank_removed' => (string) ($d['iban'] ?? ''),
+            'vat.created' => trim(($d['name'] ?? '').' · '.($d['code'] ?? ''), ' ·'),
+            'vat.scheduled' => ($d['from'] ?? '').' → '.($d['to'] ?? '').' · '.($d['date'] ?? ''),
+            'vat.ended', 'vat.deleted' => (string) ($d['name'] ?? ''),
             'auth.refused_unknown' => (string) ($d['email'] ?? ''),
             default => '',
         };
