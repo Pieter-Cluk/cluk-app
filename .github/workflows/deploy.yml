@@ -19,8 +19,8 @@ env:
   SSH_USER: cys6r88bx_ssh
   APP_URL: https://app.cluk.live
   DB_HOST: cys6r88bx.mysql.service.one.com
-  DB_DATABASE: TO_FILL
-  DB_USERNAME: TO_FILL
+  DB_DATABASE: cys6r88bx_clukapp
+  DB_USERNAME: cys6r88bx_clukapp
   MICROSOFT_CLIENT_ID: TO_FILL
   MICROSOFT_TENANT_ID: TO_FILL
 
