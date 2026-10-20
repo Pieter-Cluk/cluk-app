@@ -23,6 +23,19 @@ jobs:
           SSH_PORT: ${{ secrets.ONECOM_SSH_PORT || '22' }}
         run: |
           set +e
+          # Describe the secrets without revealing them.
+          describe() { v="$1"; if [ -z "$v" ]; then echo "$2: EMPTY"; return; fi
+            printf '%s: set, %s chars' "$2" "${#v}"
+            case "$v" in *[[:space:]]*) printf ', contains spaces or line breaks';; esac
+            case "$v" in *@*) printf ', contains @';; esac
+            case "$v" in *:*) printf ', contains :';; esac
+            echo; }
+          { describe "$SSH_HOST" HOST; describe "$SSH_USER" USER; describe "$SSHPASS" PASSWORD; echo "PORT: $SSH_PORT"; } > secrets.txt
+          # Tolerate stray spaces / line breaks around the values.
+          SSH_HOST=$(printf '%s' "$SSH_HOST" | tr -d '[:space:]')
+          SSH_USER=$(printf '%s' "$SSH_USER" | tr -d '[:space:]')
+          SSH_PORT=$(printf '%s' "$SSH_PORT" | tr -d '[:space:]')
+          export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
           mkdir -p ~/.ssh
           ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           sshpass -e ssh -p "$SSH_PORT" -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
@@ -49,5 +62,5 @@ jobs:
       - name: Show the report as an annotation
         if: always()
         run: |
-          body=$(sed 's/%/%25/g' report.txt | sed ':a;N;$!ba;s/\n/%0A/g')
+          body=$(cat secrets.txt report.txt 2>/dev/null | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
           echo "::notice title=one.com report::${body}"
