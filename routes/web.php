@@ -1,10 +1,21 @@
 <?php
 
+use App\Http\Controllers\Auth\MicrosoftLoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::redirect('/', '/dashboard');
+
+// Staff login with Microsoft 365.
+Route::middleware('guest')->group(function () {
+    Route::view('/login', 'auth.staff-login')->name('login');
+    Route::get('/auth/microsoft/redirect', [MicrosoftLoginController::class, 'redirect'])->name('login.microsoft');
+    Route::get('/auth/microsoft/callback', [MicrosoftLoginController::class, 'callback'])->name('login.microsoft.callback');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [MicrosoftLoginController::class, 'logout'])->name('logout');
+    Route::view('/dashboard', 'dashboard')->name('dashboard');
 });
 
 // Switch the language for this session (and for the signed-in person).

@@ -1,0 +1,34 @@
+/* CLUK app base styles (from the design mockups). Plain CSS: no build step needed on the server. */
+:root{--bg:#f4f6f3;--surface:#fff;--surface-subtle:#f7f8f5;--line:#e5e9e4;--ink:#222624;--muted:#676e69;--brand:#52ae32;--brand-strong:#327b1d;--brand-tint:#edf6e8;--on-brand:#fff;--warning-bg:#fff4df;--warning-text:#8a6216;--danger-bg:#fbe9e6;--danger-text:#b03a2e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#141815;--surface:#1c211d;--surface-subtle:#222823;--line:#2e352f;--ink:#e9ede8;--muted:#9aa39b;--brand:#5cbf3a;--brand-strong:#8fd673;--brand-tint:#1f3318;--on-brand:#0f1a0b;--warning-bg:#3a2e14;--warning-text:#e8b860;--danger-bg:#3a1f1c;--danger-text:#ef6f62}}
+:root[data-theme="dark"]{--bg:#141815;--surface:#1c211d;--surface-subtle:#222823;--line:#2e352f;--ink:#e9ede8;--muted:#9aa39b;--brand:#5cbf3a;--brand-strong:#8fd673;--brand-tint:#1f3318;--on-brand:#0f1a0b;--warning-bg:#3a2e14;--warning-text:#e8b860;--danger-bg:#3a1f1c;--danger-text:#ef6f62}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-size:14px}
+a{color:var(--brand-strong)}
+
+/* Staff login */
+.login{min-height:100vh;position:relative;background:#0b0e0c url("/images/staff-login.jpg") left center/cover no-repeat;color:#fff;display:flex;flex-direction:column;padding:32px 40px}
+.login-top{display:flex;justify-content:flex-end}
+.login-langs{display:flex;gap:2px}
+.login-langs button{border:0;background:transparent;color:rgba(255,255,255,.7);padding:0 8px;min-height:36px;font:inherit;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer}
+.login-langs button[aria-current="true"]{color:#fff;text-decoration:underline;text-underline-offset:6px}
+.login-main{flex:1;display:flex;align-items:center;justify-content:flex-end;padding:32px 6% 32px 0}
+.login-box{width:100%;max-width:400px}
+.login-panel{background:rgba(14,17,15,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:40px 36px;text-align:center}
+.login-kicker{font-size:11px;letter-spacing:3.5px;font-weight:700;color:#8fd673;margin-bottom:12px;text-transform:uppercase}
+.login-panel h1{font-size:24px;margin:0 0 8px;letter-spacing:-.5px}
+.login-panel p{color:rgba(255,255,255,.72);margin:0 0 28px}
+.ms-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:52px;border-radius:8px;border:0;background:#fff;color:#1b1b1b;font:inherit;font-size:15px;font-weight:700;text-decoration:none}
+.ms-btn:hover{background:#eef1ed}
+.login-note{font-size:12px;color:rgba(255,255,255,.6);margin:18px 0 0;line-height:1.5}
+.login-error{border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.45;text-align:left;background:rgba(255,120,110,.14);color:#ffb4ab;margin-bottom:18px}
+.login-member{text-align:center;margin:18px 0 0;font-size:13px}
+.login-member a{color:rgba(255,255,255,.8)}
+@media (max-width:700px){.login{padding:20px 16px}.login-main{justify-content:center;padding:24px 0}.login-panel{padding:32px 22px}}
+
+/* Temporary dashboard (the full layout follows in the next step) */
+.page{max-width:900px;margin:0 auto;padding:40px 16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{border:1px solid var(--line);padding:8px 14px;border-radius:20px;background:var(--brand-tint);color:var(--brand-strong);font-size:13px}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:10px 14px;font:inherit;font-size:13px;cursor:pointer;min-height:44px}

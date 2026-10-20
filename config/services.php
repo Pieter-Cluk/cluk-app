@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    // Staff login with Microsoft 365 (Entra ID app registration "CLUK app",
+    // single tenant: only @cluk.live accounts).
+    'microsoft' => [
+        'client_id' => env('MICROSOFT_CLIENT_ID'),
+        'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
+        'redirect' => env('MICROSOFT_REDIRECT_URI', '/auth/microsoft/callback'),
+        'tenant' => env('MICROSOFT_TENANT_ID', 'organizations'),
+    ],
+
 ];

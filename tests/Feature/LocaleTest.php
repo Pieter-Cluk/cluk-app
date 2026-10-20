@@ -10,12 +10,16 @@ class LocaleTest extends TestCase
 {
     public function test_every_language_has_the_same_translation_keys_as_english(): void
     {
-        $english = array_keys(Arr::dot(require lang_path('en/cluk.php')));
+        foreach (glob(lang_path('en/*.php')) as $file) {
+            $name = basename($file);
+            $english = array_keys(Arr::dot(require $file));
 
-        foreach (array_keys(config('cluk.locales')) as $locale) {
-            $keys = array_keys(Arr::dot(require lang_path($locale.'/cluk.php')));
+            foreach (array_keys(config('cluk.locales')) as $locale) {
+                $this->assertFileExists(lang_path($locale.'/'.$name));
+                $keys = array_keys(Arr::dot(require lang_path($locale.'/'.$name)));
 
-            $this->assertEqualsCanonicalizing($english, $keys, "lang/{$locale}/cluk.php is missing or has extra keys");
+                $this->assertEqualsCanonicalizing($english, $keys, "lang/{$locale}/{$name} is missing or has extra keys");
+            }
         }
     }
 
@@ -32,14 +36,14 @@ class LocaleTest extends TestCase
 
     public function test_the_browser_language_is_used_when_supported(): void
     {
-        $this->get('/', ['Accept-Language' => 'fr-BE,fr;q=0.9,en;q=0.5'])->assertOk();
+        $this->get('/login', ['Accept-Language' => 'fr-BE,fr;q=0.9,en;q=0.5'])->assertOk();
 
         $this->assertSame('fr', App::getLocale());
     }
 
     public function test_an_unsupported_browser_language_falls_back_to_the_default(): void
     {
-        $this->get('/', ['Accept-Language' => 'ja'])->assertOk();
+        $this->get('/login', ['Accept-Language' => 'ja'])->assertOk();
 
         $this->assertSame(config('app.locale'), App::getLocale());
     }
@@ -49,7 +53,7 @@ class LocaleTest extends TestCase
         $this->post('/locale/nl')->assertRedirect();
         $this->assertSame('nl', session('locale'));
 
-        $this->get('/')->assertOk();
+        $this->get('/login')->assertOk();
         $this->assertSame('nl', App::getLocale());
     }
 
