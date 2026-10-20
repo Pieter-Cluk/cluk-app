@@ -13,10 +13,23 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            // Staff of CLUK. Afrit 6 members get their own table and login.
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            // Staff sign in with Microsoft 365: no password is stored for them.
+            $table->string('password')->nullable();
+            $table->string('microsoft_id')->nullable()->unique();
+            $table->string('title')->nullable();          // job title, e.g. "Asset manager"
+            $table->string('department')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('mobile')->nullable();
+            $table->string('location')->nullable();
+            $table->string('locale', 5)->default('en');
+            $table->string('status', 20)->default('active'); // active | disabled
+            $table->boolean('is_commercial')->default(false); // counts in revenue per salesperson
+            $table->timestamp('last_seen_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
