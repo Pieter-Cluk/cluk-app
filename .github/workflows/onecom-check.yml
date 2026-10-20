@@ -50,6 +50,9 @@ jobs:
           ls -la "$ACCOUNT" 2>&1 | head -30
           echo "== folders named like cluk.live (5 levels deep)"
           find "$ACCOUNT" -maxdepth 5 -type d \( -name '*cluk.live*' -o -name 'webroots' -o -name 'www' -o -name 'public_html' \) 2>/dev/null | head -30
+          echo "== webroots (from the SSH home)"
+          ls -la ~/webroots/ 2>&1 | head -20
+          for d in ~/webroots/*/ "$ACCOUNT"/webroots/*/; do echo "-- $d"; ls -la "$d" 2>&1 | head -12; [ -w "$d" ] && echo "(writable)" || echo "(not writable)"; done 2>/dev/null | head -80
           echo "== writable from SSH?"
           for d in $(find "$ACCOUNT" -maxdepth 5 -type d -name '*cluk.live*' 2>/dev/null | head -5); do [ -w "$d" ] && echo "writable: $d" || echo "read-only: $d"; ls -la "$d" 2>&1 | head -8; done
           echo "== php"
