@@ -21,7 +21,7 @@ env:
   DB_HOST: cys6r88bx.mysql.service.one.com
   DB_DATABASE: cys6r88bx_clukapp
   DB_USERNAME: cys6r88bx_clukapp
-  MICROSOFT_CLIENT_ID: TO_FILL
+  MICROSOFT_CLIENT_ID: eb2f0282-587c-44c5-8583-25088023e6f7
   MICROSOFT_TENANT_ID: TO_FILL
 
 jobs:
