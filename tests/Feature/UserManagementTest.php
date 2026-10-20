@@ -341,7 +341,8 @@ class UserManagementTest extends TestCase
         foreach (array_keys(config('cluk.locales')) as $locale) {
             $this->admin->forceFill(['locale' => $locale])->save();
             foreach (['/settings/users', '/settings/users/new', '/settings/users/'.$jens->id, '/settings/users/'.$this->admin->id, '/settings/roles', '/settings/activity'] as $url) {
-                $this->actingAs($this->admin->fresh())->get($url)->assertOk()->assertDontSee('users.');
+                $html = $this->actingAs($this->admin->fresh())->get($url)->assertOk()->getContent();
+                $this->assertDoesNotMatchRegularExpression('/\b(users|cluk|nav)\.[a-z_]+\.[a-z_]+/', strip_tags($html), "untranslated text on {$url} ({$locale})");
             }
         }
     }
