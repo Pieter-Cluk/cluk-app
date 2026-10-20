@@ -1,0 +1,129 @@
+name: Deploy to app.cluk.live
+
+# Started by hand (Actions tab → "Deploy to app.cluk.live" → Run workflow).
+# 1. runs the full test suite, 2. builds the app for production on PHP 8.4,
+# 3. uploads it to one.com over SSH and switches over in one move.
+# Secrets used (Settings → Secrets and variables → Actions):
+#   ONECOM_SSH_PASSWORD, ONECOM_DB_PASSWORD, MICROSOFT_CLIENT_SECRET
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  # Not secret.
+  SSH_HOST: ssh.cys6r88bx.service.one
+  SSH_USER: cys6r88bx_ssh
+  APP_URL: https://app.cluk.live
+  DB_HOST: TO_FILL
+  DB_DATABASE: TO_FILL
+  DB_USERNAME: TO_FILL
+  MICROSOFT_CLIENT_ID: TO_FILL
+  MICROSOFT_TENANT_ID: TO_FILL
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl, bcmath, pdo_sqlite, pdo_mysql, zip, gd, fileinfo
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: cp .env.example .env && php artisan key:generate
+      - run: php artisan test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the settings are filled in
+        run: |
+          for v in DB_HOST DB_DATABASE DB_USERNAME MICROSOFT_CLIENT_ID MICROSOFT_TENANT_ID; do
+            if [ "${!v}" = "TO_FILL" ]; then echo "::error title=Missing setting::$v is not filled in yet in deploy.yml"; exit 1; fi
+          done
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl, bcmath, pdo_mysql, zip, gd, fileinfo
+          coverage: none
+
+      - name: Build for production
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-progress
+          echo "$GITHUB_SHA" > REVISION
+          tar --exclude=.git --exclude=.github --exclude=tests --exclude=node_modules \
+              --exclude='.env*' --exclude='storage/logs/*' -czf /tmp/build.tgz .
+
+      - name: Write the server settings
+        env:
+          DB_PASSWORD: ${{ secrets.ONECOM_DB_PASSWORD }}
+          MICROSOFT_CLIENT_SECRET: ${{ secrets.MICROSOFT_CLIENT_SECRET }}
+        run: |
+          trim() { printf '%s' "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'; }
+          cat > /tmp/env.new <<EOF
+          APP_NAME=CLUK
+          APP_ENV=production
+          APP_DEBUG=false
+          APP_URL=${APP_URL}
+          APP_LOCALE=en
+          APP_FALLBACK_LOCALE=en
+          APP_TIMEZONE=Europe/Brussels
+          LOG_CHANNEL=daily
+          LOG_LEVEL=warning
+          DB_CONNECTION=mariadb
+          DB_HOST=${DB_HOST}
+          DB_PORT=3306
+          DB_DATABASE=${DB_DATABASE}
+          DB_USERNAME=${DB_USERNAME}
+          DB_PASSWORD="$(trim "$DB_PASSWORD")"
+          SESSION_DRIVER=database
+          SESSION_LIFETIME=480
+          SESSION_SECURE_COOKIE=true
+          CACHE_STORE=database
+          QUEUE_CONNECTION=database
+          MAIL_MAILER=log
+          MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
+          MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}
+          MICROSOFT_CLIENT_SECRET="$(trim "$MICROSOFT_CLIENT_SECRET")"
+          MICROSOFT_REDIRECT_URI=${APP_URL}/auth/microsoft/callback
+          EOF
+          sed -i 's/^[[:space:]]*//' /tmp/env.new
+
+      - name: Upload and switch over on one.com
+        env:
+          SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+          export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          SSH="sshpass -e ssh -o ConnectTimeout=20 $SSH_USER@$SSH_HOST"
+          WEBROOT=$($SSH 'readlink -f ~/webroots/by-route/app.cluk.live_')
+          echo "Web root: $WEBROOT"
+          test -n "$WEBROOT"
+          $SSH "mkdir -p '$WEBROOT/shared' && cat > '$WEBROOT/build.tgz'" < /tmp/build.tgz
+          $SSH "cat > '$WEBROOT/shared/.env.new'" < /tmp/env.new
+          $SSH "cat > '$WEBROOT/install.sh'" < deploy/server-install.sh
+          $SSH "bash '$WEBROOT/install.sh' '$WEBROOT' '$WEBROOT/build.tgz' && rm -f '$WEBROOT/install.sh'" 2>&1 | tee /tmp/install.log
+
+      - name: Check the site answers
+        run: |
+          sleep 5
+          code=$(curl -s -o /tmp/login.html -w '%{http_code}' "$APP_URL/login")
+          echo "HTTP $code"
+          grep -q 'Microsoft' /tmp/login.html && echo "Login page OK"
+          test "$code" = "200"
+
+      - name: Report
+        if: always()
+        run: |
+          body=$( (cat /tmp/install.log 2>/dev/null; echo; echo "Login page HTTP: $(curl -s -o /dev/null -w '%{http_code}' "$APP_URL/login")") | tail -c 30000 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
+          echo "::notice title=Deploy report::${body}"

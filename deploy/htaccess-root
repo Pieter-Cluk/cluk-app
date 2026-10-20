@@ -1,0 +1,14 @@
+# app.cluk.live web root (one.com). The Laravel app lives in ./app;
+# only ./app/public may be reached from the internet.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Never serve hidden files (.env, .git…) from anywhere.
+    RewriteRule (^|/)\. - [F,L]
+
+    # Everything goes to the app's public folder.
+    RewriteCond %{REQUEST_URI} !^/app/public/
+    RewriteRule ^(.*)$ app/public/$1 [L]
+</IfModule>
