@@ -43,8 +43,15 @@ jobs:
           sshpass -e ssh -p "$SSH_PORT" -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
           echo "== home: $(pwd)"
           ls -la ~ 2>&1 | head -40
-          echo "== folders named app.cluk.live (3 levels deep)"
-          find ~ -maxdepth 3 -type d -name 'app.cluk.live' 2>/dev/null
+          echo "== home contents"
+          ls -la ~/ 2>&1 | head -30
+          ACCOUNT=$(cd ~/ && pwd -P | sed 's#/users/.*##')
+          echo "== account folder: $ACCOUNT"
+          ls -la "$ACCOUNT" 2>&1 | head -30
+          echo "== folders named like cluk.live (5 levels deep)"
+          find "$ACCOUNT" -maxdepth 5 -type d \( -name '*cluk.live*' -o -name 'webroots' -o -name 'www' -o -name 'public_html' \) 2>/dev/null | head -30
+          echo "== writable from SSH?"
+          for d in $(find "$ACCOUNT" -maxdepth 5 -type d -name '*cluk.live*' 2>/dev/null | head -5); do [ -w "$d" ] && echo "writable: $d" || echo "read-only: $d"; ls -la "$d" 2>&1 | head -8; done
           echo "== php"
           php -v 2>&1 | head -1
           echo "== php extensions"
