@@ -4,7 +4,7 @@ Check these in the one.com control panel before the first deployment.
 
 | Need | Why |
 |---|---|
-| PHP 8.3 or newer | Laravel 13 requires it |
+| PHP 8.3 or newer | Laravel 13 requires it · **one.com: PHP 8.4 available ✓** |
 | PHP extensions: pdo_mysql, mbstring, openssl, intl, bcmath, fileinfo, zip, gd | database, languages, money calculations, uploads, PDF and label images |
 | SSH access | install and update the app, run database migrations |
 | Web root can point to the `public` folder (or a subdomain such as app.cluk.live can) | only `public` may be reachable from the internet |
@@ -19,3 +19,7 @@ Check these in the one.com control panel before the first deployment.
 - Wall screens refresh by polling every 30–60 seconds instead of live push.
 
 If one of the items above is missing, the app moves to a small Laravel-ready server without code changes.
+
+## Address
+
+The app runs on **https://app.cluk.live** (subdomain of cluk.live). Microsoft 365 redirect URI: `https://app.cluk.live/auth/microsoft/callback`.
