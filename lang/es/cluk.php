@@ -19,20 +19,36 @@ return [
         'manage' => 'Gestionar',
     ],
     'rights' => [
-        'afrit6.approve_members' => 'Aprobar nuevos miembros de Afrit 6',
-        'afrit6.door_codes' => 'Ver y cambiar códigos de puerta',
-        'companies.see_health' => 'Ver salud financiera y crédito',
-        'finance.see_margins' => 'Ver precios de compra y márgenes',
-        'finance.send_to_okioki' => 'Aprobar proformas y enviarlas a OkiOki',
-        'gdpr.export_erase' => 'Exportación y borrado RGPD',
-        'orders.approve' => 'Pedidos: aprobar y enviar la confirmación',
-        'sales.approve_low_margin' => 'Ventas: aprobar presupuestos con menos del 10 % de margen',
-        'sales.edit_items' => 'Artículos de venta: añadir y editar',
-        'users.manage' => 'Gestionar usuarios y roles',
-        'warehouse.release_repair' => 'Almacén: liberar artículos de reparación',
-        'warehouse.setup_locations' => 'Almacén: configurar ubicaciones e imprimir etiquetas',
-        'warehouse.sign_delivery' => 'Almacén: firmar albaranes y entregar',
-        'warehouse.write_off' => 'Almacén: dar de baja stock perdido o roto',
+        'afrit6' => [
+            'approve_members' => 'Aprobar nuevos miembros de Afrit 6',
+            'door_codes' => 'Ver y cambiar códigos de puerta',
+        ],
+        'companies' => [
+            'see_health' => 'Ver salud financiera y crédito',
+        ],
+        'finance' => [
+            'see_margins' => 'Ver precios de compra y márgenes',
+            'send_to_okioki' => 'Aprobar proformas y enviarlas a OkiOki',
+        ],
+        'gdpr' => [
+            'export_erase' => 'Exportación y borrado RGPD',
+        ],
+        'orders' => [
+            'approve' => 'Pedidos: aprobar y enviar la confirmación',
+        ],
+        'sales' => [
+            'approve_low_margin' => 'Ventas: aprobar presupuestos con menos del 10 % de margen',
+            'edit_items' => 'Artículos de venta: añadir y editar',
+        ],
+        'users' => [
+            'manage' => 'Gestionar usuarios y roles',
+        ],
+        'warehouse' => [
+            'release_repair' => 'Almacén: liberar artículos de reparación',
+            'setup_locations' => 'Almacén: configurar ubicaciones e imprimir etiquetas',
+            'sign_delivery' => 'Almacén: firmar albaranes y entregar',
+            'write_off' => 'Almacén: dar de baja stock perdido o roto',
+        ],
     ],
     'app' => [
         'name' => 'CLUK',
