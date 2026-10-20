@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
+            \App\Http\Middleware\LogoutDisabledUsers::class,
         ]);
         $middleware->alias([
             'nav' => \App\Http\Middleware\EnsureNavAccess::class,

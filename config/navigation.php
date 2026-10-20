@@ -36,7 +36,7 @@ return [
             ['key' => 'preinvoice', 'path' => '/pre-invoicing', 'icon' => 'invoice', 'module' => ['preinvoice', 1]],
         ],
         'settings' => [
-            ['key' => 'users', 'path' => '/settings/users', 'icon' => 'user', 'right' => 'users.manage'],
+            ['key' => 'users', 'path' => '/settings/users', 'icon' => 'user', 'right' => 'users.manage', 'also' => ['/settings/roles', '/settings/activity']],
             ['key' => 'company', 'path' => '/settings/company', 'icon' => 'building', 'module' => ['settings', 2]],
             ['key' => 'documents', 'path' => '/settings/documents', 'icon' => 'doc', 'module' => ['settings', 2]],
             ['key' => 'vat', 'path' => '/settings/vat-rates', 'icon' => 'percent', 'module' => ['settings', 2]],
