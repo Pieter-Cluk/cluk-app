@@ -87,12 +87,17 @@ jobs:
             curl -s -o /tmp/l.html -m 20 -w 'HTTP %{http_code}\n' https://app.cluk.live/login || echo "no answer"
             curl -sv -o /dev/null -m 20 https://app.cluk.live/login 2>&1 | grep -E 'subject:|issuer:|expire|SSL|Connected|Could not|error' | head -8
             grep -o 'Sign in with Microsoft' /tmp/l.html 2>/dev/null | head -1
+            IP=$(getent hosts 3e3535bb.website.cys6r88bx.service.one | awk '{print $1}' | head -1)
+            echo "== one.com site IP: ${IP:-none}"
+            echo "== direct http (Host app.cluk.live): $(curl -s -o /dev/null -m 20 -w '%{http_code} %{redirect_url}' --resolve app.cluk.live:80:$IP http://app.cluk.live/login)"
+            echo "== direct https (Host app.cluk.live): $(curl -s -k -o /dev/null -m 20 -w '%{http_code}' --resolve app.cluk.live:443:$IP https://app.cluk.live/login 2>&1)"
+            echo "== one.com preview name: $(curl -s -o /dev/null -m 20 -w '%{http_code} %{redirect_url}' http://3e3535bb.website.cys6r88bx.service.one/login)"
           } >> report.txt 2>&1
 
       - name: Web check lines as separate annotations
         if: always()
         run: |
-          sed -n '/== DNS app/,$p' report.txt | tr -d '\r' | grep -v '^$' | head -10 | while IFS= read -r line; do
+          sed -n '/== DNS app/,$p' report.txt | tr -d '\r' | grep -v '^$' | head -16 | while IFS= read -r line; do
             safe=$(printf '%s' "$line" | sed 's/%/%25/g; s/::/: :/g')
             echo "::notice title=web::${safe}"
           done
