@@ -87,12 +87,18 @@ jobs:
             curl -s -o /tmp/l.html -m 20 -w 'HTTP %{http_code}\n' https://app.cluk.live/login || echo "no answer"
             curl -sv -o /dev/null -m 20 https://app.cluk.live/login 2>&1 | grep -E 'subject:|issuer:|expire|SSL|Connected|Could not|error' | head -8
             grep -o 'Sign in with Microsoft' /tmp/l.html 2>/dev/null | head -1
-            IP=$(getent hosts 3e3535bb.website.cys6r88bx.service.one | awk '{print $1}' | head -1)
+            IP=$(getent ahostsv4 3e3535bb.website.cys6r88bx.service.one | awk '{print $1}' | head -1)
             echo "== one.com site IP: ${IP:-none}"
             echo "== direct http (Host app.cluk.live): $(curl -s -o /dev/null -m 20 -w '%{http_code} %{redirect_url}' --resolve app.cluk.live:80:$IP http://app.cluk.live/login)"
             echo "== direct https (Host app.cluk.live): $(curl -s -k -o /dev/null -m 20 -w '%{http_code}' --resolve app.cluk.live:443:$IP https://app.cluk.live/login 2>&1)"
             echo "== one.com preview name: $(curl -s -o /dev/null -m 20 -w '%{http_code} %{redirect_url}' http://3e3535bb.website.cys6r88bx.service.one/login)"
           } >> report.txt 2>&1
+
+      - name: Direct check as one annotation
+        if: always()
+        run: |
+          body=$(grep -E '^== (one.com site IP|direct|one.com preview)' report.txt | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
+          echo "::notice title=direct::${body}"
 
       - name: Web check lines as separate annotations
         if: always()
