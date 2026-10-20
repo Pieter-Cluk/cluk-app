@@ -1,0 +1,25 @@
+name: Vendor bundle
+
+# Started by hand. Installs the locked PHP packages and keeps them as a
+# download, so the app can also be run in places without access to Packagist.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, intl, bcmath, pdo_sqlite, zip, gd, fileinfo
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: tar -czf vendor.tgz vendor
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vendor
+          path: vendor.tgz
+          retention-days: 3
