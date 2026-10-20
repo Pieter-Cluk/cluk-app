@@ -16,6 +16,18 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [MicrosoftLoginController::class, 'logout'])->name('logout');
     Route::view('/dashboard', 'dashboard')->name('dashboard');
+
+    // Every menu item gets its address now; screens not built yet show
+    // "coming soon". Access is checked against the same rules as the menu.
+    $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
+    foreach ($items as $item) {
+        if ($item['key'] === 'dashboard') {
+            continue;
+        }
+        Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])
+            ->middleware('nav:'.$item['key'])
+            ->name('nav.'.$item['key']);
+    }
 });
 
 // Switch the language for this session (and for the signed-in person).
