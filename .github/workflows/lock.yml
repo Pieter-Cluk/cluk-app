@@ -1,0 +1,43 @@
+name: Lock package versions
+
+# Started by hand (Actions tab → "Lock package versions" → Run workflow).
+# Resolves the newest allowed versions of the PHP packages, runs the tests
+# with them and, when they pass, commits composer.lock so every deploy
+# installs exactly these tested versions. Run again to take updates.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'   # lowest supported, so the lock also installs on 8.4 (one.com)
+          extensions: mbstring, intl, bcmath, pdo_sqlite, pdo_mysql, zip, gd, fileinfo
+          coverage: none
+
+      - name: Resolve versions
+        run: composer update --no-interaction --prefer-dist --no-progress
+
+      - name: Test with these versions
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan test
+
+      - name: Commit composer.lock
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f composer.lock
+          if git diff --cached --quiet; then echo "composer.lock unchanged"; exit 0; fi
+          git commit -m "Lock package versions (tested)"
+          git push
+          echo "::notice title=composer.lock::$(grep -o '"name": "laravel/framework",' -A1 composer.lock | tail -1 | tr -d ' ')"
