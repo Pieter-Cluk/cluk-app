@@ -9,6 +9,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         php: ['8.3', '8.4']   # 8.4 = one.com
     name: tests (PHP ${{ matrix.php }})
@@ -35,11 +36,17 @@ jobs:
           set -o pipefail
           php artisan test --colors=never 2>&1 | tee test-output.txt
 
-      - name: Report failures as an annotation
+      - name: Report failures as annotations
         if: failure()
         run: |
-          body=$(tail -c 60000 test-output.txt | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
-          echo "::error title=Test output::${body}"
+          # Annotations are short, so send only the failure details, in parts.
+          awk '/FAILED|Error|Exception|Failed asserting/{p=1} p' test-output.txt | head -c 30000 > failures.txt
+          [ -s failures.txt ] || tail -c 3500 test-output.txt > failures.txt
+          split -b 3500 failures.txt part_
+          for f in part_*; do
+            body=$(sed 's/%/%25/g' "$f" | sed ':a;N;$!ba;s/\n/%0A/g')
+            echo "::error title=Test failure ($f)::${body}"
+          done
 
       - name: Code style (report only)
         run: vendor/bin/pint --test
