@@ -9,6 +9,7 @@
     "license": "proprietary",
     "require": {
         "php": "^8.3",
+        "chillerlan/php-qrcode": "^6.0",
         "laravel/framework": "^13.17",
         "laravel/socialite": "^5.31",
         "laravel/tinker": "^3.0",
