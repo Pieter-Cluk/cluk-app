@@ -12,6 +12,8 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
 use App\Http\Controllers\QuotePublicController;
+use App\Http\Controllers\Rental\OrderController;
+use App\Http\Controllers\Rental\SubhireController;
 use App\Http\Controllers\Sales\DealController;
 use App\Http\Controllers\Sales\IncomingController;
 use App\Http\Controllers\Sales\QuoteController;
@@ -41,6 +43,7 @@ Route::get('/terms/{lang?}', function (?string $lang = null) {
 Route::prefix('q/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {
     Route::get('/', [QuotePublicController::class, 'show'])->name('quote.public');
     Route::get('/print', [QuotePublicController::class, 'print'])->name('quote.public.print');
+    Route::get('/order', [QuotePublicController::class, 'order'])->name('quote.public.order');
     Route::post('/accept', [QuotePublicController::class, 'accept'])->middleware('throttle:10,1')->name('quote.public.accept');
     Route::post('/change', [QuotePublicController::class, 'change'])->middleware('throttle:10,1')->name('quote.public.change');
     Route::post('/decline', [QuotePublicController::class, 'decline'])->middleware('throttle:10,1')->name('quote.public.decline');
@@ -254,11 +257,39 @@ Route::middleware('auth:web')->group(function () {
         });
     });
 
+    // Order allocation: confirmed rental orders, covered from own stock or sub-hire, then approved.
+    Route::prefix('order-allocation')->middleware('nav:orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('/{order}', [OrderController::class, 'show'])->whereNumber('order')->name('orders.show');
+        Route::get('/{order}/print', [OrderController::class, 'print'])->whereNumber('order')->name('orders.print');
+        Route::post('/{order}/assign', [OrderController::class, 'assign'])->whereNumber('order')->name('orders.assign');
+        Route::post('/{order}/auto', [OrderController::class, 'autoAllocate'])->whereNumber('order')->name('orders.auto');
+        Route::post('/{order}/lines/{line}/allocate', [OrderController::class, 'allocateLine'])->whereNumber(['order', 'line'])->name('orders.allocate');
+        Route::post('/{order}/lines/{line}/clear', [OrderController::class, 'clearLine'])->whereNumber(['order', 'line'])->name('orders.clear');
+        Route::delete('/{order}/assets/{orderAsset}', [OrderController::class, 'releaseAsset'])->whereNumber(['order', 'orderAsset'])->name('orders.release');
+        Route::post('/{order}/lines/{line}/subhire', [OrderController::class, 'addSubhire'])->whereNumber(['order', 'line'])->name('orders.subhire');
+        Route::post('/{order}/send-requests', [OrderController::class, 'sendRequests'])->whereNumber('order')->name('orders.send');
+        Route::post('/{order}/approve', [OrderController::class, 'approve'])->whereNumber('order')->name('orders.approve');
+        Route::post('/{order}/cancel', [OrderController::class, 'cancel'])->whereNumber('order')->name('orders.cancel');
+    });
+
+    // Sub-hire: price requests (SHQ) and confirmations (SHC).
+    Route::prefix('sub-hire')->middleware('nav:subhire')->group(function () {
+        Route::get('/', [SubhireController::class, 'index'])->name('subhire.index');
+        Route::get('/{subhire}', [SubhireController::class, 'show'])->whereNumber('subhire')->name('subhire.show');
+        Route::put('/{subhire}', [SubhireController::class, 'update'])->whereNumber('subhire')->name('subhire.update');
+        Route::delete('/{subhire}/lines/{line}', [SubhireController::class, 'removeLine'])->whereNumber(['subhire', 'line'])->name('subhire.line.remove');
+        Route::post('/{subhire}/accept', [SubhireController::class, 'accept'])->whereNumber('subhire')->name('subhire.accept');
+        Route::post('/{subhire}/not-available', [SubhireController::class, 'notAvailable'])->whereNumber('subhire')->name('subhire.na');
+        Route::post('/{subhire}/resend', [SubhireController::class, 'resend'])->whereNumber('subhire')->name('subhire.resend');
+        Route::post('/{subhire}/cancel', [SubhireController::class, 'cancel'])->whereNumber('subhire')->name('subhire.cancel');
+    });
+
     // Every menu item gets its address now; screens not built yet show
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'companies', 'sales', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'companies', 'sales', 'orders', 'subhire', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

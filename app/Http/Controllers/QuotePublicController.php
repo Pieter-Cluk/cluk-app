@@ -72,6 +72,17 @@ class QuotePublicController extends Controller
         return redirect()->route('quote.public', $token)->with('answered', 'declined');
     }
 
+    /** The order confirmation, once asset management approved the order. */
+    public function order(Request $request, string $token): View
+    {
+        $quote = $this->find($token);
+        $order = $quote->order;
+        abort_unless($order && $order->status === 'approved', 404);
+        $this->locale($request, $quote);
+
+        return view('rental.orders.print', ['order' => $order->load(['lines', 'company', 'contact', 'handedBy']), 'me' => CompanyDetail::current()]);
+    }
+
     public function print(Request $request, string $token): View
     {
         $quote = $this->find($token);

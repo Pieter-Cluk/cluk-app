@@ -6,12 +6,16 @@ use App\Models\Afrit6\DeskBooking;
 use App\Models\Afrit6\RoomBooking;
 use App\Models\Afrit6\ServiceRequest;
 use App\Models\Afrit6\Space;
+use App\Models\Company;
 use App\Models\Member;
+use App\Models\Rental\Order;
+use App\Models\Rental\SubhireRequest;
 use App\Models\Role;
 use App\Models\Sales\Quote;
 use App\Models\User;
 use App\Notifications\Confirmation;
 use App\Services\Afrit6\MemberMails;
+use App\Services\Rental\OrderMails;
 use App\Services\Rental\QuoteMails;
 use App\Support\InLocale;
 use Database\Seeders\RoleSeeder;
@@ -113,5 +117,38 @@ class MailsTest extends TestCase
             return true;
         });
         $this->assertSame(16, $sent);
+    }
+
+    public function test_order_and_subhire_emails_in_every_language(): void
+    {
+        $this->seed(RoleSeeder::class);
+        Notification::fake();
+        $am = User::factory()->create(['role_id' => Role::where('slug', 'asset-manager')->value('id'), 'first_name' => 'Elke', 'last_name' => 'Martens']);
+        $order = Order::create([
+            'number' => 'R-OC-2026-0001', 'status' => 'approved', 'title' => 'Company evening', 'out_from' => '2026-11-13 14:00', 'out_until' => '2026-11-16 10:00',
+            'use_from' => '2026-11-14', 'use_until' => '2026-11-15', 'customer_email' => 'sarah@demo.be', 'confirmed_name' => 'Sarah Peeters', 'po_number' => 'PO 7',
+            'net_cents' => 1000, 'vat_rate_bp' => 2100, 'vat_cents' => 210, 'gross_cents' => 1210,
+        ]);
+        $line = $order->lines()->create(['kind' => 'item', 'name' => 'Robe Spiider', 'qty' => 2, 'amount_cents' => 1000]);
+        $supplier = Company::create(['name' => 'Partner BV', 'is_customer' => false, 'is_supplier' => true, 'vat_regime' => 'auto', 'language' => 'nl']);
+        $request = SubhireRequest::create(['number' => 'SHQ-2026-0001', 'confirm_number' => 'SHC-2026-0001', 'order_id' => $order->id, 'supplier_id' => $supplier->id, 'status' => 'accepted', 'sent_to' => 'partner@demo.be', 'delivery_at' => '2026-11-12 16:00', 'return_at' => '2026-11-17 10:00', 'total_cents' => 22000, 'extra_cents' => 0]);
+        $request->lines()->create(['order_line_id' => $line->id, 'name' => 'Robe Spiider', 'qty' => 2, 'price_cents' => 5500, 'factor' => 2, 'amount_cents' => 22000]);
+
+        foreach (array_keys(config('cluk.locales')) as $locale) {
+            $order->forceFill(['language' => $locale])->save();
+            $supplier->forceFill(['language' => $locale])->save();
+            OrderMails::orderConfirmation($order->fresh(['lines']), $am);
+            OrderMails::priceRequest($request->fresh(['supplier', 'lines']), $am);
+            OrderMails::subhireConfirmation($request->fresh(['supplier', 'lines']), $am);
+        }
+        $sent = 0;
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, function (Confirmation $n, $ch, $to) use (&$sent) {
+            $html = $this->render($n, $to);
+            $this->assertDoesNotMatchRegularExpression('/\\b(mails|orders|quotes)\\.[a-z_]+(\\.[a-z_]+)*\\b/', strip_tags($html), $n->subject);
+            $sent++;
+
+            return true;
+        });
+        $this->assertSame(12, $sent);
     }
 }

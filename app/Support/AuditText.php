@@ -9,6 +9,8 @@ use App\Models\CompanyDetail;
 use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
 use App\Models\Member;
+use App\Models\Rental\Order;
+use App\Models\Rental\SubhireRequest;
 use App\Models\Role;
 use App\Models\Sales\Quote;
 use App\Models\User;
@@ -38,6 +40,8 @@ class AuditText
             $subject instanceof Item => $subject->number.' · '.$subject->name,
             $subject instanceof Asset => $subject->code,
             $subject instanceof Quote => $subject->code().' · '.$subject->title,
+            $subject instanceof Order => $subject->number.' · '.$subject->title,
+            $subject instanceof SubhireRequest => $subject->code().' · '.$subject->supplier?->name,
             $subject instanceof ServiceRequest => __('workspace.kinds.'.$subject->kind).' · '.$subject->member?->name,
             $subject instanceof CompanyDetail => trim($subject->legal_name.' '.$subject->legal_form),
             $subject !== null => class_basename($subject).' #'.$subject->getKey(),
@@ -82,6 +86,13 @@ class AuditText
             'afrit6.member_declined' => (string) ($d['reason'] ?? ''),
             'quote.sent' => trim(($d['to'] ?? '').' · '.($d['total'] ?? ''), ' ·'),
             'quote.accepted' => trim(($d['name'] ?? '').(isset($d['po']) ? ' · PO '.$d['po'] : '').' · '.($d['total'] ?? '').(isset($d['by_staff']) ? ' · '.$d['by_staff'] : ''), ' ·'),
+            'order.created' => trim(($d['quote'] ?? '').' · '.($d['total'] ?? ''), ' ·'),
+            'order.approved' => trim(($d['to'] ?? '').' · '.($d['total'] ?? ''), ' ·'),
+            'order.assigned' => ($d['from'] ?? '—').' → '.($d['to'] ?? ''),
+            'order.cancelled' => (string) ($d['reason'] ?? ''),
+            'subhire.sent' => trim(($d['supplier'] ?? '').' · '.($d['to'] ?? ''), ' ·'),
+            'subhire.accepted' => trim(($d['supplier'] ?? '').' · '.($d['total'] ?? ''), ' ·'),
+            'subhire.not_available' => (string) ($d['supplier'] ?? ''),
             'quote.declined' => isset($d['reason']) ? __('quotes.decline_reasons.'.$d['reason']) : '',
             'auth.refused_unknown' => (string) ($d['email'] ?? ''),
             default => '',

@@ -1,0 +1,1 @@
+<span @class(['pill', 'pill-off' => in_array($r->status, ['draft', 'cancelled', 'not_available']), 'pill-warn' => $r->status === 'sent', 'pill-ok' => $r->status === 'accepted'])>{{ __('orders.sub_statuses.'.$r->status) }}</span>

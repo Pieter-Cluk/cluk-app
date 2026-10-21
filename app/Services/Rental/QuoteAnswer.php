@@ -23,6 +23,7 @@ class QuoteAnswer
         $quote->forceFill([
             'status' => 'accepted', 'answered_at' => now(), 'answered_name' => $name, 'po_number' => $po ?: null, 'answered_ip' => $ip,
         ])->save();
+        Orders::fromQuote($quote);
         AuditLog::record('quote.accepted', $quote, array_filter(['name' => $name, 'po' => $po, 'total' => Pricing::eur($quote->net_cents), 'by_staff' => $by?->name]), $by);
 
         if ($deal = $quote->deal) {

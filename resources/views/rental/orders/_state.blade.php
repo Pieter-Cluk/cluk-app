@@ -1,0 +1,1 @@
+<span @class(['pill', 'pill-lg' => $lg ?? false, 'pill-danger' => $state === 'subhire', 'pill-warn' => $state === 'waiting', 'pill-off' => in_array($state, ['allocate', 'cancelled']), 'pill-info' => $state === 'ready', 'pill-ok' => $state === 'approved'])>{{ __('orders.states.'.$state) }}</span>
