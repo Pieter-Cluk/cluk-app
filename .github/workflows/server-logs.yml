@@ -35,6 +35,7 @@ jobs:
           echo "== settings present (names only)"
           grep -oE '^(MICROSOFT_[A-Z_]+|MAIL_[A-Z_]+|APP_URL|SESSION_[A-Z_]+)=' .env | tr '\n' ' '
           echo
+          echo "== upload limits (PHP)"; php -r 'echo "upload_max_filesize=".ini_get("upload_max_filesize")." post_max_size=".ini_get("post_max_size")." gd=".(function_exists("imagecreatefromstring")?"yes":"no")." exif=".(function_exists("exif_read_data")?"yes":"no").PHP_EOL;'
           echo "== secret lengths"
           for k in MICROSOFT_CLIENT_SECRET DB_PASSWORD INTAKE_TOKEN; do v=$(grep "^$k=" .env | cut -d= -f2- | tr -d '"'); echo "$k: ${#v} chars"; done
           REMOTE
