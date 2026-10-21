@@ -83,7 +83,7 @@ return [
     'portal' => [
         'title' => 'Ledenportaal',
         'welcome' => 'Welkom, :name!',
-        'intro' => 'Je account is actief. Bureaus kiezen, de vergaderzaal boeken en magazijnaanvragen komen hier heel binnenkort.',
+        'intro' => 'Alles voor een vlotte werkdag in Afrit 6: je bureaus, de vergaderzaal, magazijndiensten en je rekening.',
         'desks' => 'Bureaus',
         'rooms' => 'Vergaderzaal',
         'warehouse' => 'Magazijnaanvragen',

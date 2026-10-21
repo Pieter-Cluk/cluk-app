@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\Afrit6\ServiceRequest;
 use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\CompanyDetail;
@@ -31,6 +32,7 @@ class AuditText
             $subject instanceof VatRate => $subject->name,
             $subject instanceof Company => $subject->name,
             $subject instanceof Member => $subject->name,
+            $subject instanceof ServiceRequest => __('workspace.kinds.'.$subject->kind).' · '.$subject->member?->name,
             $subject instanceof CompanyDetail => trim($subject->legal_name.' '.$subject->legal_form),
             $subject !== null => class_basename($subject).' #'.$subject->getKey(),
             default => '',
@@ -57,6 +59,13 @@ class AuditText
             'vat.scheduled' => ($d['from'] ?? '').' → '.($d['to'] ?? '').' · '.($d['date'] ?? ''),
             'vat.ended', 'vat.deleted' => (string) ($d['name'] ?? ''),
             'crm.company_updated' => implode(', ', array_map(fn ($f) => __('companies.fields.'.$f), $d['fields'] ?? [])),
+            'afrit6.desk_swapped' => ($d['from'] ?? '').' → '.($d['to'] ?? '').' · '.($d['date'] ?? ''),
+            'afrit6.desk_added' => trim(($d['desk'] ?? '').' · '.($d['from'] ?? '').' → '.($d['to'] ?? '…').' · '.($d['price'] ?? ''), ' ·'),
+            'afrit6.desk_ended' => ($d['desk'] ?? '').' · '.($d['from'] ?? '…').' → '.($d['to'] ?? ''),
+            'afrit6.statement_created' => ($d['period'] ?? '').' · '.($d['total'] ?? ''),
+            'afrit6.task_assigned' => trim(($d['from'] ?? '—').' → '.($d['to'] ?? '').(isset($d['note']) ? ' · '.$d['note'] : '')),
+            'afrit6.task_declined' => (string) ($d['reason'] ?? ''),
+            'afrit6.task_amount' => ($d['from'] ?? '').' → '.($d['to'] ?? ''),
             'crm.vat_regime_changed' => ($d['from'] ?? '').' → '.($d['to'] ?? '').(isset($d['code']) ? ' ('.$d['code'].')' : ''),
             'import.done' => trim(($d['file'] ?? '').' · '.collect($d)->except('file')->map(fn ($r, $k) => __('import.kinds.'.$k).' +'.($r['created'] ?? 0).' ~'.($r['updated'] ?? 0))->implode(' · '), ' ·'),
             'afrit6.member_approved' => (string) ($d['company'] ?? ''),

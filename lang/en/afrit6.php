@@ -83,7 +83,7 @@ return [
     'portal' => [
         'title' => 'Member portal',
         'welcome' => 'Welcome, :name!',
-        'intro' => 'Your account is active. Choosing desks, booking the meeting room and warehouse requests open here very soon.',
+        'intro' => 'Everything for your working day at Afrit 6: your desks, the meeting room, warehouse services and your bill.',
         'desks' => 'Desks',
         'rooms' => 'Meeting room',
         'warehouse' => 'Warehouse requests',

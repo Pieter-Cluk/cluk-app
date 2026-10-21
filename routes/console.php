@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -10,7 +11,7 @@ Artisan::command('inspire', function () {
 // First install on a server: create the starting roles and the first admin,
 // but only when there are no roles yet (later changes made in the app are kept).
 Artisan::command('cluk:first-install', function () {
-    if (\App\Models\Role::query()->exists()) {
+    if (Role::query()->exists()) {
         $this->info('Roles exist already: nothing to do.');
 
         return;

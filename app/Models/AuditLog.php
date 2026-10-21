@@ -38,7 +38,8 @@ class AuditLog extends Model
     public static function record(string $action, ?Model $subject = null, array $data = [], ?User $actor = null): self
     {
         return static::create([
-            'actor_id' => ($actor ?? Auth::user())?->getKey(),
+            // Only staff are actors; a member's own action is recorded without one.
+            'actor_id' => ($actor ?? Auth::guard('web')->user())?->getKey(),
             'action' => $action,
             'subject_type' => $subject?->getMorphClass(),
             'subject_id' => $subject?->getKey(),

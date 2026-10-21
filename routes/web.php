@@ -3,15 +3,18 @@
 use App\Http\Controllers\Afrit6\MemberAdminController;
 use App\Http\Controllers\Afrit6\MemberAuthController;
 use App\Http\Controllers\Afrit6\PortalController;
+use App\Http\Controllers\Afrit6\StaffWorkspaceController;
+use App\Http\Controllers\Afrit6\TaskController;
+use App\Http\Controllers\Afrit6\WorkspaceController;
 use App\Http\Controllers\Auth\MicrosoftLoginController;
 use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Settings\AuditLogController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
 use App\Http\Controllers\Settings\ImportController;
-use App\Http\Controllers\Settings\VatRateController;
 use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\UserController;
+use App\Http\Controllers\Settings\VatRateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +46,20 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
     Route::get('/verify/{member}/{hash}', [MemberAuthController::class, 'verify'])->middleware(['signed', 'throttle:20,1'])->whereNumber('member')->name('verify');
     Route::middleware('auth:member')->group(function () {
         Route::get('/portal', [PortalController::class, 'home'])->name('portal');
+        Route::middleware('member.active')->prefix('portal')->name('portal.')->group(function () {
+            Route::get('/desks', [WorkspaceController::class, 'desks'])->name('desks');
+            Route::post('/desks/swap', [WorkspaceController::class, 'swapDesk'])->middleware('throttle:20,1')->name('desks.swap');
+            Route::post('/desks/add', [WorkspaceController::class, 'addDesk'])->middleware('throttle:20,1')->name('desks.add');
+            Route::get('/room', [WorkspaceController::class, 'room'])->name('room');
+            Route::post('/room', [WorkspaceController::class, 'book'])->middleware('throttle:30,1')->name('room.book');
+            Route::post('/room/{booking}/cancel', [WorkspaceController::class, 'cancelBooking'])->whereNumber('booking')->name('room.cancel');
+            Route::get('/services', [WorkspaceController::class, 'services'])->name('services');
+            Route::post('/services', [WorkspaceController::class, 'storeService'])->middleware('throttle:30,1')->name('services.store');
+            Route::post('/services/{serviceRequest}/cancel', [WorkspaceController::class, 'cancelService'])->whereNumber('serviceRequest')->name('services.cancel');
+            Route::post('/services/{serviceRequest}/stop', [WorkspaceController::class, 'stopStorage'])->whereNumber('serviceRequest')->name('services.stop');
+            Route::post('/services/{serviceRequest}/reply', [WorkspaceController::class, 'reply'])->whereNumber('serviceRequest')->middleware('throttle:30,1')->name('services.reply');
+            Route::get('/bill', [WorkspaceController::class, 'bill'])->name('bill');
+        });
         Route::post('/logout', [MemberAuthController::class, 'logout'])->name('logout');
     });
 });
@@ -78,6 +95,24 @@ Route::middleware('auth:web')->group(function () {
     Route::middleware('nav:afrit6')->prefix('afrit6-staff')->name('afrit6.staff.')->group(function () {
         Route::get('/', [MemberAdminController::class, 'index'])->name('index');
         Route::get('/members/{member}', [MemberAdminController::class, 'show'])->whereNumber('member')->name('show');
+        Route::get('/tasks', [TaskController::class, 'index'])->name('tasks');
+        Route::get('/tasks/{task}', [TaskController::class, 'show'])->whereNumber('task')->name('tasks.show');
+        Route::get('/room', [StaffWorkspaceController::class, 'room'])->name('room');
+        Route::get('/desks', [StaffWorkspaceController::class, 'desks'])->name('desks');
+        Route::middleware('level:afrit6,2')->group(function () {
+            Route::post('/tasks/{task}/take', [TaskController::class, 'take'])->whereNumber('task')->name('tasks.take');
+            Route::post('/tasks/{task}/reassign', [TaskController::class, 'reassign'])->whereNumber('task')->name('tasks.reassign');
+            Route::post('/tasks/{task}/confirm', [TaskController::class, 'confirm'])->whereNumber('task')->name('tasks.confirm');
+            Route::post('/tasks/{task}/decline', [TaskController::class, 'decline'])->whereNumber('task')->name('tasks.decline');
+            Route::post('/tasks/{task}/done', [TaskController::class, 'done'])->whereNumber('task')->name('tasks.done');
+            Route::post('/tasks/{task}/reopen', [TaskController::class, 'reopen'])->whereNumber('task')->name('tasks.reopen');
+            Route::post('/tasks/{task}/message', [TaskController::class, 'message'])->whereNumber('task')->name('tasks.message');
+            Route::post('/tasks/{task}/amount', [TaskController::class, 'amount'])->whereNumber('task')->name('tasks.amount');
+            Route::post('/members/{member}/desks', [StaffWorkspaceController::class, 'storeDesk'])->whereNumber('member')->name('desks.store');
+            Route::post('/members/{member}/desks/{rental}/end', [StaffWorkspaceController::class, 'endDesk'])->whereNumber(['member', 'rental'])->name('desks.end');
+        });
+        Route::put('/members/{member}/door-code', [StaffWorkspaceController::class, 'doorCode'])->whereNumber('member')->middleware('right:afrit6.door_codes')->name('door');
+        Route::post('/members/{member}/statements', [StaffWorkspaceController::class, 'storeStatement'])->whereNumber('member')->middleware('level:afrit6,3')->name('statements.store');
         Route::middleware('right:afrit6.approve_members')->group(function () {
             Route::post('/members/{member}/approve', [MemberAdminController::class, 'approve'])->whereNumber('member')->name('approve');
             Route::post('/members/{member}/decline', [MemberAdminController::class, 'decline'])->whereNumber('member')->name('decline');

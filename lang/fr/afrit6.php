@@ -83,7 +83,7 @@ return [
     'portal' => [
         'title' => 'Portail membre',
         'welcome' => 'Bienvenue, :name !',
-        'intro' => 'Votre compte est actif. Le choix des bureaux, la réservation de la salle de réunion et les demandes à l\'entrepôt arrivent ici très bientôt.',
+        'intro' => 'Tout pour votre journée de travail à Afrit 6 : vos bureaux, la salle de réunion, les services entrepôt et votre facture.',
         'desks' => 'Bureaux',
         'rooms' => 'Salle de réunion',
         'warehouse' => 'Demandes à l\'entrepôt',

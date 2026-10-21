@@ -83,7 +83,7 @@ return [
     'portal' => [
         'title' => 'Portal de miembros',
         'welcome' => '¡Bienvenido, :name!',
-        'intro' => 'Tu cuenta está activa. Elegir puestos, reservar la sala de reuniones y las solicitudes al almacén llegarán aquí muy pronto.',
+        'intro' => 'Todo para tu jornada en Afrit 6: tus puestos, la sala de reuniones, los servicios de almacén y tu factura.',
         'desks' => 'Puestos',
         'rooms' => 'Sala de reuniones',
         'warehouse' => 'Solicitudes al almacén',

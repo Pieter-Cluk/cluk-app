@@ -51,6 +51,7 @@
                     </form>
                 </section>
             @endif
+            @include('afrit6.staff._member-workspace')
         </div>
 
         <aside class="stack">

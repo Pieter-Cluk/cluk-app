@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Afrit6;
 
 use App\Http\Controllers\Controller;
+use App\Models\Afrit6\ServiceRequest;
+use App\Models\Afrit6\Space;
 use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Member;
 use App\Notifications\MemberApproved;
+use App\Services\Afrit6\StatementBuilder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +52,15 @@ class MemberAdminController extends Controller
             'match' => $member->company ?? ($member->reg_vat_number ? Company::where('vat_number', $member->reg_vat_number)->first() : null),
             'canDecide' => $request->user()->hasRight('afrit6.approve_members'),
             'activity' => AuditLog::with('actor')->where('subject_type', $member->getMorphClass())->where('subject_id', $member->id)->latest('id')->limit(15)->get(),
+            'rentals' => $member->deskRentals()->with('space')->get(),
+            'desks' => Space::desks()->get(),
+            'canDesks' => $request->user()->canUseModule('afrit6', 2),
+            'canDoor' => $request->user()->hasRight('afrit6.door_codes'),
+            'canStatement' => $request->user()->canUseModule('afrit6', 3),
+            'bill' => $member->isActive() ? (new StatementBuilder($member))->build(today(), app()->getLocale()) : null,
+            'lastBill' => $member->isActive() ? (new StatementBuilder($member))->build((new StatementBuilder($member))->period()[0]->copy()->subDay(), app()->getLocale()) : null,
+            'statements' => $member->statements()->with('createdBy')->get(),
+            'openTasks' => ServiceRequest::where('member_id', $member->id)->open()->with('assignee')->orderBy('date')->get(),
         ]);
     }
 

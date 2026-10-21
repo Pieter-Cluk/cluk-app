@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Afrit6\DeskRental;
+use App\Models\Afrit6\RoomBooking;
+use App\Models\Afrit6\ServiceRequest;
+use App\Models\Afrit6\Statement;
 use App\Notifications\MemberResetPassword;
 use App\Support\VatNumber;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -12,8 +16,10 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
 /**
  * An Afrit 6 co-working member with a login to the member portal.
@@ -23,7 +29,7 @@ use Illuminate\Notifications\Notifiable;
     'first_name', 'last_name', 'email', 'mobile', 'password', 'locale', 'newsletter',
     'reg_country', 'reg_vat_number', 'reg_company_name', 'reg_address', 'vies_status',
 ])]
-#[Hidden(['password', 'remember_token'])]
+#[Hidden(['password', 'remember_token', 'door_code'])]
 class Member extends Authenticatable implements CanResetPasswordContract, HasLocalePreference
 {
     use CanResetPassword, HasFactory, Notifiable;
@@ -45,6 +51,7 @@ class Member extends Authenticatable implements CanResetPasswordContract, HasLoc
             'approved_at' => 'datetime',
             'last_login_at' => 'datetime',
             'newsletter' => 'boolean',
+            'door_code' => 'encrypted',
         ];
     }
 
@@ -56,6 +63,38 @@ class Member extends Authenticatable implements CanResetPasswordContract, HasLoc
     public function contact(): BelongsTo
     {
         return $this->belongsTo(Contact::class);
+    }
+
+    public function deskRentals(): HasMany
+    {
+        return $this->hasMany(DeskRental::class)->orderBy('starts_on');
+    }
+
+    public function roomBookings(): HasMany
+    {
+        return $this->hasMany(RoomBooking::class);
+    }
+
+    public function serviceRequests(): HasMany
+    {
+        return $this->hasMany(ServiceRequest::class);
+    }
+
+    public function statements(): HasMany
+    {
+        return $this->hasMany(Statement::class)->orderByDesc('period_start');
+    }
+
+    /** Desks rented today. */
+    public function desksToday()
+    {
+        return $this->deskRentals()->activeOn(today())->with('space')->get();
+    }
+
+    /** Desks of this member active on a day (for the free room slots of that week). */
+    public function deskCountOn(Carbon $day): int
+    {
+        return $this->deskRentals()->activeOn($day)->count();
     }
 
     public function decidedBy(): BelongsTo

@@ -8,6 +8,7 @@
         <a class="btn" href="{{ route('afrit6.login') }}" target="_blank" rel="noopener">{{ __('afrit6.staff.open_portal') }}</a>
     </div>
     @include('partials.flash')
+    @include('afrit6.staff._tabs', ['section' => 'members'])
 
     <nav class="tabs" aria-label="{{ __('nav.items.afrit6') }}">
         @foreach (\App\Http\Controllers\Afrit6\MemberAdminController::TABS as $t)

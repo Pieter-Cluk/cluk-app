@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'nav' => \App\Http\Middleware\EnsureNavAccess::class,
             'level' => \App\Http\Middleware\EnsureModuleLevel::class,
             'right' => \App\Http\Middleware\EnsureRight::class,
+            'member.active' => \App\Http\Middleware\EnsureActiveMember::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

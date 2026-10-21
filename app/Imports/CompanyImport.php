@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Company;
 use App\Models\User;
 use App\Support\VatNumber;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 /**
@@ -14,7 +15,7 @@ use Illuminate\Support\Str;
  */
 class CompanyImport extends Importer
 {
-    /** @var \Illuminate\Support\Collection<int, User>|null */
+    /** @var Collection<int, User>|null */
     private $users = null;
 
     public static function sheetNames(): array
