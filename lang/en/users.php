@@ -180,6 +180,7 @@ return [
             'factory_confirmed' => 'Cluk Factory booking confirmed',
             'factory_done' => 'Cluk Factory booking done',
             'factory_cancelled' => 'Cluk Factory booking cancelled',
+            'wall_renewed' => 'Made a new wall screen link',
             'subhire_sent' => 'Sent a sub-hire price request',
             'subhire_accepted' => 'Confirmed a sub-hire',
             'subhire_not_available' => 'Sub-hire not available',

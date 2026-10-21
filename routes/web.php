@@ -28,6 +28,7 @@ use App\Http\Controllers\Settings\ImportController;
 use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\UserController;
 use App\Http\Controllers\Settings\VatRateController;
+use App\Http\Controllers\WallController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,9 @@ Route::get('/terms/{lang?}', function (?string $lang = null) {
 // The public Cluk Factory booking page (also for the website).
 Route::get('/book', [FactoryPublicController::class, 'show'])->name('factory.book');
 Route::post('/book', [FactoryPublicController::class, 'store'])->middleware('throttle:10,1')->name('factory.book.store');
+
+// Office wall screens: a secret link per screen, no login on the screen PC.
+Route::get('/wall/{view}', [WallController::class, 'show'])->whereIn('view', ['planning', 'today'])->middleware('throttle:120,1')->name('wall.show');
 
 // The customer's quote page (link in the quote email).
 Route::prefix('q/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {
@@ -316,6 +320,13 @@ Route::middleware('auth:web')->group(function () {
         });
     });
 
+    // Wall screens: display links and settings.
+    Route::middleware('nav:wallscreens')->group(function () {
+        Route::get('/wall-screens', [WallController::class, 'index'])->name('wall.index');
+        Route::post('/wall-screens/{screen}/renew', [WallController::class, 'renew'])->whereNumber('screen')->name('wall.renew');
+        Route::put('/wall-screens/{screen}', [WallController::class, 'update'])->whereNumber('screen')->name('wall.update');
+    });
+
     // Sub-hire: price requests (SHQ) and confirmations (SHC).
     Route::prefix('sub-hire')->middleware('nav:subhire')->group(function () {
         Route::get('/', [SubhireController::class, 'index'])->name('subhire.index');
@@ -332,7 +343,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'wallscreens', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

@@ -586,3 +586,5 @@ img.av{object-fit:cover;background:var(--surface-subtle);padding:0}
 .date-chip b{font-size:18px;line-height:1}.date-chip small{font-size:11px;color:var(--muted);text-transform:uppercase}
 .checks.one-col{grid-template-columns:1fr}
 @media (max-width:700px){.fday{min-height:52px}.fbar{font-size:0;height:8px;padding:0}}
+.split-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:900px){.split-2{grid-template-columns:1fr}}

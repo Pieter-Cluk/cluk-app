@@ -180,6 +180,7 @@ return [
             'factory_confirmed' => 'Réservation Cluk Factory confirmée',
             'factory_done' => 'Réservation Cluk Factory terminée',
             'factory_cancelled' => 'Réservation Cluk Factory annulée',
+            'wall_renewed' => 'Nouveau lien d’écran mural',
             'subhire_sent' => 'Demande de prix de sous-location envoyée',
             'subhire_accepted' => 'Sous-location confirmée',
             'subhire_not_available' => 'Sous-location indisponible',

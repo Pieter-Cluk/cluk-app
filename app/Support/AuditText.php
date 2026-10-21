@@ -16,6 +16,7 @@ use App\Models\Role;
 use App\Models\Sales\Quote;
 use App\Models\User;
 use App\Models\VatRate;
+use App\Models\WallScreen;
 
 /** Turns an audit log line into a short sentence in the reader's language. */
 class AuditText
@@ -42,6 +43,7 @@ class AuditText
             $subject instanceof Asset => $subject->code,
             $subject instanceof Quote => $subject->code().' · '.$subject->title,
             $subject instanceof Booking => $subject->number.' · '.$subject->title,
+            $subject instanceof WallScreen => __('wall.admin.screen_'.$subject->view),
             $subject instanceof Order => $subject->number.' · '.$subject->title,
             $subject instanceof SubhireRequest => $subject->code().' · '.$subject->supplier?->name,
             $subject instanceof ServiceRequest => __('workspace.kinds.'.$subject->kind).' · '.$subject->member?->name,

@@ -180,6 +180,7 @@ return [
             'factory_confirmed' => 'Cluk Factory-boeking bevestigd',
             'factory_done' => 'Cluk Factory-boeking afgerond',
             'factory_cancelled' => 'Cluk Factory-boeking geannuleerd',
+            'wall_renewed' => 'Nieuwe wandschermlink gemaakt',
             'subhire_sent' => 'Bijhuur-prijsaanvraag verstuurd',
             'subhire_accepted' => 'Bijhuur bevestigd',
             'subhire_not_available' => 'Bijhuur niet beschikbaar',
