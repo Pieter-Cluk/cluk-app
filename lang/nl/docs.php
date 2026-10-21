@@ -7,12 +7,14 @@ return [
         'dn' => 'Leverbon',
         'ret' => 'Retourcontrole',
         'pf' => 'Proforma',
+        'ch' => 'Proforma · retourkosten',
     ],
     'flags' => [
         'pick' => 'intern · zonder prijzen',
         'dn' => 'overdracht · zonder prijzen',
         'ret' => 'intern · zonder prijzen',
         'pf' => 'geen factuur',
+        'ch' => 'geen factuur',
     ],
     'meaning' => [
         'pick' => 'Wat uit de rekken moet: serienummers met hun locatie, kits en pakketinhoud, binnenkomende bijhuur.',
@@ -26,6 +28,7 @@ return [
         'dn' => 'Geleverd aan',
         'ret' => 'Teruggebracht door',
         'pf' => 'Uitgereikt aan',
+        'ch' => 'Uitgereikt aan',
     ],
     'order' => 'Order',
     'cols' => [
@@ -87,5 +90,9 @@ return [
     'flash' => [
         'pf_sent' => 'Proforma verstuurd naar :email.',
         'pf_not_sent' => 'De proforma kon niet gemaild worden. Druk ze af en stuur ze zelf.',
+    ],
+    'ch' => [
+        'intro' => 'Kosten vastgesteld toen het materiaal van order :order terugkwam: opkuis, ontbrekende onderdelen of schade. De factuur volgt apart.',
+        'when' => 'Gelieve te betalen bij ontvangst, tenzij schriftelijk anders afgesproken.',
     ],
 ];

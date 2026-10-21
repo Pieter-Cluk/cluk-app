@@ -7,6 +7,7 @@ use App\Models\Contact;
 use App\Models\Sales\Deal;
 use App\Models\Sales\Quote;
 use App\Models\User;
+use App\Models\Warehouse\Charge;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 #[Fillable([
     'number', 'status', 'quote_id', 'deal_id', 'company_id', 'contact_id', 'title', 'language', 'out_from', 'out_until',
     'use_from', 'use_until', 'location', 'po_number', 'confirmed_name', 'confirmed_at', 'confirmed_online', 'customer_email',
-    'handed_by_id', 'assignee_id', 'approved_at', 'approved_by_id', 'cancelled_at', 'cancel_reason', 'project_discount_bp',
+    'handed_by_id', 'assignee_id', 'approved_at', 'approved_by_id', 'loaded_at', 'loaded_by_id', 'returned_at', 'cancelled_at', 'cancel_reason', 'project_discount_bp',
     'vat_code', 'vat_rate_bp', 'subtotal_cents', 'discount_cents', 'net_cents', 'vat_cents', 'gross_cents',
 ])]
 class Order extends Model
@@ -36,7 +37,7 @@ class Order extends Model
     {
         return [
             'out_from' => 'datetime', 'out_until' => 'datetime', 'use_from' => 'date', 'use_until' => 'date',
-            'confirmed_at' => 'datetime', 'approved_at' => 'datetime', 'cancelled_at' => 'datetime', 'confirmed_online' => 'boolean',
+            'confirmed_at' => 'datetime', 'approved_at' => 'datetime', 'loaded_at' => 'datetime', 'returned_at' => 'datetime', 'cancelled_at' => 'datetime', 'confirmed_online' => 'boolean',
             'project_discount_bp' => 'integer', 'vat_rate_bp' => 'integer', 'subtotal_cents' => 'integer', 'discount_cents' => 'integer',
             'net_cents' => 'integer', 'vat_cents' => 'integer', 'gross_cents' => 'integer',
         ];
@@ -50,6 +51,12 @@ class Order extends Model
     public function assets(): HasMany
     {
         return $this->hasMany(OrderAsset::class);
+    }
+
+    /** Costs found at the return check (cleaning, missing parts, damage). */
+    public function charges(): HasMany
+    {
+        return $this->hasMany(Charge::class);
     }
 
     public function subhires(): HasMany

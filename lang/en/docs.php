@@ -7,12 +7,14 @@ return [
         'dn' => 'Delivery note',
         'ret' => 'Return checklist',
         'pf' => 'Proforma',
+        'ch' => 'Proforma · return charges',
     ],
     'flags' => [
         'pick' => 'internal · no prices',
         'dn' => 'handover · no prices',
         'ret' => 'internal · no prices',
         'pf' => 'not a tax invoice',
+        'ch' => 'not a tax invoice',
     ],
     'meaning' => [
         'pick' => 'What to take from the racks: serial numbers with their location, kits and package contents, sub-hire coming in.',
@@ -26,6 +28,7 @@ return [
         'dn' => 'Delivered to',
         'ret' => 'Returned by',
         'pf' => 'Issued to',
+        'ch' => 'Issued to',
     ],
     'order' => 'Order',
     'cols' => [
@@ -87,5 +90,9 @@ return [
     'flash' => [
         'pf_sent' => 'Proforma sent to :email.',
         'pf_not_sent' => 'The proforma could not be emailed. Print it and send it yourself.',
+    ],
+    'ch' => [
+        'intro' => 'Costs found when the equipment of order :order came back: cleaning, missing parts or damage. The invoice follows separately.',
+        'when' => 'Please pay on receipt, unless other terms were agreed in writing.',
     ],
 ];

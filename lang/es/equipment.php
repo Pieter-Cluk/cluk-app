@@ -132,6 +132,7 @@ return [
     'statuses' => [
         'available' => 'Disponible',
         'out' => 'En trabajo',
+        'check' => 'En control',
         'repair' => 'En reparación',
         'retired' => 'De baja',
     ],

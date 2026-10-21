@@ -7,12 +7,14 @@ return [
         'dn' => 'Albarán de entrega',
         'ret' => 'Control de devolución',
         'pf' => 'Factura proforma',
+        'ch' => 'Proforma · cargos de retorno',
     ],
     'flags' => [
         'pick' => 'interno · sin precios',
         'dn' => 'entrega · sin precios',
         'ret' => 'interno · sin precios',
         'pf' => 'no es una factura',
+        'ch' => 'no es una factura',
     ],
     'meaning' => [
         'pick' => 'Qué sacar de las estanterías: números de serie con su ubicación, kits y contenido de paquetes, subalquiler entrante.',
@@ -26,6 +28,7 @@ return [
         'dn' => 'Entregado a',
         'ret' => 'Devuelto por',
         'pf' => 'Emitido a',
+        'ch' => 'Emitido a',
     ],
     'order' => 'Pedido',
     'cols' => [
@@ -87,5 +90,9 @@ return [
     'flash' => [
         'pf_sent' => 'Proforma enviada a :email.',
         'pf_not_sent' => 'No se pudo enviar la proforma. Imprímela y envíala tú.',
+    ],
+    'ch' => [
+        'intro' => 'Costes detectados al volver el material del pedido :order: limpieza, piezas que faltan o daños. La factura llegará por separado.',
+        'when' => 'Por favor, pague a la recepción, salvo otras condiciones acordadas por escrito.',
     ],
 ];

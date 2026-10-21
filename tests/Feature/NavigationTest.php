@@ -68,7 +68,8 @@ class NavigationTest extends TestCase
     {
         $crew = $this->as('warehouse');
 
-        $this->actingAs($crew)->get('/warehouse')->assertOk()->assertSee('Coming soon');
+        $this->actingAs($crew)->get('/product-sales')->assertForbidden();
+        $this->actingAs($crew)->get('/warehouse')->assertOk()->assertSee('Movement log');
         $this->actingAs($crew)->get('/pre-invoicing')->assertForbidden();
         $this->actingAs($crew)->get('/settings/users')->assertForbidden();
     }

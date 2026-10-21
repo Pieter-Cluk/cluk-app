@@ -16,7 +16,7 @@
             <section class="card">
                 <h2>{{ __('equipment.details') }}</h2>
                 <dl class="facts">
-                    <dt>{{ __('equipment.fields.location') }}</dt><dd>{{ $asset->location ?? '—' }}</dd>
+                    <dt>{{ __('equipment.fields.location') }}</dt><dd>{{ $asset->location ? \App\Services\Warehouse\Moves::label($asset->location).($asset->location !== \App\Services\Warehouse\Moves::label($asset->location) ? ' · '.$asset->location : '') : '—' }}@if ($asset->outOrder) · {{ $asset->outOrder->number }}@endif</dd>
                     <dt>{{ __('equipment.fields.purchase_date') }}</dt><dd>{{ $asset->purchase_date?->format('d/m/Y') ?? '—' }}</dd>
                     @if ($canMoney)
                         <dt>{{ __('equipment.fields.purchase_price') }}</dt><dd>{{ $asset->purchase_price_cents !== null ? $eur($asset->purchase_price_cents) : '—' }}</dd>
@@ -67,6 +67,14 @@
                 <div class="qr-preview">{!! \App\Support\QrSvg::make(route('equipment.scan', $asset->code)) !!}<b>{{ $asset->code }}</b></div>
                 <p class="muted small">{{ __('equipment.label_hint') }}</p>
                 @if ($canEdit && ! $retired)<a class="btn wide" href="{{ route('equipment.labels', ['assets' => $asset->id]) }}" target="_blank" rel="noopener">{{ __('equipment.print') }}</a>@endif
+            </section>
+            <section class="card">
+                <h2>{{ __('warehouse.office.moves') }}</h2>
+                @forelse ($asset->moves()->with(['user', 'order'])->limit(15)->get() as $m)
+                    <div class="log-line"><small class="muted">{{ $fmt($m->created_at) }} · {{ $m->user?->name }}</small><div>{{ __('warehouse.kinds.'.$m->kind) }} · {{ \App\Services\Warehouse\Moves::label($m->from_code) }} → {{ \App\Services\Warehouse\Moves::label($m->to_code) }}@if ($m->order) <span class="muted">· {{ $m->order->number }}</span>@endif</div></div>
+                @empty
+                    <p class="muted">{{ __('warehouse.office.no_moves') }}</p>
+                @endforelse
             </section>
             <section class="card">
                 <h2>{{ __('users.edit.activity') }}</h2>

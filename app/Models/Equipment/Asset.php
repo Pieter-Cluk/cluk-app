@@ -2,14 +2,17 @@
 
 namespace App\Models\Equipment;
 
+use App\Models\Rental\Order;
+use App\Models\Warehouse\Move;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /** One physical piece of a serial item, with its own code and QR label. */
 #[Fillable([
-    'item_id', 'code', 'serial_number', 'status', 'location', 'purchase_date', 'purchase_price_cents',
+    'item_id', 'code', 'serial_number', 'status', 'location', 'out_order_id', 'repair_released_at', 'purchase_date', 'purchase_price_cents',
     'supplier', 'warranty_until', 'note', 'retired_reason', 'retired_at', 'label_printed_at',
 ])]
 class Asset extends Model
@@ -22,9 +25,12 @@ class Asset extends Model
 
     public const REPAIR = 'repair';
 
+    /** Back from a job and on its way through cleaning and the check: not rentable yet. */
+    public const CHECK = 'check';
+
     public const RETIRED = 'retired';
 
-    public const STATUSES = [self::AVAILABLE, self::OUT, self::REPAIR, self::RETIRED];
+    public const STATUSES = [self::AVAILABLE, self::OUT, self::CHECK, self::REPAIR, self::RETIRED];
 
     public const RETIRE_REASONS = ['sold', 'lost', 'stolen', 'broken'];
 
@@ -32,13 +38,23 @@ class Asset extends Model
     {
         return [
             'purchase_date' => 'date', 'warranty_until' => 'date', 'retired_at' => 'datetime',
-            'label_printed_at' => 'datetime', 'purchase_price_cents' => 'integer',
+            'label_printed_at' => 'datetime', 'purchase_price_cents' => 'integer', 'repair_released_at' => 'datetime',
         ];
     }
 
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function moves(): HasMany
+    {
+        return $this->hasMany(Move::class)->latest('id');
+    }
+
+    public function outOrder(): BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'out_order_id');
     }
 
     /** Next free code for an item's prefix: LT-0001, LT-0002, … */

@@ -30,6 +30,9 @@ use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\UserController;
 use App\Http\Controllers\Settings\VatRateController;
 use App\Http\Controllers\WallController;
+use App\Http\Controllers\Warehouse\LocationController;
+use App\Http\Controllers\Warehouse\PhoneController;
+use App\Http\Controllers\Warehouse\WarehouseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -331,6 +334,50 @@ Route::middleware('auth:web')->group(function () {
         });
     });
 
+    // Warehouse: the app on the crew's phone (scan the piece, then where it goes).
+    Route::get('/l/{code}', fn (string $code) => redirect()->route('w.scan', ['scanned' => strtoupper($code)]))->where('code', '[A-Za-z0-9\-]+')->middleware('nav:warehouse')->name('w.loc');
+    Route::prefix('w')->name('w.')->middleware('nav:warehouse')->group(function () {
+        Route::get('/', [PhoneController::class, 'home'])->name('home');
+        Route::get('/scan', [PhoneController::class, 'scan'])->name('scan');
+        Route::get('/pick/{order}', [PhoneController::class, 'pick'])->whereNumber('order')->name('pick');
+        Route::get('/return/{order}', [PhoneController::class, 'returns'])->whereNumber('order')->name('return');
+        Route::get('/clean/{asset}', [PhoneController::class, 'clean'])->whereNumber('asset')->name('clean');
+        Route::get('/check/{asset}', [PhoneController::class, 'check'])->whereNumber('asset')->name('check');
+        Route::get('/photos/{check}/{i}', [PhoneController::class, 'photo'])->whereNumber(['check', 'i'])->name('photo');
+        Route::middleware('level:warehouse,2')->group(function () {
+            Route::post('/scan', [PhoneController::class, 'scanPost'])->middleware('throttle:120,1')->name('scan.post');
+            Route::post('/scan/cancel', [PhoneController::class, 'cancel'])->name('scan.cancel');
+            Route::post('/pick/{order}/scan', [PhoneController::class, 'pickScan'])->whereNumber('order')->name('pick.scan');
+            Route::post('/pick/{order}/lines/{line}', [PhoneController::class, 'pickCount'])->whereNumber(['order', 'line'])->name('count');
+            Route::post('/pick/{order}/load', [PhoneController::class, 'load'])->whereNumber('order')->name('load');
+            Route::post('/return/{order}/scan', [PhoneController::class, 'returnScan'])->whereNumber('order')->name('return.scan');
+            Route::post('/return/{order}/close', [PhoneController::class, 'returnClose'])->whereNumber('order')->name('return.close');
+            Route::post('/clean/{asset}', [PhoneController::class, 'cleanSave'])->whereNumber('asset')->name('clean.save');
+            Route::post('/check/{asset}', [PhoneController::class, 'checkSave'])->whereNumber('asset')->name('check.save');
+        });
+    });
+
+    // Warehouse for the office: where everything is, repairs, charges to approve.
+    Route::prefix('warehouse')->middleware('nav:warehouse')->group(function () {
+        Route::get('/', [WarehouseController::class, 'index'])->name('warehouse.index');
+        Route::post('/assets/{asset}/release', [WarehouseController::class, 'release'])->whereNumber('asset')->middleware('right:warehouse.release_repair')->name('warehouse.release');
+        Route::get('/charges/{order}', [WarehouseController::class, 'charges'])->whereNumber('order')->name('warehouse.charges');
+        Route::post('/charges/line/{charge}', [WarehouseController::class, 'updateCharge'])->whereNumber('charge')->name('warehouse.charge.update');
+        Route::post('/charges/{order}/approve', [WarehouseController::class, 'approveCharges'])->whereNumber('order')->name('warehouse.charges.approve');
+        Route::get('/charges/{order}/proforma', [WarehouseController::class, 'proforma'])->whereNumber('order')->name('warehouse.charges.proforma');
+    });
+
+    // Settings › Warehouse locations: zones, route, storage positions, labels.
+    Route::prefix('settings/warehouse-locations')->middleware('nav:locations')->group(function () {
+        Route::get('/', [LocationController::class, 'index'])->name('locations.index');
+        Route::post('/', [LocationController::class, 'store'])->name('locations.store');
+        Route::put('/zones/{zone}', [LocationController::class, 'update'])->whereNumber('zone')->name('locations.update');
+        Route::get('/positions', [LocationController::class, 'positions'])->name('locations.positions');
+        Route::put('/positions/{position}', [LocationController::class, 'updatePosition'])->whereNumber('position')->name('locations.position.update');
+        Route::post('/positions/{position}/switch', [LocationController::class, 'switchLayer'])->whereNumber('position')->name('locations.position.switch');
+        Route::get('/labels', [LocationController::class, 'labels'])->name('locations.labels');
+    });
+
     // Wall screens: display links and settings.
     Route::middleware('nav:wallscreens')->group(function () {
         Route::get('/wall-screens', [WallController::class, 'index'])->name('wall.index');
@@ -354,7 +401,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'wallscreens', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'wallscreens', 'warehouse', 'locations', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

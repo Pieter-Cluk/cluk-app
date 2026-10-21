@@ -614,3 +614,33 @@ img.av{object-fit:cover;background:var(--surface-subtle);padding:0}
 .ftask-foot{padding:12px 20px;border-top:1px solid var(--line);margin:0}
 .ftask-foot + .ftask-foot{border-top:0;padding-top:0}
 .ftask-foot summary{cursor:pointer;font-weight:600;color:var(--brand-text, var(--ink))}
+
+/* Warehouse office: route of zones, storage positions */
+.card-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:14px;padding-bottom:14px}
+.w-sm{width:100px}
+.wz-route{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.wz{position:relative;display:grid;gap:2px;padding:10px 34px 10px 12px;min-width:120px;border:1px solid var(--line);border-radius:8px;background:var(--surface-subtle);text-decoration:none;color:var(--ink)}
+.wz small{color:var(--muted);font-size:11px}
+.wz-n{position:absolute;top:8px;right:10px;font-weight:800}
+.wz-cleaning{border-color:#9cc8ea}.wz-repair{border-color:var(--danger-text)}.wz-storage{border-color:var(--brand)}
+.wz-on{box-shadow:0 0 0 2px var(--brand);background:var(--brand-tint)}
+.row-sel td{background:var(--brand-tint)}.row-off td{opacity:.5}
+.wp-anat{display:flex;gap:6px;margin:0 0 14px}
+.wp-anat span{display:grid;justify-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.wp-anat b{font-size:22px;font-family:ui-monospace,Menlo,monospace}
+.wp-anat small{color:var(--muted);font-size:11px}
+.wp-racks{display:flex;flex-wrap:wrap;gap:12px}
+.wp-rack{border:1px solid var(--line);border-radius:8px;padding:8px;display:grid;gap:4px;background:var(--surface-subtle)}
+.wp-rack-name{font-size:12px;font-family:ui-monospace,Menlo,monospace}
+.wp-layer{display:flex;gap:4px;align-items:center}
+.wp-layer-name{width:12px;font-size:10px;color:var(--muted)}
+.wp-spot{display:flex;align-items:center;justify-content:center;height:30px;border-radius:4px;font-size:10px;text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--surface)}
+.wp-shelf,.legend-row i.wp-shelf{width:30px}
+.wp-pallet,.legend-row i.wp-pallet{width:48px;background:#eef1ec}
+.wp-occ,.legend-row i.wp-occ{background:#cfe6c4;border-color:var(--brand)}
+.wp-a6,.legend-row i.wp-a6{background:var(--warning-bg);border-color:var(--warning-text)}
+.wp-sales{background:var(--info-bg)}
+.wp-on{box-shadow:0 0 0 2px var(--ink)}
+.legend-row i.wp-shelf,.legend-row i.wp-pallet,.legend-row i.wp-occ,.legend-row i.wp-a6{display:inline-block;height:12px;border:1px solid var(--line);border-radius:3px;margin-right:6px;vertical-align:middle}
+.wp-qr svg{width:120px;height:120px}
+.wp-qr svg path,.qr-preview svg path{fill:var(--ink)}

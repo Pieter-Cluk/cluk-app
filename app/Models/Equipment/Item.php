@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * A package is sold as one line but made of items; a case holds items.
  */
 #[Fillable([
-    'number', 'kind', 'category', 'subcategory', 'brand', 'type', 'name', 'unit', 'serial', 'stock_qty',
+    'number', 'kind', 'category', 'subcategory', 'brand', 'type', 'name', 'unit', 'serial', 'stock_qty', 'position_code',
     'day_price_cents', 'price_unit', 'catalog_price_cents', 'weight_kg', 'width_m', 'length_m', 'height_m', 'origin', 'hs_code',
     'descriptions', 'photo_path', 'in_search', 'active',
 ])]

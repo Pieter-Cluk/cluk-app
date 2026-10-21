@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** A line of a rental order, covered by own stock (serial numbers or a count) and/or sub-hire. */
-#[Fillable(['order_id', 'position', 'kind', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp', 'amount_cents', 'own_qty'])]
+#[Fillable(['order_id', 'position', 'kind', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp', 'amount_cents', 'own_qty', 'picked_qty', 'returned_qty'])]
 class OrderLine extends Model
 {
     protected function casts(): array
     {
-        return ['qty' => 'decimal:2', 'factor' => 'decimal:2', 'unit_price_cents' => 'integer', 'discount_bp' => 'integer', 'amount_cents' => 'integer', 'own_qty' => 'integer'];
+        return ['qty' => 'decimal:2', 'factor' => 'decimal:2', 'unit_price_cents' => 'integer', 'discount_bp' => 'integer', 'amount_cents' => 'integer', 'own_qty' => 'integer', 'picked_qty' => 'integer', 'returned_qty' => 'integer'];
     }
 
     public function order(): BelongsTo

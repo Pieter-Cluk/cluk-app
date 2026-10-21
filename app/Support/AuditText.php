@@ -17,6 +17,8 @@ use App\Models\Sales\Quote;
 use App\Models\User;
 use App\Models\VatRate;
 use App\Models\WallScreen;
+use App\Models\Warehouse\Position;
+use App\Models\Warehouse\Zone;
 
 /** Turns an audit log line into a short sentence in the reader's language. */
 class AuditText
@@ -43,6 +45,8 @@ class AuditText
             $subject instanceof Asset => $subject->code,
             $subject instanceof Quote => $subject->code().' · '.$subject->title,
             $subject instanceof Booking => $subject->number.' · '.$subject->title,
+            $subject instanceof Zone => $subject->code.' · '.$subject->label(),
+            $subject instanceof Position => $subject->code,
             $subject instanceof WallScreen => __('wall.admin.screen_'.$subject->view),
             $subject instanceof Order => $subject->number.' · '.$subject->title,
             $subject instanceof SubhireRequest => $subject->code().' · '.$subject->supplier?->name,
@@ -101,6 +105,9 @@ class AuditText
             'factory.task_added', 'factory.task_assigned' => ($d['task'] ?? '').(isset($d['to']) ? ' → '.$d['to'] : ''),
             'factory.task_done', 'factory.task_reopened' => (string) ($d['task'] ?? ''),
             'order.cancelled' => (string) ($d['reason'] ?? ''),
+            'warehouse.checked' => __('warehouse.check.result_'.($d['result'] ?? 'ok')).(isset($d['order']) ? ' · '.$d['order'] : ''),
+            'warehouse.charges_approved' => trim(($d['total'] ?? '').' · '.trans_choice('warehouse.office.lines_waiting', (int) ($d['lines'] ?? 0), ['n' => (int) ($d['lines'] ?? 0)]), ' ·'),
+            'warehouse.layer_switched' => ($d['layer'] ?? '').' → '.__('warehouse.settings.'.(($d['to'] ?? 'shelf') === 'pallet' ? 'pallet' : 'shelf')),
             'subhire.sent' => trim(($d['supplier'] ?? '').' · '.($d['to'] ?? ''), ' ·'),
             'subhire.accepted' => trim(($d['supplier'] ?? '').' · '.($d['total'] ?? ''), ' ·'),
             'subhire.not_available' => (string) ($d['supplier'] ?? ''),

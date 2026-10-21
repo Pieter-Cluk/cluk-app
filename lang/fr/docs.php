@@ -7,12 +7,14 @@ return [
         'dn' => 'Bon de livraison',
         'ret' => 'Contrôle de retour',
         'pf' => 'Facture proforma',
+        'ch' => 'Proforma · frais de retour',
     ],
     'flags' => [
         'pick' => 'interne · sans prix',
         'dn' => 'remise · sans prix',
         'ret' => 'interne · sans prix',
         'pf' => 'pas une facture',
+        'ch' => 'pas une facture',
     ],
     'meaning' => [
         'pick' => 'Ce qu’il faut prendre dans les racks : numéros de série et emplacement, kits et contenu des packs, sous-location entrante.',
@@ -26,6 +28,7 @@ return [
         'dn' => 'Livré à',
         'ret' => 'Retourné par',
         'pf' => 'Émis pour',
+        'ch' => 'Émis pour',
     ],
     'order' => 'Commande',
     'cols' => [
@@ -87,5 +90,9 @@ return [
     'flash' => [
         'pf_sent' => 'Proforma envoyée à :email.',
         'pf_not_sent' => 'La proforma n’a pas pu être envoyée. Imprimez-la et envoyez-la vous-même.',
+    ],
+    'ch' => [
+        'intro' => 'Frais constatés au retour du matériel de la commande :order : nettoyage, pièces manquantes ou dégâts. La facture suit séparément.',
+        'when' => 'Merci de payer à réception, sauf conditions convenues par écrit.',
     ],
 ];
