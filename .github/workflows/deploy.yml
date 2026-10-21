@@ -121,7 +121,13 @@ jobs:
 
       - name: Check the site answers
         run: |
-          sleep 5
+          # The web server sometimes needs a moment after the switch: try for up to a minute.
+          for i in 1 2 3 4 5 6; do
+            sleep 10
+            c=$(curl -4 -s -o /dev/null -m 15 -w '%{http_code}' "$APP_URL/login" || true)
+            echo "Try $i: HTTP $c"
+            [ "$c" = "200" ] && break
+          done
           # Straight to the one.com web server, so the app can be checked before DNS points there.
           ONECOM_IP=$(getent ahostsv4 3e3535bb.website.cys6r88bx.service.one | awk '{print $1}' | head -1)
           echo "one.com web server: $ONECOM_IP"
@@ -130,7 +136,7 @@ jobs:
           echo "Direct to one.com: HTTP $direct"
           if grep -q 'Microsoft' /tmp/direct.html; then echo "Direct: login page OK"; echo "DIRECT_PAGE=login page OK" >> "$GITHUB_ENV"; fi
           echo "DIRECT=$direct" >> "$GITHUB_ENV"
-          code=$(curl -s -o /tmp/login.html -w '%{http_code}' "$APP_URL/login" || true)
+          code=$(curl -4 -s -o /tmp/login.html -w '%{http_code}' "$APP_URL/login" || true)
           echo "Public address: HTTP $code"
           echo "PUBLIC=$code" >> "$GITHUB_ENV"
           if [ "$code" = "200" ]; then exit 0; fi
