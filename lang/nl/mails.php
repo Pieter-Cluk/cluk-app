@@ -41,6 +41,11 @@ return [
         'delivery' => 'Levering bij ons',
         'return_partner' => 'Terug naar u',
         'days' => 'Huurdagen',
+        'amount' => 'Te betalen bedrag',
+        'iban' => 'IBAN',
+        'bic' => 'BIC',
+        'beneficiary' => 'Begunstigde',
+        'reference' => 'Mededeling',
     ],
     'subhire' => [
         'request_subject' => 'Aanvraag beschikbaarheid en prijs :number',
@@ -58,6 +63,12 @@ return [
         'staff_subject' => 'Order goedgekeurd: :title (:number)',
         'staff_intro' => ':name keurde order :number voor :customer goed. De orderbevestiging ging naar :email.',
         'staff_button' => 'Open de order',
+    ],
+    'pf' => [
+        'subject' => 'Proforma :number · :title',
+        'intro' => 'Hier is de proforma voor “:title”: het bedrag om te betalen vóór de afhaling.',
+        'next' => 'Gebruik de mededeling, dan koppelen we uw betaling meteen. De factuur volgt apart.',
+        'button' => 'Proforma (PDF)',
     ],
     'quote' => [
         'sent_subject' => 'Uw offerte van CLUK: :title',

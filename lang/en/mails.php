@@ -41,6 +41,11 @@ return [
         'delivery' => 'Delivery to us',
         'return_partner' => 'Return to you',
         'days' => 'Rental days',
+        'amount' => 'Amount to pay',
+        'iban' => 'IBAN',
+        'bic' => 'BIC',
+        'beneficiary' => 'Beneficiary',
+        'reference' => 'Payment reference',
     ],
     'subhire' => [
         'request_subject' => 'Availability and price request :number',
@@ -58,6 +63,12 @@ return [
         'staff_subject' => 'Order approved: :title (:number)',
         'staff_intro' => ':name approved order :number for :customer. The order confirmation went to :email.',
         'staff_button' => 'Open the order',
+    ],
+    'pf' => [
+        'subject' => 'Proforma :number · :title',
+        'intro' => 'Here is the proforma for “:title”: the amount to pay before collection.',
+        'next' => 'Please use the payment reference so we can match your payment. The invoice follows separately.',
+        'button' => 'Proforma (PDF)',
     ],
     'quote' => [
         'sent_subject' => 'Your quote from CLUK: :title',

@@ -172,6 +172,7 @@ return [
             'order_approved' => 'Approved an order and sent the confirmation',
             'order_assigned' => 'Handed an order over',
             'order_cancelled' => 'Cancelled an order',
+            'order_proforma_sent' => 'Sent a proforma',
             'subhire_sent' => 'Sent a sub-hire price request',
             'subhire_accepted' => 'Confirmed a sub-hire',
             'subhire_not_available' => 'Sub-hire not available',

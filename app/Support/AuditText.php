@@ -89,6 +89,7 @@ class AuditText
             'order.created' => trim(($d['quote'] ?? '').' · '.($d['total'] ?? ''), ' ·'),
             'order.approved' => trim(($d['to'] ?? '').' · '.($d['total'] ?? ''), ' ·'),
             'order.assigned' => ($d['from'] ?? '—').' → '.($d['to'] ?? ''),
+            'order.proforma_sent' => trim(($d['number'] ?? '').' · '.($d['to'] ?? ''), ' ·'),
             'order.cancelled' => (string) ($d['reason'] ?? ''),
             'subhire.sent' => trim(($d['supplier'] ?? '').' · '.($d['to'] ?? ''), ' ·'),
             'subhire.accepted' => trim(($d['supplier'] ?? '').' · '.($d['total'] ?? ''), ' ·'),

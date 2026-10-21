@@ -2,6 +2,7 @@
 
 namespace App\Services\Rental;
 
+use App\Models\BankAccount;
 use App\Models\CompanyDetail;
 use App\Models\Rental\Order;
 use App\Models\Rental\SubhireRequest;
@@ -115,6 +116,34 @@ class OrderMails
                 rows: $rows, totals: $totals,
                 next: [__('mails.order.next', ['address' => self::warehouse()]), __('mails.quote.terms_line')],
                 button: $o->quote?->token ? [__('mails.order.button'), route('quote.public.order', $o->quote->token)] : null,
+                signer: $by,
+            );
+        });
+    }
+
+    /** The proforma: what to pay before collection, with the bank details. */
+    public static function proforma(Order $o, User $by): bool
+    {
+        $o->loadMissing(['contact', 'quote']);
+        $bank = BankAccount::where('on_documents', true)->orderByDesc('is_main')->first();
+
+        return self::send($o->customer_email, $o->language, function () use ($o, $by, $bank) {
+            $number = str_replace('R-OC', 'R-PF', $o->number);
+            $first = $o->contact?->first_name ?? ($o->confirmed_name ? Str::before($o->confirmed_name, ' ') : null);
+
+            return new Confirmation(
+                subject: __('mails.pf.subject', ['title' => $o->title, 'number' => $number]),
+                greeting: self::hello($first),
+                intro: [__('mails.pf.intro', ['title' => $o->title])],
+                details: array_filter([
+                    __('mails.label.amount') => Pricing::eur($o->gross_cents),
+                    __('mails.label.iban') => $bank?->formattedIban(),
+                    __('mails.label.bic') => $bank?->bic,
+                    __('mails.label.beneficiary') => trim(CompanyDetail::current()->legal_name.' '.CompanyDetail::current()->legal_form),
+                    __('mails.label.reference') => $number,
+                ]),
+                next: [__('mails.pf.next')],
+                button: $o->quote?->token ? [__('mails.pf.button'), route('quote.public.proforma', $o->quote->token)] : null,
                 signer: $by,
             );
         });

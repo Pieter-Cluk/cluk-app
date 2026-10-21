@@ -173,6 +173,27 @@
         @endif
     </section>
 
+    @if ($order->status === 'approved')
+        <section class="card">
+            <h2>{{ __('docs.title') }}</h2>
+            <div class="doc-links">
+                @foreach (\App\Http\Controllers\Rental\OrderDocumentController::TYPES as $t => $prefix)
+                    <a class="doc-link" href="{{ route('orders.doc', [$order, $t]) }}" target="_blank" rel="noopener">
+                        <b>{{ __('docs.titles.'.$t) }}</b>
+                        <small class="muted">{{ \App\Http\Controllers\Rental\OrderDocumentController::number($order, $t) }} · {{ __('docs.flags.'.$t) }}</small>
+                        <small>{{ __('docs.meaning.'.$t) }}</small>
+                    </a>
+                @endforeach
+            </div>
+            @if (auth()->user()->hasRight('orders.approve') && $order->customer_email)
+                <form method="post" action="{{ route('orders.proforma', $order) }}" class="inline-form mt">
+                    @csrf
+                    <button class="btn" type="submit">{{ __('docs.send_pf', ['email' => $order->customer_email]) }}</button>
+                </form>
+            @endif
+        </section>
+    @endif
+
     @if ($order->isInAllocation() && auth()->user()->canUseModule('dryhire', 3))
         <details class="card">
             <summary>{{ __('orders.cancel') }}</summary>

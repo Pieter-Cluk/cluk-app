@@ -172,6 +172,7 @@ return [
             'order_approved' => 'Pedido aprobado y confirmación enviada',
             'order_assigned' => 'Pedido traspasado',
             'order_cancelled' => 'Pedido cancelado',
+            'order_proforma_sent' => 'Proforma enviada',
             'subhire_sent' => 'Solicitud de precio de subalquiler enviada',
             'subhire_accepted' => 'Subalquiler confirmado',
             'subhire_not_available' => 'Subalquiler no disponible',

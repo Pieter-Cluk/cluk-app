@@ -172,6 +172,7 @@ return [
             'order_approved' => 'Commande approuvée et confirmation envoyée',
             'order_assigned' => 'Commande transmise',
             'order_cancelled' => 'Commande annulée',
+            'order_proforma_sent' => 'Proforma envoyée',
             'subhire_sent' => 'Demande de prix de sous-location envoyée',
             'subhire_accepted' => 'Sous-location confirmée',
             'subhire_not_available' => 'Sous-location indisponible',

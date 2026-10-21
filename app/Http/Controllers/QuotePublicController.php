@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Rental\OrderDocumentController;
 use App\Models\CompanyDetail;
 use App\Models\Sales\Quote;
 use App\Services\Rental\QuoteAnswer;
@@ -81,6 +82,15 @@ class QuotePublicController extends Controller
         $this->locale($request, $quote);
 
         return view('rental.orders.print', ['order' => $order->load(['lines', 'company', 'contact', 'handedBy']), 'me' => CompanyDetail::current()]);
+    }
+
+    /** The proforma (payment request) of the approved order. */
+    public function proforma(Request $request, string $token): View
+    {
+        $quote = $this->find($token);
+        abort_unless($quote->order && $quote->order->status === 'approved', 404);
+
+        return OrderDocumentController::render($quote->order, 'pf');
     }
 
     public function print(Request $request, string $token): View

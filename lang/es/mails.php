@@ -41,6 +41,11 @@ return [
         'delivery' => 'Entrega en nuestro almacén',
         'return_partner' => 'Devolución a ustedes',
         'days' => 'Días de alquiler',
+        'amount' => 'Importe a pagar',
+        'iban' => 'IBAN',
+        'bic' => 'BIC',
+        'beneficiary' => 'Beneficiario',
+        'reference' => 'Concepto',
     ],
     'subhire' => [
         'request_subject' => 'Solicitud de disponibilidad y precio :number',
@@ -58,6 +63,12 @@ return [
         'staff_subject' => 'Pedido aprobado: :title (:number)',
         'staff_intro' => ':name aprobó el pedido :number para :customer. La confirmación se envió a :email.',
         'staff_button' => 'Abrir el pedido',
+    ],
+    'pf' => [
+        'subject' => 'Proforma :number · :title',
+        'intro' => 'Aquí tiene la proforma de «:title»: el importe a pagar antes de la recogida.',
+        'next' => 'Use el concepto para que podamos identificar su pago. La factura llega por separado.',
+        'button' => 'Proforma (PDF)',
     ],
     'quote' => [
         'sent_subject' => 'Su presupuesto de CLUK: :title',

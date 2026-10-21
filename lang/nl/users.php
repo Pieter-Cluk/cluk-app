@@ -172,6 +172,7 @@ return [
             'order_approved' => 'Order goedgekeurd en bevestiging verstuurd',
             'order_assigned' => 'Order overgedragen',
             'order_cancelled' => 'Order geannuleerd',
+            'order_proforma_sent' => 'Proforma verstuurd',
             'subhire_sent' => 'Bijhuur-prijsaanvraag verstuurd',
             'subhire_accepted' => 'Bijhuur bevestigd',
             'subhire_not_available' => 'Bijhuur niet beschikbaar',

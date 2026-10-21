@@ -41,6 +41,11 @@ return [
         'delivery' => 'Livraison chez nous',
         'return_partner' => 'Retour chez vous',
         'days' => 'Jours de location',
+        'amount' => 'Montant à payer',
+        'iban' => 'IBAN',
+        'bic' => 'BIC',
+        'beneficiary' => 'Bénéficiaire',
+        'reference' => 'Communication',
     ],
     'subhire' => [
         'request_subject' => 'Demande de disponibilité et de prix :number',
@@ -58,6 +63,12 @@ return [
         'staff_subject' => 'Commande approuvée : :title (:number)',
         'staff_intro' => ':name a approuvé la commande :number pour :customer. La confirmation a été envoyée à :email.',
         'staff_button' => 'Ouvrir la commande',
+    ],
+    'pf' => [
+        'subject' => 'Proforma :number · :title',
+        'intro' => 'Voici la proforma pour « :title » : le montant à payer avant l’enlèvement.',
+        'next' => 'Merci d’utiliser la communication pour que nous retrouvions votre paiement. La facture suit séparément.',
+        'button' => 'Proforma (PDF)',
     ],
     'quote' => [
         'sent_subject' => 'Votre devis CLUK : :title',

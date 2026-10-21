@@ -15,6 +15,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\QuotePublicController;
 use App\Http\Controllers\Rental\OrderController;
+use App\Http\Controllers\Rental\OrderDocumentController;
 use App\Http\Controllers\Rental\SubhireController;
 use App\Http\Controllers\Sales\DealController;
 use App\Http\Controllers\Sales\IncomingController;
@@ -46,6 +47,7 @@ Route::prefix('q/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('t
     Route::get('/', [QuotePublicController::class, 'show'])->name('quote.public');
     Route::get('/print', [QuotePublicController::class, 'print'])->name('quote.public.print');
     Route::get('/order', [QuotePublicController::class, 'order'])->name('quote.public.order');
+    Route::get('/proforma', [QuotePublicController::class, 'proforma'])->name('quote.public.proforma');
     Route::post('/accept', [QuotePublicController::class, 'accept'])->middleware('throttle:10,1')->name('quote.public.accept');
     Route::post('/change', [QuotePublicController::class, 'change'])->middleware('throttle:10,1')->name('quote.public.change');
     Route::post('/decline', [QuotePublicController::class, 'decline'])->middleware('throttle:10,1')->name('quote.public.decline');
@@ -286,6 +288,8 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/{order}/send-requests', [OrderController::class, 'sendRequests'])->whereNumber('order')->name('orders.send');
         Route::post('/{order}/approve', [OrderController::class, 'approve'])->whereNumber('order')->name('orders.approve');
         Route::post('/{order}/cancel', [OrderController::class, 'cancel'])->whereNumber('order')->name('orders.cancel');
+        Route::get('/{order}/documents/{type}', [OrderDocumentController::class, 'show'])->whereNumber('order')->whereIn('type', array_keys(OrderDocumentController::TYPES))->name('orders.doc');
+        Route::post('/{order}/proforma', [OrderDocumentController::class, 'sendProforma'])->whereNumber('order')->name('orders.proforma');
     });
 
     // Sub-hire: price requests (SHQ) and confirmations (SHC).

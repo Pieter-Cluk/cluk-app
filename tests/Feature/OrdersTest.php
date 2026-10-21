@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\AuditLog;
+use App\Models\BankAccount;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Equipment\Item;
@@ -260,6 +261,53 @@ class OrdersTest extends TestCase
                 $html = $this->actingAs($admin->fresh())->get($url)->assertOk()->getContent();
                 $this->assertDoesNotMatchRegularExpression($pattern, strip_tags($html), "{$url} ({$locale})");
             }
+        }
+    }
+
+    public function test_documents_of_an_approved_order(): void
+    {
+        $order = $this->order(4);
+        $this->spiider->assets()->where('code', 'LT-0001')->update(['location' => 'A-03-2']);
+        BankAccount::create(['bank' => 'KBC', 'iban' => 'BE68539007547034', 'bic' => 'KREDBEBB', 'is_main' => true, 'on_documents' => true]);
+        $this->actingAs($this->am)->get('/order-allocation/'.$order->id.'/documents/pick')->assertNotFound(); // not approved yet
+
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/auto');
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/approve');
+        $n = substr($order->number, 5);
+
+        $this->actingAs($this->am)->get('/order-allocation/'.$order->id.'/documents/pick')->assertOk()
+            ->assertSee('R-PICK-'.$n)->assertSee('LT-0001 · A-03-2')->assertDontSee('€');
+        $this->actingAs($this->am)->get('/order-allocation/'.$order->id.'/documents/dn')->assertOk()->assertSee('R-DN-'.$n)->assertDontSee('€');
+        $this->actingAs($this->am)->get('/order-allocation/'.$order->id.'/documents/ret')->assertOk()->assertSee('R-RET-'.$n)->assertDontSee('€');
+        $this->actingAs($this->am)->get('/order-allocation/'.$order->id.'/documents/pf')->assertOk()->assertSee('R-PF-'.$n)->assertSee('BE68 5390 0754 7034')->assertSee('not a tax invoice');
+
+        // Customer documents follow the customer's language.
+        $order->update(['language' => 'nl']);
+        $this->actingAs($this->am)->get('/order-allocation/'.$order->id.'/documents/dn')->assertSee('LEVERBON');
+
+        Notification::fake();
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/proforma')->assertSessionHasNoErrors();
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'sarah@demo.be' && str_starts_with($n->subject, 'Proforma'));
+        $this->actingAs($this->as('warehouse'))->post('/order-allocation/'.$order->id.'/proforma')->assertForbidden();
+        auth('web')->logout();
+        $this->get('/q/'.$order->quote->token.'/proforma')->assertOk()->assertSee('R-PF-'.$n);
+    }
+
+    public function test_documents_in_every_language_without_missing_texts(): void
+    {
+        $order = $this->order(4);
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/auto');
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/approve');
+        $admin = $this->as('admin');
+        foreach (array_keys(config('cluk.locales')) as $locale) {
+            $admin->forceFill(['locale' => $locale])->save();
+            $order->update(['language' => $locale]);
+            foreach (['pick', 'dn', 'ret', 'pf'] as $t) {
+                $html = $this->actingAs($admin->fresh())->get('/order-allocation/'.$order->id.'/documents/'.$t)->assertOk()->getContent();
+                $this->assertDoesNotMatchRegularExpression('/\\b(docs|orders|quotes)\\.[a-z_]+(\\.[a-z_]+)*\\b/', strip_tags($html), "{$t} ({$locale})");
+            }
+            $html = $this->actingAs($admin->fresh())->get('/order-allocation/'.$order->id)->assertOk()->getContent();
+            $this->assertDoesNotMatchRegularExpression('/\\bdocs\\.[a-z_]+/', strip_tags($html));
         }
     }
 }
