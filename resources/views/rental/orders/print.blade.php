@@ -79,6 +79,7 @@
         <p>{{ $pay > 0 ? __('quotes.doc_pay_days', ['days' => $pay]) : __('quotes.doc_pay_now') }}</p>
         <p>{{ __('quotes.doc_terms_link', ['url' => preg_replace('#^https?://#', '', route('terms', $order->language))]) }}</p>
     </section>
+    @include('partials.doc-extras', ['type' => 'R-OC'])
     <footer class="doc-foot">
         {{ trim($me->legal_name.' '.$me->legal_form) }} · {{ $me->street }}, {{ $me->postcode }} {{ $me->city }} · {{ \App\Support\VatNumber::format($me->vat_number) }}@if ($bank) · IBAN {{ $bank->formattedIban() }}@endif
         @if ($order->handedBy)<br>{{ __('quotes.prepared_by', ['name' => $order->handedBy->name, 'email' => $order->handedBy->email]) }}@endif

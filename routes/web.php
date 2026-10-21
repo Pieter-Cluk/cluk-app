@@ -26,6 +26,7 @@ use App\Http\Controllers\Sales\IncomingController;
 use App\Http\Controllers\Sales\QuoteController;
 use App\Http\Controllers\Settings\AuditLogController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
+use App\Http\Controllers\Settings\DocumentController;
 use App\Http\Controllers\Settings\ImportController;
 use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\UserController;
@@ -272,6 +273,11 @@ Route::middleware('auth:web')->group(function () {
             Route::get('/company', [CompanyDetailsController::class, 'edit'])->name('company.edit');
             Route::put('/company', [CompanyDetailsController::class, 'update'])->name('company.update');
         });
+        Route::middleware('nav:documents')->group(function () {
+            Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+            Route::put('/documents/note/{type}', [DocumentController::class, 'updateNote'])->where('type', '[A-Z0-9\-]+')->name('documents.note');
+            Route::put('/documents/season', [DocumentController::class, 'updateSeason'])->name('documents.season');
+        });
         Route::middleware('nav:import')->group(function () {
             Route::get('/import', [ImportController::class, 'index'])->name('import.index');
             Route::get('/import/template', [ImportController::class, 'template'])->name('import.template');
@@ -414,7 +420,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'wallscreens', 'warehouse', 'locations', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'wallscreens', 'warehouse', 'locations', 'documents', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

@@ -103,6 +103,7 @@
             <div class="sign"><span>{{ __('factory.doc.sign_customer') }}</span></div>
         </div>
     @endif
+    @include('partials.doc-extras', ['type' => $type === 'pf' ? 'F-PF' : 'F-BC'])
     <footer class="doc-foot">
         {{ trim($me->legal_name.' '.$me->legal_form) }} · {{ $me->street }}, {{ $me->postcode }} {{ $me->city }} · {{ \App\Support\VatNumber::format($me->vat_number) }}@if ($bank) · IBAN {{ $bank->formattedIban() }}@endif
     </footer>

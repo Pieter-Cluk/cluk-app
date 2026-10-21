@@ -678,3 +678,14 @@ img.av{object-fit:cover;background:var(--surface-subtle);padding:0}
 .db-option{background:var(--warning-bg);border-color:var(--warning-text)}
 .db-closed{opacity:.45}
 @media (max-width:760px){.db-pipe{grid-template-columns:1fr 1fr}.db-new-menu{grid-template-columns:1fr}}
+.doc-cnote{margin-top:18px;padding:12px 14px;border-left:3px solid #52ae32;background:#f3f8f0;font-size:12.5px}
+.doc-cnote p{margin:4px 0 0}
+.doc-season{margin:14px 0 0;text-align:center;font-size:12px;font-weight:700;color:#327b1d}
+.dl-list{display:grid;gap:4px}
+.dl-group{font-size:10px;letter-spacing:1.4px;color:var(--muted);font-weight:700;margin:12px 0 4px}
+.dl-item{display:flex;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:6px;text-decoration:none;color:var(--ink);border:1px solid transparent}
+.dl-item:hover{background:var(--surface-subtle)}
+.dl-on{background:var(--brand-tint);border-color:var(--brand)}
+.dl-item small{color:var(--muted);font-family:ui-monospace,Menlo,monospace}
+.dl-locs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:760px){.dl-locs{grid-template-columns:1fr}}

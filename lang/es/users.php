@@ -186,6 +186,8 @@ return [
             'warehouse_checked' => 'Controlado en el banco de pruebas',
             'warehouse_charges_approved' => 'Cargos de retorno aprobados',
             'warehouse_zone_saved' => 'Zona de almacén guardada',
+            'documents_note' => 'Nota comercial de un documento cambiada',
+            'documents_season' => 'Mensaje de temporada cambiado',
             'warehouse_delivery' => 'Entrega no anunciada registrada',
             'warehouse_layer_switched' => 'Nivel de almacenaje cambiado',
             'factory_gear' => 'Presupuesto de material Cluk Factory creado',

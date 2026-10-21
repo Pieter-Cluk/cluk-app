@@ -186,6 +186,8 @@ return [
             'warehouse_checked' => 'Contrôlée sur le banc de test',
             'warehouse_charges_approved' => 'Frais de retour approuvés',
             'warehouse_zone_saved' => 'Zone d’entrepôt enregistrée',
+            'documents_note' => 'Note commerciale d’un document modifiée',
+            'documents_season' => 'Message de saison modifié',
             'warehouse_delivery' => 'Livraison non annoncée enregistrée',
             'warehouse_layer_switched' => 'Niveau de stockage modifié',
             'factory_gear' => 'Devis matériel Cluk Factory créé',

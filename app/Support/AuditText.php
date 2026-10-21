@@ -107,6 +107,8 @@ class AuditText
             'order.cancelled' => (string) ($d['reason'] ?? ''),
             'warehouse.checked' => __('warehouse.check.result_'.($d['result'] ?? 'ok')).(isset($d['order']) ? ' · '.$d['order'] : ''),
             'warehouse.charges_approved' => trim(($d['total'] ?? '').' · '.trans_choice('warehouse.office.lines_waiting', (int) ($d['lines'] ?? 0), ['n' => (int) ($d['lines'] ?? 0)]), ' ·'),
+            'documents.note' => ($d['type'] ?? '').' · '.(($d['on'] ?? false) ? '✓' : '—'),
+            'documents.season' => ($d['from'] ?? '—').' → '.($d['to'] ?? '—'),
             'warehouse.delivery' => trim(($d['to'] ?? __('warehouse.delivery.m_'.($d['match'] ?? 'unknown'))).' · '.($d['note'] ?? ''), ' ·'),
             'warehouse.layer_switched' => ($d['layer'] ?? '').' → '.__('warehouse.settings.'.(($d['to'] ?? 'shelf') === 'pallet' ? 'pallet' : 'shelf')),
             'subhire.sent' => trim(($d['supplier'] ?? '').' · '.($d['to'] ?? ''), ' ·'),

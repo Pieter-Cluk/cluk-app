@@ -54,6 +54,7 @@
         <p>{{ __('quotes.doc_factor') }}</p>
         <p>{{ __('quotes.doc_terms_link', ['url' => preg_replace('#^https?://#', '', route('terms', $quote->language))]) }}</p>
     </section>
+    @include('partials.doc-extras', ['type' => 'R-QUO'])
     <footer class="doc-foot">
         {{ trim($me->legal_name.' '.$me->legal_form) }} · {{ $me->street }}, {{ $me->postcode }} {{ $me->city }} · {{ \App\Support\VatNumber::format($me->vat_number) }}@if ($bank) · IBAN {{ $bank->formattedIban() }}@endif
         @if ($quote->owner)<br>{{ __('quotes.prepared_by', ['name' => $quote->owner->name, 'email' => $quote->owner->email]) }}@endif

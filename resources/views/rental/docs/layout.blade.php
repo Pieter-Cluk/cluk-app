@@ -50,6 +50,7 @@
     @hasSection('signs')
         <div class="doc-signs">@yield('signs')</div>
     @endif
+    @if (in_array($type, ['dn', 'pf', 'ch'], true))@include('partials.doc-extras', ['type' => 'R-'.strtoupper($type)])@endif
     <footer class="doc-foot">
         {{ trim($me->legal_name.' '.$me->legal_form) }} · {{ $me->street }}, {{ $me->postcode }} {{ $me->city }} · {{ \App\Support\VatNumber::format($me->vat_number) }}@if ($bank) · IBAN {{ $bank->formattedIban() }}@endif
     </footer>
