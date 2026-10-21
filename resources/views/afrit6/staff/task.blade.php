@@ -26,6 +26,7 @@
                     <dd>
                         @if ($task->isStorage()){{ __('workspace.tasks.per_day', ['amount' => $eur($task->qty * \App\Services\Afrit6\Pricing::dayPrice($task->kind))]) }}
                         @elseif ($task->kind === 'desk_add'){{ __('workspace.desks.per_month', ['amount' => $eur($task->amount_cents)]) }}
+                        @elseif ($task->kind === 'office'){{ __('workspace.office.price_on_request') }} · {{ __('workspace.office.staff_hint') }}
                         @else {{ $task->amount_cents ? $eur($task->amount_cents) : __('workspace.services.free') }}@endif
                     </dd>
                     <dt>{{ __('workspace.tasks.who_has_it') }}</dt><dd>{{ $task->assignee?->name ?? __('workspace.tasks.unassigned') }}</dd>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Afrit6;
 
 use App\Http\Controllers\Controller;
+use App\Models\Afrit6\DeskBooking;
 use App\Models\Afrit6\DeskRental;
 use App\Models\Afrit6\RequestMessage;
 use App\Models\Afrit6\RoomBooking;
@@ -49,12 +50,113 @@ class WorkspaceController extends Controller
             'state' => in_array($s->id, $mineIds, true) ? 'mine' : (in_array($s->id, $takenIds, true) ? 'taken' : 'free'),
         ]);
 
+        // Book a free desk for a morning, an afternoon or a whole day.
+        $dayDate = $this->nextWeekday($request->query('day') ? Carbon::parse($request->query('day'))->startOfDay() : today());
+        $part = in_array($request->query('part'), DeskBooking::PARTS, true) ? $request->query('part') : 'day';
+        if (! $request->query('day') && ! $request->query('part') && DeskBooking::startsAt($dayDate, 'day')->lte(now())) {
+            // Nothing chosen yet: offer this afternoon if it has not started, else the next weekday.
+            if (DeskBooking::startsAt($dayDate, 'pm')->gt(now())) {
+                $part = 'pm';
+            } else {
+                $dayDate = $this->nextWeekday($dayDate->copy()->addDay());
+            }
+        }
+        $office = Space::office();
+
         return view('afrit6.portal.desks', [
             'member' => $member,
             'mine' => $mine,
             'floors' => $desks->groupBy(fn ($d) => $d['space']->floor),
             'selected' => $desks->first(fn ($d) => $d['space']->code === $request->query('desk')),
+            'dayDate' => $dayDate,
+            'part' => $part,
+            'partStarted' => DeskBooking::startsAt($dayDate, $part)->lte(now()),
+            'freeForDay' => Space::desks()->get()->filter(fn (Space $s) => $s->isFreeForPart($dayDate, $part))->values(),
+            'dayBookings' => DeskBooking::live()->with('space')->where('member_id', $member->id)
+                ->where('date', '>=', today()->toDateString())->orderBy('date')->get(),
+            'office' => $office,
+            'officeRequest' => $office ? ServiceRequest::where('member_id', $member->id)->where('kind', 'office')->open()->first() : null,
+            'officeMine' => $office ? $mine->firstWhere('space_id', $office->id) : null,
         ]);
+    }
+
+    private function nextWeekday(Carbon $d): Carbon
+    {
+        $d = $d->lt(today()) ? today() : $d->copy();
+        while ($d->isWeekend()) {
+            $d->addDay();
+        }
+
+        return $d;
+    }
+
+    /** Book a free desk for a morning, an afternoon or a whole day. */
+    public function bookDay(Request $request): RedirectResponse
+    {
+        $member = $this->member($request);
+        $data = $request->validate([
+            'space_id' => ['required', 'integer', Rule::exists('afrit6_spaces', 'id')->where('kind', 'desk')->where('active', true)],
+            'date' => ['required', 'date_format:Y-m-d', 'after_or_equal:today', 'before_or_equal:'.today()->addWeeks((int) config('afrit6.room.weeks_ahead'))->toDateString()],
+            'part' => ['required', Rule::in(DeskBooking::PARTS)],
+        ]);
+        $date = Carbon::parse($data['date'])->startOfDay();
+        if ($date->isWeekend()) {
+            throw ValidationException::withMessages(['date' => __('workspace.room.err_weekend')]);
+        }
+        if (DeskBooking::startsAt($date, $data['part'])->lte(now())) {
+            throw ValidationException::withMessages(['date' => __('workspace.room.err_past')]);
+        }
+
+        $booking = DB::transaction(function () use ($member, $date, $data) {
+            $space = Space::whereKey($data['space_id'])->lockForUpdate()->first();
+            if (! $space->isFreeForPart($date, $data['part'])) {
+                throw ValidationException::withMessages(['space_id' => __('workspace.days.taken', ['desk' => $space->code])]);
+            }
+
+            return DeskBooking::create([
+                'member_id' => $member->id, 'space_id' => $space->id, 'date' => $date,
+                'part' => $data['part'], 'price_cents' => DeskBooking::price($data['part']),
+            ]);
+        });
+
+        return redirect()->route('afrit6.portal.desks', ['day' => $date->toDateString(), 'part' => $data['part']])
+            ->with('status', __('workspace.days.booked', [
+                'desk' => $booking->space->code, 'date' => $date->locale(app()->getLocale())->translatedFormat('l j F'),
+                'part' => __('workspace.days.parts.'.$booking->part), 'amount' => Pricing::eur($booking->price_cents),
+            ]));
+    }
+
+    public function cancelDay(Request $request, DeskBooking $deskBooking): RedirectResponse
+    {
+        abort_unless($deskBooking->member_id === $this->member($request)->id && $deskBooking->cancelled_at === null, 404);
+        if ($deskBooking->hasStarted()) {
+            return back()->withErrors(['booking' => __('workspace.days.too_late')]);
+        }
+        $deskBooking->update(['cancelled_at' => now()]);
+
+        return back()->with('status', __('workspace.days.cancelled'));
+    }
+
+    /** The private office is long term: the member asks for a price and the team gets in touch. */
+    public function requestOffice(Request $request): RedirectResponse
+    {
+        $member = $this->member($request);
+        $office = Space::office();
+        abort_unless($office, 404);
+        $data = $request->validate([
+            'date' => ['required', 'date', 'after_or_equal:today'],
+            'people' => ['required', 'integer', 'min:1', 'max:20'],
+            'wishes' => ['nullable', 'string', 'max:2000'],
+        ]);
+        if (ServiceRequest::where('member_id', $member->id)->where('kind', 'office')->open()->exists()) {
+            throw ValidationException::withMessages(['date' => __('workspace.office.already')]);
+        }
+        ServiceRequest::create([
+            'member_id' => $member->id, 'kind' => 'office', 'status' => ServiceRequest::PENDING,
+            'date' => $data['date'], 'qty' => $data['people'], 'space_id' => $office->id, 'note' => $data['wishes'] ?? null,
+        ]);
+
+        return redirect()->route('afrit6.portal.desks')->with('status', __('workspace.office.sent'));
     }
 
     public function room(Request $request): View

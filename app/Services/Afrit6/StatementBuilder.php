@@ -2,6 +2,7 @@
 
 namespace App\Services\Afrit6;
 
+use App\Models\Afrit6\DeskBooking;
 use App\Models\Afrit6\DeskRental;
 use App\Models\Afrit6\RoomBooking;
 use App\Models\Afrit6\ServiceRequest;
@@ -78,6 +79,19 @@ class StatementBuilder
                 'qty' => $full ? 1 : round($days / $periodDays, 4),
                 'unit_cents' => $r->monthly_price_cents,
                 'amount_cents' => $amount,
+            ];
+        }
+
+        // Desks booked for a morning, afternoon or day.
+        $days = DeskBooking::live()->with('space')->where('member_id', $this->member->id)
+            ->whereBetween('date', [$start->toDateString(), $end->toDateString()])->orderBy('date')->get();
+        foreach ($days as $db) {
+            $lines[] = [
+                'type' => 'desk_day',
+                'text' => __('workspace.bill.desk_day', ['desk' => $db->space->code, 'date' => $d($db->date), 'part' => __('workspace.days.parts.'.$db->part, [], $locale)], $locale),
+                'qty' => 1,
+                'unit_cents' => $db->price_cents,
+                'amount_cents' => $db->price_cents,
             ];
         }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Afrit6;
 
 use App\Http\Controllers\Controller;
+use App\Models\Afrit6\DeskBooking;
 use App\Models\Afrit6\DeskRental;
 use App\Models\Afrit6\RoomBooking;
 use App\Models\Afrit6\Space;
@@ -40,8 +41,9 @@ class StaffWorkspaceController extends Controller
 
         return view('afrit6.staff.desks', [
             'day' => $day,
-            'desks' => Space::desks()->get(),
+            'desks' => Space::rentable()->get(),
             'rentals' => $rentals,
+            'dayBookings' => DeskBooking::live()->with('member')->whereDate('date', $day->toDateString())->get()->groupBy('space_id'),
             'next' => $next,
         ]);
     }
@@ -50,7 +52,7 @@ class StaffWorkspaceController extends Controller
     {
         abort_unless($member->isActive(), 404);
         $data = $request->validate([
-            'space_id' => ['required', 'integer', Rule::exists('afrit6_spaces', 'id')->where('kind', 'desk')],
+            'space_id' => ['required', 'integer', Rule::exists('afrit6_spaces', 'id')->whereIn('kind', ['desk', 'office'])],
             'starts_on' => ['required', 'date'],
             'ends_on' => ['nullable', 'date', 'after_or_equal:starts_on'],
             'price' => ['required', 'numeric', 'min:0', 'max:100000'],

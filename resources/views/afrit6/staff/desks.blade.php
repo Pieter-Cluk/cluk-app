@@ -13,6 +13,9 @@
                 @else
                     <span class="pill pill-ok">{{ __('workspace.staff.free_desk') }}</span>
                 @endif
+                @foreach ($dayBookings[$s->id] ?? [] as $db)
+                    <small><span class="pill pill-info">{{ __('workspace.days.parts.'.$db->part) }}</span> <a href="{{ route('afrit6.staff.show', $db->member) }}">{{ $db->member->name }}</a></small>
+                @endforeach
                 @foreach (($next[$s->id] ?? collect())->take(1) as $n)
                     <small class="muted">{{ __('workspace.staff.next_rental', ['name' => $n->member->name, 'date' => $n->starts_on->format('d/m/Y')]) }}</small>
                 @endforeach

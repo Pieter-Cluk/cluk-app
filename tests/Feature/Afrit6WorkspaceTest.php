@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Afrit6\DeskBooking;
 use App\Models\Afrit6\DeskRental;
 use App\Models\Afrit6\RoomBooking;
 use App\Models\Afrit6\ServiceRequest;
@@ -76,7 +77,7 @@ class Afrit6WorkspaceTest extends TestCase
 
         foreach (array_keys(config('cluk.locales')) as $locale) {
             $m->forceFill(['locale' => $locale])->save();
-            foreach (['/afrit6/portal', '/afrit6/portal/desks?desk=D-07', '/afrit6/portal/desks?desk=D-04', '/afrit6/portal/room?day=2026-10-20', '/afrit6/portal/services?new=receive', '/afrit6/portal/bill'] as $url) {
+            foreach (['/afrit6/portal', '/afrit6/portal/desks?desk=D-07&day=2026-10-20&part=am', '/afrit6/portal/desks?desk=D-04', '/afrit6/portal/room?day=2026-10-20', '/afrit6/portal/services?new=receive', '/afrit6/portal/bill'] as $url) {
                 $html = $this->actingAs($m->fresh(), 'member')->get($url)->assertOk()->getContent();
                 $this->assertDoesNotMatchRegularExpression($pattern, strip_tags($html), "{$url} ({$locale})");
             }
@@ -374,5 +375,67 @@ class Afrit6WorkspaceTest extends TestCase
         $this->actingAs($host, 'web')->post($url.'/'.$rental->id.'/end', ['ends_on' => '2027-01-31'])->assertSessionHasNoErrors();
         $this->assertSame('2027-01-31', $rental->fresh()->ends_on->toDateString());
         $this->actingAs($this->staff('sales'), 'web')->post($url, ['space_id' => $this->desk('A-1')->id, 'starts_on' => '2026-11-01', 'price' => 350])->assertForbidden();
+    }
+
+    // -------------------------------------------------------- day desks
+
+    public function test_a_free_desk_can_be_booked_for_half_a_day_or_a_day(): void
+    {
+        $m = $this->member([]);
+        $other = $this->member([]);
+        $this->member(['D-01'], '2026-10-01'); // D-01 is rented per month
+        $post = fn (Member $who, string $desk, string $date, string $part) => $this->actingAs($who, 'member')
+            ->post('/afrit6/portal/desks/day', ['space_id' => $this->desk($desk)->id, 'date' => $date, 'part' => $part]);
+
+        $post($m, 'D-03', '2026-10-20', 'am')->assertSessionHasNoErrors();
+        $post($other, 'D-03', '2026-10-20', 'pm')->assertSessionHasNoErrors();      // afternoon is still free
+        $post($other, 'D-03', '2026-10-20', 'day')->assertSessionHasErrors('space_id'); // clashes with both
+        $post($other, 'D-03', '2026-10-20', 'am')->assertSessionHasErrors('space_id');
+        $post($m, 'D-01', '2026-10-20', 'day')->assertSessionHasErrors('space_id');     // rented per month
+        $post($m, 'D-03', '2026-10-24', 'day')->assertSessionHasErrors('date');         // Saturday
+        $post($m, 'D-03', '2026-10-19', 'am')->assertSessionHasErrors('date');          // this morning started at 08:00
+        $post($m, 'D-03', '2026-10-19', 'pm')->assertSessionHasNoErrors();              // this afternoon is fine
+        $post($m, 'D-04', '2026-10-21', 'day')->assertSessionHasNoErrors();
+
+        $this->assertSame([3000, 3000, 3000, 5000], DeskBooking::orderBy('id')->pluck('price_cents')->all());
+        $bill = collect((new StatementBuilder($m))->build(today())['lines'])->where('type', 'desk_day');
+        $this->assertSame(3000 + 3000 + 5000, $bill->sum('amount_cents'));
+
+        // The free desk list leaves out what is taken.
+        $this->actingAs($other, 'member')->get('/afrit6/portal/desks?day=2026-10-20&part=day')
+            ->assertOk()->assertDontSee('name="space_id" value="'.$this->desk('D-03')->id.'"', false);
+    }
+
+    public function test_a_day_booking_can_be_cancelled_until_it_starts(): void
+    {
+        $m = $this->member([]);
+        $this->actingAs($m, 'member')->post('/afrit6/portal/desks/day', ['space_id' => $this->desk('B-2')->id, 'date' => '2026-10-19', 'part' => 'pm']);
+        $b = DeskBooking::firstOrFail();
+
+        Carbon::setTestNow(Carbon::parse('2026-10-19 13:05:00'));
+        $this->actingAs($m, 'member')->post('/afrit6/portal/desks/day/'.$b->id.'/cancel')->assertSessionHasErrors('booking');
+        $this->actingAs($this->member([]), 'member')->post('/afrit6/portal/desks/day/'.$b->id.'/cancel')->assertNotFound();
+
+        Carbon::setTestNow(Carbon::parse('2026-10-19 12:00:00'));
+        $this->actingAs($m, 'member')->post('/afrit6/portal/desks/day/'.$b->id.'/cancel')->assertSessionHasNoErrors();
+        $this->assertNotNull($b->fresh()->cancelled_at);
+        $this->assertSame([], (new StatementBuilder($m))->build(today())['lines']);
+    }
+
+    public function test_the_private_office_is_a_price_request_and_staff_can_rent_it_out(): void
+    {
+        $m = $this->member();
+        $host = $this->staff('workspace-host');
+
+        $this->actingAs($m, 'member')->post('/afrit6/portal/office', ['date' => '2026-11-01', 'people' => 3, 'wishes' => '3 desks, a whiteboard'])->assertSessionHasNoErrors();
+        $this->actingAs($m, 'member')->post('/afrit6/portal/office', ['date' => '2026-11-01', 'people' => 3])->assertSessionHasErrors('date');
+        $r = ServiceRequest::where('kind', 'office')->firstOrFail();
+        $this->assertSame([0, 'pending', 3], [$r->amount_cents, $r->status, $r->qty]);
+        $this->actingAs($host, 'web')->get('/afrit6-staff/tasks/'.$r->id)->assertOk()->assertSee('3 desks, a whiteboard');
+
+        $office = Space::office();
+        $this->actingAs($host, 'web')->post('/afrit6-staff/members/'.$m->id.'/desks', ['space_id' => $office->id, 'starts_on' => '2026-11-01', 'price' => 950])->assertSessionHasNoErrors();
+        $this->assertTrue($m->deskRentals()->where('space_id', $office->id)->where('monthly_price_cents', 95000)->exists());
+        $this->assertFalse(Space::desks()->pluck('code')->contains('OFFICE'), 'the office is not on the desk map');
     }
 }

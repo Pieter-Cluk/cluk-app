@@ -29,6 +29,29 @@ class Space extends Model
         return $q->where('kind', 'desk')->where('active', true)->orderBy('sort');
     }
 
+    /** Desks and the private office: what can be rented per month. */
+    public function scopeRentable(Builder $q): Builder
+    {
+        return $q->whereIn('kind', ['desk', 'office'])->where('active', true)->orderBy('sort');
+    }
+
+    public static function office(): ?self
+    {
+        return static::where('kind', 'office')->where('active', true)->orderBy('sort')->first();
+    }
+
+    /** Free for a morning, afternoon or whole day: no monthly rental, no clashing day booking. */
+    public function isFreeForPart(Carbon|string $date, string $part, ?int $ignoreBookingId = null): bool
+    {
+        $d = Carbon::parse($date)->toDateString();
+
+        return ! DeskRental::where('space_id', $this->id)->activeOn($d)->exists()
+            && ! DeskBooking::live()->where('space_id', $this->id)->whereDate('date', $d)
+                ->whereIn('part', DeskBooking::clashingParts($part))
+                ->when($ignoreBookingId, fn ($q) => $q->whereKeyNot($ignoreBookingId))
+                ->exists();
+    }
+
     public static function room(): ?self
     {
         return static::where('kind', 'room')->where('active', true)->orderBy('sort')->first();

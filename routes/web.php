@@ -50,6 +50,9 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
             Route::get('/desks', [WorkspaceController::class, 'desks'])->name('desks');
             Route::post('/desks/swap', [WorkspaceController::class, 'swapDesk'])->middleware('throttle:20,1')->name('desks.swap');
             Route::post('/desks/add', [WorkspaceController::class, 'addDesk'])->middleware('throttle:20,1')->name('desks.add');
+            Route::post('/desks/day', [WorkspaceController::class, 'bookDay'])->middleware('throttle:30,1')->name('desks.day');
+            Route::post('/desks/day/{deskBooking}/cancel', [WorkspaceController::class, 'cancelDay'])->whereNumber('deskBooking')->name('desks.day.cancel');
+            Route::post('/office', [WorkspaceController::class, 'requestOffice'])->middleware('throttle:10,1')->name('office');
             Route::get('/room', [WorkspaceController::class, 'room'])->name('room');
             Route::post('/room', [WorkspaceController::class, 'book'])->middleware('throttle:30,1')->name('room.book');
             Route::post('/room/{booking}/cancel', [WorkspaceController::class, 'cancelBooking'])->whereNumber('booking')->name('room.cancel');

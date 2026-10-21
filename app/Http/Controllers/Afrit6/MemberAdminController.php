@@ -53,7 +53,7 @@ class MemberAdminController extends Controller
             'canDecide' => $request->user()->hasRight('afrit6.approve_members'),
             'activity' => AuditLog::with('actor')->where('subject_type', $member->getMorphClass())->where('subject_id', $member->id)->latest('id')->limit(15)->get(),
             'rentals' => $member->deskRentals()->with('space')->get(),
-            'desks' => Space::desks()->get(),
+            'desks' => Space::rentable()->get(),
             'canDesks' => $request->user()->canUseModule('afrit6', 2),
             'canDoor' => $request->user()->hasRight('afrit6.door_codes'),
             'canStatement' => $request->user()->canUseModule('afrit6', 3),

@@ -27,6 +27,9 @@
                                     @case('desk_add')
                                         {{ $r->space?->code }} · {{ __('workspace.desks.from', ['date' => $r->date->format('d/m/Y')]) }}
                                         @break
+                                    @case('office')
+                                        {{ __('workspace.desks.from', ['date' => $r->date->format('d/m/Y')]) }} · {{ trans_choice('workspace.office.people_count', $r->qty, ['n' => $r->qty]) }} · {{ __('workspace.office.price_on_request') }}
+                                        @break
                                     @case('desk_swap')
                                         {{ $r->fromSpace?->code }} → {{ $r->space?->code }} · {{ __('workspace.desks.from', ['date' => $r->date->format('d/m/Y')]) }}
                                         @break
