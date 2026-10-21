@@ -4,8 +4,8 @@
 |--------------------------------------------------------------------------
 | Afrit 6 co-working: prices and rules
 |--------------------------------------------------------------------------
-| Amounts in cents, excluding VAT (confirmed by Pieter, 21 Oct 2026, except
-| the handling fees marked "sample"). They will move to a settings screen.
+| Amounts in cents, excluding VAT, all confirmed by Pieter on 21 Oct 2026.
+| They will move to a settings screen.
 */
 
 return [
@@ -16,8 +16,8 @@ return [
         'pallet_day' => 100,          // pallet place, per place per day
         'packing_coli' => 160,        // packing labour per coli (3–5 min)
         'packing_pallet' => 1500,     // packing labour per pallet (15 min)
-        'handling_coli' => 200,       // receive into storage / send: per coli (sample)
-        'handling_pallet' => 800,     // receive into storage / send: per pallet (sample)
+        'handling_coli' => 200,       // receive into storage / send: per coli
+        'handling_pallet' => 800,     // receive into storage / send: per pallet
         'room_half_hour' => 625,      // meeting room beyond the free weekly slot: € 12.50 per hour
     ],
 
