@@ -121,4 +121,12 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    | Email look: the CLUK theme in resources/views/vendor/mail/html/themes/cluk.css
+    */
+    'markdown' => [
+        'theme' => 'cluk',
+        'paths' => [resource_path('views/vendor/mail')],
+    ],
+
 ];

@@ -23,7 +23,9 @@ return [
     // Price units that are multiplied by the factor; others (event, coli…) are charged once per qty.
     'factor_units' => ['day', 'half_day'],
 
-    // Link to CLUK's general rental conditions, shown on the accept page (null = no link yet).
-    'terms_url' => env('RENTAL_TERMS_URL'),
+    // CLUK's general terms and conditions (PDF in public/), served at /terms.
+    // The customer ticks them when accepting a quote; emails and documents link to them.
+    'terms_file' => 'docs/CLUK_BV_Terms_and_conditions_EN.pdf',
+    'terms_url' => env('RENTAL_TERMS_URL', '/terms'),
 
 ];

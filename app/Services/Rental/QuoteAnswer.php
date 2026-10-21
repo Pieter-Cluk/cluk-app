@@ -35,6 +35,7 @@ class QuoteAnswer
             }
         }
         if (! $by) {
+            QuoteMails::accepted($quote);
             self::tellOwner($quote, 'accepted');
         }
     }
@@ -44,6 +45,7 @@ class QuoteAnswer
         $quote->forceFill(['status' => 'change', 'answered_at' => now(), 'answered_name' => $name ?: null, 'answer_note' => $message, 'answered_ip' => $ip])->save();
         AuditLog::record('quote.change', $quote, ['name' => $name]);
         $quote->deal?->log('email', __('quotes.log.change', ['code' => $quote->code(), 'name' => $name ?: '—'], self::loc($quote))."\n".$message);
+        QuoteMails::change($quote);
         self::tellOwner($quote, 'change');
     }
 
@@ -52,6 +54,7 @@ class QuoteAnswer
         $quote->forceFill(['status' => 'declined', 'answered_at' => now(), 'decline_reason' => $reason, 'answer_note' => $note, 'answered_ip' => $ip, 'reserved_until' => null])->save();
         AuditLog::record('quote.declined', $quote, ['reason' => $reason]);
         $quote->deal?->log('email', __('quotes.log.declined', ['code' => $quote->code(), 'reason' => __('quotes.decline_reasons.'.$reason, [], self::loc($quote))], self::loc($quote)).($note ? "\n".$note : ''));
+        QuoteMails::declined($quote);
         self::tellOwner($quote, 'declined');
     }
 

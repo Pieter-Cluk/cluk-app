@@ -11,6 +11,7 @@ use App\Models\Afrit6\ServiceRequest;
 use App\Models\Afrit6\Space;
 use App\Models\AuditLog;
 use App\Models\Member;
+use App\Services\Afrit6\MemberMails;
 use App\Services\Afrit6\Pricing;
 use App\Services\Afrit6\RoomPlanner;
 use App\Services\Afrit6\StatementBuilder;
@@ -119,6 +120,8 @@ class WorkspaceController extends Controller
             ]);
         });
 
+        MemberMails::deskBooked($member, $booking);
+
         return redirect()->route('afrit6.portal.desks', ['day' => $date->toDateString(), 'part' => $data['part']])
             ->with('status', __('workspace.days.booked', [
                 'desk' => $booking->space->code, 'date' => $date->locale(app()->getLocale())->translatedFormat('l j F'),
@@ -133,6 +136,7 @@ class WorkspaceController extends Controller
             return back()->withErrors(['booking' => __('workspace.days.too_late')]);
         }
         $deskBooking->update(['cancelled_at' => now()]);
+        MemberMails::deskCancelled($deskBooking->member, $deskBooking);
 
         return back()->with('status', __('workspace.days.cancelled'));
     }
@@ -151,10 +155,12 @@ class WorkspaceController extends Controller
         if (ServiceRequest::where('member_id', $member->id)->where('kind', 'office')->open()->exists()) {
             throw ValidationException::withMessages(['date' => __('workspace.office.already')]);
         }
-        ServiceRequest::create([
+        $sr = ServiceRequest::create([
             'member_id' => $member->id, 'kind' => 'office', 'status' => ServiceRequest::PENDING,
             'date' => $data['date'], 'qty' => $data['people'], 'space_id' => $office->id, 'note' => $data['wishes'] ?? null,
         ]);
+
+        MemberMails::requestReceived($member, $sr);
 
         return redirect()->route('afrit6.portal.desks')->with('status', __('workspace.office.sent'));
     }
@@ -251,6 +257,8 @@ class WorkspaceController extends Controller
             AuditLog::record('afrit6.desk_swapped', $member, ['from' => $fromSpace->code, 'to' => $to->code, 'date' => $effective->toDateString()]);
         });
 
+        MemberMails::deskSwapped($member, Space::find($data['from'])?->code ?? '', $to->code, $effective);
+
         return redirect()->route('afrit6.portal.desks')->with('status', __('workspace.desks.swapped', [
             'to' => $to->code, 'date' => $effective->locale(app()->getLocale())->translatedFormat('j F'),
         ]));
@@ -278,11 +286,13 @@ class WorkspaceController extends Controller
             throw ValidationException::withMessages(['space_id' => __('workspace.desks.already_asked', ['desk' => $space->code])]);
         }
 
-        ServiceRequest::create([
+        $sr = ServiceRequest::create([
             'member_id' => $member->id, 'kind' => 'desk_add', 'status' => ServiceRequest::PENDING,
             'date' => $data['date'], 'ends_on' => $until, 'space_id' => $space->id, 'note' => $data['note'] ?? null,
             'amount_cents' => Pricing::price('desk_month'),
         ]);
+
+        MemberMails::requestReceived($member, $sr);
 
         return redirect()->route('afrit6.portal.desks')->with('status', __('workspace.desks.asked', ['desk' => $space->code]));
     }
@@ -324,6 +334,8 @@ class WorkspaceController extends Controller
             return $booking;
         });
 
+        MemberMails::roomBooked($member, $booking);
+
         return redirect()->route('afrit6.portal.room', ['day' => $date->toDateString()])->with('status', __('workspace.room.booked', [
             'date' => $date->locale(app()->getLocale())->translatedFormat('l j F'), 'time' => $booking->timeRange(),
         ]));
@@ -339,6 +351,8 @@ class WorkspaceController extends Controller
             $booking->update(['cancelled_at' => now()]);
             ServiceRequest::where('room_booking_id', $booking->id)->open()->delete();
         });
+
+        MemberMails::roomCancelled($booking->member, $booking);
 
         return redirect()->route('afrit6.portal.room', ['day' => $booking->date->toDateString()])->with('status', __('workspace.room.cancelled'));
     }
@@ -377,7 +391,8 @@ class WorkspaceController extends Controller
             'from_text' => $data['from_text'] ?? null, 'carrier' => $data['carrier'] ?? null, 'note' => $data['note'] ?? null,
         ];
         $attrs['amount_cents'] = Pricing::oneOff($attrs);
-        ServiceRequest::create($attrs);
+        $sr = ServiceRequest::create($attrs);
+        MemberMails::requestReceived($member, $sr);
 
         return redirect()->route('afrit6.portal.services')->with('status', __('workspace.services.sent'));
     }
@@ -395,6 +410,7 @@ class WorkspaceController extends Controller
         if ($sr->status !== ServiceRequest::PENDING && ! ($sr->status === ServiceRequest::WAITING && $sr->status_before_wait === ServiceRequest::PENDING)) {
             return back()->withErrors(['request' => __('workspace.services.cannot_cancel')]);
         }
+        MemberMails::requestCancelled($sr->member, $sr);
         $sr->delete();
 
         return back()->with('status', __('workspace.services.cancelled'));
@@ -408,6 +424,7 @@ class WorkspaceController extends Controller
         $last = $sr->date->gt(today()) ? $sr->date : today();
         $sr->update(['ends_on' => $last]);
         $sr->messages()->create(['member_id' => $sr->member_id, 'body' => __('workspace.services.stop_note', ['date' => $last->format('d/m/Y')])]);
+        MemberMails::storageStopped($sr->member, $sr);
 
         return back()->with('status', __('workspace.services.stopped', ['date' => $last->format('d/m/Y')]));
     }

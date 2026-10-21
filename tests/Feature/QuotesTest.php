@@ -10,8 +10,8 @@ use App\Models\Role;
 use App\Models\Sales\Deal;
 use App\Models\Sales\Quote;
 use App\Models\User;
+use App\Notifications\Confirmation;
 use App\Notifications\QuoteAnswered;
-use App\Notifications\QuoteSent;
 use App\Services\Rental\Availability;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -208,7 +208,7 @@ class QuotesTest extends TestCase
         $this->assertSame('proposal', $quote->deal->stage);
         $this->assertSame(19500, $quote->deal->value_cents);
         $this->assertTrue(AuditLog::where('action', 'quote.sent')->exists());
-        Notification::assertSentTo(new AnonymousNotifiable, QuoteSent::class, fn ($n, $ch, $notifiable) => $notifiable->routes['mail'] === 'sarah@demo.be');
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $ch, $notifiable) => $notifiable->routes['mail'] === 'sarah@demo.be' && str_contains($n->subject, 'Company evening') && $n->signer?->is($this->sales));
 
         // Frozen: no more edits.
         $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/lines', ['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 1])->assertStatus(409);
@@ -233,6 +233,8 @@ class QuotesTest extends TestCase
         $this->assertSame('won', $quote->deal->stage);
         $this->assertTrue(AuditLog::where('action', 'quote.accepted')->whereNull('actor_id')->exists());
         Notification::assertSentTo($this->sales, QuoteAnswered::class);
+        // The customer gets a confirmation of what they did, with the PO.
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n) => str_starts_with($n->subject, 'We received your confirmation') && in_array('PO 4500-9031', $n->details, true));
 
         // Answering twice is not possible.
         $this->post('/q/'.$quote->token.'/decline', ['reason' => 'price'])->assertStatus(409);

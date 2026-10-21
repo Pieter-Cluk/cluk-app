@@ -52,6 +52,7 @@
         @if ($quote->notes)<p>{!! nl2br(e($quote->notes)) !!}</p>@endif
         <p>{{ __('quotes.doc_terms', ['valid' => ($quote->valid_until ?? today()->addDays($me->quote_valid_days ?: 14))->format('d/m/Y'), 'days' => $me->payment_term_days ?: 30]) }}</p>
         <p>{{ __('quotes.doc_factor') }}</p>
+        <p>{{ __('quotes.doc_terms_link', ['url' => preg_replace('#^https?://#', '', url('/terms'))]) }}</p>
     </section>
     <footer class="doc-foot">
         {{ trim($me->legal_name.' '.$me->legal_form) }} · {{ $me->street }}, {{ $me->postcode }} {{ $me->city }} · {{ \App\Support\VatNumber::format($me->vat_number) }}@if ($bank) · IBAN {{ $bank->formattedIban() }}@endif

@@ -9,17 +9,15 @@ use App\Models\Equipment\Item;
 use App\Models\Sales\Deal;
 use App\Models\Sales\Quote;
 use App\Models\Sales\QuoteLine;
-use App\Notifications\QuoteSent;
 use App\Services\Afrit6\Pricing;
 use App\Services\Rental\Availability;
 use App\Services\Rental\QuoteAnswer;
-use App\Support\SafeMail;
+use App\Services\Rental\QuoteMails;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -245,7 +243,7 @@ class QuoteController extends Controller
             }
             $deal->log('email', __('quotes.log.sent', ['code' => $quote->code(), 'to' => $quote->sent_to, 'total' => Pricing::eur($quote->net_cents)]));
         }
-        $ok = SafeMail::notify(Notification::route('mail', $quote->sent_to), (new QuoteSent($quote, $d['message'] ?? null, $request->user()))->locale($quote->language));
+        $ok = QuoteMails::sent($quote->load(['lines', 'contact', 'owner']), $d['message'] ?? null, $request->user());
 
         return redirect()->route('quotes.show', $quote)->with('status', $ok ? __('quotes.flash.sent', ['to' => $quote->sent_to]) : __('quotes.flash.sent_no_mail'));
     }

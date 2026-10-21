@@ -8,6 +8,7 @@ use App\Models\Afrit6\RequestMessage;
 use App\Models\Afrit6\ServiceRequest;
 use App\Models\AuditLog;
 use App\Models\User;
+use App\Services\Afrit6\MemberMails;
 use App\Services\Afrit6\Pricing;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -157,6 +158,10 @@ class TaskController extends Controller
             AuditLog::record('afrit6.task_confirmed', $task, [], $me);
         });
 
+        if (in_array($task->kind, config('afrit6.member_kinds'), true)) {
+            MemberMails::confirmed($task->fresh());
+        }
+
         return back()->with('status', __('workspace.tasks.confirmed'));
     }
 
@@ -172,6 +177,10 @@ class TaskController extends Controller
             RequestMessage::create(['request_id' => $task->id, 'user_id' => $me->id, 'body' => $data['reason']]);
             AuditLog::record('afrit6.task_declined', $task, ['reason' => $data['reason']], $me);
         });
+
+        if (in_array($task->kind, config('afrit6.member_kinds'), true)) {
+            MemberMails::declined($task->fresh());
+        }
 
         return back()->with('status', __('workspace.tasks.declined'));
     }
@@ -214,6 +223,10 @@ class TaskController extends Controller
                 $task->update(['status' => ServiceRequest::WAITING, 'status_before_wait' => $task->status]);
             }
         });
+
+        if (in_array($task->kind, config('afrit6.member_kinds'), true)) {
+            MemberMails::question($task, $data['body']);
+        }
 
         return back()->with('status', __(! empty($data['wait']) ? 'workspace.tasks.asked' : 'workspace.tasks.message_sent'));
     }
