@@ -588,3 +588,7 @@ img.av{object-fit:cover;background:var(--surface-subtle);padding:0}
 @media (max-width:700px){.fday{min-height:52px}.fbar{font-size:0;height:8px;padding:0}}
 .split-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media (max-width:900px){.split-2{grid-template-columns:1fr}}
+
+/* Wall screens admin */
+.wall-card > .muted { margin: 4px 0 0; }
+.wall-card .inline-form { margin: 14px 0 4px; padding-left: 0; }

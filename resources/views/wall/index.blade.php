@@ -3,7 +3,7 @@
     @include('partials.flash')
     <div class="split-2">
         @foreach ($screens as $s)
-            <section class="card">
+            <section class="card wall-card">
                 <div class="card-head"><h2>{{ __('wall.admin.screen_'.$s->view) }}</h2><span @class(['pill', 'pill-ok' => $s->isOnline(), 'pill-off' => ! $s->isOnline()])>{{ $s->isOnline() ? __('wall.admin.online') : __('wall.admin.offline') }}</span></div>
                 <p class="muted">{{ __('wall.admin.desc_'.$s->view) }}</p>
                 <div class="inline-form">
