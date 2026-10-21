@@ -384,3 +384,38 @@ tr.is-off td{color:var(--muted)}
 .qr-preview svg{width:160px;height:160px}
 .qr-preview b{font-size:16px;letter-spacing:1px}
 .form-grid.pad{padding:16px 24px 24px;margin:0;border-top:1px solid var(--line)}
+/* Sales: pipeline board, deal page, Incoming */
+.filters{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:16px 0}
+.board{display:grid;grid-template-columns:repeat(4,minmax(220px,1fr));gap:14px;overflow-x:auto;padding-bottom:8px}
+.board-col{background:var(--surface-subtle);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:200px}
+.board-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:4px 4px 8px;border-bottom:3px solid var(--line)}
+.board-head small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.board-qualified{border-bottom-color:var(--info-text)}.board-proposal{border-bottom-color:var(--warning-text)}.board-negotiation{border-bottom-color:var(--brand)}
+.board-empty{padding:8px 4px}
+.deal-card{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;color:var(--ink);text-decoration:none}
+.deal-card:hover{border-color:var(--brand)}
+.deal-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px}
+.av-sm{width:26px;height:26px;font-size:10px}
+.small{font-size:12px}
+.pipeline{display:flex;gap:4px;margin:0 0 16px;flex-wrap:wrap}
+.pipeline form{display:contents}
+.pipe{flex:1 1 120px;min-height:40px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px;font-weight:700;border-radius:6px;cursor:pointer;padding:0 10px}
+span.pipe{cursor:default}
+.pipe-done{background:var(--brand-tint);color:var(--brand-strong);border-color:transparent}
+.pipe-on{background:var(--brand);color:#fff}
+.stack-sm{display:flex;flex-direction:column;gap:8px}
+.note-form{display:grid;grid-template-columns:140px 1fr auto;gap:8px;align-items:start;margin-bottom:12px}
+.activity{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.act{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.act p{margin:2px 0 0;font-size:14px;line-height:1.45}
+.act-stage p,.act-system p{color:var(--muted)}
+.inbox{list-style:none;margin:0;padding:0}
+.inbox-item{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.inbox-item:hover,.inbox-item.is-on{background:var(--brand-tint)}
+.inbox-main{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.inbox-side{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.inbox-empty{padding:24px 16px}
+.message-body{background:var(--surface-subtle);border-radius:8px;padding:12px;font-size:14px;line-height:1.5;margin-top:12px;white-space:normal;overflow-wrap:anywhere}
+details>summary{cursor:pointer;font-size:14px;min-height:32px;display:flex;align-items:center}
+@media (max-width:900px){.note-form{grid-template-columns:1fr}.board{grid-template-columns:repeat(4,80vw)}}
+aside .checks{grid-template-columns:1fr}

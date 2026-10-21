@@ -11,6 +11,8 @@ use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
+use App\Http\Controllers\Sales\DealController;
+use App\Http\Controllers\Sales\IncomingController;
 use App\Http\Controllers\Settings\AuditLogController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
 use App\Http\Controllers\Settings\ImportController;
@@ -21,6 +23,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
+
+// Website form → Incoming (token in the X-Intake-Token header).
+Route::post('/intake', [IncomingController::class, 'intake'])->middleware('throttle:30,1')->name('intake');
 
 // Staff login with Microsoft 365.
 Route::middleware('guest:web')->group(function () {
@@ -97,6 +102,31 @@ Route::middleware('auth:web')->group(function () {
         });
         Route::put('/companies/{company}/vat', [CompanyController::class, 'updateVat'])->whereNumber('company')->middleware('right:finance.vat_treatment')->name('companies.vat');
         Route::get('/companies/{company}', [CompanyController::class, 'show'])->whereNumber('company')->name('companies.show');
+    });
+
+    // Sales: pipeline of deals and the Incoming inbox. View from level 1, work from level 2.
+    Route::middleware('nav:sales')->prefix('sales')->group(function () {
+        Route::get('/', [DealController::class, 'index'])->name('deals.index');
+        Route::get('/incoming', [IncomingController::class, 'index'])->name('incoming.index');
+        Route::get('/deals/{deal}', [DealController::class, 'show'])->whereNumber('deal')->name('deals.show');
+        Route::middleware('level:sales,2')->group(function () {
+            Route::get('/deals/new', [DealController::class, 'create'])->name('deals.create');
+            Route::post('/deals', [DealController::class, 'store'])->name('deals.store');
+            Route::put('/deals/{deal}', [DealController::class, 'update'])->whereNumber('deal')->name('deals.update');
+            Route::post('/deals/{deal}/checks', [DealController::class, 'checks'])->whereNumber('deal')->name('deals.checks');
+            Route::post('/deals/{deal}/move', [DealController::class, 'move'])->whereNumber('deal')->name('deals.move');
+            Route::post('/deals/{deal}/win', [DealController::class, 'win'])->whereNumber('deal')->name('deals.win');
+            Route::post('/deals/{deal}/lose', [DealController::class, 'lose'])->whereNumber('deal')->name('deals.lose');
+            Route::post('/deals/{deal}/disqualify', [DealController::class, 'disqualify'])->whereNumber('deal')->name('deals.disqualify');
+            Route::post('/deals/{deal}/reopen', [DealController::class, 'reopen'])->whereNumber('deal')->name('deals.reopen');
+            Route::post('/deals/{deal}/notes', [DealController::class, 'note'])->whereNumber('deal')->name('deals.note');
+            Route::post('/deals/{deal}/contact', [DealController::class, 'addContact'])->whereNumber('deal')->name('deals.contact');
+            Route::post('/incoming', [IncomingController::class, 'store'])->name('incoming.store');
+            Route::post('/incoming/{item}/convert', [IncomingController::class, 'convert'])->whereNumber('item')->name('incoming.convert');
+            Route::post('/incoming/{item}/link', [IncomingController::class, 'link'])->whereNumber('item')->name('incoming.link');
+            Route::post('/incoming/{item}/ask', [IncomingController::class, 'ask'])->whereNumber('item')->name('incoming.ask');
+            Route::post('/incoming/{item}/dismiss', [IncomingController::class, 'dismiss'])->whereNumber('item')->name('incoming.dismiss');
+        });
     });
 
     // Dry-hire equipment: view from level 1, change from level 2.
@@ -198,7 +228,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'companies', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'companies', 'sales', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

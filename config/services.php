@@ -44,4 +44,9 @@ return [
         'tenant' => env('MICROSOFT_TENANT_ID', 'organizations'),
     ],
 
+    // Website forms post requests to /intake with this token (header X-Intake-Token).
+    'intake' => [
+        'token' => env('INTAKE_TOKEN'),
+    ],
+
 ];

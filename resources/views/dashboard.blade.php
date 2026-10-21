@@ -12,14 +12,23 @@
 
     @php($myTasks = $user->canUseModule('afrit6') ? \App\Models\Afrit6\ServiceRequest::with('member')->open()->where('assignee_id', $user->id)->orderBy('date')->limit(8)->get() : collect())
     @php($toConfirm = $user->canUseModule('afrit6', 2) ? \App\Models\Afrit6\ServiceRequest::where('status', 'pending')->whereNull('assignee_id')->count() : 0)
+    @php($incoming = $user->canUseModule('sales', 2) ? \App\Models\Sales\IncomingMessage::where('status', 'new')->count() : 0)
+    @php($myDeals = $user->canUseModule('sales', 2) ? \App\Models\Sales\Deal::with('company')->open()->where('owner_id', $user->id)->orderByRaw('event_start is null, event_start')->limit(6)->get() : collect())
     <section class="card">
         <h2>{{ __('nav.your_tasks') }}</h2>
-        @if ($myTasks->isEmpty() && ! $toConfirm)
+        @if ($incoming)<p><a href="{{ route('incoming.index') }}" class="pill pill-warn">{{ __('deals.dashboard.incoming') }} · {{ $incoming }}</a></p>@endif
+        @if ($myTasks->isEmpty() && ! $toConfirm && ! $incoming && $myDeals->isEmpty())
             <p class="muted">{{ __('nav.no_tasks') }}</p>
         @else
             @if ($toConfirm)<p><a href="{{ route('afrit6.staff.tasks', ['status' => 'pending']) }}" class="pill pill-warn">Afrit 6 · {{ __('workspace.tasks.to_confirm_count', ['count' => $toConfirm]) }}</a></p>@endif
             @foreach ($myTasks as $t)
                 <div class="p-line"><a href="{{ route('afrit6.staff.tasks.show', $t) }}"><b>{{ __('workspace.kinds.'.$t->kind) }}</b> · {{ $t->member->companyName() }}</a><span class="muted">{{ $t->date->locale(app()->getLocale())->translatedFormat('D j M') }} · {{ __('workspace.tasks.status.'.$t->taskStatus()) }}</span></div>
+            @endforeach
+        @endif
+        @if ($myDeals->isNotEmpty())
+            <h3>{{ __('deals.dashboard.my_deals') }}</h3>
+            @foreach ($myDeals as $d)
+                <div class="p-line"><a href="{{ route('deals.show', $d) }}"><b>{{ $d->title }}</b> · {{ $d->customerName() }}</a><span class="muted">{{ __('deals.stages.'.$d->stage) }}@if ($d->event_start) · {{ $d->event_start->locale(app()->getLocale())->translatedFormat('D j M') }}@endif</span></div>
             @endforeach
         @endif
     </section>

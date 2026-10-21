@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Middleware\EnsureActiveMember;
+use App\Http\Middleware\EnsureModuleLevel;
+use App\Http\Middleware\EnsureNavAccess;
+use App\Http\Middleware\EnsureRight;
+use App\Http\Middleware\LogoutBlockedMembers;
+use App\Http\Middleware\LogoutDisabledUsers;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,18 +20,19 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
-            \App\Http\Middleware\SetLocale::class,
-            \App\Http\Middleware\LogoutDisabledUsers::class,
-            \App\Http\Middleware\LogoutBlockedMembers::class,
+            SetLocale::class,
+            LogoutDisabledUsers::class,
+            LogoutBlockedMembers::class,
         ]);
         // Afrit 6 members and staff each have their own login page and home.
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('afrit6', 'afrit6/*') ? route('afrit6.login') : route('login'));
         $middleware->redirectUsersTo(fn (Request $request) => $request->is('afrit6', 'afrit6/*') ? route('afrit6.portal') : route('dashboard'));
+        $middleware->validateCsrfTokens(except: ['intake']);
         $middleware->alias([
-            'nav' => \App\Http\Middleware\EnsureNavAccess::class,
-            'level' => \App\Http\Middleware\EnsureModuleLevel::class,
-            'right' => \App\Http\Middleware\EnsureRight::class,
-            'member.active' => \App\Http\Middleware\EnsureActiveMember::class,
+            'nav' => EnsureNavAccess::class,
+            'level' => EnsureModuleLevel::class,
+            'right' => EnsureRight::class,
+            'member.active' => EnsureActiveMember::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

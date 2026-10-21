@@ -5,6 +5,7 @@ name: Deploy to app.cluk.live
 # 3. uploads it to one.com over SSH and switches over in one move.
 # Secrets used (Settings → Secrets and variables → Actions):
 #   ONECOM_SSH_PASSWORD, ONECOM_DB_PASSWORD, MICROSOFT_CLIENT_SECRET
+#   INTAKE_TOKEN (optional: lets the cluk.live website form post into Incoming)
 
 on:
   workflow_dispatch:
@@ -67,6 +68,7 @@ jobs:
         env:
           DB_PASSWORD: ${{ secrets.ONECOM_DB_PASSWORD }}
           MICROSOFT_CLIENT_SECRET: ${{ secrets.MICROSOFT_CLIENT_SECRET }}
+          INTAKE_TOKEN: ${{ secrets.INTAKE_TOKEN }}
         run: |
           trim() { printf '%s' "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'; }
           cat > /tmp/env.new <<EOF
@@ -97,6 +99,7 @@ jobs:
           MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}
           MICROSOFT_CLIENT_SECRET="$(trim "$MICROSOFT_CLIENT_SECRET")"
           MICROSOFT_REDIRECT_URI=${APP_URL}/auth/microsoft/callback
+          INTAKE_TOKEN="$(trim "$INTAKE_TOKEN")"
           EOF
           sed -i 's/^[[:space:]]*//' /tmp/env.new
 
