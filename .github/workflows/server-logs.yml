@@ -36,7 +36,7 @@ jobs:
           grep -oE '^(MICROSOFT_[A-Z_]+|MAIL_[A-Z_]+|APP_URL|SESSION_[A-Z_]+)=' .env | tr '\n' ' '
           echo
           echo "== secret lengths"
-          for k in MICROSOFT_CLIENT_SECRET DB_PASSWORD; do v=$(grep "^$k=" .env | cut -d= -f2- | tr -d '"'); echo "$k: ${#v} chars"; done
+          for k in MICROSOFT_CLIENT_SECRET DB_PASSWORD INTAKE_TOKEN; do v=$(grep "^$k=" .env | cut -d= -f2- | tr -d '"'); echo "$k: ${#v} chars"; done
           REMOTE
           echo "ssh exit: $?" >> report.txt
 
