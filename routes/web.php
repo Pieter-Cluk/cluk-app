@@ -11,6 +11,8 @@ use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
+use App\Http\Controllers\Factory\FactoryController;
+use App\Http\Controllers\Factory\FactoryPublicController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\QuotePublicController;
@@ -41,6 +43,10 @@ Route::get('/terms/{lang?}', function (?string $lang = null) {
 
     return response()->file(public_path($file), ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'inline; filename="'.basename($file).'"']);
 })->where('lang', '[a-z]{2}')->name('terms');
+
+// The public Cluk Factory booking page (also for the website).
+Route::get('/book', [FactoryPublicController::class, 'show'])->name('factory.book');
+Route::post('/book', [FactoryPublicController::class, 'store'])->middleware('throttle:10,1')->name('factory.book.store');
 
 // The customer's quote page (link in the quote email).
 Route::prefix('q/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {
@@ -292,6 +298,24 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/{order}/proforma', [OrderDocumentController::class, 'sendProforma'])->whereNumber('order')->name('orders.proforma');
     });
 
+    // Cluk Factory: requests, the hall calendar and bookings. View from level 1, work from level 2.
+    Route::prefix('factory')->middleware('nav:factory')->group(function () {
+        Route::get('/', [FactoryController::class, 'index'])->name('factory.index');
+        Route::get('/bookings/{booking}', [FactoryController::class, 'show'])->whereNumber('booking')->name('factory.show');
+        Route::middleware('level:factory,2')->group(function () {
+            Route::get('/bookings/new', [FactoryController::class, 'create'])->name('factory.create');
+            Route::post('/bookings', [FactoryController::class, 'store'])->name('factory.store');
+            Route::get('/bookings/{booking}/edit', [FactoryController::class, 'edit'])->whereNumber('booking')->name('factory.edit');
+            Route::put('/bookings/{booking}', [FactoryController::class, 'update'])->whereNumber('booking')->name('factory.update');
+            Route::post('/bookings/{booking}/hold', [FactoryController::class, 'hold'])->whereNumber('booking')->name('factory.hold');
+            Route::post('/bookings/{booking}/decline', [FactoryController::class, 'decline'])->whereNumber('booking')->name('factory.decline');
+            Route::post('/bookings/{booking}/quote', [FactoryController::class, 'quote'])->whereNumber('booking')->name('factory.quote');
+            Route::post('/bookings/{booking}/confirm', [FactoryController::class, 'confirm'])->whereNumber('booking')->name('factory.confirm');
+            Route::post('/bookings/{booking}/checks', [FactoryController::class, 'checks'])->whereNumber('booking')->name('factory.checks');
+            Route::post('/bookings/{booking}/status', [FactoryController::class, 'status'])->whereNumber('booking')->name('factory.status');
+        });
+    });
+
     // Sub-hire: price requests (SHQ) and confirmations (SHC).
     Route::prefix('sub-hire')->middleware('nav:subhire')->group(function () {
         Route::get('/', [SubhireController::class, 'index'])->name('subhire.index');
@@ -308,7 +332,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'companies', 'sales', 'orders', 'subhire', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

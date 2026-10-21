@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\CompanyDetail;
 use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
+use App\Models\Factory\Booking;
 use App\Models\Member;
 use App\Models\Rental\Order;
 use App\Models\Rental\SubhireRequest;
@@ -40,6 +41,7 @@ class AuditText
             $subject instanceof Item => $subject->number.' · '.$subject->name,
             $subject instanceof Asset => $subject->code,
             $subject instanceof Quote => $subject->code().' · '.$subject->title,
+            $subject instanceof Booking => $subject->number.' · '.$subject->title,
             $subject instanceof Order => $subject->number.' · '.$subject->title,
             $subject instanceof SubhireRequest => $subject->code().' · '.$subject->supplier?->name,
             $subject instanceof ServiceRequest => __('workspace.kinds.'.$subject->kind).' · '.$subject->member?->name,
@@ -90,6 +92,10 @@ class AuditText
             'order.approved' => trim(($d['to'] ?? '').' · '.($d['total'] ?? ''), ' ·'),
             'order.assigned' => ($d['from'] ?? '—').' → '.($d['to'] ?? ''),
             'order.proforma_sent' => trim(($d['number'] ?? '').' · '.($d['to'] ?? ''), ' ·'),
+            'factory.requested' => ($d['date'] ?? '').' · '.($d['status'] ?? ''),
+            'factory.option' => (string) ($d['until'] ?? ''),
+            'factory.declined' => (string) ($d['reason'] ?? ''),
+            'factory.quote' => (string) ($d['quote'] ?? ''),
             'order.cancelled' => (string) ($d['reason'] ?? ''),
             'subhire.sent' => trim(($d['supplier'] ?? '').' · '.($d['to'] ?? ''), ' ·'),
             'subhire.accepted' => trim(($d['supplier'] ?? '').' · '.($d['total'] ?? ''), ' ·'),

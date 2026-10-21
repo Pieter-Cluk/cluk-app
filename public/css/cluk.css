@@ -567,3 +567,22 @@ img.av{object-fit:cover;background:var(--surface-subtle);padding:0}
 .doc-link{display:flex;flex-direction:column;gap:4px;border:1px solid var(--line);border-radius:8px;padding:12px 14px;color:var(--ink);text-decoration:none}
 .doc-link:hover{border-color:var(--brand)}
 .doc-check th.box{font-size:10px}
+/* Cluk Factory staff */
+.card-head.pad{padding:16px 20px 0}
+.fcal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:12px}
+.fdow{font-size:11px;color:var(--muted);text-align:center;text-transform:capitalize}
+.fday{min-height:76px;border:1px solid var(--line);border-radius:6px;padding:4px;display:flex;flex-direction:column;gap:3px;background:var(--surface)}
+.fday-empty{visibility:hidden}
+.fday-past{opacity:.55}
+.fday-today{border-color:var(--brand)}
+.fnum{font-size:12px;color:var(--muted)}
+.fbar{display:block;font-size:11px;line-height:1.3;border-radius:4px;padding:3px 5px;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fbar-event,.legend-row i.fbar-event{background:var(--brand);color:#fff}
+.fbar-buildup,.fbar-breakdown,.legend-row i.fbar-buildup{background:var(--brand-tint);color:var(--brand-strong)}
+.fbar-option,.legend-row i.fbar-option{background:var(--warning-bg);color:var(--warning-text)}
+.legend-row{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
+.legend-row i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.date-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:46px;border:1px solid var(--line);border-radius:8px;padding:4px}
+.date-chip b{font-size:18px;line-height:1}.date-chip small{font-size:11px;color:var(--muted);text-transform:uppercase}
+.checks.one-col{grid-template-columns:1fr}
+@media (max-width:700px){.fday{min-height:52px}.fbar{font-size:0;height:8px;padding:0}}

@@ -14,12 +14,14 @@
     @php($toConfirm = $user->canUseModule('afrit6', 2) ? \App\Models\Afrit6\ServiceRequest::where('status', 'pending')->whereNull('assignee_id')->count() : 0)
     @php($incoming = $user->canUseModule('sales', 2) ? \App\Models\Sales\IncomingMessage::where('status', 'new')->count() : 0)
     @php($ordersOpen = $user->canUseModule('dryhire', 2) ? \App\Models\Rental\Order::where('status', 'allocation')->where(fn ($q) => $q->whereNull('assignee_id')->orWhere('assignee_id', $user->id))->count() : 0)
+    @php($venueRequests = $user->canUseModule('factory', 2) ? \App\Models\Factory\Booking::where('status', 'request')->count() : 0)
     @php($myDeals = $user->canUseModule('sales', 2) ? \App\Models\Sales\Deal::with('company')->open()->where('owner_id', $user->id)->orderByRaw('event_start is null, event_start')->limit(6)->get() : collect())
     <section class="card">
         <h2>{{ __('nav.your_tasks') }}</h2>
         @if ($incoming)<p><a href="{{ route('incoming.index') }}" class="pill pill-warn">{{ __('deals.dashboard.incoming') }} · {{ $incoming }}</a></p>@endif
+        @if ($venueRequests)<p><a href="{{ route('factory.index') }}" class="pill pill-warn">{{ __('factory.dashboard') }} · {{ $venueRequests }}</a></p>@endif
         @if ($ordersOpen)<p><a href="{{ route('orders.index') }}" class="pill pill-warn">{{ __('orders.dashboard.orders') }} · {{ $ordersOpen }}</a></p>@endif
-        @if ($myTasks->isEmpty() && ! $toConfirm && ! $incoming && $myDeals->isEmpty() && ! $ordersOpen)
+        @if ($myTasks->isEmpty() && ! $toConfirm && ! $incoming && $myDeals->isEmpty() && ! $ordersOpen && ! $venueRequests)
             <p class="muted">{{ __('nav.no_tasks') }}</p>
         @else
             @if ($toConfirm)<p><a href="{{ route('afrit6.staff.tasks', ['status' => 'pending']) }}" class="pill pill-warn">Afrit 6 · {{ __('workspace.tasks.to_confirm_count', ['count' => $toConfirm]) }}</a></p>@endif
