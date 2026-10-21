@@ -30,10 +30,12 @@ Route::redirect('/', '/dashboard');
 Route::post('/intake', [IncomingController::class, 'intake'])->middleware('throttle:30,1')->name('intake');
 
 // CLUK's general terms and conditions (linked from quotes, emails and documents).
-Route::get('/terms', fn () => response()->file(public_path(config('rental.terms_file')), [
-    'Content-Type' => 'application/pdf',
-    'Content-Disposition' => 'inline; filename="CLUK_BV_Terms_and_conditions.pdf"',
-]))->name('terms');
+Route::get('/terms/{lang?}', function (?string $lang = null) {
+    $files = config('rental.terms_files');
+    $file = $files[$lang ?? app()->getLocale()] ?? $files['en'];
+
+    return response()->file(public_path($file), ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'inline; filename="'.basename($file).'"']);
+})->where('lang', '[a-z]{2}')->name('terms');
 
 // The customer's quote page (link in the quote email).
 Route::prefix('q/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {

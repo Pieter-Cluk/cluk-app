@@ -40,7 +40,7 @@ return [
         'footer' => 'Pied de page sur chaque page',
         'later' => 'Les logos par marque, les conditions par langue et les médias & connexions arrivent avec le module documents.',
         'preview' => 'Aperçu sur un document',
-        'preview_terms' => 'Paiement sous :pay jours · devis valable :valid jours · matériel en option :option jours',
+        'preview_terms' => 'Paiement : :pay · devis valable :valid jours · matériel en option :option jours',
         'vat_short' => 'TVA',
     ],
     'vat' => [

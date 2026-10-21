@@ -50,9 +50,9 @@
     <section class="doc-notes">
         <b>{{ __('quotes.doc_notes') }}</b>
         @if ($quote->notes)<p>{!! nl2br(e($quote->notes)) !!}</p>@endif
-        <p>{{ __('quotes.doc_terms', ['valid' => ($quote->valid_until ?? today()->addDays($me->quote_valid_days ?: 14))->format('d/m/Y'), 'days' => $me->payment_term_days ?: 30]) }}</p>
+        <p>{{ __('quotes.doc_terms', ['valid' => ($quote->valid_until ?? today()->addDays($me->quote_valid_days ?: 30))->format('d/m/Y')]) }} {{ ($pay = $quote->company?->customer_payment_days ?? (int) $me->payment_term_days) > 0 ? __('quotes.doc_pay_days', ['days' => $pay]) : __('quotes.doc_pay_now') }}</p>
         <p>{{ __('quotes.doc_factor') }}</p>
-        <p>{{ __('quotes.doc_terms_link', ['url' => preg_replace('#^https?://#', '', url('/terms'))]) }}</p>
+        <p>{{ __('quotes.doc_terms_link', ['url' => preg_replace('#^https?://#', '', route('terms', $quote->language))]) }}</p>
     </section>
     <footer class="doc-foot">
         {{ trim($me->legal_name.' '.$me->legal_form) }} · {{ $me->street }}, {{ $me->postcode }} {{ $me->city }} · {{ \App\Support\VatNumber::format($me->vat_number) }}@if ($bank) · IBAN {{ $bank->formattedIban() }}@endif

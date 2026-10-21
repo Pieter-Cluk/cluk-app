@@ -165,10 +165,10 @@
                 <dl class="facts">
                     @if ($company->is_customer)
                         <dt>{{ __('companies.fields.customer_payment_days') }}</dt>
-                        <dd>{{ __('companies.days', ['days' => $company->customer_payment_days ?? \App\Models\CompanyDetail::current()->payment_term_days]) }}@if ($company->customer_payment_days === null) <small class="muted">({{ __('companies.show.standard') }})</small>@endif</dd>
+                        <dd>{{ trans_choice('companies.days', (int) ($company->customer_payment_days ?? \App\Models\CompanyDetail::current()->payment_term_days), ['days' => $company->customer_payment_days ?? \App\Models\CompanyDetail::current()->payment_term_days]) }}@if ($company->customer_payment_days === null) <small class="muted">({{ __('companies.show.standard') }})</small>@endif</dd>
                     @endif
                     @if ($company->is_supplier)
-                        <dt>{{ __('companies.fields.supplier_payment_days') }}</dt><dd>{{ $company->supplier_payment_days !== null ? __('companies.days', ['days' => $company->supplier_payment_days]) : '—' }}</dd>
+                        <dt>{{ __('companies.fields.supplier_payment_days') }}</dt><dd>{{ $company->supplier_payment_days !== null ? trans_choice('companies.days', (int) ($company->supplier_payment_days), ['days' => $company->supplier_payment_days]) : '—' }}</dd>
                         <dt>{{ __('companies.fields.supplies') }}</dt><dd>{{ collect($company->supplies ?? [])->map(fn ($s) => __('companies.supplies.'.$s))->implode(', ') ?: '—' }}</dd>
                     @endif
                     <dt>{{ __('companies.fields.phone') }}</dt><dd>{{ $company->phone ?? '—' }}</dd>

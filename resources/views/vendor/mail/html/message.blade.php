@@ -23,7 +23,7 @@ CLUK
 <x-slot:footer>
 <x-mail::footer>
 **{{ trim($me->legal_name.' '.$me->legal_form) }}** · {{ $me->street }}, {{ $me->postcode }} {{ $me->city }} · {{ \App\Support\VatNumber::format($me->vat_number) }}<br>
-[{{ $me->website ?: 'cluk.live' }}](https://{{ $me->website ?: 'cluk.live' }}) · [{{ __('mails.terms') }}]({{ rtrim(config('app.url'), '/') }}/terms)
+[{{ $me->website ?: 'cluk.live' }}](https://{{ $me->website ?: 'cluk.live' }}) · [{{ __('mails.terms') }}]({{ rtrim(config('app.url'), '/') }}/terms/{{ app()->getLocale() }})
 </x-mail::footer>
 </x-slot:footer>
 </x-mail::layout>

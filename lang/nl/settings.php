@@ -40,7 +40,7 @@ return [
         'footer' => 'Voettekst op elke pagina',
         'later' => 'Logo\'s per merk, voorwaarden per taal en media & koppelingen volgen met de documentenmodule.',
         'preview' => 'Zo ziet het eruit op een document',
-        'preview_terms' => 'Betaling binnen :pay dagen · offerte geldig :valid dagen · materiaal :option dagen in optie',
+        'preview_terms' => 'Betaling: :pay · offerte geldig :valid dagen · materiaal :option dagen in optie',
         'vat_short' => 'Btw',
     ],
     'vat' => [

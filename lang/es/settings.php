@@ -40,7 +40,7 @@ return [
         'footer' => 'Pie en cada página',
         'later' => 'Los logotipos por marca, las condiciones por idioma y los medios y conexiones llegan con el módulo de documentos.',
         'preview' => 'Así se ve en un documento',
-        'preview_terms' => 'Pago en :pay días · presupuesto válido :valid días · material reservado :option días',
+        'preview_terms' => 'Pago: :pay · presupuesto válido :valid días · material reservado :option días',
         'vat_short' => 'IVA',
     ],
     'vat' => [

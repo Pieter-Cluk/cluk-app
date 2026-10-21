@@ -3,7 +3,7 @@
 return [
     'yes' => 'Sí',
     'no' => 'No',
-    'days' => ':days días',
+    'days' => '{0} inmediato|{1} :days día|[2,*] :days días',
     'tabs' => [
         'all' => 'Todas las empresas',
         'customers' => 'Clientes',

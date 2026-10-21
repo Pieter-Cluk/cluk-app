@@ -40,7 +40,7 @@ return [
         'footer' => 'Footer line on every page',
         'later' => 'Logos per brand, terms and conditions per language and media & connections follow with the documents module.',
         'preview' => 'How it looks on a document',
-        'preview_terms' => 'Payment within :pay days · quote valid for :valid days · equipment held for :option days',
+        'preview_terms' => 'Payment: :pay · quote valid for :valid days · equipment held for :option days',
         'vat_short' => 'VAT',
     ],
     'vat' => [

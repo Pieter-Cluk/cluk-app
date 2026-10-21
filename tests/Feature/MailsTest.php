@@ -39,6 +39,11 @@ class MailsTest extends TestCase
     public function test_terms_pdf_is_served(): void
     {
         $this->get('/terms')->assertOk()->assertHeader('Content-Type', 'application/pdf');
+        foreach (config('rental.terms_files') as $lang => $file) {
+            $this->assertFileExists(public_path($file));
+            $this->get('/terms/'.$lang)->assertOk()->assertHeader('Content-Disposition', 'inline; filename="'.basename($file).'"');
+        }
+        $this->get('/terms/de')->assertOk(); // unknown language: the English version
     }
 
     public function test_member_emails_in_every_language(): void
@@ -102,7 +107,7 @@ class MailsTest extends TestCase
             $html = $this->render($n, $to);
             $this->assertDoesNotMatchRegularExpression($this->pattern, strip_tags($html), $n->subject);
             $this->assertStringContainsString('Elke Martens', $html);
-            $this->assertStringContainsString('/terms', $html);
+            $this->assertStringContainsString('/terms/'.$n->locale, $html);
             $sent++;
 
             return true;

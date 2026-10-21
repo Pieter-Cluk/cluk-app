@@ -203,7 +203,7 @@ class QuotesTest extends TestCase
 
         $this->assertSame('sent', $quote->status);
         $this->assertSame(48, strlen($quote->token));
-        $this->assertSame(today()->addDays(14)->toDateString(), $quote->valid_until->toDateString());
+        $this->assertSame(today()->addDays(30)->toDateString(), $quote->valid_until->toDateString());
         $this->assertSame(today()->addDays(3)->setTime(17, 0)->toDateTimeString(), $quote->reserved_until->toDateTimeString());
         $this->assertSame('proposal', $quote->deal->stage);
         $this->assertSame(19500, $quote->deal->value_cents);

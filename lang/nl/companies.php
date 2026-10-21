@@ -3,7 +3,7 @@
 return [
     'yes' => 'Ja',
     'no' => 'Nee',
-    'days' => ':days dagen',
+    'days' => '{0} onmiddellijk|{1} :days dag|[2,*] :days dagen',
     'tabs' => [
         'all' => 'Alle bedrijven',
         'customers' => 'Klanten',

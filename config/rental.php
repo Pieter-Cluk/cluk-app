@@ -23,9 +23,13 @@ return [
     // Price units that are multiplied by the factor; others (event, coli…) are charged once per qty.
     'factor_units' => ['day', 'half_day'],
 
-    // CLUK's general terms and conditions (PDF in public/), served at /terms.
+    // CLUK's general terms and conditions (PDFs in public/), served at /terms/{language}.
     // The customer ticks them when accepting a quote; emails and documents link to them.
-    'terms_file' => 'docs/CLUK_BV_Terms_and_conditions_EN.pdf',
-    'terms_url' => env('RENTAL_TERMS_URL', '/terms'),
+    'terms_files' => [
+        'en' => 'docs/CLUK_BV_Terms_and_conditions_EN.pdf',
+        'nl' => 'docs/CLUK_BV_Algemene_voorwaarden_NL.pdf',
+        'fr' => 'docs/CLUK_BV_Conditions_generales_FR.pdf',
+        'es' => 'docs/CLUK_BV_Condiciones_generales_ES.pdf',
+    ],
 
 ];

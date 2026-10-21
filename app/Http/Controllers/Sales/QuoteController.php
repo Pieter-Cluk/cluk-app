@@ -229,7 +229,7 @@ class QuoteController extends Controller
         $quote->recalculate();
         $quote->forceFill([
             'status' => 'sent', 'token' => $quote->token ?: Str::random(48), 'sent_at' => now(), 'sent_by_id' => $request->user()->id,
-            'sent_to' => mb_strtolower($d['to']), 'valid_until' => today()->addDays($me->quote_valid_days ?: 14),
+            'sent_to' => mb_strtolower($d['to']), 'valid_until' => today()->addDays($me->quote_valid_days ?: 30),
             'reserved_until' => today()->addDays($me->option_days ?: 3)->setTime(17, 0),
         ])->save();
 

@@ -33,7 +33,7 @@ class SettingsTest extends TestCase
             'legal_name' => $c->legal_name, 'legal_form' => $c->legal_form, 'vat_number' => $c->vat_number,
             'street' => $c->street, 'postcode' => $c->postcode, 'city' => $c->city, 'country' => $c->country,
             'warehouse_address' => $c->warehouse_address, 'website' => $c->website,
-            'payment_term_days' => 30, 'quote_valid_days' => 14, 'option_days' => 3, 'footer_line' => $c->footer_line,
+            'payment_term_days' => 0, 'quote_valid_days' => 30, 'option_days' => 3, 'footer_line' => $c->footer_line,
         ];
     }
 

@@ -119,7 +119,7 @@
                     {{ collect([$company->phone, $company->email])->filter()->implode(' · ') }}<br>
                     {{ $company->website }}</p>
                 <hr>
-                <p class="small">{{ __('settings.company.preview_terms', ['pay' => $company->payment_term_days, 'valid' => $company->quote_valid_days, 'option' => $company->option_days]) }}</p>
+                <p class="small">{{ __('settings.company.preview_terms', ['pay' => trans_choice('companies.days', (int) $company->payment_term_days, ['days' => $company->payment_term_days]), 'valid' => $company->quote_valid_days, 'option' => $company->option_days]) }}</p>
                 <hr>
                 <p class="small muted">{{ $company->legal_name }} {{ $company->legal_form }} · {{ __('settings.company.vat_short') }} {{ $company->vat_number ?? '—' }}@if ($company->rpr) · RPR {{ $company->rpr }}@endif
                     @if ($main = $banks->firstWhere('is_main', true)) · {{ $main->formattedIban() }}@endif

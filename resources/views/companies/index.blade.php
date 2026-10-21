@@ -116,7 +116,7 @@
                                 </td>
                                 @if ($view === 'suppliers')
                                     <td>{{ collect($c->supplies ?? [])->map(fn ($s) => __('companies.supplies.'.$s))->implode(', ') ?: '—' }}</td>
-                                    <td>{{ $c->supplier_payment_days !== null ? __('companies.days', ['days' => $c->supplier_payment_days]) : '—' }}</td>
+                                    <td>{{ $c->supplier_payment_days !== null ? trans_choice('companies.days', (int) ($c->supplier_payment_days), ['days' => $c->supplier_payment_days]) : '—' }}</td>
                                 @else
                                     <td><span class="badge badge-{{ $rel }}">{{ __('companies.relationship.'.$rel) }}</span></td>
                                 @endif

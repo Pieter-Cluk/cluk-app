@@ -65,7 +65,7 @@
                     <label class="field"><span>{{ __('quotes.confirmed_by') }}</span><input name="name" required maxlength="120" value="{{ old('name', $quote->contact?->name) }}" autocomplete="name"></label>
                 </div>
                 <p class="muted small">{{ __('quotes.public.po_note') }}</p>
-                <label class="check"><input type="checkbox" name="terms" value="1" required> <span>@if (config('rental.terms_url')){!! __('quotes.public.terms_link', ['link' => '<a href="'.e(config('rental.terms_url')).'" target="_blank" rel="noopener">'.e(__('quotes.public.terms_name')).'</a>']) !!}@else{{ __('quotes.public.terms_plain') }}@endif</span></label>
+                <label class="check"><input type="checkbox" name="terms" value="1" required> <span>{!! __('quotes.public.terms_link', ['link' => '<a href="'.e(route('terms', app()->getLocale())).'" target="_blank" rel="noopener">'.e(__('quotes.public.terms_name')).'</a>']) !!}</span></label>
                 <div class="form-actions"><button class="primary" type="submit">{{ __('quotes.public.accept') }}</button></div>
             </form>
             <details class="mt">
