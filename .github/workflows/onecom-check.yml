@@ -80,6 +80,11 @@ jobs:
             echo "== DNS one.com site for app: $(getent hosts 3e3535bb.website.cys6r88bx.service.one | head -2 | tr '\n' ' ')"
             echo "== DNS one.com site for cluk.live: $(getent hosts 51e5a3f8.website.cys6r88bx.service.one | head -2 | tr '\n' ' ')"
             echo "== nameservers: $(dig +short NS cluk.live 2>/dev/null | tr '\n' ' ')"
+            echo "== MX: $(dig +short MX cluk.live 2>/dev/null | tr '\n' ' ')"
+            echo "== SPF/TXT: $(dig +short TXT cluk.live 2>/dev/null | tr '\n' ' ' | cut -c1-300)"
+            echo "== autodiscover: $(dig +short CNAME autodiscover.cluk.live 2>/dev/null)"
+            echo "== DKIM: $(dig +short CNAME selector1._domainkey.cluk.live 2>/dev/null) $(dig +short CNAME selector2._domainkey.cluk.live 2>/dev/null)"
+            echo "== DMARC: $(dig +short TXT _dmarc.cluk.live 2>/dev/null)"
             echo "== app CNAME: $(dig +short CNAME app.cluk.live 2>/dev/null)  wildcard test: $(dig +short A random123.cluk.live 2>/dev/null | tr '\n' ' ')"
             echo "== http://app.cluk.live/login"
             curl -s -o /dev/null -m 20 -w 'HTTP %{http_code} redirect=%{redirect_url}\n' http://app.cluk.live/login || echo "no answer"
@@ -103,7 +108,7 @@ jobs:
       - name: Web check lines as separate annotations
         if: always()
         run: |
-          sed -n '/== DNS app/,$p' report.txt | tr -d '\r' | grep -v '^$' | head -16 | while IFS= read -r line; do
+          sed -n '/== DNS app/,$p' report.txt | tr -d '\r' | grep -v '^$' | head -24 | while IFS= read -r line; do
             safe=$(printf '%s' "$line" | sed 's/%/%25/g; s/::/: :/g')
             echo "::notice title=web::${safe}"
           done
