@@ -24,7 +24,7 @@
                         $can('purchasing', 2) && Route::has('purchasing.create') ? ['purchasing.create', 'purchase'] : null,
                         $can('warehouse') ? ['w.home', 'warehouse'] : null,
                         $can('warehouse') ? ['w.delivery', 'delivery'] : null,
-                        $can('sales', 2) && Route::has('psales.items.create') ? ['psales.items.create', 'sales_item'] : null,
+                        $user->hasRight('sales.edit_items') ? ['psales.items', 'sales_item'] : null,
                         $can('dryhire', 2) ? ['equipment.create', 'item'] : null,
                     ]),
                     'afrit6' => array_filter([

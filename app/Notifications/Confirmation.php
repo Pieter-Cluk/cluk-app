@@ -36,6 +36,9 @@ class Confirmation extends Notification
         public ?string $replyTo = null,
     ) {}
 
+    /** Files to attach: [['path' => …, 'name' => …]]. */
+    public array $attachFiles = [];
+
     public function via(object $notifiable): array
     {
         return ['mail'];
@@ -47,6 +50,9 @@ class Confirmation extends Notification
             'greeting' => $this->greeting, 'intro' => $this->intro, 'details' => $this->details, 'next' => $this->next,
             'button' => $this->button, 'signer' => $this->signer, 'rows' => $this->rows, 'totals' => $this->totals, 'team' => $this->team,
         ]);
+        foreach ($this->attachFiles as $f) {
+            $mail->attach($f['path'], ['as' => $f['name'], 'mime' => $f['mime'] ?? 'application/pdf']);
+        }
         if ($reply = $this->replyTo ?? $this->signer?->email) {
             $mail->replyTo($reply, $this->signer?->name);
         }

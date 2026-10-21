@@ -17,6 +17,10 @@ use App\Http\Controllers\Factory\FactoryPublicController;
 use App\Http\Controllers\Factory\FactoryTaskController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
+use App\Http\Controllers\ProductSales\ItemController as SalesItemController;
+use App\Http\Controllers\ProductSales\SalesPublicController;
+use App\Http\Controllers\ProductSales\SalesQuoteController;
+use App\Http\Controllers\Purchasing\PurchasingController;
 use App\Http\Controllers\QuotePublicController;
 use App\Http\Controllers\Rental\OrderController;
 use App\Http\Controllers\Rental\OrderDocumentController;
@@ -60,6 +64,15 @@ Route::post('/book', [FactoryPublicController::class, 'store'])->middleware('thr
 Route::get('/wall/{view}', [WallController::class, 'show'])->whereIn('view', ['planning', 'today'])->middleware('throttle:120,1')->name('wall.show');
 
 // The customer's quote page (link in the quote email).
+// Product sales: the customer's link to a sales quote.
+Route::prefix('sq/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {
+    Route::get('/', [SalesPublicController::class, 'show'])->name('psales.public');
+    Route::post('/accept', [SalesPublicController::class, 'accept'])->name('psales.public.accept');
+    Route::post('/decline', [SalesPublicController::class, 'decline'])->name('psales.public.decline');
+});
+// A sales item PDF from a link in an email (signed, 30 days).
+Route::get('/d/{doc}', [SalesItemController::class, 'publicDoc'])->whereNumber('doc')->middleware('signed')->name('psales.doc.public');
+
 Route::prefix('q/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {
     Route::get('/', [QuotePublicController::class, 'show'])->name('quote.public');
     Route::get('/print', [QuotePublicController::class, 'print'])->name('quote.public.print');
@@ -397,6 +410,57 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/labels', [LocationController::class, 'labels'])->name('locations.labels');
     });
 
+    // Product sales: items with suppliers and PDFs, sales quotes → order confirmation.
+    Route::prefix('product-sales')->middleware('nav:productsales')->group(function () {
+        Route::get('/', [SalesQuoteController::class, 'index'])->name('psales.index');
+        Route::get('/items', [SalesItemController::class, 'index'])->name('psales.items');
+        Route::get('/items/{item}/photo', [SalesItemController::class, 'photoShow'])->whereNumber('item')->name('psales.items.photo.show');
+        Route::get('/items/{item}/documents/{doc}', [SalesItemController::class, 'download'])->whereNumber(['item', 'doc'])->name('psales.items.doc');
+        Route::get('/quotes/{quote}', [SalesQuoteController::class, 'show'])->whereNumber('quote')->name('psales.show');
+        Route::get('/quotes/{quote}/print/{type}', [SalesQuoteController::class, 'print'])->whereNumber('quote')->whereIn('type', ['quo', 'oc', 'pick', 'dn', 'pf'])->name('psales.print');
+        Route::middleware('right:sales.edit_items')->group(function () {
+            Route::post('/items', [SalesItemController::class, 'store'])->name('psales.items.store');
+            Route::put('/items/{item}', [SalesItemController::class, 'update'])->whereNumber('item')->name('psales.items.update');
+            Route::post('/items/{item}/photo', [SalesItemController::class, 'photo'])->whereNumber('item')->name('psales.items.photo');
+            Route::post('/items/{item}/suppliers', [SalesItemController::class, 'supplier'])->whereNumber('item')->name('psales.items.supplier');
+            Route::post('/items/{item}/documents', [SalesItemController::class, 'upload'])->whereNumber('item')->name('psales.items.upload');
+            Route::delete('/items/{item}/documents/{doc}', [SalesItemController::class, 'removeDoc'])->whereNumber(['item', 'doc'])->name('psales.items.doc.remove');
+        });
+        Route::middleware('level:sales,2')->group(function () {
+            Route::post('/items/{item}/send', [SalesItemController::class, 'send'])->whereNumber('item')->name('psales.items.send');
+            Route::get('/quotes/new', [SalesQuoteController::class, 'create'])->name('psales.create');
+            Route::post('/quotes', [SalesQuoteController::class, 'store'])->name('psales.store');
+            Route::put('/quotes/{quote}', [SalesQuoteController::class, 'update'])->whereNumber('quote')->name('psales.update');
+            Route::post('/quotes/{quote}/lines', [SalesQuoteController::class, 'addLine'])->whereNumber('quote')->name('psales.lines.add');
+            Route::delete('/quotes/{quote}/lines/{line}', [SalesQuoteController::class, 'removeLine'])->whereNumber(['quote', 'line'])->name('psales.lines.remove');
+            Route::post('/quotes/{quote}/approve', [SalesQuoteController::class, 'approve'])->whereNumber('quote')->name('psales.approve');
+            Route::post('/quotes/{quote}/send', [SalesQuoteController::class, 'send'])->whereNumber('quote')->name('psales.send');
+            Route::post('/quotes/{quote}/accept', [SalesQuoteController::class, 'accept'])->whereNumber('quote')->name('psales.accept');
+            Route::post('/quotes/{quote}/confirm', [SalesQuoteController::class, 'confirm'])->whereNumber('quote')->name('psales.confirm');
+            Route::post('/quotes/{quote}/deliver', [SalesQuoteController::class, 'deliver'])->whereNumber('quote')->name('psales.deliver');
+            Route::post('/quotes/{quote}/cancel', [SalesQuoteController::class, 'cancel'])->whereNumber('quote')->name('psales.cancel');
+        });
+    });
+
+    // Purchasing: price requests (PQ) and purchase orders (PO).
+    Route::prefix('purchasing')->middleware('nav:purchasing')->group(function () {
+        Route::get('/', [PurchasingController::class, 'index'])->name('purchasing.index');
+        Route::get('/requests/{pq}', [PurchasingController::class, 'pq'])->whereNumber('pq')->name('purchasing.pq');
+        Route::get('/requests/{pq}/print', [PurchasingController::class, 'printPq'])->whereNumber('pq')->name('purchasing.pq.print');
+        Route::get('/orders/{po}', [PurchasingController::class, 'po'])->whereNumber('po')->name('purchasing.po');
+        Route::get('/orders/{po}/print', [PurchasingController::class, 'printPo'])->whereNumber('po')->name('purchasing.po.print');
+        Route::middleware('level:purchasing,2')->group(function () {
+            Route::get('/requests/new', [PurchasingController::class, 'create'])->name('purchasing.create');
+            Route::post('/requests', [PurchasingController::class, 'store'])->name('purchasing.store');
+            Route::post('/requests/{pq}/send', [PurchasingController::class, 'send'])->whereNumber('pq')->name('purchasing.send');
+            Route::post('/requests/{pq}/replies', [PurchasingController::class, 'replies'])->whereNumber('pq')->name('purchasing.replies');
+            Route::post('/requests/{pq}/cancel', [PurchasingController::class, 'cancel'])->whereNumber('pq')->name('purchasing.cancel');
+            Route::post('/orders/{po}/confirm', [PurchasingController::class, 'confirm'])->whereNumber('po')->name('purchasing.confirm');
+            Route::post('/orders/{po}/receive', [PurchasingController::class, 'receive'])->whereNumber('po')->name('purchasing.receive');
+            Route::post('/orders/{po}/invoice', [PurchasingController::class, 'invoice'])->whereNumber('po')->name('purchasing.invoice');
+        });
+    });
+
     // Wall screens: display links and settings.
     Route::middleware('nav:wallscreens')->group(function () {
         Route::get('/wall-screens', [WallController::class, 'index'])->name('wall.index');
@@ -420,7 +484,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'wallscreens', 'warehouse', 'locations', 'documents', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

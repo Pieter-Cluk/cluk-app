@@ -1,0 +1,2 @@
+@php($st = $q->status === 'draft' && $q->needsApproval() ? 'approval' : ($q->status === 'accepted' && $q->datesIn() ? 'ready' : $q->status))
+<span @class(['pill', 'pill-warn' => in_array($st, ['approval', 'accepted'], true), 'pill-info' => in_array($st, ['sent', 'ready'], true), 'pill-ok' => in_array($st, ['confirmed', 'delivered'], true), 'pill-off' => in_array($st, ['declined', 'cancelled', 'draft'], true)])>{{ __('psales.statuses.'.$st) }}</span>

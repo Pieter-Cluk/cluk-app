@@ -10,6 +10,10 @@ use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
 use App\Models\Factory\Booking;
 use App\Models\Member;
+use App\Models\ProductSales\SalesItem;
+use App\Models\ProductSales\SalesQuote;
+use App\Models\Purchasing\PurchaseOrder;
+use App\Models\Purchasing\PurchaseRequest;
 use App\Models\Rental\Order;
 use App\Models\Rental\SubhireRequest;
 use App\Models\Role;
@@ -47,6 +51,10 @@ class AuditText
             $subject instanceof Booking => $subject->number.' · '.$subject->title,
             $subject instanceof Zone => $subject->code.' · '.$subject->label(),
             $subject instanceof Position => $subject->code,
+            $subject instanceof SalesQuote => $subject->code().' · '.$subject->title,
+            $subject instanceof SalesItem => $subject->number.' · '.$subject->name(),
+            $subject instanceof PurchaseRequest => $subject->number,
+            $subject instanceof PurchaseOrder => $subject->number.' · '.$subject->supplier?->name,
             $subject instanceof WallScreen => __('wall.admin.screen_'.$subject->view),
             $subject instanceof Order => $subject->number.' · '.$subject->title,
             $subject instanceof SubhireRequest => $subject->code().' · '.$subject->supplier?->name,
@@ -107,6 +115,14 @@ class AuditText
             'order.cancelled' => (string) ($d['reason'] ?? ''),
             'warehouse.checked' => __('warehouse.check.result_'.($d['result'] ?? 'ok')).(isset($d['order']) ? ' · '.$d['order'] : ''),
             'warehouse.charges_approved' => trim(($d['total'] ?? '').' · '.trans_choice('warehouse.office.lines_waiting', (int) ($d['lines'] ?? 0), ['n' => (int) ($d['lines'] ?? 0)]), ' ·'),
+            'psales.approved', 'psales.accepted', 'psales.sent' => trim(implode(' · ', array_filter([$d['margin'] ?? null, $d['name'] ?? null, $d['to'] ?? null, $d['po'] ?? null, $d['total'] ?? null, $d['note'] ?? null]))),
+            'psales.confirmed', 'psales.delivered', 'psales.created', 'psales.item_created' => (string) ($d['number'] ?? ''),
+            'psales.declined' => (string) ($d['reason'] ?? ''),
+            'psales.item_supplier' => ($d['supplier'] ?? '').' · '.($d['discount'] ?? ''),
+            'psales.docs_sent' => ($d['item'] ?? '').' → '.($d['to'] ?? '').' · '.($d['files'] ?? ''),
+            'purchase.ordered' => ($d['supplier'] ?? '').' · '.($d['total'] ?? ''),
+            'purchase.invoice' => ($d['invoice'] ?? '').' / PO '.($d['po'] ?? ''),
+            'purchase.requested' => (string) ($d['for'] ?? ''),
             'documents.note' => ($d['type'] ?? '').' · '.(($d['on'] ?? false) ? '✓' : '—'),
             'documents.season' => ($d['from'] ?? '—').' → '.($d['to'] ?? '—'),
             'warehouse.delivery' => trim(($d['to'] ?? __('warehouse.delivery.m_'.($d['match'] ?? 'unknown'))).' · '.($d['note'] ?? ''), ' ·'),
