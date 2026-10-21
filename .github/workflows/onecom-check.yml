@@ -75,7 +75,7 @@ jobs:
         if: always()
         run: |
           {
-            echo "== DNS app.cluk.live: $(getent hosts app.cluk.live | head -2 | tr '\n' ' ')"
+            echo "== DNS app.cluk.live A: $(dig +short A app.cluk.live @1.1.1.1 | tr '\n' ' ') AAAA: $(dig +short AAAA app.cluk.live @1.1.1.1 | tr '\n' ' ')"
             echo "== DNS cluk.live: $(getent hosts cluk.live | head -1)"
             echo "== DNS one.com site for app: $(getent hosts 3e3535bb.website.cys6r88bx.service.one | head -2 | tr '\n' ' ')"
             echo "== DNS one.com site for cluk.live: $(getent hosts 51e5a3f8.website.cys6r88bx.service.one | head -2 | tr '\n' ' ')"
@@ -88,7 +88,7 @@ jobs:
             echo "== app CNAME: $(dig +short CNAME app.cluk.live 2>/dev/null)  wildcard test: $(dig +short A random123.cluk.live 2>/dev/null | tr '\n' ' ')"
             echo "== http://app.cluk.live/login"
             curl -s -o /dev/null -m 20 -w 'HTTP %{http_code} redirect=%{redirect_url}\n' http://app.cluk.live/login || echo "no answer"
-            echo "== https://app.cluk.live/login"
+            echo "== https://app.cluk.live/login (IPv4): $(curl -4 -s -o /dev/null -m 20 -w '%{http_code}' https://app.cluk.live/login || echo none)"
             curl -s -o /tmp/l.html -m 20 -w 'HTTP %{http_code}\n' https://app.cluk.live/login || echo "no answer"
             curl -sv -o /dev/null -m 20 https://app.cluk.live/login 2>&1 | grep -E 'subject:|issuer:|expire|SSL|Connected|Could not|error' | head -8
             grep -o 'Sign in with Microsoft' /tmp/l.html 2>/dev/null | head -1
