@@ -1,0 +1,50 @@
+name: Server logs
+
+# Started by hand. Shows the latest errors from the app's log on one.com and
+# tests outgoing connections (VIES, Microsoft). Changes nothing on the server.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  logs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read the log on one.com
+        env:
+          SSH_HOST: ssh.cys6r88bx.service.one
+          SSH_USER: cys6r88bx_ssh
+          SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
+        run: |
+          set +e
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass >/dev/null
+          export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          sshpass -e ssh -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
+          W=$(readlink -f ~/webroots/by-route/app.cluk.live_)
+          cd "$W/app" || exit 1
+          echo "== log files"; ls -la storage/logs/ 2>&1 | tail -5
+          echo "== latest errors (message lines only)"
+          cat storage/logs/laravel*.log 2>/dev/null | grep -E '^\[[0-9-]+ [0-9:]+\] [a-z]+\.(ERROR|WARNING|CRITICAL)' | tail -25 | cut -c1-600
+          echo "== outgoing: VIES"
+          curl -s -o /dev/null -m 15 -w '%{http_code}\n' https://ec.europa.eu/taxation_customs/vies/rest-api/check-vat-number -X POST -H 'Content-Type: application/json' -d '{"countryCode":"BE","vatNumber":"1010948054"}' || echo failed
+          echo "== outgoing: Microsoft"
+          curl -s -o /dev/null -m 15 -w '%{http_code}\n' https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration || echo failed
+          echo "== outgoing: Graph"
+          curl -s -o /dev/null -m 15 -w '%{http_code}\n' https://graph.microsoft.com/v1.0/ || echo failed
+          echo "== settings present (names only)"
+          grep -oE '^(MICROSOFT_[A-Z_]+|MAIL_[A-Z_]+|APP_URL|SESSION_[A-Z_]+)=' .env | tr '\n' ' '
+          echo
+          echo "== secret lengths"
+          for k in MICROSOFT_CLIENT_SECRET DB_PASSWORD; do v=$(grep "^$k=" .env | cut -d= -f2- | tr -d '"'); echo "$k: ${#v} chars"; done
+          REMOTE
+          echo "ssh exit: $?" >> report.txt
+
+      - name: Report
+        if: always()
+        run: |
+          head -c 60000 report.txt | split -b 3500 - part_
+          for f in part_*; do
+            body=$(sed 's/%/%25/g' "$f" | sed ':a;N;$!ba;s/\n/%0A/g')
+            echo "::notice title=log ($f)::${body}"
+          done
