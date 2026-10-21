@@ -6,6 +6,8 @@ use App\Models\Afrit6\ServiceRequest;
 use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\CompanyDetail;
+use App\Models\Equipment\Asset;
+use App\Models\Equipment\Item;
 use App\Models\Member;
 use App\Models\Role;
 use App\Models\User;
@@ -32,6 +34,8 @@ class AuditText
             $subject instanceof VatRate => $subject->name,
             $subject instanceof Company => $subject->name,
             $subject instanceof Member => $subject->name,
+            $subject instanceof Item => $subject->number.' · '.$subject->name,
+            $subject instanceof Asset => $subject->code,
             $subject instanceof ServiceRequest => __('workspace.kinds.'.$subject->kind).' · '.$subject->member?->name,
             $subject instanceof CompanyDetail => trim($subject->legal_name.' '.$subject->legal_form),
             $subject !== null => class_basename($subject).' #'.$subject->getKey(),
@@ -66,6 +70,10 @@ class AuditText
             'afrit6.task_assigned' => trim(($d['from'] ?? '—').' → '.($d['to'] ?? '').(isset($d['note']) ? ' · '.$d['note'] : '')),
             'afrit6.task_declined' => (string) ($d['reason'] ?? ''),
             'afrit6.task_amount' => ($d['from'] ?? '').' → '.($d['to'] ?? ''),
+            'equipment.item_created' => (string) ($d['number'] ?? ''),
+            'equipment.item_updated', 'equipment.asset_updated' => implode(', ', array_map(fn ($f) => __('equipment.fields.'.preg_replace('/_cents$/', '', $f)), array_keys($d['changes'] ?? []))),
+            'equipment.assets_added' => ($d['count'] ?? '').' · '.($d['codes'] ?? ''),
+            'equipment.asset_retired' => __('equipment.reasons.'.($d['reason'] ?? '')),
             'crm.vat_regime_changed' => ($d['from'] ?? '').' → '.($d['to'] ?? '').(isset($d['code']) ? ' ('.$d['code'].')' : ''),
             'import.done' => trim(($d['file'] ?? '').' · '.collect($d)->except('file')->map(fn ($r, $k) => __('import.kinds.'.$k).' +'.($r['created'] ?? 0).' ~'.($r['updated'] ?? 0))->implode(' · '), ' ·'),
             'afrit6.member_approved' => (string) ($d['company'] ?? ''),

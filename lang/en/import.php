@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'intro' => 'Bring companies and contacts in from a spreadsheet (the CLUK template, or an export from HubSpot, HireHop or Excel). You first see what would happen; nothing changes until you confirm.',
+    'intro' => 'Bring companies, contacts and rental equipment in from a spreadsheet (the CLUK template, or an export from HubSpot, HireHop or Excel). You first see what would happen; nothing changes until you confirm.',
     'template' => 'Download the template',
     'upload_title' => 'Upload a spreadsheet',
     'file' => 'File (.xlsx or .csv)',
@@ -11,6 +11,7 @@ return [
     'kinds' => [
         'companies' => 'Companies',
         'contacts' => 'Contacts',
+        'equipment' => 'Rental equipment',
     ],
     'check' => 'Check the file',
     'preview_title' => 'Check: :file',
@@ -30,7 +31,8 @@ return [
     'how_2' => 'A contact with the same email address is updated and linked to the company of that row.',
     'how_3' => 'Empty cells never wipe what is already in the app.',
     'how_4' => 'Wrong VAT numbers, unknown countries or account owners are reported per row; the rest of the row is still imported.',
-    'later' => 'Equipment and sales items can be imported once those modules are live.',
+    'how_5' => 'Equipment: rows with the same item number form one item; a row with a serial number becomes a piece with its own QR label, a row with a quantity is counted stock.',
+    'later' => 'Sales items can be imported once that module is live.',
     'vies_title' => 'VIES check',
     'vies_pending' => '{1} 1 imported company has an EU VAT number that was not checked in VIES yet.|[2,*] :count imported companies have an EU VAT number that was not checked in VIES yet.',
     'vies_check' => 'Check the next 15 in VIES',
@@ -39,7 +41,8 @@ return [
         'no_name' => 'No company name: row skipped.',
         'no_first_name' => 'No first name: row skipped.',
         'unreadable' => 'This file could not be read. Save it as .xlsx or .csv and try again.',
-        'no_sheet' => 'No sheet with companies or contacts was found.',
+        'no_sheet' => 'No sheet with companies, contacts or equipment was found.',
+        'no_number' => 'No item number: row skipped.',
     ],
     'warnings' => [
         'country' => 'Country ":value" not recognised; Belgium is used. Use two letters, e.g. NL.',
@@ -49,6 +52,8 @@ return [
         'owner' => 'Account owner ":value" is not a user; add them under Settings › Users first.',
         'company' => ':name: company ":company" not found, so the contact is not linked to it.',
         'example' => 'Example row from the template: skipped.',
+        'price' => 'Price ":value" is not a number and was left out.',
+        'qty_serial' => ':number has pieces with serial numbers; the quantity was ignored.',
     ],
     'flash' => [
         'vies_checked' => ':count companies checked in VIES. Still to check: :left.',

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'intro' => 'Breng bedrijven en contactpersonen binnen vanuit een rekenblad (het CLUK-sjabloon, of een export uit HubSpot, HireHop of Excel). Je ziet eerst wat er zou gebeuren; er verandert niets tot je bevestigt.',
+    'intro' => 'Breng bedrijven, contactpersonen en verhuurmateriaal binnen vanuit een rekenblad (het CLUK-sjabloon, of een export uit HubSpot, HireHop of Excel). Je ziet eerst wat er zou gebeuren; er verandert niets tot je bevestigt.',
     'template' => 'Sjabloon downloaden',
     'upload_title' => 'Rekenblad opladen',
     'file' => 'Bestand (.xlsx of .csv)',
@@ -11,6 +11,7 @@ return [
     'kinds' => [
         'companies' => 'Bedrijven',
         'contacts' => 'Contactpersonen',
+        'equipment' => 'Verhuurmateriaal',
     ],
     'check' => 'Bestand controleren',
     'preview_title' => 'Controle: :file',
@@ -30,7 +31,8 @@ return [
     'how_2' => 'Een contactpersoon met hetzelfde e-mailadres wordt bijgewerkt en gekoppeld aan het bedrijf van die rij.',
     'how_3' => 'Lege cellen wissen nooit wat al in de app staat.',
     'how_4' => 'Foute btw-nummers, onbekende landen of accountbeheerders worden per rij gemeld; de rest van de rij wordt toch geïmporteerd.',
-    'later' => 'Materiaal en verkoopartikelen kunnen geïmporteerd worden zodra die modules live zijn.',
+    'how_5' => 'Materiaal: rijen met hetzelfde artikelnummer vormen één artikel; een rij met een serienummer wordt een stuk met een eigen QR-label, een rij met een aantal is getelde stock.',
+    'later' => 'Verkoopartikelen kunnen geïmporteerd worden zodra die module live is.',
     'vies_title' => 'VIES-controle',
     'vies_pending' => '{1} 1 geïmporteerd bedrijf heeft een EU-btw-nummer dat nog niet in VIES gecontroleerd is.|[2,*] :count geïmporteerde bedrijven hebben een EU-btw-nummer dat nog niet in VIES gecontroleerd is.',
     'vies_check' => 'Volgende 15 controleren in VIES',
@@ -39,7 +41,8 @@ return [
         'no_name' => 'Geen bedrijfsnaam: rij overgeslagen.',
         'no_first_name' => 'Geen voornaam: rij overgeslagen.',
         'unreadable' => 'Dit bestand kan niet gelezen worden. Bewaar het als .xlsx of .csv en probeer opnieuw.',
-        'no_sheet' => 'Geen tabblad met bedrijven of contactpersonen gevonden.',
+        'no_sheet' => 'Geen tabblad met bedrijven, contactpersonen of materiaal gevonden.',
+        'no_number' => 'Geen artikelnummer: rij overgeslagen.',
     ],
     'warnings' => [
         'country' => 'Land ":value" niet herkend; België wordt gebruikt. Gebruik twee letters, bv. NL.',
@@ -49,6 +52,8 @@ return [
         'owner' => 'Accountbeheerder ":value" is geen gebruiker; voeg die eerst toe onder Instellingen › Gebruikers.',
         'company' => ':name: bedrijf ":company" niet gevonden, dus de contactpersoon is er niet aan gekoppeld.',
         'example' => 'Voorbeeldrij uit het sjabloon: overgeslagen.',
+        'price' => 'Prijs ":value" is geen getal en werd weggelaten.',
+        'qty_serial' => ':number heeft stukken met serienummers; het aantal werd genegeerd.',
     ],
     'flash' => [
         'vies_checked' => ':count bedrijven gecontroleerd in VIES. Nog te controleren: :left.',

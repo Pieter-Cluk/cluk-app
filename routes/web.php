@@ -9,6 +9,8 @@ use App\Http\Controllers\Afrit6\WorkspaceController;
 use App\Http\Controllers\Auth\MicrosoftLoginController;
 use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Equipment\AssetController;
+use App\Http\Controllers\Equipment\ItemController;
 use App\Http\Controllers\Settings\AuditLogController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
 use App\Http\Controllers\Settings\ImportController;
@@ -97,6 +99,29 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/companies/{company}', [CompanyController::class, 'show'])->whereNumber('company')->name('companies.show');
     });
 
+    // Dry-hire equipment: view from level 1, change from level 2.
+    Route::middleware('nav:dryhire')->prefix('dry-hire')->group(function () {
+        Route::get('/', [ItemController::class, 'index'])->name('equipment.index');
+        Route::get('/items/{item}', [ItemController::class, 'show'])->whereNumber('item')->name('equipment.show');
+        Route::get('/items/{item}/photo', [ItemController::class, 'photo'])->whereNumber('item')->name('equipment.photo');
+        Route::get('/assets/{asset}', [AssetController::class, 'show'])->whereNumber('asset')->name('equipment.assets.show');
+        Route::middleware('level:dryhire,2')->group(function () {
+            Route::get('/items/new', [ItemController::class, 'create'])->name('equipment.create');
+            Route::post('/items', [ItemController::class, 'store'])->name('equipment.store');
+            Route::get('/items/{item}/edit', [ItemController::class, 'edit'])->whereNumber('item')->name('equipment.edit');
+            Route::put('/items/{item}', [ItemController::class, 'update'])->whereNumber('item')->name('equipment.update');
+            Route::post('/items/{item}/components', [ItemController::class, 'addComponent'])->whereNumber('item')->name('equipment.components.store');
+            Route::delete('/items/{item}/components/{child}', [ItemController::class, 'removeComponent'])->whereNumber(['item', 'child'])->name('equipment.components.destroy');
+            Route::post('/items/{item}/assets', [ItemController::class, 'addAssets'])->whereNumber('item')->name('equipment.assets.store');
+            Route::post('/items/{item}/photo', [ItemController::class, 'uploadPhoto'])->whereNumber('item')->name('equipment.photo.store');
+            Route::put('/assets/{asset}', [AssetController::class, 'update'])->whereNumber('asset')->name('equipment.assets.update');
+            Route::get('/labels', [AssetController::class, 'labels'])->name('equipment.labels');
+        });
+        Route::post('/assets/{asset}/retire', [AssetController::class, 'retire'])->whereNumber('asset')->name('equipment.assets.retire');
+    });
+    // A scanned QR label opens the asset card.
+    Route::get('/a/{code}', [AssetController::class, 'byCode'])->where('code', '[A-Za-z0-9\-]+')->middleware('nav:dryhire')->name('equipment.scan');
+
     // Afrit 6 for staff: registrations to approve and members.
     Route::middleware('nav:afrit6')->prefix('afrit6-staff')->name('afrit6.staff.')->group(function () {
         Route::get('/', [MemberAdminController::class, 'index'])->name('index');
@@ -173,7 +198,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'companies', 'afrit6', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'companies', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

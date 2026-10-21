@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'intro' => 'Trae empresas y contactos desde una hoja de cálculo (la plantilla de CLUK, o una exportación de HubSpot, HireHop o Excel). Primero ves lo que pasaría; nada cambia hasta que confirmas.',
+    'intro' => 'Trae empresas, contactos y material de alquiler desde una hoja de cálculo (la plantilla de CLUK, o una exportación de HubSpot, HireHop o Excel). Primero ves lo que pasaría; nada cambia hasta que confirmas.',
     'template' => 'Descargar la plantilla',
     'upload_title' => 'Subir una hoja de cálculo',
     'file' => 'Archivo (.xlsx o .csv)',
@@ -11,6 +11,7 @@ return [
     'kinds' => [
         'companies' => 'Empresas',
         'contacts' => 'Contactos',
+        'equipment' => 'Material de alquiler',
     ],
     'check' => 'Comprobar el archivo',
     'preview_title' => 'Comprobación: :file',
@@ -30,7 +31,8 @@ return [
     'how_2' => 'Un contacto con el mismo correo se actualiza y se vincula a la empresa de esa fila.',
     'how_3' => 'Las celdas vacías nunca borran lo que ya está en la app.',
     'how_4' => 'Los números de IVA erróneos y los países o responsables desconocidos se indican por fila; el resto de la fila se importa igual.',
-    'later' => 'El material y los artículos de venta se podrán importar cuando esos módulos estén activos.',
+    'how_5' => 'Material: las filas con el mismo número de artículo forman un artículo; una fila con número de serie es una pieza con su propia etiqueta QR, una fila con cantidad es stock contado.',
+    'later' => 'Los artículos de venta se podrán importar cuando ese módulo esté activo.',
     'vies_title' => 'Comprobación VIES',
     'vies_pending' => '{1} 1 empresa importada tiene un número de IVA de la UE aún sin comprobar en VIES.|[2,*] :count empresas importadas tienen un número de IVA de la UE aún sin comprobar en VIES.',
     'vies_check' => 'Comprobar las 15 siguientes en VIES',
@@ -39,7 +41,8 @@ return [
         'no_name' => 'Sin nombre de empresa: fila omitida.',
         'no_first_name' => 'Sin nombre: fila omitida.',
         'unreadable' => 'No se puede leer este archivo. Guárdalo como .xlsx o .csv e inténtalo de nuevo.',
-        'no_sheet' => 'No se encontró ninguna hoja con empresas o contactos.',
+        'no_sheet' => 'No se encontró ninguna hoja con empresas, contactos o material.',
+        'no_number' => 'Sin número de artículo: fila omitida.',
     ],
     'warnings' => [
         'country' => 'País «:value» no reconocido; se usa Bélgica. Usa dos letras, p. ej. NL.',
@@ -49,6 +52,8 @@ return [
         'owner' => 'El responsable «:value» no es un usuario; añádelo primero en Ajustes › Usuarios.',
         'company' => ':name: no se encontró la empresa «:company», así que el contacto no queda vinculado.',
         'example' => 'Fila de ejemplo de la plantilla: omitida.',
+        'price' => 'El precio ":value" no es un número y se omitió.',
+        'qty_serial' => ':number tiene piezas con número de serie; se ignoró la cantidad.',
     ],
     'flash' => [
         'vies_checked' => ':count empresas comprobadas en VIES. Quedan por comprobar: :left.',

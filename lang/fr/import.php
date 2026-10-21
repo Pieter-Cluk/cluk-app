@@ -11,6 +11,7 @@ return [
     'kinds' => [
         'companies' => 'Entreprises',
         'contacts' => 'Contacts',
+        'equipment' => 'Matériel de location',
     ],
     'check' => 'Vérifier le fichier',
     'preview_title' => 'Vérification : :file',
@@ -30,7 +31,8 @@ return [
     'how_2' => 'Un contact avec la même adresse e-mail est mis à jour et lié à l\'entreprise de cette ligne.',
     'how_3' => 'Les cellules vides n\'effacent jamais ce qui est déjà dans l\'application.',
     'how_4' => 'Les numéros de TVA erronés, pays ou responsables inconnus sont signalés par ligne ; le reste de la ligne est importé.',
-    'later' => 'Le matériel et les articles de vente pourront être importés quand ces modules seront en ligne.',
+    'how_5' => 'Matériel : les lignes avec le même numéro d’article forment un article ; une ligne avec un numéro de série devient une pièce avec sa propre étiquette QR, une ligne avec une quantité est du stock compté.',
+    'later' => 'Les articles de vente pourront être importés quand ce module sera en ligne.',
     'vies_title' => 'Vérification VIES',
     'vies_pending' => '{1} 1 entreprise importée a un numéro de TVA UE pas encore vérifié dans VIES.|[2,*] :count entreprises importées ont un numéro de TVA UE pas encore vérifié dans VIES.',
     'vies_check' => 'Vérifier les 15 suivantes dans VIES',
@@ -39,7 +41,8 @@ return [
         'no_name' => 'Pas de nom d\'entreprise : ligne ignorée.',
         'no_first_name' => 'Pas de prénom : ligne ignorée.',
         'unreadable' => 'Ce fichier est illisible. Enregistrez-le en .xlsx ou .csv et réessayez.',
-        'no_sheet' => 'Aucun onglet avec des entreprises ou des contacts trouvé.',
+        'no_sheet' => 'Aucun onglet avec des entreprises, des contacts ou du matériel trouvé.',
+        'no_number' => 'Pas de numéro d’article : ligne ignorée.',
     ],
     'warnings' => [
         'country' => 'Pays « :value » non reconnu ; la Belgique est utilisée. Utilisez deux lettres, p. ex. NL.',
@@ -49,6 +52,8 @@ return [
         'owner' => 'Le responsable « :value » n\'est pas un utilisateur ; ajoutez-le d\'abord dans Paramètres › Utilisateurs.',
         'company' => ':name : entreprise « :company » introuvable, le contact n\'y est donc pas lié.',
         'example' => 'Ligne d\'exemple du modèle : ignorée.',
+        'price' => 'Le prix « :value » n’est pas un nombre et a été omis.',
+        'qty_serial' => ':number a des pièces avec numéro de série ; la quantité a été ignorée.',
     ],
     'flash' => [
         'vies_checked' => ':count entreprises vérifiées dans VIES. Encore à vérifier : :left.',

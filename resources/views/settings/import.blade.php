@@ -67,6 +67,7 @@
                     <li>{{ __('import.how_2') }}</li>
                     <li>{{ __('import.how_3') }}</li>
                     <li>{{ __('import.how_4') }}</li>
+                    <li>{{ __('import.how_5') }}</li>
                 </ul>
                 <p class="muted small">{{ __('import.later') }}</p>
             </section>
