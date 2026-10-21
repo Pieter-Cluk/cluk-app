@@ -8,6 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // A first run on MariaDB stopped on a too long index name: clear what it left (all new and empty).
+        foreach (['purchase_order_lines', 'purchase_orders', 'purchase_request_replies', 'purchase_request_suppliers', 'purchase_request_lines', 'purchase_requests',
+            'sales_quote_lines', 'sales_quotes', 'sales_item_documents', 'sales_item_suppliers', 'sales_items'] as $t) {
+            Schema::dropIfExists($t);
+        }
+
         // Products we sell. No assets: stock is a number.
         Schema::create('sales_items', function (Blueprint $table) {
             $table->id();
@@ -150,7 +156,7 @@ return new class extends Migration
             $table->unsignedInteger('net_cents')->nullable();
             $table->date('delivery_date')->nullable();
             $table->timestamps();
-            $table->unique(['purchase_request_line_id', 'company_id']);
+            $table->unique(['purchase_request_line_id', 'company_id'], 'pq_replies_line_company_unique');
         });
 
         // Purchase orders (PO): one per chosen supplier.
