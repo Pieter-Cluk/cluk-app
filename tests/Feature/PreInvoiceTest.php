@@ -27,7 +27,7 @@ class PreInvoiceTest extends TestCase
 
     private function as(string $role, array $extra = []): User
     {
-        return User::factory()->create(['role_id' => Role::where('slug', $role)->value('id'), 'locale' => 'en'] + $extra);
+        return User::factory()->create($extra + ['role_id' => Role::where('slug', $role)->value('id'), 'locale' => 'en']);
     }
 
     /** A Belgian customer that wants a PO number, and an approved order of € 1,000. */

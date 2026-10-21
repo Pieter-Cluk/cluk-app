@@ -725,3 +725,37 @@ img.av{object-fit:cover;background:var(--surface-subtle);padding:0}
 .pf-amber{color:var(--warning-text);font-weight:700}
 .pf-late{padding:12px;border-radius:8px;background:var(--warning-bg)}
 .pf-send{display:grid;gap:6px}
+
+/* Management */
+:root{--c-ty:#3c8b2a;--c-ly:#4f7fc4;--stage-1:#c9d7c3;--stage-2:#9dc58c;--stage-3:#70b253;--stage-4:#3c8b2a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c-ty:#5ca844;--c-ly:#5f8ed6;--stage-1:#4a5a45;--stage-2:#5f8c4c;--stage-3:#78b45e;--stage-4:#5ca844}}
+:root[data-theme="dark"]{--c-ty:#5ca844;--c-ly:#5f8ed6;--stage-1:#4a5a45;--stage-2:#5f8c4c;--stage-3:#78b45e;--stage-4:#5ca844}
+.mg-kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.up{color:var(--brand-strong);font-weight:700}
+.down{color:var(--danger-text);font-weight:700}
+.mg-legend{display:flex;gap:14px;font-size:13px}
+.mg-legend span{display:flex;align-items:center;gap:6px}
+.mg-legend i{display:inline-block;width:10px;height:10px;border-radius:2px}
+i.mg-ty{background:var(--c-ty)}
+i.mg-ly{background:var(--c-ly)}
+.mg-sel{margin:4px 0 12px}
+.mg-chart{display:flex;gap:4px;height:200px;align-items:stretch;border-bottom:1px solid var(--line)}
+.mcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--muted);border-radius:4px 4px 0 0;padding:4px 2px 0}
+.mcol:hover,.mcol-on{background:var(--surface-subtle);color:var(--ink)}
+.mg-bars{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px}
+.mg-bars i{display:block;width:42%;max-width:16px;border-radius:4px 4px 0 0;min-height:0}
+.mcol small{font-size:11px}
+.mg-row{display:grid;grid-template-columns:minmax(110px,1.2fr) 2fr auto 70px;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.mg-row small{text-align:right}
+.mg-track{display:block;height:12px;border-radius:4px;background:var(--surface-subtle);overflow:hidden}
+.mg-track i{display:block;height:100%;border-radius:4px;background:var(--c-ty)}
+.mg-track i.mg-none{background:var(--line)}
+.mg-stage-1{background:var(--stage-1) !important}.mg-stage-2{background:var(--stage-2) !important}.mg-stage-3{background:var(--stage-3) !important}.mg-stage-4{background:var(--stage-4) !important}
+.mg-rep{display:grid;grid-template-columns:minmax(80px,1fr) auto 36px;gap:8px;align-items:center;min-width:220px}
+@media (max-width:700px){.mg-row{grid-template-columns:1fr auto;}.mg-row .mg-track{grid-column:1/-1;order:3}.mg-chart{height:150px}}
+.mg-two{display:grid;grid-template-columns:1fr 1fr;gap:20px}@media (max-width:900px){.mg-two{grid-template-columns:1fr}}
+.mg-pad{padding:16px 20px}
+.table th.num{text-align:right}
+.pf-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px;align-items:start}
+@media (max-width:1000px){.pf-split{grid-template-columns:1fr}}
+.pf-actions{justify-content:flex-start}

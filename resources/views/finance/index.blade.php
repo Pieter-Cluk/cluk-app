@@ -20,7 +20,7 @@
         <a @class(['chip', 'chip-on' => $flagOnly]) href="{{ route('finance.index', array_filter(['f' => $filt, 'flags' => $flagOnly ? null : 1])) }}">⚑ {{ __('finance.flags_only') }}</a>
     </nav>
 
-    <div class="split mt">
+    <div class="pf-split mt">
         <section class="card card-flush">
             <ul class="inbox">
                 @forelse ($list as $p)
@@ -53,19 +53,21 @@
                     </dl>
                 </section>
 
+                @if ($sel->checks)
                 <section class="card">
                     <h2>{{ __('finance.checks_title') }}</h2>
                     @foreach (collect($sel->checks ?? [])->sortBy(fn ($c) => array_search($c['level'], ['bad', 'warn', 'ok'], true)) as $c)
                         <div class="pf-check pf-{{ $c['level'] }}"><span class="pf-mark">{{ ['ok' => '✓', 'warn' => '!', 'bad' => '✕'][$c['level']] }}</span><span><b>{{ __('finance.checks.'.$c['key'], $c['p']) }}</b><small class="muted">{{ __('finance.cats.'.$c['cat']) }}</small></span></div>
                     @endforeach
                 </section>
+                @endif
 
                 <section class="card card-flush">
                     <table class="table">
                         <thead><tr><th>{{ __('finance.cols.desc') }}</th><th class="num">{{ __('finance.cols.qty') }}</th><th class="num">{{ __('finance.cols.unit') }}</th><th class="num">{{ __('finance.cols.amount') }}</th></tr></thead>
                         <tbody>@foreach ($sel->lines as $l)<tr><td>{{ $l['d'] }}@if (! empty($l['note']))<br><small class="muted">{{ $l['note'] }}</small>@endif</td><td class="num">{{ $l['q'] }}</td><td class="num nowrap">{{ $eur($l['unit_cents']) }}</td><td class="num nowrap">{{ $eur($l['amount_cents']) }}</td></tr>@endforeach</tbody>
                     </table>
-                    <div class="pad"><div class="doc-totals">
+                    <div class="mg-pad"><div class="doc-totals">
                         <div><span>{{ __('finance.subtotal') }}</span><span>{{ $eur($sel->net_cents) }}</span></div>
                         <div class="muted"><span>{{ $sel->vat_rate_bp ? __('quotes.vat', ['pct' => rtrim(rtrim(number_format($sel->vat_rate_bp / 100, 2, '.', ''), '0'), '.').'%']) : __('finance.no_vat_line', ['code' => $sel->vat_code]) }}</span><span>{{ $eur($sel->vat_cents) }}</span></div>
                         <div class="grand"><span>{{ __('quotes.total') }}</span><span>{{ $eur($sel->gross_cents) }}</span></div>
@@ -77,7 +79,7 @@
                         <form method="post" action="{{ route('finance.accept', $sel) }}" class="stack-sm">@csrf
                             <label class="field"><span>{{ __('finance.invoice_number') }}</span><input name="invoice_number" maxlength="40" placeholder="INV {{ now()->year }}/…"></label>
                             @if ($sel->reds())<input type="hidden" name="override" value="0"><label class="check"><input type="checkbox" name="override" value="1"> {{ __('finance.override') }}</label>@endif
-                            <div class="inline-form"><button class="primary" type="submit">{{ __('finance.accept') }}</button><a class="btn" href="{{ route('finance.print', $sel) }}" target="_blank" rel="noopener">{{ __('finance.print') }}</a></div>
+                            <div class="actionbar pf-actions"><button class="primary" type="submit">{{ __('finance.accept') }}</button><a class="btn" href="{{ route('finance.print', $sel) }}" target="_blank" rel="noopener">{{ __('finance.print') }}</a></div>
                             <small class="muted">{{ __('finance.okioki_hint') }}</small>
                         </form>
                         <details class="mt"><summary>{{ __('finance.send_back', ['name' => $sel->madeBy?->first_name ?? '—']) }}</summary>
@@ -106,7 +108,7 @@
                                 @if (\App\Services\Finance\PreInvoices::isPrivate($sel))<p class="muted small">{{ __('finance.late_private') }}</p>@endif
                                 @if ($sel->reminder?->decision)<p><span class="pill">{{ __('finance.late_decisions.'.$sel->reminder->decision) }}</span> {{ $sel->reminder->decidedBy?->name }}@if ($sel->reminder->reason) · {{ $sel->reminder->reason }}@endif</p>@endif
                                 <form method="post" action="{{ route('finance.late', $sel) }}" class="stack-sm">@csrf
-                                    <select name="decision" aria-label="{{ __('finance.late_decide') }}">@foreach (\App\Models\Finance\Reminder::DECISIONS as $d)<option value="{{ $d }}">{{ __('finance.late_decisions.'.$d) }}</option>@endforeach</select>
+                                    <select name="decision" aria-label="{{ __('finance.late_decide') }}">@php($def = $sel->reminder?->decision ?? (\App\Services\Finance\PreInvoices::isPrivate($sel) ? 'skip' : 'now'))@foreach (\App\Models\Finance\Reminder::DECISIONS as $d)<option value="{{ $d }}" @selected($d === $def)>{{ __('finance.late_decisions.'.$d) }}</option>@endforeach</select>
                                     <input name="reason" maxlength="500" placeholder="{{ __('finance.late_reason') }}" aria-label="{{ __('finance.late_reason') }}">
                                     <div><button class="btn" type="submit">{{ __('finance.late_decide') }}</button></div>
                                 </form>

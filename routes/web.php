@@ -16,6 +16,7 @@ use App\Http\Controllers\Factory\FactoryController;
 use App\Http\Controllers\Factory\FactoryPublicController;
 use App\Http\Controllers\Factory\FactoryTaskController;
 use App\Http\Controllers\Finance\PreInvoiceController;
+use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\ProductSales\ItemController as SalesItemController;
@@ -138,6 +139,7 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
 Route::middleware('auth:web')->group(function () {
     Route::post('/logout', [MicrosoftLoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/management', ManagementController::class)->middleware('nav:management')->name('management');
 
     // Pictures (served only to signed-in staff).
     Route::get('/media/users/{user}', [MediaController::class, 'user'])->whereNumber('user')->name('media.user');
@@ -501,7 +503,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])
