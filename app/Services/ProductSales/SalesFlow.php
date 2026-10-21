@@ -6,6 +6,7 @@ use App\Models\AuditLog;
 use App\Models\ProductSales\SalesQuote;
 use App\Models\User;
 use App\Services\Afrit6\Pricing;
+use App\Services\Finance\PreInvoices;
 use App\Services\Purchasing\Purchasing;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -101,5 +102,6 @@ class SalesFlow
             $q->update(['status' => 'delivered', 'delivered_at' => now()]);
             AuditLog::record('psales.delivered', $q, ['number' => $q->docCode('S-DN')], $by);
         });
+        PreInvoices::make('sales', $q->fresh(), $by);
     }
 }

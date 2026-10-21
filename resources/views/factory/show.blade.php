@@ -33,6 +33,7 @@
 
             @if (in_array($b->status, ['confirmed', 'done'], true))
                 @include('factory._tasks')
+                <section class="card"><h2>{{ __('nav.items.preinvoice') }}</h2>@include('finance._send', ['type' => 'factory', 'id' => $b->id])</section>
             @endif
 
             @if (in_array($b->status, ['option', 'confirmed', 'done'], true))

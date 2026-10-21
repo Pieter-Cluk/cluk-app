@@ -15,6 +15,7 @@ use App\Http\Controllers\Equipment\ItemController;
 use App\Http\Controllers\Factory\FactoryController;
 use App\Http\Controllers\Factory\FactoryPublicController;
 use App\Http\Controllers\Factory\FactoryTaskController;
+use App\Http\Controllers\Finance\PreInvoiceController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\ProductSales\ItemController as SalesItemController;
@@ -40,6 +41,7 @@ use App\Http\Controllers\Warehouse\LocationController;
 use App\Http\Controllers\Warehouse\PhoneAfrit6Controller;
 use App\Http\Controllers\Warehouse\PhoneController;
 use App\Http\Controllers\Warehouse\WarehouseController;
+use App\Services\Finance\PreInvoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -461,6 +463,21 @@ Route::middleware('auth:web')->group(function () {
         });
     });
 
+    // Finance › Pre-invoicing: every proforma passes the accountant before OkiOki.
+    Route::post('/pre-invoicing/make/{type}/{id}', [PreInvoiceController::class, 'make'])->whereIn('type', PreInvoices::TYPES)->whereNumber('id')->name('finance.make');
+    Route::post('/pre-invoicing/{pf}/resend', [PreInvoiceController::class, 'resend'])->whereNumber('pf')->name('finance.resend');
+    Route::prefix('pre-invoicing')->middleware('nav:preinvoice')->group(function () {
+        Route::get('/', [PreInvoiceController::class, 'index'])->name('finance.index');
+        Route::get('/{pf}/print', [PreInvoiceController::class, 'print'])->whereNumber('pf')->name('finance.print');
+        Route::middleware('level:preinvoice,2')->group(function () {
+            Route::post('/{pf}/accept', [PreInvoiceController::class, 'accept'])->whereNumber('pf')->name('finance.accept');
+            Route::post('/{pf}/back', [PreInvoiceController::class, 'back'])->whereNumber('pf')->name('finance.back');
+            Route::post('/{pf}/paid', [PreInvoiceController::class, 'paid'])->whereNumber('pf')->name('finance.paid');
+            Route::post('/{pf}/cancel', [PreInvoiceController::class, 'cancel'])->whereNumber('pf')->name('finance.cancel');
+            Route::post('/{pf}/late', [PreInvoiceController::class, 'late'])->whereNumber('pf')->name('finance.late');
+        });
+    });
+
     // Wall screens: display links and settings.
     Route::middleware('nav:wallscreens')->group(function () {
         Route::get('/wall-screens', [WallController::class, 'index'])->name('wall.index');
@@ -484,7 +501,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

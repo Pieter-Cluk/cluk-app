@@ -44,5 +44,8 @@
             @endif
         </div>
     </section>
+    @if ($charges->where('status', 'approved')->isNotEmpty())
+        <section class="card mt"><h2>{{ __('nav.items.preinvoice') }}</h2>@include('finance._send', ['type' => 'charges', 'id' => $order->id])</section>
+    @endif
     <p class="muted small">{{ __('warehouse.office.approve_rule') }}</p>
 </x-layouts.app>

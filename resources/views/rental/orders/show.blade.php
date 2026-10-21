@@ -155,6 +155,7 @@
                 <p class="muted">{{ __('orders.approved_by', ['name' => $order->approvedBy?->name ?? '—', 'date' => $order->approved_at?->format('d/m/Y H:i'), 'email' => $order->customer_email ?: '—']) }}</p>
             </div>
             <a class="btn" href="{{ route('orders.print', $order) }}" target="_blank" rel="noopener">{{ __('orders.print') }}</a>
+            @include('finance._send', ['type' => 'rental', 'id' => $order->id])
         @elseif ($order->status === 'cancelled')
             <div><h2>{{ __('orders.states.cancelled') }}</h2><p class="muted">{{ $order->cancel_reason }}</p></div>
         @else

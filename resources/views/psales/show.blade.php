@@ -138,6 +138,9 @@
                     @endif
                 </section>
             @endif
+            @if ($q->status === 'delivered')
+                <section class="card"><h2>{{ __('nav.items.preinvoice') }}</h2>@include('finance._send', ['type' => 'sales', 'id' => $q->id])</section>
+            @endif
             <section class="card">
                 <h2>{{ __('psales.docs') }}</h2>
                 <ul class="plain-list">

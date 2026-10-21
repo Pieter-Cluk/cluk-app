@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'name', 'legal_form', 'is_customer', 'is_supplier', 'vat_number', 'country', 'street', 'postcode', 'city',
     'phone', 'email', 'website', 'language', 'account_owner_id', 'vat_regime',
-    'customer_payment_days', 'supplier_payment_days', 'supplies', 'notes',
+    'customer_payment_days', 'supplier_payment_days', 'supplies', 'notes', 'po_required',
 ])]
 class Company extends Model
 {
@@ -31,6 +31,7 @@ class Company extends Model
         return [
             'is_customer' => 'boolean',
             'is_supplier' => 'boolean',
+            'po_required' => 'boolean',
             'supplies' => 'array',
             'vies_checked_at' => 'datetime',
             'archived_at' => 'datetime',

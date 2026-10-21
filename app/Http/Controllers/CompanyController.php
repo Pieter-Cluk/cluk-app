@@ -251,6 +251,7 @@ class CompanyController extends Controller
 
         $data['is_customer'] = $request->boolean('is_customer');
         $data['is_supplier'] = $request->boolean('is_supplier');
+        $data['po_required'] = $request->boolean('po_required');
         $data['supplies'] = $data['is_supplier'] ? array_values($data['supplies'] ?? []) : [];
         $data['account_owner_id'] = isset($data['account_owner_id']) ? (int) $data['account_owner_id'] : null;
 

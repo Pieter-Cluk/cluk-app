@@ -45,6 +45,7 @@ return [
         'language' => 'Language of documents',
         'account_owner_id' => 'Account owner',
         'customer_payment_days' => 'Payment term as customer',
+        'po_required' => 'Asks a PO number on every invoice',
         'supplier_payment_days' => 'Payment term as supplier',
         'supplies' => 'Supplies',
         'notes' => 'Notes',

@@ -13,6 +13,7 @@ use App\Models\Warehouse\Check;
 use App\Models\Warehouse\Move;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
+use App\Services\Finance\PreInvoices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -266,6 +267,7 @@ class Moves
     {
         if ($order && ! $order->returned_at && self::allBack($order)) {
             $order->update(['returned_at' => now()]);
+            PreInvoices::make('rental', $order, $order->handedBy);
         }
     }
 
@@ -296,6 +298,7 @@ class Moves
             }
             $order->update(['returned_at' => $order->returned_at ?? now()]);
             AuditLog::record('order.returned', $order, ['missing_lines' => $n], $by);
+            PreInvoices::make('rental', $order, $order->handedBy ?? $by);
 
             return $n;
         });

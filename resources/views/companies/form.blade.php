@@ -54,6 +54,7 @@
                 </select></label>
             <label class="field"><span>{{ __('companies.fields.customer_payment_days') }}</span>
                 <input type="number" name="customer_payment_days" value="{{ old('customer_payment_days', $company->customer_payment_days) }}" min="0" max="365" placeholder="{{ \App\Models\CompanyDetail::current()->payment_term_days }}"></label>
+            <label class="check"><input type="hidden" name="po_required" value="0"><input type="checkbox" name="po_required" value="1" @checked(old('po_required', $company->po_required))> {{ __('companies.fields.po_required') }}</label>
             <label class="field"><span>{{ __('companies.fields.supplier_payment_days') }}</span>
                 <input type="number" name="supplier_payment_days" value="{{ old('supplier_payment_days', $company->supplier_payment_days) }}" min="0" max="365"></label>
             <fieldset class="field span-2 plain">

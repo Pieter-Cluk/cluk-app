@@ -45,6 +45,7 @@ return [
         'language' => 'Langue des documents',
         'account_owner_id' => 'Responsable du compte',
         'customer_payment_days' => 'Délai de paiement en tant que client',
+        'po_required' => 'Exige un numéro de commande sur chaque facture',
         'supplier_payment_days' => 'Délai de paiement en tant que fournisseur',
         'supplies' => 'Fournit',
         'notes' => 'Notes',

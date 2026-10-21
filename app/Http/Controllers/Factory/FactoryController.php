@@ -9,6 +9,7 @@ use App\Models\Factory\Booking;
 use App\Models\Factory\Task;
 use App\Services\Factory\Bookings;
 use App\Services\Factory\Tasks;
+use App\Services\Finance\PreInvoices;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -185,6 +186,9 @@ class FactoryController extends Controller
         $booking->update(['status' => $to]);
         if ($to === 'cancelled') {
             Tasks::dropOpen($booking);
+        }
+        if ($to === 'done' && $booking->currentQuote()?->status === 'accepted') {
+            PreInvoices::make('factory', $booking, $request->user());
         }
         AuditLog::record('factory.'.$to, $booking, [], $request->user());
 

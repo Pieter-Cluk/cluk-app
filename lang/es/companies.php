@@ -45,6 +45,7 @@ return [
         'language' => 'Idioma de los documentos',
         'account_owner_id' => 'Responsable de la cuenta',
         'customer_payment_days' => 'Plazo de pago como cliente',
+        'po_required' => 'Pide un número de pedido en cada factura',
         'supplier_payment_days' => 'Plazo de pago como proveedor',
         'supplies' => 'Suministra',
         'notes' => 'Notas',

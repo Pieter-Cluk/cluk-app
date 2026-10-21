@@ -12,6 +12,7 @@ use App\Models\AuditLog;
 use App\Models\Member;
 use App\Services\Afrit6\Pricing;
 use App\Services\Afrit6\StatementBuilder;
+use App\Services\Finance\PreInvoices;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -111,6 +112,7 @@ class StaffWorkspaceController extends Controller
             'period_start' => $bill['start'], 'period_end' => $bill['end'],
             'lines' => $bill['lines'], 'total_cents' => $bill['total_cents'], 'created_by_id' => $request->user()->id,
         ]);
+        PreInvoices::make('afrit6', $statement, $request->user());
         AuditLog::record('afrit6.statement_created', $member, [
             'period' => $bill['start']->format('d/m/Y').' – '.$bill['end']->format('d/m/Y'), 'total' => Pricing::eur($statement->total_cents),
         ]);

@@ -14,6 +14,7 @@ use App\Models\Warehouse\Move;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
 use App\Services\Afrit6\Pricing;
+use App\Services\Finance\PreInvoices;
 use App\Services\Warehouse\Moves;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -101,6 +102,7 @@ class WarehouseController extends Controller
         foreach ($pending as $c) {
             $c->update(['status' => 'approved', 'decided_by_id' => $request->user()->id, 'decided_at' => now()]);
         }
+        PreInvoices::make('charges', $order, $request->user());
         AuditLog::record('warehouse.charges_approved', $order, ['total' => Pricing::eur((int) $pending->sum('amount_cents')), 'lines' => $pending->count()], $request->user());
 
         return back()->with('status', __('warehouse.office.approved', ['code' => self::code($order)]));

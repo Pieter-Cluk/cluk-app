@@ -9,6 +9,7 @@ use App\Models\CompanyDetail;
 use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
 use App\Models\Factory\Booking;
+use App\Models\Finance\PreInvoice;
 use App\Models\Member;
 use App\Models\ProductSales\SalesItem;
 use App\Models\ProductSales\SalesQuote;
@@ -51,6 +52,7 @@ class AuditText
             $subject instanceof Booking => $subject->number.' · '.$subject->title,
             $subject instanceof Zone => $subject->code.' · '.$subject->label(),
             $subject instanceof Position => $subject->code,
+            $subject instanceof PreInvoice => $subject->number.' · '.$subject->customerName(),
             $subject instanceof SalesQuote => $subject->code().' · '.$subject->title,
             $subject instanceof SalesItem => $subject->number.' · '.$subject->name(),
             $subject instanceof PurchaseRequest => $subject->number,

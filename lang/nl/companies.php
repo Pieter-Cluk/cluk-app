@@ -45,6 +45,7 @@ return [
         'language' => 'Taal van documenten',
         'account_owner_id' => 'Accountbeheerder',
         'customer_payment_days' => 'Betalingstermijn als klant',
+        'po_required' => 'Vraagt een PO-nummer op elke factuur',
         'supplier_payment_days' => 'Betalingstermijn als leverancier',
         'supplies' => 'Levert',
         'notes' => 'Notities',
