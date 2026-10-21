@@ -115,7 +115,7 @@ class FactoryTasksTest extends TestCase
         $this->actingAs($sales)->post('/factory/bookings/'.$b->id.'/tasks', ['title' => 'Pick up the brand banners', 'due_date' => today()->addDays(3)->toDateString(), 'due_time' => '14:00', 'assignee_id' => $sales->id])->assertRedirect();
         $own = Task::whereNull('kind')->firstOrFail();
         $this->assertSame($sales->id, $own->assignee_id);
-        $this->actingAs($sales)->get('/dashboard')->assertSee('Cluk Factory: 1 task for you this week', false);
+        $this->actingAs($sales)->get('/dashboard')->assertSee('Cluk Factory crew tasks this week', false);
         $this->actingAs($sales)->delete('/factory/tasks/'.$b->tasks()->whereNotNull('kind')->value('id'))->assertStatus(409);
         $this->actingAs($sales)->delete('/factory/tasks/'.$own->id)->assertRedirect();
 

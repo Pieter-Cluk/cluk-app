@@ -9,6 +9,7 @@ use App\Http\Controllers\Afrit6\WorkspaceController;
 use App\Http\Controllers\Auth\MicrosoftLoginController;
 use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
 use App\Http\Controllers\Factory\FactoryController;
@@ -120,7 +121,7 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
 
 Route::middleware('auth:web')->group(function () {
     Route::post('/logout', [MicrosoftLoginController::class, 'logout'])->name('logout');
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     // Pictures (served only to signed-in staff).
     Route::get('/media/users/{user}', [MediaController::class, 'user'])->whereNumber('user')->name('media.user');
