@@ -60,6 +60,18 @@
             </section>
 
             <section class="card">
+                <div class="card-head"><h2>{{ __('quotes.title') }}</h2>
+                    @if ($canWork && $open)<form method="post" action="{{ route('quotes.store', $deal) }}">@csrf<button class="btn" type="submit">{{ __('quotes.new') }}</button></form>@endif
+                </div>
+                @php($quotes = $deal->quotes->where('status', '!=', 'replaced'))
+                @forelse ($quotes as $q)
+                    <div class="p-line"><a href="{{ route('quotes.show', $q) }}"><b>{{ $q->code() }}</b> · {{ $q->title }}</a><span>@include('sales.quotes._status', ['quote' => $q]) {{ \App\Services\Afrit6\Pricing::eur($q->net_cents) }}</span></div>
+                @empty
+                    <p class="muted">{{ __('quotes.none_for_deal') }}</p>
+                @endforelse
+            </section>
+
+            <section class="card">
                 <h2>{{ __('deals.activity') }}</h2>
                 @if (auth()->user()->canUseModule('sales', 2))
                     <form method="post" action="{{ route('deals.note', $deal) }}" class="note-form">

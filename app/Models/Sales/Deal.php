@@ -113,6 +113,17 @@ class Deal extends Model
         return $prefix.str_pad((string) ($last + 1), 4, '0', STR_PAD_LEFT);
     }
 
+    public function quotes(): HasMany
+    {
+        return $this->hasMany(Quote::class)->orderByDesc('id');
+    }
+
+    /** Level 3 works on every deal, level 2 on own and unassigned deals. */
+    public function canBeWorkedBy(User $user): bool
+    {
+        return $user->canUseModule('sales', 3) || ($user->canUseModule('sales', 2) && ($this->owner_id === null || $this->owner_id === $user->id));
+    }
+
     public function log(string $kind, string $body, ?User $by = null): DealActivity
     {
         return $this->activities()->create(['kind' => $kind, 'body' => $body, 'user_id' => $by?->id ?? auth('web')->id()]);

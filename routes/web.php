@@ -11,8 +11,10 @@ use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
+use App\Http\Controllers\QuotePublicController;
 use App\Http\Controllers\Sales\DealController;
 use App\Http\Controllers\Sales\IncomingController;
+use App\Http\Controllers\Sales\QuoteController;
 use App\Http\Controllers\Settings\AuditLogController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
 use App\Http\Controllers\Settings\ImportController;
@@ -26,6 +28,15 @@ Route::redirect('/', '/dashboard');
 
 // Website form → Incoming (token in the X-Intake-Token header).
 Route::post('/intake', [IncomingController::class, 'intake'])->middleware('throttle:30,1')->name('intake');
+
+// The customer's quote page (link in the quote email).
+Route::prefix('q/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {
+    Route::get('/', [QuotePublicController::class, 'show'])->name('quote.public');
+    Route::get('/print', [QuotePublicController::class, 'print'])->name('quote.public.print');
+    Route::post('/accept', [QuotePublicController::class, 'accept'])->middleware('throttle:10,1')->name('quote.public.accept');
+    Route::post('/change', [QuotePublicController::class, 'change'])->middleware('throttle:10,1')->name('quote.public.change');
+    Route::post('/decline', [QuotePublicController::class, 'decline'])->middleware('throttle:10,1')->name('quote.public.decline');
+});
 
 // Staff login with Microsoft 365.
 Route::middleware('guest:web')->group(function () {
@@ -109,6 +120,9 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/', [DealController::class, 'index'])->name('deals.index');
         Route::get('/incoming', [IncomingController::class, 'index'])->name('incoming.index');
         Route::get('/deals/{deal}', [DealController::class, 'show'])->whereNumber('deal')->name('deals.show');
+        Route::get('/quotes', [QuoteController::class, 'index'])->name('quotes.index');
+        Route::get('/quotes/{quote}', [QuoteController::class, 'show'])->whereNumber('quote')->name('quotes.show');
+        Route::get('/quotes/{quote}/print', [QuoteController::class, 'print'])->whereNumber('quote')->name('quotes.print');
         Route::middleware('level:sales,2')->group(function () {
             Route::get('/deals/new', [DealController::class, 'create'])->name('deals.create');
             Route::post('/deals', [DealController::class, 'store'])->name('deals.store');
@@ -121,6 +135,14 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/deals/{deal}/reopen', [DealController::class, 'reopen'])->whereNumber('deal')->name('deals.reopen');
             Route::post('/deals/{deal}/notes', [DealController::class, 'note'])->whereNumber('deal')->name('deals.note');
             Route::post('/deals/{deal}/contact', [DealController::class, 'addContact'])->whereNumber('deal')->name('deals.contact');
+            Route::post('/deals/{deal}/quotes', [QuoteController::class, 'store'])->whereNumber('deal')->name('quotes.store');
+            Route::put('/quotes/{quote}', [QuoteController::class, 'update'])->whereNumber('quote')->name('quotes.update');
+            Route::post('/quotes/{quote}/lines', [QuoteController::class, 'addLine'])->whereNumber('quote')->name('quotes.lines.add');
+            Route::delete('/quotes/{quote}/lines/{line}', [QuoteController::class, 'removeLine'])->whereNumber('quote')->whereNumber('line')->name('quotes.lines.remove');
+            Route::get('/quotes/{quote}/search', [QuoteController::class, 'search'])->whereNumber('quote')->name('quotes.search');
+            Route::post('/quotes/{quote}/send', [QuoteController::class, 'send'])->whereNumber('quote')->name('quotes.send');
+            Route::post('/quotes/{quote}/revise', [QuoteController::class, 'revise'])->whereNumber('quote')->name('quotes.revise');
+            Route::post('/quotes/{quote}/accepted', [QuoteController::class, 'markAccepted'])->whereNumber('quote')->name('quotes.accepted');
             Route::post('/incoming', [IncomingController::class, 'store'])->name('incoming.store');
             Route::post('/incoming/{item}/convert', [IncomingController::class, 'convert'])->whereNumber('item')->name('incoming.convert');
             Route::post('/incoming/{item}/link', [IncomingController::class, 'link'])->whereNumber('item')->name('incoming.link');

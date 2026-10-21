@@ -10,6 +10,7 @@ use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
 use App\Models\Member;
 use App\Models\Role;
+use App\Models\Sales\Quote;
 use App\Models\User;
 use App\Models\VatRate;
 
@@ -36,6 +37,7 @@ class AuditText
             $subject instanceof Member => $subject->name,
             $subject instanceof Item => $subject->number.' · '.$subject->name,
             $subject instanceof Asset => $subject->code,
+            $subject instanceof Quote => $subject->code().' · '.$subject->title,
             $subject instanceof ServiceRequest => __('workspace.kinds.'.$subject->kind).' · '.$subject->member?->name,
             $subject instanceof CompanyDetail => trim($subject->legal_name.' '.$subject->legal_form),
             $subject !== null => class_basename($subject).' #'.$subject->getKey(),
@@ -78,6 +80,9 @@ class AuditText
             'import.done' => trim(($d['file'] ?? '').' · '.collect($d)->except('file')->map(fn ($r, $k) => __('import.kinds.'.$k).' +'.($r['created'] ?? 0).' ~'.($r['updated'] ?? 0))->implode(' · '), ' ·'),
             'afrit6.member_approved' => (string) ($d['company'] ?? ''),
             'afrit6.member_declined' => (string) ($d['reason'] ?? ''),
+            'quote.sent' => trim(($d['to'] ?? '').' · '.($d['total'] ?? ''), ' ·'),
+            'quote.accepted' => trim(($d['name'] ?? '').(isset($d['po']) ? ' · PO '.$d['po'] : '').' · '.($d['total'] ?? '').(isset($d['by_staff']) ? ' · '.$d['by_staff'] : ''), ' ·'),
+            'quote.declined' => isset($d['reason']) ? __('quotes.decline_reasons.'.$d['reason']) : '',
             'auth.refused_unknown' => (string) ($d['email'] ?? ''),
             default => '',
         };

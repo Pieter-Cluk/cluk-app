@@ -53,7 +53,7 @@ class DealController extends Controller
 
     public function show(Request $request, Deal $deal): View
     {
-        $deal->load(['company', 'contact', 'owner', 'closedBy', 'incoming', 'activities.user']);
+        $deal->load(['company', 'contact', 'owner', 'closedBy', 'incoming', 'activities.user', 'quotes']);
 
         return view('sales.deals.show', [
             'deal' => $deal,
@@ -73,7 +73,7 @@ class DealController extends Controller
 
     private function canWork(User $me, Deal $deal): bool
     {
-        return $me->canUseModule('sales', 3) || ($me->canUseModule('sales', 2) && ($deal->owner_id === null || $deal->owner_id === $me->id));
+        return $deal->canBeWorkedBy($me);
     }
 
     private function guard(Request $request, Deal $deal): void
