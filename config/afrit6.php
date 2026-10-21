@@ -25,10 +25,14 @@ return [
 
     // Terms members accept (tick boxes). Raise the version when the texts change:
     // members then accept again before they can use the portal.
-    'terms_version' => '2026-10',
+    'terms_version' => '2026-10-2',
     'payment' => [
         'days' => 30,                 // invoices payable within 30 days
-        'late_interest' => 8,         // % per year on late payments; the accountant decides per case
+        // Late payment (B2B, law of 2 August 2002): the statutory rate for commercial
+        // transactions, set every half year (2026: 10.5% per year), simple interest on
+        // the unpaid amount, plus a fixed € 40 per late invoice. The accountant decides per case.
+        'statutory_rate' => 10.5,     // % per year, update when the half-yearly rate changes
+        'fixed_compensation' => 4000, // cents per late invoice
     ],
 
     // Day bookings of a free desk.

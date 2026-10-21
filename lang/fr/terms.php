@@ -2,7 +2,7 @@
 
 return [
     'tick_rules' => 'J’accepte le <a href=":url" target="_blank" rel="noopener">règlement intérieur et de réservation</a>.',
-    'tick_payment' => 'J’accepte les <a href=":url" target="_blank" rel="noopener">conditions de paiement</a>, dont :rate % d’intérêts par an en cas de retard de paiement.',
+    'tick_payment' => 'J’accepte les <a href=":url" target="_blank" rel="noopener">conditions de paiement</a>, dont des intérêts au taux légal et une indemnité forfaitaire de :fee par facture payée en retard.',
     'accept_title' => 'Avant de continuer',
     'accept_intro' => 'Veuillez lire et accepter le règlement intérieur et de réservation ainsi que les conditions de paiement d’Afrit 6.',
     'accept_btn' => 'Accepter et continuer',
@@ -31,7 +31,7 @@ return [
             '1' => 'Tous les prix sont en euros, hors TVA.',
             '2' => 'Les bureaux fixes sont facturés par mois de contrat. Les bureaux à la journée, le temps supplémentaire en salle et les services sont facturés avec le mois de contrat au cours duquel ils ont eu lieu.',
             '3' => 'Les factures sont payables dans les :days jours suivant la date de facture, par virement avec la référence indiquée.',
-            '4' => 'Si une facture n’est pas payée à temps, CLUK peut facturer des intérêts de :rate % par an sur le montant impayé, de l’échéance jusqu’au paiement complet, au moyen d’une facture distincte.',
+            '4' => 'Si une facture n’est pas payée à temps, des intérêts sont dus de plein droit et sans mise en demeure à partir du lendemain de l’échéance, au taux légal applicable aux transactions commerciales (loi du 2 août 2002 ; actuellement :rate % par an), sur le montant impayé jusqu’au paiement complet. En outre, une indemnité forfaitaire de :fee par facture payée en retard est due pour les frais de recouvrement. CLUK les facture séparément.',
             '5' => 'En cas de retards de paiement répétés, CLUK peut suspendre l’accès aux bureaux, à la salle de réunion et aux services jusqu’au paiement complet.',
             '6' => 'Toute contestation d’une facture doit être adressée par écrit dans les 8 jours suivant sa date.',
         ],

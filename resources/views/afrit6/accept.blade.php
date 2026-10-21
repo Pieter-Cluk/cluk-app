@@ -7,7 +7,7 @@
             <summary><b>{{ __('terms.'.$doc.'.title') }}</b></summary>
             <ol class="terms-list">
                 @foreach (array_keys(trans('terms.'.$doc.'.items')) as $i)
-                    <li>{{ __('terms.'.$doc.'.items.'.$i, ['days' => config('afrit6.payment.days'), 'rate' => config('afrit6.payment.late_interest')]) }}</li>
+                    <li>{{ __('terms.'.$doc.'.items.'.$i, \App\Services\Afrit6\Pricing::termsParams()) }}</li>
                 @endforeach
             </ol>
         </details>

@@ -316,7 +316,7 @@ class Afrit6MembersTest extends TestCase
     {
         $this->post('/afrit6/register', ['country' => 'BE', 'vat_number' => '1010.948.054']);
         $this->get('/afrit6/register/details')->assertOk()
-            ->assertSee(route('afrit6.terms', 'rules'), false)->assertSee(route('afrit6.terms', 'payment'), false)->assertSee('8%');
+            ->assertSee(route('afrit6.terms', 'rules'), false)->assertSee(route('afrit6.terms', 'payment'), false)->assertSee('€ 40,00');
 
         $this->post('/afrit6/register/details', $this->details(['rules' => null]))->assertSessionHasErrors('rules');
         $this->post('/afrit6/register/details', $this->details(['payment_terms' => null]))->assertSessionHasErrors('payment_terms');
@@ -337,7 +337,8 @@ class Afrit6MembersTest extends TestCase
                 $this->assertDoesNotMatchRegularExpression('/\bterms\.[a-z_]+/', strip_tags($html));
             }
         }
-        $this->withSession(['locale' => 'en'])->get('/afrit6/terms/payment')->assertSee('8%')->assertSee('30 days');
+        $this->withSession(['locale' => 'en'])->get('/afrit6/terms/payment')->assertSee('10.5% per year')->assertSee('€ 40,00')->assertSee('30 days');
+        $this->withSession(['locale' => 'nl'])->get('/afrit6/terms/payment')->assertSee('10,5% per jaar');
         $this->get('/afrit6/terms/other')->assertNotFound();
     }
 

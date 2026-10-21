@@ -43,4 +43,16 @@ class Pricing
     {
         return '€ '.number_format($cents / 100, 2, ',', '.');
     }
+
+    /** Values used in the payment terms texts: payment days, statutory rate and fixed compensation. */
+    public static function termsParams(): array
+    {
+        $rate = rtrim(rtrim(number_format((float) config('afrit6.payment.statutory_rate'), 2, '.', ''), '0'), '.');
+
+        return [
+            'days' => (int) config('afrit6.payment.days'),
+            'rate' => app()->getLocale() === 'en' ? $rate : str_replace('.', ',', $rate),
+            'fee' => self::eur((int) config('afrit6.payment.fixed_compensation')),
+        ];
+    }
 }

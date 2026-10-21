@@ -1,2 +1,2 @@
 <label class="mcheck"><input type="checkbox" name="rules" value="1" required @checked(old('rules'))> <span>{!! __('terms.tick_rules', ['url' => e(route('afrit6.terms', 'rules'))]) !!}</span></label>
-<label class="mcheck"><input type="checkbox" name="payment_terms" value="1" required @checked(old('payment_terms'))> <span>{!! __('terms.tick_payment', ['url' => e(route('afrit6.terms', 'payment')), 'rate' => (int) config('afrit6.payment.late_interest')]) !!}</span></label>
+<label class="mcheck"><input type="checkbox" name="payment_terms" value="1" required @checked(old('payment_terms'))> <span>{!! __('terms.tick_payment', ['url' => e(route('afrit6.terms', 'payment'))] + \App\Services\Afrit6\Pricing::termsParams()) !!}</span></label>

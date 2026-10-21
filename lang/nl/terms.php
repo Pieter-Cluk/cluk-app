@@ -2,7 +2,7 @@
 
 return [
     'tick_rules' => 'Ik aanvaard het <a href=":url" target="_blank" rel="noopener">huis- en boekingsreglement</a>.',
-    'tick_payment' => 'Ik aanvaard de <a href=":url" target="_blank" rel="noopener">betalingsvoorwaarden</a>, met :rate% intrest per jaar bij laattijdige betaling.',
+    'tick_payment' => 'Ik aanvaard de <a href=":url" target="_blank" rel="noopener">betalingsvoorwaarden</a>, met intrest aan de wettelijke rentevoet en een forfaitaire vergoeding van :fee per laattijdig betaalde factuur.',
     'accept_title' => 'Voor je verdergaat',
     'accept_intro' => 'Lees en aanvaard het huis- en boekingsreglement en de betalingsvoorwaarden van Afrit 6.',
     'accept_btn' => 'Aanvaarden en verdergaan',
@@ -31,7 +31,7 @@ return [
             '1' => 'Alle prijzen zijn in euro, exclusief btw.',
             '2' => 'Vaste bureaus worden per contractmaand gefactureerd. Dagbureaus, extra tijd in de vergaderzaal en diensten worden gefactureerd met de contractmaand waarin ze plaatsvonden.',
             '3' => 'Facturen zijn betaalbaar binnen :days dagen na factuurdatum, via overschrijving met de referentie op de factuur.',
-            '4' => 'Wordt een factuur niet tijdig betaald, dan kan CLUK een intrest van :rate% per jaar aanrekenen op het onbetaalde bedrag, vanaf de vervaldag tot de volledige betaling, via een afzonderlijke factuur.',
+            '4' => 'Wordt een factuur niet tijdig betaald, dan is vanaf de dag na de vervaldag van rechtswege en zonder ingebrekestelling intrest verschuldigd aan de wettelijke rentevoet voor handelstransacties (wet van 2 augustus 2002; momenteel :rate% per jaar), op het onbetaalde bedrag tot de volledige betaling. Daarnaast is een forfaitaire vergoeding van :fee per laattijdig betaalde factuur verschuldigd voor invorderingskosten. CLUK factureert dit afzonderlijk.',
             '5' => 'Bij herhaalde laattijdige betaling kan CLUK de toegang tot de bureaus, de vergaderzaal en de diensten opschorten tot alles betaald is.',
             '6' => 'Vragen over een factuur bezorg je schriftelijk binnen 8 dagen na factuurdatum.',
         ],

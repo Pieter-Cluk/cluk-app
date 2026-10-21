@@ -2,7 +2,7 @@
 
 return [
     'tick_rules' => 'Acepto las <a href=":url" target="_blank" rel="noopener">normas de la casa y de reserva</a>.',
-    'tick_payment' => 'Acepto las <a href=":url" target="_blank" rel="noopener">condiciones de pago</a>, incluido un :rate % de interés anual por pago tardío.',
+    'tick_payment' => 'Acepto las <a href=":url" target="_blank" rel="noopener">condiciones de pago</a>, incluidos intereses al tipo legal y una indemnización fija de :fee por factura pagada con retraso.',
     'accept_title' => 'Antes de continuar',
     'accept_intro' => 'Lee y acepta las normas de la casa y de reserva y las condiciones de pago de Afrit 6.',
     'accept_btn' => 'Aceptar y continuar',
@@ -31,7 +31,7 @@ return [
             '1' => 'Todos los precios son en euros, sin IVA.',
             '2' => 'Los puestos fijos se facturan por mes de contrato. Los puestos por día, el tiempo extra de sala y los servicios se facturan con el mes de contrato en que tuvieron lugar.',
             '3' => 'Las facturas se pagan en un plazo de :days días desde su fecha, por transferencia con la referencia de la factura.',
-            '4' => 'Si una factura no se paga a tiempo, CLUK puede cobrar un interés del :rate % anual sobre el importe impagado, desde el vencimiento hasta el pago completo, mediante una factura aparte.',
+            '4' => 'Si una factura no se paga a tiempo, se deben intereses de pleno derecho y sin requerimiento desde el día siguiente al vencimiento, al tipo legal para transacciones comerciales (ley belga de 2 de agosto de 2002; actualmente :rate % anual), sobre el importe impagado hasta el pago completo. Además, se debe una indemnización fija de :fee por factura pagada con retraso por los gastos de cobro. CLUK los factura aparte.',
             '5' => 'En caso de retrasos repetidos, CLUK puede suspender el acceso a los puestos, la sala y los servicios hasta que todo esté pagado.',
             '6' => 'Las reclamaciones sobre una factura se envían por escrito en los 8 días siguientes a su fecha.',
         ],

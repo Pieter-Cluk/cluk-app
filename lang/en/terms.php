@@ -2,7 +2,7 @@
 
 return [
     'tick_rules' => 'I accept the <a href=":url" target="_blank" rel="noopener">house and booking rules</a>.',
-    'tick_payment' => 'I accept the <a href=":url" target="_blank" rel="noopener">payment terms</a>, including :rate% interest per year on late payments.',
+    'tick_payment' => 'I accept the <a href=":url" target="_blank" rel="noopener">payment terms</a>, including interest at the statutory rate and a fixed compensation of :fee per late invoice.',
     'accept_title' => 'Before you continue',
     'accept_intro' => 'Please read and accept the Afrit 6 house and booking rules and the payment terms.',
     'accept_btn' => 'Accept and continue',
@@ -31,7 +31,7 @@ return [
             '1' => 'All prices are in euro, excluding VAT.',
             '2' => 'Fixed desks are invoiced per contract month. Day desks, extra meeting room time and services are invoiced with the contract month in which they took place.',
             '3' => 'Invoices are payable within :days days of the invoice date, by bank transfer with the reference on the invoice.',
-            '4' => 'If an invoice is not paid on time, CLUK may charge interest of :rate% per year on the unpaid amount, from the due date until full payment, by means of a separate invoice.',
+            '4' => 'If an invoice is not paid on time, interest is due from the day after the due date, by law and without prior notice, at the statutory rate for commercial transactions (law of 2 August 2002; currently :rate% per year), on the unpaid amount until full payment. In addition, a fixed compensation of :fee per late invoice is due for recovery costs. CLUK invoices these separately.',
             '5' => 'In case of repeated late payment, CLUK may suspend access to the desks, the meeting room and the services until everything is paid.',
             '6' => 'Questions about an invoice must be sent in writing within 8 days of the invoice date.',
         ],
