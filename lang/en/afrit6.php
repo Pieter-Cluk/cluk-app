@@ -33,6 +33,8 @@ return [
         'company_sub' => 'We check your VAT number in VIES, the European VAT register.',
         'vat_hint' => 'No VAT number? Leave it empty and fill in your company name and address.',
         'vat_wrong' => 'This VAT number is not correct. Check the digits.',
+        'mail_failed' => 'We could not send the email right now. Try “Resend email” in a few minutes, or contact the Afrit 6 team.',
+        'change_company' => 'Change',
         'vies_valid' => 'VAT number found in VIES:',
         'vies_invalid' => 'VAT number not found in VIES. Fill in your company name and address; a CLUK manager will verify your company.',
         'vies_unavailable' => 'VIES cannot be reached right now. Fill in your company name and address; a CLUK manager will verify your company.',

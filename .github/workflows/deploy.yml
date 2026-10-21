@@ -90,8 +90,8 @@ jobs:
           SESSION_SECURE_COOKIE=true
           CACHE_STORE=database
           QUEUE_CONNECTION=database
-          MAIL_MAILER=log
-          MAIL_FROM_ADDRESS=noreply@cluk.live
+          MAIL_MAILER=microsoft-graph
+          MAIL_FROM_ADDRESS=${{ vars.MAIL_FROM_ADDRESS || 'noreply@cluk.live' }}
           MAIL_FROM_NAME=CLUK
           MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
           MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}

@@ -7,6 +7,7 @@ use App\Models\Member;
 use App\Notifications\MemberVerifyEmail;
 use App\Rules\MemberPassword;
 use App\Services\Vies;
+use App\Support\SafeMail;
 use App\Support\VatNumber;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
@@ -188,11 +189,11 @@ class MemberAuthController extends Controller
             'terms_version' => config('afrit6.terms_version'),
         ])->save();
 
-        $member->notify(new MemberVerifyEmail);
+        $sent = SafeMail::notify($member, new MemberVerifyEmail);
         $request->session()->forget('afrit6.reg');
         $request->session()->put('afrit6.unverified', $member->id);
 
-        return redirect()->route('afrit6.check-inbox');
+        return redirect()->route('afrit6.check-inbox')->with($sent ? [] : ['mail_failed' => true]);
     }
 
     public function checkInbox(Request $request): View|RedirectResponse
@@ -212,7 +213,9 @@ class MemberAuthController extends Controller
             $key = 'member-verify:'.$member->id;
             if (! RateLimiter::tooManyAttempts($key, 3)) {
                 RateLimiter::hit($key, 600);
-                $member->notify(new MemberVerifyEmail);
+                if (! SafeMail::notify($member, new MemberVerifyEmail)) {
+                    return back()->with('mail_failed', true);
+                }
             }
         }
 

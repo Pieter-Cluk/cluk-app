@@ -31,7 +31,7 @@ class Vies
             ]);
 
             if (! $response->successful() || ! is_bool($response->json('valid'))) {
-                Log::info('VIES did not answer', ['country' => $prefix, 'http' => $response->status(), 'error' => $response->json('errorWrappers.0.error') ?? $response->json('userError')]);
+                Log::warning('VIES did not answer', ['country' => $prefix, 'http' => $response->status(), 'error' => $response->json('errorWrappers.0.error') ?? $response->json('userError')]);
 
                 return ['status' => 'unavailable', 'name' => null, 'address' => null];
             }
@@ -44,7 +44,7 @@ class Vies
                 'address' => $clean($response->json('address')),
             ];
         } catch (Throwable $e) {
-            Log::info('VIES could not be reached', ['error' => $e->getMessage()]);
+            Log::warning('VIES could not be reached', ['error' => $e->getMessage()]);
 
             return ['status' => 'unavailable', 'name' => null, 'address' => null];
         }

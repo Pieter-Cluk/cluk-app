@@ -33,6 +33,8 @@ return [
         'company_sub' => 'Comprobamos tu número de IVA en VIES, el registro europeo del IVA.',
         'vat_hint' => '¿Sin número de IVA? Déjalo vacío e indica el nombre y la dirección de tu empresa.',
         'vat_wrong' => 'Este número de IVA no es correcto. Revisa los dígitos.',
+        'mail_failed' => 'No hemos podido enviar el correo ahora. Prueba «Reenviar correo» dentro de unos minutos o contacta con el equipo de Afrit 6.',
+        'change_company' => 'Cambiar',
         'vies_valid' => 'Número de IVA encontrado en VIES:',
         'vies_invalid' => 'Número de IVA no encontrado en VIES. Indica el nombre y la dirección de tu empresa; un responsable de CLUK la comprobará.',
         'vies_unavailable' => 'VIES no está disponible ahora. Indica el nombre y la dirección de tu empresa; un responsable de CLUK la comprobará.',

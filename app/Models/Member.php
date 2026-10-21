@@ -7,6 +7,7 @@ use App\Models\Afrit6\RoomBooking;
 use App\Models\Afrit6\ServiceRequest;
 use App\Models\Afrit6\Statement;
 use App\Notifications\MemberResetPassword;
+use App\Support\SafeMail;
 use App\Support\VatNumber;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
@@ -159,6 +160,6 @@ class Member extends Authenticatable implements CanResetPasswordContract, HasLoc
 
     public function sendPasswordResetNotification($token): void
     {
-        $this->notify(new MemberResetPassword($token));
+        SafeMail::notify($this, new MemberResetPassword($token));
     }
 }

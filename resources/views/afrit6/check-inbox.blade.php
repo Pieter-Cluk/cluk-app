@@ -3,6 +3,7 @@
     <h1>{{ __('afrit6.register.inbox_title') }}</h1>
     <p>{{ __('afrit6.register.inbox_text', ['email' => $member->email]) }}</p>
     @include('afrit6._messages')
+    @if (session('mail_failed'))<div class="member-warn" role="alert">{{ __('afrit6.register.mail_failed') }}</div>@endif
     <form method="post" action="{{ route('afrit6.resend') }}">@csrf<button class="ms-btn member-btn" type="submit">{{ __('afrit6.register.resend') }}</button></form>
     <p class="login-note">{{ __('afrit6.register.inbox_note') }}</p>
     <p class="login-note"><a href="{{ route('afrit6.login') }}">{{ __('afrit6.register.back_to_login') }}</a></p>

@@ -33,6 +33,8 @@ return [
         'company_sub' => 'Nous vérifions votre numéro de TVA dans VIES, le registre européen de la TVA.',
         'vat_hint' => 'Pas de numéro de TVA ? Laissez vide et indiquez le nom et l\'adresse de votre entreprise.',
         'vat_wrong' => 'Ce numéro de TVA n\'est pas correct. Vérifiez les chiffres.',
+        'mail_failed' => 'Nous n’avons pas pu envoyer l’e-mail pour le moment. Réessayez « Renvoyer l’e-mail » dans quelques minutes ou contactez l’équipe Afrit 6.',
+        'change_company' => 'Modifier',
         'vies_valid' => 'Numéro de TVA trouvé dans VIES :',
         'vies_invalid' => 'Numéro de TVA introuvable dans VIES. Indiquez le nom et l\'adresse de votre entreprise ; un responsable CLUK la vérifiera.',
         'vies_unavailable' => 'VIES est injoignable pour le moment. Indiquez le nom et l\'adresse de votre entreprise ; un responsable CLUK la vérifiera.',

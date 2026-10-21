@@ -11,6 +11,7 @@ use App\Models\Contact;
 use App\Models\Member;
 use App\Notifications\MemberApproved;
 use App\Services\Afrit6\StatementBuilder;
+use App\Support\SafeMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -112,7 +113,7 @@ class MemberAdminController extends Controller
             AuditLog::record('afrit6.member_approved', $member, ['company' => $company->name]);
         });
 
-        $member->notify(new MemberApproved);
+        SafeMail::notify($member, new MemberApproved);
 
         return redirect()->route('afrit6.staff.show', $member)->with('status', __('afrit6.staff.approved', ['name' => $member->name]));
     }

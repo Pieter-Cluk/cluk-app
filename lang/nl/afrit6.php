@@ -33,6 +33,8 @@ return [
         'company_sub' => 'We controleren je btw-nummer in VIES, het Europese btw-register.',
         'vat_hint' => 'Geen btw-nummer? Laat het leeg en vul je bedrijfsnaam en adres in.',
         'vat_wrong' => 'Dit btw-nummer klopt niet. Controleer de cijfers.',
+        'mail_failed' => 'We konden de e-mail nu niet versturen. Probeer binnen enkele minuten “E-mail opnieuw versturen”, of neem contact op met het Afrit 6-team.',
+        'change_company' => 'Wijzigen',
         'vies_valid' => 'Btw-nummer gevonden in VIES:',
         'vies_invalid' => 'Btw-nummer niet gevonden in VIES. Vul je bedrijfsnaam en adres in; een CLUK-manager controleert je bedrijf.',
         'vies_unavailable' => 'VIES is nu niet bereikbaar. Vul je bedrijfsnaam en adres in; een CLUK-manager controleert je bedrijf.',

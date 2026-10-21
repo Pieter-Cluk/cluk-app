@@ -37,6 +37,12 @@ return [
 
     'mailers' => [
 
+        // Microsoft 365 through Microsoft Graph (app registration "CLUK app",
+        // application permission Mail.Send). Sends as MAIL_FROM_ADDRESS.
+        'microsoft-graph' => [
+            'transport' => 'microsoft-graph',
+        ],
+
         'smtp' => [
             'transport' => 'smtp',
             'scheme' => env('MAIL_SCHEME'),

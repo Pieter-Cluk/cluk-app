@@ -1,7 +1,12 @@
 <x-layouts.member :title="__('afrit6.register.details_title')">
     @include('afrit6._steps', ['step' => 2])
     <h1>{{ __('afrit6.register.details_title') }}</h1>
-    <p>{{ $reg['company_name'] ?? $reg['vies_name'] }}@if (!empty($reg['vat_number'])) · {{ \App\Support\VatNumber::format($reg['vat_number']) }}@endif</p>
+    @if (($reg['vies_status'] ?? null) === 'valid')
+        <div class="member-ok">✓ {{ __('afrit6.register.vies_valid') }}<br><b>{{ $reg['vies_name'] ?? $reg['company_name'] }}</b>@if (!empty($reg['vat_number'])) · {{ \App\Support\VatNumber::format($reg['vat_number']) }}@endif<br>{{ $reg['vies_address'] ?? $reg['address'] }} · <a href="{{ route('afrit6.register') }}">{{ __('afrit6.register.change_company') }}</a></div>
+    @else
+        @if (($reg['vies_status'] ?? null) === 'invalid')<div class="member-warn">{{ __('afrit6.register.vies_invalid') }}</div>@elseif (($reg['vies_status'] ?? null) === 'unavailable')<div class="member-warn">{{ __('afrit6.register.vies_unavailable') }}</div>@endif
+        <p>{{ $reg['company_name'] ?? $reg['vies_name'] }}@if (!empty($reg['vat_number'])) · {{ \App\Support\VatNumber::format($reg['vat_number']) }}@endif · <a href="{{ route('afrit6.register') }}">{{ __('afrit6.register.change_company') }}</a></p>
+    @endif
     @include('afrit6._messages')
     <form method="post" action="{{ route('afrit6.register.store') }}" class="member-form">
         @csrf
