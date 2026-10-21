@@ -35,6 +35,17 @@ class Item extends Model
         ];
     }
 
+    public function photos(): HasMany
+    {
+        return $this->hasMany(ItemPhoto::class)->orderBy('position')->orderBy('id');
+    }
+
+    /** The first photo is the main one (shown in lists and on quotes). */
+    public function syncMainPhoto(): void
+    {
+        $this->forceFill(['photo_path' => $this->photos()->value('path')])->save();
+    }
+
     public function assets(): HasMany
     {
         return $this->hasMany(Asset::class)->orderBy('code');

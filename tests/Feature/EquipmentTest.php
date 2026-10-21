@@ -33,10 +33,14 @@ class EquipmentTest extends TestCase
         return Item::create(['number' => 'LT-SPIIDER', 'kind' => 'item', 'name' => 'Robe Spiider', 'category' => 'Light', 'serial' => true, 'day_price_cents' => 6500, 'catalog_price_cents' => 985000, 'weight_kg' => 13.5]);
     }
 
-    public function test_only_the_known_service_items_are_in_the_database(): void
+    public function test_only_the_known_items_are_in_the_database(): void
     {
-        $this->assertSame(22, Item::count());
-        $this->assertSame(['service'], Item::distinct()->pluck('kind')->all());
+        $this->assertSame(22, Item::where('kind', 'service')->count());
+        // The four audio items Pieter gave to test sub-hire, without pieces yet.
+        $this->assertSame(['AUDACCK&MM20POLE', 'AUDACCK&MSTAND1', 'AUDSPEQSCKLA12', 'AUDSPEQSCKLA181'], Item::where('kind', 'item')->orderBy('number')->pluck('number')->all());
+        $this->assertSame(3000, Item::where('number', 'AUDSPEQSCKLA181')->value('day_price_cents'));
+        $this->assertEquals(47.2, Item::where('number', 'AUDSPEQSCKLA181')->value('weight_kg'));
+        $this->assertStringContainsString('1,000 W', Item::where('number', 'AUDSPEQSCKLA12')->first()->description('en'));
         $this->assertSame(35000, Item::where('number', 'A6-DESK-MONTH')->value('day_price_cents'));
         $this->assertSame(1250, Item::where('number', 'A6-ROOM-HOUR')->value('day_price_cents'));
         $this->assertSame(160, Item::where('number', 'WH-PACK-COLI')->value('day_price_cents'));
@@ -167,7 +171,7 @@ class EquipmentTest extends TestCase
         $item = $this->spiider();
         $am = $this->as('asset-manager');
 
-        $this->actingAs($am)->post('/dry-hire/items/'.$item->id.'/photo', ['photo' => UploadedFile::fake()->image('spiider.jpg', 600, 600)])->assertRedirect();
+        $this->actingAs($am)->post('/dry-hire/items/'.$item->id.'/photos', ['photos' => [UploadedFile::fake()->image('spiider.jpg', 600, 600)]])->assertRedirect();
         $this->assertNotNull($item->fresh()->photo_path);
         $this->actingAs($this->as('read-only'))->get('/dry-hire/items/'.$item->id.'/photo')->assertOk();
     }

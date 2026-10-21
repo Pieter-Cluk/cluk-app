@@ -118,12 +118,37 @@
 
         <aside class="stack">
             <section class="card">
-                <h2>{{ __('equipment.photo') }}</h2>
-                @if ($item->photo_path)<img class="photo" src="{{ route('equipment.photo', $item) }}" alt="{{ $item->name }}">@else<p class="muted">{{ __('equipment.no_photo') }}</p>@endif
+                <h2>{{ __('pictures.item_title') }}</h2>
+                @php($photos = $item->photos)
+                @if ($photos->isNotEmpty())
+                    <img class="photo" src="{{ route('media.item', $photos->first()) }}" alt="{{ $item->name }}">
+                    @if ($photos->count() > 1)
+                        <div class="thumbs">
+                            @foreach ($photos->skip(1) as $p)
+                                <figure class="thumb-fig">
+                                    <img src="{{ route('media.item', $p) }}" alt="" loading="lazy">
+                                    @if ($canEdit)
+                                        <figcaption>
+                                            <form method="post" action="{{ route('equipment.photos.main', [$item, $p]) }}">@csrf<button class="linkbtn" type="submit">{{ __('pictures.make_main') }}</button></form>
+                                            <form method="post" action="{{ route('equipment.photos.destroy', [$item, $p]) }}">@csrf @method('DELETE')<button class="linkbtn danger" type="submit" aria-label="{{ __('pictures.remove') }}">✕</button></form>
+                                        </figcaption>
+                                    @endif
+                                </figure>
+                            @endforeach
+                        </div>
+                    @endif
+                    @if ($canEdit)
+                        <form method="post" action="{{ route('equipment.photos.destroy', [$item, $photos->first()]) }}" class="mt">@csrf @method('DELETE')<button class="linkbtn danger" type="submit">{{ __('pictures.remove_main') }}</button></form>
+                    @endif
+                @else
+                    <p class="muted">{{ __('equipment.no_photo') }}</p>
+                @endif
                 @if ($canEdit)
-                    <form method="post" action="{{ route('equipment.photo.store', $item) }}" enctype="multipart/form-data" class="inline-form mt">
-                        @csrf <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required aria-label="{{ __('equipment.photo') }}">
-                        <button class="btn" type="submit">{{ __('equipment.upload') }}</button>
+                    <form method="post" action="{{ route('equipment.photos.store', $item) }}" enctype="multipart/form-data" class="stack-sm mt">
+                        @csrf
+                        <input type="file" name="photos[]" accept="image/*" multiple required aria-label="{{ __('pictures.item_title') }}">
+                        <button class="btn" type="submit">{{ __('pictures.upload') }}</button>
+                        <small class="muted">{{ __('pictures.item_hint') }}</small>
                     </form>
                 @endif
             </section>

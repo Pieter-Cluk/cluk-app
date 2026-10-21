@@ -63,7 +63,7 @@
                             <b>{{ $d->title }}</b>
                             <span class="muted small">{{ $d->customerName() }}</span>
                             <span class="deal-meta"><span class="pill">{{ __('deals.modules.'.$d->module) }}</span><span>{{ $eur($d->value_cents) }}</span></span>
-                            <span class="deal-meta muted small"><span>{{ $d->event_start ? $d->event_start->locale(app()->getLocale())->translatedFormat('j M') : '—' }}</span><span class="av av-sm" title="{{ $d->owner?->name }}">{{ $d->owner?->initials ?? '?' }}</span></span>
+                            <span class="deal-meta muted small"><span>{{ $d->event_start ? $d->event_start->locale(app()->getLocale())->translatedFormat('j M') : '—' }}</span><x-avatar :who="$d->owner" size="sm" title="{{ $d->owner?->name }}"/></span>
                         </a>
                     @empty
                         <p class="muted small board-empty">{{ __('deals.empty_col') }}</p>

@@ -29,7 +29,8 @@ class UserManagementTest extends TestCase
 
     private function person(string $role, array $attrs = []): User
     {
-        return User::factory()->create($attrs + ['role_id' => $this->role($role)->id, 'locale' => 'en']);
+        // Fixed names and neutral email addresses, so random fake names never match a search.
+        return User::factory()->create($attrs + ['role_id' => $this->role($role)->id, 'locale' => 'en', 'last_name' => 'Tester', 'email' => 'u'.bin2hex(random_bytes(5)).'@example.test']);
     }
 
     private function details(array $override = []): array

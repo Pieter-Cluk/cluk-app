@@ -2,7 +2,20 @@
 @php($fmt = fn ($d) => $d?->timezone(config('app.timezone'))->format('d/m/Y'))
 <x-layouts.app :title="$company->name">
     <div class="company-head rel-row-{{ $rel }}">
-        <span class="logo-ini logo-lg rel-{{ $rel }}">{{ $company->initials() }}</span>
+        <div class="logo-box">
+            <x-logo :company="$company" size="lg" :rel="$rel"/>
+            @if ($canEdit)
+                <details class="logo-edit">
+                    <summary class="linkbtn">{{ $company->logo_path ? __('pictures.change') : __('pictures.add_logo') }}</summary>
+                    <form method="post" action="{{ route('companies.logo', $company) }}" enctype="multipart/form-data" class="stack-sm">
+                        @csrf
+                        <input type="file" name="logo" accept="image/*" required aria-label="{{ __('pictures.add_logo') }}">
+                        <button class="btn" type="submit">{{ __('pictures.upload') }}</button>
+                    </form>
+                    @if ($company->logo_path)<form method="post" action="{{ route('companies.logo.destroy', $company) }}">@csrf @method('DELETE')<button class="linkbtn danger" type="submit">{{ __('pictures.remove') }}</button></form>@endif
+                </details>
+            @endif
+        </div>
         <div class="company-id">
             <div class="kicker"><a href="{{ route('companies.index') }}">{{ mb_strtoupper(__('nav.items.companies')) }}</a></div>
             <h1>{{ $company->name }}@if ($company->legal_form) <span class="muted">{{ $company->legal_form }}</span>@endif</h1>
@@ -44,7 +57,7 @@
                 </div>
                 @forelse ($company->contacts as $c)
                     <div class="contact">
-                        <span class="av">{{ $c->initials }}</span>
+                        <x-avatar :who="$c"/>
                         <div class="contact-main">
                             <b>{{ $c->name }}</b>
                             <small class="muted">{{ $c->pivot->job_title }}@if ($c->pivot->is_main) · {{ __('companies.contacts.main') }}@endif @if ($c->pivot->is_billing) · {{ __('companies.contacts.billing') }}@endif</small>
@@ -68,6 +81,13 @@
                                     @include('companies._contact-fields', ['c' => $c, 'pivot' => $c->pivot])
                                     <div class="form-actions"><button class="primary" type="submit">{{ __('settings.save') }}</button></div>
                                 </form>
+                                <form method="post" action="{{ route('companies.contacts.photo', [$company, $c]) }}" enctype="multipart/form-data" class="inline-form mt">
+                                    @csrf
+                                    <span class="muted small">{{ __('pictures.contact_photo') }}</span>
+                                    <input type="file" name="photo" accept="image/*" required aria-label="{{ __('pictures.contact_photo') }}">
+                                    <button class="btn" type="submit">{{ __('pictures.upload') }}</button>
+                                </form>
+                                @if ($c->photo_path)<form method="post" action="{{ route('companies.contacts.photo.destroy', [$company, $c]) }}">@csrf @method('DELETE')<button class="linkbtn danger" type="submit">{{ __('pictures.remove_photo') }}</button></form>@endif
                                 <form method="post" action="{{ route('companies.contacts.destroy', [$company, $c]) }}" onsubmit="return confirm(@js(__('companies.contacts.remove_confirm', ['name' => $c->name, 'company' => $company->name])))">
                                     @csrf @method('delete')
                                     <button class="linkbtn danger" type="submit">{{ __('companies.contacts.remove') }}</button>

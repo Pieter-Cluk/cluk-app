@@ -56,9 +56,9 @@
                     </div>
                 </details>
                 <details class="um">
-                    <summary aria-label="{{ __('nav.account_menu') }}"><span class="um-name">{{ $user->name }}</span><span class="av">{{ $user->initials }}</span></summary>
+                    <summary aria-label="{{ __('nav.account_menu') }}"><span class="um-name">{{ $user->name }}</span><x-avatar :who="$user"/></summary>
                     <div class="um-pop">
-                        <div class="um-head"><span class="av av-lg">{{ $user->initials }}</span><div><b>{{ $user->name }}</b><small>{{ $user->email }}</small><small>{{ __('nav.role') }}: {{ $user->role?->name ?? '—' }}</small></div></div>
+                        <div class="um-head"><x-avatar :who="$user" size="lg"/><div><b>{{ $user->name }}</b><small>{{ $user->email }}</small><small>{{ __('nav.role') }}: {{ $user->role?->name ?? '—' }}</small></div></div>
                         <div class="um-sep"></div>
                         @foreach ($nav['account'] as $item)
                             <a class="um-item" href="{{ url($item['path']) }}"><x-icon :name="$item['icon']"/>{{ __('nav.items.'.$item['key']) }}</a>

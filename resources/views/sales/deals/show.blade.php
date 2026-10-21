@@ -84,7 +84,7 @@
                 <ol class="activity">
                     @forelse ($deal->activities as $a)
                         <li @class(['act', 'act-'.$a->kind])>
-                            <span class="av av-sm" aria-hidden="true">{{ $a->user?->initials ?? '·' }}</span>
+                            <x-avatar :who="$a->user" size="sm" aria-hidden="true"/>
                             <div>
                                 <small class="muted">{{ __('deals.kinds.'.$a->kind) }} · {{ $a->user?->name ?? __('deals.system') }} · {{ $a->created_at?->format('d/m/Y H:i') }}</small>
                                 <p>{!! nl2br(e($a->body)) !!}</p>

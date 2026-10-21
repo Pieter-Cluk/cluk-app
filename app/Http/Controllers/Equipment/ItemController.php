@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
+use App\Support\Images;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -55,7 +56,7 @@ class ItemController extends Controller
 
     public function show(Request $request, Item $item): View
     {
-        $item->load(['assets', 'kit', 'contents.assets']);
+        $item->load(['assets', 'kit', 'contents.assets', 'photos']);
         $user = $request->user();
 
         return view('equipment.show', [
@@ -80,8 +81,17 @@ class ItemController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $request->validate(['photos' => ['nullable', 'array', 'max:12'], 'photos.*' => Images::rule()]);
         $item = new Item;
         $item->fill($this->validated($request, $item))->save();
+        foreach ($request->file('photos', []) as $i => $file) {
+            try {
+                $item->photos()->create(['path' => Images::store($file, 'equipment', 1600), 'position' => $i]);
+            } catch (\Throwable) {
+                // not a picture: skipped, the item itself is saved
+            }
+        }
+        $item->syncMainPhoto();
         AuditLog::record('equipment.item_created', $item, ['number' => $item->number]);
 
         return redirect()->route('equipment.show', $item)->with('status', __('equipment.flash.created'));
@@ -227,18 +237,6 @@ class ItemController extends Controller
 
         return redirect()->route('equipment.show', $item)->with('status', trans_choice('equipment.flash.assets_added', $count, ['count' => $count]))
             ->with('print', $codes);
-    }
-
-    public function uploadPhoto(Request $request, Item $item): RedirectResponse
-    {
-        $request->validate(['photo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:6144']]);
-        if ($item->photo_path) {
-            Storage::disk('local')->delete($item->photo_path);
-        }
-        $item->update(['photo_path' => $request->file('photo')->store('equipment', 'local')]);
-        AuditLog::record('equipment.item_updated', $item, ['changes' => ['photo' => true]]);
-
-        return back()->with('status', __('equipment.flash.saved'));
     }
 
     public function photo(Item $item): Response

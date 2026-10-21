@@ -7,12 +7,12 @@
         </div>
     </div>
     @include('partials.flash')
-    <form method="post" action="{{ $item->exists ? route('equipment.update', $item) : route('equipment.store') }}" class="stack">
+    <form method="post" action="{{ $item->exists ? route('equipment.update', $item) : route('equipment.store') }}" class="stack" enctype="multipart/form-data">
         @csrf @if ($item->exists) @method('PUT') @endif
         <section class="card">
             <h2>{{ __('equipment.details') }}</h2>
             <div class="form-grid">
-                <label class="field"><span>{{ __('equipment.fields.number') }}</span><input name="number" required maxlength="40" value="{{ $v('number', $item->number) }}" placeholder="LT-SPIIDER"><small>{{ __('equipment.number_hint') }}</small></label>
+                <label class="field"><span>{{ __('equipment.fields.number') }}</span><input name="number" required maxlength="40" value="{{ $v('number', $item->number) }}" placeholder="AUDSPEQSCKLA181" data-codes="{{ json_encode(config('equipment_codes')) }}"><small>{{ __('equipment.number_hint') }}</small>@unless ($item->exists)<button type="button" class="linkbtn js-suggest">{{ __('equipment.suggest_number') }}</button>@endunless</label>
                 <label class="field"><span>{{ __('equipment.cols.kind') }}</span>
                     <select name="kind">@foreach (\App\Models\Equipment\Item::KINDS as $k)<option value="{{ $k }}" @selected($v('kind', $item->kind) === $k)>{{ __('equipment.kinds.'.$k) }}</option>@endforeach</select>
                 </label>
@@ -27,6 +27,13 @@
             </div>
             <datalist id="cats">@foreach (\App\Models\Equipment\Item::query()->whereNotNull('category')->distinct()->orderBy('category')->pluck('category') as $c)<option value="{{ $c }}">@endforeach</datalist>
         </section>
+        @unless ($item->exists)
+            <section class="card">
+                <h2>{{ __('pictures.item_title') }}</h2>
+                <input type="file" name="photos[]" accept="image/*" multiple aria-label="{{ __('pictures.item_title') }}">
+                <p class="muted small">{{ __('pictures.item_hint') }}</p>
+            </section>
+        @endunless
         <section class="card">
             <h2>{{ __('equipment.prices') }}</h2>
             <div class="form-grid">
@@ -67,4 +74,20 @@
             </div>
         </section>
     </form>
+    @unless ($item->exists)
+        <script>
+        (() => {
+            const f = document.querySelector('[data-codes]');
+            if (!f) return;
+            const codes = JSON.parse(f.dataset.codes);
+            const val = n => (f.form.querySelector('[name=' + n + ']')?.value || '').trim();
+            const clean = s => s.toUpperCase().replace(/[^A-Z0-9&]/g, '');
+            const code = (map, s, len) => map[s] || clean(s).slice(0, len);
+            const suggest = () => code(codes.categories, val('category'), 3) + code(codes.subcategories, val('subcategory'), 3) + clean(val('brand')).slice(0, 3) + clean(val('type')).slice(0, 6);
+            document.querySelector('.js-suggest')?.addEventListener('click', () => { f.value = suggest(); });
+            ['category', 'subcategory', 'brand', 'type'].forEach(n => f.form.querySelector('[name=' + n + ']')?.addEventListener('change', () => { if (!f.dataset.touched) f.value = suggest(); }));
+            f.addEventListener('input', () => { f.dataset.touched = '1'; });
+        })();
+        </script>
+    @endunless
 </x-layouts.app>

@@ -43,7 +43,7 @@
                         <tr>
                             <td>
                                 <a class="person" href="{{ route('settings.users.edit', $u) }}">
-                                    <span class="av">{{ $u->initials }}</span>
+                                    <x-avatar :who="$u"/>
                                     <span><b>{{ $u->name }}</b><small>{{ $u->email }}</small></span>
                                 </a>
                             </td>

@@ -68,7 +68,7 @@
                         @forelse ($contacts as $p)
                             @php($first = $p->companies->first())
                             <tr>
-                                <td><span class="person"><span class="av">{{ $p->initials }}</span><b>{{ $p->name }}</b></span></td>
+                                <td><span class="person"><x-avatar :who="$p"/><b>{{ $p->name }}</b></span></td>
                                 <td>{{ $first?->pivot->job_title ?? '—' }}</td>
                                 <td>
                                     @foreach ($p->companies as $c)
@@ -106,7 +106,7 @@
                             <tr class="rel-row rel-row-{{ $rel }}">
                                 <td>
                                     <a class="person" href="{{ route('companies.show', $c) }}">
-                                        <span class="logo-ini rel-{{ $rel }}">{{ $c->initials() }}</span>
+                                        <x-logo :company="$c" :rel="$rel"/>
                                         <span><b>{{ $c->name }}</b><small>{{ trim(($c->city ? $c->city.', ' : '').$c->country) }}</small></span>
                                     </a>
                                 </td>

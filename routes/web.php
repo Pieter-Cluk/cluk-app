@@ -11,6 +11,8 @@ use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\PictureController;
 use App\Http\Controllers\QuotePublicController;
 use App\Http\Controllers\Rental\OrderController;
 use App\Http\Controllers\Rental\SubhireController;
@@ -103,6 +105,13 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/logout', [MicrosoftLoginController::class, 'logout'])->name('logout');
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
+    // Pictures (served only to signed-in staff).
+    Route::get('/media/users/{user}', [MediaController::class, 'user'])->whereNumber('user')->name('media.user');
+    Route::get('/media/companies/{company}', [MediaController::class, 'company'])->whereNumber('company')->name('media.company');
+    Route::get('/media/contacts/{contact}', [MediaController::class, 'contact'])->whereNumber('contact')->name('media.contact');
+    Route::get('/media/items/{photo}', [MediaController::class, 'itemPhoto'])->whereNumber('photo')->name('media.item');
+    Route::post('/users/{user}/photo', [PictureController::class, 'storeUserPhoto'])->whereNumber('user')->name('users.photo');
+
     // Companies & contacts: view from level 1, change from level 2, archive at level 3.
     Route::middleware('nav:companies')->group(function () {
         Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
@@ -115,6 +124,10 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/companies/{company}/contacts', [CompanyContactController::class, 'store'])->whereNumber('company')->name('companies.contacts.store');
             Route::put('/companies/{company}/contacts/{contact}', [CompanyContactController::class, 'update'])->whereNumber(['company', 'contact'])->name('companies.contacts.update');
             Route::delete('/companies/{company}/contacts/{contact}', [CompanyContactController::class, 'destroy'])->whereNumber(['company', 'contact'])->name('companies.contacts.destroy');
+            Route::post('/companies/{company}/logo', [PictureController::class, 'storeLogo'])->whereNumber('company')->name('companies.logo');
+            Route::delete('/companies/{company}/logo', [PictureController::class, 'destroyLogo'])->whereNumber('company')->name('companies.logo.destroy');
+            Route::post('/companies/{company}/contacts/{contact}/photo', [PictureController::class, 'storeContactPhoto'])->whereNumber(['company', 'contact'])->name('companies.contacts.photo');
+            Route::delete('/companies/{company}/contacts/{contact}/photo', [PictureController::class, 'destroyContactPhoto'])->whereNumber(['company', 'contact'])->name('companies.contacts.photo.destroy');
             Route::post('/companies/{company}/addresses', [CompanyContactController::class, 'storeAddress'])->whereNumber('company')->name('companies.addresses.store');
             Route::delete('/companies/{company}/addresses/{address}', [CompanyContactController::class, 'destroyAddress'])->whereNumber(['company', 'address'])->name('companies.addresses.destroy');
         });
@@ -176,7 +189,9 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/items/{item}/components', [ItemController::class, 'addComponent'])->whereNumber('item')->name('equipment.components.store');
             Route::delete('/items/{item}/components/{child}', [ItemController::class, 'removeComponent'])->whereNumber(['item', 'child'])->name('equipment.components.destroy');
             Route::post('/items/{item}/assets', [ItemController::class, 'addAssets'])->whereNumber('item')->name('equipment.assets.store');
-            Route::post('/items/{item}/photo', [ItemController::class, 'uploadPhoto'])->whereNumber('item')->name('equipment.photo.store');
+            Route::post('/items/{item}/photos', [PictureController::class, 'storeItemPhotos'])->whereNumber('item')->name('equipment.photos.store');
+            Route::post('/items/{item}/photos/{photo}/main', [PictureController::class, 'mainItemPhoto'])->whereNumber(['item', 'photo'])->name('equipment.photos.main');
+            Route::delete('/items/{item}/photos/{photo}', [PictureController::class, 'destroyItemPhoto'])->whereNumber(['item', 'photo'])->name('equipment.photos.destroy');
             Route::put('/assets/{asset}', [AssetController::class, 'update'])->whereNumber('asset')->name('equipment.assets.update');
             Route::get('/labels', [AssetController::class, 'labels'])->name('equipment.labels');
         });

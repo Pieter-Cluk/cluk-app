@@ -72,9 +72,15 @@
         <aside class="stack">
             <section class="card">
                 <div class="person person-lg">
-                    <span class="av av-lg">{{ $user->initials }}</span>
+                    <x-avatar :who="$user" size="lg"/>
                     <span><b>{{ $user->name }}</b><small>{{ $user->email }}</small></span>
                 </div>
+                <p class="muted small">{{ __('pictures.user_hint') }}</p>
+                <form method="post" action="{{ route('users.photo', $user) }}" enctype="multipart/form-data" class="inline-form">
+                    @csrf
+                    <input type="file" name="photo" accept="image/*" required aria-label="{{ __('pictures.user_photo') }}">
+                    <button class="btn" type="submit">{{ __('pictures.upload') }}</button>
+                </form>
                 <p><span @class(['pill', 'pill-ok' => $user->isActive(), 'pill-off' => ! $user->isActive()])>{{ __('users.status.'.$user->status) }}</span>
                     <span class="muted">· {{ $user->microsoft_id ? __('users.edit.microsoft_linked') : __('users.edit.microsoft_not_linked') }}</span></p>
                 @if ($user->is($me))
