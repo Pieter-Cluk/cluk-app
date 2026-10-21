@@ -23,6 +23,7 @@
                     <dt>{{ __('afrit6.staff.language') }}</dt><dd>{{ config('cluk.locales')[$member->locale] ?? $member->locale }}</dd>
                     <dt>{{ __('afrit6.staff.newsletter') }}</dt><dd>{{ $member->newsletter ? __('companies.yes') : __('companies.no') }}</dd>
                     <dt>{{ __('afrit6.staff.terms') }}</dt><dd>{{ $fmt($member->terms_accepted_at) ?? '—' }}</dd>
+                    <dt>{{ __('terms.staff_accepted') }}</dt><dd>{{ $member->hasCurrentTerms() ? __('terms.staff_accepted_on', ['date' => $fmt($member->payment_terms_accepted_at), 'version' => $member->terms_version]) : __('terms.staff_not_accepted') }}</dd>
                     <dt>{{ __('afrit6.staff.registered') }}</dt><dd>{{ $fmt($member->created_at) }}</dd>
                     <dt>{{ __('afrit6.staff.last_login') }}</dt><dd>{{ $fmt($member->last_login_at) ?? __('users.index.never') }}</dd>
                     <dt>{{ __('afrit6.staff.password') }}</dt><dd class="muted">{{ __('afrit6.staff.password_note') }}</dd>

@@ -28,6 +28,7 @@ use Illuminate\Support\Carbon;
 #[Fillable([
     'first_name', 'last_name', 'email', 'mobile', 'password', 'locale', 'newsletter',
     'reg_country', 'reg_vat_number', 'reg_company_name', 'reg_address', 'vies_status',
+    'terms_accepted_at', 'rules_accepted_at', 'payment_terms_accepted_at', 'terms_version',
 ])]
 #[Hidden(['password', 'remember_token', 'door_code'])]
 class Member extends Authenticatable implements CanResetPasswordContract, HasLocalePreference
@@ -48,6 +49,8 @@ class Member extends Authenticatable implements CanResetPasswordContract, HasLoc
             'password' => 'hashed',
             'email_verified_at' => 'datetime',
             'terms_accepted_at' => 'datetime',
+            'rules_accepted_at' => 'datetime',
+            'payment_terms_accepted_at' => 'datetime',
             'approved_at' => 'datetime',
             'last_login_at' => 'datetime',
             'newsletter' => 'boolean',
@@ -110,6 +113,23 @@ class Member extends Authenticatable implements CanResetPasswordContract, HasLoc
     protected function initials(): Attribute
     {
         return Attribute::get(fn () => mb_strtoupper(mb_substr($this->first_name, 0, 1).mb_substr($this->last_name, 0, 1)));
+    }
+
+    /** Has the member accepted the current house & booking rules and payment terms? */
+    public function hasCurrentTerms(): bool
+    {
+        return $this->terms_version === config('afrit6.terms_version')
+            && $this->rules_accepted_at !== null && $this->payment_terms_accepted_at !== null;
+    }
+
+    public function acceptCurrentTerms(): void
+    {
+        $this->forceFill([
+            'rules_accepted_at' => now(), 'payment_terms_accepted_at' => now(),
+            'terms_accepted_at' => $this->terms_accepted_at ?? now(),
+            'terms_version' => config('afrit6.terms_version'),
+        ])->save();
+        AuditLog::record('afrit6.terms_accepted', $this, ['version' => config('afrit6.terms_version')]);
     }
 
     public function isActive(): bool

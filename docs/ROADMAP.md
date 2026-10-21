@@ -32,3 +32,5 @@ Sales items with suppliers, PDFs and pictures; sales quote with 10% margin appro
 ## Phase 5 · Finance & management
 
 Pre-invoicing with red flags, OkiOki connection, management dashboard, revenue per salesperson and module.
+
+Late payments (agreed 21 Oct 2026): members and customers accept payment terms with 8% interest per year on late payments (config `afrit6.payment`). When OkiOki reports an invoice as unpaid after its due date, the app creates a reminder for the accountant with the interest calculated (amount × 8% × days late / 365). The accountant decides per case: make an interest invoice (proforma → OkiOki) or skip it with a reason. Nothing is invoiced automatically.

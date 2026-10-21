@@ -43,9 +43,12 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
         Route::get('/reset-password/{token}', [MemberAuthController::class, 'showReset'])->name('password.reset');
         Route::post('/reset-password', [MemberAuthController::class, 'reset'])->middleware('throttle:10,1')->name('password.update');
     });
+    Route::get('/terms/{doc}', fn (string $doc) => view('afrit6.terms', ['doc' => $doc]))->whereIn('doc', ['rules', 'payment'])->name('terms');
     Route::get('/verify/{member}/{hash}', [MemberAuthController::class, 'verify'])->middleware(['signed', 'throttle:20,1'])->whereNumber('member')->name('verify');
     Route::middleware('auth:member')->group(function () {
         Route::get('/portal', [PortalController::class, 'home'])->name('portal');
+        Route::get('/accept', [PortalController::class, 'showAccept'])->name('accept');
+        Route::post('/accept', [PortalController::class, 'accept'])->name('accept.store');
         Route::middleware('member.active')->prefix('portal')->name('portal.')->group(function () {
             Route::get('/desks', [WorkspaceController::class, 'desks'])->name('desks');
             Route::post('/desks/swap', [WorkspaceController::class, 'swapDesk'])->middleware('throttle:20,1')->name('desks.swap');

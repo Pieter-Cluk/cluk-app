@@ -165,6 +165,8 @@ class MemberAuthController extends Controller
             'mobile' => ['nullable', 'string', 'max:40'],
             'password' => ['required', 'string', 'max:200', new MemberPassword($request->input('first_name'), $request->input('last_name'), $request->input('email'))],
             'terms' => ['accepted'],
+            'rules' => ['accepted'],
+            'payment_terms' => ['accepted'],
         ]);
 
         $member = new Member([
@@ -181,8 +183,10 @@ class MemberAuthController extends Controller
             'reg_address' => $reg['address'] ?? $reg['vies_address'],
             'vies_status' => $reg['vies_status'],
         ]);
-        $member->terms_accepted_at = now();
-        $member->save();
+        $member->forceFill([
+            'terms_accepted_at' => now(), 'rules_accepted_at' => now(), 'payment_terms_accepted_at' => now(),
+            'terms_version' => config('afrit6.terms_version'),
+        ])->save();
 
         $member->notify(new MemberVerifyEmail);
         $request->session()->forget('afrit6.reg');

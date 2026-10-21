@@ -159,6 +159,7 @@ return [
             'afrit6_member_blocked' => 'Blocked an Afrit 6 member',
             'afrit6_member_unblocked' => 'Gave an Afrit 6 member access again',
             'afrit6_reset_link_sent' => 'Sent a password reset link',
+            'afrit6_terms_accepted' => 'Member accepted the rules and payment terms',
             'afrit6_desk_swapped' => 'Member swapped a desk',
             'afrit6_desk_added' => 'Added a desk',
             'afrit6_desk_ended' => 'Set the end of a desk',

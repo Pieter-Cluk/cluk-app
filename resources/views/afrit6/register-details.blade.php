@@ -18,6 +18,7 @@
             <li>{{ __('afrit6.password_rules.personal') }}</li>
         </ul>
         <label class="mcheck"><input type="checkbox" name="terms" value="1" required @checked(old('terms'))> {{ __('afrit6.register.terms') }}</label>
+        @include('afrit6._terms-ticks')
         <label class="mcheck"><input type="checkbox" name="newsletter" value="1" @checked(old('newsletter'))> {{ __('afrit6.register.newsletter') }}</label>
         <div class="mrow">
             <a href="{{ route('afrit6.register') }}">{{ __('afrit6.register.back') }}</a>

@@ -8,6 +8,7 @@ use App\Models\Afrit6\ServiceRequest;
 use App\Models\Member;
 use App\Services\Afrit6\RoomPlanner;
 use App\Services\Afrit6\StatementBuilder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -15,12 +16,15 @@ use Illuminate\View\View;
 /** The member portal. Until CLUK approves the account, it shows where things stand. */
 class PortalController extends Controller
 {
-    public function home(Request $request): View
+    public function home(Request $request): View|RedirectResponse
     {
         /** @var Member $member */
         $member = Auth::guard('member')->user()->load('company');
         if (! $member->isActive()) {
             return view('afrit6.status', ['member' => $member]);
+        }
+        if (! $member->hasCurrentTerms()) {
+            return redirect()->route('afrit6.accept');
         }
 
         $planner = RoomPlanner::forRoom();
@@ -37,5 +41,21 @@ class PortalController extends Controller
             'waiting' => $open->where('status', ServiceRequest::WAITING),
             'bill' => (new StatementBuilder($member))->build(today(), app()->getLocale()),
         ]);
+    }
+
+    /** Members accept the current house & booking rules and payment terms once (again after a new version). */
+    public function showAccept(Request $request): View|RedirectResponse
+    {
+        $member = $request->user('member');
+
+        return $member->hasCurrentTerms() ? redirect()->route('afrit6.portal') : view('afrit6.accept', ['member' => $member]);
+    }
+
+    public function accept(Request $request): RedirectResponse
+    {
+        $request->validate(['rules' => ['accepted'], 'payment_terms' => ['accepted']]);
+        $request->user('member')->acceptCurrentTerms();
+
+        return redirect()->route('afrit6.portal')->with('status', __('terms.accepted'));
     }
 }

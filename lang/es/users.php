@@ -159,6 +159,7 @@ return [
             'afrit6_member_blocked' => 'Bloqueó a un miembro de Afrit 6',
             'afrit6_member_unblocked' => 'Devolvió el acceso a un miembro de Afrit 6',
             'afrit6_reset_link_sent' => 'Envió un enlace para restablecer la contraseña',
+            'afrit6_terms_accepted' => 'El miembro aceptó las normas y condiciones de pago',
             'afrit6_desk_swapped' => 'El miembro cambió de puesto',
             'afrit6_desk_added' => 'Puesto añadido',
             'afrit6_desk_ended' => 'Fin de un puesto fijada',

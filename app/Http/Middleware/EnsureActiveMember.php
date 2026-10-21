@@ -11,8 +11,12 @@ class EnsureActiveMember
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user('member')?->isActive()) {
+        $member = $request->user('member');
+        if (! $member?->isActive()) {
             return redirect()->route('afrit6.portal');
+        }
+        if (! $member->hasCurrentTerms()) {
+            return redirect()->route('afrit6.accept');
         }
 
         return $next($request);

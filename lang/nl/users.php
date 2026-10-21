@@ -159,6 +159,7 @@ return [
             'afrit6_member_blocked' => 'Afrit 6-lid geblokkeerd',
             'afrit6_member_unblocked' => 'Afrit 6-lid opnieuw toegang gegeven',
             'afrit6_reset_link_sent' => 'Resetlink voor wachtwoord gestuurd',
+            'afrit6_terms_accepted' => 'Lid aanvaardde reglement en betalingsvoorwaarden',
             'afrit6_desk_swapped' => 'Lid wisselde van bureau',
             'afrit6_desk_added' => 'Bureau toegevoegd',
             'afrit6_desk_ended' => 'Einde van een bureau ingesteld',

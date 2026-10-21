@@ -46,7 +46,7 @@ class Afrit6MembersTest extends TestCase
     {
         return $override + [
             'first_name' => 'Lien', 'last_name' => 'De Smet', 'email' => 'Lien@DemoStudio.be',
-            'mobile' => '+32 470 00 00 04', 'password' => 'Werkplek2026', 'terms' => '1', 'newsletter' => '1',
+            'mobile' => '+32 470 00 00 04', 'password' => 'Werkplek2026', 'terms' => '1', 'rules' => '1', 'payment_terms' => '1', 'newsletter' => '1',
         ];
     }
 
@@ -308,5 +308,54 @@ class Afrit6MembersTest extends TestCase
             $this->flushSession();
             $this->app['auth']->forgetGuards();
         }
+    }
+
+    // ------------------------------------------------------- rules & payment terms
+
+    public function test_registration_needs_the_rules_and_payment_terms_and_stores_them(): void
+    {
+        $this->post('/afrit6/register', ['country' => 'BE', 'vat_number' => '1010.948.054']);
+        $this->get('/afrit6/register/details')->assertOk()
+            ->assertSee(route('afrit6.terms', 'rules'), false)->assertSee(route('afrit6.terms', 'payment'), false)->assertSee('8%');
+
+        $this->post('/afrit6/register/details', $this->details(['rules' => null]))->assertSessionHasErrors('rules');
+        $this->post('/afrit6/register/details', $this->details(['payment_terms' => null]))->assertSessionHasErrors('payment_terms');
+        $this->post('/afrit6/register/details', $this->details())->assertRedirect('/afrit6/check-inbox');
+
+        $m = Member::firstOrFail();
+        $this->assertNotNull($m->rules_accepted_at);
+        $this->assertNotNull($m->payment_terms_accepted_at);
+        $this->assertSame(config('afrit6.terms_version'), $m->terms_version);
+    }
+
+    public function test_the_terms_pages_are_public_and_translated(): void
+    {
+        foreach (array_keys(config('cluk.locales')) as $locale) {
+            $this->withSession(['locale' => $locale]);
+            foreach (['rules', 'payment'] as $doc) {
+                $html = $this->get('/afrit6/terms/'.$doc)->assertOk()->getContent();
+                $this->assertDoesNotMatchRegularExpression('/\bterms\.[a-z_]+/', strip_tags($html));
+            }
+        }
+        $this->withSession(['locale' => 'en'])->get('/afrit6/terms/payment')->assertSee('8%')->assertSee('30 days');
+        $this->get('/afrit6/terms/other')->assertNotFound();
+    }
+
+    public function test_existing_members_accept_the_terms_before_using_the_portal(): void
+    {
+        $m = Member::factory()->active()->withoutTerms()->create();
+
+        $this->actingAs($m, 'member')->get('/afrit6/portal')->assertRedirect('/afrit6/accept');
+        $this->actingAs($m, 'member')->get('/afrit6/portal/desks')->assertRedirect('/afrit6/accept');
+        $this->actingAs($m, 'member')->post('/afrit6/accept', ['rules' => '1'])->assertSessionHasErrors('payment_terms');
+        $this->actingAs($m, 'member')->post('/afrit6/accept', ['rules' => '1', 'payment_terms' => '1'])->assertRedirect('/afrit6/portal');
+
+        $this->assertTrue($m->fresh()->hasCurrentTerms());
+        $this->assertTrue(AuditLog::where('action', 'afrit6.terms_accepted')->where('subject_id', $m->id)->exists());
+        $this->actingAs($m->fresh(), 'member')->get('/afrit6/portal')->assertOk();
+
+        // A new version of the texts asks again.
+        config(['afrit6.terms_version' => '2027-01']);
+        $this->actingAs($m->fresh(), 'member')->get('/afrit6/portal')->assertRedirect('/afrit6/accept');
     }
 }

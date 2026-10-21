@@ -23,6 +23,14 @@ return [
         'room_half_hour' => 625,      // meeting room beyond the free weekly slot: € 12.50 per hour
     ],
 
+    // Terms members accept (tick boxes). Raise the version when the texts change:
+    // members then accept again before they can use the portal.
+    'terms_version' => '2026-10',
+    'payment' => [
+        'days' => 30,                 // invoices payable within 30 days
+        'late_interest' => 8,         // % per year on late payments; the accountant decides per case
+    ],
+
     // Day bookings of a free desk.
     'desk_parts' => [
         'am' => ['08:00', '13:00'],

@@ -368,3 +368,8 @@ a.chip{text-decoration:none}
 .desk-code{font-size:22px;font-weight:800}
 @media (max-width:1000px){.week{grid-template-columns:1fr}}
 @media (max-width:700px){.p-top,.p-tabs{padding-left:16px;padding-right:16px}.p-main{padding:20px 16px 40px}.slots{grid-template-columns:repeat(2,1fr)}.p-who span:last-child{display:none}}
+
+.terms-list{margin:10px 0 18px;padding-left:22px;line-height:1.55;font-size:14px;display:flex;flex-direction:column;gap:8px}
+.terms-box{border-top:1px solid rgba(255,255,255,.18);padding:10px 0}
+.terms-box summary{cursor:pointer;min-height:36px;display:flex;align-items:center}
+.mcheck a{color:#8fd673}

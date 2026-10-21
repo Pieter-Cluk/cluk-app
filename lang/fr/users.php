@@ -159,6 +159,7 @@ return [
             'afrit6_member_blocked' => 'Membre Afrit 6 bloqué',
             'afrit6_member_unblocked' => 'Accès rétabli pour un membre Afrit 6',
             'afrit6_reset_link_sent' => 'Lien de réinitialisation envoyé',
+            'afrit6_terms_accepted' => 'Le membre a accepté le règlement et les conditions de paiement',
             'afrit6_desk_swapped' => 'Le membre a changé de bureau',
             'afrit6_desk_added' => 'Bureau ajouté',
             'afrit6_desk_ended' => 'Fin d’un bureau fixée',
