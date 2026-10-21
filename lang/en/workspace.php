@@ -89,7 +89,7 @@ return [
         'note' => 'What is it for? (optional)',
         'book' => 'Book',
         'free_left' => ':left of :total free slots left this week',
-        'price_note' => 'Beyond the free slot: :amount per half hour.',
+        'price_note' => 'Beyond the free slot: :amount per hour, excl. VAT, billed per half hour.',
         'states' => [
             'free' => 'free',
             'booked' => 'booked',

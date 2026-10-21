@@ -89,7 +89,7 @@ return [
         'note' => 'Waarvoor? (optioneel)',
         'book' => 'Reserveren',
         'free_left' => ':left van :total gratis momenten over deze week',
-        'price_note' => 'Buiten het gratis moment: :amount per half uur.',
+        'price_note' => 'Buiten het gratis moment: :amount per uur, excl. btw, aangerekend per half uur.',
         'states' => [
             'free' => 'vrij',
             'booked' => 'bezet',

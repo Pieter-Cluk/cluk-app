@@ -216,7 +216,7 @@ class Afrit6WorkspaceTest extends TestCase
         $room = collect($bill['lines'])->firstWhere('type', 'room');
 
         $this->assertSame(4, (int) $room['qty']);              // 4 half hours
-        $this->assertSame(4 * 1500, $room['amount_cents']);
+        $this->assertSame(4 * 625, $room['amount_cents']); // € 12.50 per hour
     }
 
     // ---------------------------------------------------------- services
@@ -234,7 +234,7 @@ class Afrit6WorkspaceTest extends TestCase
         $post(['kind' => 'send'])->assertSessionHasErrors('colis');
         $post(['kind' => 'shelf', 'qty' => 0])->assertSessionHasErrors('qty');
 
-        $this->assertSame([10000, 500 + 1500 + 400 + 800, 0, 1600, 1200], ServiceRequest::orderBy('id')->pluck('amount_cents')->all());
+        $this->assertSame([40 * 160, 2 * 160 + 1500 + 400 + 800, 0, 1600, 1200], ServiceRequest::orderBy('id')->pluck('amount_cents')->all());
         $this->assertSame(['pending'], ServiceRequest::distinct()->pluck('status')->all());
     }
 

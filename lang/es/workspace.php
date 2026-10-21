@@ -89,7 +89,7 @@ return [
         'note' => '¿Para qué? (opcional)',
         'book' => 'Reservar',
         'free_left' => ':left de :total reservas gratuitas disponibles esta semana',
-        'price_note' => 'Fuera de la reserva gratuita: :amount por media hora.',
+        'price_note' => 'Fuera de la reserva gratuita: :amount por hora sin IVA, facturado por media hora.',
         'states' => [
             'free' => 'libre',
             'booked' => 'reservado',

@@ -89,7 +89,7 @@ return [
         'note' => 'Pour quoi ? (facultatif)',
         'book' => 'Réserver',
         'free_left' => ':left sur :total créneaux gratuits restants cette semaine',
-        'price_note' => 'Au-delà du créneau gratuit : :amount par demi-heure.',
+        'price_note' => 'Au-delà du créneau gratuit : :amount par heure HTVA, facturé par demi-heure.',
         'states' => [
             'free' => 'libre',
             'booked' => 'réservé',

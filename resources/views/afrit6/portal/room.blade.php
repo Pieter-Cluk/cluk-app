@@ -61,7 +61,7 @@
                     </label>
                     <label class="field"><span>{{ __('workspace.room.note') }}</span><input name="note" maxlength="255" value="{{ old('note') }}"></label>
                     <p class="muted small">{{ __('workspace.room.classroom_note') }}</p>
-                    <p class="muted small">{{ __('workspace.room.price_note', ['amount' => $eur((int) config('afrit6.prices.room_half_hour'))]) }}</p>
+                    <p class="muted small">{{ __('workspace.room.price_note', ['amount' => $eur(2 * (int) config('afrit6.prices.room_half_hour'))]) }}</p>
                     <button class="primary" type="submit">{{ __('workspace.room.book') }}</button>
                 </form>
             </section>
