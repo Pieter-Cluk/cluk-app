@@ -40,4 +40,26 @@ return [
 
     // How far ahead the calendar on the booking page goes.
     'months_ahead' => 12,
+
+    // The standard crew tasks for a confirmed booking: kind => [which levels, when].
+    // "when" is relative to a day of the booking: first (first day on site), start (first event day),
+    // after (the day after the last event day) or free (the day after the last breakdown day).
+    'tasks' => [
+        'blackbox' => [['basic', 'advanced', 'allin'], 'first', '08:00'],
+        'rigging' => [['basic', 'advanced', 'allin'], 'first', '10:00'],
+        'gear' => [['advanced', 'allin'], 'first', '13:00'],
+        'hospitality' => [['allin'], 'start', '12:00'],
+        'cleaning' => [['basic', 'advanced', 'allin'], 'after', '09:00'],
+        'reset' => [['basic', 'advanced', 'allin'], 'free', '12:00'],
+    ],
+
+    // Equipment that is put on the equipment quote by default, per level: item number => quantity.
+    // Items that are not in Dry-hire are skipped. Fill these in once the Factory stock is known.
+    'packages' => [
+        'basic' => [],
+        'advanced' => [],
+        'allin' => [],
+    ],
+
+    'address' => 'Cluk Factory, Karreweg 17B, Zulte',
 ];

@@ -5,12 +5,15 @@ namespace App\Services\Factory;
 use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\Equipment\Item;
 use App\Models\Factory\Booking;
+use App\Models\Rental\Order;
 use App\Models\Sales\Deal;
 use App\Models\Sales\Quote;
 use App\Models\User;
 use App\Notifications\Confirmation;
 use App\Services\Afrit6\Pricing;
+use App\Services\Rental\QuoteAnswer;
 use App\Support\InLocale;
 use App\Support\SafeMail;
 use App\Support\VatNumber;
@@ -45,7 +48,7 @@ class Bookings
     public static function fromWeb(array $d, bool $hold, string $locale): Booking
     {
         return DB::transaction(function () use ($d, $hold, $locale) {
-            $b = new Booking($d + ['number' => Booking::nextNumber(), 'status' => 'request', 'source' => 'web', 'language' => $locale]);
+            $b = new Booking($d + ['number' => Booking::nextNumber(), 'status' => 'request', 'source' => 'web', 'language' => $locale, 'load_in_time' => '08:00', 'doors_time' => '18:00', 'end_time' => '01:00']);
             $b->title = trim(__('factory.types.'.$b->event_type).' · '.($b->req_company ?: $b->req_name));
             self::matchKnown($b);
             if ($b->clashes()) {
@@ -119,7 +122,7 @@ class Bookings
                 'number' => Quote::nextNumber(), 'version' => 1, 'status' => 'draft', 'deal_id' => $deal->id, 'company_id' => $company?->id,
                 'contact_id' => $contact?->id, 'owner_id' => $by->id, 'title' => $b->title, 'language' => $b->language,
                 'out_from' => $b->firstDay()->setTime(8, 0), 'out_until' => $b->lastDay()->setTime(23, 59),
-                'use_from' => $b->start_date, 'use_until' => $b->lastEventDay(), 'location' => 'Cluk Factory, Karreweg 17B, Zulte',
+                'use_from' => $b->start_date, 'use_until' => $b->lastEventDay(), 'location' => config('factory.address'),
                 'intro' => InLocale::run($b->language, fn () => __('factory.quote_intro', ['guests' => $b->guests, 'type' => __('factory.types.'.$b->event_type)])),
             ]);
             $pos = 0;
@@ -156,8 +159,62 @@ class Bookings
     public static function confirm(Booking $b, ?User $by = null): void
     {
         $b->update(['status' => 'confirmed', 'confirmed_at' => now(), 'option_until' => null]);
+        Tasks::sync($b);
         AuditLog::record('factory.confirmed', $b, [], $by);
         self::mailCustomer($b, 'confirmed', $by ?? $b->owner);
+    }
+
+    /**
+     * The equipment for the event as a rental quote on the same deal, for the days on site.
+     * Sent to the customer when the gear is charged, or booked as included in the level.
+     */
+    public static function gearQuote(Booking $b, User $by): Quote
+    {
+        if ($b->gearQuote) {
+            return $b->gearQuote;
+        }
+
+        return DB::transaction(function () use ($b, $by) {
+            self::matchKnown($b);
+            $quote = Quote::create([
+                'number' => Quote::nextNumber(), 'version' => 1, 'status' => 'draft', 'deal_id' => $b->deal_id, 'company_id' => $b->company_id,
+                'contact_id' => $b->contact_id, 'owner_id' => $by->id, 'language' => $b->language,
+                'title' => InLocale::run($b->language, fn () => __('factory.gear.title', ['title' => $b->title])),
+                'out_from' => $b->firstDay()->setTimeFromTimeString($b->load_in_time ?: '08:00'), 'out_until' => $b->lastDay()->setTime(23, 59),
+                'use_from' => $b->start_date, 'use_until' => $b->lastEventDay(), 'location' => config('factory.address'),
+            ]);
+            $pos = 0;
+            foreach (config('factory.packages.'.$b->level, []) as $number => $qty) {
+                if ($item = Item::where('number', $number)->first()) {
+                    $quote->lines()->create(['kind' => 'item', 'item_id' => $item->id, 'number' => $item->number, 'name' => $item->name, 'qty' => $qty, 'unit_price_cents' => $item->day_price_cents, 'position' => $pos++]);
+                }
+            }
+            $quote->load('company');
+            $quote->recalculate();
+            $b->update(['gear_quote_id' => $quote->id]);
+            AuditLog::record('factory.gear', $b, ['quote' => $quote->number], $by);
+
+            return $quote;
+        });
+    }
+
+    /** The gear is part of the level (Advanced, All-in): no prices, straight to order allocation. */
+    public static function bookGearIncluded(Booking $b, User $by): Order
+    {
+        $quote = $b->gearQuote;
+        if (! $quote || ! in_array($quote->status, ['draft', 'change'], true) || $quote->lines()->where('kind', 'item')->doesntExist()) {
+            throw ValidationException::withMessages(['gear' => __('factory.gear.errors.empty')]);
+        }
+
+        return DB::transaction(function () use ($b, $by, $quote) {
+            $quote->lines()->update(['unit_price_cents' => 0]);
+            $quote->load('company');
+            $quote->recalculate();
+            QuoteAnswer::accept($quote->fresh(), $by->name, null, null, $by);
+            AuditLog::record('factory.gear_booked', $b, ['quote' => $quote->number], $by);
+
+            return $quote->fresh()->order;
+        });
     }
 
     public static function mailCustomer(Booking $b, string $what, ?User $by = null): bool

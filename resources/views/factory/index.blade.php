@@ -35,6 +35,27 @@
         </section>
     @endif
 
+    <section class="card card-flush">
+        <div class="card-head pad">
+            <h2>{{ __('factory.task.upcoming') }}</h2>
+            <nav class="chips">
+                <a @class(['chip', 'chip-on' => $taskFilter === 'all']) href="{{ route('factory.index', array_filter(['m' => request('m')])) }}">{{ __('factory.task.all') }}</a>
+                <a @class(['chip', 'chip-on' => $taskFilter === 'mine']) href="{{ route('factory.index', array_filter(['m' => request('m'), 'tasks' => 'mine'])) }}">{{ __('factory.task.mine') }}</a>
+            </nav>
+        </div>
+        <ul class="inbox">
+            @forelse ($tasks as $t)
+                <li><a class="inbox-item" href="{{ route('factory.show', $t->booking_id) }}">
+                    <span class="date-chip"><b>{{ $t->due_at->day }}</b><small>{{ $t->due_at->locale(app()->getLocale())->translatedFormat('M') }}</small></span>
+                    <span class="inbox-main"><b>{{ $t->label() }}</b><small class="muted">{{ $t->due_at->format('H:i') }} · {{ $t->booking->title }}@if ($t->isOverdue()) · <span class="txt-danger">{{ __('factory.task.late') }}</span>@endif</small></span>
+                    <span class="inbox-side">@if ($t->assignee)<span class="ftask-who"><x-avatar :who="$t->assignee" size="sm" /> <small>{{ $t->assignee->name }}</small></span>@else<span class="pill pill-warn">{{ __('factory.task.nobody') }}</span>@endif</span>
+                </a></li>
+            @empty
+                <li class="muted inbox-empty">{{ __('factory.task.none_soon') }}</li>
+            @endforelse
+        </ul>
+    </section>
+
     <section class="card">
         <div class="card-head">
             <h2>{{ $month->locale(app()->getLocale())->translatedFormat('F Y') }}</h2>

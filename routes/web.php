@@ -13,6 +13,7 @@ use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
 use App\Http\Controllers\Factory\FactoryController;
 use App\Http\Controllers\Factory\FactoryPublicController;
+use App\Http\Controllers\Factory\FactoryTaskController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\QuotePublicController;
@@ -306,6 +307,11 @@ Route::middleware('auth:web')->group(function () {
     Route::prefix('factory')->middleware('nav:factory')->group(function () {
         Route::get('/', [FactoryController::class, 'index'])->name('factory.index');
         Route::get('/bookings/{booking}', [FactoryController::class, 'show'])->whereNumber('booking')->name('factory.show');
+        Route::get('/bookings/{booking}/print', [FactoryController::class, 'print'])->whereNumber('booking')->name('factory.print');
+        // The person who has a task works on it, whatever their Factory level.
+        Route::post('/tasks/{task}/reassign', [FactoryTaskController::class, 'reassign'])->whereNumber('task')->name('factory.tasks.reassign');
+        Route::post('/tasks/{task}/done', [FactoryTaskController::class, 'done'])->whereNumber('task')->name('factory.tasks.done');
+        Route::post('/tasks/{task}/reopen', [FactoryTaskController::class, 'reopen'])->whereNumber('task')->name('factory.tasks.reopen');
         Route::middleware('level:factory,2')->group(function () {
             Route::get('/bookings/new', [FactoryController::class, 'create'])->name('factory.create');
             Route::post('/bookings', [FactoryController::class, 'store'])->name('factory.store');
@@ -317,6 +323,11 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/bookings/{booking}/confirm', [FactoryController::class, 'confirm'])->whereNumber('booking')->name('factory.confirm');
             Route::post('/bookings/{booking}/checks', [FactoryController::class, 'checks'])->whereNumber('booking')->name('factory.checks');
             Route::post('/bookings/{booking}/status', [FactoryController::class, 'status'])->whereNumber('booking')->name('factory.status');
+            Route::post('/bookings/{booking}/gear', [FactoryController::class, 'gear'])->whereNumber('booking')->name('factory.gear');
+            Route::post('/bookings/{booking}/gear/included', [FactoryController::class, 'gearIncluded'])->whereNumber('booking')->name('factory.gear.included');
+            Route::post('/bookings/{booking}/tasks', [FactoryTaskController::class, 'store'])->whereNumber('booking')->name('factory.tasks.store');
+            Route::post('/tasks/{task}/take', [FactoryTaskController::class, 'take'])->whereNumber('task')->name('factory.tasks.take');
+            Route::delete('/tasks/{task}', [FactoryTaskController::class, 'destroy'])->whereNumber('task')->name('factory.tasks.destroy');
         });
     });
 

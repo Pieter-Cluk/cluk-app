@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Factory;
 
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
+use App\Models\CompanyDetail;
 use App\Models\Factory\Booking;
+use App\Models\Factory\Task;
 use App\Services\Factory\Bookings;
+use App\Services\Factory\Tasks;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -37,20 +40,30 @@ class FactoryController extends Controller
                 'usage' => $until->day ? (int) round($used / $until->day * 100) : 0,
                 'used' => $used, 'days' => $until->day,
             ],
+            'tasks' => Task::open()->with(['booking', 'assignee'])->where('due_at', '<=', now()->addDays(14))
+                ->whereHas('booking', fn ($q) => $q->where('status', 'confirmed'))
+                ->when($request->query('tasks') === 'mine', fn ($q) => $q->where('assignee_id', $request->user()->id))
+                ->orderBy('due_at')->limit(60)->get(),
+            'taskFilter' => $request->query('tasks') === 'mine' ? 'mine' : 'all',
             'canWork' => $request->user()->canUseModule('factory', 2),
         ]);
     }
 
     public function show(Request $request, Booking $booking): View
     {
-        $booking->load(['company', 'contact', 'deal', 'quote', 'owner']);
+        Tasks::sync($booking);
+        $booking->load(['company', 'contact', 'deal', 'quote', 'owner', 'gearQuote.order', 'tasks.assignee', 'tasks.doneBy']);
+        $me = $request->user();
 
-        return view('factory.show', ['b' => $booking, 'canWork' => $request->user()->canUseModule('factory', 2), 'clashes' => $booking->clashes()]);
+        return view('factory.show', [
+            'b' => $booking, 'canWork' => $me->canUseModule('factory', 2), 'clashes' => $booking->clashes(),
+            'crew' => FactoryTaskController::crew()->filter(fn ($u) => $me->canHandTaskTo($u))->values(),
+        ]);
     }
 
     public function create(): View
     {
-        return view('factory.form', ['b' => new Booking(['event_type' => 'corporate', 'days' => 1, 'size' => 'M', 'level' => 'basic', 'guests' => 100, 'language' => 'nl', 'start_date' => today()->addWeeks(4)])]);
+        return view('factory.form', ['b' => new Booking(['event_type' => 'corporate', 'days' => 1, 'size' => 'M', 'level' => 'basic', 'guests' => 100, 'language' => 'nl', 'start_date' => today()->addWeeks(4), 'load_in_time' => '08:00', 'doors_time' => '18:00', 'end_time' => '01:00'])]);
     }
 
     private function rules(): array
@@ -73,12 +86,27 @@ class FactoryController extends Controller
             'req_name' => ['nullable', 'string', 'max:160'],
             'req_email' => ['nullable', 'email', 'max:190'],
             'req_phone' => ['nullable', 'string', 'max:40'],
+            'load_in_time' => ['nullable', 'date_format:H:i'],
+            'doors_time' => ['nullable', 'date_format:H:i'],
+            'end_time' => ['nullable', 'date_format:H:i'],
+            'load_out_time' => ['nullable', 'date_format:H:i'],
         ];
+    }
+
+    /** Times left empty get the house defaults. */
+    private function valid(Request $request): array
+    {
+        $d = $request->validate($this->rules());
+        foreach (['load_in_time' => '08:00', 'doors_time' => '18:00', 'end_time' => '01:00'] as $k => $default) {
+            $d[$k] ??= $default;
+        }
+
+        return $d;
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $d = $request->validate($this->rules());
+        $d = $this->valid($request);
         $b = new Booking($d + ['extras' => array_values($d['extras'] ?? []), 'number' => Booking::nextNumber(), 'status' => 'request', 'source' => 'staff', 'owner_id' => $request->user()->id]);
         Bookings::matchKnown($b);
         $b->save();
@@ -95,12 +123,13 @@ class FactoryController extends Controller
     public function update(Request $request, Booking $booking): RedirectResponse
     {
         abort_if(in_array($booking->status, ['declined', 'cancelled', 'done'], true), 409);
-        $d = $request->validate($this->rules());
+        $d = $this->valid($request);
         $booking->fill($d + ['extras' => array_values($d['extras'] ?? [])]);
         if ($booking->holds() && $booking->clashes()) {
             return back()->withInput()->withErrors(['start_date' => __('factory.errors.taken')]);
         }
         $booking->save();
+        Tasks::sync($booking);
 
         return redirect()->route('factory.show', $booking)->with('status', __('factory.flash.saved'));
     }
@@ -154,8 +183,43 @@ class FactoryController extends Controller
         $to = $request->validate(['to' => ['required', Rule::in(['done', 'cancelled'])]])['to'];
         abort_unless($booking->status === 'confirmed' || ($to === 'cancelled' && in_array($booking->status, ['request', 'option'], true)), 409);
         $booking->update(['status' => $to]);
+        if ($to === 'cancelled') {
+            Tasks::dropOpen($booking);
+        }
         AuditLog::record('factory.'.$to, $booking, [], $request->user());
 
         return back()->with('status', __('factory.flash.'.$to));
+    }
+
+    /** Equipment for the event: a rental quote on the same deal. */
+    public function gear(Request $request, Booking $booking): RedirectResponse
+    {
+        abort_unless(in_array($booking->status, ['confirmed', 'done'], true), 409);
+        abort_unless($request->user()->canUseModule('sales', 2), 403);
+        $quote = Bookings::gearQuote($booking, $request->user());
+
+        return redirect()->route('quotes.show', $quote)->with('status', __('factory.gear.made', ['number' => $quote->number]));
+    }
+
+    /** The gear is part of Advanced / All-in: no prices, straight to order allocation. */
+    public function gearIncluded(Request $request, Booking $booking): RedirectResponse
+    {
+        abort_unless($request->user()->canUseModule('sales', 2) && $booking->gear_quote_id, 403);
+        $order = Bookings::bookGearIncluded($booking, $request->user());
+
+        return redirect()->route('factory.show', $booking)->with('status', __('factory.gear.booked', ['number' => $order->number]));
+    }
+
+    /** The venue booking confirmation to sign, in the customer's language. */
+    public function print(Request $request, Booking $booking): View
+    {
+        $type = $request->query('type') === 'pf' ? 'pf' : 'bc';
+        abort_unless(in_array($booking->status, ['option', 'confirmed', 'done'], true), 404);
+        $booking->load(['company', 'contact', 'quote']);
+        $quote = $booking->currentQuote()?->load('lines');
+        abort_if($type === 'pf' && $quote?->status !== 'accepted', 404);
+        app()->setLocale(array_key_exists($booking->language, config('cluk.locales')) ? $booking->language : 'en');
+
+        return view('factory.doc', ['b' => $booking, 'type' => $type, 'q' => $quote, 'me' => CompanyDetail::current()]);
     }
 }

@@ -21,6 +21,7 @@
                     @if ($b->buildup_days)<dt>{{ __('factory.parts.buildup') }}</dt><dd>{{ $fmt($b->firstDay()) }}@if ($b->buildup_days > 1) – {{ $fmt($b->start_date->copy()->subDay()) }}@endif</dd>@endif
                     <dt>{{ __('factory.parts.event') }}</dt><dd><b>{{ $fmt($b->start_date) }}@if ($b->days > 1) – {{ $fmt($b->lastEventDay()) }}@endif</b></dd>
                     <dt>{{ __('factory.parts.breakdown') }}</dt><dd>{{ $b->breakdown_days ? $fmt($b->lastDay()) : __('factory.same_night') }}</dd>
+                    <dt>{{ __('factory.times.title') }}</dt><dd>{{ __('factory.times.load_in') }} {{ $b->load_in_time }} · {{ __('factory.times.doors') }} {{ $b->doors_time }} · {{ __('factory.times.end') }} {{ $b->end_time }}@if ($b->load_out_time) · {{ __('factory.times.load_out') }} {{ $b->load_out_time }}@endif</dd>
                     <dt>{{ __('factory.space') }}</dt><dd>{{ $b->size }} · {{ __('factory.book.floor', ['floor' => config('factory.sizes.'.$b->size.'.0'), 'ent' => config('factory.sizes.'.$b->size.'.1')]) }}</dd>
                     <dt>{{ __('factory.level') }}</dt><dd>{{ __('factory.levels.'.$b->level) }}</dd>
                     <dt>{{ __('factory.extras_title') }}</dt><dd>{{ collect($b->extras ?? [])->map(fn ($x) => __('factory.extras.'.$x))->implode(', ') ?: '—' }}</dd>
@@ -29,6 +30,10 @@
                 @if ($b->note)<blockquote>{!! nl2br(e($b->note)) !!}</blockquote>@endif
                 @if ($canWork && ! in_array($b->status, ['declined', 'cancelled', 'done'], true))<a class="btn" href="{{ route('factory.edit', $b) }}">{{ __('factory.edit') }}</a>@endif
             </section>
+
+            @if (in_array($b->status, ['confirmed', 'done'], true))
+                @include('factory._tasks')
+            @endif
 
             @if (in_array($b->status, ['option', 'confirmed', 'done'], true))
                 <section class="card">
@@ -49,8 +54,10 @@
                 @if ($b->company)<p><a href="{{ route('companies.show', $b->company) }}"><b>{{ $b->company->name }}</b></a> <span class="pill pill-ok">{{ __('factory.known') }}</span></p>@elseif ($b->req_company)<p><b>{{ $b->req_company }}</b>@if ($b->req_vat) · {{ $b->req_vat }}@endif</p>@endif
                 <p>{{ $b->contact?->name ?? $b->req_name }}@if ($b->req_email ?: $b->contact?->email)<br><a href="mailto:{{ $b->req_email ?: $b->contact?->email }}">{{ $b->req_email ?: $b->contact?->email }}</a>@endif @if ($b->req_phone)<br><a href="tel:{{ $b->req_phone }}">{{ $b->req_phone }}</a>@endif</p>
                 @if ($b->deal)<p><a href="{{ route('deals.show', $b->deal) }}">{{ $b->deal->number }} · {{ __('deals.stages.'.$b->deal->stage) }}</a></p>@endif
-                @if ($b->quote)<p><a href="{{ route('quotes.show', $b->quote) }}">{{ $b->quote->code() }}</a> @include('sales.quotes._status', ['quote' => $b->quote])</p>@endif
+                @if ($cq = $b->currentQuote())<p><a href="{{ route('quotes.show', $cq) }}">{{ $cq->code() }}</a> @include('sales.quotes._status', ['quote' => $cq])</p>@endif
             </section>
+
+            @include('factory._links')
 
             @if ($canWork && $open)
                 <section class="card">

@@ -592,3 +592,25 @@ img.av{object-fit:cover;background:var(--surface-subtle);padding:0}
 /* Wall screens admin */
 .wall-card > .muted { margin: 4px 0 0; }
 .wall-card .inline-form { margin: 14px 0 4px; padding-left: 0; }
+
+/* Cluk Factory crew tasks */
+.btn-sm{min-height:34px;padding:6px 10px;font-size:12.5px}
+.primary.btn-sm{padding:6px 12px;font-size:12.5px}
+.btn-ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.txt-danger{color:var(--danger-text);font-weight:700}
+.ftasks{list-style:none;margin:0;padding:0}
+.ftask{display:grid;grid-template-columns:26px minmax(0,1fr) minmax(120px,190px) auto;gap:10px;align-items:center;padding:10px 20px;border-top:1px solid var(--line)}
+.ftask-mark{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--on-brand)}
+.ftask-done .ftask-mark{background:var(--brand);border-color:var(--brand)}
+.ftask-done .ftask-main b{text-decoration:line-through;color:var(--muted)}
+.ftask-late .ftask-mark{border-color:var(--danger-text)}
+.ftask-main{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ftask-who{display:flex;align-items:center;gap:6px;font-size:13px}
+.ftask-acts{display:flex;gap:6px;align-items:flex-start;justify-content:flex-end;flex-wrap:wrap}
+.ftask-hand summary{list-style:none}
+.ftask-hand summary::-webkit-details-marker{display:none}
+.ftask-hand[open]{flex-basis:100%}
+@media (max-width:760px){.ftask{grid-template-columns:26px minmax(0,1fr)}.ftask-who,.ftask-acts{grid-column:2;justify-content:flex-start}}
+.ftask-foot{padding:12px 20px;border-top:1px solid var(--line);margin:0}
+.ftask-foot + .ftask-foot{border-top:0;padding-top:0}
+.ftask-foot summary{cursor:pointer;font-weight:600;color:var(--brand-text, var(--ink))}

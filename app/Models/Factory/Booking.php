@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 #[Fillable([
     'number', 'status', 'source', 'title', 'event_type', 'start_date', 'days', 'buildup_days', 'breakdown_days', 'size', 'level',
     'guests', 'extras', 'note', 'language', 'req_company', 'req_vat', 'req_name', 'req_email', 'req_phone', 'company_id',
-    'contact_id', 'deal_id', 'quote_id', 'owner_id', 'option_until', 'confirmed_at', 'decline_reason', 'checks',
+    'contact_id', 'deal_id', 'quote_id', 'gear_quote_id', 'owner_id', 'load_in_time', 'doors_time', 'end_time', 'load_out_time', 'option_until', 'confirmed_at', 'decline_reason', 'checks',
 ])]
 class Booking extends Model
 {
@@ -59,6 +60,28 @@ class Booking extends Model
     public function quote(): BelongsTo
     {
         return $this->belongsTo(Quote::class);
+    }
+
+    /** The equipment for the event: a rental quote that becomes an order. */
+    public function gearQuote(): BelongsTo
+    {
+        return $this->belongsTo(Quote::class, 'gear_quote_id');
+    }
+
+    /** The venue quote that is current: the accepted version, else the latest one. */
+    public function currentQuote(): ?Quote
+    {
+        if (! $this->quote) {
+            return null;
+        }
+        $all = Quote::where('number', $this->quote->number)->orderByDesc('version')->get();
+
+        return $all->firstWhere('status', 'accepted') ?? $all->first();
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class)->orderBy('due_at')->orderBy('id');
     }
 
     public function owner(): BelongsTo
