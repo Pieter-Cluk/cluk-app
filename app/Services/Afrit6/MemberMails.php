@@ -131,6 +131,17 @@ class MemberMails
         ]);
     }
 
+    /** Goods arrived unannounced: they are on the 24 h shelf. */
+    public static function arrived(ServiceRequest $r): bool
+    {
+        $what = fn () => trim(($r->colis ? trans_choice('warehouse.colli_n', $r->colis, ['n' => $r->colis]) : '').($r->colis && $r->pallets ? ' + ' : '').($r->pallets ? trans_choice('warehouse.pallets_n', $r->pallets, ['n' => $r->pallets]) : ''));
+
+        return self::send($r->member, 'arrived', ['what' => InLocale::run($r->member->locale ?: 'nl', $what) ?: '—'], fn () => [
+            __('mails.label.date') => self::day($r->date),
+            __('mails.label.kind') => __('workspace.kinds.receive'),
+        ], [], true);
+    }
+
     public static function confirmed(ServiceRequest $r): bool
     {
         return self::send($r->member, 'confirmed', ['kind' => __('workspace.kinds.'.$r->kind)], self::requestDetails($r));

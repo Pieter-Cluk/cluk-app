@@ -136,6 +136,11 @@ return [
             'intro' => 'Désolé, nous ne pouvons pas donner suite à cette demande.',
             'next' => 'Des questions ? Répondez simplement à cet e-mail ou passez nous voir.',
         ],
+        'arrived' => [
+            'subject' => 'Des marchandises sont arrivées pour vous à Afrit 6',
+            'intro' => 'Des marchandises non annoncées sont arrivées pour vous : :what. Elles sont sur l’étagère de retrait 24 h (gratuit).',
+            'next' => 'Retirez-les dans les 24 heures, ou demandez-nous dans le portail de les stocker. Non retirées à temps : nous les stockons et facturons la manutention et le stockage habituels.',
+        ],
         'question' => [
             'subject' => 'Une question sur votre demande : :kind',
             'intro' => 'L’équipe Afrit 6 a une question sur votre demande.',

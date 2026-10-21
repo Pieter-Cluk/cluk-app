@@ -31,6 +31,7 @@ use App\Http\Controllers\Settings\UserController;
 use App\Http\Controllers\Settings\VatRateController;
 use App\Http\Controllers\WallController;
 use App\Http\Controllers\Warehouse\LocationController;
+use App\Http\Controllers\Warehouse\PhoneAfrit6Controller;
 use App\Http\Controllers\Warehouse\PhoneController;
 use App\Http\Controllers\Warehouse\WarehouseController;
 use Illuminate\Http\Request;
@@ -344,6 +345,10 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/clean/{asset}', [PhoneController::class, 'clean'])->whereNumber('asset')->name('clean');
         Route::get('/check/{asset}', [PhoneController::class, 'check'])->whereNumber('asset')->name('check');
         Route::get('/photos/{check}/{i}', [PhoneController::class, 'photo'])->whereNumber(['check', 'i'])->name('photo');
+        Route::get('/media/{type}/{id}/{i}', [PhoneAfrit6Controller::class, 'media'])->whereIn('type', ['a6', 'delivery'])->whereNumber(['id', 'i'])->name('media');
+        Route::get('/afrit6', [PhoneAfrit6Controller::class, 'index'])->middleware('nav:afrit6')->name('a6');
+        Route::get('/afrit6/{task}', [PhoneAfrit6Controller::class, 'show'])->whereNumber('task')->middleware('nav:afrit6')->name('a6.show');
+        Route::get('/delivery', [PhoneAfrit6Controller::class, 'delivery'])->name('delivery');
         Route::middleware('level:warehouse,2')->group(function () {
             Route::post('/scan', [PhoneController::class, 'scanPost'])->middleware('throttle:120,1')->name('scan.post');
             Route::post('/scan/cancel', [PhoneController::class, 'cancel'])->name('scan.cancel');
@@ -354,6 +359,12 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/return/{order}/close', [PhoneController::class, 'returnClose'])->whereNumber('order')->name('return.close');
             Route::post('/clean/{asset}', [PhoneController::class, 'cleanSave'])->whereNumber('asset')->name('clean.save');
             Route::post('/check/{asset}', [PhoneController::class, 'checkSave'])->whereNumber('asset')->name('check.save');
+            Route::post('/delivery', [PhoneAfrit6Controller::class, 'deliveryStore'])->name('delivery.store');
+            Route::middleware('nav:afrit6')->group(function () {
+                Route::post('/afrit6/{task}/photo', [PhoneAfrit6Controller::class, 'photo'])->whereNumber('task')->name('a6.photo');
+                Route::post('/afrit6/{task}/scan', [PhoneAfrit6Controller::class, 'scan'])->whereNumber('task')->name('a6.scan');
+                Route::post('/afrit6/{task}/done', [PhoneAfrit6Controller::class, 'done'])->whereNumber('task')->name('a6.done');
+            });
         });
     });
 
@@ -361,6 +372,7 @@ Route::middleware('auth:web')->group(function () {
     Route::prefix('warehouse')->middleware('nav:warehouse')->group(function () {
         Route::get('/', [WarehouseController::class, 'index'])->name('warehouse.index');
         Route::post('/assets/{asset}/release', [WarehouseController::class, 'release'])->whereNumber('asset')->middleware('right:warehouse.release_repair')->name('warehouse.release');
+        Route::post('/deliveries/{delivery}', [PhoneAfrit6Controller::class, 'assign'])->whereNumber('delivery')->middleware('level:warehouse,2')->name('warehouse.delivery.assign');
         Route::get('/charges/{order}', [WarehouseController::class, 'charges'])->whereNumber('order')->name('warehouse.charges');
         Route::post('/charges/line/{charge}', [WarehouseController::class, 'updateCharge'])->whereNumber('charge')->name('warehouse.charge.update');
         Route::post('/charges/{order}/approve', [WarehouseController::class, 'approveCharges'])->whereNumber('order')->name('warehouse.charges.approve');

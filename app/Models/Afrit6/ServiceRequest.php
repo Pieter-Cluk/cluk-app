@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 #[Fillable([
     'member_id', 'kind', 'status', 'status_before_wait', 'date', 'ends_on', 'qty', 'colis', 'pallets',
-    'receive_mode', 'then_send', 'from_text', 'carrier', 'note', 'space_id', 'from_space_id',
+    'receive_mode', 'then_send', 'from_text', 'carrier', 'note', 'photos', 'scans', 'space_id', 'from_space_id',
     'room_booking_id', 'amount_cents', 'assignee_id', 'decided_by_id', 'decline_reason', 'done_at',
 ])]
 class ServiceRequest extends Model
@@ -39,7 +39,7 @@ class ServiceRequest extends Model
     {
         return [
             'date' => 'date', 'ends_on' => 'date', 'then_send' => 'boolean', 'done_at' => 'datetime',
-            'qty' => 'integer', 'colis' => 'integer', 'pallets' => 'integer', 'amount_cents' => 'integer',
+            'qty' => 'integer', 'colis' => 'integer', 'pallets' => 'integer', 'amount_cents' => 'integer', 'photos' => 'array', 'scans' => 'array',
         ];
     }
 

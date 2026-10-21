@@ -136,6 +136,11 @@ return [
             'intro' => 'Sorry, deze aanvraag kunnen we niet uitvoeren.',
             'next' => 'Vragen? Antwoord gewoon op deze e-mail of spring even binnen.',
         ],
+        'arrived' => [
+            'subject' => 'Er is iets voor u aangekomen in Afrit 6',
+            'intro' => 'Er kwam iets voor u aan dat we niet verwachtten: :what. Het staat op het 24 u-afhaalrek (gratis).',
+            'next' => 'Haal het binnen 24 uur op, of vraag ons in het portaal om het op te slaan. Niet op tijd opgehaald: dan gaat het naar de opslag en rekenen we behandeling en opslag aan zoals gewoonlijk.',
+        ],
         'question' => [
             'subject' => 'Een vraag over je aanvraag: :kind',
             'intro' => 'Het Afrit 6-team heeft een vraag over je aanvraag.',

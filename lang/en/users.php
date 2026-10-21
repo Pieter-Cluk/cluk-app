@@ -186,6 +186,7 @@ return [
             'warehouse_checked' => 'Checked on the test bench',
             'warehouse_charges_approved' => 'Return charges approved',
             'warehouse_zone_saved' => 'Warehouse zone saved',
+            'warehouse_delivery' => 'Unannounced delivery registered',
             'warehouse_layer_switched' => 'Storage layer changed',
             'factory_gear' => 'Cluk Factory equipment quote made',
             'factory_gear_booked' => 'Cluk Factory equipment booked as included',

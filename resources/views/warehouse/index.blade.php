@@ -41,6 +41,29 @@
         @endif
     </section>
 
+    @if ($deliveries->isNotEmpty())
+        <section class="card">
+            <h2>{{ __('warehouse.delivery.who_office') }}</h2>
+            @foreach ($deliveries as $d)
+                <div class="wd-row">
+                    <div class="wd-photos">@foreach ($d->photos ?? [] as $i => $p)<a href="{{ route('w.media', ['delivery', $d->id, $i]) }}" target="_blank"><img src="{{ route('w.media', ['delivery', $d->id, $i]) }}" alt="" loading="lazy"></a>@endforeach</div>
+                    <div class="wd-main">
+                        <b>{{ trim(($d->colli ? trans_choice('warehouse.colli_n', $d->colli, ['n' => $d->colli]) : '').' '.($d->pallets ? trans_choice('warehouse.pallets_n', $d->pallets, ['n' => $d->pallets]) : '')) }}@if ($d->carrier) · {{ $d->carrier }}@endif</b>
+                        <small class="muted">{{ $d->label_text }} · {{ $d->user?->first_name }} · {{ $fmt($d->created_at) }}@if ($d->damaged) · <span class="txt-danger">{{ __('warehouse.delivery.damaged') }}</span>@endif</small>
+                        @if ($d->isOverdue())<span class="pill pill-danger">{{ __('warehouse.delivery.overdue') }}</span>@endif
+                        @if ($canMove)
+                            <form method="post" action="{{ route('warehouse.delivery.assign', $d) }}" class="inline-form mt">@csrf
+                                <select name="member_id" aria-label="{{ __('warehouse.delivery.m_member') }}"><option value="">{{ __('warehouse.delivery.not_member') }}</option>@foreach ($members as $m)<option value="{{ $m->id }}">{{ $m->companyName() }}</option>@endforeach</select>
+                                <input name="note" maxlength="500" placeholder="{{ __('warehouse.delivery.close_note') }}" aria-label="{{ __('warehouse.delivery.close_note') }}">
+                                <button class="btn btn-sm" type="submit">{{ __('warehouse.delivery.close') }}</button>
+                            </form>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </section>
+    @endif
+
     <div class="split-2">
         <section class="card card-flush">
             <div class="card-head pad"><h2>{{ __('warehouse.office.charges') }}</h2></div>

@@ -186,6 +186,7 @@ return [
             'warehouse_checked' => 'Gecontroleerd op de testbank',
             'warehouse_charges_approved' => 'Retourkosten goedgekeurd',
             'warehouse_zone_saved' => 'Magazijnzone bewaard',
+            'warehouse_delivery' => 'Onaangekondigde levering geregistreerd',
             'warehouse_layer_switched' => 'Opslaglaag gewijzigd',
             'factory_gear' => 'Cluk Factory materiaalofferte gemaakt',
             'factory_gear_booked' => 'Cluk Factory materiaal geboekt als inbegrepen',

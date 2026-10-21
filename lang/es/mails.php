@@ -136,6 +136,11 @@ return [
             'intro' => 'Lo sentimos, no podemos atender esta solicitud.',
             'next' => '¿Preguntas? Responda a este correo o pase a vernos.',
         ],
+        'arrived' => [
+            'subject' => 'Ha llegado mercancía para usted en Afrit 6',
+            'intro' => 'Ha llegado mercancía para usted que no esperábamos: :what. Está en el estante de recogida de 24 h (gratis).',
+            'next' => 'Recójala en 24 horas o pídanos en el portal que la almacenemos. Si no se recoge a tiempo, la almacenamos y cobramos la manipulación y el almacenaje habituales.',
+        ],
         'question' => [
             'subject' => 'Una pregunta sobre su solicitud: :kind',
             'intro' => 'El equipo de Afrit 6 tiene una pregunta sobre su solicitud.',

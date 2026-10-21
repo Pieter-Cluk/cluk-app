@@ -136,6 +136,11 @@ return [
             'intro' => 'Sorry, we cannot do this request.',
             'next' => 'Questions? Just reply to this email or drop by.',
         ],
+        'arrived' => [
+            'subject' => 'Goods arrived for you at Afrit 6',
+            'intro' => 'Goods arrived for you that we did not expect: :what. They are on the 24 h pick-up shelf (free).',
+            'next' => 'Collect it within 24 hours, or ask us in the portal to put it into storage. Not collected in time: we move it into storage and charge handling and storage as usual.',
+        ],
         'question' => [
             'subject' => 'A question about your request: :kind',
             'intro' => 'The Afrit 6 team has a question about your request.',

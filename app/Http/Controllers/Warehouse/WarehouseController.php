@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\CompanyDetail;
 use App\Models\Equipment\Asset;
+use App\Models\Member;
 use App\Models\Rental\Order;
 use App\Models\Warehouse\Charge;
+use App\Models\Warehouse\Delivery;
 use App\Models\Warehouse\Move;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
@@ -45,6 +47,9 @@ class WarehouseController extends Controller
             'lost' => Move::with(['item', 'order', 'user'])->where('kind', 'lost')->latest('id')->limit(20)->get(),
             'picks' => Order::where('status', 'approved')->whereNull('loaded_at')->whereDate('out_from', '<=', today()->addDay())->count(),
             'canRelease' => $request->user()->hasRight('warehouse.release_repair'),
+            'canMove' => $request->user()->canUseModule('warehouse', 2),
+            'deliveries' => Delivery::with('user')->where('status', 'open')->orderBy('created_at')->get(),
+            'members' => Member::with('company')->where('status', 'active')->get()->sortBy(fn ($m) => mb_strtolower($m->companyName()))->values(),
         ]);
     }
 

@@ -12,7 +12,7 @@ class Zone extends Model
 {
     protected $table = 'warehouse_zones';
 
-    public const TYPES = ['inbound', 'cleaning', 'precheck', 'bench', 'postcheck', 'repair', 'storage', 'dispatch'];
+    public const TYPES = ['inbound', 'cleaning', 'precheck', 'bench', 'postcheck', 'repair', 'storage', 'dispatch', 'afrit6'];
 
     /** "next" code that means: any storage position. */
     public const RACKS = 'RACKS';
