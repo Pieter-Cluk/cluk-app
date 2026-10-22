@@ -1,7 +1,8 @@
 name: Server logs
 
 # Started by hand. Shows the latest errors from the app's log on one.com and
-# tests outgoing connections (VIES, Microsoft). Changes nothing on the server.
+# tests outgoing connections (VIES, Microsoft) and lists the products ticked
+# for the website with what they still miss. Changes nothing on the server.
 
 on:
   workflow_dispatch:
@@ -38,6 +39,43 @@ jobs:
           echo "== upload limits (PHP)"; php -r 'echo "upload_max_filesize=".ini_get("upload_max_filesize")." post_max_size=".ini_get("post_max_size")." gd=".(function_exists("imagecreatefromstring")?"yes":"no")." exif=".(function_exists("exif_read_data")?"yes":"no").PHP_EOL;'
           echo "== secret lengths"
           for k in MICROSOFT_CLIENT_SECRET DB_PASSWORD INTAKE_TOKEN; do v=$(grep "^$k=" .env | cut -d= -f2- | tr -d '"'); echo "$k: ${#v} chars"; done
+          echo; echo "== website products"
+          F=$(mktemp /tmp/webcheck.XXXX.php)
+          cat > "$F" <<'PHP'
+          <?php
+          require getcwd().'/vendor/autoload.php';
+          $app = require getcwd().'/bootstrap/app.php';
+          $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+          use Illuminate\Support\Facades\DB;
+          use Illuminate\Support\Facades\Schema;
+          foreach (['equipment_items', 'sales_items'] as $t) {
+              echo "$t.on_website column: ".(Schema::hasColumn($t, 'on_website') ? 'yes' : 'NO (migration not run yet)').PHP_EOL;
+          }
+          if (! Schema::hasColumn('equipment_items', 'on_website')) { exit; }
+          $eq = App\Models\Equipment\Item::query()->where('kind', 'item')->get();
+          echo PHP_EOL."== DRY-HIRE: ".$eq->where('on_website', true)->count()." of ".$eq->count()." items ticked".PHP_EOL;
+          echo "number | name | category > sub | brand | stock | price/day | photos | descriptions | active".PHP_EOL;
+          foreach ($eq->where('on_website', true)->sortBy(['category', 'subcategory', 'name']) as $i) {
+              $d = array_keys(array_filter((array) ($i->descriptions ?? [])));
+              echo implode(' | ', [$i->number, $i->name, ($i->category ?: '-').' > '.($i->subcategory ?: '-'), $i->brand ?: '-',
+                  $i->totalQty(), '€ '.number_format($i->day_price_cents / 100, 2, ',', '.'),
+                  $i->photos()->count().($i->photo_path ? ' (main set)' : ' (no main)'),
+                  $d ? implode(',', $d) : 'none', $i->active ? 'yes' : 'NO']).PHP_EOL;
+          }
+          echo PHP_EOL."== categories in the whole dry-hire list (items, ticked)".PHP_EOL;
+          foreach ($eq->groupBy(fn ($i) => ($i->category ?: '-').' > '.($i->subcategory ?: '-'))->sortKeys() as $k => $g) {
+              echo "$k: ".$g->count().', '.$g->where('on_website', true)->count().PHP_EOL;
+          }
+          $s = App\Models\ProductSales\SalesItem::query()->get();
+          echo PHP_EOL."== SALES: ".$s->where('on_website', true)->count()." of ".$s->count()." products ticked".PHP_EOL;
+          echo "number | brand type | category | stock | list price | photo | description | active".PHP_EOL;
+          foreach ($s->where('on_website', true)->sortBy(['category', 'type']) as $i) {
+              echo implode(' | ', [$i->number, trim(($i->brand ?? '').' '.$i->type), $i->category ?: '-', $i->stock_qty,
+                  '€ '.number_format($i->list_price_cents / 100, 2, ',', '.'), $i->photo_path ? 'yes' : 'no',
+                  $i->description ? 'yes' : 'no', $i->active ? 'yes' : 'NO']).PHP_EOL;
+          }
+          PHP
+          php "$F"; rm -f "$F"
           REMOTE
           echo "ssh exit: $?" >> report.txt
 
