@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 /** Contacts and extra addresses on a company card. */
 class CompanyContactController extends Controller
@@ -38,6 +39,23 @@ class CompanyContactController extends Controller
             ->with('status', __($linked ? 'companies.flash.contact_linked' : 'companies.flash.contact_added', ['name' => $contact->name]));
     }
 
+    /** Edit one contact on its own page (from the contacts list). */
+    public function edit(Request $request, Company $company, Contact $contact): View
+    {
+        $linked = $company->contacts()->whereKey($contact->id)->first();
+        abort_unless($linked, 404);
+
+        return view('companies.contact-edit', ['company' => $company, 'c' => $linked, 'back' => $this->back($request)]);
+    }
+
+    /** Only a page of this app's contacts list may be the way back. */
+    private function back(Request $request): ?string
+    {
+        $back = (string) $request->input('back', '');
+
+        return str_starts_with($back, url('/companies')) ? $back : null;
+    }
+
     public function update(Request $request, Company $company, Contact $contact): RedirectResponse
     {
         abort_unless($company->contacts()->whereKey($contact->id)->exists(), 404);
@@ -56,7 +74,9 @@ class CompanyContactController extends Controller
             $company->contacts()->updateExistingPivot($contact->id, $this->pivotFields($data));
         });
 
-        return redirect()->route('companies.show', $company)->with('status', __('companies.flash.contact_saved', ['name' => $contact->name]));
+        $to = $this->back($request);
+
+        return ($to ? redirect()->to($to) : redirect()->route('companies.show', $company))->with('status', __('companies.flash.contact_saved', ['name' => $contact->name]));
     }
 
     /** Removes the person from this company; someone linked to no company any more is deleted. */

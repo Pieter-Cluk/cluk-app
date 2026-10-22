@@ -165,6 +165,7 @@ Route::middleware('auth:web')->group(function () {
             Route::put('/companies/{company}', [CompanyController::class, 'update'])->whereNumber('company')->name('companies.update');
             Route::post('/companies/{company}/vies', [CompanyController::class, 'vies'])->whereNumber('company')->name('companies.vies');
             Route::post('/companies/{company}/contacts', [CompanyContactController::class, 'store'])->whereNumber('company')->name('companies.contacts.store');
+            Route::get('/companies/{company}/contacts/{contact}/edit', [CompanyContactController::class, 'edit'])->whereNumber(['company', 'contact'])->name('companies.contacts.edit');
             Route::put('/companies/{company}/contacts/{contact}', [CompanyContactController::class, 'update'])->whereNumber(['company', 'contact'])->name('companies.contacts.update');
             Route::delete('/companies/{company}/contacts/{contact}', [CompanyContactController::class, 'destroy'])->whereNumber(['company', 'contact'])->name('companies.contacts.destroy');
             Route::post('/companies/{company}/logo', [PictureController::class, 'storeLogo'])->whereNumber('company')->name('companies.logo');

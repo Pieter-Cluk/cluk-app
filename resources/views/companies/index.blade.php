@@ -1,3 +1,4 @@
+@php($canEditContacts = auth()->user()->canUseModule('companies', 2))
 @php($tabs = ['all' => '', 'customers' => 'customer', 'suppliers' => 'supplier', 'both' => 'both', 'contacts' => ''])
 <x-layouts.app :title="__('nav.items.companies')">
     <div class="pagehead">
@@ -62,7 +63,7 @@
                 <table class="table">
                     <thead><tr>
                         <th>{{ __('companies.contacts.name') }}</th><th>{{ __('companies.contacts.job_title') }}</th><th>{{ __('companies.contacts.company') }}</th>
-                        <th>{{ __('companies.contacts.phone') }}</th><th>{{ __('companies.contacts.email') }}</th><th>{{ __('companies.contacts.newsletter') }}</th>
+                        <th>{{ __('companies.contacts.phone') }}</th><th>{{ __('companies.contacts.email') }}</th><th>{{ __('companies.contacts.newsletter') }}</th>@if ($canEditContacts)<th><span class="sr-only">{{ __('settings.edit') }}</span></th>@endif
                     </tr></thead>
                     <tbody>
                         @forelse ($contacts as $p)
@@ -78,9 +79,10 @@
                                 <td class="nowrap">{{ $p->mobile ?? $p->phone ?? '—' }}</td>
                                 <td>@if ($p->email)<a href="mailto:{{ $p->email }}">{{ $p->email }}</a>@else — @endif</td>
                                 <td><span @class(['pill', 'pill-ok' => $p->newsletter, 'pill-off' => ! $p->newsletter])>{{ __($p->newsletter ? 'companies.yes' : 'companies.no') }}</span></td>
+                                @if ($canEditContacts)<td class="num">@if ($first)<a class="btn btn-sm" href="{{ route('companies.contacts.edit', [$first, $p, 'back' => request()->fullUrl()]) }}">{{ __('settings.edit') }}</a>@endif</td>@endif
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="muted">{{ __('companies.index.empty') }}</td></tr>
+                            <tr><td colspan="7" class="muted">{{ __('companies.index.empty') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>

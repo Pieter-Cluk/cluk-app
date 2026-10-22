@@ -100,4 +100,22 @@ class CrmExtrasTest extends TestCase
         $this->actingAs($this->admin)->get('/media/messages')->assertOk()->assertSee('Messages')->assertSee('Social media')->assertSee('Communication');
         $this->actingAs($this->admin)->get('/dashboard')->assertSee('>Media<', false);
     }
+
+    public function test_contacts_list_has_an_edit_button_that_comes_back_to_the_list(): void
+    {
+        $c = $this->company();
+        $this->actingAs($this->admin)->post('/companies/'.$c->id.'/contacts', ['first_name' => 'Jo', 'last_name' => 'Peeters', 'email' => 'jo@demo.example', 'job_title' => 'Producer']);
+        $jo = Contact::firstOrFail();
+        $list = url('/companies?view=contacts&q=jo');
+        $edit = route('companies.contacts.edit', [$c, $jo, 'back' => $list]);
+        $this->actingAs($this->admin)->get('/companies?view=contacts&q=jo')->assertOk()->assertSee('/companies/'.$c->id.'/contacts/'.$jo->id.'/edit?back=', false);
+        $this->actingAs($this->admin)->get($edit)->assertOk()->assertSee('value="Producer"', false);
+        $this->actingAs($this->admin)->put('/companies/'.$c->id.'/contacts/'.$jo->id, ['first_name' => 'Jo', 'last_name' => 'Peeters', 'email' => 'jo@demo.example', 'job_title' => 'Head of production', 'back' => $list])
+            ->assertRedirect($list);
+        $this->assertSame('Head of production', $c->contacts()->first()->pivot->job_title);
+        // Only a page of the app is a way back.
+        $this->actingAs($this->admin)->put('/companies/'.$c->id.'/contacts/'.$jo->id, ['first_name' => 'Jo', 'back' => 'https://evil.example/'])->assertRedirect(route('companies.show', $c));
+        $viewer = User::factory()->create(['role_id' => Role::where('slug', 'warehouse')->value('id'), 'locale' => 'en']);
+        $this->actingAs($viewer)->get('/companies?view=contacts')->assertDontSee('/contacts/'.$jo->id.'/edit');
+    }
 }
