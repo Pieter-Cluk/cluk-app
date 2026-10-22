@@ -8,6 +8,7 @@ use App\Http\Middleware\LogoutBlockedMembers;
 use App\Http\Middleware\LogoutDisabledUsers;
 use App\Http\Middleware\RunBackgroundChecks;
 use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\ThrottlePerPerson;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -35,6 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'level' => EnsureModuleLevel::class,
             'right' => EnsureRight::class,
             'member.active' => EnsureActiveMember::class,
+            'throttle' => ThrottlePerPerson::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
