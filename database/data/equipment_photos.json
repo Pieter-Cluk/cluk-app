@@ -13,6 +13,46 @@
   "note": "Retailer og:image (side/hero view); aedaudio.com not reachable"
  },
  {
+  "key": "AED | Audio FLEX6",
+  "title": "AED Audio FLEX6",
+  "items": [
+   "AUDFULAEDAUDIOF"
+  ],
+  "candidates": [
+   "https://www.lsionline.com/wp-content/uploads/2020/01/all-in-one-graphic.jpg"
+  ],
+  "page": "https://lsionline.com/aed-group-launches-aed-audio",
+  "source": "other",
+  "note": "Launch graphic, not a clean product shot; no manufacturer image found"
+ },
+ {
+  "key": "AED | Audio SOLID15",
+  "title": "AED Audio SOLID15",
+  "items": [
+   "AUDSUBAEDSPAESOLID15"
+  ],
+  "candidates": [
+   "https://cdn-image.bonedo.de/wp-media-folder-bonedo/2020/01/AED_AUDIO_FLEX6_Solid15_Solid28.jpg",
+   "https://www.sgssistemas.lv/uploads/news/72/01-aed-audio.jpg"
+  ],
+  "page": "https://www.bonedo.de/artikel/ise-2020-aed-group-startet-mit-flex6-solid15-und-solid28-speakern-die-neue-aed-audio-marke/",
+  "source": "other",
+  "note": "Press photo from AED Audio showing FLEX6 + SOLID15 + SOLID28 family, not SOLID15 alone"
+ },
+ {
+  "key": "AED | Audio SOLID28",
+  "title": "AED Audio SOLID28",
+  "items": [
+   "AUDSUBAEDSPAESOLID28"
+  ],
+  "candidates": [
+   "http://www.sgssistemas.lv/uploads/news/72/01-aed-audio.jpg"
+  ],
+  "page": "https://www.sgssistemas.lv/en/news/product-news/aed-audio-a-name-for-scalability-and-flexibility",
+  "source": "other",
+  "note": "Generic AED Audio news image, not confirmed SOLID28; low confidence"
+ },
+ {
   "key": "AJA | Ki Pro Go",
   "title": "AJA Ki Pro Go",
   "items": [
@@ -109,6 +149,19 @@
   "note": "Thomann"
  },
  {
+  "key": "AKG | C 535 EB",
+  "title": "AKG C 535 EB",
+  "items": [
+   "AUDMICAKGC535EB"
+  ],
+  "candidates": [
+   "https://www.musicworks.co.nz/content/products/akg-c-535-eb-handheld-condenser-microphone-1-c535eb.jpg"
+  ],
+  "page": "https://musicworks.co.nz/akg-c-535-eb-handheld-condenser-microphone-c535eb",
+  "source": "distributor",
+  "note": "Shop image (width param removed for full size)"
+ },
+ {
   "key": "APC | UPS Smart X 3000VA 230V",
   "title": "APC UPS Smart X 3000VA 230V",
   "items": [
@@ -121,6 +174,20 @@
   "page": "https://www.scan.co.uk/products/apc-smart-ups-x-3000va-4u-rack-tower-lcd-display-200-240v-27k-watts-black",
   "source": "other",
   "note": "Scan UK, SMX3000 rack/tower"
+ },
+ {
+  "key": "AV | Stumpfl Pixera Four Quad - DP1.2 / HDMI+12G In / CTRL / sync / 16TB Y68",
+  "title": "AV Stumpfl Pixera Four Quad - DP1.2 / HDMI+12G In / CTRL / sync / 16TB Y68",
+  "items": [
+   "VIDVIDAVVIPLPX4420S16"
+  ],
+  "candidates": [
+   "https://www.bhphotovideo.com/images/images500x500/pixera_px4_4_four_quad_4u_media_1752498821_1900618.jpg",
+   "https://www.bhphotovideo.com/images/fb/pixera_px4_4_four_quad_4u_media_1900618.jpg"
+  ],
+  "page": "https://www.bhphotovideo.com/c/product/1900618-REG/pixera_px4_4_four_quad_4u_media.html",
+  "source": "distributor",
+  "note": "PIXERA four Quad 4U media server"
  },
  {
   "key": "AV | Stumpfl Pixera One Quad - DP1.2 / GUI Out / sync / 0.5TB X22",
@@ -137,6 +204,48 @@
   "note": "First: PIXERA one GEN2 front (low-res, from manual); second: server lineup photo from 2019 (original generation)"
  },
  {
+  "key": "AV | Stumpfl Pixera Two Octo - DP1.2 / sync / 6TB X27",
+  "title": "AV Stumpfl Pixera Two Octo - DP1.2 / sync / 6TB X27",
+  "items": [
+   "VIDVIDAVVIPLPX2800S6"
+  ],
+  "candidates": [
+   "https://www.logando.de/en/wp-content/uploads/2019/06/av-stumpfl-pixera-one-front-768x432.png.webp",
+   "https://www.logando.de/en/wp-content/uploads/2019/06/av-stumpfl-pixera-one-side.png"
+  ],
+  "page": "https://www.logando.de/en/purchase/media-server-purchase/av-stumpfl-pixera/av-stumpfl-pixera-one-media-server-new-purchase-copy/",
+  "source": "other",
+  "note": "Close: rental listing for PIXERA two but filenames show PIXERA one chassis; Octo version may differ"
+ },
+ {
+  "key": "AV | Stumpfl Pixera Two Quad - DP1.2 / GUI Out / HDMI In / sync / 4TB X22",
+  "title": "AV Stumpfl Pixera Two Quad - DP1.2 / GUI Out / HDMI In / sync / 4TB X22",
+  "items": [
+   "VIDVIDAVVIPLPX2422S4"
+  ],
+  "candidates": [
+   "https://www.logando.de/en/wp-content/uploads/2019/06/av-stumpfl-pixera-one-front-768x432.png.webp",
+   "https://www.logando.de/en/wp-content/uploads/2019/06/av-stumpfl-pixera-one-side.png"
+  ],
+  "page": "https://www.logando.de/en/purchase/media-server-purchase/av-stumpfl-pixera/av-stumpfl-pixera-one-media-server-new-purchase-copy/",
+  "source": "other",
+  "note": "PIXERA two page at rental dealer, images show PIXERA one chassis (close model)"
+ },
+ {
+  "key": "AV | Stumpfl Pixera Two Quad - DP1.2 / sync / 4TB X17",
+  "title": "AV Stumpfl Pixera Two Quad - DP1.2 / sync / 4TB X17",
+  "items": [
+   "VIDVIDAVVIPLPX2400S4"
+  ],
+  "candidates": [
+   "https://www.logando.de/en/wp-content/uploads/2019/06/av-stumpfl-pixera-one-side.png",
+   "https://www.logando.de/en/wp-content/uploads/2019/06/av-stumpfl-pixera-one-front-768x432.png.webp"
+  ],
+  "page": "https://www.logando.de/en/purchase/media-server-purchase/av-stumpfl-pixera/av-stumpfl-pixera-one-media-server-new-purchase-copy/",
+  "source": "distributor",
+  "note": "Images labelled PIXERA one on PIXERA two page; similar chassis, verify"
+ },
+ {
   "key": "AV | Stumpfl Projection Screen - 229 NET Projection area",
   "title": "AV Stumpfl Projection Screen - 229 NET Projection area",
   "items": [
@@ -149,6 +258,50 @@
   "page": "https://avstumpfl.com/en/projection-screens/mobile-projection-screens/vario/vario/",
   "source": "manufacturer",
   "note": "Generic AV Stumpfl mobile fast-fold screen (Vario/Monoblox) overview images; exact screen system unknown; menu-size images"
+ },
+ {
+  "key": "AV | Stumpfl Projection Screen - 274 NET Projection area",
+  "title": "AV Stumpfl Projection Screen - 274 NET Projection area",
+  "items": [
+   "VIDPROAVVISC500X300"
+  ],
+  "candidates": [
+   "https://avstumpfl.com/fileadmin/_processed_/f/e/csm_Monoblox_Uebersichtsbild_2d080b7a49.png",
+   "https://avstumpfl.com/fileadmin/_processed_/a/d/csm_Vario_Uebersichtsbild_7ae4e483f6.png"
+  ],
+  "page": "https://avstumpfl.com/en/projection-screens/mobile-projection-screens/monoblox/monoblox/",
+  "source": "manufacturer",
+  "note": "Exact screen series unknown; Monoblox / Vario mobile screen images as representative"
+ },
+ {
+  "key": "Adderlink | XDIP RX/TX POE HDMI + AUDIO",
+  "title": "Adderlink XDIP RX/TX POE HDMI + AUDIO",
+  "items": [
+   "VIDITADDXDIPRX"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/1adder-xdippoe_61deae3b-950b-4a38-a9a8-f5b8aa505319.jpg?v=1737080216&width=1214",
+   "https://avlgear.com/cdn/shop/files/2adder-xdippoe_681578b2-cda6-4bf4-ada6-e8ddc39476aa.jpg?v=1737080216&width=1214",
+   "https://avlgear.com/cdn/shop/files/3adder-xdippoe_2ad4ccb4-6fcb-4c57-9ee0-ce84d67061c7.jpg?v=1737080216&width=1214"
+  ],
+  "page": "https://avlgear.com/products/adder-xdip-poe-us-hdmi-usb-single-link-kvm-extender-over-ip",
+  "source": "distributor",
+  "note": "XDIP-POE"
+ },
+ {
+  "key": "Apantac | DP1.2 - 1 In to 4 Out",
+  "title": "Apantac DP1.2 - 1 In to 4 Out",
+  "items": [
+   "VIDSIGAPADP121I"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/APA-DP-1X4-II.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/APA-DP-1X4-II.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/APA-DP-1X4-II.JPG"
+  ],
+  "page": "https://markertek.com/product/apa-dp-1x4-ii/apantac-dp-1x4-ii-mt-hood-1x4-displayport-splitter-distribution-amp-supports-hbr2-hbr-rbr-sst-or-mst-1-2-or-4-lane",
+  "source": "distributor",
+  "note": "Apantac DP-1x4-II (DP1.2 1x4 DA), assumed model"
  },
  {
   "key": "Arri | Centermount yoke for Arri Skypanel",
@@ -206,6 +359,35 @@
   "note": "Markertek, L7-C LE2 black; hi-res path inferred from page"
  },
  {
+  "key": "Arri | Honeycomb 30°",
+  "title": "Arri Honeycomb 30°",
+  "items": [
+   "LIGLEDARRLIACARHO30S360",
+   "LIGLEDARRLIACARHO30S60",
+   "LIGLEDARRLIACARHO30S30"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/ARL20014978.jpg"
+  ],
+  "page": "https://www.adorama.com/arri-30-degree-honeycomb-grid-skypanel-s360-led-softlight/p/arl20014978",
+  "source": "distributor",
+  "note": "ARRI 30° honeycomb for SkyPanel S360"
+ },
+ {
+  "key": "Arri | Honeycomb 60°",
+  "title": "Arri Honeycomb 60°",
+  "items": [
+   "LIGLEDARRLIACARHO60S360",
+   "LIGLEDARRLIACARHO60S30"
+  ],
+  "candidates": [
+   "https://www.abelcine.com/uploads/f/1/f/0/8/6/f1f0863588f2a56702d64b25f6f09b16/arri-60-degree-louver-skypanel-s360_v1.medium.jpg"
+  ],
+  "page": "https://www.abelcine.com/buy/lighting/modifiers/arri-honeycomb-60-grid-for-skypanel-s360",
+  "source": "distributor",
+  "note": "Honeycomb 60° for SkyPanel S360, medium size"
+ },
+ {
   "key": "Arri | M90 Max + high speed ballast + 4-leaf barn door + 15m cable",
   "title": "Arri M90 Max + high speed ballast + 4-leaf barn door + 15m cable",
   "items": [
@@ -220,6 +402,20 @@
   "note": "Fixture only"
  },
  {
+  "key": "Arri | Open face optic 15° - Incl. 4-leaf barn door",
+  "title": "Arri Open face optic 15° - Incl. 4-leaf barn door",
+  "items": [
+   "LIGLEDARRLIACAROROF15"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/ARR-L20033540.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/ARR-L20033540.JPG"
+  ],
+  "page": "https://www.markertek.com/product/arr-l20033540/arri-l2-0033540-open-face-optic-single-lens-for-orbiter-led-light-15-degree",
+  "source": "distributor",
+  "note": "ARRI L2.0033540 Orbiter Open Face 15 deg optic (barn door not shown necessarily)"
+ },
+ {
   "key": "Arri | Orbiter - full colour tuneable (2.000° - 20.000°K) - pole operated",
   "title": "Arri Orbiter - full colour tuneable (2.000° - 20.000°K) - pole operated",
   "items": [
@@ -231,6 +427,20 @@
   "page": "https://hotrodcameras.com/collections/arri/products/arri-orbiter-led-light-without-lens-yoke-and-cable-blue-silver",
   "source": "distributor",
   "note": "ARRI site has no packshot via fetch; dealer image shows blue/silver Orbiter without optic"
+ },
+ {
+  "key": "Arri | Skybender",
+  "title": "Arri Skybender",
+  "items": [
+   "LIGLEDARRSKYBEN"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/ARR-L20009611.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/ARR-L20009611.JPG"
+  ],
+  "page": "https://www.markertek.com/product/arr-l20009611/arri-l2-0009611-skybender-green-screen-and-color-wash-light-modifier-for-skypanel-s60-light",
+  "source": "distributor",
+  "note": "SkyBender for SkyPanel S60 (L2.0009611)"
  },
  {
   "key": "Arri | Skypanel S120-C - full colour tuneable (2.800° - 10.000°K) - pole operated",
@@ -317,6 +527,19 @@
   "note": "Titan Tube kit"
  },
  {
+  "key": "Audinate | Dante MY16",
+  "title": "Audinate Dante MY16",
+  "items": [
+   "AUDDIGAUDDANTEM"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/YADAMY16AUD2_1.jpg"
+  ],
+  "page": "https://www.adorama.com/yadamy16aud2.html",
+  "source": "distributor",
+  "note": "Yamaha/Audinate Dante-MY16-AUD2 card"
+ },
+ {
   "key": "Avalon | VT-737",
   "title": "Avalon VT-737",
   "items": [
@@ -329,6 +552,48 @@
   "page": "https://www.thomann.de/de/avalon_vt737sp_roehren_direct_signal_pfad.htm",
   "source": "distributor",
   "note": "VT-737SP (current version)"
+ },
+ {
+  "key": "Avalon | VT-737SP",
+  "title": "Avalon VT-737SP",
+  "items": [
+   "AUDINSAVAVT737S"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/1f2d1836-0dca-438c-b1d0-1d726a87a684.jpg?crop=center&height=1200&v=1737058887&width=1200",
+   "https://www.hhb.co.uk/wp-content/uploads/img_20110624101711_6162.jpg",
+   "https://avlgear.com/cdn/shop/files/79f9da24-551d-4a0f-a1dd-fe306c1da9d2.jpg?v=1737058887&width=1214"
+  ],
+  "page": "https://avlgear.com/products/avalon-design-vt-737sp-class-a-mono-tube-channel-strip",
+  "source": "distributor",
+  "note": "AVL Gear / HHB images"
+ },
+ {
+  "key": "Avalon | VT-747",
+  "title": "Avalon VT-747",
+  "items": [
+   "AUDINSAVAVT747"
+  ],
+  "candidates": [
+   "https://prggear.com/wp-content/uploads/2017/02/410u6-nxGWL.jpg",
+   "https://prggear.com/wp-content/uploads/2017/02/J16095000001000-00-500x500.jpg"
+  ],
+  "page": "https://prggear.com/product/avalon-vt-747sp-stereo-spectral-opto-compressor/",
+  "source": "other",
+  "note": "VT-747SP, rental house photos (smallish)"
+ },
+ {
+  "key": "Avolites | PowerCube Ha + Soca, 63A in",
+  "title": "Avolites PowerCube Ha + Soca, 63A in",
+  "items": [
+   "LIGDIMAVOPOWERC"
+  ],
+  "candidates": [
+   "https://www.avolites.com/app/uploads/2019/07/Front-PowerCube_900-2.png"
+  ],
+  "page": "https://www.avolites.com/product/powercube/",
+  "source": "manufacturer",
+  "note": "Avolites Power Cube; connector config may differ"
  },
  {
   "key": "BMB | Ultrastudio 4K Mini",
@@ -412,6 +677,20 @@
   "page": "https://www.thomann.co.uk/blackmagic_design_mc_hdmi_sdi_3g.htm",
   "source": "distributor",
   "note": "Micro Converter HDMI to SDI 3G"
+ },
+ {
+  "key": "BMD | Mini converter 3G/HDSDI/SDI to LC Optical",
+  "title": "BMD Mini converter 3G/HDSDI/SDI to LC Optical",
+  "items": [
+   "VIDSIGBMDVISPHDSDIFIB"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/BMD-OPTCLFIBR12G.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/BMD-OPTCLFIBR12G.JPG"
+  ],
+  "page": "https://www.markertek.com/product/bmd-optclfibr12g/blackmagic-design-mini-converter-optical-fiber-12g-bi-directional-sdi",
+  "source": "distributor",
+  "note": "Close model: Mini Converter Optical Fiber 12G (successor of 3G version, same form factor)"
  },
  {
   "key": "BMD | Mini converter 6G/3G/HDSDI/SDI to HDMI 4K",
@@ -536,6 +815,35 @@
   "page": "https://www.blackmagicdesign.com/products/blackmagicvideohub/techspecs",
   "source": "manufacturer",
   "note": "Blackmagic Videohub 40x40 12G"
+ },
+ {
+  "key": "BMD | Videohub master controller",
+  "title": "BMD Videohub master controller",
+  "items": [
+   "VIDSIGBMDVISPBMDMASTER"
+  ],
+  "candidates": [
+   "https://www.holdan.co.uk/media/image/gallery/Blackmagic-BMD-VHUBWMSTRCRLPRO-Controller_1.jpg",
+   "https://www.holdan.co.uk/media/image/gallery/Blackmagic-BMD-VHUBWMSTRCRLPRO-Controller_2.jpg"
+  ],
+  "page": "https://www.holdan.co.uk/products/details/BMDVHUBWMSTRPRO",
+  "source": "distributor",
+  "note": "Videohub Master Control Pro (assumed; older non-Pro Master Control looks similar)"
+ },
+ {
+  "key": "BMD | Videohub smart controller",
+  "title": "BMD Videohub smart controller",
+  "items": [
+   "VIDSIGBMDVISPBMDSMART"
+  ],
+  "candidates": [
+   "https://www.ormsdirect.co.za/cdn/shop/products/blackmagic-design-videohub-smart-control-pro-front.webp?v=1678114565&width=1946",
+   "https://www.markertek.com/productImage/alternate-1/hi-res/BMD-VHUB-WSC.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/BMD-VHUB-WSC.JPG"
+  ],
+  "page": "https://www.ormsdirect.co.za/products/blackmagic-design-videohub-smart-control-pro",
+  "source": "distributor",
+  "note": "first: Smart Control Pro (close model); markertek: original Videohub Smart Control alt views"
  },
  {
   "key": "Barco | E2 - Generation 2",
@@ -1031,6 +1339,34 @@
   "note": "barco.com pages not machine-readable; image from ProjectorCentral (not an official distributor); UDX models share one chassis; image is of UDX-4K40/4K32, same housing"
  },
  {
+  "key": "Beyerdynamic | DT 108",
+  "title": "Beyerdynamic DT 108",
+  "items": [
+   "AUDINTBEYDT108"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DT-108BK-NC.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/DT-108BK-NC.JPG"
+  ],
+  "page": "https://www.markertek.com/product/dt-108bk-nc/beyerdynamic-dt-108-headset-black-200-400-ohms-no-cable",
+  "source": "distributor",
+  "note": "DT 108 black 200/400 ohm"
+ },
+ {
+  "key": "Beyerdynamic | DT 109",
+  "title": "Beyerdynamic DT 109",
+  "items": [
+   "AUDINTBEYDT109"
+  ],
+  "candidates": [
+   "https://api.beyerdynamic.de/media/catalog/product/d/t/dt109_black_web_1_transparent_1.png?store=www_en&image-type=image",
+   "https://api.beyerdynamic.de/media/catalog/product/d/t/dt-109-broadcast-beyerdynamic_front.png?store=www_en&image-type=image"
+  ],
+  "page": "https://global.beyerdynamic.com/p/dt-109-200-50-ohms-black",
+  "source": "manufacturer",
+  "note": "exact model"
+ },
+ {
   "key": "Brompton | Tessera S4",
   "title": "Brompton Tessera S4",
   "items": [
@@ -1099,6 +1435,73 @@
   "page": "https://www.visuals.co.uk/compact-and-lightweight-2-3-7-6-137mm-4k-broadcast-zoom-lens.html",
   "source": "distributor",
   "note": "Visuals.co.uk listing is CJ18ex7.6B KASE (same lens, different servo version); Canon page had only lifestyle hero"
+ },
+ {
+  "key": "Canon | CJ24ex7,8 IASE-S tele + servo",
+  "title": "Canon CJ24ex7,8 IASE-S tele + servo",
+  "items": [
+   "VIDPROCANCJ24EX"
+  ],
+  "candidates": [
+   "https://www.canon.co.uk/media/cj24-fsl_800x500_tcm14-1663046.png",
+   "https://www.canon.co.uk/media/cj24-left_800x500_tcm14-1663047.png"
+  ],
+  "page": "https://www.canon.co.uk/lenses/cj24ex7-5b-iase-s/",
+  "source": "manufacturer",
+  "note": "CJ24ex7.5B IASE S (closest current model; ex7.8 not found)"
+ },
+ {
+  "key": "Canon | CJ45ex9,7B IASE high zoom + servo",
+  "title": "Canon CJ45ex9,7B IASE high zoom + servo",
+  "items": [
+   "VIDPROCANCJ45EX"
+  ],
+  "candidates": [
+   "https://i.visuals.co.uk/media/catalog/product/cache/65e0edc3f135ab5d41b7eea4808fc19d/u/8/u8067600_x04_1.jpg"
+  ],
+  "page": "https://www.visuals.co.uk/canon-cj45ex9-7b-iase-v-h-4k-broadcast-lens-used-1.html",
+  "source": "distributor",
+  "note": "Visuals UK used listing, CJ45ex9.7B IASE-V H (very close variant)"
+ },
+ {
+  "key": "Canon | HJ14ex4.3B IASE wide angle + servo",
+  "title": "Canon HJ14ex4.3B IASE wide angle + servo",
+  "items": [
+   "VIDPROCANHJ14EX"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/CAHJ14EXIASE.JPG",
+   "https://www.adorama.com/images/300x300/canon-hj14ex4_cahj14exiase.webp"
+  ],
+  "page": "https://www.adorama.com/cahj14exiase.html",
+  "source": "distributor",
+  "note": "Exact model"
+ },
+ {
+  "key": "Canon | HJ18ex7.6B IASE standard + servo",
+  "title": "Canon HJ18ex7.6B IASE standard + servo",
+  "items": [
+   "VIDPROCANHJ18EX"
+  ],
+  "candidates": [
+   "https://asia.canon/media/migration/shared/live/products/EN/hj18ex76b-b1.png"
+  ],
+  "page": "https://asia.canon/en/business/hj18ex7-6b-irse-s-iase-s/main/product",
+  "source": "manufacturer",
+  "note": "HJ18ex7.6B IRSE S / IASE S"
+ },
+ {
+  "key": "Canon | HJ24ex7.5B IASE-S tele + servo",
+  "title": "Canon HJ24ex7.5B IASE-S tele + servo",
+  "items": [
+   "VIDPROCANHJ24EX"
+  ],
+  "candidates": [
+   "https://asia.canon/media/migration/shared/live/products/EN/hj24ex7-5b_b1.png"
+  ],
+  "page": "https://asia.canon/en/business/hj24ex7-5b/main/product",
+  "source": "manufacturer",
+  "note": "HJ24ex7.5B lens"
  },
  {
   "key": "ChainMaster | 320 kg D8+ - chain 24 m",
@@ -1277,6 +1680,33 @@
   "note": "Panify 2 news photo, not white background; 1st URL is the WordPress full-size derived from the visible 150x150 thumbnail (unverified)"
  },
  {
+  "key": "Claypaky | Scenius Profile",
+  "title": "Claypaky Scenius Profile",
+  "items": [
+   "LIGINTCLALIILCPSCENP"
+  ],
+  "candidates": [
+   "https://cdn01.4wall.com/cms/rentals/thumbs/md_f5c0871721550e.jpg"
+  ],
+  "page": "https://www.4wall.com/rentals/9758275/clay-paky-scenius-profile",
+  "source": "other",
+  "note": "4Wall rental page, medium size only"
+ },
+ {
+  "key": "Claypaky | Scenius Spot",
+  "title": "Claypaky Scenius Spot",
+  "items": [
+   "LIGINTCLALIILCPSCEN"
+  ],
+  "candidates": [
+   "https://nvision360.com/wp-content/uploads/2025/07/clay_paky_scenius_spot.jpg",
+   "https://cdn01.usedlighting.com/products/images/thumbs/ncm_f6a6d0bb51c4e3.jpg"
+  ],
+  "page": "https://nvision360.com/shop/clay-paky-scenius-spot/",
+  "source": "distributor",
+  "note": "Reseller photos (320x400 and used-gear photo); manufacturer site not reached"
+ },
+ {
   "key": "Claypaky | SharBar RGBW",
   "title": "Claypaky SharBar RGBW",
   "items": [
@@ -1397,6 +1827,62 @@
   "note": "Plain Xtylos no longer has own page; family image + Xtylos Aqua (very similar look, IP66 version)"
  },
  {
+  "key": "Colorlight | Z4",
+  "title": "Colorlight Z4",
+  "items": [
+   "VIDLEDCOLZ4"
+  ],
+  "candidates": [
+   "https://www.ledwallcentral.com/images/controllers/led_controller_90.jpg",
+   "https://www.ledwallcentral.com/images/controllers/led_controller_90-b.jpg"
+  ],
+  "page": "https://www.ledwallcentral.com/ColorLight-Z4-led-controller.htm",
+  "source": "other",
+  "note": "Colorlight Z4 (LED wall database site; verify)"
+ },
+ {
+  "key": "Colorlight | Z5",
+  "title": "Colorlight Z5",
+  "items": [
+   "VIDLEDCOLZ5"
+  ],
+  "candidates": [
+   "https://www.ledwallcentral.com/images/controllers/led_controller_46.jpg",
+   "https://www.ledwallcentral.com/images/controllers/led_controller_46-b.jpg"
+  ],
+  "page": "https://www.ledwallcentral.com/ColorLight-Z5-led-controller.htm",
+  "source": "distributor",
+  "note": "Colorlight Z5"
+ },
+ {
+  "key": "Colorlight | Z6",
+  "title": "Colorlight Z6",
+  "items": [
+   "VIDLEDCOLZ6"
+  ],
+  "candidates": [
+   "https://prggear.com/wp-content/uploads/2023/02/5a3784d0cb4af.jpg",
+   "https://prggear.com/wp-content/uploads/2023/02/5a3784d0cb638.jpg"
+  ],
+  "page": "https://prggear.com/product/colorlight-z6-super-controller-led-4k-processor",
+  "source": "distributor",
+  "note": "PRG Gear shop images"
+ },
+ {
+  "key": "CueScript | CueiT Production",
+  "title": "CueScript CueiT Production",
+  "items": [
+   "VIDPROCUECUEITP"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/CUE-CSPREM.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/CUE-CSPREM.JPG"
+  ],
+  "page": "https://www.markertek.com/product/cue-csprem/cuescript-csprem-cueit-premier-prompting-software-package",
+  "source": "distributor",
+  "note": "Close model: CueiT Premier software package (not Production edition)"
+ },
+ {
   "key": "DPA | 4055",
   "title": "DPA 4055",
   "items": [
@@ -1410,6 +1896,20 @@
   "page": "https://www.thomann.de/be/dpa_4055_kick_drum_microphone.htm",
   "source": "distributor",
   "note": "dpamicrophones.com in maintenance; Thomann images"
+ },
+ {
+  "key": "DPA | D:FACTO 4018V capsule",
+  "title": "DPA D:FACTO 4018V capsule",
+  "items": [
+   "AUDWIRDPADFACTO"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-4018V-B-SE2.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/DPA-4018V-B-SE2.JPG"
+  ],
+  "page": "https://www.markertek.com/product/dpa-4018v-b-se2/dpa-4018v-b-se2-d-facto-4018v-supercardioid-mic-capsule-se2-ew-adapter-senn-2000-6000-9000-evolution-d1-black",
+  "source": "distributor",
+  "note": "4018V with SE2 (Sennheiser) adapter; CLUK version may have Shure adapter"
  },
  {
   "key": "DPA | D:FINE CORE 4266 headset omni flex (beige)",
@@ -1519,6 +2019,19 @@
   "note": "Adorama (item discontinued there)"
  },
  {
+  "key": "DPA | D:SCREET 4080 miniature directional (black)",
+  "title": "DPA D:SCREET 4080 miniature directional (black)",
+  "items": [
+   "AUDWIRDPAMIHFDP4080"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-4080-DL-DB00.JPG"
+  ],
+  "page": "https://markertek.com/product/dpa-4080-dl-db00/dpa-4080-dl-d-b00-d-screet-4080-miniature-cardioid-microphone-with-normal-spl-and-microdot-black",
+  "source": "distributor",
+  "note": "4080-DL-D-B00 black, MicroDot"
+ },
+ {
   "key": "DPA | D:SCREET CORE 6061 submini omni-direction (beige)",
   "title": "DPA D:SCREET CORE 6061 submini omni-direction (beige)",
   "items": [
@@ -1543,6 +2056,32 @@
   "page": "https://www.scan.co.uk/products/dpa-dscreet-core-6061-omnidirection-microphone-loud-spl-microdot-3mm-core-capsule-ip58-certified-bla",
   "source": "distributor",
   "note": "Scan UK"
+ },
+ {
+  "key": "DPA | D:SCREET SCO61-H miniature omni-direction (beige)",
+  "title": "DPA D:SCREET SCO61-H miniature omni-direction (beige)",
+  "items": [
+   "AUDWIRDPAMIHFDP4061BE"
+  ],
+  "candidates": [
+   "https://prggear.com/wp-content/uploads/2017/02/4061.jpg"
+  ],
+  "page": "https://prggear.com/product/dpa-4061-omni-directional-beige-lav-microphone/",
+  "source": "other",
+  "note": "DPA 4061 beige (same capsule as SC061); small 400x300"
+ },
+ {
+  "key": "DPA | D:SCREET SCO61-H miniature omni-direction (black)",
+  "title": "DPA D:SCREET SCO61-H miniature omni-direction (black)",
+  "items": [
+   "AUDWIRDPAMIHFDP4061BL"
+  ],
+  "candidates": [
+   "https://www.turramusic.com.au/cdn/shop/products/dpa-4061-2.jpg?v=1667942819"
+  ],
+  "page": "https://www.turramusic.com.au/dpa-4061-miniature-omni-microphone-black",
+  "source": "distributor",
+  "note": "DPA d:screet 4061 miniature omni black (SC4061 family)"
  },
  {
   "key": "DPA | D:VOTE 4099",
@@ -1654,6 +2193,20 @@
   "note": "Markertek hi-res images"
  },
  {
+  "key": "Decimator | D16S 3G to HDMI",
+  "title": "Decimator D16S 3G to HDMI",
+  "items": [
+   "VIDSIGDECD16S16"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DEC-DMON-16S.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/DEC-DMON-16S.JPG"
+  ],
+  "page": "https://www.markertek.com/product/dec-dmon-16s/decimator-design-dmon-16s-mini-3g-hd-sd-sdi-1-to-16-multi-viewer-w-3g-sdi-hdmi-out",
+  "source": "distributor",
+  "note": "Assumed DMON-16S 16-ch 3G multiviewer with HDMI out"
+ },
+ {
   "key": "Dell | U2422H 24\" - HD",
   "title": "Dell U2422H 24\" - HD",
   "items": [
@@ -1668,6 +2221,32 @@
   "note": "Dell Scene7 images (dynamic URLs, served as png/jpg)"
  },
  {
+  "key": "Denon | SC5000",
+  "title": "Denon SC5000",
+  "items": [
+   "AUDPLADENSC5000"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/DDJSC5PRIXUS_1.jpg"
+  ],
+  "page": "https://www.adorama.com/ddjsc5prixus.html",
+  "source": "distributor",
+  "note": "SC5000 Prime"
+ },
+ {
+  "key": "DiGiCo | 8 channel 32-bit - Mic pre-amp card for SD-rack",
+  "title": "DiGiCo 8 channel 32-bit - Mic pre-amp card for SD-rack",
+  "items": [
+   "AUDDIGDIGKIDEDISDADC32B"
+  ],
+  "candidates": [
+   "https://www.ampco-flashlight.com/wp-content/uploads/2019/03/ampco-flashlight-digico-stadius-mic-preamp.jpg"
+  ],
+  "page": "https://www.ampco-flashlight.com/racks-options/",
+  "source": "other",
+  "note": "Stadius 32-bit mic pre card, rental co. image"
+ },
+ {
   "key": "DiGiCo | 8 channel 32-bit - Output card for SD-rack",
   "title": "DiGiCo 8 channel 32-bit - Output card for SD-rack",
   "items": [
@@ -1679,6 +2258,46 @@
   "page": "https://digico.biz/rackmodules/sd-32-bit-dac/",
   "source": "manufacturer",
   "note": "No card image found (card page blocked); image shows SD-Rack with cards"
+ },
+ {
+  "key": "DiGiCo | DMI Automix module",
+  "title": "DiGiCo DMI Automix module",
+  "items": [
+   "AUDDIGDIGDMIAUT"
+  ],
+  "candidates": [
+   "https://www.sportsvideo.org/wp-content/uploads/2018/06/DiGiCo_DMI-ME_2.jpg"
+  ],
+  "page": "https://www.sportsvideo.org/2018/06/07/infocomm-2018-digico-displays-automatic-mic-mixing-card-s-series-software-users-receive-upgrade/",
+  "source": "other",
+  "note": "Press photo captioned DiGiCo DMI-AMM automatic mic mixing card"
+ },
+ {
+  "key": "DiGiCo | DMI Dante I/O module with SRC",
+  "title": "DiGiCo DMI Dante I/O module with SRC",
+  "items": [
+   "AUDDIGDIGDMIDAN"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_52/526108/19492691_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/526108.jpg"
+  ],
+  "page": "https://www.thomann.nl/digico_dmi_dante_2_z_chip.htm",
+  "source": "distributor",
+  "note": "DMI-DANTE 2 (Z chip) - close model of DMI Dante card"
+ },
+ {
+  "key": "DiGiCo | DMI Klang processing module",
+  "title": "DiGiCo DMI Klang processing module",
+  "items": [
+   "AUDDIGDIGDMIKLA"
+  ],
+  "candidates": [
+   "https://www.fullcompass.com/common/products/original/528438.jpg"
+  ],
+  "page": "https://www.fullcompass.com/prod/604944-digico-dmi-klang-in-ear-mixing-expansion-module-for-digico-conoles-digico-orange-box",
+  "source": "distributor",
+  "note": "DMI-KLANG card"
  },
  {
   "key": "DiGiCo | DMI Madi BNC I/O module",
@@ -1705,6 +2324,20 @@
   "page": "https://digico.biz/racks/dq-rack/",
   "source": "manufacturer",
   "note": "Hero 'DQ-Back' image (may show rear panel)"
+ },
+ {
+  "key": "DiGiCo | Orange box - Format converter (empty)",
+  "title": "DiGiCo Orange box - Format converter (empty)",
+  "items": [
+   "AUDDIGDIGORANGE"
+  ],
+  "candidates": [
+   "https://digico.biz/wp-content/uploads/2018/11/orange-box-highrez-4000x2500-scaled.jpg",
+   "https://digico.biz/wp-content/uploads/2018/11/orange-box-highrez-4000x25000-scaled.jpg"
+  ],
+  "page": "https://digico.biz/interfaces/orange-box",
+  "source": "manufacturer",
+  "note": "DiGiCo Orange Box"
  },
  {
   "key": "DiGiCo | Quantum 225 - Waves upgrade incl.",
@@ -1745,6 +2378,33 @@
   "page": "https://digico.biz/racks/sd-rack/",
   "source": "manufacturer",
   "note": "SD-Rack front/angle"
+ },
+ {
+  "key": "DoPChoice | Snap box",
+  "title": "DoPChoice Snap box",
+  "items": [
+   "LIGLEDDOPSNAPBO"
+  ],
+  "candidates": [
+   "https://kelpls.co.nz/cdn/shop/products/ARRI_l2_0016382_DoPchoice_snapboxfwith_skirt_for_1509456277_1369820_1200x1200.jpg?v=1645743635",
+   "https://media.musson.com/catalog/product/cache/89b115426b88968f03765275f3490f77/s/k/skypanels360c_snapbox.jpg"
+  ],
+  "page": "https://kelpls.co.nz/products/arri-dopchoice-snapbox-for-s360",
+  "source": "distributor",
+  "note": "ARRI DoPchoice SnapBox for SkyPanel S360 (L2.0016382)"
+ },
+ {
+  "key": "Dsan | Perfect Cue Mini",
+  "title": "Dsan Perfect Cue Mini",
+  "items": [
+   "VIDITDSAPERFEC"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/1pcminias3__29303-scaled.jpg?v=1706852362&width=1214"
+  ],
+  "page": "https://avlgear.com/collections/dsan-best-sellers/products/dsan-pc-mini-as3-perfectcue-mini-system-compact-usb-powered-cue-light-system-with-3-command-button-transmitter-pc-433-mini",
+  "source": "distributor",
+  "note": "PerfectCue Mini (PC-MINI-AS3 system)"
  },
  {
   "key": "ETC | Fix 14° - 4 Knives",
@@ -1943,6 +2603,59 @@
   "note": "Epson og:image (Amplience image endpoint, no file extension); EB-PU2200 series black"
  },
  {
+  "key": "Epson | ELPLL08 - L1405 7,21-10,11",
+  "title": "Epson ELPLL08 - L1405 7,21-10,11",
+  "items": [
+   "VIDPROEPSELPLL0"
+  ],
+  "candidates": [
+   "https://soundpro.com/cdn/shop/files/113312_Epson-ELPLL08-Long-Throw-Zoom-Lens.jpg?v=1768862063&width=1946"
+  ],
+  "page": "https://soundpro.com/products/epson-elpll08-long-throw-zoom-lens",
+  "source": "distributor",
+  "note": "exact lens"
+ },
+ {
+  "key": "Epson | ELPLM10 - L1405 3,32-5,06",
+  "title": "Epson ELPLM10 - L1405 3,32-5,06",
+  "items": [
+   "VIDPROEPSVIPRLEEM10"
+  ],
+  "candidates": [
+   "https://soundpro.com/cdn/shop/files/106068_Epson-ELPLM10-Middle-Throw--3-Zoom-Lens.jpg?v=1768857123&width=1946"
+  ],
+  "page": "https://soundpro.com/products/epson-v12h004m0a-elplm10",
+  "source": "distributor",
+  "note": "ELPLM10 middle throw zoom"
+ },
+ {
+  "key": "Epson | ELPLM15 - L1405 2,16-3,48",
+  "title": "Epson ELPLM15 - L1405 2,16-3,48",
+  "items": [
+   "VIDPROEPSVIPRLEEM15"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/IESELPLM15.jpg",
+   "https://www.adorama.com/images/300x300/epson-elplm15-middle-throw-lens_ieselplm15.webp"
+  ],
+  "page": "https://www.adorama.com/epson-elplm15-middle-throw-zoom-lens-2/p/ieselplm15",
+  "source": "distributor",
+  "note": "Exact model"
+ },
+ {
+  "key": "Epson | ELPLU03S - L1405 0,65-0,78",
+  "title": "Epson ELPLU03S - L1405 0,65-0,78",
+  "items": [
+   "VIDPROEPSVIPRLEEU03S"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/IESPLU03S.jpg"
+  ],
+  "page": "https://www.adorama.com/epson-elplu03s-short-throw-zoom-lens-projection-accessory/p/iesplu03s",
+  "source": "distributor",
+  "note": "ELPLU03S short-throw zoom lens"
+ },
+ {
   "key": "Epson | ELPLU04 - L1405 0,87-1,05",
   "title": "Epson ELPLU04 - L1405 0,87-1,05",
   "items": [
@@ -1954,6 +2667,73 @@
   "page": "https://www.worldwidestereo.com/products/epson-elplu04-short-throw-2-zoom-projector-lens",
   "source": "other",
   "note": "Retailer image"
+ },
+ {
+  "key": "Epson | ELPLW06 - L1405 Not compatible",
+  "title": "Epson ELPLW06 - L1405 Not compatible",
+  "items": [
+   "VIDPROEPSVIPRLEEW06"
+  ],
+  "candidates": [
+   "https://mediaserver.goepson.com/adaptivemedia/rendition?id=1c400ddfa9fd720a8e98a083a95ef48097a294bf&vid=1c400ddfa9fd720a8e98a083a95ef48097a294bf&prid=1200Wx1200H&clid=SAPDAM&prclid=banner&assetDescr=V12H004W06_ELPLW06_690x460",
+   "https://mediaserver.goepson.com/adaptivemedia/rendition?id=1c400ddfa9fd720a8e98a083a95ef48097a294bf&vid=1c400ddfa9fd720a8e98a083a95ef48097a294bf&prid=300Wx300H&clid=SAPDAM&prclid=productpictures&assetDescr=V12H004W06_ELPLW06_690x460"
+  ],
+  "page": "https://epson.com/p/V12H004W06",
+  "source": "manufacturer",
+  "note": "exact model"
+ },
+ {
+  "key": "Epson | ELPLW08 - L1405 1,18-1,66",
+  "title": "Epson ELPLW08 - L1405 1,18-1,66",
+  "items": [
+   "VIDPROEPSVIPRLEEW08"
+  ],
+  "candidates": [
+   "https://soundpro.com/cdn/shop/files/118600_Epson-ELPLW08-Wide-Throw--3-Zoom-Lens.jpg?v=1768866744&width=1946"
+  ],
+  "page": "https://soundpro.com/products/epson-elplw08-wide-throw-3-zoom-lens",
+  "source": "distributor",
+  "note": "exact lens"
+ },
+ {
+  "key": "Epson | ELPLX02S - L1405 Not compatible",
+  "title": "Epson ELPLX02S - L1405 Not compatible",
+  "items": [
+   "VIDPROEPSELPLX0"
+  ],
+  "candidates": [
+   "https://cdn.kaseyaquotemanager.com/0-master/productimages/4e/1510aa960212bf.jpg?width=1500&height=1500&fit=pad"
+  ],
+  "page": "https://store.qamba.com.au/products/epson-elplx02s-ultra-short-throw-lens-0-351-1406292",
+  "source": "distributor",
+  "note": "ELPLX02S UST lens"
+ },
+ {
+  "key": "Exact | GHOST transparent OLED 55\"",
+  "title": "Exact GHOST transparent OLED 55\"",
+  "items": [
+   "VIDDISEXAGHOSTT"
+  ],
+  "candidates": [
+   "https://cdn01.4wall.com/cms/rentals/thumbs/md_f5ff712f248b4b.png"
+  ],
+  "page": "https://europe.4wall.com/rentals/9758810/55-inch-transparent-ghost-oled",
+  "source": "other",
+  "note": "4Wall rental listing '55 inch Transparent GHOST OLED' (medium thumb); brand link to 'Exact' unverified"
+ },
+ {
+  "key": "Green-G0 | Radio (walkie-talkie) interface",
+  "title": "Green-G0 Radio (walkie-talkie) interface",
+  "items": [
+   "AUDINTGRERADIOW"
+  ],
+  "candidates": [
+   "https://www.avned.nl/media/catalog/product/cache/ca50a8f05f69c746912da767edd77ec1/g/g/ggo-rdx-front-1024x683.jpg",
+   "https://www.avned.nl/media/catalog/product/cache/ca50a8f05f69c746912da767edd77ec1/g/g/ggo-rdx-dynamic-1024x683.jpg"
+  ],
+  "page": "https://www.avned.nl/accessoires/rdx-radio-interface",
+  "source": "distributor",
+  "note": "Green-GO RDX radio interface"
  },
  {
   "key": "Green-GO | 2&4-wire interface",
@@ -1997,6 +2777,47 @@
   "note": "ProAdv, Green-GO BRIDGEX (4-port bridge interface)"
  },
  {
+  "key": "Green-GO | Intercom Green-GO set - Wireless beltpack/headset/2-4 wire interface/POE switch",
+  "title": "Green-GO Intercom Green-GO set - Wireless beltpack/headset/2-4 wire interface/POE switch",
+  "items": [
+   "VIDPROGREINTERC"
+  ],
+  "candidates": [
+   "https://dmxproductions.co.uk/wp-content/uploads/2022/08/12538.jpeg"
+  ],
+  "page": "https://dmxproductions.co.uk/product/green-go-ggo-wbpx-wireless-belt-pack/",
+  "source": "distributor",
+  "note": "WBPX wireless beltpack only, small (248x203)"
+ },
+ {
+  "key": "Green-GO | Light beacon",
+  "title": "Green-GO Light beacon",
+  "items": [
+   "AUDINTGRELIGHTB"
+  ],
+  "candidates": [
+   "https://www.avned.nl/media/catalog/product/cache/ca50a8f05f69c746912da767edd77ec1/g/g/ggo-beacon-front-1024x683.jpg",
+   "https://www.avned.nl/media/catalog/product/cache/ca50a8f05f69c746912da767edd77ec1/g/g/ggo-beacon-dynamic2-1024x683.jpg"
+  ],
+  "page": "https://www.avned.nl/accessoires/light-beacon",
+  "source": "distributor",
+  "note": "Green-GO BEACON signal light, Dutch distributor AVNED"
+ },
+ {
+  "key": "Green-GO | MCD8",
+  "title": "Green-GO MCD8",
+  "items": [
+   "AUDINTGREMCD8"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/GROMCXD.jpg",
+   "https://www.adorama.com/images/300x300/green-go-multi-channel-desk-station_gromcxd.webp"
+  ],
+  "page": "https://www.adorama.com/green-go-multi-channel-desk-station-intercom/p/gromcxd",
+  "source": "distributor",
+  "note": "Green-GO MCXD (successor of MCD desk stations) - close model, not MCD8"
+ },
+ {
   "key": "Green-GO | SW5",
   "title": "Green-GO SW5",
   "items": [
@@ -2009,6 +2830,19 @@
   "page": "https://manual.greengoconnect.com/en/devices/sw5/",
   "source": "manufacturer",
   "note": "From official manual site"
+ },
+ {
+  "key": "Green-GO | WAA",
+  "title": "Green-GO WAA",
+  "items": [
+   "AUDINTGREWAA"
+  ],
+  "candidates": [
+   "https://cdn.shopify.com/s/files/1/0054/9466/9382/files/GGO-WAA-DYNAMIC-1024x683.jpg?v=1706634945"
+  ],
+  "page": "https://musicredone.com/products/green-go-ggo-waa-wireless-active-antenna",
+  "source": "distributor",
+  "note": "GGO-WAA wireless active antenna; dynamic shot, may not be pure white background"
  },
  {
   "key": "Green-GO | WBPX",
@@ -2025,6 +2859,60 @@
   "note": "Adorama, Wireless Beltpack X"
  },
  {
+  "key": "HDFury | Vertex - signal converter 2x2 HDMI 4K + audio",
+  "title": "HDFury Vertex - signal converter 2x2 HDMI 4K + audio",
+  "items": [
+   "VIDSIGHDFVERTEX"
+  ],
+  "candidates": [
+   "https://drivercentral.io/images/detailed/3/HDF_bd0v-3x.png",
+   "https://www.hdfury.com/wp-content/uploads/2019/03/Vertex2_pack_front.jpg"
+  ],
+  "page": "https://drivercentral.io/platforms/control4-drivers/audio-video/hdfury-vertex/",
+  "source": "other",
+  "note": "1st: original Vertex (driver listing image, verify); 2nd: Vertex2 from hdfury.com (close successor)"
+ },
+ {
+  "key": "HP | ProBook 450 G6 15,6” - 515 Gb - i7 - 16 Gb RAM - QWERTY",
+  "title": "HP ProBook 450 G6 15,6” - 515 Gb - i7 - 16 Gb RAM - QWERTY",
+  "items": [
+   "VIDITHPVIITHPBOOK"
+  ],
+  "candidates": [
+   "https://guide-images.cdn.ifixit.com/igi/IRfAQ55mjaVRTBJu.standard"
+  ],
+  "page": "https://www.ifixit.com/Device/HP_ProBook_450_G6",
+  "source": "other",
+  "note": "iFixit device photo, exact model"
+ },
+ {
+  "key": "High | End Systems FQ100 - fog machine incl. oil",
+  "title": "High End Systems FQ100 - fog machine incl. oil",
+  "items": [
+   "LIGSMOHIGENDSYS"
+  ],
+  "candidates": [
+   "https://cdn01.4wall.com/cms/rentals/thumbs/md_f5605bdf89e4bf.jpg"
+  ],
+  "page": "https://europe.4wall.com/rentals/4831679/high-end-systems-fq-100-fog-machine",
+  "source": "other",
+  "note": "Medium-size rental-house image only"
+ },
+ {
+  "key": "High | End Systems HOG4",
+  "title": "High End Systems HOG4",
+  "items": [
+   "LIGLIGHIGLICOHOG4"
+  ],
+  "candidates": [
+   "https://nationwidevideo.com/wp-content/uploads/2021/03/HIGH-END-SYSTEMS-HOG-4-CONSOLE.jpg",
+   "https://nationwidevideo.com/wp-content/uploads/2021/03/HI61020006_l-7.jpg"
+  ],
+  "page": "https://nationwidevideo.com/gear/high-end-systems-hog-4-console/",
+  "source": "other",
+  "note": "Hog 4 full-size console (rental house images)"
+ },
+ {
   "key": "High | End Systems Road Hog 4",
   "title": "High End Systems Road Hog 4",
   "items": [
@@ -2037,6 +2925,73 @@
   "page": "https://www.etcconnect.com/Products/Legacy/Live-Events-High-End-Systems/Consoles/Hog-4-Consoles/Road-Hog-4/Features.aspx",
   "source": "manufacturer",
   "note": "Road Hog 4-21 (close successor of Road Hog 4); wide banner shot"
+ },
+ {
+  "key": "IDK | FDX-32 UHD HDBaseT - 21 HDMI2.0 In to 32 HDBaseT out",
+  "title": "IDK FDX-32 UHD HDBaseT - 21 HDMI2.0 In to 32 HDBaseT out",
+  "items": [
+   "VIDSIGIDKVISP32X324KBT"
+  ],
+  "candidates": [
+   "https://lang-iberia.com/wp-content/uploads/2024/10/9635.png"
+  ],
+  "page": "https://lang-iberia.com/marca/idk/",
+  "source": "other",
+  "note": "FDX-32UHD frame (32x32 HDMI2.0 config); card config differs"
+ },
+ {
+  "key": "IDK | FDX-32 UHD HDMI2.0 - 32 In to 32 Out",
+  "title": "IDK FDX-32 UHD HDMI2.0 - 32 In to 32 Out",
+  "items": [
+   "VIDSIGIDKVISP32X324K"
+  ],
+  "candidates": [
+   "https://lang-iberia.com/wp-content/uploads/2024/10/9635.png"
+  ],
+  "page": "https://lang-iberia.com/product/idk-fdx-32x32-hdmi2-0-matrix/",
+  "source": "distributor",
+  "note": "IDK FDX-32x32 HDMI2.0 matrix, Lang Iberia rental listing"
+ },
+ {
+  "key": "IDK | HDC-RH100-D HDBaseT to HDMI",
+  "title": "IDK HDC-RH100-D HDBaseT to HDMI",
+  "items": [
+   "VIDSIGIDKHDCRH1"
+  ],
+  "candidates": [
+   "https://nttxstore.jp/img/goods/L/IX15957220.jpg"
+  ],
+  "page": "https://nttxstore.jp/_II_IX15957220",
+  "source": "distributor",
+  "note": "Exact model (Japanese shop)"
+ },
+ {
+  "key": "Interspace | MasterCue V6",
+  "title": "Interspace MasterCue V6",
+  "items": [
+   "VIDITINTMASTER"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/INTI-MCV6.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/INTI-MCV6.JPG"
+  ],
+  "page": "https://www.markertek.com/product/inti-mcv6/interspace-industries-mcv6-mastercue-v6-professional-cueing-system-3-usb-ports",
+  "source": "distributor",
+  "note": null
+ },
+ {
+  "key": "K&M | Round-base for speaker pole",
+  "title": "K&M Round-base for speaker pole",
+  "items": [
+   "AUDSPEKMROUNDB"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/1-k_m-26750-022-55_9c12269f-0806-4c07-89fa-ffdd179434d9.jpg?v=1741302158&width=1214",
+   "https://avlgear.com/cdn/shop/files/2-k_m-26750-022-55_9f09e7e1-99b2-4e8a-8072-99578a547271.jpg?v=1741302158&width=1214"
+  ],
+  "page": "https://avlgear.com/collections/speaker-stands/products/kandm-26750-round-base-speaker-stand",
+  "source": "distributor",
+  "note": "close: K&M 26750 speaker stand with cast-iron round base (includes pole)"
  },
  {
   "key": "K&M | Speaker pole with M20 screw end 1,45m",
@@ -2052,6 +3007,33 @@
   "note": "K&M 21334 M20 distance rod (880 mm variant; 1.45 m version not found, same look)"
  },
  {
+  "key": "K&M | Speaker pole with M20 screw end 1,80 m",
+  "title": "K&M Speaker pole with M20 screw end 1,80 m",
+  "items": [
+   "AUDSPEKMRISTKMS180"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_19/195851/14743481_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/195851.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/km_21334_distanz_rod_m20.htm",
+  "source": "distributor",
+  "note": "K&M 21334 M20 distance rod 880 mm - close model, not 1.80 m length"
+ },
+ {
+  "key": "K&M | Speaker stand",
+  "title": "K&M Speaker stand",
+  "items": [
+   "AUDSPEKMRISTKMSS"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/3-k_m-26750-022-55_740540d5-5640-4f3b-b287-597199b91877.jpg?v=1741302158&width=1214"
+  ],
+  "page": "https://avlgear.com/collections/speaker-stands/products/kandm-26750-round-base-speaker-stand",
+  "source": "distributor",
+  "note": "generic; K&M 26750 round-base stand shown, actual may be tripod (e.g. 21450)"
+ },
+ {
   "key": "K&M | Speaker stand with ring lock",
   "title": "K&M Speaker stand with ring lock",
   "items": [
@@ -2065,6 +3047,48 @@
   "page": "https://www.thomann.de/de/km_21436.htm",
   "source": "distributor",
   "note": "Thomann, K&M 21436 ring-lock speaker stand (assumed model)"
+ },
+ {
+  "key": "K&M | Straight one hand stand with round base",
+  "title": "K&M Straight one hand stand with round base",
+  "items": [
+   "AUDMICKMMIACRBOH"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/KM-26200.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/KM-26200.JPG"
+  ],
+  "page": "https://www.markertek.com/product/km-26200/k-m-26200-one-hand-microphone-stand-black",
+  "source": "distributor",
+  "note": "K&M 26200 assumed"
+ },
+ {
+  "key": "K&M | Straight stand round base",
+  "title": "K&M Straight stand round base",
+  "items": [
+   "AUDMICKMMIACRB"
+  ],
+  "candidates": [
+   "https://soundpro.com/cdn/shop/files/47130_K_M-26010-Microphone-Stand-Tripod-Stand-With-Soft-Touch-Finish-_-Gray-_-9.84_-_-5_8_ALT01sqr.jpg?v=1790886347&width=1946",
+   "https://soundpro.com/cdn/shop/files/47130_K_M-26010-Microphone-Stand-Tripod-Stand-With-Soft-Touch-Finish-_-Gray-_-9.84_-_-5_8_ALT02sqr.jpg?v=1790886352&width=1946"
+  ],
+  "page": "https://soundpro.com/products/k-m-260-1-round-base-microphone-stand",
+  "source": "distributor",
+  "note": "K&M 260/1 (26010) round-base stand, assumed model; filename oddly says tripod, verify visually"
+ },
+ {
+  "key": "Kenwood | TK-3401D",
+  "title": "Kenwood TK-3401D",
+  "items": [
+   "AUDINTKEN4XTK34"
+  ],
+  "candidates": [
+   "https://kasc-cdn.novena.hr/files/image/2748/8/1020x700-5/TK-3401D-F.png",
+   "https://kasc-cdn.novena.hr/files/image/2748/8/1020x700-5/TK-3401D-side.png"
+  ],
+  "page": "https://kenwoodcommunications.co.uk/digital-pmr/digital-license-free-pmr446/TK-3401DE",
+  "source": "manufacturer",
+  "note": "Exact model (TK-3401DE)"
  },
  {
   "key": "L-Acoustics | A10 FOCUS",
@@ -2590,6 +3614,19 @@
   "page": "https://gearsource.com/product/larak-aes/012227",
   "source": "other",
   "note": "Gearsource used listing og:image (imgix URL without file extension, LA-RAK AES); verify"
+ },
+ {
+  "key": "L-Acoustics | LA8 AES",
+  "title": "L-Acoustics LA8 AES",
+  "items": [
+   "AUDAMPLACLA8AES"
+  ],
+  "candidates": [
+   "https://store.gl-events.com/medias/560875.jpg?context=bWFzdGVyfGltYWdlc3wyMjI5Njl8aW1hZ2UvanBlZ3xpbWFnZXMvaDMwL2hlNS84ODA1NzA2NDMyNTQyLmpwZ3w4NmVmMTkyMjQ0MTJiNGY2NTY0YjI4ZWJiYjYxYzhmNjNhNzAwY2Q2YTUzY2RhZTU5MjUwZGQxNjgyYjY0OGU5"
+  ],
+  "page": "https://store.gl-events.com/en/event-solutions/audiovisual/sound-systems/amplifications/l-acoustics-la8-amplified-controller/p/560875",
+  "source": "other",
+  "note": "Rental-store image of LA8"
  },
  {
   "key": "L-Acoustics | Lasermount for K1",
@@ -3143,6 +4180,33 @@
   "note": "SYVA BASE (assumed). WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
  },
  {
+  "key": "Lake | LM44",
+  "title": "Lake LM44",
+  "items": [
+   "AUDPROLAKLM44"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/LALM44U_1.jpg"
+  ],
+  "page": "https://www.adorama.com/lalm44u.html",
+  "source": "distributor",
+  "note": "exact model"
+ },
+ {
+  "key": "Lexicon | L-960",
+  "title": "Lexicon L-960",
+  "items": [
+   "AUDEFFLEXL960"
+  ],
+  "candidates": [
+   "https://cdn1.soniccircus.com/uploads/IMG_0329-1.jpg",
+   "https://cdn1.soniccircus.com/uploads/IMG_0335.jpg"
+  ],
+  "page": "https://soniccircus.com/product/lexicon-960l-digital-effects-system-with-larc-2-used/",
+  "source": "other",
+  "note": "Lexicon 960L with LARC2, used-gear photos (not white background)"
+ },
+ {
   "key": "Lightware | 3G SDI - 1 In to 4 Out",
   "title": "Lightware 3G SDI - 1 In to 4 Out",
   "items": [
@@ -3154,6 +4218,34 @@
   "page": "https://archive.lightware.com/da4-3gsdi",
   "source": "manufacturer",
   "note": "Assumed Lightware DA4-3GSDI; only small 265px angled image"
+ },
+ {
+  "key": "Lightware | Matrix MX-FR17 HDMI 1.4 - 16 In to 16 Out",
+  "title": "Lightware Matrix MX-FR17 HDMI 1.4 - 16 In to 16 Out",
+  "items": [
+   "VIDSIGLIGVISP16X16HDMI"
+  ],
+  "candidates": [
+   "https://cdn.shopify.com/s/files/1/0603/7982/4364/files/lightware-mx-fr17-17x17-digital-crosspoint-router-frame-91110002-creation-networks-87963.jpg?v=1757925540",
+   "https://cdn.shopify.com/s/files/1/0603/7982/4364/files/lightware-mx-fr17-17x17-digital-crosspoint-router-frame-91110002-creation-networks-76227.jpg?v=1757925541"
+  ],
+  "page": "https://creationnetworks.net/products/lightware-mx-fr17-17x17-digital-crosspoint-router-frame-91110002",
+  "source": "distributor",
+  "note": "MX-FR17 frame (17x17); I/O cards may differ"
+ },
+ {
+  "key": "Lightware | Matrix MX-FR33 DVI - 32 In to 32 Out",
+  "title": "Lightware Matrix MX-FR33 DVI - 32 In to 32 Out",
+  "items": [
+   "VIDSIGLIGVISP32X32DVI"
+  ],
+  "candidates": [
+   "https://nationwidevideo.com/wp-content/uploads/2021/08/LW_mx_fr33_aweb.jpg",
+   "https://nationwidevideo.com/wp-content/uploads/2021/08/LW_mx_fr33_frame_web.jpg"
+  ],
+  "page": "https://nationwidevideo.com/?p=227915",
+  "source": "other",
+  "note": "MX-FR33L frame (rental house images)"
  },
  {
   "key": "Lightware | Matrix MX2 HDMI 2.0 - 8 In to 8 Out + audio",
@@ -3168,6 +4260,20 @@
   "page": "https://lightware.com/en/products/matrix-switchers/mx2-8x8-hdmi20-audio",
   "source": "manufacturer",
   "note": null
+ },
+ {
+  "key": "Lightware | Matrix1616 DVI Pro - 16 In to 16 Out",
+  "title": "Lightware Matrix1616 DVI Pro - 16 In to 16 Out",
+  "items": [
+   "VIDSIGLIGVISP16X16DVI"
+  ],
+  "candidates": [
+   "https://www.touchpoint.com.au/wp-content/uploads/2024/03/63_lightware_switcher.jpg",
+   "https://cdn01.4wall.com/cms/rentals/thumbs/md_f5ba193624e877.jpg"
+  ],
+  "page": "https://www.touchpoint.com.au/shop/lightware-mx16x16dvi-plus-dvi-matrix-switcher/",
+  "source": "distributor",
+  "note": "MX16x16DVI-Plus (close model to DVI Pro)"
  },
  {
   "key": "Luminex | GigaCore 10 Neutrik DUO MMF",
@@ -3224,6 +4330,20 @@
   "page": "https://luminex.be/?p=14442",
   "source": "manufacturer",
   "note": "Luminex product page"
+ },
+ {
+  "key": "Luminex | LumiCore 64x4 POE merger/router",
+  "title": "Luminex LumiCore 64x4 POE merger/router",
+  "items": [
+   "LIGITNLUMLUMICO"
+  ],
+  "candidates": [
+   "https://www.luminex.be/wp-content/uploads/2025/02/Lumicore-64-Front-Cam-Straight.png",
+   "https://www.luminex.be/wp-content/uploads/2025/02/Lumicore-64-Front-Cam-ISO.png"
+  ],
+  "page": "https://www.luminex.be/products/lumicore/",
+  "source": "manufacturer",
+  "note": "Current LumiCore 64 renders; the older 64x4 POE unit may look different"
  },
  {
   "key": "Luminex | Luminode12 Ethernet to DMX convertor",
@@ -3336,6 +4456,35 @@
   "note": "Shared Expo family image (end of life)"
  },
  {
+  "key": "Luxibel | B Expo500TW",
+  "title": "Luxibel B Expo500TW",
+  "items": [
+   "LIGLEDLUXBEXPO5"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646625/21559844_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/646625.jpg"
+  ],
+  "page": "https://www.thomann.nl/luxibel_b_expo_100_mww.htm",
+  "source": "distributor",
+  "note": "Luxibel B Expo 100 MWW - same Expo family, not exact Expo500TW; low confidence"
+ },
+ {
+  "key": "Luxibel | B P9Z",
+  "title": "Luxibel B P9Z",
+  "items": [
+   "LIGLEDLUXBP9Z"
+  ],
+  "candidates": [
+   "https://www.luxibel.com/wp-content/uploads/2023/11/WEB_0001s_0008_B-P9Z_FRONT.png",
+   "https://www.luxibel.com/wp-content/uploads/2023/11/WEB_0001s_0005_B-P9Z_PERSPECTIVE.png",
+   "https://www.luxibel.com/wp-content/uploads/2023/11/B_P9z_B.png"
+  ],
+  "page": "https://www.luxibel.com/product/wash-lights/b-p9z/",
+  "source": "manufacturer",
+  "note": "exact model (discontinued)"
+ },
+ {
   "key": "Luxibel | B PAr105 RGBW V2",
   "title": "Luxibel B PAr105 RGBW V2",
   "items": [
@@ -3434,6 +4583,19 @@
   "note": "MA Lightcommander II 48/6 (archive); PNG via preview endpoint"
  },
  {
+  "key": "MA | Processing unit L - 8192 parameters",
+  "title": "MA Processing unit L - 8192 parameters",
+  "items": [
+   "LIGLIGMALIACMA3PUL"
+  ],
+  "candidates": [
+   "https://cdn11.bigcommerce.com/s-dd19b/products/30565/images/125732/preview__10076.1711058973.386.513.png?c=2"
+  ],
+  "page": "https://goknight.com/ma-lighting-grandma3-processing-unit-l-processor/",
+  "source": "distributor",
+  "note": "grandMA3 processing unit L; image is small preview (386x513), verify"
+ },
+ {
   "key": "MA | Processing unit M - 4096 parameters",
   "title": "MA Processing unit M - 4096 parameters",
   "items": [
@@ -3477,6 +4639,35 @@
   "note": "MDG site; img-tiny path may be small"
  },
  {
+  "key": "MDG | ATMe WPE - haze generator - IP55 incl. oil",
+  "title": "MDG ATMe WPE - haze generator - IP55 incl. oil",
+  "items": [
+   "LIGSMOMDGATMEWP"
+  ],
+  "candidates": [
+   "https://mdgfog.s3.amazonaws.com/uploads/img/atme-7.png",
+   "https://mdgfog.s3.ca-central-1.amazonaws.com/uploads/img-tiny/ATMe-B.png"
+  ],
+  "page": "https://www.mdgfog.com/en/atme?market=1",
+  "source": "manufacturer",
+  "note": "standard ATMe; WPE (IP55) is close variant"
+ },
+ {
+  "key": "MDG | Ice FOG Q - low ice generator excl. liquid CO2",
+  "title": "MDG Ice FOG Q - low ice generator excl. liquid CO2",
+  "items": [
+   "LIGSMOMDGICEFOG"
+  ],
+  "candidates": [
+   "https://mdgfog.s3.amazonaws.com/uploads/img/ice-fog-q-1.png",
+   "https://mdgfog.s3.amazonaws.com/uploads/img/icefogq-2.png",
+   "https://mdgfog.s3.amazonaws.com/uploads/img/ice-fog-q-3.png"
+  ],
+  "page": "https://www.mdgfog.com/en/ice-fog-q",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
   "key": "MDG | theONE - smoke / haze generator - case incl. CO2 bottle",
   "title": "MDG theONE - smoke / haze generator - case incl. CO2 bottle",
   "items": [
@@ -3488,6 +4679,47 @@
   "page": "https://goknight.com/mdg-mdgtheone-theone-dual-fog-haze-single-high-output-generator-touring/",
   "source": "distributor",
   "note": "theONE touring version (in case); medium-size image"
+ },
+ {
+  "key": "Manfrotto | 087 wind-up - max. 35 kg",
+  "title": "Manfrotto 087 wind-up - max. 35 kg",
+  "items": [
+   "RIGSTAMANRISTMA087",
+   "RIGSTAMANRISTMA087B"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_47/478612/14705651_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/478612.jpg"
+  ],
+  "page": "https://www.thomann.fr/manfrotto_087nwlb_wind_up.htm",
+  "source": "distributor",
+  "note": "087NWLB (black) variant"
+ },
+ {
+  "key": "Manfrotto | Stand CSU - max. 40 kg",
+  "title": "Manfrotto Stand CSU - max. 40 kg",
+  "items": [
+   "RIGSTAMANSTANDC"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/MAN-420CSU.JPG"
+  ],
+  "page": "https://www.markertek.com/product/man-420csu/manfrotto-420csu-combi-boom-stand-3-section-stand-with-sand-bag",
+  "source": "distributor",
+  "note": "Uncertain: Manfrotto 420CSU combi-boom stand; its load spec (5 kg) does not match 40 kg, verify model"
+ },
+ {
+  "key": "MediaScreen | ScreenLifter 65” - 95” - max. 90 Kg",
+  "title": "MediaScreen ScreenLifter 65” - 95” - max. 90 Kg",
+  "items": [
+   "VIDDISMEDSCREEN"
+  ],
+  "candidates": [
+   "https://mediascreen.de/wp-content/uploads/0001_0-ekwlzx.jpg"
+  ],
+  "page": "https://mediascreen.de/en/screenlifter-en/",
+  "source": "manufacturer",
+  "note": "Generic ScreenLifter gallery image from manufacturer; exact size model not identified, verify visually"
  },
  {
   "key": "Midas | DL 251",
@@ -3502,6 +4734,19 @@
   "page": "https://cuesale.com/product/midas-dl251-stage-box/",
   "source": "other",
   "note": "Used-gear dealer photos (real unit, maybe not white background)"
+ },
+ {
+  "key": "Midas | PRO X",
+  "title": "Midas PRO X",
+  "items": [
+   "AUDDIGMIDPROX"
+  ],
+  "candidates": [
+   "https://dt7v1i9vyp3mf.cloudfront.net/styles/news_large/s3/imagelibrary/r/resized-for-web_10-3lpZRtGRe8aero4_G.gdNFFjs_QQuZP_.jpg"
+  ],
+  "page": "https://www.soundonsound.com/node/4906391",
+  "source": "other",
+  "note": "Sound On Sound news image; verify background"
  },
  {
   "key": "NEXT | Deck 0,1 m",
@@ -5507,6 +6752,34 @@
   "note": "Adjustable stairs 40/75 + stair handrail (separate images)"
  },
  {
+  "key": "Netgear | GS110TP - 8-Ports PoE",
+  "title": "Netgear GS110TP - 8-Ports PoE",
+  "items": [
+   "VIDITNETGS110T"
+  ],
+  "candidates": [
+   "https://www.provu.co.uk/products/netgear/GS110TP/GS110TP-large.jpg",
+   "https://www.provu.co.uk/products/netgear/GS110TP/GS110TP-2-large.jpg"
+  ],
+  "page": "https://www.provu.co.uk/netgear-gs110tp.html",
+  "source": "distributor",
+  "note": "exact model"
+ },
+ {
+  "key": "Netgear | GS724T-400EUS - 1GB - SFP",
+  "title": "Netgear GS724T-400EUS - 1GB - SFP",
+  "items": [
+   "VIDITNETGS724T"
+  ],
+  "candidates": [
+   "https://sourceit.com.sg/cdn/shop/files/netgear-gs724t_1024x1024@2x.jpg?v=1790399465",
+   "https://sourceit.com.sg/cdn/shop/files/netgear-gs724t-2_1024x1024@2x.jpg?v=1790503860"
+  ],
+  "page": "https://sourceit.com.sg/products/netgear-24-port-gigabit-ethernet-smart-managed-pro-switch-gs724t-400eus",
+  "source": "distributor",
+  "note": "GS724T-400EUS"
+ },
+ {
   "key": "Netgear | M4250-10G2XF - 1GB PoE++ - 1GB - SFP+ - 720W max",
   "title": "Netgear M4250-10G2XF - 1GB PoE++ - 1GB - SFP+ - 720W max",
   "items": [
@@ -5519,6 +6792,20 @@
   "page": "https://avlgear.com/collections/network-switches/products/netgear-m4250-10g2xf-poe-av-network-switch",
   "source": "other",
   "note": "M4250-10G2XF-PoE++ (GSM4212UX) from AV retailer"
+ },
+ {
+  "key": "Netgear | M4250-16XF - SFP+ to RJ45 10GB - SFP+ to LC MM 10GB",
+  "title": "Netgear M4250-16XF - SFP+ to RJ45 10GB - SFP+ to LC MM 10GB",
+  "items": [
+   "VIDITNETVIITM425016XF"
+  ],
+  "candidates": [
+   "https://sourceit.com.sg/cdn/shop/files/netgear-xsm4216f_1024x1024@2x.png?v=1790418108",
+   "https://sourceit.com.sg/cdn/shop/files/netgear-xsm4216f-2_1024x1024@2x.jpg?v=1790514695"
+  ],
+  "page": "https://sourceit.com.sg/products/netgear-av-line-m4250-16xf-managed-switch-xsm4216f-100ajs",
+  "source": "distributor",
+  "note": "XSM4216F switch only, SFP modules not shown"
  },
  {
   "key": "Netgear | M4250-26G4F - 1GB PoE++ - 1GB - SFP - 1440W max",
@@ -5546,6 +6833,20 @@
   "page": "https://www.neumann.com/en-us/products/microphones/kk-104-s",
   "source": "manufacturer",
   "note": "Served as webp via format param"
+ },
+ {
+  "key": "Neumann | KK 105-S condenser capsule for SKM5200",
+  "title": "Neumann KK 105-S condenser capsule for SKM5200",
+  "items": [
+   "AUDWIRNEUKK105S"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/KK-105-S-bk_Neumann-Microphone_Head_M.png/Zz1iZThlNTI0MGU3YWExMWYwYTg2NmNlM2Q3NWM0MGYwNw==?width=730&format=webp&quality=80",
+   "https://assets.sennheiser.com/assets/KK-105-S-bk-with-SKM-5200_Neumann-Sennheiser_G.jpg/Zz0zMTBlYTE1Y2U3YzUxMWYwYWE5OGVhNTViNWQyZmI4Ng==?width=730&format=webp&quality=80"
+  ],
+  "page": "https://www.neumann.com/en-at/products/microphones/kk-105-s",
+  "source": "manufacturer",
+  "note": "Official Neumann images; second shows capsule on SKM 5200"
  },
  {
   "key": "Neumann | KM184, KM185",
@@ -5617,6 +6918,33 @@
   "note": "Thomann"
  },
  {
+  "key": "Panasonic | 4K Camcorder - AG-CX350KEJ",
+  "title": "Panasonic 4K Camcorder - AG-CX350KEJ",
+  "items": [
+   "VIDPROPAN4KCAMC"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/PCAGCX350.jpg"
+  ],
+  "page": "https://www.adorama.com/pcagcx350.html",
+  "source": "distributor",
+  "note": "AG-CX350 (US SKU, same camera)"
+ },
+ {
+  "key": "Panasonic | 4K Camera + CCU + RCP + 9\"Viewfinder AK-UC4000 / AK-UCU600ESJ / AK-HRP1010 / AK-HVF100GJ / AK-NP600G",
+  "title": "Panasonic 4K Camera + CCU + RCP + 9\"Viewfinder AK-UC4000 / AK-UCU600ESJ / AK-HRP1010 / AK-HVF100GJ / AK-NP600G",
+  "items": [
+   "VIDPROPAN4KCAME"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2018-04/uc4000_slant_high.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2018-04/uc4000_image01_high.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/products/broadcast-proav/ak-uc4000",
+  "source": "manufacturer",
+  "note": "AK-UC4000 camera head (main device)"
+ },
+ {
   "key": "Panasonic | AV-HS6000 multiformat HD mixer",
   "title": "Panasonic AV-HS6000 multiformat HD mixer",
   "items": [
@@ -5629,6 +6957,20 @@
   "page": "https://eu.connect.panasonic.com/gb/en/broadcast-proav/av-hs6000",
   "source": "manufacturer",
   "note": "Control panel front view"
+ },
+ {
+  "key": "Panasonic | AV-LBP17 remote control panel",
+  "title": "Panasonic AV-LBP17 remote control panel",
+  "items": [
+   "VIDPROPANAVLBP1"
+  ],
+  "candidates": [
+   "https://www.scan.co.uk/images/products/xlarge/3787952-xl-a.jpg",
+   "https://www.scan.co.uk/images/products-extra/ProVideo/panasonic/lbp17snap/main.png"
+  ],
+  "page": "https://www.scan.co.uk/products/panasonic-lbp17-snap-lawo-aux-panel-17-lcd-buttons-rgb-backlight-ethenet-1ru",
+  "source": "distributor",
+  "note": "Panasonic LBP17-SNAP Lawo aux panel"
  },
  {
   "key": "Panasonic | AW-RP150",
@@ -6165,6 +7507,33 @@
   "note": null
  },
  {
+  "key": "Panasonic | TH-43EQ2W 43\" - 4K",
+  "title": "Panasonic TH-43EQ2W 43\" - 4K",
+  "items": [
+   "VIDDISPANTH43EQ"
+  ],
+  "candidates": [
+   "https://creationnetworks.net/cdn/shop/files/panasonic-th-43eq2w-43-4k-uhd-500cdm2-sdm-led-lcd-display-creation-networks-47603.jpg?v=1757915487&width=1500",
+   "https://creationnetworks.net/cdn/shop/files/panasonic-th-43eq2w-43-4k-uhd-500cdm2-sdm-led-lcd-display-creation-networks-94780.webp?v=1757915488&width=1500"
+  ],
+  "page": "https://creationnetworks.net/products/panasonic-th-43eq2w-43-4k-uhd-500cd-m2-sdm-led-lcd-display",
+  "source": "distributor",
+  "note": "US reseller gallery, exact model"
+ },
+ {
+  "key": "Panasonic | TH-55EQ2W 55\" - 4K",
+  "title": "Panasonic TH-55EQ2W 55\" - 4K",
+  "items": [
+   "VIDDISPANTH55EQ"
+  ],
+  "candidates": [
+   "https://www.fullcompass.com/common/products/lgr/493341.jpg?mmr=230"
+  ],
+  "page": "https://www.fullcompass.com/prod/628513-panasonic-th-55eq2w-eq2-series-55-4k-digital-signage-display",
+  "source": "distributor",
+  "note": "Only image on page, image path relative (absolutized); verify it shows the display"
+ },
+ {
   "key": "Panasonic | TH-65EQ2W 65\" - 4K",
   "title": "Panasonic TH-65EQ2W 65\" - 4K",
   "items": [
@@ -6176,6 +7545,20 @@
   "page": "https://creationnetworks.net/products/panasonic-th-65eq2w-65-4k-uhd-500cd-m2-sdm-led-lcd-display",
   "source": "other",
   "note": "EQ2 series main image from retailer"
+ },
+ {
+  "key": "Panasonic | TH-75EQ2W 75\" - 4K",
+  "title": "Panasonic TH-75EQ2W 75\" - 4K",
+  "items": [
+   "VIDDISPANTH75EQ"
+  ],
+  "candidates": [
+   "https://store.midwich.com/media/image/gallery/PAN75EQ2-2.jpg",
+   "https://store.midwich.com/media/image/gallery/PAN55EQ2-2.jpg"
+  ],
+  "page": "https://store.midwich.com/products/details/PAN75EQ2",
+  "source": "distributor",
+  "note": "Midwich gallery images"
  },
  {
   "key": "Panasonic | TH-86EQ2W 86\" - 4K",
@@ -6263,6 +7646,62 @@
   "note": "Showtec UK shop"
  },
  {
+  "key": "Purelink | HDMI 2.0 - 1 In to 4 Out",
+  "title": "Purelink HDMI 2.0 - 1 In to 4 Out",
+  "items": [
+   "VIDSIGPURVISPDAHDMI4K"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_58/587374/18984193_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/587374.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/purelink_puretools_pt_sp_hd14_48g.htm",
+  "source": "distributor",
+  "note": "PureTools PT-SP-HD14-48G 1x4 splitter (HDMI 2.1 48G) - close model, exact CLUK model unknown"
+ },
+ {
+  "key": "QSC | TouchMix-16",
+  "title": "QSC TouchMix-16",
+  "items": [
+   "AUDDIGQSCDESKQSTM16"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/QSC-TOUCHMIX-16.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/QSC-TOUCHMIX-16.JPG"
+  ],
+  "page": "https://www.markertek.com/product/qsc-touchmix-16/qsc-touchmix-16-20-channel-digital-audio-mixer-with-12-mic-4-mic-line-inputs",
+  "source": "distributor",
+  "note": "exact model"
+ },
+ {
+  "key": "QSC | TouchMix-8",
+  "title": "QSC TouchMix-8",
+  "items": [
+   "AUDDIGQSCDESKQSTM8"
+  ],
+  "candidates": [
+   "https://www.fullcompass.com/common/products/original/191122.jpg",
+   "https://www.fullcompass.com/common/products/original/191123.jpg"
+  ],
+  "page": "https://www.fullcompass.com/prod/257451-qsc-touchmix-8-8-channel-compact-digital-mixer",
+  "source": "distributor",
+  "note": "Full Compass product images"
+ },
+ {
+  "key": "RME | Fireface 802 Audio interface USB/Firewire",
+  "title": "RME Fireface 802 Audio interface USB/Firewire",
+  "items": [
+   "VIDSIGRMEFIREFA"
+  ],
+  "candidates": [
+   "https://www.rme-usa.com/files/uploads/RME-Products/External/Fireface-802.png",
+   "https://www.rme-usa.com/files/uploads/RME-Products/External/Fireface-802-C.png"
+  ],
+  "page": "https://rme-audio.de/fireface-802.html",
+  "source": "manufacturer",
+  "note": "front + connectivity view"
+ },
+ {
   "key": "Radial | USB Pro Stereo D.I. for USB source",
   "title": "Radial USB Pro Stereo D.I. for USB source",
   "items": [
@@ -6277,6 +7716,19 @@
   "note": "Thomann"
  },
  {
+  "key": "Real | FX DF50 - oil cracker incl. oil",
+  "title": "Real FX DF50 - oil cracker incl. oil",
+  "items": [
+   "LIGSMOREAFXDF50"
+  ],
+  "candidates": [
+   "https://img.buildful.com/data/s3.us-east-1.wasabisys.com/web-us/4/catalog/product/125/200x.jpg"
+  ],
+  "page": "https://www.reelefx.com/product.125",
+  "source": "manufacturer",
+  "note": "Reel EFX DF-50 diffusion hazer, only 200px image found on manufacturer site"
+ },
+ {
   "key": "Robert | Juliat 10 - 25° - 4 Knives",
   "title": "Robert Juliat 10 - 25° - 4 Knives",
   "items": [
@@ -6289,6 +7741,19 @@
   "page": "https://www.robertjuliat.com/profilespots/600SX.html",
   "source": "manufacturer",
   "note": "Exact model unclear; 600SX series (611SX is 11-26°, only small image) - 614SX HD shown as close lookalike"
+ },
+ {
+  "key": "Robert | Juliat 15 - 40° - 4 Knives",
+  "title": "Robert Juliat 15 - 40° - 4 Knives",
+  "items": [
+   "LIGPROROBLIPR714SX2"
+  ],
+  "candidates": [
+   "https://www.10kused.com/wp-content/uploads/2020/04/10Kused-Robert-Juliat-614SX.jpg"
+  ],
+  "page": "https://www.10kused.com/?p=382722",
+  "source": "other",
+  "note": "close model: RJ 614SX profile (used-gear photo); exact may be 714SX 15-40°"
  },
  {
   "key": "Robert | Juliat Arthur 1014LT - 800W",
@@ -6318,6 +7783,19 @@
   "note": "Cyrano 1015 HD image"
  },
  {
+  "key": "Robert | Juliat Flo - MSR 1 800 13-24°",
+  "title": "Robert Juliat Flo - MSR 1 800 13-24°",
+  "items": [
+   "LIGFOLROBLIFSFL"
+  ],
+  "candidates": [
+   "https://www.stagelightingstore.com/Images/Robert%20Juliat%20FPR1459003.Robert%20Juliat%20Followspots.jpg?resizeid=5&resizeh=1200&resizew=1200"
+  ],
+  "page": "https://www.stagelightingstore.com/Robert-Juliat-Flo-208V-1800W-MSR-13-24-Electronic-PSU-Followspot",
+  "source": "distributor",
+  "note": "Flo 1800W MSR 13-24 (US 208V version, same look)"
+ },
+ {
   "key": "Robert | Juliat Heloise - HMI 2 500 15-29°",
   "title": "Robert Juliat Heloise - HMI 2 500 15-29°",
   "items": [
@@ -6329,6 +7807,34 @@
   "page": "https://store.gl-events.com/en/event-solutions/audiovisual/lighting/traditional-projectors/robert-juliat-heloise-2500-w-follow-spotlight/p/576352",
   "source": "other",
   "note": "GL events rental store image"
+ },
+ {
+  "key": "Robert | Juliat Lancelot - HTI 4 000 2-5°",
+  "title": "Robert Juliat Lancelot - HTI 4 000 2-5°",
+  "items": [
+   "LIGLEDROBLIFSLA"
+  ],
+  "candidates": [
+   "https://www.stagelightingstore.com/Images/Robert%20Juliat%20FPR1021003.Robert%20Juliat%20Followspots.jpg?resizeid=5&resizeh=1200&resizew=1200",
+   "https://www.stagelightingstore.com/83821-thickbox_default/robert-juliat-lancelot-208v-4000w-hmi-2-5-electronic-psu-followspot.jpg"
+  ],
+  "page": "https://www.stagelightingstore.com/Robert-Juliat-Lancelot-208V-4000W-HMI-2-5-Electronic-PSU-Followspot",
+  "source": "distributor",
+  "note": "Lancelot 4000W 2-5° (US 208V version)"
+ },
+ {
+  "key": "Robert | Juliat Merlin v3 - HTI 2 500 3-12°",
+  "title": "Robert Juliat Merlin v3 - HTI 2 500 3-12°",
+  "items": [
+   "LIGFOLROBLIFSME"
+  ],
+  "candidates": [
+   "https://www.robertjuliat.com/images/PhotosHD_Products/PhotoWebHD_MERLIN_1515.png",
+   "https://www.robertjuliat.com/images/FB_Images/MERLIN_FB.jpg"
+  ],
+  "page": "https://www.robertjuliat.com/followspots/Merlin.html",
+  "source": "manufacturer",
+  "note": "Merlin 1515 2500W 3-12°"
  },
  {
   "key": "Robert | Juliat OZ - 600W",
@@ -6583,6 +8089,74 @@
   "note": null
  },
  {
+  "key": "Rosendahl | MIF4 LTC/MIDI Timecode interface",
+  "title": "Rosendahl MIF4 LTC/MIDI Timecode interface",
+  "items": [
+   "VIDSIGROSMIF4LT"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_25/258255/13834326_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/258255.jpg"
+  ],
+  "page": "https://www.thomann.fr/rosendahl_mif4.htm",
+  "source": "distributor",
+  "note": "Exact model"
+ },
+ {
+  "key": "Rosendahl | NanosyncHD",
+  "title": "Rosendahl NanosyncHD",
+  "items": [
+   "AUDCONROSNANOSY"
+  ],
+  "candidates": [
+   "https://www.fullcompass.com/common/products/lgr/360018.jpg",
+   "https://www.fullcompass.com/common/products/lgr/360019.jpg"
+  ],
+  "page": "https://www.fullcompass.com/prod/113400-rosendahl-nanosyncs-hd-video-hd-sync-and-word-clock-generator",
+  "source": "distributor",
+  "note": "nanosyncs HD"
+ },
+ {
+  "key": "Sachtler | System 25 EFP - tripod - spreader - dolly",
+  "title": "Sachtler System 25 EFP - tripod - spreader - dolly",
+  "items": [
+   "VIDPROSACVICATR25"
+  ],
+  "candidates": [
+   "https://i.visuals.co.uk/media/catalog/product/cache/65e0edc3f135ab5d41b7eea4808fc19d/p/6/p6044334_o00.jpg"
+  ],
+  "page": "https://www.visuals.co.uk/2514.html",
+  "source": "distributor",
+  "note": "System 25 EFP 2 D with dolly (2514)"
+ },
+ {
+  "key": "Sachtler | System Studio 25 - pedestal",
+  "title": "Sachtler System Studio 25 - pedestal",
+  "items": [
+   "VIDPROSACVICATR25C"
+  ],
+  "candidates": [
+   "https://www.studiodepot.com/media/catalog/product/1/4/14168.jpg?optimize=medium&bg-color=255%2C255%2C255&fit=bounds&height=521&width=521&canvas=521%3A521"
+  ],
+  "page": "https://www.studiodepot.com/sachtler-system-25-studo-2594.html",
+  "source": "distributor",
+  "note": "Sachtler System 25 Studio (2594)"
+ },
+ {
+  "key": "Samsung | PM43H 43\" - HD",
+  "title": "Samsung PM43H 43\" - HD",
+  "items": [
+   "VIDDISSAMPM43H4"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/SSGPM43H_1.jpg",
+   "https://www.adorama.com/images/300x300/SSGPM43H_1.jpg"
+  ],
+  "page": "https://www.adorama.com/ssgpm43h.html",
+  "source": "distributor",
+  "note": "Exact model"
+ },
+ {
   "key": "Samsung | PM55F-BC capacitive touch 55”",
   "title": "Samsung PM55F-BC capacitive touch 55”",
   "items": [
@@ -6607,6 +8181,20 @@
   "page": "https://digitec.ch/en/s1/product/samsung-qm55c-3840-x-2160-pixels-55-digital-signage-36372744?tagIds=538",
   "source": "other",
   "note": "Samsung QM55C (digitec/galaxus); exact generation of QM55 unknown"
+ },
+ {
+  "key": "Samsung | QM65 65\" - 4K",
+  "title": "Samsung QM65 65\" - 4K",
+  "items": [
+   "VIDDISSAMQM6565"
+  ],
+  "candidates": [
+   "https://www.laptopsdirect.co.uk/Images/LH65QMREBGCXEN_1_Supersize.jpg?v=3",
+   "https://www.laptopsdirect.co.uk/Images/LH65QMREBGCXEN_2_Supersize.jpg?v=2"
+  ],
+  "page": "https://www.laptopsdirect.co.uk/samsung-qm65r-65-uhd-4k-large-format-display-lh65qmrebgcxen/version.asp",
+  "source": "distributor",
+  "note": "QM65R (LH65QMREBGCXEN)"
  },
  {
   "key": "Samsung | QM75 75\" - 4K",
@@ -6634,6 +8222,49 @@
   "page": "https://www.samsung.com/ae/smart-signage/uhd-4k-signage/qm98t-b-98-inch-uhd-4k-500nit-ip5x-lh98qmtbpgcxue/",
   "source": "manufacturer",
   "note": "QM98T-B front view (exact generation unknown; may be QM98F/QM98N)"
+ },
+ {
+  "key": "Samsung | U28E85R 28\" - 4K",
+  "title": "Samsung U28E85R 28\" - 4K",
+  "items": [
+   "VIDDISSAMU28E85"
+  ],
+  "candidates": [
+   "https://www.touchpoint.com.au/wp-content/uploads/2021/01/1501083185_IMG_840369.jpg",
+   "https://images.sabrepc.com/productimages/large/EXX-IMG-468291.jpg"
+  ],
+  "page": "https://www.touchpoint.com.au/shop/samsung-u28e850r-ue850-series-led-monitor-4k-28-lu28e85krs-go/",
+  "source": "distributor",
+  "note": "U28E850R (LU28E85KRS)"
+ },
+ {
+  "key": "Schoeps | MK2, MK4, MK41, MK5",
+  "title": "Schoeps MK2, MK4, MK41, MK5",
+  "items": [
+   "AUDMICSCHMK2MK4"
+  ],
+  "candidates": [
+   "https://schoeps.de/fileadmin/user_upload/user_upload/Produktbilder/Colette/Kapseln/Nieren/Schoeps_Microphones_capsule_MK4.jpg",
+   "https://schoeps.de/fileadmin/user_upload/user_upload/MK4_og.jpg"
+  ],
+  "page": "https://schoeps.de/en/products/colette/capsules/cardioids/mk-4.html",
+  "source": "manufacturer",
+  "note": "MK4 capsule representing the capsule set"
+ },
+ {
+  "key": "Sennheiser | A3700 omni-directional antenna 470 - 866 MHz",
+  "title": "Sennheiser A3700 omni-directional antenna 470 - 866 MHz",
+  "items": [
+   "AUDWIRSEN2XA370"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_23/234933/21438522_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_23/234933/21438542_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/234933.jpg"
+  ],
+  "page": "https://www.thomann.de/be/sennheiser_a_3700.htm",
+  "source": "distributor",
+  "note": "Thomann"
  },
  {
   "key": "Sennheiser | AB 9000 antenna booster 470 - 638 MHz",
@@ -6886,6 +8517,19 @@
   "note": "Assumed A 1031-U; only small thumbnail found"
  },
  {
+  "key": "Sennheiser | SK 9000 bodypack 470 - 558 / 550 - 638 MHz",
+  "title": "Sennheiser SK 9000 bodypack 470 - 558 / 550 - 638 MHz",
+  "items": [
+   "AUDWIRSENSK9000"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/DIGITAL_9000_SK_9000_Product_shot_cutout.png.png/Zz1mNGMzMWZmYWU3YWQxMWYwODA0ZmJlYjQzYzY2MTIyYQ==?width=1920&format=webp&quality=80"
+  ],
+  "page": "https://sennheiser.com/en-se/catalog/products/wireless-systems/sk-9000/sk-9000-a5-a8-504731",
+  "source": "manufacturer",
+  "note": "Official SK 9000 cutout"
+ },
+ {
   "key": "Sennheiser | SK5212-II bodypack 470 - 638 MHz",
   "title": "Sennheiser SK5212-II bodypack 470 - 638 MHz",
   "items": [
@@ -6910,6 +8554,33 @@
   "page": "https://creationnetworks.net/products/sennheiser-skm-9000-digital-handheld-wireless-microphone-transmitter-with-no-mic-capsule-no-battery-pack-a1-a4-470-to-558-mhz-black",
   "source": "distributor",
   "note": "Retailer image; verify"
+ },
+ {
+  "key": "Sennheiser | SKM5200-II BK handheld + KK105-S 470 - 638 MHz",
+  "title": "Sennheiser SKM5200-II BK handheld + KK105-S 470 - 638 MHz",
+  "items": [
+   "AUDWIRSENMIHFSESKM52KKL"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/SESKM52KIBKN.jpg",
+   "https://www.adorama.com/images/300x300/SESKM52KIBKN.jpg"
+  ],
+  "page": "https://www.adorama.com/seskm52kibkn.html",
+  "source": "distributor",
+  "note": "SKM 5200-II BK, band N (614-798 MHz) listing; same look, capsule may differ from KK105-S"
+ },
+ {
+  "key": "Sennheiser | SKM5200-II BK handheld + MD5235 470 - 638 MHz",
+  "title": "Sennheiser SKM5200-II BK handheld + MD5235 470 - 638 MHz",
+  "items": [
+   "AUDWIRSENMIHFSESKM52MDL"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/SESKM52KIBKN.jpg"
+  ],
+  "page": "https://www.adorama.com/seskm52kibkn.html",
+  "source": "distributor",
+  "note": "SKM 5200-II black (N band variant); same look"
  },
  {
   "key": "Sennheiser | SR2050 + EK2000 IEM + IE4 ears",
@@ -7034,6 +8705,19 @@
   "note": "Full Compass, AD4QUS (US variant, same unit)"
  },
  {
+  "key": "Shure | AD4Q quad receiver + spectrum manager & antennas 470 - 636 MHz",
+  "title": "Shure AD4Q quad receiver + spectrum manager & antennas 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUMIHFSHAD4QXA2"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/6fd/720/d4-/setcard/9fac1eac2df87b1e7ecdac443a200928.jpeg"
+  ],
+  "page": "https://shure.com/en-IN/products/wireless-systems/axient_digital/ad4q",
+  "source": "manufacturer",
+  "note": "AD4Q receiver only (main device)"
+ },
+ {
   "key": "Shure | AD610E showlink access point 470 - 960 MHz",
   "title": "Shure AD610E showlink access point 470 - 960 MHz",
   "items": [
@@ -7045,6 +8729,20 @@
   "page": "https://www.shure.com/en-US/products/accessories/ad610",
   "source": "manufacturer",
   "note": "Shure og:image (setcard size)"
+ },
+ {
+  "key": "Shure | AD651B talk switch for ADX2(FD)",
+  "title": "Shure AD651B talk switch for ADX2(FD)",
+  "items": [
+   "AUDWIRSHUAD651B"
+  ],
+  "candidates": [
+   "https://soundpro.com/cdn/shop/files/38177_Shure-AD651B-Axient-Digital-Talk-Switch.jpg?v=1768000434&width=1946",
+   "https://soundpro.com/cdn/shop/files/38177_ALT20_d9b1d993-77ff-43df-af02-a371f89ab7a0.jpg?v=1767995880&width=1946"
+  ],
+  "page": "https://soundpro.com/products/shure-ad651b",
+  "source": "distributor",
+  "note": "exact model"
  },
  {
   "key": "Shure | ADX1 bodypack transmitter 470 - 636 MHz",
@@ -7097,6 +8795,19 @@
   "page": "https://www.shure.com/en-US/products/accessories/rpw184",
   "source": "manufacturer",
   "note": "ADX2FD/B58 related-product thumbnail on RPW184 page"
+ },
+ {
+  "key": "Shure | AXT630 antenna distribution system + antenna 470 - 698 MHz",
+  "title": "Shure AXT630 antenna distribution system + antenna 470 - 698 MHz",
+  "items": [
+   "AUDWIRSHUAXT630"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/152977c3-cef5-4025-92a5-20ddc8549372.jpg?crop=center&height=1200&v=1737142187&width=1200"
+  ],
+  "page": "https://avlgear.com/collections/shure/products/shure-axt630-axient-antenna-distribution-system-470-698-mhz",
+  "source": "distributor",
+  "note": "AXT630 unit only (antennas not shown)"
  },
  {
   "key": "Shure | Beta 52A",
@@ -7207,6 +8918,33 @@
   "note": "Shure og:image"
  },
  {
+  "key": "Shure | Charging station for ADX1 - ADX2 - ADX2FD",
+  "title": "Shure Charging station for ADX1 - ADX2 - ADX2FD",
+  "items": [
+   "AUDWIRSHUMIHFSHADSBRC"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/1494118/6162202/db7ccf16/1767776354SBC240.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.co.uk/microphone-batteries-chargers/shure-sbc240",
+  "source": "distributor",
+  "note": "Shure SBC240 2-bay networked docking charger (assumed model; could be SBC840 8-bay)"
+ },
+ {
+  "key": "Shure | Charging station for ADX1M",
+  "title": "Shure Charging station for ADX1M",
+  "items": [
+   "AUDWIRSHUMIHFSHADSBRCM",
+   "AUDWIRSHUMIHFSHADSBC84M"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/726/28f/47-/setcard/23fd1441f3a7ca85078f7c7e8931a56d.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/SBC240",
+  "source": "manufacturer",
+  "note": "Shure SBC240 2-bay Axient Digital charger; page lists ADX1/ADX2, ADX1M not confirmed (close model)"
+ },
+ {
   "key": "Shure | Domed helical antenna 460 - 900 MHz",
   "title": "Shure Domed helical antenna 460 - 900 MHz",
   "items": [
@@ -7231,6 +8969,19 @@
   "page": "https://www.shure.com/en-US/products/microphones/ksm137",
   "source": "manufacturer",
   "note": "og:image from shure.com"
+ },
+ {
+  "key": "Shure | KSM8 capsule",
+  "title": "Shure KSM8 capsule",
+  "items": [
+   "AUDWIRSHUKSM8CA"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/f68/0d7/1c-/setcard/6d298dbb6e67af8b2e084e945a95b5c9.jpeg"
+  ],
+  "page": "https://www.shure.com/fr-BE/produits/accessoires/rpw174",
+  "source": "manufacturer",
+  "note": "RPW174 wireless KSM8 capsule, og:image"
  },
  {
   "key": "Shure | KSM8, KSM8 nickel",
@@ -7315,6 +9066,65 @@
   "note": "P10R+ bodypack only; SE215 not pictured"
  },
  {
+  "key": "Shure | P9HW + SE215 ears hard wired belt pack",
+  "title": "Shure P9HW + SE215 ears hard wired belt pack",
+  "items": [
+   "AUDINESHUP9HWSE"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/SH-P9HW.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/SH-P9HW.JPG"
+  ],
+  "page": "https://www.markertek.com/product/sh-p9hw/shure-p9hw-hardwired-bodypack-receiver",
+  "source": "distributor",
+  "note": "P9HW bodypack only, without SE215"
+ },
+ {
+  "key": "Shure | PA421 4 Ch. ant. combiner + antenna 470 - 865 MHz",
+  "title": "Shure PA421 4 Ch. ant. combiner + antenna 470 - 865 MHz",
+  "items": [
+   "AUDINESHUPA4214"
+  ],
+  "candidates": [
+   "https://soundpro.com/cdn/shop/files/18407_Shure-PA421B-Antenna-Combiner.jpg?v=1767912743&width=1946",
+   "https://soundpro.com/cdn/shop/files/18407_Shure-PA421B-Antenna-Combiner_1.jpg?v=1767912745&width=1946"
+  ],
+  "page": "https://soundpro.com/products/shure-pa421b",
+  "source": "distributor",
+  "note": "PA421B (current version of PA421), combiner only, no antenna"
+ },
+ {
+  "key": "Shure | PSM1000 + P10R + SE215 ears",
+  "title": "Shure PSM1000 + P10R + SE215 ears",
+  "items": [
+   "AUDINESHUSPSHPSM110E42",
+   "AUDINESHUSPSHPSM110E22",
+   "AUDINESHUPSM100"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/SH-PSM1000.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/SH-PSM1000.JPG",
+   "https://www.markertek.com/productImage/alternate-3/hi-res/SH-PSM1000.JPG"
+  ],
+  "page": "https://www.markertek.com/product/sh-psm1000/shure-psm-1000-dual-wireless-in-ear-personal-monitoring-system-g10-470-542mhz-frequency-rechargeable-li-ion-battery",
+  "source": "distributor",
+  "note": "PSM1000 system (P10T/P10R); earphones may differ from SE215"
+ },
+ {
+  "key": "Shure | PSM1000 + P10R+ + SE215 ears",
+  "title": "Shure PSM1000 + P10R+ + SE215 ears",
+  "items": [
+   "AUDINESHUSPSHPSM110E4",
+   "AUDINESHUSPSHPSM110E2"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/e0f/20e/c8-/setcard/444c5fc25519b1089084fd48fb0c1df1.jpeg"
+  ],
+  "page": "https://SHURE.COM/en-US/products/in-ear-monitoring/psm1000/p10t",
+  "source": "manufacturer",
+  "note": "Shure P10T PSM1000 transmitter main image (og setcard size); set also includes P10R+ and SE215"
+ },
+ {
   "key": "Shure | SM 57",
   "title": "Shure SM 57",
   "items": [
@@ -7355,6 +9165,20 @@
   "note": "og:image"
  },
  {
+  "key": "Shure | SM 87",
+  "title": "Shure SM 87",
+  "items": [
+   "AUDMICSHUSM87"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/4324/2103285/a2f0be17/600x600/1583932609Shure%20SM87A-1.jpg",
+   "https://static.bax-shop.es/image/product/4324/2103285/8560e375/1583932609Shure%20SM87A-1.jpg?key=og"
+  ],
+  "page": "https://bax-shop.co.uk/condenser-vocal-microphone/shure-sm87a-handheld-condenser-vocal-microphone",
+  "source": "distributor",
+  "note": "SM87A (current version of SM87)"
+ },
+ {
   "key": "Shure | SM58 with on/off switch",
   "title": "Shure SM58 with on/off switch",
   "items": [
@@ -7366,6 +9190,19 @@
   "page": "https://shure.com/en-gb/products/microphones/sm57",
   "source": "manufacturer",
   "note": "standard SM58 image (no switch visible); SM58S page not reached"
+ },
+ {
+  "key": "Shure | Spectrum manager",
+  "title": "Shure Spectrum manager",
+  "items": [
+   "AUDWIRSHUSPECTR"
+  ],
+  "candidates": [
+   "https://products.shure.com.cn/shure_product_db/product_main_images/files/4b0/ed8/48-/setcard/22656ca0e6861722cf3297d54b63519f.jpeg"
+  ],
+  "page": "https://shure.com.cn/en-US/products/accessories/axt600",
+  "source": "manufacturer",
+  "note": "AXT600 Axient spectrum manager"
  },
  {
   "key": "Shure | UA844 active antenna splitter + antenna 470 - 960 MHz",
@@ -7475,6 +9312,34 @@
   "note": "Markertek ULXD4Q (G57 band; same unit)"
  },
  {
+  "key": "Shure | ULXD4 single receiver",
+  "title": "Shure ULXD4 single receiver",
+  "items": [
+   "AUDWIRSHUULXD4S"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/c13a96be17d516bdbc82c29ad244bb8d_d5223f1f-5a3d-47d8-9165-46067720709b.jpg?v=1737394139&width=1214",
+   "https://avlgear.com/cdn/shop/files/f81d041c0c16bd144ecaf1417b450f53_0d792040-7c97-408b-b9de-62bcf397e1e0.jpg?v=1737394155&width=1214",
+   "https://avlgear.com/cdn/shop/files/21f61ffd729e5784832a0d142fc18463.jpg?v=1737394179&width=1214"
+  ],
+  "page": "https://avlgear.com/collections/shure/products/shure-ulxd4-g50-digital-networkable-wireless-receiver",
+  "source": "distributor",
+  "note": "ULXD4 G50 variant, US shop"
+ },
+ {
+  "key": "Shure | active directional antenna UA874E 470 - 790 MHz",
+  "title": "Shure active directional antenna UA874E 470 - 790 MHz",
+  "items": [
+   "AUDWIRSHU2XACTI"
+  ],
+  "candidates": [
+   "https://soundpro.com/cdn/shop/files/24417_Shure-UA874-Active-Directional-Antenna.jpg?v=1767990426&width=1946"
+  ],
+  "page": "https://soundpro.com/shure-ua874-active-directional-antenna",
+  "source": "distributor",
+  "note": "UA874 generic (band variant identical look)"
+ },
+ {
   "key": "ShurePA821 | 8 Ch. ant. combiner + antenna 470 - 865 MHz",
   "title": "ShurePA821 8 Ch. ant. combiner + antenna 470 - 865 MHz",
   "items": [
@@ -7486,6 +9351,19 @@
   "page": "https://www.shure.com/en-US/products/accessories/pa821a",
   "source": "manufacturer",
   "note": "PA821A (current version of PA821)"
+ },
+ {
+  "key": "TV | Logic LUM-242G 24\"4K/UHD HDR",
+  "title": "TV Logic LUM-242G 24\"4K/UHD HDR",
+  "items": [
+   "VIDPRETVLOGICL"
+  ],
+  "candidates": [
+   "https://i.visuals.co.uk/media/catalog/product/cache/65e0edc3f135ab5d41b7eea4808fc19d/0/1/01_lum-242g_1_1.jpg"
+  ],
+  "page": "https://www.visuals.co.uk/lum-242g.html",
+  "source": "distributor",
+  "note": "exact model"
  },
  {
   "key": "Tascam | SS-CDR1",
@@ -7531,6 +9409,19 @@
   "note": "Thomann"
  },
  {
+  "key": "VMB | TE-074 - max. 250 kg",
+  "title": "VMB TE-074 - max. 250 kg",
+  "items": [
+   "RIGSTAVMBTE074M"
+  ],
+  "candidates": [
+   "https://www.simplysoundandlighting.co.uk/cdn/shop/files/c86f55fc-ebef-4bee-bc3b-0251f530102d.jpg?v=1718882795"
+  ],
+  "page": "https://www.simplysoundandlighting.co.uk/products/vmb-te-074b-telescopic-lifter-5-35m-250kg",
+  "source": "distributor",
+  "note": "VMB TE-074B (black version) 5.35 m / 250 kg, 1600px"
+ },
+ {
   "key": "Verlinde | SR10 1000KG - chain 20 m",
   "title": "Verlinde SR10 1000KG - chain 20 m",
   "items": [
@@ -7542,6 +9433,34 @@
   "page": "https://www.10kused.com/product/verlinde-stagemaker-sr-10-d8-1000kg-40m-chain-vl-255726230751/",
   "source": "other",
   "note": "Generic Stagemaker SR image from used dealer"
+ },
+ {
+  "key": "Westone | UM PRO 20 high quality earphone",
+  "title": "Westone UM PRO 20 high quality earphone",
+  "items": [
+   "AUDINEWESUMPRO2"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/52815f14-b447-4b8e-b88a-58084be0c9bd.jpg?v=1737409456&width=1214"
+  ],
+  "page": "https://avlgear.com/collections/westone/products/westone-78488-um-pro20-smoke-dual-driver-stereo-earphone",
+  "source": "distributor",
+  "note": "UM Pro 20 smoke"
+ },
+ {
+  "key": "Wohler | AMP1-8-M 8Ch Dual input SDI audio monitor",
+  "title": "Wohler AMP1-8-M 8Ch Dual input SDI audio monitor",
+  "items": [
+   "VIDSIGWOHAMP18M"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/WOH-AMP1-8-M.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/WOH-AMP1-8-M.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/WOH-AMP1-8-M.JPG"
+  ],
+  "page": "https://www.markertek.com/product/woh-amp1-8-m/wohler-amp1-8-m-8-channel-dual-input-3g-hd-sd-sdi-audio-monitor-1ru",
+  "source": "distributor",
+  "note": "Exact model, Markertek"
  },
  {
   "key": "Yamaha | CL1",
@@ -7595,6 +9514,21 @@
   "page": "https://usa.yamaha.com/products/proaudio/mixers/rivage_pm/components.html",
   "source": "manufacturer",
   "note": "CSD-R7 surface; HY144-D card image: https://usa.yamaha.com/files/HY144-D_c35498333d40a11222ef70b56d52c8f5.jpg?impolicy=resize&imwid=4096&imhei=4096"
+ },
+ {
+  "key": "Yamaha | MG06",
+  "title": "Yamaha MG06",
+  "items": [
+   "AUDANAYAMMG06"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_33/333782/11971217_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/333782.jpg",
+   "https://thumbs.static-thomann.de/thumb//bdbmagic/pics/prod/333782.jpg"
+  ],
+  "page": "https://thomann.pl/yamaha_mg06.htm",
+  "source": "distributor",
+  "note": "Exact model"
  },
  {
   "key": "Yamaha | MG12XU",
