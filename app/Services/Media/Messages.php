@@ -103,7 +103,8 @@ class Messages
         $done = 0;
         foreach (Message::where('status', 'sending')->get() as $m) {
             foreach ($m->sends()->where('status', 'queued')->orderBy('id')->limit(max(0, $limit - $done))->get() as $s) {
-                $ok = SafeMail::notify(Notification::route('mail', $s->email), self::mail($m, $s->locale, $s));
+                $first = $s->contact?->first_name ?? $s->member?->first_name;
+                $ok = SafeMail::notify(Notification::route('mail', $s->email), self::mail($m, $s->locale, $s, ['name' => $first]));
                 $s->update(['status' => $ok ? 'sent' : 'failed', 'sent_at' => now()]);
                 $done++;
             }
@@ -119,9 +120,27 @@ class Messages
         return $done;
     }
 
+    /**
+     * Fill {name} (any capitals) in a subject or text. Without a first name it
+     * disappears neatly: "Hi {name}," becomes "Hi,".
+     */
+    public static function fill(string $text, array $vars): string
+    {
+        $out = preg_replace_callback('/\s*\{\s*(\w+)\s*\}/u', function ($m) use ($vars) {
+            $v = trim((string) ($vars[strtolower($m[1])] ?? ''));
+
+            return $v === '' ? '' : (preg_match('/^\s/', $m[0]) ? ' ' : '').$v;
+        }, $text);
+        // Tidy what an empty name leaves behind: "birthday,!" → "birthday!", ", our deals" → "our deals".
+        $out = preg_replace('/,\s*([!?.])/u', '$1', $out);
+        $out = preg_replace_callback('/^\s*,\s*(.)/mu', fn ($m) => mb_strtoupper($m[1]), $out);
+
+        return trim($out);
+    }
+
     public static function mail(Message $m, string $locale, ?MessageSend $s = null, array $vars = []): MessageMail
     {
-        $repl = fn (string $t) => strtr($t, collect($vars)->mapWithKeys(fn ($v, $k) => ['{'.$k.'}' => $v])->all());
+        $repl = fn (string $t) => self::fill($t, $vars);
         $files = [];
         $pdfLink = null;
         if ($m->pdf_path && Storage::disk('local')->exists($m->pdf_path)) {

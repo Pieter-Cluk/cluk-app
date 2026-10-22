@@ -101,7 +101,10 @@ class MessagesTest extends TestCase
         $this->assertSame(3, Messages::work(), 'Jo, Luc and the member; Ana unsubscribed from promotions');
         $this->assertSame('sent', $m->fresh()->status);
         $this->assertSame(0, Messages::work());
-        Notification::assertSentTo(new AnonymousNotifiable, MessageMail::class, fn ($n, $c, $to) => $to->routes['mail'] === 'luc@demo.example' && $n->subject === 'Notre newsletter');
+        Notification::assertSentTo(new AnonymousNotifiable, MessageMail::class, fn ($n, $c, $to) => $to->routes['mail'] === 'luc@demo.example' && $n->subject === 'Notre newsletter' && $n->body === 'Bonjour Luc, lisez les nouvelles.');
+        $this->assertSame('Happy birthday!', Messages::fill('Happy birthday, {NAME}!', []));
+        $this->assertSame('Jo, our deals for you', Messages::fill('{Name}, our deals for you', ['name' => 'Jo']));
+        $this->assertSame('Our deals', Messages::fill('{name}, our deals', []));
     }
 
     public function test_birthday_card_with_picture_and_the_banner_on_quotes(): void
