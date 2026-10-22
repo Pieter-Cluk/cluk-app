@@ -4,7 +4,9 @@ namespace App\Services\Crm;
 
 use App\Models\AuditLog;
 use App\Models\Contact;
+use App\Models\Media\Message;
 use App\Notifications\Confirmation;
+use App\Services\Media\Messages;
 use App\Support\InLocale;
 use App\Support\SafeMail;
 use Illuminate\Support\Carbon;
@@ -30,12 +32,15 @@ class Birthdays
             }
             $lang = $c->language ?: ($c->companies->first()?->language ?: 'en');
             $lang = array_key_exists($lang, config('cluk.locales')) ? $lang : 'en';
-            $mail = InLocale::run($lang, fn () => new Confirmation(
-                subject: __('companies.birthday.subject', ['name' => $c->first_name]),
-                greeting: __('companies.birthday.greeting', ['name' => $c->first_name]),
-                intro: [__('companies.birthday.text')],
-                next: [__('companies.birthday.sign')],
-            ))->locale($lang);
+            // The birthday card made in Media › Messages (picture + text), else the standard text.
+            $mail = ($card = Message::inUse('birthday', $today))
+                ? Messages::mail($card, $lang, null, ['name' => $c->first_name])
+                : InLocale::run($lang, fn () => new Confirmation(
+                    subject: __('companies.birthday.subject', ['name' => $c->first_name]),
+                    greeting: __('companies.birthday.greeting', ['name' => $c->first_name]),
+                    intro: [__('companies.birthday.text')],
+                    next: [__('companies.birthday.sign')],
+                ))->locale($lang);
             if (SafeMail::notify(Notification::route('mail', $c->email), $mail)) {
                 $c->forceFill(['birthday_sent_year' => $today->year])->save();
                 AuditLog::record('crm.birthday_sent', $c, ['to' => $c->email]);

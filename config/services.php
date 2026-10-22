@@ -44,6 +44,12 @@ return [
         'tenant' => env('MICROSOFT_TENANT_ID', 'organizations'),
     ],
 
+    // Translating messages (Media › Messages) with Claude.
+    'anthropic' => [
+        'key' => env('ANTHROPIC_API_KEY'),
+        'model' => env('ANTHROPIC_MODEL', 'claude-haiku-5-5'),
+    ],
+
     // Website forms post requests to /intake with this token (header X-Intake-Token).
     'intake' => [
         'token' => env('INTAKE_TOKEN'),

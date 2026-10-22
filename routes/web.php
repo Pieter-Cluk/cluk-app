@@ -18,6 +18,8 @@ use App\Http\Controllers\Factory\FactoryPublicController;
 use App\Http\Controllers\Factory\FactoryTaskController;
 use App\Http\Controllers\Finance\PreInvoiceController;
 use App\Http\Controllers\ManagementController;
+use App\Http\Controllers\Media\MessageController;
+use App\Http\Controllers\Media\MessagePublicController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\ProductSales\ItemController as SalesItemController;
@@ -77,6 +79,13 @@ Route::prefix('sq/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('
 });
 // A sales item PDF from a link in an email (signed, 30 days).
 Route::get('/d/{doc}', [SalesItemController::class, 'publicDoc'])->whereNumber('doc')->middleware('signed')->name('psales.doc.public');
+
+// Media › Messages: what people who got a mail can open (signed links).
+Route::middleware(['signed', 'throttle:120,1'])->group(function () {
+    Route::get('/m/{message}/image', [MessagePublicController::class, 'image'])->whereNumber('message')->name('messages.public.image');
+    Route::get('/m/{message}/pdf', [MessagePublicController::class, 'pdf'])->whereNumber('message')->name('messages.public.pdf');
+    Route::match(['get', 'post'], '/unsubscribe/{list}/{send}', [MessagePublicController::class, 'unsubscribe'])->whereIn('list', ['newsletter', 'promo'])->whereNumber('send')->name('messages.unsubscribe');
+});
 
 Route::prefix('q/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {
     Route::get('/', [QuotePublicController::class, 'show'])->name('quote.public');
@@ -146,6 +155,23 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
 Route::middleware('auth:web')->group(function () {
     Route::post('/logout', [MicrosoftLoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    // Media › Messages: birthday card, newsletters, promotions, banner on quotes.
+    Route::prefix('media/messages')->middleware('nav:messages')->group(function () {
+        Route::get('/', [MessageController::class, 'index'])->name('messages.index');
+        Route::get('/{message}', [MessageController::class, 'edit'])->whereNumber('message')->name('messages.edit');
+        Route::middleware('level:sales,2')->group(function () {
+            Route::get('/new', [MessageController::class, 'create'])->name('messages.create');
+            Route::post('/', [MessageController::class, 'store'])->name('messages.store');
+            Route::put('/{message}', [MessageController::class, 'update'])->whereNumber('message')->name('messages.update');
+            Route::post('/{message}/translate', [MessageController::class, 'translate'])->whereNumber('message')->name('messages.translate');
+            Route::post('/{message}/test', [MessageController::class, 'test'])->whereNumber('message')->middleware('throttle:10,1')->name('messages.test');
+            Route::post('/{message}/send', [MessageController::class, 'send'])->whereNumber('message')->name('messages.send');
+            Route::post('/{message}/schedule', [MessageController::class, 'schedule'])->whereNumber('message')->name('messages.schedule');
+            Route::post('/{message}/unschedule', [MessageController::class, 'unschedule'])->whereNumber('message')->name('messages.unschedule');
+            Route::post('/{message}/toggle', [MessageController::class, 'toggle'])->whereNumber('message')->name('messages.toggle');
+            Route::delete('/{message}', [MessageController::class, 'destroy'])->whereNumber('message')->name('messages.destroy');
+        });
+    });
     Route::get('/management', ManagementController::class)->middleware('nav:management')->name('management');
 
     // Pictures (served only to signed-in staff).
@@ -521,7 +547,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

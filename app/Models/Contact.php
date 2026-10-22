@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /** A person at a customer or supplier. Can be linked to more than one company. */
-#[Fillable(['first_name', 'last_name', 'email', 'phone', 'mobile', 'language', 'newsletter', 'notes', 'birth_date', 'birthday_card', 'birthday_sent_year'])]
+#[Fillable(['first_name', 'last_name', 'email', 'phone', 'mobile', 'language', 'newsletter', 'notes', 'birth_date', 'birthday_card', 'birthday_sent_year', 'promo_opt_out'])]
 class Contact extends Model
 {
     use HasFactory;
 
     protected function casts(): array
     {
-        return ['newsletter' => 'boolean', 'newsletter_changed_at' => 'datetime', 'birth_date' => 'date', 'birthday_card' => 'boolean', 'birthday_sent_year' => 'integer'];
+        return ['newsletter' => 'boolean', 'newsletter_changed_at' => 'datetime', 'birth_date' => 'date', 'birthday_card' => 'boolean', 'birthday_sent_year' => 'integer', 'promo_opt_out' => 'boolean'];
     }
 
     public function companies(): BelongsToMany

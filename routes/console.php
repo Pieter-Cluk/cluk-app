@@ -2,6 +2,7 @@
 
 use App\Models\Role;
 use App\Services\Crm\Birthdays;
+use App\Services\Media\Messages;
 use App\Services\Vies;
 use App\Services\ViesRecheck;
 use Illuminate\Foundation\Inspiring;
@@ -51,3 +52,9 @@ Artisan::command('cluk:vies-recheck', function () {
     $this->info(ViesRecheck::run(app(Vies::class)).' VAT number(s) checked again.');
 })->purpose('Check VAT numbers again that VIES could not answer for');
 Schedule::command('cluk:vies-recheck')->hourly()->withoutOverlapping();
+
+// Newsletters and promotions: start scheduled ones and send the next batch of mails.
+Artisan::command('cluk:messages', function () {
+    $this->info(Messages::work(50).' mail(s) sent.');
+})->purpose('Send scheduled newsletters and promotions');
+Schedule::command('cluk:messages')->everyMinute()->withoutOverlapping();

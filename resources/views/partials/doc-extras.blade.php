@@ -8,3 +8,6 @@
 @if ($dseason)
     <p class="doc-season">{{ $dseason }}</p>
 @endif
+@if (in_array($type, ['R-QUO', 'S-QUO'], true) && ($dbanner = \App\Models\Media\Message::inUse('banner')))
+    @include('media.messages._banner', ['b' => $dbanner, 'loc' => $loc])
+@endif

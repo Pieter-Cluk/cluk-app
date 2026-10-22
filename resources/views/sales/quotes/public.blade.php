@@ -53,6 +53,7 @@
         @if ($quote->notes)<p class="muted small">{!! nl2br(e($quote->notes)) !!}</p>@endif
         <p><a href="{{ route('quote.public.print', $quote->token) }}" target="_blank" rel="noopener">{{ __('quotes.public.print') }}</a></p>
     </section>
+    @if ($pbanner = \App\Models\Media\Message::inUse('banner'))@include('media.messages._banner', ['b' => $pbanner, 'loc' => app()->getLocale()])@endif
 
     @if ($open && ! $answered)
         @if ($errors->any())<div class="flash flash-err" role="alert">@foreach ($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div>@endif

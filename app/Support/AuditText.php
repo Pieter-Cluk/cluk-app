@@ -10,6 +10,7 @@ use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
 use App\Models\Factory\Booking;
 use App\Models\Finance\PreInvoice;
+use App\Models\Media\Message;
 use App\Models\Member;
 use App\Models\ProductSales\SalesItem;
 use App\Models\ProductSales\SalesQuote;
@@ -41,6 +42,7 @@ class AuditText
         $subject = $log->subject;
 
         return match (true) {
+            $subject instanceof Message => __('messages.kinds.'.$subject->kind).' · '.$subject->title,
             $subject instanceof User => $subject->name,
             $subject instanceof Role => $subject->name,
             $subject instanceof VatRate => $subject->name,
