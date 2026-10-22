@@ -61,14 +61,17 @@
                         <x-avatar :who="$c"/>
                         <div class="contact-main">
                             <b>{{ $c->name }}</b>
-                            <small class="muted">{{ $c->pivot->job_title }}@if ($c->pivot->is_main) · {{ __('companies.contacts.main') }}@endif @if ($c->pivot->is_billing) · {{ __('companies.contacts.billing') }}@endif</small>
+                            <small class="muted">{{ $c->pivot->job_title }}</small>
                             <div class="contact-lines">
                                 @if ($c->mobile)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $c->mobile) }}">{{ $c->mobile }}</a>@endif
                                 @if ($c->phone)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $c->phone) }}">{{ $c->phone }}</a>@endif
                                 @if ($c->email)<a href="mailto:{{ $c->email }}">{{ $c->email }}</a>@endif
                             </div>
                             <div class="badges">
+                                @if ($c->pivot->is_main)<span class="pill pill-ok">★ {{ __('companies.contacts.main') }}</span>@endif
+                                @if ($c->pivot->is_billing)<span class="pill pill-ok">€ {{ __('companies.contacts.billing') }}</span>@endif
                                 <span @class(['pill', 'pill-ok' => $c->newsletter, 'pill-off' => ! $c->newsletter])>{{ __('companies.contacts.newsletter') }}: {{ __($c->newsletter ? 'companies.yes' : 'companies.no') }}</span>
+                                <span @class(['pill', 'pill-ok' => $c->birthday_card && $c->birth_date, 'pill-off' => ! ($c->birthday_card && $c->birth_date)]) title="{{ __('companies.contacts.birthday_card') }}">🎂 {{ $c->birth_date ? $c->birth_date->locale(app()->getLocale())->translatedFormat('j F') : __('companies.contacts.no_birth_date') }}@if ($c->birth_date) · {{ __('companies.contacts.card') }}: {{ __($c->birthday_card ? 'companies.yes' : 'companies.no') }}@endif</span>
                                 @foreach ($c->companies->reject(fn ($o) => $o->id === $company->id) as $other)
                                     <a class="pill pill-info" href="{{ route('companies.show', $other) }}">{{ __('companies.contacts.also_at', ['name' => $other->name]) }}</a>
                                 @endforeach

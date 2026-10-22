@@ -59,6 +59,7 @@ class CrmExtrasTest extends TestCase
         $jo = Contact::where('first_name', 'Jo')->firstOrFail();
         $this->assertSame('1985-03-14', $jo->birth_date->toDateString());
         $this->assertTrue($jo->birthday_card);
+        $this->actingAs($this->admin)->get('/companies/'.$c->id)->assertSee('🎂 14 March · card: Yes', false)->assertSee('🎂 14 March · card: No', false);
 
         $this->assertSame(0, Birthdays::sendToday(Carbon::parse('2027-03-13')));
         $this->assertSame(1, Birthdays::sendToday(Carbon::parse('2027-03-14')), 'only the ticked contact');

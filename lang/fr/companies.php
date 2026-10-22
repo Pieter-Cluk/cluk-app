@@ -101,6 +101,8 @@ return [
         'email' => 'E-mail',
         'newsletter' => 'Newsletter',
         'newsletter_consent' => 'Accepte de recevoir la newsletter',
+        'no_birth_date' => 'pas d’anniversaire',
+        'card' => 'carte',
         'birth_date' => 'Date de naissance',
         'birthday_card' => 'Envoyer une carte d’anniversaire par e-mail',
         'same_as_company' => 'Comme l\'entreprise',

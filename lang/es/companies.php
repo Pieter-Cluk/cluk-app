@@ -101,6 +101,8 @@ return [
         'email' => 'Correo',
         'newsletter' => 'Boletín',
         'newsletter_consent' => 'Acepta recibir el boletín',
+        'no_birth_date' => 'sin cumpleaños',
+        'card' => 'tarjeta',
         'birth_date' => 'Fecha de nacimiento',
         'birthday_card' => 'Enviar una tarjeta de cumpleaños por correo',
         'same_as_company' => 'Igual que la empresa',

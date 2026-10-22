@@ -101,6 +101,8 @@ return [
         'email' => 'E-mail',
         'newsletter' => 'Nieuwsbrief',
         'newsletter_consent' => 'Akkoord om de nieuwsbrief te ontvangen',
+        'no_birth_date' => 'geen verjaardag',
+        'card' => 'kaart',
         'birth_date' => 'Geboortedatum',
         'birthday_card' => 'Verjaardagskaart sturen per e-mail',
         'same_as_company' => 'Zoals het bedrijf',

@@ -101,6 +101,8 @@ return [
         'email' => 'Email',
         'newsletter' => 'Newsletter',
         'newsletter_consent' => 'Agreed to receive the newsletter',
+        'no_birth_date' => 'no birthday',
+        'card' => 'card',
         'birth_date' => 'Date of birth',
         'birthday_card' => 'Send a birthday card by email',
         'same_as_company' => 'Same as the company',
