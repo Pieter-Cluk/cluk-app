@@ -54,4 +54,14 @@ class DashboardTest extends TestCase
         }
         $this->actingAs($admin)->get('/dashboard?type=factory')->assertDontSee('Company evening</a>', false);
     }
+
+    public function test_mine_and_everyone_switch_rows_open_their_job_and_stock_card(): void
+    {
+        $this->data();
+        $m = $this->as('manager');
+        $html = $this->actingAs($m)->get('/dashboard')->assertOk()->assertDontSee('Your modules')->assertSee('Stock needs attention')->getContent();
+        $this->assertStringContainsString('who=all', $html, 'the Everyone chip keeps its filter');
+        $this->assertStringContainsString('class="db-row-link" href="'.route('orders.show', Order::first()), $html);
+        $this->actingAs($m)->get('/dashboard?who=all')->assertOk()->assertSee('chip chip-on" href="'.route('dashboard', ['who' => 'all']), false);
+    }
 }

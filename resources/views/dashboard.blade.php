@@ -1,6 +1,6 @@
 @php($hour = (int) now()->format('G'))
 @php($eur = fn ($c) => \App\Services\Afrit6\Pricing::eur((int) $c))
-@php($q = fn ($k, $v) => route('dashboard', array_filter(array_merge(['type' => $type, 'tab' => $tab, 'who' => $who], [$k => $v]), fn ($x) => $x && $x !== 'all' && $x !== 'me')))
+@php($q = fn ($k, $v) => route('dashboard', array_filter(array_merge(['type' => $type, 'tab' => $tab, 'who' => $who], [$k => $v]), fn ($x, $key) => $x && ! ($key === 'who' ? $x === 'me' : $x === 'all'), ARRAY_FILTER_USE_BOTH)))
 @php($can = fn ($m, $l = 1) => $user->canUseModule($m, $l))
 <x-layouts.app :title="__('nav.items.dashboard')">
     <div class="pagehead">
@@ -74,7 +74,7 @@
                         <thead><tr><th>{{ __('dashboard.cols.job') }}</th><th>{{ __('dashboard.cols.activity') }}</th><th>{{ __('dashboard.cols.time') }}</th><th>{{ __('dashboard.cols.status') }}</th></tr></thead>
                         <tbody>
                             @foreach ($motion['rows'] as $r)
-                                <tr><td><b>@if (! empty($r['url']))<a href="{{ $r['url'] }}">{{ $r['name'] }}</a>@else{{ $r['name'] }}@endif</b><br><small class="muted">{{ $r['who'] }}</small></td>
+                                <tr @class(['db-row' => ! empty($r['url'])])><td><b>@if (! empty($r['url']))<a class="db-row-link" href="{{ $r['url'] }}">{{ $r['name'] }}</a>@else{{ $r['name'] }}@endif</b><br><small class="muted">{{ $r['who'] }}</small></td>
                                     <td>{{ __('dashboard.types.'.$r['type']) }} · {{ __('dashboard.tabs.'.$r['tab']) }}</td><td>{{ $r['time'] }}</td><td><span class="pill">{{ __('dashboard.st.'.$r['st']) }}</span></td></tr>
                             @endforeach
                         </tbody>
@@ -93,13 +93,15 @@
                 </section>
             @endif
 
-            @if ($shortages->isNotEmpty())
+            @if ($shortages !== null)
                 <section class="card">
-                    <h2>{{ __('dashboard.stock') }}</h2>
-                    @foreach ($shortages as $o)
-                        <div class="p-line"><a href="{{ route('orders.show', $o) }}"><b>{{ $o->title }}</b> · {{ $o->customerName() }}</a><span class="muted">{{ __('dashboard.shortage', ['from' => $o->out_from->format('d/m'), 'until' => $o->out_until->format('d/m')]) }}</span></div>
-                    @endforeach
-                    <p class="muted small">{{ __('dashboard.stock_hint') }}</p>
+                    <div class="card-head"><h2>{{ __('dashboard.stock') }}</h2><a class="btn" href="{{ route('orders.index') }}">{{ __('nav.items.orders') }}</a></div>
+                    @forelse ($shortages as $o)
+                        <a class="db-short" href="{{ route('orders.show', $o) }}#subhire"><b>{{ $o->title }} · {{ $o->customerName() }}</b><span class="muted">{{ __('dashboard.shortage', ['from' => $o->out_from->format('d/m'), 'until' => $o->out_until->format('d/m')]) }}</span><span class="db-short-go">→</span></a>
+                    @empty
+                        <p class="muted">{{ __('dashboard.stock_ok') }}</p>
+                    @endforelse
+                    @if ($shortages->isNotEmpty())<p class="muted small">{{ __('dashboard.stock_hint') }}</p>@endif
                 </section>
             @endif
         </div>
@@ -130,14 +132,6 @@
                     <p class="muted small">{{ __('dashboard.legend') }}</p>
                 </section>
             @endif
-            <section class="card">
-                <h2>{{ __('nav.your_modules') }}</h2>
-                <div class="chips">
-                    @foreach ($user->allowedModules() as $module)
-                        <span class="chip">{{ __('cluk.modules.'.$module) }} · {{ __('cluk.levels.'.config('cluk.levels')[$user->moduleLevel($module)]) }}</span>
-                    @endforeach
-                </div>
-            </section>
         </aside>
     </div>
 </x-layouts.app>

@@ -96,6 +96,7 @@ return [
     'stock' => 'Stock vraagt aandacht',
     'shortage' => 'tekort :from – :until · nog geen partner gevraagd',
     'stock_hint' => 'Huur bij via een partner in Ordertoewijzing; de bijhuurlijst toont wie wat heeft.',
+    'stock_ok' => 'Niets tekort: elke order is gedekt uit eigen stock of bijhuur.',
     'mine' => 'Mijn',
     'everyone' => 'Iedereen',
     'tasks' => [

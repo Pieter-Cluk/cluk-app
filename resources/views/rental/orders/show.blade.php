@@ -52,7 +52,7 @@
         </div>
     @endif
 
-    <section class="stack">
+    <section class="stack" id="subhire">
         @foreach ($stockLines as $line)
             @php($free = (int) $avail->free($line->item))
             @php($need = $line->ownNeeded())

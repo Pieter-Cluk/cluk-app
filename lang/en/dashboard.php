@@ -96,6 +96,7 @@ return [
     'stock' => 'Stock needs attention',
     'shortage' => 'short :from – :until · no partner asked yet',
     'stock_hint' => 'Rent in from a partner in Order allocation; the sub-hire list shows who carries what.',
+    'stock_ok' => 'Nothing short: every order is covered from own stock or sub-hire.',
     'mine' => 'Mine',
     'everyone' => 'Everyone',
     'tasks' => [

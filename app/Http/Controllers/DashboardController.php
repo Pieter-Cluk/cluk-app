@@ -40,7 +40,7 @@ class DashboardController extends Controller
             'tasks' => $this->tasks($u, $who),
             'motion' => $this->motion($u, $type, $tab),
             'pipeline' => $u->canUseModule('sales') ? $this->pipeline() : null,
-            'shortages' => $u->canUseModule('dryhire', 2) ? Order::with('company')->where('status', 'allocation')->orderBy('out_from')->get()->filter(fn ($o) => $o->state() === 'subhire')->take(3) : collect(),
+            'shortages' => $u->canUseModule('dryhire', 2) ? Order::with('company')->where('status', 'allocation')->orderBy('out_from')->get()->filter(fn ($o) => $o->state() === 'subhire')->take(5)->values() : null,
             'week' => $this->week($u),
         ]);
     }
@@ -122,7 +122,7 @@ class DashboardController extends Controller
             $m = WallData::moves(today(), today());
             foreach (['out', 'in'] as $dir) {
                 foreach ($m[$dir] as $r) {
-                    $rows->push(['name' => $r['job'], 'who' => $r['who'], 'type' => str_contains($r['job'], 'Afrit 6') ? 'afrit6' : 'dryhire', 'tab' => $dir, 'time' => ! empty($r['no_time']) ? '—' : $r['at']->format('H:i'), 'st' => $r['st'], 'at' => $r['at']]);
+                    $rows->push(['name' => $r['job'], 'who' => $r['who'], 'type' => str_contains($r['job'], 'Afrit 6') ? 'afrit6' : 'dryhire', 'tab' => $dir, 'time' => ! empty($r['no_time']) ? '—' : $r['at']->format('H:i'), 'st' => $r['st'], 'at' => $r['at'], 'url' => $r['url'] ?? null]);
                 }
             }
         }

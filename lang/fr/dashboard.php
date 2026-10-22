@@ -96,6 +96,7 @@ return [
     'stock' => 'Le stock demande de l’attention',
     'shortage' => 'manque :from – :until · aucun partenaire sollicité',
     'stock_hint' => 'Sous-louez via un partenaire dans Affectation des commandes.',
+    'stock_ok' => 'Rien ne manque : chaque commande est couverte par le stock ou la sous-location.',
     'mine' => 'Les miennes',
     'everyone' => 'Tout le monde',
     'tasks' => [

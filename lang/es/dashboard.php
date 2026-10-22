@@ -96,6 +96,7 @@ return [
     'stock' => 'El stock necesita atención',
     'shortage' => 'falta :from – :until · aún sin socio',
     'stock_hint' => 'Subalquila con un socio en Asignación de pedidos.',
+    'stock_ok' => 'No falta nada: cada pedido está cubierto con stock propio o subalquiler.',
     'mine' => 'Las mías',
     'everyone' => 'Todos',
     'tasks' => [

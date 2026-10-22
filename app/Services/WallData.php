@@ -41,11 +41,11 @@ class WallData
             if ($o->out_from->between($a, $b)) {
                 $st = $o->status === 'allocation' ? 'allocating' : ($o->out_from->isPast() ? 'gone' : 'to_pick');
                 $out->push(['at' => $o->out_from, 'job' => $o->title, 'who' => $o->customerName(), 'what' => __('wall.pieces', ['n' => $pieces]),
-                    'done' => $covered, 'total' => max(1, $stock->count()), 'prog' => __('wall.lines_covered', ['n' => $covered, 'total' => $stock->count()]), 'st' => $st, 'kind' => 'out']);
+                    'done' => $covered, 'total' => max(1, $stock->count()), 'prog' => __('wall.lines_covered', ['n' => $covered, 'total' => $stock->count()]), 'st' => $st, 'kind' => 'out', 'url' => route('orders.show', $o)]);
             }
             if ($o->out_until->between($a, $b) && $o->status === 'approved') {
                 $in->push(['at' => $o->out_until, 'job' => __('wall.return', ['title' => $o->title]), 'who' => $o->customerName(), 'what' => __('wall.pieces', ['n' => $pieces]),
-                    'done' => 0, 'total' => 1, 'prog' => '', 'st' => $o->out_until->isPast() ? 'due' : 'expected', 'kind' => 'in']);
+                    'done' => 0, 'total' => 1, 'prog' => '', 'st' => $o->out_until->isPast() ? 'due' : 'expected', 'kind' => 'in', 'url' => route('orders.show', $o)]);
             }
         }
 
@@ -53,10 +53,10 @@ class WallData
             ->where(fn ($q) => $q->whereBetween('delivery_at', [$a, $b])->orWhereBetween('return_at', [$a, $b]))->get() as $r) {
             $what = __('wall.pieces', ['n' => $r->lines->sum('qty')]);
             if ($r->delivery_at && $r->delivery_at->between($a, $b)) {
-                $in->push(['at' => $r->delivery_at, 'job' => __('wall.subhire_in'), 'who' => $r->supplier->name.' · '.$r->order->title, 'what' => $what, 'done' => 0, 'total' => 1, 'prog' => '', 'st' => $r->delivery_at->isPast() ? 'due' : 'expected', 'kind' => 'in']);
+                $in->push(['at' => $r->delivery_at, 'job' => __('wall.subhire_in'), 'who' => $r->supplier->name.' · '.$r->order->title, 'what' => $what, 'done' => 0, 'total' => 1, 'prog' => '', 'st' => $r->delivery_at->isPast() ? 'due' : 'expected', 'kind' => 'in', 'url' => route('subhire.show', $r)]);
             }
             if ($r->return_at && $r->return_at->between($a, $b)) {
-                $out->push(['at' => $r->return_at, 'job' => __('wall.subhire_back'), 'who' => $r->supplier->name, 'what' => $what, 'done' => 0, 'total' => 1, 'prog' => '', 'st' => 'to_pick', 'kind' => 'out']);
+                $out->push(['at' => $r->return_at, 'job' => __('wall.subhire_back'), 'who' => $r->supplier->name, 'what' => $what, 'done' => 0, 'total' => 1, 'prog' => '', 'st' => 'to_pick', 'kind' => 'out', 'url' => route('subhire.show', $r)]);
             }
         }
 
@@ -65,7 +65,7 @@ class WallData
             ->whereBetween('date', [$a->toDateString(), $b->toDateString()])->get() as $sr) {
             $row = ['at' => $sr->date->copy()->setTime(9, 0), 'no_time' => true, 'job' => __('workspace.kinds.'.$sr->kind).' · Afrit 6', 'who' => $sr->member?->companyName() ?? '—',
                 'what' => trim(($sr->colis ? __('wall.colis', ['n' => $sr->colis]) : '').($sr->pallets ? ' '.__('wall.pallets', ['n' => $sr->pallets]) : '')), 'done' => $sr->status === ServiceRequest::DONE ? 1 : 0, 'total' => 1, 'prog' => '',
-                'st' => $sr->status === ServiceRequest::DONE ? 'done' : ($sr->status === ServiceRequest::PENDING ? 'to_confirm' : 'planned'), 'kind' => $sr->kind === 'receive' ? 'in' : 'out'];
+                'st' => $sr->status === ServiceRequest::DONE ? 'done' : ($sr->status === ServiceRequest::PENDING ? 'to_confirm' : 'planned'), 'kind' => $sr->kind === 'receive' ? 'in' : 'out', 'url' => route('afrit6.staff.tasks')];
             $sr->kind === 'receive' ? $in->push($row) : $out->push($row);
         }
 
