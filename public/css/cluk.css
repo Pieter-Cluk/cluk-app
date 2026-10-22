@@ -788,3 +788,6 @@ tr.db-row:hover td{background:var(--surface-subtle)}
 .ps-opt img{width:100%;aspect-ratio:1;object-fit:contain;background:#fff}
 .ps-opt span{font-size:12px;font-weight:700;color:var(--brand-strong)}
 .ps-done{width:120px;aspect-ratio:1;object-fit:contain;background:#fff;border-radius:8px;border:1px solid var(--line)}
+/* Warehouse › Labels */
+.lbl-bar{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:10px;position:sticky;top:0;background:var(--bg,#fff);padding:8px 0;z-index:2}
+.w-check{width:44px}

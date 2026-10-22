@@ -8,6 +8,7 @@
         </div>
         <div class="inline-form">
             @if (auth()->user()->hasRight('warehouse.setup_locations'))<a class="btn" href="{{ route('locations.index') }}">{{ __('nav.items.locations') }}</a>@endif
+            <a class="btn" href="{{ route('warehouse.labels') }}">{{ __('warehouse.labels.title') }}</a>
             <a class="primary" href="{{ route('w.home') }}">{{ __('warehouse.office.open_app') }}</a>
         </div>
     </div>

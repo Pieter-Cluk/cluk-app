@@ -42,6 +42,7 @@ use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\UserController;
 use App\Http\Controllers\Settings\VatRateController;
 use App\Http\Controllers\WallController;
+use App\Http\Controllers\Warehouse\LabelController as WarehouseLabelController;
 use App\Http\Controllers\Warehouse\LocationController;
 use App\Http\Controllers\Warehouse\PhoneAfrit6Controller;
 use App\Http\Controllers\Warehouse\PhoneController;
@@ -444,6 +445,9 @@ Route::middleware('auth:web')->group(function () {
     // Warehouse for the office: where everything is, repairs, charges to approve.
     Route::prefix('warehouse')->middleware('nav:warehouse')->group(function () {
         Route::get('/', [WarehouseController::class, 'index'])->name('warehouse.index');
+        Route::get('/labels', [WarehouseLabelController::class, 'index'])->name('warehouse.labels');
+        Route::post('/labels/locations', [WarehouseLabelController::class, 'locations'])->middleware('level:warehouse,2')->name('warehouse.labels.locations');
+        Route::post('/labels/items', [WarehouseLabelController::class, 'items'])->middleware('level:warehouse,2')->name('warehouse.labels.items');
         Route::post('/assets/{asset}/release', [WarehouseController::class, 'release'])->whereNumber('asset')->middleware('right:warehouse.release_repair')->name('warehouse.release');
         Route::post('/deliveries/{delivery}', [PhoneAfrit6Controller::class, 'assign'])->whereNumber('delivery')->middleware('level:warehouse,2')->name('warehouse.delivery.assign');
         Route::get('/charges/{order}', [WarehouseController::class, 'charges'])->whereNumber('order')->name('warehouse.charges');

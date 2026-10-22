@@ -121,22 +121,20 @@ class LocationController extends Controller
     }
 
     /**
-     * Location labels on Dymo 11354 (57 × 32 mm): ?zone=CLEAN, ?p=GA1A1, ?rack=GA1, ?row=GA.
+     * Location labels on Dymo 2112290 (59 × 102 mm): ?zone=CLEAN, ?p=GA1A1, ?rack=GA1, ?row=GA.
      */
     public function labels(Request $request): View
     {
-        $labels = collect();
+        $codes = [];
         if ($z = Zone::byCode((string) $request->query('zone'))) {
-            $labels->push(['code' => $z->code, 'name' => $z->label()]);
+            $codes[] = $z->code;
         }
-        $q = Position::where('active', true);
         $prefix = strtoupper((string) ($request->query('p') ?? $request->query('rack') ?? $request->query('row') ?? ''));
         if ($prefix !== '' && preg_match('/^[GM][A-Z]([0-9]([A-Z]([0-9])?)?)?$/', $prefix)) {
-            foreach ($q->where('code', 'like', $prefix.'%')->orderBy('code')->get() as $p) {
-                $labels->push(['code' => $p->code, 'name' => __('warehouse.settings.position_desc', ['floor' => __('warehouse.floors.'.$p->floor), 'row' => $p->row, 'rack' => $p->rack, 'layer' => $p->layer, 'spot' => $p->spot])]);
-            }
+            $codes = array_merge($codes, Position::where('active', true)->where('code', 'like', $prefix.'%')->orderBy('code')->pluck('code')->all());
         }
-        abort_if($labels->isEmpty(), 404);
+        abort_if(! $codes, 404);
+        $labels = LabelController::locationLabels($codes);
 
         return view('warehouse.settings.labels', ['labels' => $labels]);
     }
