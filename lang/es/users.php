@@ -45,6 +45,8 @@ return [
         'role_id' => 'Rol',
         'reports_to_id' => 'Responde a',
         'is_commercial' => 'Contacto comercial (puede gestionar clientes y oportunidades)',
+        'email_login' => 'Puede entrar con un código por correo (sin Microsoft 365, p. ej. autónomos; solo direcciones @:domain)',
+        'email_login_hint' => 'No se guarda contraseña: reciben cada vez un código de un solo uso en su correo de trabajo.',
         'nobody' => '— nadie —',
     ],
     'hints' => [
@@ -186,6 +188,9 @@ return [
             'warehouse_checked' => 'Controlado en el banco de pruebas',
             'warehouse_charges_approved' => 'Cargos de retorno aprobados',
             'warehouse_zone_saved' => 'Zona de almacén guardada',
+            'afrit6_door_code_requested' => 'Código de puerta pedido por el miembro',
+            'auth_code_sent' => 'Código de acceso enviado',
+            'auth_code_refused' => 'Código de acceso rechazado (no permitido)',
             'crm_birthday_sent' => 'Tarjeta de cumpleaños enviada',
             'order_times_changed' => 'Horarios del pedido cambiados',
             'order_reopened' => 'Pedido reabierto',

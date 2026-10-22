@@ -45,6 +45,8 @@ return [
         'role_id' => 'Rol',
         'reports_to_id' => 'Rapporteert aan',
         'is_commercial' => 'Commercieel contactpersoon (kan klanten en deals beheren)',
+        'email_login' => 'Mag aanmelden met een code per e-mail (geen Microsoft 365, bv. freelancers; enkel @:domain-adressen)',
+        'email_login_hint' => 'Er wordt geen wachtwoord bewaard: ze krijgen telkens een eenmalige code op hun werkadres.',
         'nobody' => '— niemand —',
     ],
     'hints' => [
@@ -186,6 +188,9 @@ return [
             'warehouse_checked' => 'Gecontroleerd op de testbank',
             'warehouse_charges_approved' => 'Retourkosten goedgekeurd',
             'warehouse_zone_saved' => 'Magazijnzone bewaard',
+            'afrit6_door_code_requested' => 'Deurcode aangevraagd door het lid',
+            'auth_code_sent' => 'Aanmeldcode gemaild',
+            'auth_code_refused' => 'Aanmeldcode geweigerd (niet toegestaan)',
             'crm_birthday_sent' => 'Verjaardagskaart verstuurd',
             'order_times_changed' => 'Ordertijden gewijzigd',
             'order_reopened' => 'Order heropend',

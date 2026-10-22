@@ -144,6 +144,11 @@ return [
         'who_can_change' => 'Only Finance and Admin can change this.',
     ],
     'vies' => [
+        'why_busy' => 'VIES was busy (the Belgian service limits how many checks it answers at once). This says nothing about the number; it is checked again automatically every hour.',
+        'why_unreachable' => 'VIES could not be reached. Checked again automatically every hour.',
+        'why_not_registered' => 'The number exists in the format, but is not registered for VAT on intra-EU trade. Common for small businesses under the VAT exemption scheme, a company just started, or a number that was stopped. Check it on the official KBO/CBE public search.',
+        'why_bad_format' => 'VIES did not accept the format of this number. Check the country and the digits.',
+        'why_name_differs' => 'Valid, but VIES knows it as “:vies”, not “:given”. Check that the number belongs to this company.',
         'short_valid' => 'VIES valid',
         'short_invalid' => 'VIES invalid',
         'short_unavailable' => 'VIES not reachable',

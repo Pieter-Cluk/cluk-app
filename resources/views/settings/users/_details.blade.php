@@ -41,4 +41,7 @@
     <label class="check span-2">
         <input type="checkbox" name="is_commercial" value="1" @checked(old('is_commercial', $user->is_commercial))>
         <span>{{ __('users.fields.is_commercial') }}</span></label>
+    <label class="check span-2">
+        <input type="checkbox" name="email_login" value="1" @checked(old('email_login', $user->email_login))>
+        <span>{{ __('users.fields.email_login', ['domain' => config('cluk.staff_email_domain')]) }}<br><small class="muted">{{ __('users.fields.email_login_hint') }}</small></span></label>
 </div>

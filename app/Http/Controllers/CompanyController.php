@@ -237,6 +237,7 @@ class CompanyController extends Controller
         $result = $this->vies->check($company->vat_number);
         $company->forceFill([
             'vies_status' => $result['status'],
+            'vies_reason' => $result['reason'] ?? null,
             'vies_checked_at' => now(),
             'vies_name' => $result['name'] ?? ($result['status'] === 'unavailable' ? $company->vies_name : null),
             'vies_address' => $result['address'] ?? ($result['status'] === 'unavailable' ? $company->vies_address : null),

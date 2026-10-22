@@ -22,6 +22,12 @@ return [
         'bill' => 'Ma facture',
     ],
     'portal' => [
+        'door_ask' => 'Demander un code de porte',
+        'door_new' => 'Demander un nouveau code',
+        'door_note' => 'Quelque chose à savoir ? (optionnel, ex. perdu, partagé par erreur)',
+        'door_send' => 'Envoyer la demande',
+        'door_requested' => 'Demande envoyée. CLUK configure votre code et vous le verrez ici.',
+        'door_pending' => 'Code demandé le :date. Vous le verrez ici dès qu’il est configuré.',
         'door_code' => 'Code de porte',
         'show' => 'Afficher',
         'hide' => 'Masquer',
@@ -294,6 +300,8 @@ return [
         'to_confirm_count' => ':count à confirmer',
     ],
     'staff' => [
+        'door_requested' => 'Le membre a demandé un code le :date',
+        'door_asked' => 'code demandé',
         'tabs' => [
             'tasks' => 'Tâches',
             'room' => 'Salle de réunion',

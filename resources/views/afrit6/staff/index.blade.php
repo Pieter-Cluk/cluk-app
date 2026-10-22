@@ -26,7 +26,7 @@
                 <tbody>
                     @forelse ($members as $m)
                         <tr>
-                            <td><a class="person" href="{{ route('afrit6.staff.show', $m) }}"><span class="av">{{ $m->initials }}</span><span><b>{{ $m->name }}</b><small>{{ $m->email }}</small></span></a></td>
+                            <td><a class="person" href="{{ route('afrit6.staff.show', $m) }}"><span class="av">{{ $m->initials }}</span><span><b>{{ $m->name }}</b><small>{{ $m->email }}</small>@if ($m->door_requested_at)<small class="txt-danger">🔑 {{ __('workspace.staff.door_asked') }}</small>@endif</span></a></td>
                             <td>@if ($m->company)<a href="{{ route('companies.show', $m->company) }}">{{ $m->company->name }}</a>@else {{ $m->reg_company_name ?? '—' }} @endif</td>
                             <td class="nowrap">{{ $m->formattedRegVat() ?: '—' }}@if ($m->vies_status)<br><small @class(['vies', 'vies-'.$m->vies_status])>{{ __('companies.vies.short_'.$m->vies_status) }}</small>@endif</td>
                             <td>{{ $m->email_verified_at ? __('companies.yes') : __('companies.no') }}</td>

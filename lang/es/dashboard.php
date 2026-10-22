@@ -122,6 +122,8 @@ return [
         'afrit6_confirm_s' => 'del portal de miembros',
         'afrit6_tasks' => 'Tareas Afrit 6',
         'afrit6_tasks_s' => 'confirmadas, por hacer',
+        'door_codes' => 'Códigos de puerta pedidos',
+        'door_codes_s' => 'miembros de Afrit 6 esperando un código',
         'pf_back' => 'Proformas devueltas',
         'pf_back_s' => 'finanzas pide un cambio',
         'pf_check' => 'Prefacturas por revisar',

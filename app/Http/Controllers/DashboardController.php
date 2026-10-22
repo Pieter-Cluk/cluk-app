@@ -11,6 +11,7 @@ use App\Models\Equipment\Asset;
 use App\Models\Factory\Booking;
 use App\Models\Factory\Task;
 use App\Models\Finance\PreInvoice;
+use App\Models\Member;
 use App\Models\Rental\Order;
 use App\Models\Sales\Deal;
 use App\Models\Sales\IncomingMessage;
@@ -102,6 +103,10 @@ class DashboardController extends Controller
         }
         if ($u->canUseModule('afrit6', 2)) {
             $t[] = ['n' => ServiceRequest::where('status', 'pending')->count(), 'key' => 'afrit6_confirm', 'url' => route('afrit6.staff.tasks', ['status' => 'pending']), 'tone' => 'warn'];
+        }
+        if ($u->hasRight('afrit6.door_codes')) {
+            $req = Member::whereNotNull('door_requested_at')->orderBy('door_requested_at')->get(['id']);
+            $t[] = ['n' => $req->count(), 'key' => 'door_codes', 'url' => $req->count() === 1 ? route('afrit6.staff.show', $req->first()->id) : route('afrit6.staff.index', ['door' => 1]), 'tone' => 'warn'];
         }
         if ($u->canUseModule('afrit6')) {
             $t[] = ['n' => ServiceRequest::open()->when($who === 'me', fn ($q) => $q->where('assignee_id', $u->id))->where('status', '!=', 'pending')->count(), 'key' => 'afrit6_tasks', 'url' => route('afrit6.staff.tasks', ['who' => $who === 'me' ? 'mine' : null]), 'tone' => 'info'];

@@ -144,6 +144,11 @@ return [
         'who_can_change' => 'Enkel Finance en Admin kunnen dit wijzigen.',
     ],
     'vies' => [
+        'why_busy' => 'VIES was overbelast (de Belgische dienst beperkt hoeveel controles hij tegelijk beantwoordt). Dat zegt niets over het nummer; het wordt elk uur automatisch opnieuw gecontroleerd.',
+        'why_unreachable' => 'VIES was niet bereikbaar. Wordt elk uur automatisch opnieuw gecontroleerd.',
+        'why_not_registered' => 'Het nummer klopt van vorm, maar is niet geregistreerd voor btw op intracommunautaire handel. Vaak bij kleine ondernemingen met btw-vrijstelling, een net opgestart bedrijf, of een stopgezet nummer. Controleer in de KBO Public Search.',
+        'why_bad_format' => 'VIES aanvaardde de vorm van dit nummer niet. Controleer het land en de cijfers.',
+        'why_name_differs' => 'Geldig, maar VIES kent het als “:vies”, niet als “:given”. Controleer of het nummer bij dit bedrijf hoort.',
         'short_valid' => 'VIES geldig',
         'short_invalid' => 'VIES ongeldig',
         'short_unavailable' => 'VIES niet bereikbaar',

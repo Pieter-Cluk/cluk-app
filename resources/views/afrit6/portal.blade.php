@@ -23,6 +23,16 @@
             @else
                 <p class="muted">{{ __('workspace.portal.no_code') }}</p>
             @endif
+            @if ($member->door_requested_at)
+                <p class="flash flash-ok mt">{{ __('workspace.portal.door_pending', ['date' => $member->door_requested_at->format('d/m H:i')]) }}</p>
+            @else
+                <details class="mt"><summary class="btn">{{ $member->door_code ? __('workspace.portal.door_new') : __('workspace.portal.door_ask') }}</summary>
+                    <form method="post" action="{{ route('afrit6.portal.door') }}" class="stack-sm mt">@csrf
+                        <input name="note" maxlength="300" placeholder="{{ __('workspace.portal.door_note') }}" aria-label="{{ __('workspace.portal.door_note') }}">
+                        <div><button class="primary" type="submit">{{ __('workspace.portal.door_send') }}</button></div>
+                    </form>
+                </details>
+            @endif
         </section>
 
         <section class="card">

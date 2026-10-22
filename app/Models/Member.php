@@ -53,6 +53,8 @@ class Member extends Authenticatable implements CanResetPasswordContract, HasLoc
             'rules_accepted_at' => 'datetime',
             'payment_terms_accepted_at' => 'datetime',
             'approved_at' => 'datetime',
+            'vies_checked_at' => 'datetime',
+            'door_requested_at' => 'datetime',
             'last_login_at' => 'datetime',
             'newsletter' => 'boolean',
             'door_code' => 'encrypted',

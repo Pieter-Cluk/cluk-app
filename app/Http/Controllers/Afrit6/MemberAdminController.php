@@ -11,6 +11,8 @@ use App\Models\Contact;
 use App\Models\Member;
 use App\Notifications\MemberApproved;
 use App\Services\Afrit6\StatementBuilder;
+use App\Services\Vies;
+use App\Services\ViesRecheck;
 use App\Support\SafeMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,7 +42,9 @@ class MemberAdminController extends Controller
         return view('afrit6.staff.index', [
             'tab' => $tab,
             'counts' => $counts,
-            'members' => Member::with('company')->where('status', $status)->latest()->paginate(50)->withQueryString(),
+            'members' => $request->boolean('door')
+                ? Member::with('company')->whereNotNull('door_requested_at')->orderBy('door_requested_at')->paginate(50)->withQueryString()
+                : Member::with('company')->where('status', $status)->latest()->paginate(50)->withQueryString(),
         ]);
     }
 
@@ -63,6 +67,14 @@ class MemberAdminController extends Controller
             'statements' => $member->statements()->with('createdBy')->get(),
             'openTasks' => ServiceRequest::where('member_id', $member->id)->open()->with('assignee')->orderBy('date')->get(),
         ]);
+    }
+
+    /** Ask VIES again (it was busy, or the number was corrected). */
+    public function vies(Member $member, Vies $vies): RedirectResponse
+    {
+        ViesRecheck::member($member, $vies);
+
+        return back()->with('status', __('companies.vies.result_'.$member->vies_status));
     }
 
     /** Approve: link (or create) the company and a contact, then the member can use the portal. */
@@ -88,7 +100,7 @@ class MemberAdminController extends Controller
                     'vat_regime' => 'auto',
                 ]);
             if ($member->vies_status && $company->vies_status === null && $company->vat_number === $member->reg_vat_number) {
-                $company->forceFill(['vies_status' => $member->vies_status, 'vies_checked_at' => now()])->save();
+                $company->forceFill(['vies_status' => $member->vies_status, 'vies_reason' => $member->vies_reason, 'vies_name' => $member->vies_name, 'vies_checked_at' => now()])->save();
             }
             if (! $company->is_customer) {
                 $company->update(['is_customer' => true]);

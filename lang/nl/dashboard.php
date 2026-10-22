@@ -122,6 +122,8 @@ return [
         'afrit6_confirm_s' => 'uit het ledenportaal',
         'afrit6_tasks' => 'Afrit 6-taken',
         'afrit6_tasks_s' => 'bevestigd, te doen',
+        'door_codes' => 'Deurcodes aangevraagd',
+        'door_codes_s' => 'Afrit 6-leden wachten op een code',
         'pf_back' => 'Teruggestuurde proformas',
         'pf_back_s' => 'finance vraagt een aanpassing',
         'pf_check' => 'Voorfacturen te controleren',

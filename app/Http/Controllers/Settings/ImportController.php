@@ -104,7 +104,7 @@ class ImportController extends Controller
         foreach ($this->viesPendingQuery()->limit(15)->get() as $company) {
             $result = $vies->check($company->vat_number);
             $company->forceFill([
-                'vies_status' => $result['status'], 'vies_checked_at' => now(),
+                'vies_status' => $result['status'], 'vies_reason' => $result['reason'] ?? null, 'vies_checked_at' => now(),
                 'vies_name' => $result['name'], 'vies_address' => $result['address'],
             ])->save();
             $checked++;

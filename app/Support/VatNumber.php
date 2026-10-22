@@ -33,7 +33,10 @@ class VatNumber
             return null;
         }
 
-        return preg_match('/^[A-Z]{2}/', $clean) ? $clean : self::prefix($country).$clean;
+        $full = preg_match('/^[A-Z]{2}/', $clean) ? $clean : self::prefix($country).$clean;
+
+        // Old Belgian numbers have 9 digits: they get a leading 0 (BE 123.456.749 → BE0123456749).
+        return preg_match('/^BE\d{9}$/', $full) ? 'BE0'.substr($full, 2) : $full;
     }
 
     /** Local check before asking VIES. Belgium: 10 digits with a mod-97 check. */

@@ -32,6 +32,7 @@
 
 <section class="card">
     <h2>{{ __('workspace.staff.door') }}</h2>
+    @if ($member->door_requested_at)<p class="flash flash-err">{{ __('workspace.staff.door_requested', ['date' => $member->door_requested_at->format('d/m/Y H:i')]) }}@if ($member->door_request_note) · “{{ $member->door_request_note }}”@endif</p>@endif
     @if ($canDoor)
         <form method="post" action="{{ route('afrit6.staff.door', $member) }}" class="inline-form">
             @csrf @method('PUT')

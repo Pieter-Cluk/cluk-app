@@ -22,6 +22,12 @@ return [
         'bill' => 'My bill',
     ],
     'portal' => [
+        'door_ask' => 'Request a door code',
+        'door_new' => 'Request a new door code',
+        'door_note' => 'Anything we should know? (optional, e.g. lost, shared by mistake)',
+        'door_send' => 'Send the request',
+        'door_requested' => 'Request sent. CLUK sets your door code and you see it here.',
+        'door_pending' => 'Door code requested on :date. You see it here as soon as it is set.',
         'door_code' => 'Door code',
         'show' => 'Show',
         'hide' => 'Hide',
@@ -294,6 +300,8 @@ return [
         'to_confirm_count' => ':count to confirm',
     ],
     'staff' => [
+        'door_requested' => 'The member asked for a door code on :date',
+        'door_asked' => 'door code requested',
         'tabs' => [
             'tasks' => 'Tasks',
             'room' => 'Meeting room',

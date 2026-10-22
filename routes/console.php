@@ -2,6 +2,8 @@
 
 use App\Models\Role;
 use App\Services\Crm\Birthdays;
+use App\Services\Vies;
+use App\Services\ViesRecheck;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
@@ -43,3 +45,9 @@ Artisan::command('cluk:birthdays', function () {
     $this->info(Birthdays::sendToday().' birthday card(s) sent.');
 })->purpose('Send today\'s birthday cards');
 Schedule::command('cluk:birthdays')->dailyAt('09:00')->timezone('Europe/Brussels')->withoutOverlapping();
+
+// VIES was busy or down: check those numbers again every hour.
+Artisan::command('cluk:vies-recheck', function () {
+    $this->info(ViesRecheck::run(app(Vies::class)).' VAT number(s) checked again.');
+})->purpose('Check VAT numbers again that VIES could not answer for');
+Schedule::command('cluk:vies-recheck')->hourly()->withoutOverlapping();

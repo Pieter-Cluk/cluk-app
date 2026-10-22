@@ -144,6 +144,11 @@ return [
         'who_can_change' => 'Seuls Finance et Admin peuvent le modifier.',
     ],
     'vies' => [
+        'why_busy' => 'VIES était saturé (le service belge limite les vérifications simultanées). Cela ne dit rien du numéro ; il est revérifié automatiquement chaque heure.',
+        'why_unreachable' => 'VIES était injoignable. Revérifié automatiquement chaque heure.',
+        'why_not_registered' => 'Le numéro a le bon format mais n’est pas enregistré à la TVA intracommunautaire. Fréquent pour les petites entreprises en franchise de TVA, une société qui vient de démarrer ou un numéro arrêté. Vérifiez sur KBO/BCE Public Search.',
+        'why_bad_format' => 'VIES n’a pas accepté le format de ce numéro. Vérifiez le pays et les chiffres.',
+        'why_name_differs' => 'Valide, mais VIES le connaît comme « :vies », pas « :given ». Vérifiez que le numéro appartient bien à cette société.',
         'short_valid' => 'VIES valide',
         'short_invalid' => 'VIES non valide',
         'short_unavailable' => 'VIES injoignable',

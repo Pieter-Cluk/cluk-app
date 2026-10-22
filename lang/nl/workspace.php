@@ -22,6 +22,12 @@ return [
         'bill' => 'Mijn rekening',
     ],
     'portal' => [
+        'door_ask' => 'Deurcode aanvragen',
+        'door_new' => 'Nieuwe deurcode aanvragen',
+        'door_note' => 'Iets dat we moeten weten? (optioneel, bv. vergeten, per ongeluk gedeeld)',
+        'door_send' => 'Aanvraag versturen',
+        'door_requested' => 'Aanvraag verstuurd. CLUK stelt je deurcode in en je ziet hem hier.',
+        'door_pending' => 'Deurcode aangevraagd op :date. Je ziet hem hier zodra hij ingesteld is.',
         'door_code' => 'Deurcode',
         'show' => 'Toon',
         'hide' => 'Verberg',
@@ -294,6 +300,8 @@ return [
         'to_confirm_count' => ':count te bevestigen',
     ],
     'staff' => [
+        'door_requested' => 'Het lid vroeg een deurcode aan op :date',
+        'door_asked' => 'deurcode gevraagd',
         'tabs' => [
             'tasks' => 'Taken',
             'room' => 'Vergaderzaal',

@@ -45,6 +45,8 @@ return [
         'role_id' => 'Rôle',
         'reports_to_id' => 'Responsable',
         'is_commercial' => 'Contact commercial (peut gérer des clients et des deals)',
+        'email_login' => 'Peut se connecter avec un code par e-mail (sans Microsoft 365, ex. freelances ; adresses @:domain uniquement)',
+        'email_login_hint' => 'Aucun mot de passe n’est conservé : un code unique est envoyé à chaque fois à leur adresse pro.',
         'nobody' => '— personne —',
     ],
     'hints' => [
@@ -186,6 +188,9 @@ return [
             'warehouse_checked' => 'Contrôlée sur le banc de test',
             'warehouse_charges_approved' => 'Frais de retour approuvés',
             'warehouse_zone_saved' => 'Zone d’entrepôt enregistrée',
+            'afrit6_door_code_requested' => 'Code de porte demandé par le membre',
+            'auth_code_sent' => 'Code de connexion envoyé',
+            'auth_code_refused' => 'Code de connexion refusé (non autorisé)',
             'crm_birthday_sent' => 'Carte d’anniversaire envoyée',
             'order_times_changed' => 'Horaires de la commande modifiés',
             'order_reopened' => 'Commande rouverte',

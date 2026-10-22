@@ -122,6 +122,8 @@ return [
         'afrit6_confirm_s' => 'from the member portal',
         'afrit6_tasks' => 'Afrit 6 tasks',
         'afrit6_tasks_s' => 'confirmed, to do',
+        'door_codes' => 'Door codes requested',
+        'door_codes_s' => 'Afrit 6 members waiting for a code',
         'pf_back' => 'Proformas sent back',
         'pf_back_s' => 'finance asks for a change',
         'pf_check' => 'Pre-invoices to check',

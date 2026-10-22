@@ -17,7 +17,9 @@
                     <dt>{{ __('afrit6.fields.email') }}</dt><dd>{{ $member->email }} · {{ $member->email_verified_at ? __('afrit6.staff.confirmed_on', ['date' => $fmt($member->email_verified_at)]) : __('afrit6.staff.not_confirmed') }}</dd>
                     <dt>{{ __('afrit6.fields.mobile') }}</dt><dd>{{ $member->mobile ?? '—' }}</dd>
                     <dt>{{ __('afrit6.fields.company_name') }}</dt><dd>{{ $member->reg_company_name ?? '—' }}</dd>
-                    <dt>{{ __('afrit6.fields.vat_number') }}</dt><dd>{{ $member->formattedRegVat() ?: '—' }}@if ($member->vies_status) · <span @class(['vies', 'vies-'.$member->vies_status])>{{ __('companies.vies.short_'.$member->vies_status) }}</span>@endif</dd>
+                    <dt>{{ __('afrit6.fields.vat_number') }}</dt><dd>{{ $member->formattedRegVat() ?: '—' }}@if ($member->vies_status) · <span @class(['vies', 'vies-'.$member->vies_status, 'vies-unavailable' => $member->vies_reason === 'name_differs'])>{{ __('companies.vies.short_'.$member->vies_status) }}</span>@endif
+                        @include('partials.vies-reason', ['reason' => $member->vies_reason, 'viesName' => $member->vies_name, 'given' => $member->reg_company_name, 'checked' => $member->vies_checked_at])
+                        @if ($member->reg_vat_number && \App\Services\Vies::appliesTo($member->reg_vat_number) && auth()->user()->canUseModule('afrit6', 2))<form method="post" action="{{ route('afrit6.staff.vies', $member) }}">@csrf<button class="linkbtn" type="submit">{{ __('companies.vies.check_again') }}</button></form>@endif</dd>
                     <dt>{{ __('afrit6.fields.address') }}</dt><dd>{{ $member->reg_address ?? '—' }}</dd>
                     <dt>{{ __('afrit6.fields.country') }}</dt><dd>{{ $member->reg_country }}</dd>
                     <dt>{{ __('afrit6.staff.language') }}</dt><dd>{{ config('cluk.locales')[$member->locale] ?? $member->locale }}</dd>

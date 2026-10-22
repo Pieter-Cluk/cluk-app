@@ -10,6 +10,9 @@ return [
     | (the documents will need 14 languages).
     */
 
+    // Staff without Microsoft 365 sign in with a code sent to an address on this domain.
+    'staff_email_domain' => env('STAFF_EMAIL_DOMAIN', 'cluk.live'),
+
     'locales' => [
         'en' => 'English',
         'nl' => 'Nederlands',

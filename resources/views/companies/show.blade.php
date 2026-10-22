@@ -29,6 +29,7 @@
                     {{ $company->formattedVat() }} ·
                     @if ($company->vies_status)
                         <span @class(['vies', 'vies-'.$company->vies_status])>{{ __('companies.vies.status_'.$company->vies_status, ['date' => $fmt($company->vies_checked_at)]) }}</span>
+                        @include('partials.vies-reason', ['reason' => $company->vies_reason, 'viesName' => $company->vies_name, 'given' => $company->name, 'checked' => null])
                     @elseif (\App\Services\Vies::appliesTo($company->vat_number))
                         {{ __('companies.vies.not_checked') }}
                     @else

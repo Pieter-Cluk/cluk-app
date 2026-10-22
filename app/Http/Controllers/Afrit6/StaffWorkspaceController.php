@@ -89,7 +89,7 @@ class StaffWorkspaceController extends Controller
     {
         $data = $request->validate(['door_code' => ['nullable', 'string', 'regex:/^[0-9 ]{4,12}$/']]);
         $code = isset($data['door_code']) ? preg_replace('/\s+/', '', $data['door_code']) : null;
-        $member->forceFill(['door_code' => $code ?: null])->save();
+        $member->forceFill(['door_code' => $code ?: null, 'door_requested_at' => $code ? null : $member->door_requested_at, 'door_request_note' => $code ? null : $member->door_request_note])->save();
         AuditLog::record($code ? 'afrit6.door_code_set' : 'afrit6.door_code_removed', $member);
 
         return back()->with('status', __('workspace.staff.door_saved'));

@@ -144,6 +144,11 @@ return [
         'who_can_change' => 'Solo Finanzas y Admin pueden cambiarlo.',
     ],
     'vies' => [
+        'why_busy' => 'VIES estaba saturado (el servicio belga limita las consultas simultáneas). No dice nada del número; se vuelve a comprobar cada hora automáticamente.',
+        'why_unreachable' => 'No se pudo contactar con VIES. Se vuelve a comprobar cada hora.',
+        'why_not_registered' => 'El número tiene el formato correcto pero no está registrado para IVA intracomunitario. Habitual en pequeñas empresas exentas, empresas recién creadas o números dados de baja. Compruébalo en el registro oficial.',
+        'why_bad_format' => 'VIES no aceptó el formato del número. Revisa el país y las cifras.',
+        'why_name_differs' => 'Válido, pero VIES lo conoce como «:vies», no «:given». Comprueba que el número pertenece a esta empresa.',
         'short_valid' => 'VIES válido',
         'short_invalid' => 'VIES no válido',
         'short_unavailable' => 'VIES no disponible',

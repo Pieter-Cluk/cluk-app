@@ -198,6 +198,10 @@ class UserController extends Controller
             'reports_to_id' => ['nullable', 'integer', 'exists:users,id'],
         ]);
         $data['is_commercial'] = $request->boolean('is_commercial');
+        $data['email_login'] = $request->boolean('email_login');
+        if ($data['email_login'] && ! str_ends_with($data['email'], '@'.config('cluk.staff_email_domain'))) {
+            throw ValidationException::withMessages(['email_login' => __('login.code.wrong_domain', ['domain' => config('cluk.staff_email_domain')])]);
+        }
         $data['role_id'] = (int) $data['role_id'];
         $data['reports_to_id'] = isset($data['reports_to_id']) ? (int) $data['reports_to_id'] : null;
 

@@ -36,6 +36,7 @@
                     <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><rect width="9.5" height="9.5" fill="#f25022"/><rect x="10.5" width="9.5" height="9.5" fill="#7fba00"/><rect y="10.5" width="9.5" height="9.5" fill="#00a4ef"/><rect x="10.5" y="10.5" width="9.5" height="9.5" fill="#ffb900"/></svg>
                     {{ __('login.button') }}
                 </a>
+                <a class="code-link" href="{{ route('login.code') }}">{{ __('login.code.link') }}</a>
                 <p class="login-note">{{ __('login.no_access') }}</p>
             </div>
             <p class="login-member"><a href="/afrit6">{{ __('login.member_link') }}</a></p>

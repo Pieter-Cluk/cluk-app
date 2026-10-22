@@ -6,6 +6,7 @@ use App\Http\Controllers\Afrit6\PortalController;
 use App\Http\Controllers\Afrit6\StaffWorkspaceController;
 use App\Http\Controllers\Afrit6\TaskController;
 use App\Http\Controllers\Afrit6\WorkspaceController;
+use App\Http\Controllers\Auth\EmailCodeLoginController;
 use App\Http\Controllers\Auth\MicrosoftLoginController;
 use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
@@ -92,6 +93,10 @@ Route::middleware('guest:web')->group(function () {
     Route::view('/login', 'auth.staff-login')->name('login');
     Route::get('/auth/microsoft/redirect', [MicrosoftLoginController::class, 'redirect'])->name('login.microsoft');
     Route::get('/auth/microsoft/callback', [MicrosoftLoginController::class, 'callback'])->name('login.microsoft.callback');
+    // Without Microsoft 365 (freelancers): a one-time code by email to their @cluk.live address.
+    Route::get('/login/code', [EmailCodeLoginController::class, 'form'])->name('login.code');
+    Route::post('/login/code', [EmailCodeLoginController::class, 'send'])->middleware('throttle:6,1')->name('login.code.send');
+    Route::post('/login/code/verify', [EmailCodeLoginController::class, 'verify'])->middleware('throttle:10,1')->name('login.code.verify');
 });
 
 // Afrit 6 member portal (members have their own login, separate from staff).
@@ -127,6 +132,7 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
             Route::post('/room', [WorkspaceController::class, 'book'])->middleware('throttle:30,1')->name('room.book');
             Route::post('/room/{booking}/cancel', [WorkspaceController::class, 'cancelBooking'])->whereNumber('booking')->name('room.cancel');
             Route::get('/services', [WorkspaceController::class, 'services'])->name('services');
+            Route::post('/door-code', [PortalController::class, 'requestDoorCode'])->middleware('throttle:5,1')->name('door');
             Route::post('/services', [WorkspaceController::class, 'storeService'])->middleware('throttle:30,1')->name('services.store');
             Route::post('/services/{serviceRequest}/cancel', [WorkspaceController::class, 'cancelService'])->whereNumber('serviceRequest')->name('services.cancel');
             Route::post('/services/{serviceRequest}/stop', [WorkspaceController::class, 'stopStorage'])->whereNumber('serviceRequest')->name('services.stop');
@@ -248,6 +254,7 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/desks', [StaffWorkspaceController::class, 'desks'])->name('desks');
         Route::middleware('level:afrit6,2')->group(function () {
             Route::post('/tasks/{task}/take', [TaskController::class, 'take'])->whereNumber('task')->name('tasks.take');
+            Route::post('/members/{member}/vies', [MemberAdminController::class, 'vies'])->whereNumber('member')->name('vies');
             Route::post('/tasks/{task}/reassign', [TaskController::class, 'reassign'])->whereNumber('task')->name('tasks.reassign');
             Route::post('/tasks/{task}/confirm', [TaskController::class, 'confirm'])->whereNumber('task')->name('tasks.confirm');
             Route::post('/tasks/{task}/decline', [TaskController::class, 'decline'])->whereNumber('task')->name('tasks.decline');

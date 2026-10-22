@@ -45,6 +45,8 @@ return [
         'role_id' => 'Role',
         'reports_to_id' => 'Reports to',
         'is_commercial' => 'Commercial contact (can own customers and deals)',
+        'email_login' => 'May sign in with a code by email (no Microsoft 365, e.g. freelancers; only @:domain addresses)',
+        'email_login_hint' => 'No password is stored: they get a one-time code at their work address each time.',
         'nobody' => '— nobody —',
     ],
     'hints' => [
@@ -186,6 +188,9 @@ return [
             'warehouse_checked' => 'Checked on the test bench',
             'warehouse_charges_approved' => 'Return charges approved',
             'warehouse_zone_saved' => 'Warehouse zone saved',
+            'afrit6_door_code_requested' => 'Door code requested by the member',
+            'auth_code_sent' => 'Sign-in code emailed',
+            'auth_code_refused' => 'Sign-in code refused (not allowed)',
             'crm_birthday_sent' => 'Birthday card sent',
             'order_times_changed' => 'Order times changed',
             'order_reopened' => 'Order reopened',

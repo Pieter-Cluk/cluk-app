@@ -108,6 +108,7 @@ class MemberAuthController extends Controller
             'vies_status' => null,
             'vies_name' => null,
             'vies_address' => null,
+            'vies_reason' => null,
         ];
 
         if ($vat !== null && ! VatNumber::looksValid($vat)) {
@@ -118,13 +119,17 @@ class MemberAuthController extends Controller
         if ($vat !== null && Vies::appliesTo($vat)) {
             // Only ask VIES again when the number changed.
             if (($previous['vat_number'] ?? null) === $vat && isset($previous['vies_status'])) {
-                $result = ['status' => $previous['vies_status'], 'name' => $previous['vies_name'], 'address' => $previous['vies_address']];
+                $result = ['status' => $previous['vies_status'], 'name' => $previous['vies_name'], 'address' => $previous['vies_address'], 'reason' => $previous['vies_reason'] ?? null];
             } else {
                 $result = $vies->check($vat);
             }
             $reg['vies_status'] = $result['status'];
             $reg['vies_name'] = $result['name'];
             $reg['vies_address'] = $result['address'];
+            $reg['vies_reason'] = $result['reason'] ?? null;
+            if ($result['status'] === 'valid' && Vies::nameDiffers($reg['company_name'], $result['name'])) {
+                $reg['vies_reason'] = 'name_differs';
+            }
             if ($result['status'] === 'valid') {
                 $reg['company_name'] ??= $result['name'];
                 $reg['address'] ??= $result['address'];
@@ -184,6 +189,7 @@ class MemberAuthController extends Controller
             'reg_address' => $reg['address'] ?? $reg['vies_address'],
             'vies_status' => $reg['vies_status'],
         ]);
+        $member->forceFill(['vies_reason' => $reg['vies_reason'] ?? null, 'vies_name' => $reg['vies_name'] ?? null, 'vies_checked_at' => $reg['vies_status'] ? now() : null]);
         $member->forceFill([
             'terms_accepted_at' => now(), 'rules_accepted_at' => now(), 'payment_terms_accepted_at' => now(),
             'terms_version' => config('afrit6.terms_version'),
