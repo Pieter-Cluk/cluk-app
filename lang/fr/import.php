@@ -38,6 +38,7 @@ return [
     'vies_pending' => '{1} 1 entreprise importée a un numéro de TVA UE pas encore vérifié dans VIES.|[2,*] :count entreprises importées ont un numéro de TVA UE pas encore vérifié dans VIES.',
     'vies_check' => 'Vérifier les 15 suivantes dans VIES',
     'errors' => [
+        'number_long' => 'Le numéro d’article « :number » dépasse 40 caractères : ligne ignorée.',
         'no_type' => 'Pas de type ou de nom de produit : ligne ignorée.',
         'missing_column' => 'La colonne « :column » manque. Gardez les noms de colonnes du modèle en ligne 1.',
         'no_name' => 'Pas de nom d\'entreprise : ligne ignorée.',

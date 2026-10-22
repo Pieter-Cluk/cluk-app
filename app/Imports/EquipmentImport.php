@@ -52,7 +52,15 @@ class EquipmentImport extends Importer
 
     protected function importRow(array $row, int $line): void
     {
+        // Texts longer than their field are cut to fit, never a crash halfway through a file.
+        $fit = fn (?string $v, int $len) => $v === null ? null : mb_substr($v, 0, $len);
         $number = strtoupper(trim((string) $row['number']));
+        if (mb_strlen($number) > 40) {
+            $this->report['skipped']++;
+            $this->message($line, 'error', __('import.errors.number_long', ['number' => $number]));
+
+            return;
+        }
         if ($number === '') {
             $this->report['skipped']++;
             $this->message($line, 'error', __('import.errors.no_number'));
@@ -69,12 +77,12 @@ class EquipmentImport extends Importer
 
         // Item details: from the first row of this item in the file; empty cells never wipe.
         if ($first) {
-            $brand = self::text($row['brand'] ?? null);
-            $type = self::text($row['type'] ?? null);
+            $brand = $fit(self::text($row['brand'] ?? null), 80);
+            $type = $fit(self::text($row['type'] ?? null), 255);
             $values = array_filter([
-                'category' => self::text($row['category'] ?? null),
-                'subcategory' => self::text($row['subcategory'] ?? null),
-                'unit' => self::text($row['unit'] ?? null),
+                'category' => $fit(self::text($row['category'] ?? null), 60),
+                'subcategory' => $fit(self::text($row['subcategory'] ?? null), 160),
+                'unit' => $fit(self::text($row['unit'] ?? null), 12),
                 'brand' => $brand,
                 'type' => $type,
                 'origin' => ($o = self::country($row['origin'] ?? null)) && strlen($o) === 2 ? $o : null,
@@ -94,7 +102,7 @@ class EquipmentImport extends Importer
             $item->fill($values);
             $name = self::text($row['name'] ?? null) ?? trim(($brand ?? '').' '.($type ?? ''));
             if ($name !== '' || $isNew) {
-                $item->name = $name !== '' ? $name : (self::text($row['description'] ?? null) ?? $number);
+                $item->name = mb_substr($name !== '' ? $name : (self::text($row['description'] ?? null) ?? $number), 0, 255);
             }
             if ($d = self::text($row['description'] ?? null)) {
                 $item->descriptions = array_merge($item->descriptions ?? [], ['en' => $d]);

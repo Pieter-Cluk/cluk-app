@@ -38,6 +38,7 @@ return [
     'vies_pending' => '{1} 1 geïmporteerd bedrijf heeft een EU-btw-nummer dat nog niet in VIES gecontroleerd is.|[2,*] :count geïmporteerde bedrijven hebben een EU-btw-nummer dat nog niet in VIES gecontroleerd is.',
     'vies_check' => 'Volgende 15 controleren in VIES',
     'errors' => [
+        'number_long' => 'Het artikelnummer ":number" is langer dan 40 tekens: rij overgeslagen.',
         'no_type' => 'Geen type of productnaam: rij overgeslagen.',
         'missing_column' => 'De kolom ":column" ontbreekt. Behoud de kolomnamen van het sjabloon in rij 1.',
         'no_name' => 'Geen bedrijfsnaam: rij overgeslagen.',

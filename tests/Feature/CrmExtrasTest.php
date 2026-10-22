@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\Equipment\Item;
 use App\Models\ProductSales\SalesItem;
 use App\Models\Role;
 use App\Models\User;
@@ -118,5 +119,18 @@ class CrmExtrasTest extends TestCase
         $this->actingAs($this->admin)->put('/companies/'.$c->id.'/contacts/'.$jo->id, ['first_name' => 'Jo', 'back' => 'https://evil.example/'])->assertRedirect(route('companies.show', $c));
         $viewer = User::factory()->create(['role_id' => Role::where('slug', 'warehouse')->value('id'), 'locale' => 'en']);
         $this->actingAs($viewer)->get('/companies?view=contacts')->assertDontSee('/contacts/'.$jo->id.'/edit');
+    }
+
+    public function test_long_hirehop_texts_are_cut_to_fit_instead_of_failing(): void
+    {
+        $long = str_repeat('Wireless microphones - Shure ULDX series (G51, H51 & K52) ', 6);
+        $csv = "Itemnumber;Category;Sub-Category;Brand;Type;Name;Rental price per day\n"
+            ."AUDWIRSHU2XULXD;Audio;{$long};Shure;{$long};Shure {$long};110\n";
+        $preview = $this->actingAs($this->admin)->post('/settings/import/preview', ['file' => UploadedFile::fake()->createWithContent('stock.csv', $csv), 'kind' => 'equipment'])->assertOk();
+        $this->actingAs($this->admin)->post('/settings/import/run', ['token' => $preview->viewData('token')])->assertOk();
+        $item = Item::where('number', 'AUDWIRSHU2XULXD')->firstOrFail();
+        $this->assertSame(160, mb_strlen($item->subcategory));
+        $this->assertSame(255, mb_strlen($item->name));
+        $this->assertSame(11000, $item->day_price_cents);
     }
 }

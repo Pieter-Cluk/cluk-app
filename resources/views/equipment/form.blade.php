@@ -16,11 +16,11 @@
                 <label class="field"><span>{{ __('equipment.cols.kind') }}</span>
                     <select name="kind">@foreach (\App\Models\Equipment\Item::KINDS as $k)<option value="{{ $k }}" @selected($v('kind', $item->kind) === $k)>{{ __('equipment.kinds.'.$k) }}</option>@endforeach</select>
                 </label>
-                <label class="field span-2"><span>{{ __('equipment.fields.name') }}</span><input name="name" required maxlength="160" value="{{ $v('name', $item->name) }}"></label>
+                <label class="field span-2"><span>{{ __('equipment.fields.name') }}</span><input name="name" required maxlength="255" value="{{ $v('name', $item->name) }}"></label>
                 <label class="field"><span>{{ __('equipment.fields.category') }}</span><input name="category" maxlength="60" value="{{ $v('category', $item->category) }}" list="cats"></label>
-                <label class="field"><span>{{ __('equipment.fields.subcategory') }}</span><input name="subcategory" maxlength="80" value="{{ $v('subcategory', $item->subcategory) }}"></label>
+                <label class="field"><span>{{ __('equipment.fields.subcategory') }}</span><input name="subcategory" maxlength="160" value="{{ $v('subcategory', $item->subcategory) }}"></label>
                 <label class="field"><span>{{ __('equipment.fields.brand') }}</span><input name="brand" maxlength="80" value="{{ $v('brand', $item->brand) }}"></label>
-                <label class="field"><span>{{ __('equipment.fields.type') }}</span><input name="type" maxlength="120" value="{{ $v('type', $item->type) }}"></label>
+                <label class="field"><span>{{ __('equipment.fields.type') }}</span><input name="type" maxlength="255" value="{{ $v('type', $item->type) }}"></label>
                 <label class="field"><span>{{ __('equipment.fields.unit') }}</span><input name="unit" required maxlength="12" value="{{ $v('unit', $item->unit ?? 'pcs') }}"></label>
                 <label class="check"><input type="checkbox" name="serial" value="1" @checked($v('serial', $item->serial))><span>{{ __('equipment.fields.serial') }}<br><small>{{ __('equipment.serial_hint') }}</small></span></label>
                 <label class="field"><span>{{ __('equipment.fields.stock_qty') }}</span><input type="number" name="stock_qty" min="0" value="{{ $v('stock_qty', $item->stock_qty) }}"><small>{{ __('equipment.stock_hint') }}</small></label>

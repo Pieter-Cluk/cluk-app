@@ -3,6 +3,7 @@
 use App\Models\Role;
 use App\Services\Crm\Birthdays;
 use App\Services\Media\Messages;
+use App\Services\Media\Translator;
 use App\Services\Vies;
 use App\Services\ViesRecheck;
 use Illuminate\Foundation\Inspiring;
@@ -61,12 +62,12 @@ Schedule::command('cluk:messages')->everyMinute()->withoutOverlapping();
 
 // Check that translating works (Media › Messages). Prints the Dutch, French and Spanish of a test sentence.
 Artisan::command('cluk:translate-test', function () {
-    if (! \App\Services\Media\Translator::available()) {
+    if (! Translator::available()) {
         $this->error('No ANTHROPIC_API_KEY on the server.');
 
         return 1;
     }
-    $out = app(\App\Services\Media\Translator::class)->translate(['body' => 'Happy birthday, {name}! The whole CLUK team wishes you a great day.']);
+    $out = app(Translator::class)->translate(['body' => 'Happy birthday, {name}! The whole CLUK team wishes you a great day.']);
     if ($out === null) {
         $this->error('Translation failed: see the log (storage/logs) for the reason.');
 

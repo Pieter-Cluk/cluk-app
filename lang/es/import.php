@@ -38,6 +38,7 @@ return [
     'vies_pending' => '{1} 1 empresa importada tiene un número de IVA de la UE aún sin comprobar en VIES.|[2,*] :count empresas importadas tienen un número de IVA de la UE aún sin comprobar en VIES.',
     'vies_check' => 'Comprobar las 15 siguientes en VIES',
     'errors' => [
+        'number_long' => 'El número de artículo ":number" supera los 40 caracteres: fila omitida.',
         'no_type' => 'Sin tipo ni nombre de producto: fila omitida.',
         'missing_column' => 'Falta la columna «:column». Mantén los nombres de columna de la plantilla en la fila 1.',
         'no_name' => 'Sin nombre de empresa: fila omitida.',

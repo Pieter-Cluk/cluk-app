@@ -38,6 +38,7 @@ return [
     'vies_pending' => '{1} 1 imported company has an EU VAT number that was not checked in VIES yet.|[2,*] :count imported companies have an EU VAT number that was not checked in VIES yet.',
     'vies_check' => 'Check the next 15 in VIES',
     'errors' => [
+        'number_long' => 'The item number ":number" is longer than 40 characters: row skipped.',
         'no_type' => 'No type or product name: row skipped.',
         'missing_column' => 'The column ":column" is missing. Keep the column names of the template in row 1.',
         'no_name' => 'No company name: row skipped.',
