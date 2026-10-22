@@ -35,7 +35,7 @@ return [
     'fields' => [
         'first_name' => 'Voornaam',
         'last_name' => 'Achternaam',
-        'email' => 'Microsoft 365-e-mailadres',
+        'email' => 'Werk-e-mailadres (@cluk.live)',
         'title' => 'Functie',
         'department' => 'Afdeling',
         'phone' => 'Telefoon',
@@ -50,7 +50,7 @@ return [
         'nobody' => '— niemand —',
     ],
     'hints' => [
-        'email' => 'Meldt aan met dit Microsoft 365-account. Niemand anders kan aanmelden.',
+        'email' => 'Ze melden aan met dit adres: met Microsoft 365, of met een code per e-mail als je dat hieronder aanvinkt. Niemand anders kan aanmelden.',
         'reports_to' => 'Gebruikt bij het doorgeven van taken: een leidinggevende kan de taken van iedereen onder zich herverdelen.',
         'role' => 'De rol bepaalt de basistoegang. Na het opslaan kun je hieronder losse modules aanpassen.',
     ],

@@ -35,7 +35,7 @@ return [
     'fields' => [
         'first_name' => 'First name',
         'last_name' => 'Last name',
-        'email' => 'Microsoft 365 email address',
+        'email' => 'Work email address (@cluk.live)',
         'title' => 'Job title',
         'department' => 'Department',
         'phone' => 'Phone',
@@ -50,7 +50,7 @@ return [
         'nobody' => '— nobody —',
     ],
     'hints' => [
-        'email' => 'They sign in with this Microsoft 365 account. Nobody else can sign in.',
+        'email' => 'They sign in with this address: with Microsoft 365, or with a code by email if you tick that below. Nobody else can sign in.',
         'reports_to' => 'Used for handing over tasks: a manager can reassign the tasks of everyone below them.',
         'role' => 'The role sets the starting access. You can change single modules below, after saving.',
     ],

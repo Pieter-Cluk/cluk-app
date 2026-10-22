@@ -35,7 +35,7 @@ return [
     'fields' => [
         'first_name' => 'Nombre',
         'last_name' => 'Apellidos',
-        'email' => 'Correo de Microsoft 365',
+        'email' => 'Correo de trabajo (@cluk.live)',
         'title' => 'Puesto',
         'department' => 'Departamento',
         'phone' => 'Teléfono',
@@ -50,7 +50,7 @@ return [
         'nobody' => '— nadie —',
     ],
     'hints' => [
-        'email' => 'Inicia sesión con esta cuenta de Microsoft 365. Nadie más puede entrar.',
+        'email' => 'Entra con esta dirección: con Microsoft 365, o con un código por correo si lo marcas abajo. Nadie más puede entrar.',
         'reports_to' => 'Se usa al pasar tareas: un responsable puede reasignar las tareas de todo su equipo.',
         'role' => 'El rol define el acceso básico. Después de guardar puedes cambiar módulos sueltos más abajo.',
     ],

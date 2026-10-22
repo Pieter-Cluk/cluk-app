@@ -35,7 +35,7 @@ return [
     'fields' => [
         'first_name' => 'Prénom',
         'last_name' => 'Nom',
-        'email' => 'Adresse e-mail Microsoft 365',
+        'email' => 'Adresse e-mail professionnelle (@cluk.live)',
         'title' => 'Fonction',
         'department' => 'Service',
         'phone' => 'Téléphone',
@@ -50,7 +50,7 @@ return [
         'nobody' => '— personne —',
     ],
     'hints' => [
-        'email' => 'Se connecte avec ce compte Microsoft 365. Personne d\'autre ne peut se connecter.',
+        'email' => 'La personne se connecte avec cette adresse : via Microsoft 365, ou avec un code par e-mail si vous le cochez ci-dessous. Personne d’autre ne peut se connecter.',
         'reports_to' => 'Utilisé pour transmettre des tâches : un responsable peut réattribuer les tâches de toute son équipe.',
         'role' => 'Le rôle définit l\'accès de base. Après l\'enregistrement, vous pouvez modifier des modules ci-dessous.',
     ],
