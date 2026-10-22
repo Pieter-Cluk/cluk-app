@@ -22,7 +22,7 @@
             <ul class="inbox">
                 @forelse ($items as $it)
                     <li><a @class(['inbox-item', 'is-on' => $sel?->is($it) && ! $new]) href="{{ route('psales.items', array_filter(['item' => $it->id, 'cat' => $cat, 'q' => $q])) }}">
-                        <span class="inbox-main"><b>{{ $it->name() }}</b><small class="muted">{{ $it->number }} · {{ $it->documents_count ? trans_choice('psales.items.pdfs', $it->documents_count, ['n' => $it->documents_count]) : __('psales.items.no_pdfs') }}</small></span>
+                        <span class="inbox-main"><b>{{ $it->name() }}@if ($it->on_website) <span class="pill">{{ __('equipment.web_pill') }}</span>@endif</b><small class="muted">{{ $it->number }} · {{ $it->documents_count ? trans_choice('psales.items.pdfs', $it->documents_count, ['n' => $it->documents_count]) : __('psales.items.no_pdfs') }}</small></span>
                         <span class="inbox-side"><b>{{ $eur($it->list_price_cents) }}</b><small class="muted">{{ $it->stock_qty > 0 ? __('psales.items.in_stock', ['n' => $it->stock_qty]) : __('psales.items.order_it') }}</small></span>
                     </a></li>
                 @empty

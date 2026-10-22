@@ -13,3 +13,4 @@
     <label class="field"><span>{{ __('psales.items.min_stock') }}</span><input type="number" min="0" name="min_stock" value="{{ old('min_stock', $it->min_stock ?? 0) }}" class="w-sm"></label>
     <label class="field"><span>{{ __('psales.items.ean') }}</span><input name="ean" maxlength="32" value="{{ old('ean', $it->ean ?? '') }}" inputmode="numeric"></label>
 </div>
+<label class="check"><input type="hidden" name="on_website" value="0"><input type="checkbox" name="on_website" value="1" @checked(old('on_website', $it->on_website ?? false))><span>{{ __('psales.items.on_website') }}<br><small>{{ __('equipment.on_website_hint') }}</small></span></label>

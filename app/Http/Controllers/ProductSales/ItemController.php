@@ -49,14 +49,14 @@ class ItemController extends Controller
             'brand' => ['nullable', 'string', 'max:80'], 'type' => ['required', 'string', 'max:120'], 'description' => ['nullable', 'string', 'max:300'],
             'category' => ['nullable', Rule::in(SalesItem::CATEGORIES)], 'unit' => ['required', Rule::in(SalesItem::UNITS)],
             'list_price' => ['required', 'numeric', 'min:0', 'max:1000000'], 'stock_qty' => ['nullable', 'integer', 'min:0', 'max:1000000'], 'min_stock' => ['nullable', 'integer', 'min:0', 'max:100000'],
-            'ean' => ['nullable', 'string', 'max:32'],
+            'ean' => ['nullable', 'string', 'max:32'], 'on_website' => ['nullable', 'boolean'],
         ];
     }
 
     private function data(array $d): array
     {
         return ['brand' => $d['brand'] ?? null, 'type' => $d['type'], 'description' => $d['description'] ?? null, 'category' => $d['category'] ?? null, 'unit' => $d['unit'],
-            'list_price_cents' => (int) round($d['list_price'] * 100), 'stock_qty' => (int) ($d['stock_qty'] ?? 0), 'min_stock' => (int) ($d['min_stock'] ?? 0), 'ean' => $d['ean'] ?? null];
+            'list_price_cents' => (int) round($d['list_price'] * 100), 'stock_qty' => (int) ($d['stock_qty'] ?? 0), 'min_stock' => (int) ($d['min_stock'] ?? 0), 'ean' => $d['ean'] ?? null, 'on_website' => (bool) ($d['on_website'] ?? false)];
     }
 
     public function store(Request $request): RedirectResponse

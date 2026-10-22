@@ -27,8 +27,9 @@ class ItemController extends Controller
         $cat = (string) $request->query('cat', '');
         $q = trim((string) $request->query('q', ''));
         $showInactive = $request->boolean('inactive');
+        $onlyWeb = $request->boolean('web');
 
-        $base = Item::query()->when(! $showInactive, fn ($w) => $w->where('active', true));
+        $base = Item::query()->when(! $showInactive, fn ($w) => $w->where('active', true))->when($onlyWeb, fn ($w) => $w->where('on_website', true));
         $counts = ['all' => (clone $base)->count()];
         foreach (array_slice(self::FILTERS, 1) as $k) {
             $counts[$k] = (clone $base)->where('kind', $k)->count();
@@ -47,7 +48,7 @@ class ItemController extends Controller
             ->orderBy('category')->orderBy('number')
             ->paginate(50)->withQueryString();
 
-        return view('equipment.index', [
+        return view('equipment.index', ['onlyWeb' => $onlyWeb,
             'items' => $items, 'kind' => $kind, 'cat' => $cat, 'q' => $q, 'counts' => $counts, 'showInactive' => $showInactive,
             'categories' => Item::query()->whereNotNull('category')->distinct()->orderBy('category')->pluck('category'),
             'canEdit' => $request->user()->canUseModule('dryhire', 2),
@@ -138,6 +139,7 @@ class ItemController extends Controller
             'desc' => ['nullable', 'array'],
             'desc.*' => ['nullable', 'string', 'max:2000'],
             'in_search' => ['nullable', 'boolean'],
+            'on_website' => ['nullable', 'boolean'],
             'active' => ['nullable', 'boolean'],
         ]);
         $serial = in_array($d['kind'], ['item', 'case'], true) && ! empty($d['serial']);
@@ -153,7 +155,7 @@ class ItemController extends Controller
             'weight_kg' => $d['weight_kg'] ?? null, 'width_m' => $d['width_m'] ?? null, 'length_m' => $d['length_m'] ?? null, 'height_m' => $d['height_m'] ?? null,
             'origin' => isset($d['origin']) ? strtoupper($d['origin']) : null, 'hs_code' => $d['hs_code'] ?? null,
             'descriptions' => array_filter(array_intersect_key($d['desc'] ?? [], config('cluk.locales'))) ?: null,
-            'in_search' => (bool) ($d['in_search'] ?? false), 'active' => (bool) ($d['active'] ?? false),
+            'in_search' => (bool) ($d['in_search'] ?? false), 'on_website' => (bool) ($d['on_website'] ?? false), 'active' => (bool) ($d['active'] ?? false),
         ];
     }
 

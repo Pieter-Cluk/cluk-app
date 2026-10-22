@@ -112,6 +112,7 @@ return [
         'height_m' => 'Height (m)',
         'origin' => 'Country of origin',
         'hs_code' => 'HS code',
+        'on_website' => 'Show on the website',
         'in_search' => 'Show in the quote catalogue',
         'active' => 'Active',
         'code' => 'Code',
@@ -184,4 +185,7 @@ return [
         'sources' => ['manufacturer' => 'manufacturer site', 'distributor' => 'shop / distributor', 'other' => 'other site', 'none' => 'source unknown'],
         'empty' => 'Nothing here.',
     ],
+    'on_website_hint' => 'Only products with this ticked appear on the CLUK website.',
+    'only_web' => 'Only on the website',
+    'web_pill' => 'Web',
 ];

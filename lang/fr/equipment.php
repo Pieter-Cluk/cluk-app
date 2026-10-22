@@ -112,6 +112,7 @@ return [
         'height_m' => 'Hauteur (m)',
         'origin' => 'Pays d’origine',
         'hs_code' => 'Code SH',
+        'on_website' => 'Afficher sur le site web',
         'in_search' => 'Afficher dans le catalogue des devis',
         'active' => 'Actif',
         'code' => 'Code',
@@ -184,4 +185,7 @@ return [
         'sources' => ['manufacturer' => 'site du fabricant', 'distributor' => 'boutique / distributeur', 'other' => 'autre site', 'none' => 'source inconnue'],
         'empty' => 'Rien ici.',
     ],
+    'on_website_hint' => 'Seuls les produits cochés apparaissent sur le site web de CLUK.',
+    'only_web' => 'Seulement sur le site web',
+    'web_pill' => 'Web',
 ];

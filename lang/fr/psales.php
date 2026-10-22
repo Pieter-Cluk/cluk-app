@@ -223,6 +223,7 @@ return [
         'reserved' => ':n réservés pour des ventes',
         'min' => 'minimum :n',
         'min_stock' => 'Stock minimum',
+        'on_website' => 'Afficher sur le site web',
         'ean' => 'EAN / code-barres',
         'category' => 'Catégorie',
         'edit' => 'Modifier l’article',

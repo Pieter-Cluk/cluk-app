@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'number', 'kind', 'category', 'subcategory', 'brand', 'type', 'name', 'unit', 'serial', 'stock_qty', 'position_code',
     'day_price_cents', 'price_unit', 'catalog_price_cents', 'weight_kg', 'width_m', 'length_m', 'height_m', 'origin', 'hs_code',
-    'descriptions', 'photo_path', 'in_search', 'active',
+    'descriptions', 'photo_path', 'in_search', 'on_website', 'active',
 ])]
 class Item extends Model
 {
@@ -29,7 +29,7 @@ class Item extends Model
     protected function casts(): array
     {
         return [
-            'serial' => 'boolean', 'in_search' => 'boolean', 'active' => 'boolean', 'descriptions' => 'array',
+            'serial' => 'boolean', 'in_search' => 'boolean', 'on_website' => 'boolean', 'active' => 'boolean', 'descriptions' => 'array',
             'stock_qty' => 'integer', 'day_price_cents' => 'integer', 'catalog_price_cents' => 'integer',
             'weight_kg' => 'float', 'width_m' => 'float', 'length_m' => 'float', 'height_m' => 'float',
         ];

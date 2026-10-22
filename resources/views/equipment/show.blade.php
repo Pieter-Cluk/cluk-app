@@ -38,6 +38,7 @@
                     @endif
                     <dt>{{ __('equipment.fields.unit') }}</dt><dd>{{ $item->unit }}</dd>
                     <dt>{{ __('equipment.fields.in_search') }}</dt><dd>{{ $item->in_search ? __('companies.yes') : __('companies.no') }}</dd>
+                    <dt>{{ __('equipment.fields.on_website') }}</dt><dd>{{ $item->on_website ? __('companies.yes') : __('companies.no') }}</dd>
                 </dl>
             </section>
 

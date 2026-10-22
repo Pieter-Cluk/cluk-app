@@ -223,6 +223,7 @@ return [
         'reserved' => ':n kept for sales',
         'min' => 'minimum :n',
         'min_stock' => 'Minimum stock',
+        'on_website' => 'Show on the website',
         'ean' => 'EAN / barcode',
         'category' => 'Category',
         'edit' => 'Edit item',

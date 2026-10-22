@@ -67,6 +67,7 @@
         </section>
         <section class="card">
             <label class="check"><input type="checkbox" name="in_search" value="1" @checked($v('in_search', $item->in_search))><span>{{ __('equipment.fields.in_search') }}</span></label>
+            <label class="check"><input type="checkbox" name="on_website" value="1" @checked($v('on_website', $item->on_website))><span>{{ __('equipment.fields.on_website') }}<br><small>{{ __('equipment.on_website_hint') }}</small></span></label>
             <label class="check"><input type="checkbox" name="active" value="1" @checked($v('active', $item->active))><span>{{ __('equipment.fields.active') }}<br><small>{{ __('equipment.active_hint') }}</small></span></label>
             <div class="form-actions">
                 <a class="btn" href="{{ $item->exists ? route('equipment.show', $item) : route('equipment.index') }}">{{ __('equipment.cancel') }}</a>

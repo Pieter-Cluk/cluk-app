@@ -223,6 +223,7 @@ return [
         'reserved' => ':n gereserveerd voor verkopen',
         'min' => 'minimum :n',
         'min_stock' => 'Minimumstock',
+        'on_website' => 'Tonen op de website',
         'ean' => 'EAN / streepjescode',
         'category' => 'Categorie',
         'edit' => 'Artikel bewerken',

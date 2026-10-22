@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /** A product we sell. No assets: stock is a number. */
-#[Fillable(['number', 'brand', 'type', 'description', 'category', 'unit', 'list_price_cents', 'stock_qty', 'min_stock', 'photo_path', 'active', 'ean'])]
+#[Fillable(['number', 'brand', 'type', 'description', 'category', 'unit', 'list_price_cents', 'stock_qty', 'min_stock', 'photo_path', 'active', 'ean', 'on_website'])]
 class SalesItem extends Model
 {
     public const CATEGORIES = ['Audio', 'Light', 'Video', 'Connectors', 'Rigging', 'Consumables', 'Cases', 'Other'];
@@ -19,7 +19,7 @@ class SalesItem extends Model
 
     protected function casts(): array
     {
-        return ['list_price_cents' => 'integer', 'stock_qty' => 'integer', 'min_stock' => 'integer', 'active' => 'boolean'];
+        return ['list_price_cents' => 'integer', 'stock_qty' => 'integer', 'min_stock' => 'integer', 'active' => 'boolean', 'on_website' => 'boolean'];
     }
 
     public function suppliers(): BelongsToMany

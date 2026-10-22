@@ -112,6 +112,7 @@ return [
         'height_m' => 'Hoogte (m)',
         'origin' => 'Land van oorsprong',
         'hs_code' => 'HS-code',
+        'on_website' => 'Tonen op de website',
         'in_search' => 'Tonen in de offertecatalogus',
         'active' => 'Actief',
         'code' => 'Code',
@@ -184,4 +185,7 @@ return [
         'sources' => ['manufacturer' => 'site fabrikant', 'distributor' => 'winkel / verdeler', 'other' => 'andere site', 'none' => 'bron onbekend'],
         'empty' => 'Niets hier.',
     ],
+    'on_website_hint' => 'Alleen producten met dit vinkje verschijnen op de CLUK-website.',
+    'only_web' => 'Alleen op de website',
+    'web_pill' => 'Web',
 ];
