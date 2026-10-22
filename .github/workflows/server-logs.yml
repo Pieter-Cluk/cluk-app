@@ -62,10 +62,11 @@ jobs:
                   $i->photos()->count().($i->photo_path ? ' (main set)' : ' (no main)'),
                   $d ? implode(',', $d) : 'none', $i->active ? 'yes' : 'NO']).PHP_EOL;
           }
-          echo PHP_EOL."== categories in the whole dry-hire list (items, ticked)".PHP_EOL;
-          foreach ($eq->groupBy(fn ($i) => ($i->category ?: '-').' > '.($i->subcategory ?: '-'))->sortKeys() as $k => $g) {
-              echo "$k: ".$g->count().', '.$g->where('on_website', true)->count().PHP_EOL;
+          echo PHP_EOL."== dry-hire categories: items, ticked, subcategories, pieces".PHP_EOL;
+          foreach ($eq->groupBy(fn ($i) => $i->category ?: '-')->sortKeys() as $k => $g) {
+              echo "$k: ".$g->count().', '.$g->where('on_website', true)->count().', '.$g->pluck('subcategory')->unique()->count().', '.$g->sum(fn ($i) => $i->totalQty()).PHP_EOL;
           }
+          echo "items with any pieces or stock: ".$eq->filter(fn ($i) => $i->totalQty() > 0)->count().PHP_EOL;
           $s = App\Models\ProductSales\SalesItem::query()->get();
           echo PHP_EOL."== SALES: ".$s->where('on_website', true)->count()." of ".$s->count()." products ticked".PHP_EOL;
           echo "number | brand type | category | stock | list price | photo | description | active".PHP_EOL;
