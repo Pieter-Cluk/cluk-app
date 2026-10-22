@@ -10,9 +10,11 @@
         <select name="language"><option value="">{{ __('companies.contacts.same_as_company') }}</option>
             @foreach (config('cluk.locales') as $code => $name)<option value="{{ $code }}" @selected($c->language === $code)>{{ $name }}</option>@endforeach
         </select></label>
+    <label class="field"><span>{{ __('companies.contacts.birth_date') }}</span><input type="date" name="birth_date" value="{{ $c->birth_date?->format('Y-m-d') }}" max="{{ today()->subDay()->format('Y-m-d') }}"></label>
     <div class="field">
         <label class="check"><input type="checkbox" name="is_main" value="1" @checked($pivot?->is_main)><span>{{ __('companies.contacts.is_main') }}</span></label>
         <label class="check"><input type="checkbox" name="is_billing" value="1" @checked($pivot?->is_billing)><span>{{ __('companies.contacts.is_billing') }}</span></label>
         <label class="check"><input type="checkbox" name="newsletter" value="1" @checked($c->newsletter)><span>{{ __('companies.contacts.newsletter_consent') }}</span></label>
+        <label class="check"><input type="checkbox" name="birthday_card" value="1" @checked($c->birthday_card)><span>{{ __('companies.contacts.birthday_card') }}</span></label>
     </div>
 </div>

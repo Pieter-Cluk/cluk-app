@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /** A product we sell. No assets: stock is a number. */
-#[Fillable(['number', 'brand', 'type', 'description', 'category', 'unit', 'list_price_cents', 'stock_qty', 'min_stock', 'photo_path', 'active'])]
+#[Fillable(['number', 'brand', 'type', 'description', 'category', 'unit', 'list_price_cents', 'stock_qty', 'min_stock', 'photo_path', 'active', 'ean'])]
 class SalesItem extends Model
 {
     public const CATEGORIES = ['Audio', 'Light', 'Video', 'Connectors', 'Rigging', 'Consumables', 'Cases', 'Other'];
@@ -24,7 +24,7 @@ class SalesItem extends Model
 
     public function suppliers(): BelongsToMany
     {
-        return $this->belongsToMany(Company::class, 'sales_item_suppliers')->withPivot(['id', 'discount_bp', 'lead_days', 'preferred'])->withTimestamps()->orderByDesc('sales_item_suppliers.preferred');
+        return $this->belongsToMany(Company::class, 'sales_item_suppliers')->withPivot(['id', 'discount_bp', 'lead_days', 'preferred', 'supplier_ref'])->withTimestamps()->orderByDesc('sales_item_suppliers.preferred');
     }
 
     public function documents(): HasMany

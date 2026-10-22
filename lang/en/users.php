@@ -186,6 +186,7 @@ return [
             'warehouse_checked' => 'Checked on the test bench',
             'warehouse_charges_approved' => 'Return charges approved',
             'warehouse_zone_saved' => 'Warehouse zone saved',
+            'crm_birthday_sent' => 'Birthday card sent',
             'order_times_changed' => 'Order times changed',
             'order_reopened' => 'Order reopened',
             'order_taken_back' => 'Reopened order continues with the new quote',

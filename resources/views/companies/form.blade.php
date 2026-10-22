@@ -9,8 +9,13 @@
     </div>
     @include('partials.flash')
 
-    <form class="card" method="post" action="{{ $editing ? route('companies.update', $company) : route('companies.store') }}">
+    <form class="card" method="post" action="{{ $editing ? route('companies.update', $company) : route('companies.store') }}" enctype="multipart/form-data">
         @csrf @if ($editing) @method('put') @endif
+
+        <div class="logo-field">
+            @if ($company->exists)<x-logo :company="$company" size="lg" :rel="$company->relationshipKey()"/>@endif
+            <label class="field"><span>{{ __('companies.fields.logo') }}</span><input type="file" name="logo" accept="image/*"><small class="muted">{{ __('companies.fields.logo_hint') }}</small></label>
+        </div>
 
         <fieldset class="rel-pick">
             <legend>{{ __('companies.form.relationship') }}</legend>
@@ -66,7 +71,7 @@
                 </div>
                 <small>{{ __('companies.form.supplies_hint') }}</small>
             </fieldset>
-            <label class="field span-2"><span>{{ __('companies.fields.notes') }}</span>
+            <label class="field span-2"><span>{{ __('companies.fields.notes') }} · <small class="muted">{{ __('companies.fields.notes_hint') }}</small></span>
                 <textarea name="notes" rows="3" maxlength="5000">{{ old('notes', $company->notes) }}</textarea></label>
         </div>
         <div class="form-actions">

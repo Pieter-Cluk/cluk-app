@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'intro' => 'Bring companies, contacts and rental equipment in from a spreadsheet (the CLUK template, or an export from HubSpot, HireHop or Excel). You first see what would happen; nothing changes until you confirm.',
+    'intro' => 'Bring companies, contacts, rental equipment and sales products in from a spreadsheet (the CLUK template, or an export from HubSpot, HireHop or Excel). You first see what would happen; nothing changes until you confirm.',
     'template' => 'Download the template',
     'upload_title' => 'Upload a spreadsheet',
     'file' => 'File (.xlsx or .csv)',
@@ -9,6 +9,7 @@ return [
     'kind' => 'What is in the file',
     'kind_auto' => 'Find out from the sheet names',
     'kinds' => [
+        'salesitems' => 'Sales products',
         'companies' => 'Companies',
         'contacts' => 'Contacts',
         'equipment' => 'Rental equipment',
@@ -37,14 +38,17 @@ return [
     'vies_pending' => '{1} 1 imported company has an EU VAT number that was not checked in VIES yet.|[2,*] :count imported companies have an EU VAT number that was not checked in VIES yet.',
     'vies_check' => 'Check the next 15 in VIES',
     'errors' => [
+        'no_type' => 'No type or product name: row skipped.',
         'missing_column' => 'The column ":column" is missing. Keep the column names of the template in row 1.',
         'no_name' => 'No company name: row skipped.',
         'no_first_name' => 'No first name: row skipped.',
         'unreadable' => 'This file could not be read. Save it as .xlsx or .csv and try again.',
-        'no_sheet' => 'No sheet with companies, contacts or equipment was found.',
+        'no_sheet' => 'No sheet with companies, contacts, equipment or sales products was found.',
         'no_number' => 'No item number: row skipped.',
     ],
     'warnings' => [
+        'unit' => 'Unit ":value" not known (piece, set, roll, box, meter): piece is used.',
+        'supplier' => 'Supplier ":name" not found: import the companies first (same file, sheet Companies).',
         'country' => 'Country ":value" not recognised; Belgium is used. Use two letters, e.g. NL.',
         'vat' => 'VAT number ":number" for :name is not correct and was left out.',
         'email' => 'Email ":value" is not an email address and was left out.',

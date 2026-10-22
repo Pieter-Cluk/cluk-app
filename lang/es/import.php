@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'intro' => 'Trae empresas, contactos y material de alquiler desde una hoja de cálculo (la plantilla de CLUK, o una exportación de HubSpot, HireHop o Excel). Primero ves lo que pasaría; nada cambia hasta que confirmas.',
+    'intro' => 'Importa empresas, contactos, equipos de alquiler y productos de venta desde una hoja de cálculo (la plantilla CLUK, o una exportación de HubSpot, HireHop o Excel). Primero ves lo que pasaría; nada cambia hasta que confirmes.',
     'template' => 'Descargar la plantilla',
     'upload_title' => 'Subir una hoja de cálculo',
     'file' => 'Archivo (.xlsx o .csv)',
@@ -9,6 +9,7 @@ return [
     'kind' => 'Qué contiene el archivo',
     'kind_auto' => 'Deducirlo de los nombres de las hojas',
     'kinds' => [
+        'salesitems' => 'Productos de venta',
         'companies' => 'Empresas',
         'contacts' => 'Contactos',
         'equipment' => 'Material de alquiler',
@@ -37,14 +38,17 @@ return [
     'vies_pending' => '{1} 1 empresa importada tiene un número de IVA de la UE aún sin comprobar en VIES.|[2,*] :count empresas importadas tienen un número de IVA de la UE aún sin comprobar en VIES.',
     'vies_check' => 'Comprobar las 15 siguientes en VIES',
     'errors' => [
+        'no_type' => 'Sin tipo ni nombre de producto: fila omitida.',
         'missing_column' => 'Falta la columna «:column». Mantén los nombres de columna de la plantilla en la fila 1.',
         'no_name' => 'Sin nombre de empresa: fila omitida.',
         'no_first_name' => 'Sin nombre: fila omitida.',
         'unreadable' => 'No se puede leer este archivo. Guárdalo como .xlsx o .csv e inténtalo de nuevo.',
-        'no_sheet' => 'No se encontró ninguna hoja con empresas, contactos o material.',
+        'no_sheet' => 'No se encontró ninguna hoja con empresas, contactos, equipos o productos de venta.',
         'no_number' => 'Sin número de artículo: fila omitida.',
     ],
     'warnings' => [
+        'unit' => 'Unidad ":value" desconocida (piece, set, roll, box, meter): se usa piece.',
+        'supplier' => 'Proveedor ":name" no encontrado: importa primero las empresas (mismo archivo, hoja Companies).',
         'country' => 'País «:value» no reconocido; se usa Bélgica. Usa dos letras, p. ej. NL.',
         'vat' => 'El número de IVA «:number» de :name no es correcto y se ha omitido.',
         'email' => 'El correo «:value» no es una dirección válida y se ha omitido.',

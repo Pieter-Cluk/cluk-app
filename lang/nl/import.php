@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'intro' => 'Breng bedrijven, contactpersonen en verhuurmateriaal binnen vanuit een rekenblad (het CLUK-sjabloon, of een export uit HubSpot, HireHop of Excel). Je ziet eerst wat er zou gebeuren; er verandert niets tot je bevestigt.',
+    'intro' => 'Breng bedrijven, contacten, verhuurmateriaal en verkoopproducten binnen uit een spreadsheet (het CLUK-sjabloon, of een export uit HubSpot, HireHop of Excel). Je ziet eerst wat er zou gebeuren; er verandert niets tot je bevestigt.',
     'template' => 'Sjabloon downloaden',
     'upload_title' => 'Rekenblad opladen',
     'file' => 'Bestand (.xlsx of .csv)',
@@ -9,6 +9,7 @@ return [
     'kind' => 'Wat zit er in het bestand',
     'kind_auto' => 'Afleiden uit de namen van de tabbladen',
     'kinds' => [
+        'salesitems' => 'Verkoopproducten',
         'companies' => 'Bedrijven',
         'contacts' => 'Contactpersonen',
         'equipment' => 'Verhuurmateriaal',
@@ -37,14 +38,17 @@ return [
     'vies_pending' => '{1} 1 geïmporteerd bedrijf heeft een EU-btw-nummer dat nog niet in VIES gecontroleerd is.|[2,*] :count geïmporteerde bedrijven hebben een EU-btw-nummer dat nog niet in VIES gecontroleerd is.',
     'vies_check' => 'Volgende 15 controleren in VIES',
     'errors' => [
+        'no_type' => 'Geen type of productnaam: rij overgeslagen.',
         'missing_column' => 'De kolom ":column" ontbreekt. Behoud de kolomnamen van het sjabloon in rij 1.',
         'no_name' => 'Geen bedrijfsnaam: rij overgeslagen.',
         'no_first_name' => 'Geen voornaam: rij overgeslagen.',
         'unreadable' => 'Dit bestand kan niet gelezen worden. Bewaar het als .xlsx of .csv en probeer opnieuw.',
-        'no_sheet' => 'Geen tabblad met bedrijven, contactpersonen of materiaal gevonden.',
+        'no_sheet' => 'Geen blad met bedrijven, contacten, materiaal of verkoopproducten gevonden.',
         'no_number' => 'Geen artikelnummer: rij overgeslagen.',
     ],
     'warnings' => [
+        'unit' => 'Eenheid ":value" onbekend (piece, set, roll, box, meter): piece wordt gebruikt.',
+        'supplier' => 'Leverancier ":name" niet gevonden: importeer eerst de bedrijven (zelfde bestand, blad Companies).',
         'country' => 'Land ":value" niet herkend; België wordt gebruikt. Gebruik twee letters, bv. NL.',
         'vat' => 'Btw-nummer ":number" van :name klopt niet en is weggelaten.',
         'email' => 'E-mail ":value" is geen e-mailadres en is weggelaten.',

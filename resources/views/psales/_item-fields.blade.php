@@ -11,4 +11,5 @@
     <label class="field"><span>{{ __('psales.items.list_price') }} (€)</span><input type="number" step="0.01" min="0" name="list_price" required value="{{ old('list_price', $it->exists ? number_format($it->list_price_cents / 100, 2, '.', '') : '') }}" class="w-sm"></label>
     <label class="field"><span>{{ __('psales.items.stock') }}</span><input type="number" min="0" name="stock_qty" value="{{ old('stock_qty', $it->stock_qty ?? 0) }}" class="w-sm"></label>
     <label class="field"><span>{{ __('psales.items.min_stock') }}</span><input type="number" min="0" name="min_stock" value="{{ old('min_stock', $it->min_stock ?? 0) }}" class="w-sm"></label>
+    <label class="field"><span>{{ __('psales.items.ean') }}</span><input name="ean" maxlength="32" value="{{ old('ean', $it->ean ?? '') }}" inputmode="numeric"></label>
 </div>

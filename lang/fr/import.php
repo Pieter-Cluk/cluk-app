@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'intro' => 'Importez des entreprises et des contacts depuis un tableur (le modèle CLUK, ou un export de HubSpot, HireHop ou Excel). Vous voyez d\'abord ce qui se passerait ; rien ne change avant votre confirmation.',
+    'intro' => 'Importez sociétés, contacts, matériel de location et produits de vente depuis un tableur (le modèle CLUK, ou un export HubSpot, HireHop ou Excel). Vous voyez d’abord ce qui se passerait ; rien ne change avant votre confirmation.',
     'template' => 'Télécharger le modèle',
     'upload_title' => 'Envoyer un tableur',
     'file' => 'Fichier (.xlsx ou .csv)',
@@ -9,6 +9,7 @@ return [
     'kind' => 'Contenu du fichier',
     'kind_auto' => 'Déduire des noms d\'onglets',
     'kinds' => [
+        'salesitems' => 'Produits de vente',
         'companies' => 'Entreprises',
         'contacts' => 'Contacts',
         'equipment' => 'Matériel de location',
@@ -37,14 +38,17 @@ return [
     'vies_pending' => '{1} 1 entreprise importée a un numéro de TVA UE pas encore vérifié dans VIES.|[2,*] :count entreprises importées ont un numéro de TVA UE pas encore vérifié dans VIES.',
     'vies_check' => 'Vérifier les 15 suivantes dans VIES',
     'errors' => [
+        'no_type' => 'Pas de type ou de nom de produit : ligne ignorée.',
         'missing_column' => 'La colonne « :column » manque. Gardez les noms de colonnes du modèle en ligne 1.',
         'no_name' => 'Pas de nom d\'entreprise : ligne ignorée.',
         'no_first_name' => 'Pas de prénom : ligne ignorée.',
         'unreadable' => 'Ce fichier est illisible. Enregistrez-le en .xlsx ou .csv et réessayez.',
-        'no_sheet' => 'Aucun onglet avec des entreprises, des contacts ou du matériel trouvé.',
+        'no_sheet' => 'Aucune feuille avec sociétés, contacts, matériel ou produits de vente trouvée.',
         'no_number' => 'Pas de numéro d’article : ligne ignorée.',
     ],
     'warnings' => [
+        'unit' => 'Unité « :value » inconnue (piece, set, roll, box, meter) : piece est utilisé.',
+        'supplier' => 'Fournisseur « :name » introuvable : importez d’abord les sociétés (même fichier, feuille Companies).',
         'country' => 'Pays « :value » non reconnu ; la Belgique est utilisée. Utilisez deux lettres, p. ex. NL.',
         'vat' => 'Le numéro de TVA « :number » de :name n\'est pas correct et a été omis.',
         'email' => 'L\'e-mail « :value » n\'est pas une adresse e-mail et a été omis.',

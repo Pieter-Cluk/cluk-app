@@ -6,7 +6,7 @@
             <x-logo :company="$company" size="lg" :rel="$rel"/>
             @if ($canEdit)
                 <details class="logo-edit">
-                    <summary class="linkbtn">{{ $company->logo_path ? __('pictures.change') : __('pictures.add_logo') }}</summary>
+                    <summary @class(['linkbtn' => $company->logo_path, 'btn btn-sm' => ! $company->logo_path])>{{ $company->logo_path ? __('pictures.change') : '＋ '.__('pictures.add_logo') }}</summary>
                     <form method="post" action="{{ route('companies.logo', $company) }}" enctype="multipart/form-data" class="stack-sm">
                         @csrf
                         <input type="file" name="logo" accept="image/*" required aria-label="{{ __('pictures.add_logo') }}">
@@ -143,9 +143,19 @@
                 @endif
             </section>
 
-            @if ($company->notes)
-                <section class="card"><h2>{{ __('companies.fields.notes') }}</h2><p class="prewrap">{{ $company->notes }}</p></section>
-            @endif
+            <section class="card">
+                <h2>{{ __('companies.fields.notes') }} <span class="muted small">· {{ __('companies.fields.notes_hint') }}</span></h2>
+                @if ($canEdit)
+                    <form method="post" action="{{ route('companies.notes', $company) }}" class="stack-sm">@csrf
+                        <textarea name="notes" rows="4" maxlength="5000" placeholder="{{ __('companies.fields.notes_placeholder') }}" aria-label="{{ __('companies.fields.notes') }}">{{ old('notes', $company->notes) }}</textarea>
+                        <div><button class="btn" type="submit">{{ __('companies.save_notes') }}</button></div>
+                    </form>
+                @elseif ($company->notes)
+                    <p class="prewrap">{{ $company->notes }}</p>
+                @else
+                    <p class="muted">—</p>
+                @endif
+            </section>
         </div>
 
         <aside class="stack">

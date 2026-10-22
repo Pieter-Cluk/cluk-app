@@ -107,7 +107,9 @@ class CompanyContactController extends Controller
             'language' => ['nullable', Rule::in(array_keys(config('cluk.locales')))],
             'job_title' => ['nullable', 'string', 'max:120'],
             'notes' => ['nullable', 'string', 'max:2000'],
+            'birth_date' => ['nullable', 'date', 'before:today', 'after:1900-01-01'],
         ]);
+        $data['birthday_card'] = $request->boolean('birthday_card');
         $data['is_main'] = $request->boolean('is_main');
         $data['is_billing'] = $request->boolean('is_billing');
         $data['newsletter'] = $request->boolean('newsletter');
@@ -118,8 +120,8 @@ class CompanyContactController extends Controller
     /** @param array<string, mixed> $data */
     private function contactFields(array $data): array
     {
-        return array_intersect_key($data, array_flip(['first_name', 'last_name', 'email', 'phone', 'mobile', 'language', 'newsletter', 'notes']))
-            + ['last_name' => null, 'email' => null, 'phone' => null, 'mobile' => null, 'language' => null, 'notes' => null];
+        return array_intersect_key($data, array_flip(['first_name', 'last_name', 'email', 'phone', 'mobile', 'language', 'newsletter', 'notes', 'birth_date', 'birthday_card']))
+            + ['last_name' => null, 'email' => null, 'phone' => null, 'mobile' => null, 'language' => null, 'notes' => null, 'birth_date' => null];
     }
 
     /** @param array<string, mixed> $data */

@@ -186,6 +186,7 @@ return [
             'warehouse_checked' => 'Controlado en el banco de pruebas',
             'warehouse_charges_approved' => 'Cargos de retorno aprobados',
             'warehouse_zone_saved' => 'Zona de almacén guardada',
+            'crm_birthday_sent' => 'Tarjeta de cumpleaños enviada',
             'order_times_changed' => 'Horarios del pedido cambiados',
             'order_reopened' => 'Pedido reabierto',
             'order_taken_back' => 'El pedido reabierto sigue con el nuevo presupuesto',

@@ -186,6 +186,7 @@ return [
             'warehouse_checked' => 'Gecontroleerd op de testbank',
             'warehouse_charges_approved' => 'Retourkosten goedgekeurd',
             'warehouse_zone_saved' => 'Magazijnzone bewaard',
+            'crm_birthday_sent' => 'Verjaardagskaart verstuurd',
             'order_times_changed' => 'Ordertijden gewijzigd',
             'order_reopened' => 'Order heropend',
             'order_taken_back' => 'Heropende order gaat verder met de nieuwe offerte',

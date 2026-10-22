@@ -8,6 +8,7 @@ use App\Models\Contact;
 use App\Models\User;
 use App\Models\VatRate;
 use App\Services\Vies;
+use App\Support\Images;
 use App\Support\VatNumber;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -113,6 +114,7 @@ class CompanyController extends Controller
     {
         $data = $this->validated($request);
         $company = Company::create($data);
+        $this->saveLogo($request, $company);
         AuditLog::record('crm.company_created', $company, ['name' => $company->name]);
 
         $this->checkVies($company);
@@ -147,6 +149,7 @@ class CompanyController extends Controller
         $company->fill($data);
         $changes = array_keys($company->getDirty());
         $company->save();
+        $this->saveLogo($request, $company);
         if ($changes !== []) {
             AuditLog::record('crm.company_updated', $company, ['fields' => $changes]);
         }
@@ -169,6 +172,31 @@ class CompanyController extends Controller
     }
 
     /** VAT treatment: automatic, or one VAT code chosen by Finance. */
+    /** A logo chosen in the company form (the company page has its own upload too). */
+    private function saveLogo(Request $request, Company $company): void
+    {
+        if (! $request->hasFile('logo')) {
+            return;
+        }
+        $request->validate(['logo' => Images::rule()]);
+        try {
+            $path = Images::store($request->file('logo'), 'logos', 400, true);
+        } catch (\Throwable) {
+            throw ValidationException::withMessages(['logo' => __('pictures.not_image')]);
+        }
+        Images::delete($company->logo_path);
+        $company->forceFill(['logo_path' => $path])->save();
+    }
+
+    /** Internal notes, straight from the company page. */
+    public function notes(Request $request, Company $company): RedirectResponse
+    {
+        $company->update(['notes' => $request->validate(['notes' => ['nullable', 'string', 'max:5000']])['notes'] ?? null]);
+        AuditLog::record('crm.company_updated', $company, ['fields' => ['notes']]);
+
+        return redirect()->route('companies.show', $company)->with('status', __('companies.flash.notes_saved'));
+    }
+
     public function updateVat(Request $request, Company $company): RedirectResponse
     {
         $codes = VatRate::activeChoices()->pluck('code')->all();

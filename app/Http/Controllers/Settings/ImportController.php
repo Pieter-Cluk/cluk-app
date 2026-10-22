@@ -7,6 +7,7 @@ use App\Imports\CompanyImport;
 use App\Imports\ContactImport;
 use App\Imports\EquipmentImport;
 use App\Imports\Importer;
+use App\Imports\SalesItemImport;
 use App\Models\AuditLog;
 use App\Models\Company;
 use App\Services\Vies;
@@ -29,7 +30,7 @@ use Throwable;
 class ImportController extends Controller
 {
     /** Import kinds in the order they run (companies first, so contacts can link). */
-    public const KINDS = ['companies' => CompanyImport::class, 'contacts' => ContactImport::class, 'equipment' => EquipmentImport::class];
+    public const KINDS = ['companies' => CompanyImport::class, 'contacts' => ContactImport::class, 'equipment' => EquipmentImport::class, 'salesitems' => SalesItemImport::class];
 
     public function index(): View
     {
@@ -48,7 +49,7 @@ class ImportController extends Controller
     {
         $request->validate([
             'file' => ['required', 'file', 'max:10240', 'extensions:xlsx,csv,txt'],
-            'kind' => ['nullable', 'in:auto,companies,contacts,equipment'],
+            'kind' => ['nullable', 'in:auto,companies,contacts,equipment,salesitems'],
         ]);
 
         $file = $request->file('file');
@@ -143,7 +144,8 @@ class ImportController extends Controller
             $rows = reset($all);
             $header = array_map(fn ($h) => Importer::key((string) $h), $rows[0] ?? []);
             $found[array_intersect($header, ['firstname', 'voornaam', 'prenom']) ? 'contacts'
-                : (array_intersect($header, ['itemnumber', 'serialnumber', 'artikelnummer', 'catalogprice']) ? 'equipment' : 'companies')] = $rows;
+                : (array_intersect($header, ['listprice', 'lijstprijs', 'verkoopprijs', 'supplierdiscount', 'minimumstock']) ? 'salesitems'
+                : (array_intersect($header, ['itemnumber', 'serialnumber', 'artikelnummer', 'catalogprice']) ? 'equipment' : 'companies'))] = $rows;
         }
 
         if ($found === []) {

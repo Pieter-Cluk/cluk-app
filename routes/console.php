@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\Role;
+use App\Services\Crm\Birthdays;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -35,3 +37,9 @@ Artisan::command('cluk:mail-test {to}', function (string $to) {
         return 1;
     }
 })->purpose('Send a test email');
+
+// Birthday cards for ticked contacts, every morning at 9:00 (Brussels).
+Artisan::command('cluk:birthdays', function () {
+    $this->info(Birthdays::sendToday().' birthday card(s) sent.');
+})->purpose('Send today\'s birthday cards');
+Schedule::command('cluk:birthdays')->dailyAt('09:00')->timezone('Europe/Brussels')->withoutOverlapping();

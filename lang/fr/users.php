@@ -186,6 +186,7 @@ return [
             'warehouse_checked' => 'Contrôlée sur le banc de test',
             'warehouse_charges_approved' => 'Frais de retour approuvés',
             'warehouse_zone_saved' => 'Zone d’entrepôt enregistrée',
+            'crm_birthday_sent' => 'Carte d’anniversaire envoyée',
             'order_times_changed' => 'Horaires de la commande modifiés',
             'order_reopened' => 'Commande rouverte',
             'order_taken_back' => 'La commande rouverte reprend le nouveau devis',

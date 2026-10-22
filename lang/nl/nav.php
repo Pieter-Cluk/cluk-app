@@ -2,6 +2,10 @@
 
 return [
     'items' => [
+        'messages' => 'Berichten',
+        'social' => 'Sociale media',
+        'website' => 'Website',
+        'communication' => 'Communicatie',
         'dashboard' => 'Dashboard',
         'management' => 'Management',
         'wallscreens' => 'Wandschermen',
@@ -28,6 +32,7 @@ return [
         'help' => 'Help & sneltoetsen',
     ],
     'groups' => [
+        'media' => 'Media',
         'commercial' => 'Commercieel',
         'operations' => 'Operaties',
         'finance' => 'Financiën',

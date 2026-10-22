@@ -1,6 +1,10 @@
 @props(['name'])
 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" {{ $attributes }}>
 @switch($name)
+    @case('message')<path d="M2 3.5h12v7.5H6.5L3.5 13.5V11H2z"/><path d="M5 6.5h6M5 8.5h4"/>@break
+    @case('share')<circle cx="4" cy="8" r="1.8"/><circle cx="12" cy="4" r="1.8"/><circle cx="12" cy="12" r="1.8"/><path d="M5.6 7.2 10.4 4.8M5.6 8.8l4.8 2.4"/>@break
+    @case('globe')<circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c1.8 2 1.8 10 0 12M8 2c-1.8 2-1.8 10 0 12"/>@break
+    @case('megaphone')<path d="M2.5 6.5v3h2l6 3v-9l-6 3z"/><path d="M4.5 9.5l1 4h1.5l-.6-3.5M12.5 6.5c.8.5.8 2.5 0 3"/>@break
     @case('home')<path d="M2.5 7.5 8 3l5.5 4.5V13H2.5z"/><path d="M6.5 13V9.5h3V13"/>@break
     @case('chart')<path d="M2.5 13.5h11M4 11V8M7 11V5M10 11V7M13 11V3.5"/>@break
     @case('screen')<rect x="2" y="3" width="12" height="8" rx="1"/><path d="M6 13.5h4M8 11v2.5"/>@break
