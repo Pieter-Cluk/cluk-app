@@ -21,7 +21,7 @@ return [
         'intro' => 'Para compañeros y autónomos sin Microsoft 365. Escribe tu dirección @:domain y te enviamos un código por correo.',
         'email' => 'Tu correo de trabajo',
         'send' => 'Envíame un código',
-        'sent' => 'Si :email puede entrar así, el código va en camino. Revisa tu bandeja (y el spam).',
+        'sent' => 'Si :email puede entrar así, el código va a la dirección que CLUK tiene de ti (a menudo tu correo propio, no este). Revisa esa bandeja, y el spam.',
         'code' => 'Código de acceso',
         'code_hint' => '6 cifras, válido :minutes minutos, un solo uso.',
         'sign_in' => 'Entrar',

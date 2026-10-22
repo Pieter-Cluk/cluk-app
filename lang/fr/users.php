@@ -47,6 +47,8 @@ return [
         'is_commercial' => 'Contact commercial (peut gérer des clients et des deals)',
         'email_login' => 'Peut se connecter avec un code par e-mail (sans Microsoft 365, ex. freelances ; adresses @:domain uniquement)',
         'email_login_hint' => 'Aucun mot de passe n’est conservé : un code unique est envoyé à chaque fois à leur adresse pro.',
+        'code_email' => 'Envoyer les codes de connexion à',
+        'code_email_hint' => 'Requis pour la connexion par code : leur propre adresse (ex. Gmail). L’adresse @cluk.live reste leur identifiant, mais son courrier arrive chez Microsoft 365.',
         'nobody' => '— personne —',
     ],
     'hints' => [
@@ -188,6 +190,7 @@ return [
             'warehouse_checked' => 'Contrôlée sur le banc de test',
             'warehouse_charges_approved' => 'Frais de retour approuvés',
             'warehouse_zone_saved' => 'Zone d’entrepôt enregistrée',
+            'user_instructions_sent' => 'Instructions de connexion envoyées',
             'messages_created' => 'Message créé',
             'messages_send_started' => 'Envoi lancé',
             'messages_sent' => 'Message envoyé à toute la liste',
@@ -275,6 +278,7 @@ return [
         'role_deleted' => 'Rôle :name supprimé.',
     ],
     'errors' => [
+        'code_email_needed' => 'Indiquez où envoyer les codes de connexion.',
         'last_manager' => 'Non enregistré : plus personne ne pourrait gérer les utilisateurs. Gardez au moins une personne active avec le droit « Gérer les utilisateurs et les rôles ».',
         'not_yourself' => 'Vous ne pouvez pas vous désactiver vous-même.',
         'reporting_loop' => 'Cette personne ne peut pas dépendre de quelqu\'un qui dépend d\'elle.',
@@ -282,4 +286,16 @@ return [
     ],
     'previous' => '← Précédent',
     'next' => 'Suivant →',
+    'instructions' => [
+        'go' => 'Envoyer les instructions de connexion',
+        'hint' => 'Envoie comment se connecter, à :email. Renvoyez-le si besoin.',
+        'sent' => 'Instructions envoyées à :email.',
+        'subject' => 'Comment vous connecter à l’app CLUK',
+        'intro' => ':by vous a donné accès à l’app CLUK. Vous vous connectez avec un code envoyé à cette adresse ; pas de mot de passe.',
+        'address' => 'Allez sur',
+        'sign_in_as' => 'Saisissez cette adresse',
+        'code_to' => 'Le code arrive à',
+        'next' => 'Saisissez le code à 6 chiffres de l’e-mail. Valable une fois, 10 minutes ; demandez-en un nouveau quand vous voulez.',
+        'button' => 'Se connecter',
+    ],
 ];

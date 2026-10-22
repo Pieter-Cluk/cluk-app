@@ -47,6 +47,8 @@ return [
         'is_commercial' => 'Contacto comercial (puede gestionar clientes y oportunidades)',
         'email_login' => 'Puede entrar con un código por correo (sin Microsoft 365, p. ej. autónomos; solo direcciones @:domain)',
         'email_login_hint' => 'No se guarda contraseña: reciben cada vez un código de un solo uso en su correo de trabajo.',
+        'code_email' => 'Enviar los códigos de acceso a',
+        'code_email_hint' => 'Necesario para entrar con código: su propio correo (p. ej. Gmail). La dirección @cluk.live sigue siendo su nombre de acceso, pero su correo llega a Microsoft 365.',
         'nobody' => '— nadie —',
     ],
     'hints' => [
@@ -188,6 +190,7 @@ return [
             'warehouse_checked' => 'Controlado en el banco de pruebas',
             'warehouse_charges_approved' => 'Cargos de retorno aprobados',
             'warehouse_zone_saved' => 'Zona de almacén guardada',
+            'user_instructions_sent' => 'Instrucciones de acceso enviadas',
             'messages_created' => 'Mensaje creado',
             'messages_send_started' => 'Envío iniciado',
             'messages_sent' => 'Mensaje enviado a toda la lista',
@@ -275,6 +278,7 @@ return [
         'role_deleted' => 'Rol :name eliminado.',
     ],
     'errors' => [
+        'code_email_needed' => 'Indica dónde enviar los códigos de acceso.',
         'last_manager' => 'No guardado: nadie podría gestionar usuarios. Mantén al menos una persona activa con el permiso «Gestionar usuarios y roles».',
         'not_yourself' => 'No puedes desactivarte a ti mismo.',
         'reporting_loop' => 'Esta persona no puede responder a alguien que le responde a ella.',
@@ -282,4 +286,16 @@ return [
     ],
     'previous' => '← Anterior',
     'next' => 'Siguiente →',
+    'instructions' => [
+        'go' => 'Enviar instrucciones de acceso',
+        'hint' => 'Envía cómo entrar, a :email. Reenvíalo cuando haga falta.',
+        'sent' => 'Instrucciones enviadas a :email.',
+        'subject' => 'Cómo entrar en la app de CLUK',
+        'intro' => ':by te ha dado acceso a la app de CLUK. Entras con un código que enviamos a esta dirección; sin contraseña.',
+        'address' => 'Ve a',
+        'sign_in_as' => 'Escribe esta dirección',
+        'code_to' => 'El código llega a',
+        'next' => 'Escribe el código de 6 cifras del correo. Vale una vez, 10 minutos; pide otro cuando quieras.',
+        'button' => 'Entrar',
+    ],
 ];

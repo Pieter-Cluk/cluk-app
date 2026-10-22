@@ -21,7 +21,7 @@ return [
         'intro' => 'Pour les collègues et freelances sans Microsoft 365. Saisissez votre adresse @:domain et nous vous envoyons un code par e-mail.',
         'email' => 'Votre e-mail professionnel',
         'send' => 'Envoyez-moi un code',
-        'sent' => 'Si :email peut se connecter ainsi, un code est en route. Vérifiez votre boîte (et les spams).',
+        'sent' => 'Si :email peut se connecter ainsi, un code part vers l’adresse que CLUK a pour vous (souvent votre adresse personnelle, pas celle-ci). Vérifiez cette boîte, et les spams.',
         'code' => 'Code de connexion',
         'code_hint' => '6 chiffres, valable :minutes minutes, une seule fois.',
         'sign_in' => 'Se connecter',

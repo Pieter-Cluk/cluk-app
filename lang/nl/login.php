@@ -21,7 +21,7 @@ return [
         'intro' => 'Voor collega’s en freelancers zonder Microsoft 365. Typ je @:domain-adres en we mailen je een code om aan te melden.',
         'email' => 'Je werk-e-mailadres',
         'send' => 'Mail me een code',
-        'sent' => 'Als :email zo mag aanmelden, is er een code onderweg. Kijk in je inbox (en spam).',
+        'sent' => 'Als :email zo mag aanmelden, is er een code onderweg naar het e-mailadres dat CLUK van je heeft (vaak je eigen adres, niet dit). Kijk in die inbox, en in spam.',
         'code' => 'Aanmeldcode',
         'code_hint' => '6 cijfers, :minutes minuten geldig, werkt één keer.',
         'sign_in' => 'Aanmelden',

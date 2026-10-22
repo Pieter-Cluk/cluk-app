@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -39,12 +40,13 @@ class EmailCodeLoginController extends Controller
             throw ValidationException::withMessages(['email' => __('login.code.wrong_domain', ['domain' => self::domain()])]);
         }
         $user = User::whereRaw('lower(email) = ?', [$email])->first();
-        if ($user && $user->isActive() && $user->email_login) {
+        if ($user && $user->isActive() && $user->email_login && $user->code_email) {
             StaffLoginCode::where('user_id', $user->id)->whereNull('used_at')->update(['used_at' => now()]);
             $code = (string) random_int(100000, 999999);
             StaffLoginCode::create(['user_id' => $user->id, 'code_hash' => Hash::make($code), 'expires_at' => now()->addMinutes(StaffLoginCode::MINUTES), 'ip' => $request->ip()]);
             $lang = $user->locale ?: config('app.locale');
-            SafeMail::notify($user, (new Confirmation(
+            // cluk.live mail goes to Microsoft 365: the code goes to the address on the user card.
+            SafeMail::notify(Notification::route('mail', $user->code_email ?: $user->email), (new Confirmation(
                 subject: __('login.code.mail_subject', ['code' => $code], $lang),
                 greeting: __('mails.hello', ['name' => $user->first_name], $lang),
                 intro: [__('login.code.mail_intro', ['minutes' => StaffLoginCode::MINUTES], $lang)],

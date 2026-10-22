@@ -47,6 +47,8 @@ return [
         'is_commercial' => 'Commercieel contactpersoon (kan klanten en deals beheren)',
         'email_login' => 'Mag aanmelden met een code per e-mail (geen Microsoft 365, bv. freelancers; enkel @:domain-adressen)',
         'email_login_hint' => 'Er wordt geen wachtwoord bewaard: ze krijgen telkens een eenmalige code op hun werkadres.',
+        'code_email' => 'Aanmeldcodes sturen naar',
+        'code_email_hint' => 'Nodig voor aanmelden met een code: hun eigen e-mailadres (bv. Gmail). Het @cluk.live-adres blijft hun aanmeldnaam, maar mail daarvoor komt bij Microsoft 365 terecht.',
         'nobody' => '— niemand —',
     ],
     'hints' => [
@@ -188,6 +190,7 @@ return [
             'warehouse_checked' => 'Gecontroleerd op de testbank',
             'warehouse_charges_approved' => 'Retourkosten goedgekeurd',
             'warehouse_zone_saved' => 'Magazijnzone bewaard',
+            'user_instructions_sent' => 'Aanmeldinstructies gestuurd',
             'messages_created' => 'Bericht gemaakt',
             'messages_send_started' => 'Versturen gestart',
             'messages_sent' => 'Bericht verstuurd naar iedereen op de lijst',
@@ -275,6 +278,7 @@ return [
         'role_deleted' => 'Rol :name verwijderd.',
     ],
     'errors' => [
+        'code_email_needed' => 'Vul in waar de aanmeldcodes naartoe moeten.',
         'last_manager' => 'Niet opgeslagen: dan kan niemand nog gebruikers beheren. Houd minstens één actieve persoon met het recht "Gebruikers en rollen beheren".',
         'not_yourself' => 'Je kunt jezelf niet uitschakelen.',
         'reporting_loop' => 'Deze persoon kan niet rapporteren aan iemand die aan hem of haar rapporteert.',
@@ -282,4 +286,16 @@ return [
     ],
     'previous' => '← Vorige',
     'next' => 'Volgende →',
+    'instructions' => [
+        'go' => 'Aanmeldinstructies sturen',
+        'hint' => 'Mailt hoe aanmelden werkt, naar :email. Stuur het opnieuw wanneer nodig.',
+        'sent' => 'Aanmeldinstructies gestuurd naar :email.',
+        'subject' => 'Zo meld je aan in de CLUK-app',
+        'intro' => ':by gaf je toegang tot de CLUK-app. Je meldt aan met een code die we naar dit adres mailen; geen wachtwoord nodig.',
+        'address' => 'Ga naar',
+        'sign_in_as' => 'Typ dit adres',
+        'code_to' => 'De code komt binnen op',
+        'next' => 'Typ de 6-cijferige code uit de mail. Hij werkt één keer, 10 minuten lang; vraag gerust een nieuwe.',
+        'button' => 'Aanmelden',
+    ],
 ];

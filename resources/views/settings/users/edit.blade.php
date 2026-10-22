@@ -83,6 +83,12 @@
                 </form>
                 <p><span @class(['pill', 'pill-ok' => $user->isActive(), 'pill-off' => ! $user->isActive()])>{{ __('users.status.'.$user->status) }}</span>
                     <span class="muted">· {{ $user->microsoft_id ? __('users.edit.microsoft_linked') : __('users.edit.microsoft_not_linked') }}</span></p>
+                @if ($user->email_login && $user->code_email && $user->isActive())
+                    <div class="stack-sm">
+                        <p class="muted small">{{ __('users.instructions.hint', ['email' => $user->code_email]) }}</p>
+                        <form method="post" action="{{ route('settings.users.instructions', $user) }}">@csrf<button class="btn" type="submit">✉ {{ __('users.instructions.go') }}</button></form>
+                    </div>
+                @endif
                 @if ($user->is($me))
                     <p class="muted">{{ __('users.edit.you') }}</p>
                 @elseif ($user->isActive())

@@ -313,6 +313,7 @@ Route::middleware('auth:web')->group(function () {
         Route::put('/users/{user}/access', [UserController::class, 'updateAccess'])->whereNumber('user')->name('users.access');
         Route::post('/users/{user}/disable', [UserController::class, 'disable'])->whereNumber('user')->name('users.disable');
         Route::post('/users/{user}/enable', [UserController::class, 'enable'])->whereNumber('user')->name('users.enable');
+        Route::post('/users/{user}/instructions', [UserController::class, 'sendInstructions'])->whereNumber('user')->middleware('throttle:10,1')->name('users.instructions');
         Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
         Route::put('/roles', [RoleController::class, 'update'])->name('roles.update');
         Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');

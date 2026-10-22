@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\Confirmation;
 use App\Support\AccessGuard;
+use App\Support\SafeMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -73,6 +76,29 @@ class UserController extends Controller
         });
 
         return redirect()->route('settings.users.edit', $user)->with('status', __('users.flash.created', ['name' => $user->name]));
+    }
+
+    /** Email the person how to sign in with a code (as often as needed). */
+    public function sendInstructions(Request $request, User $user): RedirectResponse
+    {
+        abort_unless($user->email_login && $user->code_email && $user->isActive(), 409);
+        $lang = $user->locale ?: config('app.locale');
+        $ok = SafeMail::notify(Notification::route('mail', $user->code_email), (new Confirmation(
+            subject: __('users.instructions.subject', [], $lang),
+            greeting: __('mails.hello', ['name' => $user->first_name], $lang),
+            intro: [__('users.instructions.intro', ['by' => $request->user()->name], $lang)],
+            details: [
+                __('users.instructions.address', [], $lang) => route('login.code'),
+                __('users.instructions.sign_in_as', [], $lang) => $user->email,
+                __('users.instructions.code_to', [], $lang) => $user->code_email,
+            ],
+            next: [__('users.instructions.next', [], $lang)],
+            button: [__('users.instructions.button', [], $lang), route('login.code')],
+            signer: $request->user(),
+        ))->locale($lang));
+        AuditLog::record('user.instructions_sent', $user, ['to' => $user->code_email], $request->user());
+
+        return back()->with('status', $ok ? __('users.instructions.sent', ['email' => $user->code_email]) : __('messages.mail_failed'));
     }
 
     public function edit(User $user): View
@@ -196,11 +222,16 @@ class UserController extends Controller
             'locale' => ['required', Rule::in(array_keys(config('cluk.locales')))],
             'role_id' => ['required', 'integer', 'exists:roles,id'],
             'reports_to_id' => ['nullable', 'integer', 'exists:users,id'],
+            'code_email' => ['nullable', 'email', 'max:190'],
         ]);
         $data['is_commercial'] = $request->boolean('is_commercial');
         $data['email_login'] = $request->boolean('email_login');
         if ($data['email_login'] && ! str_ends_with($data['email'], '@'.config('cluk.staff_email_domain'))) {
             throw ValidationException::withMessages(['email_login' => __('login.code.wrong_domain', ['domain' => config('cluk.staff_email_domain')])]);
+        }
+        $data['code_email'] = isset($data['code_email']) && $data['code_email'] !== '' ? mb_strtolower(trim($data['code_email'])) : null;
+        if ($data['email_login'] && ! $data['code_email']) {
+            throw ValidationException::withMessages(['code_email' => __('users.errors.code_email_needed')]);
         }
         $data['role_id'] = (int) $data['role_id'];
         $data['reports_to_id'] = isset($data['reports_to_id']) ? (int) $data['reports_to_id'] : null;

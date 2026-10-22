@@ -21,7 +21,7 @@ return [
         'intro' => 'For colleagues and freelancers without Microsoft 365. Type your @:domain address and we email you a code to sign in.',
         'email' => 'Your work email',
         'send' => 'Email me a code',
-        'sent' => 'If :email may sign in this way, a code is on its way. Check your inbox (and spam).',
+        'sent' => 'If :email may sign in this way, a code is on its way to the email address CLUK has for you (often your own address, not this one). Check that inbox, and spam.',
         'code' => 'Sign-in code',
         'code_hint' => '6 digits, valid for :minutes minutes, works once.',
         'sign_in' => 'Sign in',

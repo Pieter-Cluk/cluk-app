@@ -47,6 +47,8 @@ return [
         'is_commercial' => 'Commercial contact (can own customers and deals)',
         'email_login' => 'May sign in with a code by email (no Microsoft 365, e.g. freelancers; only @:domain addresses)',
         'email_login_hint' => 'No password is stored: they get a one-time code at their work address each time.',
+        'code_email' => 'Send sign-in codes to',
+        'code_email_hint' => 'Needed for sign-in with a code: their own email address (e.g. Gmail). The @cluk.live address stays their sign-in name, but its mail goes to Microsoft 365.',
         'nobody' => '— nobody —',
     ],
     'hints' => [
@@ -188,6 +190,7 @@ return [
             'warehouse_checked' => 'Checked on the test bench',
             'warehouse_charges_approved' => 'Return charges approved',
             'warehouse_zone_saved' => 'Warehouse zone saved',
+            'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',
             'messages_send_started' => 'Sending started',
             'messages_sent' => 'Message sent to everyone on the list',
@@ -275,6 +278,7 @@ return [
         'role_deleted' => 'Role :name deleted.',
     ],
     'errors' => [
+        'code_email_needed' => 'Fill in where the sign-in codes should go.',
         'last_manager' => 'Not saved: then nobody could manage users any more. Keep at least one active person with the right "Manage users and roles".',
         'not_yourself' => 'You cannot disable yourself.',
         'reporting_loop' => 'This person cannot report to someone who reports to them.',
@@ -282,4 +286,16 @@ return [
     ],
     'previous' => '← Previous',
     'next' => 'Next →',
+    'instructions' => [
+        'go' => 'Send sign-in instructions',
+        'hint' => 'Emails how to sign in, to :email. Send it again whenever needed.',
+        'sent' => 'Sign-in instructions sent to :email.',
+        'subject' => 'How to sign in to the CLUK app',
+        'intro' => ':by gave you access to the CLUK app. You sign in with a code we email to this address; no password needed.',
+        'address' => 'Go to',
+        'sign_in_as' => 'Type this address',
+        'code_to' => 'The code arrives at',
+        'next' => 'Type the 6-digit code from the email. It works once, for 10 minutes; ask for a new one any time.',
+        'button' => 'Sign in',
+    ],
 ];

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Notifications\Confirmation;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -24,16 +25,18 @@ class EmailCodeLoginTest extends TestCase
 
     private function freelancer(array $a = []): User
     {
-        return User::factory()->create($a + ['email' => 'jens@cluk.live', 'email_login' => true, 'role_id' => Role::where('slug', 'warehouse')->value('id'), 'locale' => 'en']);
+        return User::factory()->create($a + ['email' => 'jens@cluk.live', 'email_login' => true, 'code_email' => 'jens.private@gmail.com', 'role_id' => Role::where('slug', 'warehouse')->value('id'), 'locale' => 'en']);
     }
 
     private function codeFor(User $u): string
     {
         $code = null;
-        Notification::assertSentTo($u, Confirmation::class, function ($n) use (&$code) {
-            $code = array_values($n->details)[0];
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, function ($n, $c, $to) use (&$code, $u) {
+            if ($to->routes['mail'] === $u->code_email && str_contains($n->subject, 'sign-in code')) {
+                $code = array_values($n->details)[0];
+            }
 
-            return true;
+            return $code !== null;
         });
 
         return (string) $code;
@@ -85,7 +88,17 @@ class EmailCodeLoginTest extends TestCase
         $this->actingAs($admin)->get('/settings/users/new')->assertOk()->assertSee('May sign in with a code by email');
         $role = Role::where('slug', 'warehouse')->value('id');
         $this->actingAs($admin)->post('/settings/users', ['first_name' => 'Free', 'last_name' => 'Lancer', 'email' => 'free@gmail.com', 'locale' => 'en', 'role_id' => $role, 'email_login' => '1'])->assertSessionHasErrors('email_login');
-        $this->actingAs($admin)->post('/settings/users', ['first_name' => 'Free', 'last_name' => 'Lancer', 'email' => 'free@cluk.live', 'locale' => 'en', 'role_id' => $role, 'email_login' => '1'])->assertSessionHasNoErrors();
-        $this->assertTrue(User::where('email', 'free@cluk.live')->value('email_login'));
+        $this->actingAs($admin)->post('/settings/users', ['first_name' => 'Free', 'last_name' => 'Lancer', 'email' => 'free@cluk.live', 'locale' => 'en', 'role_id' => $role, 'email_login' => '1'])->assertSessionHasErrors('code_email');
+        $this->actingAs($admin)->post('/settings/users', ['first_name' => 'Free', 'last_name' => 'Lancer', 'email' => 'free@cluk.live', 'locale' => 'en', 'role_id' => $role, 'email_login' => '1', 'code_email' => 'Free.Lancer@Gmail.com'])->assertSessionHasNoErrors();
+        $free = User::where('email', 'free@cluk.live')->firstOrFail();
+        $this->assertTrue($free->email_login);
+        $this->assertSame('free.lancer@gmail.com', $free->code_email);
+
+        // Sign-in instructions, as often as needed, to the private address.
+        $this->actingAs($admin)->get('/settings/users/'.$free->id)->assertSee('Send sign-in instructions');
+        $this->actingAs($admin)->post('/settings/users/'.$free->id.'/instructions')->assertSessionHas('status', 'Sign-in instructions sent to free.lancer@gmail.com.');
+        $this->actingAs($admin)->post('/settings/users/'.$free->id.'/instructions');
+        Notification::assertSentTimes(Confirmation::class, 2);
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'free.lancer@gmail.com' && $n->details['Type this address'] === 'free@cluk.live');
     }
 }

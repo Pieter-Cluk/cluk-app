@@ -44,4 +44,9 @@
     <label class="check span-2">
         <input type="checkbox" name="email_login" value="1" @checked(old('email_login', $user->email_login))>
         <span>{{ __('users.fields.email_login', ['domain' => config('cluk.staff_email_domain')]) }}<br><small class="muted">{{ __('users.fields.email_login_hint') }}</small></span></label>
+    @error('email_login')<small class="txt-danger span-2">{{ $message }}</small>@enderror
+    <label class="field span-2"><span>{{ __('users.fields.code_email') }}</span>
+        <input type="email" name="code_email" maxlength="190" value="{{ old('code_email', $user->code_email) }}" placeholder="name@gmail.com">
+        <small class="muted">{{ __('users.fields.code_email_hint') }}</small>
+        @error('code_email')<small class="txt-danger">{{ $message }}</small>@enderror</label>
 </div>
