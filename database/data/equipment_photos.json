@@ -1,0 +1,4065 @@
+[
+ {
+  "key": "AED | Audio AED MULTI12",
+  "title": "AED Audio AED MULTI12",
+  "items": [
+   "AUDSELAEDAUDIOA"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/1116077/4320607/b468fd0c/1683795772AED%20Audio%20-%20MULTI12_hero_side_JPG.jpg?key=og"
+  ],
+  "page": "https://bax-shop.it/full-range-attivi/aed-audio-multi12-1000w-active-full-range-speaker",
+  "source": "distributor",
+  "note": "Retailer og:image (side/hero view); aedaudio.com not reachable"
+ },
+ {
+  "key": "Arri | Fresnel L10-C",
+  "title": "Arri Fresnel L10-C",
+  "items": [
+   "LIGLEDARRLILEARL10C"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/hi-res/ARR-L0-0003381.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/ARR-L0-0003381.JPG"
+  ],
+  "page": "https://markertek.com/product/arr-l0-0003381/arri-l10-c-color-led-fresnel-stand-mount-blue-silver",
+  "source": "distributor",
+  "note": "Markertek; image is blue/silver stand-mount version; hi-res path inferred from page"
+ },
+ {
+  "key": "Arri | Fresnel L5-C",
+  "title": "Arri Fresnel L5-C",
+  "items": [
+   "LIGLEDARRLILEARL5C"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/hi-res/ARR-L0-0001954.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/ARR-L0-0001954.JPG"
+  ],
+  "page": "https://www.markertek.com/product/arr-l0-0001954/arri-l5-c-5-inch-led-fresnel-black-hanging",
+  "source": "distributor",
+  "note": "Markertek, black hanging version (ours is pole operated); hi-res path inferred"
+ },
+ {
+  "key": "Arri | Fresnel L7-C",
+  "title": "Arri Fresnel L7-C",
+  "items": [
+   "LIGLEDARRLILEARL7C"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/hi-res/ARR-L00015217.JPG",
+   "https://www.markertek.com/productImage/alternate-1/450x450/ARR-L00015217.JPG"
+  ],
+  "page": "https://markertek.com/product/arr-l00015217/arri-l0-0015217-l7-c-le2-7-inch-led-fresnel-powercon-cable-black-manual-mount-barndoors-not-included",
+  "source": "distributor",
+  "note": "Markertek, L7-C LE2 black; hi-res path inferred from page"
+ },
+ {
+  "key": "Arri | Orbiter - full colour tuneable (2.000° - 20.000°K) - pole operated",
+  "title": "Arri Orbiter - full colour tuneable (2.000° - 20.000°K) - pole operated",
+  "items": [
+   "LIGLEDARRORBITE"
+  ],
+  "candidates": [
+   "https://hotrodcameras.com/cdn/shop/files/1602672384_1566877_1200x1200.jpg?v=1758552651"
+  ],
+  "page": "https://hotrodcameras.com/collections/arri/products/arri-orbiter-led-light-without-lens-yoke-and-cable-blue-silver",
+  "source": "distributor",
+  "note": "ARRI site has no packshot via fetch; dealer image shows blue/silver Orbiter without optic"
+ },
+ {
+  "key": "Arri | Skypanel S60-C - full colour tuneable (2.800° - 10.000°K) - pole operated",
+  "title": "Arri Skypanel S60-C - full colour tuneable (2.800° - 10.000°K) - pole operated",
+  "items": [
+   "LIGLEDARRLILEARS60C"
+  ],
+  "candidates": [
+   "https://productiongear.co.uk/cdn/shop/files/L0.0007064_73c55fcc-d72e-47d3-aa98-8ef2746ab08c.jpg?v=1764755112",
+   "https://productiongear.co.uk/cdn/shop/files/ARI-L0.0007064-2_6fa9b29b-3110-44d9-a218-c774d12341aa.jpg?v=1764755113&width=1946"
+  ],
+  "page": "https://productiongear.co.uk/products/arri-s60-c-skypanel",
+  "source": "distributor",
+  "note": "Production Gear (UK ARRI dealer); likely blue/silver manual version"
+ },
+ {
+  "key": "Arri | Skypanel S60-C LE2 - full colour tuneable (2.800° - 10.000°K) - pole operated",
+  "title": "Arri Skypanel S60-C LE2 - full colour tuneable (2.800° - 10.000°K) - pole operated",
+  "items": [
+   "LIGLEDARRLILEARS60C2"
+  ],
+  "candidates": [
+   "https://productiongear.co.uk/cdn/shop/files/L0.0007064_73c55fcc-d72e-47d3-aa98-8ef2746ab08c.jpg?v=1764755112"
+  ],
+  "page": "https://productiongear.co.uk/products/arri-s60-c-skypanel",
+  "source": "distributor",
+  "note": "Reuses S60-C image (LE2 looks identical)"
+ },
+ {
+  "key": "Barco | E2 - Generation 2",
+  "title": "Barco E2 - Generation 2",
+  "items": [
+   "VIDMULBARE2GENE"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004789_E2_Tri-Combo_left_angle.jpg",
+   "https://www.audiogeneral.com/barco/E2%20left.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2501",
+  "source": "distributor",
+  "note": "Audio General; angled view"
+ },
+ {
+  "key": "Barco | EC-210",
+  "title": "Barco EC-210",
+  "items": [
+   "VIDMULBAREC210"
+  ],
+  "candidates": [
+   "https://midwich.us/o/commerce-media/products/1764778/ec-210-large-event-controller/78604088/EC-210%20Large%20Event%20Controller?download=false"
+  ],
+  "page": "https://midwich.us/p/ec-210-large-event-controller",
+  "source": "distributor",
+  "note": "Midwich US distributor image"
+ },
+ {
+  "key": "Barco | EC-50",
+  "title": "Barco EC-50",
+  "items": [
+   "VIDMULBAREC50"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/EC-50_Front_730.jpg",
+   "https://www.audiogeneral.com/barco/image%20processing/EC-50%20Left.jpg",
+   "https://www.audiogeneral.com/barco/image%20processing/EC-50_Right_730.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2560",
+  "source": "distributor",
+  "note": "Audio General"
+ },
+ {
+  "key": "Barco | ImagePRO 4K 12G/DP1.2/HDMI2.0 In/Out",
+  "title": "Barco ImagePRO 4K 12G/DP1.2/HDMI2.0 In/Out",
+  "items": [
+   "VIDSIGBARIMAGEP"
+  ],
+  "candidates": [
+   "https://www.avendor.com/cdn/shop/files/R9004795B.jpg?v=1746426610",
+   "https://www.avendor.com/cdn/shop/files/R9004795B_1024x.jpg?v=1746426610"
+  ],
+  "page": "https://www.avendor.com/products/barco-imagepro-4k-processor",
+  "source": "distributor",
+  "note": "AVendor dealer image"
+ },
+ {
+  "key": "Barco | Matrix Pro II 3G - HD SDI - 32 In to 32 Out",
+  "title": "Barco Matrix Pro II 3G - HD SDI - 32 In to 32 Out",
+  "items": [
+   "VIDSIGBARMATRIX"
+  ],
+  "candidates": [
+   "https://www.rentex.com/wp-content/uploads/2026/01/L_XVM0350.gif",
+   "https://www.rentex.com/wp-content/uploads/2016/07/L_XVM0350b.gif"
+  ],
+  "page": "https://www.rentex.com/rental-products/barco-matrixpro-ii-32x32",
+  "source": "distributor",
+  "note": "only found on Rentex (US rental house), GIF; low confidence"
+ },
+ {
+  "key": "Barco | PDS4K",
+  "title": "Barco PDS4K",
+  "items": [
+   "VIDMULBARPDS4K"
+  ],
+  "candidates": [
+   "https://shop.avispl.com/cdn/shop/files/BARR9009650_1200x800.jpg?v=1764624684",
+   "https://shop.avispl.com/cdn/shop/files/BARR9009650_800x533.jpg?v=1764624684"
+  ],
+  "page": "https://shop.avispl.com/products/barco-pds-4k-small-venue-presentation-switcher",
+  "source": "distributor",
+  "note": "AVI-SPL shop image"
+ },
+ {
+  "key": "Barco | R9004741 3G-SDI Output card",
+  "title": "Barco R9004741 3G-SDI Output card",
+  "items": [
+   "VIDACCBARVISPE2CSO"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004741%203G%20SDI%20output%20card_200.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2577",
+  "source": "distributor",
+  "note": "Audio General; small (200px) image"
+ },
+ {
+  "key": "Barco | R9004742 3G-SDI Input card",
+  "title": "Barco R9004742 3G-SDI Input card",
+  "items": [
+   "VIDACCBARVISPE2CSI"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004742%20SDI%20input%20card_200.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2576",
+  "source": "distributor",
+  "note": "Audio General; small (200px) image"
+ },
+ {
+  "key": "Barco | R9004744 HDMI / DP Input card",
+  "title": "Barco R9004744 HDMI / DP Input card",
+  "items": [
+   "VIDACCBARVISPE2CHDI"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004744%20HDMI-DisplayPort%20input%20card.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2574",
+  "source": "distributor",
+  "note": "Audio General"
+ },
+ {
+  "key": "Barco | R9004765 DP1.2 Output card",
+  "title": "Barco R9004765 DP1.2 Output card",
+  "items": [
+   "VIDACCBARVISPE2CDPO"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004765_360.jpg",
+   "https://www.audiogeneral.com/barco/image%20processing/R9004765_200.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2572",
+  "source": "distributor",
+  "note": "Audio General; _360 inferred, _200 verified"
+ },
+ {
+  "key": "Barco | R9004785 Tri combo Input card",
+  "title": "Barco R9004785 Tri combo Input card",
+  "items": [
+   "VIDACCBARVISPE2CTCI"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004785%204K%20tri-combo%20inout%20card.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2571",
+  "source": "distributor",
+  "note": "Audio General"
+ },
+ {
+  "key": "Barco | R9004786 Tri combo Output card",
+  "title": "Barco R9004786 Tri combo Output card",
+  "items": [
+   "VIDACCBARVISPE2CTCO"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004786%20Tri_combo%20output%20card%203507.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2570",
+  "source": "distributor",
+  "note": "Audio General"
+ },
+ {
+  "key": "Barco | R9004791 HDMI 2.0 Input card",
+  "title": "Barco R9004791 HDMI 2.0 Input card",
+  "items": [
+   "VIDACCBARVISPE2CHI"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004791_Quad_HDMI_2-0_Input_Card_360.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2582",
+  "source": "distributor",
+  "note": "Audio General"
+ },
+ {
+  "key": "Barco | R9004792 HDMI 2.0 Output card",
+  "title": "Barco R9004792 HDMI 2.0 Output card",
+  "items": [
+   "VIDACCBARVISPE2CHO"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004792_Quad_HDMI_2-0_Output_Card_360.jpg",
+   "https://www.audiogeneral.com/barco/image%20processing/R9004792_Quad_HDMI_2-0_Output_Card_200.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2581",
+  "source": "distributor",
+  "note": "Audio General; _360 inferred, _200 verified"
+ },
+ {
+  "key": "Barco | R9004793 DP1.2 Input card",
+  "title": "Barco R9004793 DP1.2 Input card",
+  "items": [
+   "VIDACCBARVISPE2CDPI"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/R9004793_Quad_DP_1-2_Input_Card_360.jpg",
+   "https://www.audiogeneral.com/barco/image%20processing/R9004793_Quad_DP_1-2_Input_Card_200.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2583",
+  "source": "distributor",
+  "note": "Audio General; _360 size inferred from sibling product, _200 verified"
+ },
+ {
+  "key": "Barco | R9801414 - 16/10 0,8-1,16",
+  "title": "Barco R9801414 - 16/10 0,8-1,16",
+  "items": [
+   "VIDPROBARR98014"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/R9801414%5Blg%5D.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0601-1346",
+  "source": "distributor",
+  "note": "Audio General (Barco dealer)"
+ },
+ {
+  "key": "Barco | R9801661 - 16/10 0,4:1",
+  "title": "Barco R9801661 - 16/10 0,4:1",
+  "items": [
+   "VIDPROBARR98016"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/r9801661.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/barco/large_venue_lenses.php",
+  "source": "distributor",
+  "note": "Audio General (Barco dealer) lens image"
+ },
+ {
+  "key": "Barco | R9829997 - 16/10 6,9-10,3",
+  "title": "Barco R9829997 - 16/10 6,9-10,3",
+  "items": [
+   "VIDPROBARR98299"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/r9829997.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/barco/large_venue_lenses.php",
+  "source": "distributor",
+  "note": "Audio General (Barco dealer) lens image"
+ },
+ {
+  "key": "Barco | R9862001 - 16/10 0,68-0,87",
+  "title": "Barco R9862001 - 16/10 0,68-0,87",
+  "items": [
+   "VIDPROBARVIPRLETLD07"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/r9862001.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/barco/large_venue_lenses.php",
+  "source": "distributor",
+  "note": "Audio General (Barco dealer) lens image"
+ },
+ {
+  "key": "Barco | R9862005 - 16/10 1,16-1,49",
+  "title": "Barco R9862005 - 16/10 1,16-1,49",
+  "items": [
+   "VIDPROBARVIPRLETLD125"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/r9862005.jpg",
+   "https://www.audiogeneral.com/barco/r9840775.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/barco/large_venue_lenses.php",
+  "source": "distributor",
+  "note": "Audio General page captions R9862005/R9840775 may be swapped; check"
+ },
+ {
+  "key": "Barco | R9862010 - 16/10 1,39-1,87",
+  "title": "Barco R9862010 - 16/10 1,39-1,87",
+  "items": [
+   "VIDPROBARVIPRLETLD16"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/r9862010.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/barco/large_venue_lenses.php",
+  "source": "distributor",
+  "note": "Audio General (Barco dealer) lens image"
+ },
+ {
+  "key": "Barco | R9862020 - 16/10 1,87-2,56",
+  "title": "Barco R9862020 - 16/10 1,87-2,56",
+  "items": [
+   "VIDPROBARVIPRLETLD20"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/r9862020.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/barco/large_venue_lenses.php",
+  "source": "distributor",
+  "note": "Audio General (Barco dealer) lens image"
+ },
+ {
+  "key": "Barco | R9862030 - 16/10 2,56-4,17",
+  "title": "Barco R9862030 - 16/10 2,56-4,17",
+  "items": [
+   "VIDPROBARVIPRLETLD28"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/r9862030.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/barco/large_venue_lenses.php",
+  "source": "distributor",
+  "note": "Audio General (Barco dealer) lens image"
+ },
+ {
+  "key": "Barco | R9862040 - 16/10 4,17-6,95",
+  "title": "Barco R9862040 - 16/10 4,17-6,95",
+  "items": [
+   "VIDPROBARVIPRLETLD50"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/r9862040.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/barco/large_venue_lenses.php",
+  "source": "distributor",
+  "note": "Audio General (Barco dealer) lens image"
+ },
+ {
+  "key": "Barco | S3 4K",
+  "title": "Barco S3 4K",
+  "items": [
+   "VIDMULBARS34K"
+  ],
+  "candidates": [
+   "https://www.audiogeneral.com/barco/image%20processing/S3%203-4%20right.jpg"
+  ],
+  "page": "https://www.audiogeneral.com/store/products/view/0602-2551",
+  "source": "distributor",
+  "note": "Audio General; 3/4 view"
+ },
+ {
+  "key": "Barco | UDM-4K18",
+  "title": "Barco UDM-4K18",
+  "items": [
+   "VIDPROBARUDM4K1"
+  ],
+  "candidates": [
+   "https://www.fullcompass.com/common/products/original/448666.jpg",
+   "https://www.fullcompass.com/common/products/original/448667.jpg",
+   "https://www.fullcompass.com/common/products/original/448668.jpg"
+  ],
+  "page": "https://www.fullcompass.com/prod/613720-barco-udm-4k22-22000-lumens-4k-uhd-large-venue-3dlp-laser-projector-body",
+  "source": "distributor",
+  "note": "Full Compass images of UDM-4K22; UDM models share one housing"
+ },
+ {
+  "key": "Barco | UDM-4K22",
+  "title": "Barco UDM-4K22",
+  "items": [
+   "VIDPROBARUDM4K2"
+  ],
+  "candidates": [
+   "https://www.fullcompass.com/common/products/original/448666.jpg",
+   "https://www.fullcompass.com/common/products/original/448667.jpg",
+   "https://www.fullcompass.com/common/products/original/448668.jpg"
+  ],
+  "page": "https://www.fullcompass.com/prod/613720-barco-udm-4k22-22000-lumens-4k-uhd-large-venue-3dlp-laser-projector-body",
+  "source": "distributor",
+  "note": "Full Compass dealer images; view order not verified"
+ },
+ {
+  "key": "Barco | UDM-WQ18",
+  "title": "Barco UDM-WQ18",
+  "items": [
+   "VIDPROBARUDMWQ1"
+  ],
+  "candidates": [
+   "https://www.fullcompass.com/common/products/original/448666.jpg",
+   "https://www.fullcompass.com/common/products/original/448667.jpg",
+   "https://www.fullcompass.com/common/products/original/448668.jpg"
+  ],
+  "page": "https://www.fullcompass.com/prod/613720-barco-udm-4k22-22000-lumens-4k-uhd-large-venue-3dlp-laser-projector-body",
+  "source": "distributor",
+  "note": "Full Compass images of UDM-4K22; UDM models share one housing"
+ },
+ {
+  "key": "Barco | UDM-WQ22",
+  "title": "Barco UDM-WQ22",
+  "items": [
+   "VIDPROBARUDMWQ2"
+  ],
+  "candidates": [
+   "https://www.fullcompass.com/common/products/original/448666.jpg",
+   "https://www.fullcompass.com/common/products/original/448667.jpg",
+   "https://www.fullcompass.com/common/products/original/448668.jpg"
+  ],
+  "page": "https://www.fullcompass.com/prod/613720-barco-udm-4k22-22000-lumens-4k-uhd-large-venue-3dlp-laser-projector-body",
+  "source": "distributor",
+  "note": "Full Compass images of UDM-4K22; UDM models share one housing"
+ },
+ {
+  "key": "Barco | UDX-4K26",
+  "title": "Barco UDX-4K26",
+  "items": [
+   "VIDPROBARUDX4K2"
+  ],
+  "candidates": [
+   "https://www.projectorcentral.com/images/projectors2/img10777.jpg",
+   "https://www.projectorcentral.com/images/projectors2/img10113.jpg"
+  ],
+  "page": "https://www.projectorcentral.com/barco-udx-4k40.htm",
+  "source": "distributor",
+  "note": "barco.com pages not machine-readable; image from ProjectorCentral (not an official distributor); UDX models share one chassis; image is of UDX-4K40/4K32, same housing"
+ },
+ {
+  "key": "Barco | UDX-4K32",
+  "title": "Barco UDX-4K32",
+  "items": [
+   "VIDPROBARUDX4K3"
+  ],
+  "candidates": [
+   "https://www.projectorcentral.com/images/projectors2/img10113.jpg",
+   "https://www.projectorcentral.com/images/projectors2/img10777.jpg"
+  ],
+  "page": "https://www.projectorcentral.com/barco-udx-4k32.htm",
+  "source": "distributor",
+  "note": "barco.com pages not machine-readable; image from ProjectorCentral (not an official distributor); UDX models share one chassis"
+ },
+ {
+  "key": "Barco | UDX-4K40",
+  "title": "Barco UDX-4K40",
+  "items": [
+   "VIDPROBARUDX4K4"
+  ],
+  "candidates": [
+   "https://www.projectorcentral.com/images/projectors2/img10777.jpg",
+   "https://www.projectorcentral.com/images/projectors2/img10113.jpg"
+  ],
+  "page": "https://www.projectorcentral.com/barco-udx-4k40.htm",
+  "source": "distributor",
+  "note": "barco.com pages not machine-readable; image from ProjectorCentral (not an official distributor); UDX models share one chassis"
+ },
+ {
+  "key": "Barco | UDX-WQ18",
+  "title": "Barco UDX-WQ18",
+  "items": [
+   "VIDPROBARUDXWQ1"
+  ],
+  "candidates": [
+   "https://www.projectorcentral.com/images/projectors2/img10777.jpg",
+   "https://www.projectorcentral.com/images/projectors2/img10113.jpg"
+  ],
+  "page": "https://www.projectorcentral.com/barco-udx-4k40.htm",
+  "source": "distributor",
+  "note": "barco.com pages not machine-readable; image from ProjectorCentral (not an official distributor); UDX models share one chassis; image is of UDX-4K40/4K32, same housing"
+ },
+ {
+  "key": "Barco | UDX-WQ26",
+  "title": "Barco UDX-WQ26",
+  "items": [
+   "VIDPROBARUDXWQ2"
+  ],
+  "candidates": [
+   "https://www.projectorcentral.com/images/projectors2/img10777.jpg",
+   "https://www.projectorcentral.com/images/projectors2/img10113.jpg"
+  ],
+  "page": "https://www.projectorcentral.com/barco-udx-4k40.htm",
+  "source": "distributor",
+  "note": "barco.com pages not machine-readable; image from ProjectorCentral (not an official distributor); UDX models share one chassis; image is of UDX-4K40/4K32, same housing"
+ },
+ {
+  "key": "Barco | UDX-WQ32",
+  "title": "Barco UDX-WQ32",
+  "items": [
+   "VIDPROBARUDXWQ3"
+  ],
+  "candidates": [
+   "https://www.projectorcentral.com/images/projectors2/img10777.jpg",
+   "https://www.projectorcentral.com/images/projectors2/img10113.jpg"
+  ],
+  "page": "https://www.projectorcentral.com/barco-udx-4k40.htm",
+  "source": "distributor",
+  "note": "barco.com pages not machine-readable; image from ProjectorCentral (not an official distributor); UDX models share one chassis; image is of UDX-4K40/4K32, same housing"
+ },
+ {
+  "key": "Barco | UDX-WQ40",
+  "title": "Barco UDX-WQ40",
+  "items": [
+   "VIDPROBARUDXWQ4"
+  ],
+  "candidates": [
+   "https://www.projectorcentral.com/images/projectors2/img10777.jpg",
+   "https://www.projectorcentral.com/images/projectors2/img10113.jpg"
+  ],
+  "page": "https://www.projectorcentral.com/barco-udx-4k40.htm",
+  "source": "distributor",
+  "note": "barco.com pages not machine-readable; image from ProjectorCentral (not an official distributor); UDX models share one chassis; image is of UDX-4K40/4K32, same housing"
+ },
+ {
+  "key": "Circular | polarized helical antenna 450 - 950 MHz",
+  "title": "Circular polarized helical antenna 450 - 950 MHz",
+  "items": [
+   "AUDINECIRPOLARI"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_22/223168/19682944_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_22/223168/19691829_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_22/223168/19682945_800.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/sennheiser_a5000cp.htm",
+  "source": "distributor",
+  "note": "Same as Sennheiser A 5000-CP (assumed)"
+ },
+ {
+  "key": "Claypaky | Arolla MP Profile",
+  "title": "Claypaky Arolla MP Profile",
+  "items": [
+   "LIGLEDCLAAROLLA"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_Arolla_Profile_MP.jpg",
+   "https://www.claypaky.it/wp-content/uploads/2023/02/Claypaky_Arolla_Profile_MP_02.jpg",
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_Arolla_Profile_MP_03.jpg"
+  ],
+  "page": "https://claypaky.it/products/arolla-profile-mp",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Claypaky | HY B-EYE K25",
+  "title": "Claypaky HY B-EYE K25",
+  "items": [
+   "LIGLEDCLALILECPK25"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_HY_B-EYE_K25.jpg"
+  ],
+  "page": "https://www.claypaky.it/products/hy-b-eye-k25/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Claypaky | Midi-B",
+  "title": "Claypaky Midi-B",
+  "items": [
+   "LIGLEDCLAMIDIB"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_Midi-B.jpg"
+  ],
+  "page": "https://www.claypaky.it/products/midib/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Claypaky | Mini-B",
+  "title": "Claypaky Mini-B",
+  "items": [
+   "LIGLEDCLAMINIB"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_Mini-B.jpg"
+  ],
+  "page": "https://claypaky.it/products/mini-b",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Claypaky | MiniXtylos HPE",
+  "title": "Claypaky MiniXtylos HPE",
+  "items": [
+   "LIGLASCLAMINIXT"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_Mini_Xtylos_HPE.jpg"
+  ],
+  "page": "https://www.claypaky.it/products/mini-xtylos",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Claypaky | Sharpy Plus",
+  "title": "Claypaky Sharpy Plus",
+  "items": [
+   "LIGINTCLALIILCPSHARPY"
+  ],
+  "candidates": [
+   "https://cdn11.bigcommerce.com/s-dd19b/products/27423/images/113583/Claypaky_SharpyPlus__08419.1696010352.386.513.jpg?c=2"
+  ],
+  "page": "https://goknight.com/claypaky-cd3000-sharpy-plus-moving-head-fixture/",
+  "source": "distributor",
+  "note": "Goknight (US distributor) image, Claypaky studio packshot; small (386x513)"
+ },
+ {
+  "key": "Claypaky | Sharpy Plus Aqua",
+  "title": "Claypaky Sharpy Plus Aqua",
+  "items": [
+   "LIGINTCLALIILCPSHAQUA"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2025/06/Claypaky_SharpyPlusAqua.jpg"
+  ],
+  "page": "https://claypaky.it/products/sharpy-plus-aqua",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Claypaky | Sharpy X Frame",
+  "title": "Claypaky Sharpy X Frame",
+  "items": [
+   "LIGINTCLALIILCPSHXFRAME"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_SharpyXFrame.jpg"
+  ],
+  "page": "https://www.claypaky.it/products/sharpy-xframe/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Claypaky | Stormy CC RGBW",
+  "title": "Claypaky Stormy CC RGBW",
+  "items": [
+   "LIGLEDCLASTORMY"
+  ],
+  "candidates": [
+   "https://www.panavision.com/images/default-source/product-images/panalux/heads/xal5fan_stormy-cc-rgbw-led-strobe/px_heads_effects_clay-paky_stormy-cc-rgbw-led-strobe_01-png.png?sfvrsn=9ad1c5d7_0",
+   "https://www.panavision.com/images/default-source/product-images/panalux/heads/xal5fan_stormy-cc-rgbw-led-strobe/px_heads_effects_clay-paky_stormy-cc-rgbw-led-strobe_02-png.png?sfvrsn=986ffcc3_0"
+  ],
+  "page": "https://www.panavision.com/lighting/lighting-products/heads/product-detail/xal5fan-stormy-cc-rgbw-led-strobe",
+  "source": "distributor",
+  "note": "Panavision/Panalux rental page"
+ },
+ {
+  "key": "DPA | 4055",
+  "title": "DPA 4055",
+  "items": [
+   "AUDMICDPA4055"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_54/543434/17292453_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_54/543434/17292473_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_54/543434/17292423_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/dpa_4055_kick_drum_microphone.htm",
+  "source": "distributor",
+  "note": "dpamicrophones.com in maintenance; Thomann images"
+ },
+ {
+  "key": "DPA | D:FINE CORE 4266 headset omni flex (beige)",
+  "title": "DPA D:FINE CORE 4266 headset omni flex (beige)",
+  "items": [
+   "AUDWIRDPAMIHFDPCO66BE"
+  ],
+  "candidates": [
+   "https://www.scan.co.uk/images/products/xlarge/2974426-xl-a.jpg",
+   "https://www.scan.co.uk/images/products/xlarge/2974426-xl-b.jpg",
+   "https://www.adorama.com/images/Large/DPA4266FF1LE.JPG"
+  ],
+  "page": "https://www.scan.co.uk/products/dpa-core-4266-omni-flex-headset-mic-with-110-mm-boom-microdot-connector-20-hz-20-khz-beige",
+  "source": "distributor",
+  "note": "Scan UK / Adorama (Adorama image is one-ear earset variant)"
+ },
+ {
+  "key": "DPA | D:FINE CORE 4266 headset omni flex (black)",
+  "title": "DPA D:FINE CORE 4266 headset omni flex (black)",
+  "items": [
+   "AUDWIRDPAMIHFDPCO66BL"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-4266OCFB00MH.JPG"
+  ],
+  "page": "https://markertek.com/product/dpa-4266ocfb00mh/dpa-4266-oc-f-b00-mh-4266-core-omni-flex-headset-microphone-90mm-boom-microdot-black",
+  "source": "distributor",
+  "note": "Markertek"
+ },
+ {
+  "key": "DPA | D:FINE CORE 4288 headset directional flex (beige)",
+  "title": "DPA D:FINE CORE 4288 headset directional flex (beige)",
+  "items": [
+   "AUDWIRDPAMIHFDPCO88BE"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/DPA4288DCFFM.JPG"
+  ],
+  "page": "https://www.adorama.com/dpa4288dcffm.html",
+  "source": "distributor",
+  "note": "Adorama"
+ },
+ {
+  "key": "DPA | D:FINE CORE 6066 headset omni (beige)",
+  "title": "DPA D:FINE CORE 6066 headset omni (beige)",
+  "items": [
+   "AUDWIRDPAMIHFDP6066BE"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/DP6066OCRF00.JPG"
+  ],
+  "page": "https://www.adorama.com/dp6066ocrf00.html",
+  "source": "distributor",
+  "note": "Adorama"
+ },
+ {
+  "key": "DPA | D:FINE CORE 6066 headset omni (black)",
+  "title": "DPA D:FINE CORE 6066 headset omni (black)",
+  "items": [
+   "AUDWIRDPAMIHFDP6066BL"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-6066-OCR-B10.JPG"
+  ],
+  "page": "https://markertek.com/product/dpa-6066-ocr-b10/dpa-6066-oc-r-b10-d-fine-trade-core-6066-omni-headset-mic-black-w-hardwired-ta4f-mini-xlr-connector",
+  "source": "distributor",
+  "note": "Markertek, TA4F version"
+ },
+ {
+  "key": "DPA | D:FINE FID88 dual earset directional (beige)",
+  "title": "DPA D:FINE FID88 dual earset directional (beige)",
+  "items": [
+   "AUDWIRDPAMIHFDP4088BE"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/DPAFID88F032.JPG",
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-FID88F00-M2.JPG"
+  ],
+  "page": "https://www.adorama.com/dpafid88f032.html",
+  "source": "distributor",
+  "note": "Adorama / Markertek"
+ },
+ {
+  "key": "DPA | D:FINE FIO66 dual earset omni-directional (beige)",
+  "title": "DPA D:FINE FIO66 dual earset omni-directional (beige)",
+  "items": [
+   "AUDWIRDPAMIHFDP4066BE"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/DPAFIO66F342.JPG"
+  ],
+  "page": "https://www.adorama.com/dpafio66f342.html",
+  "source": "distributor",
+  "note": "Adorama"
+ },
+ {
+  "key": "DPA | D:FINE FIO66 dual earset omni-directional (black)",
+  "title": "DPA D:FINE FIO66 dual earset omni-directional (black)",
+  "items": [
+   "AUDWIRDPAMIHFDP4066BL"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/DPAFIO66B032.JPG"
+  ],
+  "page": "https://www.adorama.com/dpafio66b032.html",
+  "source": "distributor",
+  "note": "Adorama (item discontinued there)"
+ },
+ {
+  "key": "DPA | D:SCREET CORE 6061 submini omni-direction (beige)",
+  "title": "DPA D:SCREET CORE 6061 submini omni-direction (beige)",
+  "items": [
+   "AUDWIRDPAMIHFDP6061BE"
+  ],
+  "candidates": [
+   "https://www.scan.co.uk/images/products/xlarge/2996948-xl-a.jpg"
+  ],
+  "page": "https://www.scan.co.uk/products/dpa-core-6061-omnidirection-microphone-loud-spl-microdot-3mm-core-capsule-ip58-certified-beige",
+  "source": "distributor",
+  "note": "Scan UK"
+ },
+ {
+  "key": "DPA | D:SCREET CORE 6061 submini omni-direction (black)",
+  "title": "DPA D:SCREET CORE 6061 submini omni-direction (black)",
+  "items": [
+   "AUDWIRDPAMIHFDP6061BL"
+  ],
+  "candidates": [
+   "https://www.scan.co.uk/images/products/xlarge/2996947-xl-a.jpg"
+  ],
+  "page": "https://www.scan.co.uk/products/dpa-dscreet-core-6061-omnidirection-microphone-loud-spl-microdot-3mm-core-capsule-ip58-certified-bla",
+  "source": "distributor",
+  "note": "Scan UK"
+ },
+ {
+  "key": "DPA | D:VOTE 4099",
+  "title": "DPA D:VOTE 4099",
+  "items": [
+   "AUDWIRDPAMICRDP4099"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-4099-DP-1.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/DPA-4099-DP-1.JPG"
+  ],
+  "page": "https://www.markertek.com/product/dpa-4099-dp-1/dpa-4099-core-ip58-supercardioid-instrument-microphone-loud-spl-6-mv-pa-sensitivity",
+  "source": "distributor",
+  "note": "CORE+ variant image; visually near-identical"
+ },
+ {
+  "key": "DPA | D:VOTE CORE 4099",
+  "title": "DPA D:VOTE CORE 4099",
+  "items": [
+   "AUDWIRDPADVOTEC"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-4099-DP-1.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/DPA-4099-DP-1.JPG",
+   "https://www.markertek.com/productImage/alternate-3/hi-res/DPA-4099-DP-1.JPG"
+  ],
+  "page": "https://www.markertek.com/product/dpa-4099-dp-1/dpa-4099-core-ip58-supercardioid-instrument-microphone-loud-spl-6-mv-pa-sensitivity",
+  "source": "distributor",
+  "note": "Markertek, 4099 CORE+ (current version)"
+ },
+ {
+  "key": "DPA | STEREO SET D:VOTE 4099 for piano",
+  "title": "DPA STEREO SET D:VOTE 4099 for piano",
+  "items": [
+   "AUDWIRDPAMICRDP4099P"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-4099-DP-1.JPG"
+  ],
+  "page": "https://www.markertek.com/product/dpa-4099-dp-1/dpa-4099-core-ip58-supercardioid-instrument-microphone-loud-spl-6-mv-pa-sensitivity",
+  "source": "distributor",
+  "note": "4099 CORE+ mic image (looks near-identical to older 4099), not the set"
+ },
+ {
+  "key": "DPA | STEREO SET D:VOTE CORE 4099 for accordion",
+  "title": "DPA STEREO SET D:VOTE CORE 4099 for accordion",
+  "items": [
+   "AUDWIRDPAMICRDPCO99A"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-4099-DP-1.JPG"
+  ],
+  "page": "https://www.markertek.com/product/dpa-4099-dp-1/dpa-4099-core-ip58-supercardioid-instrument-microphone-loud-spl-6-mv-pa-sensitivity",
+  "source": "distributor",
+  "note": "single 4099 mic image, not the accordion set"
+ },
+ {
+  "key": "DPA | STEREO SET D:VOTE CORE 4099 for piano",
+  "title": "DPA STEREO SET D:VOTE CORE 4099 for piano",
+  "items": [
+   "AUDWIRDPAMICRDPCO99P"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-4099-DP-1.JPG"
+  ],
+  "page": "https://www.markertek.com/product/dpa-4099-dp-1/dpa-4099-core-ip58-supercardioid-instrument-microphone-loud-spl-6-mv-pa-sensitivity",
+  "source": "distributor",
+  "note": "single 4099 mic image, not the piano set"
+ },
+ {
+  "key": "ETC | Fix 14° - 4 Knives",
+  "title": "ETC Fix 14° - 4 Knives",
+  "items": [
+   "LIGPROETCFIX144"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/SourceFour-Incand_547x400.jpg"
+  ],
+  "page": "https://www.etcconnect.com/Products/Entertainment-Fixtures/",
+  "source": "manufacturer",
+  "note": "Source Four incandescent overview thumbnail (547x400); generic for all lens variants"
+ },
+ {
+  "key": "ETC | Fix 50° - 4 Knives",
+  "title": "ETC Fix 50° - 4 Knives",
+  "items": [
+   "LIGPROETCFIX504"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/SourceFour-Incand_547x400.jpg"
+  ],
+  "page": "https://www.etcconnect.com/Products/Entertainment-Fixtures/",
+  "source": "manufacturer",
+  "note": "Source Four incandescent overview thumbnail (547x400); generic for all lens variants"
+ },
+ {
+  "key": "ETC | LED S4 Lustr2 Incl. cyc lens",
+  "title": "ETC LED S4 Lustr2 Incl. cyc lens",
+  "items": [
+   "LIGLEDETCLEDS4L"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_glam_1.jpg",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/CYC_adapter_engines_547x400.gif"
+  ],
+  "page": "https://www.etcconnect.com/Products/Lighting-Fixtures/Source-Four-LED-Series-2/Source-Four-LED-Series-2-Lustr/",
+  "source": "manufacturer",
+  "note": "no packshot with CYC adapter; 2nd is small animated gif of CYC adapter"
+ },
+ {
+  "key": "ETC | S4 Lustr2 Incl. 19° Lenstube Iris - 4 Knives",
+  "title": "ETC S4 Lustr2 Incl. 19° Lenstube Iris - 4 Knives",
+  "items": [
+   "LIGLEDETCLILEETC19"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_glam_1.jpg",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/S4LED_Series2_Lustr_Blue_2.png",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_Lustr_Red.jpg"
+  ],
+  "page": "https://www.etcconnect.com/Products/Lighting-Fixtures/Source-Four-LED-Series-2/Source-Four-LED-Series-2-Lustr/",
+  "source": "manufacturer",
+  "note": "series image; lens tube angle not distinguishable"
+ },
+ {
+  "key": "ETC | S4 Lustr2 Incl. 25°-50° Lenstube Iris - 4 Knives",
+  "title": "ETC S4 Lustr2 Incl. 25°-50° Lenstube Iris - 4 Knives",
+  "items": [
+   "LIGLEDETCLILEETCZ2550"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_glam_1.jpg",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/S4LED_Series2_Lustr_Blue_2.png",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_Lustr_Red.jpg"
+  ],
+  "page": "https://www.etcconnect.com/Products/Lighting-Fixtures/Source-Four-LED-Series-2/Source-Four-LED-Series-2-Lustr/",
+  "source": "manufacturer",
+  "note": "series image; lens tube angle not distinguishable"
+ },
+ {
+  "key": "ETC | S4 Lustr2 Incl. 26° Lenstube Iris - 4 Knives",
+  "title": "ETC S4 Lustr2 Incl. 26° Lenstube Iris - 4 Knives",
+  "items": [
+   "LIGLEDETCLILEETC26"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_glam_1.jpg",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/S4LED_Series2_Lustr_Blue_2.png",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_Lustr_Red.jpg"
+  ],
+  "page": "https://www.etcconnect.com/Products/Lighting-Fixtures/Source-Four-LED-Series-2/Source-Four-LED-Series-2-Lustr/",
+  "source": "manufacturer",
+  "note": "series image; lens tube angle not distinguishable"
+ },
+ {
+  "key": "ETC | S4 Lustr2 Incl. 36° Lenstube Iris - 4 Knives",
+  "title": "ETC S4 Lustr2 Incl. 36° Lenstube Iris - 4 Knives",
+  "items": [
+   "LIGLEDETCLILEETC36"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_glam_1.jpg",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/S4LED_Series2_Lustr_Blue_2.png",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_Lustr_Red.jpg"
+  ],
+  "page": "https://www.etcconnect.com/Products/Lighting-Fixtures/Source-Four-LED-Series-2/Source-Four-LED-Series-2-Lustr/",
+  "source": "manufacturer",
+  "note": "series image; lens tube angle not distinguishable"
+ },
+ {
+  "key": "ETC | S4 Lustr2 Incl. 50° Lenstube Iris - 4 Knives",
+  "title": "ETC S4 Lustr2 Incl. 50° Lenstube Iris - 4 Knives",
+  "items": [
+   "LIGLEDETCLILEETC50"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_glam_1.jpg",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/S4LED_Series2_Lustr_Blue_2.png",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_Lustr_Red.jpg"
+  ],
+  "page": "https://www.etcconnect.com/Products/Lighting-Fixtures/Source-Four-LED-Series-2/Source-Four-LED-Series-2-Lustr/",
+  "source": "manufacturer",
+  "note": "series image; lens tube angle not distinguishable"
+ },
+ {
+  "key": "ETC | S4 Series2 Daylight HD 19° - 4 Knives",
+  "title": "ETC S4 Series2 Daylight HD 19° - 4 Knives",
+  "items": [
+   "LIGLEDETCLILEETC19DL"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_glam_1.jpg",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/S4LED_Series2_Lustr_Blue_2.png"
+  ],
+  "page": "https://www.etcconnect.com/Products/Lighting-Fixtures/Source-Four-LED-Series-2/Source-Four-LED-Series-2-Lustr/",
+  "source": "manufacturer",
+  "note": "Series 2 fixture shown as Lustr; same body, no Daylight-specific packshot found"
+ },
+ {
+  "key": "ETC | S4 Series2 Daylight HD Zoom 25°-50° - 4 Knives",
+  "title": "ETC S4 Series2 Daylight HD Zoom 25°-50° - 4 Knives",
+  "items": [
+   "LIGLEDETCLILEETCZ2250DL"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Lighting_Fixtures/Source_Four/S4LED_Series2_glam_1.jpg",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/S4LED_Series2_Lustr_Blue_2.png"
+  ],
+  "page": "https://www.etcconnect.com/Products/Lighting-Fixtures/Source-Four-LED-Series-2/Source-Four-LED-Series-2-Lustr/",
+  "source": "manufacturer",
+  "note": "Series 2 fixture shown as Lustr; same body, no Daylight-specific packshot found"
+ },
+ {
+  "key": "ETC | Zoom 25-50° Iris - 4 Knives",
+  "title": "ETC Zoom 25-50° Iris - 4 Knives",
+  "items": [
+   "LIGPROETCZOOM25"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Entertainment_Fixtures/SourceFour-Incand_547x400.jpg"
+  ],
+  "page": "https://www.etcconnect.com/Products/Entertainment-Fixtures/",
+  "source": "manufacturer",
+  "note": "Source Four incandescent overview thumbnail (547x400); generic for all lens variants"
+ },
+ {
+  "key": "L-Acoustics | A10 FOCUS",
+  "title": "L-Acoustics A10 FOCUS",
+  "items": [
+   "AUDFULLACA10FOC"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_4xA10_FocusA10-BUMP_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/loudspeakers/a-series/",
+  "source": "manufacturer",
+  "note": "array render (4x A10 Focus + bump)"
+ },
+ {
+  "key": "L-Acoustics | A10 WIDE",
+  "title": "L-Acoustics A10 WIDE",
+  "items": [
+   "AUDFULLACA10WID"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_3xA10_WideA10-Lift_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/loudspeakers/a-series/",
+  "source": "manufacturer",
+  "note": "array render (3x A10 Wide + lift)"
+ },
+ {
+  "key": "L-Acoustics | A15 FOCUS",
+  "title": "L-Acoustics A15 FOCUS",
+  "items": [
+   "AUDFULLACA15FOC"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_A15_Focus_Perspective_01-800x400-1.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_4xA15_FocusA15-Bump_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/a15-focus/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | A15 WIDE",
+  "title": "L-Acoustics A15 WIDE",
+  "items": [
+   "AUDFULLACA15WID"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_3xA15_WideA15-Lift_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/loudspeakers/a-series/",
+  "source": "manufacturer",
+  "note": "array render (3x A15 Wide + lift)"
+ },
+ {
+  "key": "L-Acoustics | Accessory for stacking for KS21",
+  "title": "L-Acoustics Accessory for stacking for KS21",
+  "items": [
+   "AUDRIGLACRIAUKS21OUTRIG"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/116-3DR_KS21_OUTRIG_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/116-3DR_KS21_OUTRIG_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/ks21/",
+  "source": "manufacturer",
+  "note": "KS21-OUTRIG. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Accessory for stacking for KS28",
+  "title": "L-Acoustics Accessory for stacking for KS28",
+  "items": [
+   "AUDRIGLACRIAUKS28OUTRIG"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/076-3DR_KS28-OUTRIG_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/076-3DR_KS28-OUTRIG_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/ks28/",
+  "source": "manufacturer",
+  "note": "KS28-OUTRIG (assumed). WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Accessory for stacking/tilting for A15 and A10 onto KS21",
+  "title": "L-Acoustics Accessory for stacking/tilting for A15 and A10 onto KS21",
+  "items": [
+   "AUDRIGLACRIAUA1510TILT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/029-3DR_A-TILT_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/029-3DR_A-TILT_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/a15-focus/",
+  "source": "manufacturer",
+  "note": "A-TILT. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Accessory for stacking/tilting for K3",
+  "title": "L-Acoustics Accessory for stacking/tilting for K3",
+  "items": [
+   "AUDRIGLACRIAUK3TILT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/074-3DR_K3-TILT_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/074-3DR_K3-TILT_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k3/",
+  "source": "manufacturer",
+  "note": "K3-TILT. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Array Frame for K2",
+  "title": "L-Acoustics Array Frame for K2",
+  "items": [
+   "AUDRIGLACRIAUK2AF"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/062-3DR_K2-BUMP_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/062-3DR_K2-BUMP_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k2/",
+  "source": "manufacturer",
+  "note": "K2-BUMP. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Array frame for 24 K1 and K1-SB",
+  "title": "L-Acoustics Array frame for 24 K1 and K1-SB",
+  "items": [
+   "AUDRIGLACRIAUK1AF"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/057-K1-BUMP.jpg",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/057-K1-BUMP-300x188.jpg"
+  ],
+  "page": "https://www.l-acoustics.com/products/k1/",
+  "source": "manufacturer",
+  "note": "K1-BUMP. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Array frame for K3",
+  "title": "L-Acoustics Array frame for K3",
+  "items": [
+   "AUDRIGLACRIAUK3AF"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/069-3DR_K3-BUMP_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/069-3DR_K3-BUMP_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k3/",
+  "source": "manufacturer",
+  "note": "K3-BUMP. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Array frame for KIVA II",
+  "title": "L-Acoustics Array frame for KIVA II",
+  "items": [
+   "AUDRIGLACRIAUAFKIVAII"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/093-3DR_KIBU_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/093-3DR_KIBU_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kiva-ii/",
+  "source": "manufacturer",
+  "note": "KIBU II. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Array frame for KIVA and KILO",
+  "title": "L-Acoustics Array frame for KIVA and KILO",
+  "items": [
+   "AUDRIGLACRIAUAFKIVA"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/093-3DR_KIBU_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/093-3DR_KIBU_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kiva-ii/",
+  "source": "manufacturer",
+  "note": "KIBU (original) not online; KIBU II image used. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Bump for KS28",
+  "title": "L-Acoustics Bump for KS28",
+  "items": [
+   "AUDRIGLACBUMPFO"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/117-3DR_KS28-BUMP_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/117-3DR_KS28-BUMP_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/ks28/",
+  "source": "manufacturer",
+  "note": "KS28-BUMP. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Clamp - max. 250kg",
+  "title": "L-Acoustics Clamp - max. 250kg",
+  "items": [
+   "AUDRIGLACCLAMPM"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/124-3DR_CLAMP250_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/124-3DR_CLAMP250_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kara-ii/",
+  "source": "manufacturer",
+  "note": "CLAMP250. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Delta plate",
+  "title": "L-Acoustics Delta plate",
+  "items": [
+   "AUDRIGLACRIAUDELTA"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/058-3DR_K1-DELTA_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/073-3DR_DELTA-1.5T_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k2/",
+  "source": "manufacturer",
+  "note": "ambiguous: K1-DELTA first, DELTA 1.5T second (WordPress originals)"
+ },
+ {
+  "key": "L-Acoustics | Delta plate for K1 array frame",
+  "title": "L-Acoustics Delta plate for K1 array frame",
+  "items": [
+   "AUDRIGLACRIAUK1DELTA"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/058-3DR_K1-DELTA_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/058-3DR_K1-DELTA_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k1/",
+  "source": "manufacturer",
+  "note": "K1-DELTA. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Element for horizontally arraying for A10",
+  "title": "L-Acoustics Element for horizontally arraying for A10",
+  "items": [
+   "AUDRIGLACRIAUA10LIFT"
+  ],
+  "candidates": [
+   "https://www.aedgroup.com/wp-content/uploads/products/RIAUA10LIFT-FV.png"
+  ],
+  "page": "https://www.aedgroup.com/products/riaua10lift/",
+  "source": "distributor",
+  "note": "A10-LIFT; AED Group (L-Acoustics distributor)"
+ },
+ {
+  "key": "L-Acoustics | Element for horizontally arraying for A15",
+  "title": "L-Acoustics Element for horizontally arraying for A15",
+  "items": [
+   "AUDRIGLACRIAUA15LIFT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/032-3DR_A15-LIFT_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/032-3DR_A15-LIFT_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/a15-focus/",
+  "source": "manufacturer",
+  "note": "A15-LIFT. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Flying bumper for KARA under K1",
+  "title": "L-Acoustics Flying bumper for KARA under K1",
+  "items": [
+   "AUDRIGLACRIAUK1KARAD"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/059-KARA-DOWNK1.jpg",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/059-KARA-DOWNK1-300x135.jpg"
+  ],
+  "page": "https://www.l-acoustics.com/products/k1/",
+  "source": "manufacturer",
+  "note": "KARA-DOWNK1. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Flying bumper for KARA under K2",
+  "title": "L-Acoustics Flying bumper for KARA under K2",
+  "items": [
+   "AUDRIGLACRIAUK2KARAD"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/067-3DR_KARADOWNK2_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/067-3DR_KARADOWNK2_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k2/",
+  "source": "manufacturer",
+  "note": "KARADOWNK2. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Flying bumper for KARA under K3",
+  "title": "L-Acoustics Flying bumper for KARA under K3",
+  "items": [
+   "AUDRIGLACRIAUK3KARAD"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/072-3DR_KARADOWNK3_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/072-3DR_KARADOWNK3_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k3/",
+  "source": "manufacturer",
+  "note": "KARA-DOWNK3. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Jack for K2",
+  "title": "L-Acoustics Jack for K2",
+  "items": [
+   "AUDRIGLACJACKFO"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/166-3DR_K2-JACK_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/166-3DR_K2-JACK_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k2/",
+  "source": "manufacturer",
+  "note": "K2-JACK. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | K1",
+  "title": "L-Acoustics K1",
+  "items": [
+   "AUDFULLAC4XK1"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_K1_Perspective_01-800x400-1.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xK1K1-BUMP_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k1/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | K1-SB",
+  "title": "L-Acoustics K1-SB",
+  "items": [
+   "AUDSUBLAC4XK1SB"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xK1-SBK1-BUMP_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/loudspeakers/k-series/",
+  "source": "manufacturer",
+  "note": "array render (8x K1-SB + bump)"
+ },
+ {
+  "key": "L-Acoustics | K2",
+  "title": "L-Acoustics K2",
+  "items": [
+   "AUDFULLAC4XK2"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xK2K2-BUMP_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k2/",
+  "source": "manufacturer",
+  "note": "only an array render (8x K2 + bump) found"
+ },
+ {
+  "key": "L-Acoustics | K3",
+  "title": "L-Acoustics K3",
+  "items": [
+   "AUDFULLAC4XK3"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/12/K3_Perspective_award.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xK3K3-BUMP_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k3/",
+  "source": "manufacturer",
+  "note": "first image may carry an award badge"
+ },
+ {
+  "key": "L-Acoustics | KARA",
+  "title": "L-Acoustics KARA",
+  "items": [
+   "AUDFULLACSPLAKARA3",
+   "AUDFULLAC6XKARA"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_Kara_II_Perspective_01-800x400-1.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kara-ii/",
+  "source": "manufacturer",
+  "note": "original KARA (discontinued) has no page; KARA II image, near-identical look"
+ },
+ {
+  "key": "L-Acoustics | KARA II",
+  "title": "L-Acoustics KARA II",
+  "items": [
+   "AUDFULLACSPLAKARAII3"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_Kara_II_Perspective_01-800x400-1.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xKara_IIM-BUMP_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kara-ii/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | KIVA II",
+  "title": "L-Acoustics KIVA II",
+  "items": [
+   "AUDFULLAC4XKIVA"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_Kiva_II_Perspective_01-800x400-1.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xKiva_IIKIBU-SB_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kiva-ii/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | KS21",
+  "title": "L-Acoustics KS21",
+  "items": [
+   "AUDSUBLACKS21"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2020/12/3DR_KS21_Perspective_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_KS21_Perspective_01-800x400-1.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/ks21/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | KS28",
+  "title": "L-Acoustics KS28",
+  "items": [
+   "AUDSUBLAC4XKS28",
+   "AUDSUBLACKS28"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_KS28_Perspective_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_KS28_Perspective_01-800x400-1.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/ks28/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | LA12X",
+  "title": "L-Acoustics LA12X",
+  "items": [
+   "AUDAMPLACLA12X"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA12X_Perspective.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA12X_Perspective-768x349.png"
+  ],
+  "page": "https://www.l-acoustics.com/electronics/",
+  "source": "manufacturer",
+  "note": "WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | LA12X - LA-RAK II + AES",
+  "title": "L-Acoustics LA12X - LA-RAK II + AES",
+  "items": [
+   "AUDAMPLACAMRALA12X"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA-RAK_II_AVB_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA-RAK_II_AVB_01-768x349.png"
+  ],
+  "page": "https://www.l-acoustics.com/electronics/",
+  "source": "manufacturer",
+  "note": "LA-RAK II AVB image. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | LA12X - LS10 - LA-RAK II + AES/AVB",
+  "title": "L-Acoustics LA12X - LS10 - LA-RAK II + AES/AVB",
+  "items": [
+   "AUDAMPLACAMRALA12XAVB"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA-RAK_II_AVB_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA-RAK_II_AVB_01-768x349.png"
+  ],
+  "page": "https://www.l-acoustics.com/electronics/",
+  "source": "manufacturer",
+  "note": "LA-RAK II AVB image (LS10 not shown). WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | LA4X",
+  "title": "L-Acoustics LA4X",
+  "items": [
+   "AUDAMPLACLA4X"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA4X_Perspective.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA4X_Perspective-768x349.png"
+  ],
+  "page": "https://www.l-acoustics.com/electronics/",
+  "source": "manufacturer",
+  "note": "WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Lasermount for K1",
+  "title": "L-Acoustics Lasermount for K1",
+  "items": [
+   "AUDRIGLACRIAUK1LZMOUNT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/212-3DR_K1-LASERMOUNT_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/212-3DR_K1-LASERMOUNT_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k1/",
+  "source": "manufacturer",
+  "note": "K1-LASERMOUNT. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Lasermount for K2",
+  "title": "L-Acoustics Lasermount for K2",
+  "items": [
+   "AUDRIGLACRIAUK2LZMOUNT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/065-3DR_K2-LASERMOUNT_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/065-3DR_K2-LASERMOUNT_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k2/",
+  "source": "manufacturer",
+  "note": "K2-LASERMOUNT. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Link for K1/K1SB to K2",
+  "title": "L-Acoustics Link for K1/K1SB to K2",
+  "items": [
+   "AUDRIGLACLINKFO"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/068-3DR_K2-LINK_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/068-3DR_K2-LINK_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k1/",
+  "source": "manufacturer",
+  "note": "K2-LINK. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Long U bracket for X12",
+  "title": "L-Acoustics Long U bracket for X12",
+  "items": [
+   "AUDRIGLACRIAUXUL12"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/007-3DR_X-UL12.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/007-3DR_X-UL12-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/x12/",
+  "source": "manufacturer",
+  "note": "X-UL12. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Long U bracket for X15 HiQ",
+  "title": "L-Acoustics Long U bracket for X15 HiQ",
+  "items": [
+   "AUDRIGLACRIAUXUL15"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/012-3DR_X-UL15.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/012-3DR_X-UL15-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/x15-hiq/",
+  "source": "manufacturer",
+  "note": "X-UL15. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Long U bracket for X8",
+  "title": "L-Acoustics Long U bracket for X8",
+  "items": [
+   "AUDRIGLACRIAUXUL8"
+  ],
+  "candidates": [
+   "https://www.aedgroup.com/wp-content/uploads/products/RIAUXUL8-FV.png"
+  ],
+  "page": "https://www.aedgroup.com/products/riauxul8/",
+  "source": "distributor",
+  "note": "X-UL8; AED Group (L-Acoustics distributor)"
+ },
+ {
+  "key": "L-Acoustics | M-bar for KARA",
+  "title": "L-Acoustics M-bar for KARA",
+  "items": [
+   "AUDRIGLACMBARFO"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/078-3DR_M-BAR_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/078-3DR_M-BAR_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kara-ii/",
+  "source": "manufacturer",
+  "note": "M-BAR. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | M-jack for KARA",
+  "title": "L-Acoustics M-jack for KARA",
+  "items": [
+   "AUDRIGLACMJACKF"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/082-3DR_M-JACK_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/082-3DR_M-JACK_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kara-ii/",
+  "source": "manufacturer",
+  "note": "M-JACK. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | P1",
+  "title": "L-Acoustics P1",
+  "items": [
+   "AUDPROLACP1"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_P1_Perspective.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_P1_Perspective-768x349.png"
+  ],
+  "page": "https://www.l-acoustics.com/electronics/",
+  "source": "manufacturer",
+  "note": "WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Pole mount for A15 and A10",
+  "title": "L-Acoustics Pole mount for A15 and A10",
+  "items": [
+   "AUDRIGLACPOLEMO"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/028-3DR_A-MOUNT_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/028-3DR_A-MOUNT_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/a15-focus/",
+  "source": "manufacturer",
+  "note": "A-MOUNT (assumed to be the pole mount; verify). WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Pullback plate for KARA",
+  "title": "L-Acoustics Pullback plate for KARA",
+  "items": [
+   "AUDRIGLACRIAUKARAPB"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/081-3DR_Kara-Pullback_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/081-3DR_Kara-Pullback_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kara-ii/",
+  "source": "manufacturer",
+  "note": "KARA-PULLBACK. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Pullback plate for KIVA II",
+  "title": "L-Acoustics Pullback plate for KIVA II",
+  "items": [
+   "AUDRIGLACRIAUKIVAPB"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/092-3DR_KIVA_PULLBACK_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/092-3DR_KIVA_PULLBACK_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kiva-ii/",
+  "source": "manufacturer",
+  "note": "KIVA-PULLBACK. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Rigging bar and pullback accessory for A10",
+  "title": "L-Acoustics Rigging bar and pullback accessory for A10",
+  "items": [
+   "AUDRIGLACRIAUA10RIGBAR"
+  ],
+  "candidates": [
+   "https://www.aedgroup.com/wp-content/uploads/products/RIAUA10RIGBAR-FV.png"
+  ],
+  "page": "https://www.aedgroup.com/products/riaua10rigbar/",
+  "source": "distributor",
+  "note": "A10-RIGBAR; AED Group (L-Acoustics distributor)"
+ },
+ {
+  "key": "L-Acoustics | Rigging bar and pullback for A15 and KS21",
+  "title": "L-Acoustics Rigging bar and pullback for A15 and KS21",
+  "items": [
+   "AUDRIGLACRIAUA15RIGBAR"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/037-3DR_A15-RIGBAR_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/037-3DR_A15-RIGBAR_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/ks21/",
+  "source": "manufacturer",
+  "note": "A15-RIGBAR. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Rigging bar for X Series",
+  "title": "L-Acoustics Rigging bar for X Series",
+  "items": [
+   "AUDRIGLACRIAUXBAR"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/010-3DR_X-BAR.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/010-3DR_X-BAR-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/x12/",
+  "source": "manufacturer",
+  "note": "X-BAR. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Rigging element for KIVA II",
+  "title": "L-Acoustics Rigging element for KIVA II",
+  "items": [
+   "AUDRIGLACRIAUKIETII"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/091-3DR_KIET_II_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/091-3DR_KIET_II_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kiva-ii/",
+  "source": "manufacturer",
+  "note": "KIET II. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | SB15m",
+  "title": "L-Acoustics SB15m",
+  "items": [
+   "AUDSUBLACSB15M"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2020/12/3DR_SB15M_Horizontal_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/loudspeakers/subwoofer-series/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | SB18",
+  "title": "L-Acoustics SB18",
+  "items": [
+   "AUDSUBLACSB18"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2020/12/3DR_SB18_Horizontal_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/loudspeakers/subwoofer-series/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | SB28-2",
+  "title": "L-Acoustics SB28-2",
+  "items": [
+   "AUDSUBLACSB282"
+  ],
+  "candidates": [
+   "https://www.jsfrance.com/35604-thickbox_default/l-acoustics-renfort-de-grave-passif-sb28-neuf.jpg"
+  ],
+  "page": "https://www.jsfrance.com/en/caissons-de-basses-actifs-passifs/4817-l-acoustics-renfort-de-grave-passif-sb28-neuf-2100000019892.html",
+  "source": "distributor",
+  "note": "SB28 discontinued, no manufacturer page; reseller image (JS France), check quality"
+ },
+ {
+  "key": "L-Acoustics | SYVA",
+  "title": "L-Acoustics SYVA",
+  "items": [
+   "AUDFULLAC2XSYVA"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2020/12/3DR_Syva_3_4_Avant_Catalogue_07.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_Syva_3_4_Avant_Catalogue_800x400-2.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/syva/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | SYVA LOW",
+  "title": "L-Acoustics SYVA LOW",
+  "items": [
+   "AUDSUBLACSYVALO"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_Syva-Low_3_4_Avant_Catalogue_06.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_Syva-Low_3_4_Avant_Catalogue_06-800x400-1.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/syva-low/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | SYVA SUB",
+  "title": "L-Acoustics SYVA SUB",
+  "items": [
+   "AUDSUBLACSYVASU"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_Syva_Sub_Perspective_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/loudspeakers/s-series/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | Short U bracket for X12 and X15 HiQ",
+  "title": "L-Acoustics Short U bracket for X12 and X15 HiQ",
+  "items": [
+   "AUDRIGLACRIAUXUS1215"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/013-3DR_X-US1215.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/013-3DR_X-US1215-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/x15-hiq/",
+  "source": "manufacturer",
+  "note": "X-US1215. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | System technician tool case - V2",
+  "title": "L-Acoustics System technician tool case - V2",
+  "items": [
+   "AUDRIGLACSYSTEM"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/09/Tech_Toolcase-II_03-800x800-1.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/09/Tech_Toolcase-II_03-800x800-1-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k1/",
+  "source": "manufacturer",
+  "note": "TECH TOOLCASE II. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | Wall mount for SYVA",
+  "title": "L-Acoustics Wall mount for SYVA",
+  "items": [
+   "AUDRIGLACWALLMO"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/053-3DR_Syva-Wall_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/053-3DR_Syva-Wall_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/syva/",
+  "source": "manufacturer",
+  "note": "SYVA WALL. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | X12",
+  "title": "L-Acoustics X12",
+  "items": [
+   "AUDFULLACX12"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2020/12/3DR_X12_3_4_Avant_Catalogue_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_X12_3_4_Avant_Catalogue_01-800x400-2.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/x12/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | X15 HiQ",
+  "title": "L-Acoustics X15 HiQ",
+  "items": [
+   "AUDFULLACX15HIQ"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2020/12/3DR_X15HiQ_Perspective_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/04/3DR_X15HiQ_Perspective_01-800x400-2.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/x15-hiq/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | X8",
+  "title": "L-Acoustics X8",
+  "items": [
+   "AUDFULLACX8"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2020/12/3DR_X8_3_4_Avant_Catalogue_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/loudspeakers/x-series/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "L-Acoustics | angle bar extension for KARA",
+  "title": "L-Acoustics angle bar extension for KARA",
+  "items": [
+   "AUDRIGLAC2XANGL"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/083-3DR_KARA-ANGARMEX_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/083-3DR_KARA-ANGARMEX_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kara-ii/",
+  "source": "manufacturer",
+  "note": "KARA-ANGARMEX. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | array frame for A10",
+  "title": "L-Acoustics array frame for A10",
+  "items": [
+   "AUDRIGLACRIAUA10BUMPKIT"
+  ],
+  "candidates": [
+   "https://www.aedgroup.com/wp-content/uploads/products/RIAUA10BUMPKIT-FV.png"
+  ],
+  "page": "https://www.aedgroup.com/products/riaua10bumpkit/",
+  "source": "distributor",
+  "note": "A10-BUMP; AED Group (L-Acoustics distributor)"
+ },
+ {
+  "key": "L-Acoustics | array frame for A15 and KS21",
+  "title": "L-Acoustics array frame for A15 and KS21",
+  "items": [
+   "AUDRIGLACRIAUA15BUMPKIT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/031-3DR_A15-BUMP_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/031-3DR_A15-BUMP_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/ks21/",
+  "source": "manufacturer",
+  "note": "A15-BUMP. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | array frame for KARA",
+  "title": "L-Acoustics array frame for KARA",
+  "items": [
+   "AUDRIGLACRIAUKITMINIBU"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/079-3DR_KARA-MINIBU_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/079-3DR_KARA-MINIBU_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kara-ii/",
+  "source": "manufacturer",
+  "note": "KARA-MINIBU (assumed). WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | array frame for KARA and SB18",
+  "title": "L-Acoustics array frame for KARA and SB18",
+  "items": [
+   "AUDRIGLACRIAUKITKA"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/077-3DR_M-BUMP_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/077-3DR_M-BUMP_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kara-ii/",
+  "source": "manufacturer",
+  "note": "M-BUMP. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | array frame for KIVA and SB15m",
+  "title": "L-Acoustics array frame for KIVA and SB15m",
+  "items": [
+   "AUDRIGLACRIAUKIBUKIT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/094-3DR_KIBU_SB_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/094-3DR_KIBU_SB_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/kiva-ii/",
+  "source": "manufacturer",
+  "note": "KIBU-SB. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | array frame for LA-RAK",
+  "title": "L-Acoustics array frame for LA-RAK",
+  "items": [
+   "AUDRIGLACRIAUKITLA"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_LA-RAKMOUNT_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_LA-RAKMOUNT_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k3/",
+  "source": "manufacturer",
+  "note": "LA-RAKMOUNT (assumed). WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | rigging bar + pullback accessory for K2",
+  "title": "L-Acoustics rigging bar + pullback accessory for K2",
+  "items": [
+   "AUDRIGLACRIAUK2RIGBKIT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/064-3DR_K2-RIGBAR_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/064-3DR_K2-RIGBAR_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k2/",
+  "source": "manufacturer",
+  "note": "K2-RIGBAR. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | rigging bar + pullback accessory for K3",
+  "title": "L-Acoustics rigging bar + pullback accessory for K3",
+  "items": [
+   "AUDRIGLACRIAUK3RIGBKIT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/071-3DR_K3-RIGBAR_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/071-3DR_K3-RIGBAR_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/k3/",
+  "source": "manufacturer",
+  "note": "K3-RIGBAR. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "L-Acoustics | support for SYVA LOW",
+  "title": "L-Acoustics support for SYVA LOW",
+  "items": [
+   "AUDRIGLAC2XSUPP"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/054-3DR_Syva-Base_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/054-3DR_Syva-Base_01-300x300.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/syva-low/",
+  "source": "manufacturer",
+  "note": "SYVA BASE (assumed). WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
+ },
+ {
+  "key": "Lightware | 3G SDI - 1 In to 4 Out",
+  "title": "Lightware 3G SDI - 1 In to 4 Out",
+  "items": [
+   "VIDSIGLIG3GSDI1"
+  ],
+  "candidates": [
+   "https://archive.lightware.com/pub/media/catalog/product/cache/image/265x265/beff4985b56e3afdbeabfc89641a4582/0/_/0__da4_3gsdi_axon.jpg"
+  ],
+  "page": "https://archive.lightware.com/da4-3gsdi",
+  "source": "manufacturer",
+  "note": "Assumed Lightware DA4-3GSDI; only small 265px angled image"
+ },
+ {
+  "key": "Lightware | Matrix MX2 HDMI 2.0 - 8 In to 8 Out + audio",
+  "title": "Lightware Matrix MX2 HDMI 2.0 - 8 In to 8 Out + audio",
+  "items": [
+   "VIDSIGLIGVISP8X8HDMI4K"
+  ],
+  "candidates": [
+   "https://assets.prod.pim.lightware.com/assets/File-Downloads/Images-and-Drawings/Product-Pictures/MX2-8x8-HDMI20-Audio/4-WebImage/MX2-8x8-HDMI20-Audio_Front.png",
+   "https://assets.prod.lwm.lightware.com/public/strapi/MX_2_8x8_HDMI_20_Audio_d1c26425c9.png"
+  ],
+  "page": "https://lightware.com/en/products/matrix-switchers/mx2-8x8-hdmi20-audio",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Luxibel | B Blinded 1",
+  "title": "Luxibel B Blinded 1",
+  "items": [
+   "LIGLEDLUXLILEBBLINDED1"
+  ],
+  "candidates": [
+   "https://cpc.farnell.com/productimages/large/en_GB/DP36009-40.jpg"
+  ],
+  "page": "https://cpc.farnell.com/luxibel/b-blinded-1/led-single-blinder/dp/DP36009",
+  "source": "distributor",
+  "note": "luxibel.com not reachable; CPC Farnell image"
+ },
+ {
+  "key": "Luxibel | B Expo100MWW",
+  "title": "Luxibel B Expo100MWW",
+  "items": [
+   "LIGLEDLUXBEXPO1"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646625/21559844_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646625/21559834_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646625/21559839_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/luxibel_b_expo_100_mww.htm",
+  "source": "distributor",
+  "note": "luxibel.com not reachable; Thomann images, first not visually verified as front view"
+ },
+ {
+  "key": "Luxibel | B PAr105 RGBW V2",
+  "title": "Luxibel B PAr105 RGBW V2",
+  "items": [
+   "LIGLEDLUXBPAR10"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646635/21288311_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646635/21288310_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646635/21288309_800.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/luxibel_b_par_105_rgbw_v2.htm",
+  "source": "distributor",
+  "note": "luxibel.com not reachable; Thomann images"
+ },
+ {
+  "key": "Luxibel | B Par360Z",
+  "title": "Luxibel B Par360Z",
+  "items": [
+   "LIGLEDLUXBPAR36"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646637/21288326_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646637/21288324_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/646637/21288325_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/luxibel_b_par_360_z.htm",
+  "source": "distributor",
+  "note": "luxibel.com not reachable; Thomann images"
+ },
+ {
+  "key": "NEXT | Deck 0,1 m",
+  "title": "NEXT Deck 0,1 m",
+  "items": [
+   "ACCNEXNEXSESTNXD05X1"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NXD-H100x50-1.png",
+   "https://www.next-truss.com/app/uploads/2020/01/NXD-H100x50-2.png"
+  ],
+  "page": "https://www.next-truss.com/product/next-deck-1x05/",
+  "source": "manufacturer",
+  "note": "NEXT Deck Outdoor 1x0,5"
+ },
+ {
+  "key": "NEXT | Deck 0,2 m",
+  "title": "NEXT Deck 0,2 m",
+  "items": [
+   "ACCNEXNEXSESTNXD05X2"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NXD-H200x50-1.png",
+   "https://www.next-truss.com/app/uploads/2020/01/NXD-H200x50-2.png"
+  ],
+  "page": "https://www.next-truss.com/product/next-deck-2x05/",
+  "source": "manufacturer",
+  "note": "NEXT Deck Outdoor 2x0,5"
+ },
+ {
+  "key": "NEXT | Deck 1 m",
+  "title": "NEXT Deck 1 m",
+  "items": [
+   "ACCNEXNEXDECK2X",
+   "ACCNEXNEXDECK1X"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NXD-H200x100-4.png",
+   "https://www.next-truss.com/app/uploads/2020/01/NXD-H200x100-3.png"
+  ],
+  "page": "https://www.next-truss.com/product/next-deck/",
+  "source": "manufacturer",
+  "note": "NEXT Deck Outdoor 2x1"
+ },
+ {
+  "key": "NEXT | Deck to deck clamp",
+  "title": "NEXT Deck to deck clamp",
+  "items": [
+   "ACCNEXNEXDECKTO"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NXD-DD-1.png"
+  ],
+  "page": "https://www.next-truss.com/product/deck-to-deck-clamp/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Ground support - NST44 - Masttruss - Tower erecting system",
+  "title": "NEXT Ground support - NST44 - Masttruss - Tower erecting system",
+  "items": [
+   "RIGGRONEXTRNST44HELP"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2026/02/NEXT-Truss-Tower-Erecting-System-TES.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/tower-erecting-system/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Ground support - NT30 - 1 ton - Base - NH34 0,75 m - top - sleeve",
+  "title": "NEXT Ground support - NT30 - 1 ton - Base - NH34 0,75 m - top - sleeve",
+  "items": [
+   "RIGGRONEXTRNT30NH34",
+   "RIGGRONEXTRNT30NH44",
+   "RIGGRONEXTRNT30BNH34",
+   "RIGGRONEXTRNT30BNH44"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/NEXT-Truss-NT-Base-30.jpg",
+   "https://www.next-truss.com/app/uploads/2026/02/NEXT-Truss-NT-SLB-30.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nt-base-30/",
+  "source": "manufacturer",
+  "note": "Base (NT-BASE-30) and sleeve block (NT-SLB-30) are separate images"
+ },
+ {
+  "key": "NEXT | Ground support - NT40 - 2 ton - Base - NST44 0,50 m - top - sleeve",
+  "title": "NEXT Ground support - NT40 - 2 ton - Base - NST44 0,50 m - top - sleeve",
+  "items": [
+   "RIGGRONEXTRNT40BNS52NSL52"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/NEXT-Truss-NT40-Tower.jpg",
+   "https://www.next-truss.com/app/uploads/2021/11/Markerting-000025_v2_2021-Oct-07_12-55-27PM-000_CustomizedView35674347138.png"
+  ],
+  "page": "https://www.next-truss.com/product/nt40-tower-system/",
+  "source": "manufacturer",
+  "note": "Complete NT40 tower image; base-only page not reachable"
+ },
+ {
+  "key": "NEXT | Ground support - NT40 - 2 ton - Base - NST44 0,75 m - top - sleeve",
+  "title": "NEXT Ground support - NT40 - 2 ton - Base - NST44 0,75 m - top - sleeve",
+  "items": [
+   "RIGGRONEXTRNT40NS52NSL52"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/NEXT-Truss-NT40-Tower.jpg",
+   "https://www.next-truss.com/app/uploads/2021/11/Markerting-000025_v2_2021-Oct-07_12-55-27PM-000_CustomizedView35674347138.png"
+  ],
+  "page": "https://www.next-truss.com/product/nt40-tower-system/",
+  "source": "manufacturer",
+  "note": "Complete NT40 tower image; base-only page not reachable"
+ },
+ {
+  "key": "NEXT | Ground support - NT40 - 2 ton - Set long outriggers - stabilizers tower",
+  "title": "NEXT Ground support - NT40 - 2 ton - Set long outriggers - stabilizers tower",
+  "items": [
+   "RIGGRONEXTRNT40OUTRL02"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/NEXT-Truss-NT40-Tower.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nt40-tower-system/",
+  "source": "manufacturer",
+  "note": "Complete NT40 tower image (shows outriggers), no outrigger-only packshot"
+ },
+ {
+  "key": "NEXT | Ground support - NT40 - 2 ton - Sleeve block",
+  "title": "NEXT Ground support - NT40 - 2 ton - Sleeve block",
+  "items": [
+   "RIGGRONEXTRNT40BSL5266",
+   "RIGGRONEXTRNT40BSL5266100",
+   "RIGGRONEXTRNT40BSL100"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/Markerting-000025_v2_2021-Oct-07_12-55-27PM-000_CustomizedView35674347138.png"
+  ],
+  "page": "https://www.next-truss.com/product/sleeve-block-ns52/",
+  "source": "manufacturer",
+  "note": "NEXT Sleeve block NS52 (NT40)"
+ },
+ {
+  "key": "NEXT | Ground support - NT50 - 5 ton - Base - NBT52 1m - top - sleeve",
+  "title": "NEXT Ground support - NT50 - 5 ton - Base - NBT52 1m - top - sleeve",
+  "items": [
+   "RIGGRONEXTRNT50BNBR100NS52"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2022/01/0c1d03da-0c99-4cb0-92a6-a9ec2dc34e16.png",
+   "https://www.next-truss.com/app/uploads/2021/11/NEXT-Truss-NT50-Tower-System.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nt-base-03/",
+  "source": "manufacturer",
+  "note": "NT-Base-03 (NT50 base) + complete tower"
+ },
+ {
+  "key": "NEXT | Ground support - NT50 - 5 ton - Set long outriggers - stabilizers tower",
+  "title": "NEXT Ground support - NT50 - 5 ton - Set long outriggers - stabilizers tower",
+  "items": [
+   "RIGGRONEXTRNT50OUTRL03"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/NEXT-Truss-NT50-Tower-System.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nt50-tower-system/",
+  "source": "manufacturer",
+  "note": "Complete NT50 tower image, no outrigger-only packshot"
+ },
+ {
+  "key": "NEXT | Set of 24 deck to deck clamps",
+  "title": "NEXT Set of 24 deck to deck clamps",
+  "items": [
+   "ACCNEXNEXSETOF2"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NXD-DD-1.png"
+  ],
+  "page": "https://www.next-truss.com/product/deck-to-deck-clamp/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Set of 4 wheels (rolling riser)",
+  "title": "NEXT Set of 4 wheels (rolling riser)",
+  "items": [
+   "ACCNEXNEXSETOF4"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/Castor-wheel-leg.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/standard-leg-with-castor-40cm-with-brake/",
+  "source": "manufacturer",
+  "note": "NEXT castor wheel leg; verify it matches rolling-riser wheel"
+ },
+ {
+  "key": "NEXT | StageLIFT NSL10 DC D8+ 1000kg - chain 20m",
+  "title": "NEXT StageLIFT NSL10 DC D8+ 1000kg - chain 20m",
+  "items": [
+   "RIGRIGNEXRIHONE1000D8NEXTSTAGELIFT"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2022/11/NSL10-Stagelift.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nsl10-1000kg/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | StageLIFT NSL2.5 DC D8+ 250kg - chain 20m",
+  "title": "NEXT StageLIFT NSL2.5 DC D8+ 250kg - chain 20m",
+  "items": [
+   "RIGRIGNEXRIHONE250D8NEXTSTAGELIFT"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2022/11/NSL2.5-StageLIFT.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nsl-2-5-250kg/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | StageLIFT NSL5 DC D8+ 500kg - chain 20m",
+  "title": "NEXT StageLIFT NSL5 DC D8+ 500kg - chain 20m",
+  "items": [
+   "RIGRIGNEXRIHONE500D8NEXTSTAGELIFT"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2022/11/NSL5-Stagelift.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nsl5-500kg/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Tower erecting system",
+  "title": "NEXT Tower erecting system",
+  "items": [
+   "RIGGRONEXTOWERE"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2026/02/NEXT-Truss-Tower-Erecting-System-TES.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/tower-erecting-system/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NBR100 - Rectangle",
+  "title": "NEXT Truss - NBR100 - Rectangle",
+  "items": [
+   "RIGTRUNEXTRNBR100B060",
+   "RIGTRUNEXTRNBR100B080",
+   "RIGTRUNEXTRNBR100B100",
+   "RIGTRUNEXTRNBR100B120",
+   "RIGTRUNEXTRNBR100B160",
+   "RIGTRUNEXTRNBR100B200",
+   "RIGTRUNEXTRNBR100B240"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/NBR100-Rectangular-Truss-NEXT-Truss-1.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nbr100-rectangular-truss/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NBR100 - Rectangle - Box corner 4-way",
+  "title": "NEXT Truss - NBR100 - Rectangle - Box corner 4-way",
+  "items": [
+   "RIGTRUNEXTRNBR100BBOX"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2022/01/BLK-NB100_2021-Aug-23_07-59-13AM-000_CustomizedView19682600290.png"
+  ],
+  "page": "https://www.next-truss.com/product/nbox-100r/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Ladder",
+  "title": "NEXT Truss - NH32 - Ladder",
+  "items": [
+   "RIGTRUNEXTRNH32B021",
+   "RIGTRUNEXTRNH32B029",
+   "RIGTRUNEXTRNH32B050",
+   "RIGTRUNEXTRNH32B100",
+   "RIGTRUNEXTRNH32B200",
+   "RIGTRUNEXTRNH32B300"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/01/NH32-Ladder-Truss-NEXT-Truss.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nh32-ladder-truss/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Ladder - Box corner 4-way",
+  "title": "NEXT Truss - NH32 - Ladder - Box corner 4-way",
+  "items": [
+   "RIGTRUNEXTRNH32BBOX"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/12/NXBOX-32_-BOXCORNER_NX32_2021-May-18_11-29-56AM-000_CustomizedView4149153808.png"
+  ],
+  "page": "https://www.next-truss.com/product/nx-nh32-boxcorner/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH32- ladder",
+  "title": "NEXT Truss - NH32- ladder",
+  "items": [
+   "RIGTRUNEXTRNH32050",
+   "RIGTRUNEXTRNH32100",
+   "RIGTRUNEXTRNH32200",
+   "RIGTRUNEXTRNH32300"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/01/NH32-Ladder-Truss-NEXT-Truss.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nh32-ladder-truss/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH32- ladder - Box corner 4-way",
+  "title": "NEXT Truss - NH32- ladder - Box corner 4-way",
+  "items": [
+   "RIGTRUNEXTRNH32BOX"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/12/NXBOX-32_-BOXCORNER_NX32_2021-May-18_11-29-56AM-000_CustomizedView4149153808.png"
+  ],
+  "page": "https://www.next-truss.com/product/nx-nh32-boxcorner/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square",
+  "title": "NEXT Truss - NH34 - Square",
+  "items": [
+   "RIGTRUNEXTRNH34021",
+   "RIGTRUNEXTRNH34040",
+   "RIGTRUNEXTRNH34079",
+   "RIGTRUNEXTRNH34025",
+   "RIGTRUNEXTRNH34029",
+   "RIGTRUNEXTRNH34050",
+   "RIGTRUNEXTRNH34071",
+   "RIGTRUNEXTRNH34100",
+   "RIGTRUNEXTRNH34200",
+   "RIGTRUNEXTRNH34300"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NH34-Square-Truss-NEXT-Truss.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nh34-square-truss/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Base plate",
+  "title": "NEXT Truss - NH34 - Square - Base plate",
+  "items": [
+   "RIGTRUNEXTRNH34PLB"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/02/NXBASE-44-2.png"
+  ],
+  "page": "https://www.next-truss.com/product/baseplate-square-nh44/",
+  "source": "manufacturer",
+  "note": "Square baseplates NPLB-24/34/44/52 (shared image)"
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Book corner",
+  "title": "NEXT Truss - NH34 - Square - Book corner",
+  "items": [
+   "RIGTRUNEXTRNH34BC2"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NBC-30-Book-Corner-NEXT-Truss.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nbc-30-book-corner/",
+  "source": "manufacturer",
+  "note": "NBC-30 book corner (3x series)"
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Box corner",
+  "title": "NEXT Truss - NH34 - Square - Box corner",
+  "items": [
+   "RIGTRUNEXTRNH34BOXE"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NEXT-Truss-BOX-34.png",
+   "https://www.next-truss.com/app/uploads/2022/01/BOX-34R_3D_2021-Nov-09_10-39-14AM-000_CustomizedView39124351224.png"
+  ],
+  "page": "https://www.next-truss.com/product/boxcorner-nx-nh34-re-inforced-heavy-duty/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Box corner 5-way",
+  "title": "NEXT Truss - NH34 - Square - Box corner 5-way",
+  "items": [
+   "RIGTRUNEXTRNH34BOX"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NEXT-Truss-BOX-34.png",
+   "https://www.next-truss.com/app/uploads/2022/01/BOX-34R_3D_2021-Nov-09_10-39-14AM-000_CustomizedView39124351224.png"
+  ],
+  "page": "https://www.next-truss.com/product/boxcorner-nx-nh34-re-inforced-heavy-duty/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Heavy duty base plate round",
+  "title": "NEXT Truss - NH34 - Square - Heavy duty base plate round",
+  "items": [
+   "RIGTRUNEXTRNH34PLBHDR2"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX30-40-RB.png",
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX3040-RG-empty.png",
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX30-40-RB-with-couplers.png"
+  ],
+  "page": "https://www.next-truss.com/product/round-baseplate-nx30-40-d800-black/",
+  "source": "manufacturer",
+  "note": "BASE-NX30-40 round D=80cm (black/galvanized)"
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Heavy duty base plate square",
+  "title": "NEXT Truss - NH34 - Square - Heavy duty base plate square",
+  "items": [
+   "RIGTRUNEXTRNH34PLBHDS2"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX30-40-SB.png",
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX3040-SG.png"
+  ],
+  "page": "https://www.next-truss.com/product/square-baseplate-nx-h30-40-800x800-black/",
+  "source": "manufacturer",
+  "note": "BASE-NX30-40 square 80cm (black/galvanized)"
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square",
+  "title": "NEXT Truss - NH44 - Square",
+  "items": [
+   "RIGTRUNEXTRNH44021",
+   "RIGTRUNEXTRNH44029",
+   "RIGTRUNEXTRNH44040",
+   "RIGTRUNEXTRNH44069",
+   "RIGTRUNEXTRNH44075",
+   "RIGTRUNEXTRNH44025",
+   "RIGTRUNEXTRNH44050",
+   "RIGTRUNEXTRNH44071",
+   "RIGTRUNEXTRNH44081",
+   "RIGTRUNEXTRNH44100",
+   "RIGTRUNEXTRNH44200",
+   "RIGTRUNEXTRNH44300",
+   "RIGTRUNEXTRNH44B021",
+   "RIGTRUNEXTRNH44B029",
+   "RIGTRUNEXTRNH44B040",
+   "RIGTRUNEXTRNH44B069",
+   "RIGTRUNEXTRNH44B075",
+   "RIGTRUNEXTRNH44B025",
+   "RIGTRUNEXTRNH44B050",
+   "RIGTRUNEXTRNH44B081",
+   "RIGTRUNEXTRNH44B100",
+   "RIGTRUNEXTRNH44B150",
+   "RIGTRUNEXTRNH44B200",
+   "RIGTRUNEXTRNH44B300"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/NH44-Square-Truss-NEXT-Truss.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nh44-square-truss/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Base plate",
+  "title": "NEXT Truss - NH44 - Square - Base plate",
+  "items": [
+   "RIGTRUNEXTRNH44PLB",
+   "RIGTRUNEXTRNH44BPLB"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/02/NXBASE-44-2.png"
+  ],
+  "page": "https://www.next-truss.com/product/baseplate-square-nh44/",
+  "source": "manufacturer",
+  "note": "Square baseplates NPLB-24/34/44/52 (shared image)"
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Box corner",
+  "title": "NEXT Truss - NH44 - Square - Box corner",
+  "items": [
+   "RIGTRUNEXTRNH44BOXE",
+   "RIGTRUNEXTRNH44BBOXE"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NEXT-Truss-BOX-44.png"
+  ],
+  "page": "https://www.next-truss.com/product/nx-nh44-boxcorner-re-inforced-heavy-duty/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Box corner 5-way",
+  "title": "NEXT Truss - NH44 - Square - Box corner 5-way",
+  "items": [
+   "RIGTRUNEXTRNH44BOX",
+   "RIGTRUNEXTRNH44BBOX"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NEXT-Truss-BOX-44.png"
+  ],
+  "page": "https://www.next-truss.com/product/nx-nh44-boxcorner-re-inforced-heavy-duty/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Heavy duty base plate round",
+  "title": "NEXT Truss - NH44 - Square - Heavy duty base plate round",
+  "items": [
+   "RIGTRUNEXTRNH34PLBHDR3"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX30-40-RB.png",
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX3040-RG-empty.png",
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX30-40-RB-with-couplers.png"
+  ],
+  "page": "https://www.next-truss.com/product/round-baseplate-nx30-40-d800-black/",
+  "source": "manufacturer",
+  "note": "BASE-NX30-40 round D=80cm (black/galvanized)"
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Heavy duty base plate square",
+  "title": "NEXT Truss - NH44 - Square - Heavy duty base plate square",
+  "items": [
+   "RIGTRUNEXTRNH34PLBHDS3"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX30-40-SB.png",
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX3040-SG.png"
+  ],
+  "page": "https://www.next-truss.com/product/square-baseplate-nx-h30-40-800x800-black/",
+  "source": "manufacturer",
+  "note": "BASE-NX30-40 square 80cm (black/galvanized)"
+ },
+ {
+  "key": "NEXT | Truss - NS52 - Square",
+  "title": "NEXT Truss - NS52 - Square",
+  "items": [
+   "RIGTRUNEXTRNS52B025",
+   "RIGTRUNEXTRNS52B050",
+   "RIGTRUNEXTRNS52B069",
+   "RIGTRUNEXTRNS52B080",
+   "RIGTRUNEXTRNS52B100",
+   "RIGTRUNEXTRNS52B120",
+   "RIGTRUNEXTRNS52B150",
+   "RIGTRUNEXTRNS52B160",
+   "RIGTRUNEXTRNS52B200",
+   "RIGTRUNEXTRNS52B240",
+   "RIGTRUNEXTRNS52B250",
+   "RIGTRUNEXTRNS52B300"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/NS52-Square-Truss-NEXT-Truss.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/ns52-square-truss/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NS52 - Square - Box corner 5-way",
+  "title": "NEXT Truss - NS52 - Square - Box corner 5-way",
+  "items": [
+   "RIGTRUNEXTRNS52BBOX"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NEXT-Truss-BOX-52.png",
+   "https://www.next-truss.com/app/uploads/2022/01/BOX-H52R_3D_2021-Nov-09_10-43-12AM-000_CustomizedView4566474046.png"
+  ],
+  "page": "https://www.next-truss.com/product/boxcorner-ns52-re-inforced-heavy-duty/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NSPR36 - Prerig - Rectangle",
+  "title": "NEXT Truss - NSPR36 - Prerig - Rectangle",
+  "items": [
+   "RIGTRUNEXTRNSPR36B122",
+   "RIGTRUNEXTRNSPR36B244"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2023/01/NSPR36-NEXT-Truss.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nspr36-pre-rig-truss/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NSR36 - Rectangle",
+  "title": "NEXT Truss - NSR36 - Rectangle",
+  "items": [
+   "RIGTRUNEXTRNSR36B060",
+   "RIGTRUNEXTRNSR36B080",
+   "RIGTRUNEXTRNSR36B100",
+   "RIGTRUNEXTRNSR36B120",
+   "RIGTRUNEXTRNSR36B150",
+   "RIGTRUNEXTRNSR36B200",
+   "RIGTRUNEXTRNSR36B240"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/NS36.png"
+  ],
+  "page": "https://www.next-truss.com/product/nsr36-rectangular-truss/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NSR36 - Rectangle - Box corner 4-way",
+  "title": "NEXT Truss - NSR36 - Rectangle - Box corner 4-way",
+  "items": [
+   "RIGTRUNEXTRNSR36BBOX"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2022/01/BOX-36R_3D_2021-Sep-24_07-59-51AM-000_CustomizedView11377252063.png"
+  ],
+  "page": "https://www.next-truss.com/product/nbox-36r/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle",
+  "title": "NEXT Truss - NX33 - Triangle",
+  "items": [
+   "RIGTRUNEXTRNX33029",
+   "RIGTRUNEXTRNX33050",
+   "RIGTRUNEXTRNX33071",
+   "RIGTRUNEXTRNX33100",
+   "RIGTRUNEXTRNX33200",
+   "RIGTRUNEXTRNX33300",
+   "RIGTRUNEXTRNX33B029",
+   "RIGTRUNEXTRNX33B050",
+   "RIGTRUNEXTRNX33B071",
+   "RIGTRUNEXTRNX33B100",
+   "RIGTRUNEXTRNX33B200",
+   "RIGTRUNEXTRNX33B300"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NX33-Triangular-Truss-NEXT-Truss.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nx33-triangle-truss/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Base plate",
+  "title": "NEXT Truss - NX33 - Triangle - Base plate",
+  "items": [
+   "RIGTRUNEXTRNX33PLB",
+   "RIGTRUNEXTRNX33BPLB"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NXBASE-33.png"
+  ],
+  "page": "https://www.next-truss.com/product/baseplate-nxnh34/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Book corner",
+  "title": "NEXT Truss - NX33 - Triangle - Book corner",
+  "items": [
+   "RIGTRUNEXTRNH34BC",
+   "RIGTRUNEXTRNH34BBC"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NBC-30-Book-Corner-NEXT-Truss.jpg"
+  ],
+  "page": "https://www.next-truss.com/product/nbc-30-book-corner/",
+  "source": "manufacturer",
+  "note": "NBC-30 book corner (3x series)"
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Heavy duty base plate round",
+  "title": "NEXT Truss - NX33 - Triangle - Heavy duty base plate round",
+  "items": [
+   "RIGTRUNEXTRNH34PLBHDR"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX30-40-RB.png",
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX3040-RG-empty.png",
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX30-40-RB-with-couplers.png"
+  ],
+  "page": "https://www.next-truss.com/product/round-baseplate-nx30-40-d800-black/",
+  "source": "manufacturer",
+  "note": "BASE-NX30-40 round D=80cm (black/galvanized)"
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Heavy duty base plate square",
+  "title": "NEXT Truss - NX33 - Triangle - Heavy duty base plate square",
+  "items": [
+   "RIGTRUNEXTRNH34PLBHDS"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX30-40-SB.png",
+   "https://www.next-truss.com/app/uploads/2020/01/BASE-NX3040-SG.png"
+  ],
+  "page": "https://www.next-truss.com/product/square-baseplate-nx-h30-40-800x800-black/",
+  "source": "manufacturer",
+  "note": "BASE-NX30-40 square 80cm (black/galvanized)"
+ },
+ {
+  "key": "NEXT | Truss Solid hanging truss adapter for NX/NH34",
+  "title": "NEXT Truss Solid hanging truss adapter for NX/NH34",
+  "items": [
+   "RIGTRUNEXTRAC32"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/11/9f11f712-1ae6-4cce-8a46-6b22793056c9.png"
+  ],
+  "page": "https://www.next-truss.com/product/heavy-duty-hanging-adapter/",
+  "source": "manufacturer",
+  "note": "NEXT Heavy Duty Hanging Adapter (fits NX/NH3x); verify"
+ },
+ {
+  "key": "NEXT | Truss TUB-602 Male half coupler to M12 hole",
+  "title": "NEXT Truss TUB-602 Male half coupler to M12 hole",
+  "items": [
+   "RIGTRUNEXTRAC04"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2020/01/NX-652S-2.png",
+   "https://www.next-truss.com/app/uploads/2020/01/NX-652S.png"
+  ],
+  "page": "https://www.next-truss.com/product/nc1-halfconnector-19mm-m12/",
+  "source": "manufacturer",
+  "note": "NEXT NC1-SCON-BOX half connector M12 (closest NEXT equivalent)"
+ },
+ {
+  "key": "NEXT | stairs + railing - W = 1 m / H = 0,4",
+  "title": "NEXT stairs + railing - W = 1 m / H = 0,4",
+  "items": [
+   "ACCNEXNEXSTAIRS"
+  ],
+  "candidates": [
+   "https://www.next-truss.com/app/uploads/2021/01/NXD-STAIR-A02-Adjustable-Stair.png",
+   "https://www.next-truss.com/app/uploads/2020/01/NXD-HR-AS-Handrailing-for-Adjustable-Stair.png"
+  ],
+  "page": "https://www.next-truss.com/product/adjustable-stairs-40-75/",
+  "source": "manufacturer",
+  "note": "Adjustable stairs 40/75 + stair handrail (separate images)"
+ },
+ {
+  "key": "Panasonic | ET-D3LES20 - 16/10 1,7-2,4",
+  "title": "Panasonic ET-D3LES20 - 16/10 1,7-2,4",
+  "items": [
+   "VIDPROPANVIPRLEP31724"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/et-d3les20_high_2.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/et-d3les20_productmainimage.jpg",
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3les20.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/projectors/et-d3les20",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Panasonic | ET-D3LET30 - 16/10 2,4-4,7",
+  "title": "Panasonic ET-D3LET30 - 16/10 2,4-4,7",
+  "items": [
+   "VIDPROPANVIPRLEP32447"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3let30.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D3LET40 - 16/10 4,61-7,41",
+  "title": "Panasonic ET-D3LET40 - 16/10 4,61-7,41",
+  "items": [
+   "VIDPROPANVIPRLEP35080"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3let40.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D3LET80 - 16/10 7,34-13,80",
+  "title": "Panasonic ET-D3LET80 - 16/10 7,34-13,80",
+  "items": [
+   "VIDPROPANVIPRLEP38015"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3let80.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D3LEU100 - 16/10 0,37:1",
+  "title": "Panasonic ET-D3LEU100 - 16/10 0,37:1",
+  "items": [
+   "VIDPROPANVIPRLEP304"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3leu100.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D3LEW10 - 16/10 1,26-1,72",
+  "title": "Panasonic ET-D3LEW10 - 16/10 1,26-1,72",
+  "items": [
+   "VIDPROPANVIPRLEP31418"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3lew10.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D3LEW200 - 16/10 0,65-0,85",
+  "title": "Panasonic ET-D3LEW200 - 16/10 0,65-0,85",
+  "items": [
+   "VIDPROPANVIPRLEP30709"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3lew200.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D3LEW60 - 16/10 0,93-1,10",
+  "title": "Panasonic ET-D3LEW60 - 16/10 0,93-1,10",
+  "items": [
+   "VIDPROPANVIPRLEP31012"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3lew60.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D3QT600 - 16/10 3,3-3,9",
+  "title": "Panasonic ET-D3QT600 - 16/10 3,3-3,9",
+  "items": [
+   "VIDPROPANETD3QT"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3qt600.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D3QW300 - 16/10 1,1-1,7",
+  "title": "Panasonic ET-D3QW300 - 16/10 1,1-1,7",
+  "items": [
+   "VIDPROPANETD3QW"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/2024-04/et-d3qw300_high.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2026-01/et-d3qw300high15748383452635.jpg",
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d3qw300.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/es/es/proyectores/et-d3qw300",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Panasonic | ET-D75LE10 - 16/10 1,3-1,7",
+  "title": "Panasonic ET-D75LE10 - 16/10 1,3-1,7",
+  "items": [
+   "VIDPROPANVIPRLEP1418"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d75le10.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D75LE20 - 16/10 1,7-2,4",
+  "title": "Panasonic ET-D75LE20 - 16/10 1,7-2,4",
+  "items": [
+   "VIDPROPANVIPRLEP1826"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/etd75le20_high_1420534587_4.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/img_d75le20_1467710289.jpg",
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d75le20.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/projectors/et-d75le20",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Panasonic | ET-D75LE30 - 16/10 2,4-4,7",
+  "title": "Panasonic ET-D75LE30 - 16/10 2,4-4,7",
+  "items": [
+   "VIDPROPANVIPRLEP2650"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d75le30.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D75LE4(0) - 16/10 4,6-7,4",
+  "title": "Panasonic ET-D75LE4(0) - 16/10 4,6-7,4",
+  "items": [
+   "VIDPROPANVIPRLEP5080"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d75le40.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "ET-D75LE40 image; Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D75LE5(0) - 16/10 0,7:1",
+  "title": "Panasonic ET-D75LE5(0) - 16/10 0,7:1",
+  "items": [
+   "VIDPROPANVIPRLEP08"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d75le50.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "ET-D75LE50 image; Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-D75LE6 - 16/10 0,9-1,1",
+  "title": "Panasonic ET-D75LE6 - 16/10 0,9-1,1",
+  "items": [
+   "VIDPROPANVIPRLEP1012"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/ET-D75LE6_01_high_1420534588_2.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/img_d75le6_1467765898.jpg",
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d75le6.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/es/en/projectors/et-d75le6",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Panasonic | ET-D75LE8 - 16/10 7,3-13,8",
+  "title": "Panasonic ET-D75LE8 - 16/10 7,3-13,8",
+  "items": [
+   "VIDPROPANVIPRLEP8015"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d75le8.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-DL75LE95 - 16/10 0,36:1",
+  "title": "Panasonic ET-DL75LE95 - 16/10 0,36:1",
+  "items": [
+   "VIDPROPANETDL75"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_d75le95.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "= ET-D75LE95; Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-DLE020 - 16/10 0,28-0,3",
+  "title": "Panasonic ET-DLE020 - 16/10 0,28-0,3",
+  "items": [
+   "VIDPROPANVIPRLE503"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_dle020.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-DLE060 - 16/10 0,6-0,8",
+  "title": "Panasonic ET-DLE060 - 16/10 0,6-0,8",
+  "items": [
+   "VIDPROPANVIPRLE50608"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_dle060.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-DLE085 - 16/10 0,79-0,98",
+  "title": "Panasonic ET-DLE085 - 16/10 0,79-0,98",
+  "items": [
+   "VIDPROPANVIPRLE50811"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_dle085.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-DLE105 - 16/10 1,0-1,3",
+  "title": "Panasonic ET-DLE105 - 16/10 1,0-1,3",
+  "items": [
+   "VIDPROPANVIPRLE51013"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_dle105.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-DLE150 - 16/10 1,3-1,8",
+  "title": "Panasonic ET-DLE150 - 16/10 1,3-1,8",
+  "items": [
+   "VIDPROPANVIPRLE51318"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/ET-DLE150_high_1409674533_2.jpg",
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_dle150.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/projectors/et-dle150",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Panasonic | ET-DLE250 - 16/10 2,3-3,6",
+  "title": "Panasonic ET-DLE250 - 16/10 2,3-3,6",
+  "items": [
+   "VIDPROPANETDLE2"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_dle250.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-DLE350 - 16/10 3,6-5,4",
+  "title": "Panasonic ET-DLE350 - 16/10 3,6-5,4",
+  "items": [
+   "VIDPROPANETDLE3"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_dle350.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | ET-DLE450 - 16/10 5,4-8,6",
+  "title": "Panasonic ET-DLE450 - 16/10 5,4-8,6",
+  "items": [
+   "VIDPROPANETDLE4"
+  ],
+  "candidates": [
+   "https://docs.connect.panasonic.com/projector/shared/img/prodimg/img_prod_dle450.jpg"
+  ],
+  "page": "https://docs.connect.panasonic.com/projector/download/product_images/option.html",
+  "source": "manufacturer",
+  "note": "Panasonic product-images thumbnail (small size)"
+ },
+ {
+  "key": "Panasonic | PT-RCQ10",
+  "title": "Panasonic PT-RCQ10",
+  "items": [
+   "VIDPROPANPTRCQ1"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rcq10_front_high_0.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rcq10_slant_high_0.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rcq10_w_front_high_0.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/projectors/pt-rcq10rcq10l",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Panasonic | PT-RQ25",
+  "title": "Panasonic PT-RQ25",
+  "items": [
+   "VIDPROPANPTRQ25"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2026-04/pt-rq25k-slanthighrestransparent-featuredimage.webp",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rq25k_front_high_0.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rq25k_slant_l_high.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/projectors/pt-rq25k-series/pt-rq25k",
+  "source": "manufacturer",
+  "note": "PT-RQ25K"
+ },
+ {
+  "key": "Panasonic | PT-RQ35",
+  "title": "Panasonic PT-RQ35",
+  "items": [
+   "VIDPROPANPTRQ35"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rq35k_front_high_2.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/styles/social/public/media/image/2026-04/pt-rq35k2-fronthighrestransparent-featuredimage.webp",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rq35k_slant_r_high_1.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/projectors/pt-rq35-series/pt-rq35k",
+  "source": "manufacturer",
+  "note": "PT-RQ35K (K2 image as 2nd)"
+ },
+ {
+  "key": "Panasonic | PT-RQ50",
+  "title": "Panasonic PT-RQ50",
+  "items": [
+   "VIDPROPANPTRQ50"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/2024-04/rq50k_front_high_0.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/2024-04/rq50k_slant_high_0.jpg",
+   "https://docs.connect.panasonic.com/projector/products/rq50k/img/img_mainimg001.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/projectors/pt-rq50k",
+  "source": "manufacturer",
+  "note": "PT-RQ50K; shown with ET-D3QS400 lens"
+ },
+ {
+  "key": "Panasonic | PT-RZ120",
+  "title": "Panasonic PT-RZ120",
+  "items": [
+   "VIDPROPANPTRZ12"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rz120_front_high_0.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rz120_slant_high_0.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rz120_bk_front.png"
+  ],
+  "page": "https://eu.connect.panasonic.com/fr/fr/products/projectors/pt-rz120",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Panasonic | PT-RZ660/690",
+  "title": "Panasonic PT-RZ660/690",
+  "items": [
+   "VIDPROPANPTRZ66"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rz690b_front_high.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rz690b_slant_r_high.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2026-03/pt-rz690-front-high-res-transparent-featured-image.webp"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/projectors/pt-rz990-series/pt-rz690rz690l",
+  "source": "manufacturer",
+  "note": "PT-RZ690 images (RZ660 not found)"
+ },
+ {
+  "key": "Panasonic | PT-RZ990",
+  "title": "Panasonic PT-RZ990",
+  "items": [
+   "VIDPROPANPTRZ99"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rz990b_front_high.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rz990b_slant_l_high.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/rz990w_front_high.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/projectors/pt-rz990rz990l",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Roe | Black Marble 4 - deep black matte version",
+  "title": "Roe Black Marble 4 - deep black matte version",
+  "items": [
+   "VIDLEDROEBLACKM"
+  ],
+  "candidates": [
+   "https://www.roevisual.com/uploads/Images/Products/Black%20Marble/roe-visual-black-marble-4.jpg"
+  ],
+  "page": "https://roevisual.com/products/black-marble-bm4",
+  "source": "manufacturer",
+  "note": "og:image"
+ },
+ {
+  "key": "Roe | Black OnyX 3",
+  "title": "Roe Black OnyX 3",
+  "items": [
+   "VIDLEDROEBLACKO"
+  ],
+  "candidates": [
+   "https://nvision360.com/wp-content/uploads/2025/07/roe_black_onyx_bo3_led_tile.jpg"
+  ],
+  "page": "https://nvision360.com/shop/roe-black-onyx-bo3-led-tile/",
+  "source": "distributor",
+  "note": "ROE Black Onyx page exposes no images; small dealer image"
+ },
+ {
+  "key": "Roe | Carbon Black 5 large Colorlight",
+  "title": "Roe Carbon Black 5 large Colorlight",
+  "items": [
+   "VIDLEDROEVILDCB5LC"
+  ],
+  "candidates": [
+   "https://www.roevisual.com/uploads/Images/Products/Carbon/roe-visual-carbon.jpg"
+  ],
+  "page": "https://roevisual.com/products/carbon",
+  "source": "manufacturer",
+  "note": "Carbon series og:image (not specific to CB5 size)"
+ },
+ {
+  "key": "Roe | Carbon Black 5 small Colorlight",
+  "title": "Roe Carbon Black 5 small Colorlight",
+  "items": [
+   "VIDLEDROEVILDCB5SC"
+  ],
+  "candidates": [
+   "https://www.roevisual.com/uploads/Images/Products/Carbon/roe-visual-carbon.jpg"
+  ],
+  "page": "https://roevisual.com/products/carbon",
+  "source": "manufacturer",
+  "note": "Carbon series og:image (not specific to CB5 size)"
+ },
+ {
+  "key": "Roe | Diamond 2.6",
+  "title": "Roe Diamond 2.6",
+  "items": [
+   "VIDLEDROEDIAMON"
+  ],
+  "candidates": [
+   "https://www.roevisual.com/uploads/Images/Products/Diamond/roe-visual-diamond.jpg"
+  ],
+  "page": "https://www.roevisual.com/jp/products/diamond",
+  "source": "manufacturer",
+  "note": "og:image of series page"
+ },
+ {
+  "key": "Roe | ROE Strip 120 cm",
+  "title": "Roe ROE Strip 120 cm",
+  "items": [
+   "VIDLEDROEVILDSTRIP120"
+  ],
+  "candidates": [
+   "https://www.roevisual.com/uploads/Images/Products/ROE%20Strip/roe-visual-roe-strip.jpg"
+  ],
+  "page": "https://www.roevisual.com/products/roe-strip",
+  "source": "manufacturer",
+  "note": "og:image of ROE Strip page (no length-specific image)"
+ },
+ {
+  "key": "Roe | ROE Strip 60 cm",
+  "title": "Roe ROE Strip 60 cm",
+  "items": [
+   "VIDLEDROEVILDSTRIP60"
+  ],
+  "candidates": [
+   "https://www.roevisual.com/uploads/Images/Products/ROE%20Strip/roe-visual-roe-strip.jpg"
+  ],
+  "page": "https://www.roevisual.com/products/roe-strip",
+  "source": "manufacturer",
+  "note": "og:image of ROE Strip page (no length-specific image)"
+ },
+ {
+  "key": "Roe | Vanish 8",
+  "title": "Roe Vanish 8",
+  "items": [
+   "VIDLEDROEVANISH"
+  ],
+  "candidates": [
+   "https://www.roevisual.com/uploads/Images/Products/Vanish%20V8/roe-visual-vanish-8.jpg"
+  ],
+  "page": "https://www.roevisual.com/nl-en/products/vanish-v8",
+  "source": "manufacturer",
+  "note": "og:image"
+ },
+ {
+  "key": "Roland | UVC-01 - USB capture HDMI - USB3.0 stream",
+  "title": "Roland UVC-01 - USB capture HDMI - USB3.0 stream",
+  "items": [
+   "VIDSIGROLUVC01U"
+  ],
+  "candidates": [
+   "https://static.roland.com/assets/images/products/main/uvc-01_main_front30.jpg",
+   "https://static.roland.com/assets/images/products/gallery/uvc-01_front30_gal.jpg",
+   "https://static.roland.com/assets/images/products/gallery/uvc-01_top_gal.jpg"
+  ],
+  "page": "https://proav.roland.com/global/products/uvc-01/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Roland | V-1-DL SDI/HDMI/SYNC + audio",
+  "title": "Roland V-1-DL SDI/HDMI/SYNC + audio",
+  "items": [
+   "VIDSIGROLV1DLSD"
+  ],
+  "candidates": [
+   "https://static.roland.com/assets/images/products/gallery/vc1dl_front_gal.jpg",
+   "https://static.roland.com/assets/images/products/main/vc1dl_left_diag_main.jpg",
+   "https://static.roland.com/assets/images/products/gallery/vc1dl_left_diag_main_gal.jpg"
+  ],
+  "page": "https://proav.roland.com/global/products/vc-1-dl/",
+  "source": "manufacturer",
+  "note": "Product is Roland VC-1-DL"
+ },
+ {
+  "key": "Roland | V-1-SC HDMI/SDI/RGB/SYNC + audio",
+  "title": "Roland V-1-SC HDMI/SDI/RGB/SYNC + audio",
+  "items": [
+   "VIDSIGROLV1SCHD"
+  ],
+  "candidates": [
+   "https://static.roland.com/assets/images/products/gallery/vc1sc_front_gal.jpg",
+   "https://static.roland.com/assets/images/products/main/vc1sc_left_diag_main.jpg",
+   "https://static.roland.com/assets/images/products/gallery/vc1sc_left_diag_gal.jpg"
+  ],
+  "page": "https://proav.roland.com/products/vc-1-sc/",
+  "source": "manufacturer",
+  "note": "Product is Roland VC-1-SC"
+ },
+ {
+  "key": "Roland | V-160HD",
+  "title": "Roland V-160HD",
+  "items": [
+   "VIDMULROLV160HD"
+  ],
+  "candidates": [
+   "https://static.roland.com/assets/images/products/main/v-160hd_top_main.jpg",
+   "https://static.roland.com/assets/images/products/gallery/v-160hd_front30_B_gal.jpg",
+   "https://static.roland.com/assets/images/products/gallery/v-160hd_front_gal.jpg"
+  ],
+  "page": "https://proav.roland.com/global/products/v-160hd/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Roland | V-600UHD",
+  "title": "Roland V-600UHD",
+  "items": [
+   "VIDMULROLV600UH"
+  ],
+  "candidates": [
+   "https://static.roland.com/assets/images/products/main/v-600uhd_main.jpg",
+   "https://static.roland.com/assets/images/products/gallery/v-600uhd_front_top_gal.jpg",
+   "https://static.roland.com/assets/images/products/gallery/v-600uhd_top_gal.jpg"
+  ],
+  "page": "https://proav.roland.com/global/products/v-600uhd/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Roland | V-8HD",
+  "title": "Roland V-8HD",
+  "items": [
+   "VIDMULROLV8HD"
+  ],
+  "candidates": [
+   "https://static.roland.com/assets/images/products/main/v-8hd_main.jpg",
+   "https://static.roland.com/assets/images/products/gallery/v-8hd_top_front_2_gal.jpg",
+   "https://static.roland.com/products/v-8hd/images/v-8hd_img_panel_top.jpg"
+  ],
+  "page": "https://proav.roland.com/global/products/v-8hd/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Roland | V1-SDI",
+  "title": "Roland V1-SDI",
+  "items": [
+   "VIDMULROLV1SDI"
+  ],
+  "candidates": [
+   "https://static.roland.com/assets/images/products/main/v1sdi_main.jpg",
+   "https://static.roland.com/assets/images/products/gallery/v1sdi_main_gal.jpg",
+   "https://static.roland.com/assets/images/products/gallery/v1sdi_top_gal.jpg"
+  ],
+  "page": "https://proav.roland.com/global/products/v-1sdi/",
+  "source": "manufacturer",
+  "note": "Product is Roland V-1SDI"
+ },
+ {
+  "key": "Roland | VC-100UHD 12G/HDMI2.0/AUDIO In/Out",
+  "title": "Roland VC-100UHD 12G/HDMI2.0/AUDIO In/Out",
+  "items": [
+   "VIDSIGROLVC100U"
+  ],
+  "candidates": [
+   "https://static.roland.com/assets/images/products/gallery/vc-100uhd_front_gal.jpg",
+   "https://static.roland.com/assets/images/products/main/vc-100uhd_main.jpg",
+   "https://static.roland.com/assets/images/products/gallery/vc-100uhd_front_top_gal.jpg"
+  ],
+  "page": "https://proav.roland.com/ru/products/vc-100uhd/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Roland | VR-50HD MK II",
+  "title": "Roland VR-50HD MK II",
+  "items": [
+   "VIDMULROLVR50HD"
+  ],
+  "candidates": [
+   "https://static.roland.com/assets/images/products/gallery/vr-50hd_mk_ii_front_top_gal.jpg",
+   "https://static.roland.com/assets/images/products/main/vr-50hd_mk_ii_top_main.jpg",
+   "https://static.roland.com/assets/images/products/gallery/vr-50hd_mk_ii_top_gal.jpg"
+  ],
+  "page": "https://proav.roland.com/GLOBAL/products/vr-50hd_mk_ii/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Sennheiser | AB 9000 antenna booster 470 - 638 MHz",
+  "title": "Sennheiser AB 9000 antenna booster 470 - 638 MHz",
+  "items": [
+   "AUDWIRSEN2XAB90"
+  ],
+  "candidates": [
+   "https://muzeekworld.com/cdn/shop/files/Sennheiser_AB_9000_A1-A8_grande.jpg?v=1722919645"
+  ],
+  "page": "https://muzeekworld.com/collections/sennheiser-wireless-systems/products/sennheiser-ab-9000-a1-a8-active-intelligent-antenna-booster-for-digital-9000-series-systems-a1-a8-470-to-638-mhz",
+  "source": "distributor",
+  "note": "Retailer image; verify"
+ },
+ {
+  "key": "Sennheiser | AC3200 8 Ch. ant. combiner + antenna 500 - 870 MHz",
+  "title": "Sennheiser AC3200 8 Ch. ant. combiner + antenna 500 - 870 MHz",
+  "items": [
+   "AUDINESENAC3200"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/SENN-AC-3200-II.JPG"
+  ],
+  "page": "https://markertek.com/product/senn-ac-3200-ii/sennheiser-ac-3200-ii-1ru-active-high-power-8-1-broadband-rf-antenna-combiner-max-250mw-input-power",
+  "source": "distributor",
+  "note": "AC 3200-II, Markertek"
+ },
+ {
+  "key": "Sennheiser | Circular polarized helical antenna 450 - 960 MHz",
+  "title": "Sennheiser Circular polarized helical antenna 450 - 960 MHz",
+  "items": [
+   "AUDINESENCIRCUL"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_22/223168/19682944_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_22/223168/19691829_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_22/223168/19682945_800.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/sennheiser_a5000cp.htm",
+  "source": "distributor",
+  "note": "Assumed A 5000-CP"
+ },
+ {
+  "key": "Sennheiser | E906",
+  "title": "Sennheiser E906",
+  "items": [
+   "AUDMICSENE906"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_17/178288/14631956_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_17/178288/14631951_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_17/178288/14631961_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/sennheiser_e_906.htm",
+  "source": "distributor",
+  "note": null
+ },
+ {
+  "key": "Sennheiser | EAR Set 1-4 omni-directional headset (beige)",
+  "title": "Sennheiser EAR Set 1-4 omni-directional headset (beige)",
+  "items": [
+   "AUDWIRSENEARSET"
+  ],
+  "candidates": [
+   "https://files.vplak.com/images/sennheiser/beige,-black/image-1.jpg",
+   "https://files.vplak.com/80-images/sennheiser/beige,-black/image-1.jpg"
+  ],
+  "page": "https://www.vplak.com/sennheiser-ear-set-1-4-3-ear-worn-microphone-p7034",
+  "source": "distributor",
+  "note": "Small retailer, verify image"
+ },
+ {
+  "key": "Sennheiser | EK2000 IEM + IE4 ears",
+  "title": "Sennheiser EK2000 IEM + IE4 ears",
+  "items": [
+   "AUDINESENEK2000"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_35/359202/14533793_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_35/359202/14533788_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_35/359202/14533783_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/sennheiser_ek_2000_iem_aw_a_band.htm",
+  "source": "distributor",
+  "note": "Thomann; manufacturer page has no extractable image URLs"
+ },
+ {
+  "key": "Sennheiser | EM 9046 digital receiver 8-Ch. 470 - 798 MHz",
+  "title": "Sennheiser EM 9046 digital receiver 8-Ch. 470 - 798 MHz",
+  "items": [
+   "AUDWIRSENEM9046"
+  ],
+  "candidates": [
+   "https://muzeekworld.com/cdn/shop/files/Sennheiser_EM_9046_SU_grande.jpg?v=1723512887"
+  ],
+  "page": "https://muzeekworld.com/collections/sennheiser-wireless-systems/products/sennheiser-em-9046-su-flexible-digital-transmission-with-superior-audio-quality-and-ease-of-use",
+  "source": "distributor",
+  "note": "Retailer image, medium size; verify"
+ },
+ {
+  "key": "Sennheiser | HSP4-3 cardioid headset (beige)",
+  "title": "Sennheiser HSP4-3 cardioid headset (beige)",
+  "items": [
+   "AUDWIRSENHSP43C"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_18/180806/7271133_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_18/180806/7271128_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_18/180806/7271138_800.jpg"
+  ],
+  "page": "https://thomann.pl/sennheiser_hsp_4_ew_beige.htm",
+  "source": "distributor",
+  "note": "HSP 4-EW beige"
+ },
+ {
+  "key": "Sennheiser | KK 205 Neumann condenser capsule",
+  "title": "Sennheiser KK 205 Neumann condenser capsule",
+  "items": [
+   "AUDWIRSENKK205N"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/KK-205-bk_Neumann-Microphone_Head_M.png/Zz1kNjM1N2RkOGU3YWExMWYwOGNiZDJhMzQxNzliYzkxZA==?width=730&format=webp&quality=80"
+  ],
+  "page": "https://www.neumann.com/es-mx/products/microphones/kk-205/",
+  "source": "manufacturer",
+  "note": "Neumann official asset (webp, width param)"
+ },
+ {
+  "key": "Sennheiser | MD 421",
+  "title": "Sennheiser MD 421",
+  "items": [
+   "AUDMICSENMD421"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_12/128331/7876015_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_12/128331/7876030_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_12/128331/7876020_800.jpg"
+  ],
+  "page": "https://www.thomann.fr/sennheiser_md421u4.htm",
+  "source": "distributor",
+  "note": "MD 421-II"
+ },
+ {
+  "key": "Sennheiser | MD 9235 dynamic capsule",
+  "title": "Sennheiser MD 9235 dynamic capsule",
+  "items": [
+   "AUDWIRSENMD9235"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/642478/21114490_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/sennheiser_md_9235_bk_642478.htm",
+  "source": "distributor",
+  "note": null
+ },
+ {
+  "key": "Sennheiser | ME 9004 condenser capsule",
+  "title": "Sennheiser ME 9004 condenser capsule",
+  "items": [
+   "AUDWIRSENME9004"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_42/420648/20954317_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_42/420648/20954318_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_42/420648/20954316_800.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/sennheiser_me_9004.htm",
+  "source": "distributor",
+  "note": null
+ },
+ {
+  "key": "Sennheiser | MKE40",
+  "title": "Sennheiser MKE40",
+  "items": [
+   "AUDWIRSENMKE40"
+  ],
+  "candidates": [
+   "https://www.stars-music.fr/medias/sennheiser/mke40-hd-104040.jpg",
+   "https://www.stars-music.com/medias/sennheiser/cropped-mke40-4-104040.jpeg"
+  ],
+  "page": "https://www.stars-music.com/sennheiser-mke40-4_104040.html",
+  "source": "distributor",
+  "note": "MKE 40-4"
+ },
+ {
+  "key": "Sennheiser | MKH 40",
+  "title": "Sennheiser MKH 40",
+  "items": [
+   "AUDMICSENMKH40"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/Large/SEMKH40P48.jpg"
+  ],
+  "page": "https://www.adorama.com/semkh40p48.html",
+  "source": "distributor",
+  "note": "MKH 40-P48, Adorama"
+ },
+ {
+  "key": "Sennheiser | MKH 416 Shotgun",
+  "title": "Sennheiser MKH 416 Shotgun",
+  "items": [
+   "AUDMICSENMKH416"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_14/140591/9779723_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_14/140591/9779733_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_14/140591/9779738_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/sennheiser_mkh416p48u3.htm",
+  "source": "distributor",
+  "note": null
+ },
+ {
+  "key": "Sennheiser | Omni-directional antenna 450 - 960 MHz",
+  "title": "Sennheiser Omni-directional antenna 450 - 960 MHz",
+  "items": [
+   "AUDINESENOMNIDI"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/thumb160x140/pics/prod/145407.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/sennheiser_a1031_u_reviews.htm",
+  "source": "distributor",
+  "note": "Assumed A 1031-U; only small thumbnail found"
+ },
+ {
+  "key": "Sennheiser | SKM 9000 handheld 470 - 558 / 550 - 638 MHz",
+  "title": "Sennheiser SKM 9000 handheld 470 - 558 / 550 - 638 MHz",
+  "items": [
+   "AUDWIRSENSKM900"
+  ],
+  "candidates": [
+   "https://creationnetworks.net/cdn/shop/products/sennheiser-skm-9000-bk-a1-a4-digital-handheld-wireless-microphone-with-no-capsule-and-no-battery-pack-a1-a4-470-to-558-mhz-black-creation-networks-87793.png?v=1757891401&width=1500"
+  ],
+  "page": "https://creationnetworks.net/products/sennheiser-skm-9000-digital-handheld-wireless-microphone-transmitter-with-no-mic-capsule-no-battery-pack-a1-a4-470-to-558-mhz-black",
+  "source": "distributor",
+  "note": "Retailer image; verify"
+ },
+ {
+  "key": "Sennheiser | SR2050 + EK2000 IEM + IE4 ears",
+  "title": "Sennheiser SR2050 + EK2000 IEM + IE4 ears",
+  "items": [
+   "AUDINESEN4XSR20",
+   "AUDINESENSR2050"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_54/547639/19597990_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_54/547639/19597980_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_54/547639/19597985_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/sennheiser_sr_2050_iem_aw.htm",
+  "source": "distributor",
+  "note": "SR 2050 IEM transmitter image (set); sennheiser.com pages render images client-side, no URLs extractable"
+ },
+ {
+  "key": "Sennheiser | Sennheiser BF521",
+  "title": "Sennheiser Sennheiser BF521",
+  "items": [
+   "AUDMICSENSENNHE"
+  ],
+  "candidates": [
+   "https://cuesale.com/wp-content/uploads/2025/05/sennheiser-bf521-1-scaled.jpg",
+   "https://cuesale.com/wp-content/uploads/2025/05/sennheiser-bf521-2-scaled.jpg"
+  ],
+  "page": "https://cuesale.com/product/sennheiser-bf521-black-fire-521-microphone/",
+  "source": "distributor",
+  "note": "Discontinued vintage mic; images from used-gear reseller studio, verify"
+ },
+ {
+  "key": "Sennheiser | Sennheiser MKE1-4 omni-directional lavalier (black)",
+  "title": "Sennheiser Sennheiser MKE1-4 omni-directional lavalier (black)",
+  "items": [
+   "AUDWIRSENMIHFSEMKE1"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_21/218101/939527_800.jpg"
+  ],
+  "page": "https://thomann.ae/sennheiser_mke_14.htm",
+  "source": "distributor",
+  "note": null
+ },
+ {
+  "key": "Shure | AD2 handheld transmitter + Beta 58 470 - 636 MHz",
+  "title": "Shure AD2 handheld transmitter + Beta 58 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUAD2HAN"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/1a1/2ea/ed-/original/cd056de40bfd03a48a36e10d6c9cfa7d.webp"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/rpw184",
+  "source": "manufacturer",
+  "note": "AD2/B58A related-product thumbnail on RPW184 page"
+ },
+ {
+  "key": "Shure | ADX2 handheld transmitter + Beta 58 470 - 636 MHz",
+  "title": "Shure ADX2 handheld transmitter + Beta 58 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUADX2HA"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/349/ffc/7b-/original/e235acd9ce77706b9ed6417fec7d0e19.webp"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/rpw184",
+  "source": "manufacturer",
+  "note": "ADX2/B58 related-product thumbnail on RPW184 page"
+ },
+ {
+  "key": "Shure | ADX2FD frequency diversity handheld transmitter + Beta 58 470 - 636 MHz",
+  "title": "Shure ADX2FD frequency diversity handheld transmitter + Beta 58 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUADX2FD"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/e76/e5f/3e-/original/298d7b2d7a8107df8964b5b2f4ed2443.webp"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/rpw184",
+  "source": "manufacturer",
+  "note": "ADX2FD/B58 related-product thumbnail on RPW184 page"
+ },
+ {
+  "key": "Shure | Beta 57A",
+  "title": "Shure Beta 57A",
+  "items": [
+   "AUDMICSHUBETA57"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/bc7/a0c/cd-/original/baa9c25871ffdc44febe7232d20091c7.png",
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/bc7/a0c/cd-/setcard/baa9c25871ffdc44febe7232d20091c7.jpeg"
+  ],
+  "page": "https://www.shure.com/en-in/products/microphones/beta_57a",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Shure | Beta 58 A",
+  "title": "Shure Beta 58 A",
+  "items": [
+   "AUDMICSHUBETA58"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/304/6c7/1b-/setcard/6ae20df360e613eae4581a188d076e5e.jpeg"
+  ],
+  "page": "https://shure.com/en-gb/products/microphones/beta_58a",
+  "source": "manufacturer",
+  "note": "og:image"
+ },
+ {
+  "key": "Shure | KSM9 capsule",
+  "title": "Shure KSM9 capsule",
+  "items": [
+   "AUDWIRSHUKSM9CA"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/634/85b/9f-/setcard/571a9bdacd01d5ef37d47b68b9b70cf6.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/rpw184",
+  "source": "manufacturer",
+  "note": "RPW184 wireless KSM9 cartridge; og:image"
+ },
+ {
+  "key": "Shure | SM 57",
+  "title": "Shure SM 57",
+  "items": [
+   "AUDMICSHUSM57"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/218/0f8/9b-/original/f9411c3e8a6d8a14f4632ebab7749a69.png",
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/218/0f8/9b-/setcard/f9411c3e8a6d8a14f4632ebab7749a69.jpeg"
+  ],
+  "page": "https://shure.com/en-gb/products/microphones/sm57",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Shure | SM 58",
+  "title": "Shure SM 58",
+  "items": [
+   "AUDMICSHUSM58"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/31e/242/4b-/original/8f8ab8329c1107e0758c041654d7cc30.webp"
+  ],
+  "page": "https://shure.com/en-gb/products/microphones/sm57",
+  "source": "manufacturer",
+  "note": "from Related Products thumbnail on SM57 page"
+ },
+ {
+  "key": "Shure | SM58 with on/off switch",
+  "title": "Shure SM58 with on/off switch",
+  "items": [
+   "AUDMICSHUSM58WI"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/31e/242/4b-/original/8f8ab8329c1107e0758c041654d7cc30.webp"
+  ],
+  "page": "https://shure.com/en-gb/products/microphones/sm57",
+  "source": "manufacturer",
+  "note": "standard SM58 image (no switch visible); SM58S page not reached"
+ },
+ {
+  "key": "Shure | ULXD2 handheld transmitter + Beta 58",
+  "title": "Shure ULXD2 handheld transmitter + Beta 58",
+  "items": [
+   "AUDWIRSHUULXD2H"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/5f0/bf7/b6-/original/21f64fc1083c70ea7c7f935e9346e799.webp"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/rpw184",
+  "source": "manufacturer",
+  "note": "ULXD2/B58 related-product thumbnail on RPW184 page"
+ }
+]

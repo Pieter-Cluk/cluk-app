@@ -13,6 +13,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
+use App\Http\Controllers\Equipment\PhotoSuggestionController;
 use App\Http\Controllers\Factory\FactoryController;
 use App\Http\Controllers\Factory\FactoryPublicController;
 use App\Http\Controllers\Factory\FactoryTaskController;
@@ -265,6 +266,10 @@ Route::middleware('auth:web')->group(function () {
             Route::delete('/items/{item}/photos/{photo}', [PictureController::class, 'destroyItemPhoto'])->whereNumber(['item', 'photo'])->name('equipment.photos.destroy');
             Route::put('/assets/{asset}', [AssetController::class, 'update'])->whereNumber('asset')->name('equipment.assets.update');
             Route::get('/labels', [AssetController::class, 'labels'])->name('equipment.labels');
+            Route::get('/photos-found', [PhotoSuggestionController::class, 'index'])->name('equipment.photos.found');
+            Route::get('/photos-found/{suggestion}/{i}', [PhotoSuggestionController::class, 'image'])->whereNumber(['suggestion', 'i'])->name('equipment.photos.found.image');
+            Route::post('/photos-found/{suggestion}', [PhotoSuggestionController::class, 'decide'])->whereNumber('suggestion')->name('equipment.photos.found.decide');
+            Route::post('/photos-found/bulk', [PhotoSuggestionController::class, 'bulk'])->name('equipment.photos.found.bulk');
         });
         Route::post('/assets/{asset}/retire', [AssetController::class, 'retire'])->whereNumber('asset')->name('equipment.assets.retire');
     });

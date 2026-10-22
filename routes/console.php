@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\AuditLog;
+use App\Models\Equipment\PhotoSuggestion;
 use App\Models\Role;
 use App\Services\Backup\Backups;
 use App\Services\Crm\Birthdays;
+use App\Services\Equipment\PhotoSuggestions;
 use App\Services\Media\Messages;
 use App\Services\Media\Translator;
 use App\Services\Vies;
@@ -121,3 +123,12 @@ Artisan::command('cluk:restore {backup : File name of a cluk-db-… or cluk-file
         $this->info(Backups::restoreFiles($path).' files restored from '.basename($path));
     }
 })->purpose('Restore a backup');
+
+// Product photos found on the web: read the list and fetch the photos (a batch at a time).
+Artisan::command('cluk:photo-suggestions {--limit=40}', function () {
+    $added = PhotoSuggestions::load();
+    $left = PhotoSuggestions::fetch((int) $this->option('limit'));
+    $c = PhotoSuggestion::query()->selectRaw('status, count(*) n')->groupBy('status')->pluck('n', 'status');
+    $this->info("added/updated {$added}; still to fetch {$left}; ".json_encode($c));
+    $this->line('LEFT='.$left);
+})->purpose('Fetch the product photos found on the web, for review');

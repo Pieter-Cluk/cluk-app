@@ -190,6 +190,8 @@ return [
             'warehouse_checked' => 'Checked on the test bench',
             'warehouse_charges_approved' => 'Return charges approved',
             'warehouse_zone_saved' => 'Warehouse zone saved',
+            'backup_made' => 'Backup made',
+            'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',
             'messages_send_started' => 'Sending started',

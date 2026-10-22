@@ -1,0 +1,36 @@
+name: Photo suggestions
+
+# Reads database/data/equipment_photos.json on the server and downloads the
+# product photos found on the web, a batch at a time, until none are left.
+# They then wait on Dry-hire › Photos found until someone picks one. Started by hand.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: photo-suggestions
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Fetch the photos on the server
+        env:
+          SSH_HOST: ssh.cys6r88bx.service.one
+          SSH_USER: cys6r88bx_ssh
+          SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass >/dev/null
+          export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          last=""
+          for round in $(seq 1 60); do
+            out=$(sshpass -e ssh -o ConnectTimeout=30 "$SSH_USER@$SSH_HOST" "cd \$(readlink -f ~/webroots/by-route/app.cluk.live_)/app && php -d memory_limit=512M -d max_execution_time=0 artisan cluk:photo-suggestions --limit=25" 2>&1) || { echo "$out"; exit 1; }
+            echo "round $round: $out"
+            last="$out"
+            left=$(printf '%s' "$out" | sed -n 's/^LEFT=//p')
+            [ "$left" = "0" ] && break
+          done
+          echo "::notice title=photos::$(printf '%s' "$last" | tr '\n' ' ' | cut -c1-900)"

@@ -190,6 +190,8 @@ return [
             'warehouse_checked' => 'Controlado en el banco de pruebas',
             'warehouse_charges_approved' => 'Cargos de retorno aprobados',
             'warehouse_zone_saved' => 'Zona de almacén guardada',
+            'backup_made' => 'Copia de seguridad hecha',
+            'equipment_photo_approved' => 'Foto de producto elegida de la web',
             'user_instructions_sent' => 'Instrucciones de acceso enviadas',
             'messages_created' => 'Mensaje creado',
             'messages_send_started' => 'Envío iniciado',

@@ -9,6 +9,7 @@
         @if ($canEdit)
             <div class="inline-form">
                 @if (auth()->user()->canUseModule('settings', 2))<a class="btn" href="{{ url('/settings/import') }}">{{ __('equipment.import') }}</a>@endif
+                <a class="btn" href="{{ route('equipment.photos.found') }}">{{ __('equipment.photos_found.link') }}</a>
                 <a class="primary" href="{{ route('equipment.create') }}">{{ __('equipment.new') }}</a>
             </div>
         @endif
