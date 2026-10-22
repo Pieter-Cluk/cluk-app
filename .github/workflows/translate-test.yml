@@ -1,0 +1,23 @@
+name: Test translation
+
+# Started by hand: the app on one.com translates a test sentence with Claude.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Translate on the server
+        env:
+          SSH_HOST: ssh.cys6r88bx.service.one
+          SSH_USER: cys6r88bx_ssh
+          SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
+        run: |
+          set +e
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass >/dev/null
+          export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          out=$(sshpass -e ssh -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" "cd \$(readlink -f ~/webroots/by-route/app.cluk.live_)/app && php artisan cluk:translate-test" 2>&1)
+          echo "::notice title=translation test::$(printf '%s' "$out" | tr '\n' ' ' | cut -c1-900)"

@@ -58,3 +58,21 @@ Artisan::command('cluk:messages', function () {
     $this->info(Messages::work(50).' mail(s) sent.');
 })->purpose('Send scheduled newsletters and promotions');
 Schedule::command('cluk:messages')->everyMinute()->withoutOverlapping();
+
+// Check that translating works (Media › Messages). Prints the Dutch, French and Spanish of a test sentence.
+Artisan::command('cluk:translate-test', function () {
+    if (! \App\Services\Media\Translator::available()) {
+        $this->error('No ANTHROPIC_API_KEY on the server.');
+
+        return 1;
+    }
+    $out = app(\App\Services\Media\Translator::class)->translate(['body' => 'Happy birthday, {name}! The whole CLUK team wishes you a great day.']);
+    if ($out === null) {
+        $this->error('Translation failed: see the log (storage/logs) for the reason.');
+
+        return 1;
+    }
+    foreach ($out as $l => $f) {
+        $this->line($l.': '.$f['body']);
+    }
+})->purpose('Test the translation service');
