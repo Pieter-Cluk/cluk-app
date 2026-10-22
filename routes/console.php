@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\AuditLog;
 use App\Models\Role;
+use App\Services\Backup\Backups;
 use App\Services\Crm\Birthdays;
 use App\Services\Media\Messages;
 use App\Services\Media\Translator;
@@ -77,3 +79,45 @@ Artisan::command('cluk:translate-test', function () {
         $this->line($l.': '.$f['body']);
     }
 })->purpose('Test the translation service');
+
+// Backups: the database and the uploaded files, compressed. Started twice a day by GitHub (workflow "Backup").
+Artisan::command('cluk:backup {--no-files : Only the database}', function () {
+    $r = Backups::run(! $this->option('no-files'));
+    $size = fn ($f) => $f && is_file($f) ? round(filesize($f) / 1048576, 2).' MB' : '—';
+    $this->info('Database: '.basename($r['db']).' ('.$size($r['db']).', '.$r['tables'].' tables, '.$r['rows'].' rows)');
+    if ($r['files']) {
+        $this->info('Files: '.basename($r['files']).' ('.$size($r['files']).')');
+    }
+    $this->line('Kept: '.implode(', ', array_map('basename', array_merge(Backups::list('db'), Backups::list('files')))));
+    AuditLog::record('backup.made', null, ['db' => basename($r['db']), 'rows' => $r['rows']]);
+})->purpose('Back up the database and the uploaded files');
+
+Artisan::command('cluk:backups', function () {
+    foreach (['db', 'files'] as $k) {
+        foreach (Backups::list($k) as $f) {
+            $this->line(basename($f).'  '.round(filesize($f) / 1048576, 2).' MB');
+        }
+    }
+})->purpose('List the backups');
+
+Artisan::command('cluk:restore {backup : File name of a cluk-db-… or cluk-files-… backup} {--force : Really do it}', function (string $backup) {
+    $path = Backups::dir().'/'.basename($backup);
+    if (! is_file($path)) {
+        $this->error('No such backup: '.basename($backup).'. See php artisan cluk:backups');
+
+        return 1;
+    }
+    if (! $this->option('force')) {
+        $this->warn('This replaces the current '.(str_contains($path, '-db-') ? 'database' : 'uploaded files').' with '.basename($path).'. Run again with --force to do it.');
+
+        return 1;
+    }
+    // First a fresh backup of how things are now, so a restore can be undone.
+    $now = Backups::run(false);
+    $this->info('Safety backup of the current database: '.basename($now['db']));
+    if (str_contains($path, '-db-')) {
+        $this->info(Backups::restoreDatabase($path).' statements restored from '.basename($path));
+    } else {
+        $this->info(Backups::restoreFiles($path).' files restored from '.basename($path));
+    }
+})->purpose('Restore a backup');

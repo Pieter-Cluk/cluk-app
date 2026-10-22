@@ -23,3 +23,11 @@ If one of the items above is missing, the app moves to a small Laravel-ready ser
 ## Address
 
 The app runs on **https://app.cluk.live** (subdomain of cluk.live). Microsoft 365 redirect URI: `https://app.cluk.live/auth/microsoft/callback`.
+
+## Backups
+
+- Twice a day (about 6:00 and 18:00) the GitHub workflow **Backup** runs `php artisan cluk:backup` on the server: the whole database as gzipped SQL (`cluk-db-YYYYMMDD-HHMM.sql.gz`) and all uploaded files (`cluk-files-….tar.gz`).
+- They are kept in `shared/storage/backups/` on one.com, outside the website (never downloadable). Kept: the last 2 database backups plus the last one of each of the last 7 days; the last 2 file archives. Each new database backup is read back once to check it is complete.
+- Start one by hand: GitHub › Actions › Backup › Run workflow. A failed backup shows in red and GitHub emails about it.
+- List: `php artisan cluk:backups`. Restore: `php artisan cluk:restore cluk-db-20261022-1800.sql.gz --force` (database) or a `cluk-files-…` name (files). A restore first makes a safety backup of the current database, so it can be undone.
+- Still to decide: an extra, encrypted copy outside one.com (e.g. CLUK's Microsoft 365 OneDrive / SharePoint).

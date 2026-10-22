@@ -1,0 +1,42 @@
+name: Backup
+
+# Twice a day (about 6:00 and 18:00 Belgian time): the app on one.com backs up the
+# database and the uploaded files, compressed, into a folder outside the website.
+# Old backups are cleaned up by the app (last 2 + one per day for 7 days; files: last 2).
+# Can also be started by hand. A failed run shows in red here and GitHub emails about it.
+
+on:
+  schedule:
+    - cron: '0 4,16 * * *'
+  workflow_dispatch:
+    inputs:
+      files:
+        description: Also back up the uploaded files
+        type: boolean
+        default: true
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Back up on the server
+        env:
+          SSH_HOST: ssh.cys6r88bx.service.one
+          SSH_USER: cys6r88bx_ssh
+          SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
+          FILES: ${{ github.event_name == 'schedule' || inputs.files }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass >/dev/null
+          export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          OPT=""; [ "$FILES" = "true" ] || OPT="--no-files"
+          set +e
+          out=$(sshpass -e ssh -o ConnectTimeout=30 "$SSH_USER@$SSH_HOST" "cd \$(readlink -f ~/webroots/by-route/app.cluk.live_)/app && php -d memory_limit=512M artisan cluk:backup $OPT" 2>&1)
+          code=$?
+          echo "$out"
+          echo "::notice title=backup::$(printf '%s' "$out" | tr '\n' ' ' | cut -c1-900)"
+          exit $code

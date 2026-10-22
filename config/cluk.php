@@ -13,6 +13,9 @@ return [
     // Staff without Microsoft 365 sign in with a code sent to an address on this domain.
     'staff_email_domain' => env('STAFF_EMAIL_DOMAIN', 'cluk.live'),
 
+    // Backups (database + uploaded files): a folder outside the website.
+    'backup_path' => env('BACKUP_PATH', storage_path('backups')),
+
     'locales' => [
         'en' => 'English',
         'nl' => 'Nederlands',
