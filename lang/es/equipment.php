@@ -188,4 +188,5 @@ return [
     'on_website_hint' => 'Solo los productos marcados aparecen en la web de CLUK.',
     'only_web' => 'Solo en la web',
     'web_pill' => 'Web',
+    'web_failed' => 'No se pudo guardar. Inténtalo de nuevo.',
 ];

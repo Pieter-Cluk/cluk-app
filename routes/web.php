@@ -253,6 +253,7 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/', [ItemController::class, 'index'])->name('equipment.index');
         Route::get('/items/{item}', [ItemController::class, 'show'])->whereNumber('item')->name('equipment.show');
         Route::get('/items/{item}/photo', [ItemController::class, 'photo'])->whereNumber('item')->name('equipment.photo');
+        Route::post('/items/{item}/website', [ItemController::class, 'website'])->whereNumber('item')->middleware('right:equipment.website')->name('equipment.website');
         Route::get('/assets/{asset}', [AssetController::class, 'show'])->whereNumber('asset')->name('equipment.assets.show');
         Route::middleware('level:dryhire,2')->group(function () {
             Route::get('/items/new', [ItemController::class, 'create'])->name('equipment.create');

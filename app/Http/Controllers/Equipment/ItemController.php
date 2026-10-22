@@ -155,8 +155,18 @@ class ItemController extends Controller
             'weight_kg' => $d['weight_kg'] ?? null, 'width_m' => $d['width_m'] ?? null, 'length_m' => $d['length_m'] ?? null, 'height_m' => $d['height_m'] ?? null,
             'origin' => isset($d['origin']) ? strtoupper($d['origin']) : null, 'hs_code' => $d['hs_code'] ?? null,
             'descriptions' => array_filter(array_intersect_key($d['desc'] ?? [], config('cluk.locales'))) ?: null,
-            'in_search' => (bool) ($d['in_search'] ?? false), 'on_website' => (bool) ($d['on_website'] ?? false), 'active' => (bool) ($d['active'] ?? false),
-        ];
+            'in_search' => (bool) ($d['in_search'] ?? false), 'active' => (bool) ($d['active'] ?? false),
+        ] + (auth()->user()?->hasRight('equipment.website') ? ['on_website' => (bool) ($d['on_website'] ?? false)] : []);
+    }
+
+    /** Dry-hire list: switch "Show on the website" with one click (extra right "equipment.website"). */
+    public function website(Request $request, Item $item)
+    {
+        $on = $request->boolean('on');
+        $item->update(['on_website' => $on]);
+        AuditLog::record('equipment.website', $item, ['on' => $on], $request->user());
+
+        return $request->expectsJson() ? response()->json(['on' => $on]) : back();
     }
 
     /** Add accessories (kit) or contents (package, case). */

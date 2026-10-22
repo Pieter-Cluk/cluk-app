@@ -188,4 +188,5 @@ return [
     'on_website_hint' => 'Only products with this ticked appear on the CLUK website.',
     'only_web' => 'Only on the website',
     'web_pill' => 'Web',
+    'web_failed' => 'Could not save. Please try again.',
 ];

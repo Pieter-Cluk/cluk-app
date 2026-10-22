@@ -1,5 +1,6 @@
 @php($eur = fn ($c) => \App\Services\Afrit6\Pricing::eur((int) $c))
 <x-layouts.app :title="__('nav.items.dryhire')">
+    @php($canWeb = auth()->user()->hasRight('equipment.website'))
     <div class="pagehead">
         <div>
             <div class="kicker">{{ mb_strtoupper(__('nav.groups.operations')) }}</div>
@@ -36,24 +37,39 @@
     <section class="card card-flush">
         <div class="table-wrap">
             <table class="table">
-                <thead><tr><th></th><th>{{ __('equipment.fields.number') }}</th><th>{{ __('equipment.fields.name') }}</th><th>{{ __('equipment.fields.category') }}</th><th>{{ __('equipment.cols.kind') }}</th><th class="num">{{ __('equipment.cols.stock') }}<small>{{ __('equipment.cols.stock_hint') }}</small></th><th class="num">{{ __('equipment.cols.price') }}</th></tr></thead>
+                <thead><tr><th></th><th>{{ __('equipment.fields.number') }}</th><th>{{ __('equipment.fields.name') }}</th><th>{{ __('equipment.fields.category') }}</th><th>{{ __('equipment.cols.kind') }}</th><th class="num">{{ __('equipment.cols.stock') }}<small>{{ __('equipment.cols.stock_hint') }}</small></th><th class="num">{{ __('equipment.cols.price') }}</th><th class="center" title="{{ __('equipment.fields.on_website') }}">{{ __('equipment.web_pill') }}</th></tr></thead>
                 <tbody>
                     @forelse ($items as $it)
                         <tr @class(['is-off' => ! $it->active])>
                             <td class="thumb">@if ($it->photo_path)<img src="{{ route('equipment.photo', $it) }}" alt="" width="40" height="40" loading="lazy">@else<span class="thumb-empty" aria-hidden="true"><x-icon name="box"/></span>@endif</td>
                             <td class="nowrap"><a href="{{ route('equipment.show', $it) }}"><b>{{ $it->number }}</b></a></td>
-                            <td>{{ $it->name }}@if (! $it->active) <span class="pill pill-off">{{ __('equipment.inactive') }}</span>@endif @if ($it->on_website) <span class="pill">{{ __('equipment.web_pill') }}</span>@endif<br><small class="muted">{{ trim($it->brand.' '.$it->type) }}</small></td>
+                            <td>{{ $it->name }}@if (! $it->active) <span class="pill pill-off">{{ __('equipment.inactive') }}</span>@endif<br><small class="muted">{{ trim($it->brand.' '.$it->type) }}</small></td>
                             <td>{{ $it->category ?? '—' }}<br><small class="muted">{{ $it->subcategory }}</small></td>
                             <td><span @class(['pill', 'pill-info' => $it->kind === 'package', 'pill-warn' => $it->kind === 'case', 'pill-off' => $it->kind === 'service', 'pill-ok' => $it->kind === 'item'])>{{ __('equipment.kinds.'.$it->kind) }}</span>@if ($it->kind === 'item' && ! $it->serial) <small class="muted">{{ __('equipment.counted') }}</small>@endif</td>
                             <td class="num nowrap">{{ $it->kind === 'service' ? '—' : ($it->kind === 'package' ? $it->availableQty() : $it->availableQty().' / '.$it->totalQty()) }}</td>
                             <td class="num nowrap">{{ $eur($it->day_price_cents) }}<br><small class="muted">{{ $it->kind === 'service' ? __('equipment.units.'.$it->price_unit) : __('equipment.per_day') }}</small></td>
+                            <td class="center">@if ($canWeb)<input type="checkbox" class="web-tick" data-url="{{ route('equipment.website', $it) }}" @checked($it->on_website) aria-label="{{ __('equipment.fields.on_website') }} · {{ $it->name }}">@else<span @class(['muted' => ! $it->on_website])>{{ $it->on_website ? '✓' : '—' }}</span>@endif</td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="muted">{{ __('equipment.empty') }}</td></tr>
+                        <tr><td colspan="8" class="muted">{{ __('equipment.empty') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </section>
     <x-pager :items="$items"/>
+    @if ($canWeb)
+        <script>
+            document.querySelectorAll('.web-tick').forEach(function (box) {
+                box.addEventListener('change', function () {
+                    box.disabled = true;
+                    fetch(box.dataset.url, {method: 'POST', headers: {'X-CSRF-TOKEN': @js(csrf_token()), 'Accept': 'application/json', 'Content-Type': 'application/json'}, body: JSON.stringify({on: box.checked})})
+                        .then(function (r) { if (!r.ok) throw r; return r.json(); })
+                        .then(function (d) { box.checked = d.on; })
+                        .catch(function () { box.checked = !box.checked; alert(@js(__('equipment.web_failed'))); })
+                        .finally(function () { box.disabled = false; });
+                });
+            });
+        </script>
+    @endif
 </x-layouts.app>

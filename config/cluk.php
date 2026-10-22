@@ -61,6 +61,7 @@ return [
         'afrit6.approve_members',
         'afrit6.door_codes',
         'companies.see_health',
+        'equipment.website',
         'finance.see_margins',
         'finance.send_to_okioki',
         'finance.vat_treatment',

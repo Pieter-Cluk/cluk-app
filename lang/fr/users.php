@@ -191,6 +191,7 @@ return [
             'warehouse_charges_approved' => 'Frais de retour approuvés',
             'warehouse_zone_saved' => 'Zone d’entrepôt enregistrée',
             'backup_made' => 'Sauvegarde effectuée',
+            'equipment_website' => 'Visibilité sur le site web modifiée',
             'equipment_photo_approved' => 'Photo produit choisie sur le web',
             'user_instructions_sent' => 'Instructions de connexion envoyées',
             'messages_created' => 'Message créé',

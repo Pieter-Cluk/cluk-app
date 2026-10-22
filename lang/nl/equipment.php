@@ -188,4 +188,5 @@ return [
     'on_website_hint' => 'Alleen producten met dit vinkje verschijnen op de CLUK-website.',
     'only_web' => 'Alleen op de website',
     'web_pill' => 'Web',
+    'web_failed' => 'Kon niet opslaan. Probeer opnieuw.',
 ];

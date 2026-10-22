@@ -31,6 +31,9 @@ return [
             'send_to_okioki' => 'Proforma’s goedkeuren en naar OkiOki sturen',
             'vat_treatment' => 'Btw-behandeling van een bedrijf wijzigen',
         ],
+        'equipment' => [
+            'website' => 'Producten: kiezen wat op de website staat',
+        ],
         'gdpr' => [
             'export_erase' => 'GDPR-export en wissen',
         ],

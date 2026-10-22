@@ -791,3 +791,4 @@ tr.db-row:hover td{background:var(--surface-subtle)}
 /* Warehouse › Labels */
 .lbl-bar{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:10px;position:sticky;top:0;background:var(--bg,#fff);padding:8px 0;z-index:2}
 .w-check{width:44px}
+.table th.center{text-align:center}.web-tick{width:22px;height:22px;cursor:pointer}

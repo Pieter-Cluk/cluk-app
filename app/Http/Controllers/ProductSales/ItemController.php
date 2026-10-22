@@ -56,7 +56,8 @@ class ItemController extends Controller
     private function data(array $d): array
     {
         return ['brand' => $d['brand'] ?? null, 'type' => $d['type'], 'description' => $d['description'] ?? null, 'category' => $d['category'] ?? null, 'unit' => $d['unit'],
-            'list_price_cents' => (int) round($d['list_price'] * 100), 'stock_qty' => (int) ($d['stock_qty'] ?? 0), 'min_stock' => (int) ($d['min_stock'] ?? 0), 'ean' => $d['ean'] ?? null, 'on_website' => (bool) ($d['on_website'] ?? false)];
+            'list_price_cents' => (int) round($d['list_price'] * 100), 'stock_qty' => (int) ($d['stock_qty'] ?? 0), 'min_stock' => (int) ($d['min_stock'] ?? 0), 'ean' => $d['ean'] ?? null]
+            + (auth()->user()?->hasRight('equipment.website') ? ['on_website' => (bool) ($d['on_website'] ?? false)] : []);
     }
 
     public function store(Request $request): RedirectResponse

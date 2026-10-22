@@ -191,6 +191,7 @@ return [
             'warehouse_charges_approved' => 'Retourkosten goedgekeurd',
             'warehouse_zone_saved' => 'Magazijnzone bewaard',
             'backup_made' => 'Back-up gemaakt',
+            'equipment_website' => 'Zichtbaarheid op de website gewijzigd',
             'equipment_photo_approved' => 'Productfoto van het web gekozen',
             'user_instructions_sent' => 'Aanmeldinstructies gestuurd',
             'messages_created' => 'Bericht gemaakt',

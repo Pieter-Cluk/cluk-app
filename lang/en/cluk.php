@@ -31,6 +31,9 @@ return [
             'send_to_okioki' => 'Approve proformas and send to OkiOki',
             'vat_treatment' => 'Change the VAT treatment of a company',
         ],
+        'equipment' => [
+            'website' => 'Products: choose what shows on the website',
+        ],
         'gdpr' => [
             'export_erase' => 'GDPR export and erase',
         ],

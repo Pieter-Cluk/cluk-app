@@ -31,6 +31,9 @@ return [
             'send_to_okioki' => 'Approuver les proformas et les envoyer à OkiOki',
             'vat_treatment' => 'Modifier le traitement TVA d\'une entreprise',
         ],
+        'equipment' => [
+            'website' => 'Produits : choisir ce qui apparaît sur le site web',
+        ],
         'gdpr' => [
             'export_erase' => 'Export et effacement RGPD',
         ],

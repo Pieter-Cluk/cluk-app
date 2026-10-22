@@ -188,4 +188,5 @@ return [
     'on_website_hint' => 'Seuls les produits cochés apparaissent sur le site web de CLUK.',
     'only_web' => 'Seulement sur le site web',
     'web_pill' => 'Web',
+    'web_failed' => 'Enregistrement impossible. Réessayez.',
 ];

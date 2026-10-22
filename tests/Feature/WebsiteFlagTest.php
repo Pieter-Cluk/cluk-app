@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AuditLog;
 use App\Models\Equipment\Item;
 use App\Models\ProductSales\SalesItem;
 use App\Models\Role;
@@ -49,5 +50,27 @@ class WebsiteFlagTest extends TestCase
             $u->update(['locale' => $loc]);
             $this->actingAs($u)->get('/product-sales/items?item='.$it->id)->assertOk()->assertSee($t);
         }
+    }
+
+    public function test_one_click_in_the_list_needs_the_extra_right(): void
+    {
+        $this->seed(RoleSeeder::class);
+        $item = Item::create(['number' => 'LT-C', 'name' => 'Claypaky Sharpy', 'serial' => false]);
+        $am = User::factory()->create(['role_id' => Role::where('slug', 'asset-manager')->value('id'), 'locale' => 'en']); // dry-hire level 3, no right
+
+        $this->actingAs($am)->get('/dry-hire')->assertOk()->assertDontSee('web-tick', false);
+        $this->actingAs($am)->postJson('/dry-hire/items/'.$item->id.'/website', ['on' => true])->assertForbidden();
+        // Without the right the edit form cannot change it either.
+        $this->actingAs($am)->put('/dry-hire/items/'.$item->id, ['number' => 'LT-C', 'kind' => 'item', 'name' => 'Claypaky Sharpy', 'unit' => 'pcs', 'active' => 1, 'on_website' => 1])->assertRedirect();
+        $this->assertFalse($item->fresh()->on_website);
+
+        $am->extraRights()->create(['right' => 'equipment.website']);
+        $am->unsetRelation('extraRights');
+        $this->actingAs($am->fresh())->get('/dry-hire')->assertOk()->assertSee('web-tick', false);
+        $this->actingAs($am->fresh())->postJson('/dry-hire/items/'.$item->id.'/website', ['on' => true])->assertOk()->assertJson(['on' => true]);
+        $this->assertTrue($item->fresh()->on_website);
+        $this->assertTrue(AuditLog::where('action', 'equipment.website')->exists());
+        $admin = User::factory()->create(['role_id' => Role::where('slug', 'admin')->value('id'), 'locale' => 'nl']);
+        $this->actingAs($admin)->get('/settings/roles')->assertOk()->assertSee('Producten: kiezen wat op de website staat');
     }
 }
