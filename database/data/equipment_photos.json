@@ -13,6 +13,157 @@
   "note": "Retailer og:image (side/hero view); aedaudio.com not reachable"
  },
  {
+  "key": "AJA | Ki Pro Go",
+  "title": "AJA Ki Pro Go",
+  "items": [
+   "VIDVIDAJAKIPROG"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/2a3aee45-37da-499f-b56c-93167ec521b3_383ecfb2-84ad-4129-a623-6f5f53974609.jpg?v=1737423061&width=1214"
+  ],
+  "page": "https://avlgear.com/collections/video-production-monitors-recorders/products/aja-ki-pro-go-multi-channel-hd-h-264-usb-3-0-recorder-and-player",
+  "source": "other",
+  "note": "Shop (AVLGear)"
+ },
+ {
+  "key": "AJA | Ki Pro Ultra - 4K",
+  "title": "AJA Ki Pro Ultra - 4K",
+  "items": [
+   "VIDVIDAJAKIPROU"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/AJA-KIPROULTRA.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/AJA-KIPROULTRA.JPG"
+  ],
+  "page": "https://www.markertek.com/product/aja-kiproultra/aja-ki-pro-ultra-4k-ultrahd-and-2k-hd-recorder-player-with-4k-60p-avid-mxf-support",
+  "source": "distributor",
+  "note": "Markertek hi-res"
+ },
+ {
+  "key": "AKG | C 3000 B",
+  "title": "AKG C 3000 B",
+  "items": [
+   "AUDMICAKGC3000B"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_14/141408/7910865_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/141408.jpg"
+  ],
+  "page": "https://www.thomann.de/de/akg_c3000_b.htm",
+  "source": "distributor",
+  "note": "Thomann (current C3000)"
+ },
+ {
+  "key": "AKG | C 414 ULS",
+  "title": "AKG C 414 ULS",
+  "items": [
+   "AUDMICAKGMICRAKC414"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_24/240605/9280275_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_24/240605/9280280_800.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/akg_c414_xls.htm",
+  "source": "distributor",
+  "note": "C414 ULS discontinued; C414 XLS (direct successor, near-identical look)"
+ },
+ {
+  "key": "AKG | C 414 ULS or XLR",
+  "title": "AKG C 414 ULS or XLR",
+  "items": [
+   "AUDMICAKGMICRAKC4142"
+  ],
+  "candidates": [
+   "https://www.akg.com/dw/image/v2/BFND_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dwfb080bf4/AKG_c414_xls.png?sw=535&sh=535"
+  ],
+  "page": "https://www.akg.com/microphones/condenser-microphones/C414XLS.html",
+  "source": "manufacturer",
+  "note": "C414 XLS (current model; ULS discontinued, visually near-identical)"
+ },
+ {
+  "key": "AKG | C 414 matched pair",
+  "title": "AKG C 414 matched pair",
+  "items": [
+   "AUDMICAKGC414MA"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/AKG-C414-XLS.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/AKG-C414-XLS.JPG"
+  ],
+  "page": "https://www.markertek.com/product/akg-c414-xls/akg-c414-xls-matched-pair-large-diaphragm-multipattern-condenser-microphones",
+  "source": "distributor",
+  "note": "C414 XLS matched pair (model variant XLS assumed)"
+ },
+ {
+  "key": "AKG | C 451 B",
+  "title": "AKG C 451 B",
+  "items": [
+   "AUDMICAKGC451B"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_15/154672/13024474_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/154672.jpg"
+  ],
+  "page": "https://www.thomann.de/de/akg_c451b.htm",
+  "source": "distributor",
+  "note": "Thomann"
+ },
+ {
+  "key": "APC | UPS Smart X 3000VA 230V",
+  "title": "APC UPS Smart X 3000VA 230V",
+  "items": [
+   "VIDITAPCUPSSMA"
+  ],
+  "candidates": [
+   "https://www.scan.co.uk/images/products/xlarge/2717684-xl-a.jpg",
+   "https://www.scan.co.uk/images/products/xlarge/2717684-xl-b.jpg"
+  ],
+  "page": "https://www.scan.co.uk/products/apc-smart-ups-x-3000va-4u-rack-tower-lcd-display-200-240v-27k-watts-black",
+  "source": "other",
+  "note": "Scan UK, SMX3000 rack/tower"
+ },
+ {
+  "key": "AV | Stumpfl Pixera One Quad - DP1.2 / GUI Out / sync / 0.5TB X22",
+  "title": "AV Stumpfl Pixera One Quad - DP1.2 / GUI Out / sync / 0.5TB X22",
+  "items": [
+   "VIDVIDAVVIPLPX1402S05"
+  ],
+  "candidates": [
+   "https://static.helpjuice.com/helpjuice_production/uploads/upload/image/9741/direct/1732789035211/Pixera%20one%20GEN2%20Front-Edited-Low%20resolution.png",
+   "https://avstumpfl.com/fileadmin/_processed_/5/e/csm_Pixera_server_overview_8446e8eea0.jpg"
+  ],
+  "page": "https://help.pixera.one/server-manuals/pixera-one-two-gen2-server-manual",
+  "source": "manufacturer",
+  "note": "First: PIXERA one GEN2 front (low-res, from manual); second: server lineup photo from 2019 (original generation)"
+ },
+ {
+  "key": "AV | Stumpfl Projection Screen - 229 NET Projection area",
+  "title": "AV Stumpfl Projection Screen - 229 NET Projection area",
+  "items": [
+   "VIDPROAVVISC400X225"
+  ],
+  "candidates": [
+   "https://avstumpfl.com/fileadmin/_processed_/a/d/csm_Vario_Uebersichtsbild_c2b7a62bdf.png",
+   "https://avstumpfl.com/fileadmin/_processed_/f/e/csm_Monoblox_Uebersichtsbild_52ece4fbc3.png"
+  ],
+  "page": "https://avstumpfl.com/en/projection-screens/mobile-projection-screens/vario/vario/",
+  "source": "manufacturer",
+  "note": "Generic AV Stumpfl mobile fast-fold screen (Vario/Monoblox) overview images; exact screen system unknown; menu-size images"
+ },
+ {
+  "key": "Arri | Centermount yoke for Arri Skypanel",
+  "title": "Arri Centermount yoke for Arri Skypanel",
+  "items": [
+   "LIGARRARRCENTER"
+  ],
+  "candidates": [
+   "https://i.visuals.co.uk/media/catalog/product/cache/c43fdea76e5e3b3a76d326b9e3c3203f/p/5/p5917146_o00_13.jpg"
+  ],
+  "page": "https://www.visuals.co.uk/l0.0012952.html",
+  "source": "distributor",
+  "note": "Visuals UK neighbouring product 'Center Mount' image (small cache size; unverified exact SKU)"
+ },
+ {
   "key": "Arri | Fresnel L10-C",
   "title": "Arri Fresnel L10-C",
   "items": [
@@ -55,6 +206,20 @@
   "note": "Markertek, L7-C LE2 black; hi-res path inferred from page"
  },
  {
+  "key": "Arri | M90 Max + high speed ballast + 4-leaf barn door + 15m cable",
+  "title": "Arri M90 Max + high speed ballast + 4-leaf barn door + 15m cable",
+  "items": [
+   "LIGPROARRM90MAX"
+  ],
+  "candidates": [
+   "https://www.arri.com/resource/blob/32906/533f2e88710daf84feb8289f034a450d/m90-gallery-front-data.jpg",
+   "https://www.arri.com/resource/blob/32912/344c96db7fe628de84841fa194c5e1c2/m90-gallery-tilted-to-left-above-data.jpg"
+  ],
+  "page": "https://www.arri.com/en/lighting/daylight-tungsten/daylight/m-series/m90",
+  "source": "manufacturer",
+  "note": "Fixture only"
+ },
+ {
   "key": "Arri | Orbiter - full colour tuneable (2.000° - 20.000°K) - pole operated",
   "title": "Arri Orbiter - full colour tuneable (2.000° - 20.000°K) - pole operated",
   "items": [
@@ -66,6 +231,49 @@
   "page": "https://hotrodcameras.com/collections/arri/products/arri-orbiter-led-light-without-lens-yoke-and-cable-blue-silver",
   "source": "distributor",
   "note": "ARRI site has no packshot via fetch; dealer image shows blue/silver Orbiter without optic"
+ },
+ {
+  "key": "Arri | Skypanel S120-C - full colour tuneable (2.800° - 10.000°K) - pole operated",
+  "title": "Arri Skypanel S120-C - full colour tuneable (2.800° - 10.000°K) - pole operated",
+  "items": [
+   "LIGLEDARRLILEARS120C"
+  ],
+  "candidates": [
+   "https://i.visuals.co.uk/media/catalog/product/cache/65e0edc3f135ab5d41b7eea4808fc19d/p/5/p5917148_o00_31.jpg",
+   "https://www.arri.com/resource/blob/32582/6f59d5d59f53b67449531153b8afd751/skypanel-s120-c-man-front-hang-data.jpg",
+   "https://www.arri.com/resource/blob/32578/716d2cdd98d90ebfcb821eb050b740cd/skypanel-s120-c-manual-yoke-vertical-front-left-stand-data.jpg"
+  ],
+  "page": "https://www.visuals.co.uk/l0.0012952.html",
+  "source": "distributor",
+  "note": "1st: Visuals UK S120-C black pole-operated; others: ARRI manual-yoke version"
+ },
+ {
+  "key": "Arri | Skypanel S30-C - full colour tuneable (2.800° - 10.000°K) - pole operated",
+  "title": "Arri Skypanel S30-C - full colour tuneable (2.800° - 10.000°K) - pole operated",
+  "items": [
+   "LIGLEDARRLILEARS30C"
+  ],
+  "candidates": [
+   "https://www.arri.com/resource/blob/32432/c51a0fece4bf50c24c0284c6e7cfbacd/skypanel-s30-c-gallery-front-hang-white-data.jpg",
+   "https://www.arri.com/resource/blob/32438/9aa291f4da586e7b3c43adc8d1cce52d/skypanel-s30-c-gallery-tilt-front-left-stand-white-data.jpg"
+  ],
+  "page": "https://www.arri.com/en/lighting/led-panel-lights/skypanel-classic/s30-c",
+  "source": "manufacturer",
+  "note": "ARRI gallery, white bg; pole-operated yoke may differ"
+ },
+ {
+  "key": "Arri | Skypanel S360-C - full colour tuneable (2.800° - 20.000°K) & blue",
+  "title": "Arri Skypanel S360-C - full colour tuneable (2.800° - 20.000°K) & blue",
+  "items": [
+   "LIGLEDARRLILEARS360C"
+  ],
+  "candidates": [
+   "https://www.arri.com/resource/image/313838/landscape_ratio1x0_38/480/184/f03761e5fbd585c2bd798665c8a2d06e/503BBDA0F09E77F93941C68CF285B1FA/m20-skypanel-s360.jpg",
+   "https://www.arri.com/resource/image/77674/landscape_ratio1x0_38/1920/737/624dcee12e2085db9e2f8e96ccc408d0/34CFD433B2A12B957F30F90AD13D9F53/skypanel-s360-c-productseriesnavigation.jpg"
+  ],
+  "page": "https://www.arri.com/en/lighting/led-panel-lights/skypanel-classic/s360-c",
+  "source": "manufacturer",
+  "note": "Small product image + wide banner og:image; not white-bg square"
  },
  {
   "key": "Arri | Skypanel S60-C - full colour tuneable (2.800° - 10.000°K) - pole operated",
@@ -93,6 +301,241 @@
   "page": "https://productiongear.co.uk/products/arri-s60-c-skypanel",
   "source": "distributor",
   "note": "Reuses S60-C image (LE2 looks identical)"
+ },
+ {
+  "key": "Astera | LED Astera Titan Tube + powerbox + acc",
+  "title": "Astera LED Astera Titan Tube + powerbox + acc",
+  "items": [
+   "LIGLEDAST8XLEDA"
+  ],
+  "candidates": [
+   "https://media.astera-led.com/wp-content/uploads/astera-fp1-kit-titan-tube.png",
+   "https://media.astera-led.com/wp-content/uploads/astera-fp1-kit-titan-tube-800x800.png"
+  ],
+  "page": "https://astera-led.com/products/titan-tube-kit/specs/",
+  "source": "manufacturer",
+  "note": "Titan Tube kit"
+ },
+ {
+  "key": "Avalon | VT-737",
+  "title": "Avalon VT-737",
+  "items": [
+   "AUDINSAVAVT737"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_15/156666/14251198_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/156666.jpg"
+  ],
+  "page": "https://www.thomann.de/de/avalon_vt737sp_roehren_direct_signal_pfad.htm",
+  "source": "distributor",
+  "note": "VT-737SP (current version)"
+ },
+ {
+  "key": "BMB | Ultrastudio 4K Mini",
+  "title": "BMB Ultrastudio 4K Mini",
+  "items": [
+   "VIDVIDBMBULTRAS"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/ultrastudio/product-grid/ultrastudio-4k-mini.jpg?_v=1562899961",
+   "https://images.blackmagicdesign.com/images/products/ultrastudio/landing/connections/ultrastudio-4k-mini.jpg?_v=1564969758"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/ultrastudio",
+  "source": "manufacturer",
+  "note": "Blackmagic UltraStudio 4K Mini"
+ },
+ {
+  "key": "BMD | 6G SDI - 1 In to 8 Out",
+  "title": "BMD 6G SDI - 1 In to 8 Out",
+  "items": [
+   "VIDSIGBMD6GSDI1"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/miniconverters/models/enlargements/mini-converter-sdi-distribution-4k.jpg?_v=1526268187",
+   "https://images.blackmagicdesign.com/images/products/miniconverters/models/products/mini-converter-sdi-distribution-4k-lg.jpg?_v=1509586015"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/miniconverters/models",
+  "source": "manufacturer",
+  "note": "Mini Converter SDI Distribution 4K (6G-SDI, 1 in 8 out)"
+ },
+ {
+  "key": "BMD | Atem television studio pro 4k",
+  "title": "BMD Atem television studio pro 4k",
+  "items": [
+   "VIDPROBMDATEMTE"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/atemtelevisionstudio/product-grid/atem-television-studio-4k8.jpg?_v=1680743882"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/atemtelevisionstudio",
+  "source": "manufacturer",
+  "note": "Pro 4K discontinued; image is successor ATEM Television Studio 4K8 (different look) - replace if possible"
+ },
+ {
+  "key": "BMD | Hyperdeck Studio 4K",
+  "title": "BMD Hyperdeck Studio 4K",
+  "items": [
+   "VIDVIDBMDHYPERD"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_52/525696/16729769_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_52/525696/16729774_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/blackmagic_design_hyperdeck_studio_4k_pro.htm",
+  "source": "distributor",
+  "note": "HyperDeck Studio 4K Pro (current model; 12G, 2 SSD slots)"
+ },
+ {
+  "key": "BMD | Micro converter 3G/HDSDI/SDI to HDMI",
+  "title": "BMD Micro converter 3G/HDSDI/SDI to HDMI",
+  "items": [
+   "VIDSIGBMDVISPSDIHDMI"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/microconverters/product-grid/micro-converter-sdi-to-hdmi-3g.jpg?_v=1605480800",
+   "https://images.blackmagicdesign.com/images/products/microconverters/techspecs/hero/micro-converter-sdi-to-hdmi-3g-sm.jpg?_v=1605503371"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/microconverters/techspecs",
+  "source": "manufacturer",
+  "note": "Micro Converter SDI to HDMI 3G"
+ },
+ {
+  "key": "BMD | Micro converter HDMI to 3G/HDSDI/SDI",
+  "title": "BMD Micro converter HDMI to 3G/HDSDI/SDI",
+  "items": [
+   "VIDSIGBMDVISPHDMISDI"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_50/508052/15806135_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_50/508052/15806120_800.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/blackmagic_design_mc_hdmi_sdi_3g.htm",
+  "source": "distributor",
+  "note": "Micro Converter HDMI to SDI 3G"
+ },
+ {
+  "key": "BMD | Mini converter 6G/3G/HDSDI/SDI to HDMI 4K",
+  "title": "BMD Mini converter 6G/3G/HDSDI/SDI to HDMI 4K",
+  "items": [
+   "VIDSIGBMDVISPHDSDI4K"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/miniconverters/models/enlargements/mini-converter-sdi-to-hdmi-6g.jpg?_v=1526268126",
+   "https://images.blackmagicdesign.com/images/products/miniconverters/models/products/mini-converter-sdi-to-hdmi-6g-lg.jpg?_v=1509669124"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/miniconverters/models",
+  "source": "manufacturer",
+  "note": "Mini Converter SDI to HDMI 6G (older 'SDI to HDMI 4K' look identical)"
+ },
+ {
+  "key": "BMD | Mini converter 6G/3G/HDSDI/SDI to audio",
+  "title": "BMD Mini converter 6G/3G/HDSDI/SDI to audio",
+  "items": [
+   "VIDSIGBMDVISPSDI4KAU"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/miniconverters/models/enlargements/mini-converter-sdi-to-audio-4k.jpg?_v=1526268151",
+   "https://images.blackmagicdesign.com/images/products/miniconverters/models/products/mini-converter-sdi-to-audio-4k-lg.jpg?_v=1509580242"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/miniconverters/models",
+  "source": "manufacturer",
+  "note": "Mini Converter SDI to Audio 4K (6G)"
+ },
+ {
+  "key": "BMD | Mini converter Audio to 6G/3G/HDSDI/SDI",
+  "title": "BMD Mini converter Audio to 6G/3G/HDSDI/SDI",
+  "items": [
+   "VIDSIGBMDVISPAUSDI4K"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/669f5311-53ca-4976-9bb9-a5f399336754.jpg?v=1737061500&width=1214"
+  ],
+  "page": "https://avlgear.com/collections/blackmagic-design/products/blackmagic-mini-converter-audio-to-sdi-4k",
+  "source": "other",
+  "note": "Mini Converter Audio to SDI 4K (6G model)"
+ },
+ {
+  "key": "BMD | MultiView 16 UHD SDI",
+  "title": "BMD MultiView 16 UHD SDI",
+  "items": [
+   "VIDSIGBMDMULTIV"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/landing/families/multiview.jpg?_v=1723587218"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/multiview",
+  "source": "manufacturer",
+  "note": "Generic MultiView family tile only; product page fetch was blocked - weak candidate"
+ },
+ {
+  "key": "BMD | Smartscope duo 4K",
+  "title": "BMD Smartscope duo 4K",
+  "items": [
+   "VIDPREBMDSMARTS"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/smartview/techspecs/hero/smartscope-duo-4k-sm.jpg?_v=1520381535",
+   "https://images.blackmagicdesign.com/images/products/smartview/product-grid/smartscope-duo-4k.jpg?_v=1522124260"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/smartview/techspecs",
+  "source": "manufacturer",
+  "note": "Front view (smallish)"
+ },
+ {
+  "key": "BMD | Teranex Mini 12G to HDMI 4K",
+  "title": "BMD Teranex Mini 12G to HDMI 4K",
+  "items": [
+   "VIDSIGBMDVISPSDI12GHDMI"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/teranexmini/models/enlargements/teranex-mini-sdi-to-hdmi-12g.jpg?_v=1576710544",
+   "https://images.blackmagicdesign.com/images/products/teranexmini/models/products/teranex-mini-sdi-to-hdmi-12g-lg.jpg?_v=1577073193"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/teranexmini/models",
+  "source": "manufacturer",
+  "note": "Teranex Mini SDI to HDMI 12G"
+ },
+ {
+  "key": "BMD | Teranex Mini HDMI 4K to 12G",
+  "title": "BMD Teranex Mini HDMI 4K to 12G",
+  "items": [
+   "VIDSIGBMDVISPHDMISDI12G"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/teranexmini/models/enlargements/teranex-mini-hdmi-to-sdi-12g.jpg?_v=1576710538",
+   "https://images.blackmagicdesign.com/images/products/teranexmini/models/products/teranex-mini-hdmi-to-sdi-12g-lg.jpg?_v=1576708068"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/teranexmini/techspecs/W-TERAMIN-02",
+  "source": "manufacturer",
+  "note": "Teranex Mini HDMI to SDI 12G"
+ },
+ {
+  "key": "BMD | Ultrastudio 4K extreme 12G only with MAC",
+  "title": "BMD Ultrastudio 4K extreme 12G only with MAC",
+  "items": [
+   "VIDSIGBMDULTRAS"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/BMD-ULSR4KEX3.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/BMD-ULSR4KEX3.JPG"
+  ],
+  "page": "https://www.markertek.com/product/bmd-ulsr4kex3/blackmagic-design-bdlkulsr4kextr3-ultrastudio-4k-extreme-3-thunderbolt-video-capture-and-playback-solution",
+  "source": "distributor",
+  "note": "UltraStudio 4K Extreme 3"
+ },
+ {
+  "key": "BMD | Videohub 40 12G - 40 In to 40 Out",
+  "title": "BMD Videohub 40 12G - 40 In to 40 Out",
+  "items": [
+   "VIDSIGBMDVISP40X4012G"
+  ],
+  "candidates": [
+   "https://images.blackmagicdesign.com/images/products/blackmagicvideohub/product-grid/blackmagic-videohub-40x40-12g.jpg?_v=1679973790",
+   "https://images.blackmagicdesign.com/images/products/blackmagicvideohub/techspecs/hero/blackmagic-videohub-40x40-12g-sm.jpg?_v=1680582535"
+  ],
+  "page": "https://www.blackmagicdesign.com/products/blackmagicvideohub/techspecs",
+  "source": "manufacturer",
+  "note": "Blackmagic Videohub 40x40 12G"
  },
  {
   "key": "Barco | E2 - Generation 2",
@@ -588,6 +1031,103 @@
   "note": "barco.com pages not machine-readable; image from ProjectorCentral (not an official distributor); UDX models share one chassis; image is of UDX-4K40/4K32, same housing"
  },
  {
+  "key": "Brompton | Tessera S4",
+  "title": "Brompton Tessera S4",
+  "items": [
+   "VIDLEDBROVILDTESSERAS4"
+  ],
+  "candidates": [
+   "https://store.midwich.com/media/image/gallery/Brompton-BROMS4-Processor_1.JPG",
+   "https://store.midwich.com/media/image/gallery/Brompton-BROMS4-Processor_2.JPG",
+   "https://www.ledwallcentral.com/images/controllers/led_controller_24.jpg"
+  ],
+  "page": "https://store.midwich.com/products/details/BROMS4",
+  "source": "distributor",
+  "note": "Midwich distributor images"
+ },
+ {
+  "key": "Brompton | Tessera SX40",
+  "title": "Brompton Tessera SX40",
+  "items": [
+   "VIDLEDBROVILDTESSERASX4"
+  ],
+  "candidates": [
+   "https://www.scan.co.uk/images/products/xlarge/3646192-xl-a.jpg",
+   "https://www.scan.co.uk/images/products/xlarge/3646192-xl-b.jpg"
+  ],
+  "page": "https://www.scan.co.uk/products/brompton-technology-tessera-sx40-4k-led-processor-3-year-uk-warranty",
+  "source": "other",
+  "note": "Scan UK"
+ },
+ {
+  "key": "Brompton | Tessera T1",
+  "title": "Brompton Tessera T1",
+  "items": [
+   "VIDLEDBROVILDTESSERAT1"
+  ],
+  "candidates": [
+   "https://www.bromptontech.com/wp-content/uploads/2022/06/T1_front_elevated_Final.png.webp",
+   "https://www.bromptontech.com/wp-content/uploads/2019/03/T1_final-1024x540.png.webp"
+  ],
+  "page": "https://www.bromptontech.com/product/t1/",
+  "source": "manufacturer",
+  "note": "Brompton T1"
+ },
+ {
+  "key": "Brompton | Tessera XD",
+  "title": "Brompton Tessera XD",
+  "items": [
+   "VIDLEDBROVILDTESSERAXD"
+  ],
+  "candidates": [
+   "https://www.bromptontech.com/wp-content/uploads/2025/07/XD-Product-Image_Desktop_Tablet_w1920px-1.webp"
+  ],
+  "page": "https://www.bromptontech.com/product/xd/",
+  "source": "manufacturer",
+  "note": "Wide banner-style product image (1920w)"
+ },
+ {
+  "key": "Canon | CJ18ex7,6 IASE-S standard + servo",
+  "title": "Canon CJ18ex7,6 IASE-S standard + servo",
+  "items": [
+   "VIDPROCANCJ18EX"
+  ],
+  "candidates": [
+   "https://i.visuals.co.uk/media/catalog/product/cache/c43fdea76e5e3b3a76d326b9e3c3203f/1/5/1594380913_1472953.jpg",
+   "https://i.visuals.co.uk/media/catalog/product/cache/65e0edc3f135ab5d41b7eea4808fc19d/1/5/1594380913_1472953_1.jpg"
+  ],
+  "page": "https://www.visuals.co.uk/compact-and-lightweight-2-3-7-6-137mm-4k-broadcast-zoom-lens.html",
+  "source": "distributor",
+  "note": "Visuals.co.uk listing is CJ18ex7.6B KASE (same lens, different servo version); Canon page had only lifestyle hero"
+ },
+ {
+  "key": "ChainMaster | 320 kg D8+ - chain 24 m",
+  "title": "ChainMaster 320 kg D8+ - chain 24 m",
+  "items": [
+   "RIGRIGCHA320KGD"
+  ],
+  "candidates": [
+   "https://www.procom-me.com/cdn/shop/files/unnamed_17.webp?v=1776061850&width=2048"
+  ],
+  "page": "https://www.procom-me.com/product/d8-compact-electric-chain-hoists-320-kg-load/",
+  "source": "other",
+  "note": "Procom ME 'D8 compact 320 kg' hoist - brand/model not verified as ChainMaster D8+; Huss page had no readable images"
+ },
+ {
+  "key": "ChainMaster | 750 kg D8+ - chain 24 m",
+  "title": "ChainMaster 750 kg D8+ - chain 24 m",
+  "items": [
+   "RIGRIGCHA750KGD"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/649764/21413497_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_64/649764/21413507_800.jpg"
+  ],
+  "page": "https://www.thomannmusic.com/chainmaster_d8_ultra_dc_1000kg_25m_h_h.htm",
+  "source": "distributor",
+  "note": "Close model: ChainMaster D8+ 1000 kg (750 kg version looks the same)"
+ },
+ {
   "key": "Circular | polarized helical antenna 450 - 950 MHz",
   "title": "Circular polarized helical antenna 450 - 950 MHz",
   "items": [
@@ -618,6 +1158,45 @@
   "note": null
  },
  {
+  "key": "Claypaky | Axcor Profile 600",
+  "title": "Claypaky Axcor Profile 600",
+  "items": [
+   "LIGLEDCLAAXCORP"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2018/08/claypaky_adds_axcor_profile_600_and_400_to_axcor_led_series.jpg"
+  ],
+  "page": "https://www.claypaky.it/en/news/claypaky_adds_axcor_profile_600_and_400_to_axcor_led_series/",
+  "source": "manufacturer",
+  "note": "Launch news image (may show Profile 600 and 400 together); product page fetch blocked"
+ },
+ {
+  "key": "Claypaky | Axcor Spot 300",
+  "title": "Claypaky Axcor Spot 300",
+  "items": [
+   "LIGLEDCLAAXCORS"
+  ],
+  "candidates": [
+   "https://cdn11.bigcommerce.com/s-dd19b/products/27420/images/113571/Claypaky_Axcor_300_Spot__83692.1696003201.386.513.jpg?c=2"
+  ],
+  "page": "https://goknight.com/claypaky-c61725-axcor-spot-300-moving-head-led-fixture/",
+  "source": "distributor",
+  "note": "Medium size image from Knight (US dealer)"
+ },
+ {
+  "key": "Claypaky | HY B-EYE K15",
+  "title": "Claypaky HY B-EYE K15",
+  "items": [
+   "LIGLEDCLALILECPK15"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_HY_B-EYE_K15.jpg"
+  ],
+  "page": "https://www.claypaky.it/products/hy-b-eye-k15/",
+  "source": "manufacturer",
+  "note": "2000x2000"
+ },
+ {
   "key": "Claypaky | HY B-EYE K25",
   "title": "Claypaky HY B-EYE K25",
   "items": [
@@ -629,6 +1208,19 @@
   "page": "https://www.claypaky.it/products/hy-b-eye-k25/",
   "source": "manufacturer",
   "note": null
+ },
+ {
+  "key": "Claypaky | Hepikos",
+  "title": "Claypaky Hepikos",
+  "items": [
+   "LIGINTCLAHEPIKO"
+  ],
+  "candidates": [
+   "https://www.10kused.com/wp-content/uploads/2019/09/Clay-Paky-Hepikos-6.jpg"
+  ],
+  "page": "https://www.10kused.com/?p=88918",
+  "source": "other",
+  "note": "Used-gear listing photo; manufacturer page not found in search"
  },
  {
   "key": "Claypaky | Midi-B",
@@ -668,6 +1260,47 @@
   "page": "https://www.claypaky.it/products/mini-xtylos",
   "source": "manufacturer",
   "note": null
+ },
+ {
+  "key": "Claypaky | Panify",
+  "title": "Claypaky Panify",
+  "items": [
+   "LIGINTCLALIILCPPANIFY",
+   "LIGINTCLALIILCPPANIFY2"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2024/03/Claypaky_NewProducts_at_PLS2024_Panify2.jpg",
+   "https://www.claypaky.it/wp-content/uploads/2024/03/Claypaky_NewProducts_at_PLS2024_Panify2-150x150.jpg"
+  ],
+  "page": "https://www.claypaky.it/en/news/claypaky-new-products-prolightsound-2024/",
+  "source": "manufacturer",
+  "note": "Panify 2 news photo, not white background; 1st URL is the WordPress full-size derived from the visible 150x150 thumbnail (unverified)"
+ },
+ {
+  "key": "Claypaky | SharBar RGBW",
+  "title": "Claypaky SharBar RGBW",
+  "items": [
+   "LIGLEDCLASHARBA"
+  ],
+  "candidates": [
+   "https://www.10kused.com/wp-content/uploads/2019/09/Clay-Paky-SharBar-1.jpg"
+  ],
+  "page": "https://www.10kused.com/used/claypaky-sharbar/",
+  "source": "other",
+  "note": "Used-gear listing photo"
+ },
+ {
+  "key": "Claypaky | Sharpy",
+  "title": "Claypaky Sharpy",
+  "items": [
+   "LIGINTCLALIILCPSHARPY2"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_Sharpy.jpg"
+  ],
+  "page": "https://www.claypaky.it/products/sharpy-legacy/",
+  "source": "manufacturer",
+  "note": "Original Sharpy (legacy page)"
  },
  {
   "key": "Claypaky | Sharpy Plus",
@@ -721,6 +1354,47 @@
   "page": "https://www.panavision.com/lighting/lighting-products/heads/product-detail/xal5fan-stormy-cc-rgbw-led-strobe",
   "source": "distributor",
   "note": "Panavision/Panalux rental page"
+ },
+ {
+  "key": "Claypaky | Tambora batten round",
+  "title": "Claypaky Tambora batten round",
+  "items": [
+   "LIGLEDCLALILECPTAMBORABATR"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_TamboraBatten_Square.jpg",
+   "https://www.claypaky.it/wp-content/uploads/2023/04/Tambora_highlights_squaretoround.jpg"
+  ],
+  "page": "https://www.claypaky.it/products/tambora-batten/",
+  "source": "manufacturer",
+  "note": "Main image shows square-lens version; 2nd shows square-to-round lens"
+ },
+ {
+  "key": "Claypaky | Tambora batten square",
+  "title": "Claypaky Tambora batten square",
+  "items": [
+   "LIGLEDCLALILECPTAMBORABATS"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2022/10/Claypaky_TamboraBatten_Square.jpg"
+  ],
+  "page": "https://www.claypaky.it/products/tambora-batten/",
+  "source": "manufacturer",
+  "note": "og:image 2000x2000, square lens variant"
+ },
+ {
+  "key": "Claypaky | Xtylos",
+  "title": "Claypaky Xtylos",
+  "items": [
+   "LIGLASCLAXTYLOS"
+  ],
+  "candidates": [
+   "https://www.claypaky.it/wp-content/uploads/2023/05/Claypaky_Xtylos_family00.jpg",
+   "https://www.claypaky.it/wp-content/uploads/2025/06/Claypaky_XtylosAqua.jpg"
+  ],
+  "page": "https://www.claypaky.it/family/xtylos/",
+  "source": "manufacturer",
+  "note": "Plain Xtylos no longer has own page; family image + Xtylos Aqua (very similar look, IP66 version)"
  },
  {
   "key": "DPA | 4055",
@@ -885,6 +1559,19 @@
   "note": "CORE+ variant image; visually near-identical"
  },
  {
+  "key": "DPA | D:VOTE 4099 clamp",
+  "title": "DPA D:VOTE 4099 clamp",
+  "items": [
+   "AUDWIRDPAMICRDP4099CL"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/DPA-4099-DP-1.JPG"
+  ],
+  "page": null,
+  "source": "other",
+  "note": "Reused D:VOTE 4099 image (mic with clamp), not the clamp alone"
+ },
+ {
   "key": "DPA | D:VOTE CORE 4099",
   "title": "DPA D:VOTE CORE 4099",
   "items": [
@@ -937,6 +1624,127 @@
   "page": "https://www.markertek.com/product/dpa-4099-dp-1/dpa-4099-core-ip58-supercardioid-instrument-microphone-loud-spl-6-mv-pa-sensitivity",
   "source": "distributor",
   "note": "single 4099 mic image, not the piano set"
+ },
+ {
+  "key": "Datapath | FX4/D DP Out",
+  "title": "Datapath FX4/D DP Out",
+  "items": [
+   "VIDSIGDATFX4D4X"
+  ],
+  "candidates": [
+   "https://www.datapath.co.uk/wp-content/uploads/FX4_Carousel_01.jpg",
+   "https://www.datapath.co.uk/wp-content/uploads/FX4_Carousel_02.jpg"
+  ],
+  "page": "https://www.datapath.co.uk/datapath-products/video-wall-controllers/datapath-fx4/",
+  "source": "manufacturer",
+  "note": "Fx4 generic images; DP vs HDMI variant not identified"
+ },
+ {
+  "key": "Datapath | FX4/HDR HDMI HDR Out",
+  "title": "Datapath FX4/HDR HDMI HDR Out",
+  "items": [
+   "VIDSIGDATFX4HDR"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/FX4-HDR.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/FX4-HDR.JPG"
+  ],
+  "page": "https://www.markertek.com/product/fx4-hdr/datapath-fx4-hdr-4k-hdr-display-controller-with-4-x-hdmi-outputs",
+  "source": "distributor",
+  "note": "Markertek hi-res images"
+ },
+ {
+  "key": "Dell | U2422H 24\" - HD",
+  "title": "Dell U2422H 24\" - HD",
+  "items": [
+   "VIDDISDELU2422H"
+  ],
+  "candidates": [
+   "https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/peripherals/monitors/u-series/u2422h/media-gallery/peripherals_monitor_u2422h_gallery_2.psd?fmt=png-alpha&pscan=auto&scl=1&hei=804&wid=1005&qlt=100%2C1&resMode=sharp2&size=1005%2C804&chrss=full",
+   "https://i.dell.com/is/image/DellContent//content/dam/ss2/product-images/peripherals/output-devices/dell/monitors/u-series/u2422h/responsive/362353_u2422h_responsive_module_hero.png?fmt=jpg&wid=504&hei=350"
+  ],
+  "page": "https://dell.com/en-uk/shop/dell-ultrasharp-24-monitor-u2422h/apd/210-ayui/monitors-monitor-accessories",
+  "source": "manufacturer",
+  "note": "Dell Scene7 images (dynamic URLs, served as png/jpg)"
+ },
+ {
+  "key": "DiGiCo | 8 channel 32-bit - Output card for SD-rack",
+  "title": "DiGiCo 8 channel 32-bit - Output card for SD-rack",
+  "items": [
+   "AUDDIGDIGKIDEDISDDAC32B"
+  ],
+  "candidates": [
+   "https://digico.biz/wp-content/uploads/2018/10/SD_Rack_withCards-scaled.jpg"
+  ],
+  "page": "https://digico.biz/rackmodules/sd-32-bit-dac/",
+  "source": "manufacturer",
+  "note": "No card image found (card page blocked); image shows SD-Rack with cards"
+ },
+ {
+  "key": "DiGiCo | DMI Madi BNC I/O module",
+  "title": "DiGiCo DMI Madi BNC I/O module",
+  "items": [
+   "AUDDIGDIGDMIMAD"
+  ],
+  "candidates": [
+   "https://digico.biz/wp-content/uploads/2018/11/DMI_MADIB-600x375.jpg"
+  ],
+  "page": "https://digico.biz/dmi_cards/dmi-madi-b/",
+  "source": "manufacturer",
+  "note": "DMI-MADI-B card (600x375)"
+ },
+ {
+  "key": "DiGiCo | DQ-rack - Dante - 48 mic In - 24 Line Out",
+  "title": "DiGiCo DQ-rack - Dante - 48 mic In - 24 Line Out",
+  "items": [
+   "AUDDIGDIGDQRACK"
+  ],
+  "candidates": [
+   "https://digico.biz/wp-content/uploads/2021/01/DQ-Back-1-scaled.jpg"
+  ],
+  "page": "https://digico.biz/racks/dq-rack/",
+  "source": "manufacturer",
+  "note": "Hero 'DQ-Back' image (may show rear panel)"
+ },
+ {
+  "key": "DiGiCo | Quantum 225 - Waves upgrade incl.",
+  "title": "DiGiCo Quantum 225 - Waves upgrade incl.",
+  "items": [
+   "AUDDIGDIGKIDEDIQ225W"
+  ],
+  "candidates": [
+   "https://www.turramusic.com.au/cdn/shop/files/digico-quantum-225-2.jpg?v=1698021850"
+  ],
+  "page": "https://www.turramusic.com.au/products/digico-quantum-225",
+  "source": "other",
+  "note": "Turra Music AU, 600x600"
+ },
+ {
+  "key": "DiGiCo | Quantum 338 - HMA optics - Waves upgrade incl.",
+  "title": "DiGiCo Quantum 338 - HMA optics - Waves upgrade incl.",
+  "items": [
+   "AUDDIGDIGKIDEDIQ338W"
+  ],
+  "candidates": [
+   "https://nvision360.com/wp-content/uploads/2025/07/digico_quantum_338_digital_mixing_console.jpg"
+  ],
+  "page": "https://nvision360.com/shop/digico-quantum-338-digital-mixing-console/",
+  "source": "other",
+  "note": "Quantum 338 from reseller"
+ },
+ {
+  "key": "DiGiCo | SD-rack 192kHz – empty SD-Rack",
+  "title": "DiGiCo SD-rack 192kHz – empty SD-Rack",
+  "items": [
+   "AUDDIGDIGSDRACK"
+  ],
+  "candidates": [
+   "https://digico.biz/wp-content/uploads/2018/10/SD_Rack_front-scaled.jpg",
+   "https://digico.biz/wp-content/uploads/2018/10/SD_Rack_angle-scaled.jpg"
+  ],
+  "page": "https://digico.biz/racks/sd-rack/",
+  "source": "manufacturer",
+  "note": "SD-Rack front/angle"
  },
  {
   "key": "ETC | Fix 14° - 4 Knives",
@@ -1093,6 +1901,170 @@
   "page": "https://www.etcconnect.com/Products/Entertainment-Fixtures/",
   "source": "manufacturer",
   "note": "Source Four incandescent overview thumbnail (547x400); generic for all lens variants"
+ },
+ {
+  "key": "EV | RE 20",
+  "title": "EV RE 20",
+  "items": [
+   "AUDMICEVRE20"
+  ],
+  "candidates": [
+   "https://keenfinity.cdn-norce.tech/3fdc9c76-d56a-4b51-9b2b-146c8c27160f?w=2048",
+   "https://keenfinity.cdn-norce.tech/8f3ffc8e-c85b-4849-a7a9-b797759e95cf"
+  ],
+  "page": "https://www.electrovoice.com/product/re20",
+  "source": "manufacturer",
+  "note": "CDN image URLs without file extension (serve images)"
+ },
+ {
+  "key": "Epson | EB-L735U",
+  "title": "Epson EB-L735U",
+  "items": [
+   "VIDPROEPSEBL735"
+  ],
+  "candidates": [
+   "https://www.epson.com.au/img-old/products/EB-L735U_600.jpg"
+  ],
+  "page": "https://epson.com.au/products/projector/EB-L735U.asp?groupid=18",
+  "source": "manufacturer",
+  "note": "Epson Australia, 600px"
+ },
+ {
+  "key": "Epson | EB-PU2220B",
+  "title": "Epson EB-PU2220B",
+  "items": [
+   "VIDPROEPSEBPU22"
+  ],
+  "candidates": [
+   "https://i8.amplience.net/i/epsonemear/pu2200_b_std_03_png"
+  ],
+  "page": "https://www.epson.eu/en_EU/products/projector/professional/eb-pu2220b-projector/p/34365",
+  "source": "manufacturer",
+  "note": "Epson og:image (Amplience image endpoint, no file extension); EB-PU2200 series black"
+ },
+ {
+  "key": "Epson | ELPLU04 - L1405 0,87-1,05",
+  "title": "Epson ELPLU04 - L1405 0,87-1,05",
+  "items": [
+   "VIDPROEPSVIPRLEEU04"
+  ],
+  "candidates": [
+   "https://www.worldwidestereo.com/cdn/shop/files/Epson-ELPLU04-Projector-Lens-Short-Zoom-2-Image-01_1946x.jpg?v=1781708866"
+  ],
+  "page": "https://www.worldwidestereo.com/products/epson-elplu04-short-throw-2-zoom-projector-lens",
+  "source": "other",
+  "note": "Retailer image"
+ },
+ {
+  "key": "Green-GO | 2&4-wire interface",
+  "title": "Green-GO 2&4-wire interface",
+  "items": [
+   "AUDINTGRE24WIRE"
+  ],
+  "candidates": [
+   "https://manual.greengoconnect.com/assets/images/devices/interfacex-front.png"
+  ],
+  "page": "https://manual.greengoconnect.com/en/devices/interfacex/",
+  "source": "manufacturer",
+  "note": "Assumed INTX InterfaceX (2-wire + 4-wire); could be older Interface/SI2WR - verify model"
+ },
+ {
+  "key": "Green-GO | BPX",
+  "title": "Green-GO BPX",
+  "items": [
+   "AUDINTGREBPX"
+  ],
+  "candidates": [
+   "https://www.canford.co.uk/Images/ItemImages/large/26-775_01.jpg",
+   "https://www.canford.co.uk/Images/ItemImages/large/26-775_02.jpg"
+  ],
+  "page": "https://www.canford.co.uk/GREEN-GO-DIGITAL-INTERCOM-SYSTEM-Wired-beltpacks",
+  "source": "distributor",
+  "note": "Canford GGO-BPX"
+ },
+ {
+  "key": "Green-GO | Bridge interface",
+  "title": "Green-GO Bridge interface",
+  "items": [
+   "AUDINTGREBRIDGE"
+  ],
+  "candidates": [
+   "https://cdn11.bigcommerce.com/s-5ig7x53cx8/images/stencil/500x659/products/482/22342/GreenGO-BRIDGEX_DYNAMIC__64710.1679493106.png?c=2",
+   "https://cdn11.bigcommerce.com/s-5ig7x53cx8/products/482/images/22342/GreenGO-BRIDGEX_DYNAMIC__64710.1679493106.500.750.png?c=2"
+  ],
+  "page": "https://proadv.com/green-go-4-port-bridge-interface/",
+  "source": "distributor",
+  "note": "ProAdv, Green-GO BRIDGEX (4-port bridge interface)"
+ },
+ {
+  "key": "Green-GO | SW5",
+  "title": "Green-GO SW5",
+  "items": [
+   "AUDINTGRESW5"
+  ],
+  "candidates": [
+   "https://manual.greengoconnect.com/assets/images/devices/sw5-dynamic.png",
+   "https://manual.greengoconnect.com/assets/images/devices/sw5-preview.png"
+  ],
+  "page": "https://manual.greengoconnect.com/en/devices/sw5/",
+  "source": "manufacturer",
+  "note": "From official manual site"
+ },
+ {
+  "key": "Green-GO | WBPX",
+  "title": "Green-GO WBPX",
+  "items": [
+   "AUDINTGRE4XWBPX",
+   "AUDINTGREWBPX"
+  ],
+  "candidates": [
+   "https://www.adorama.com/images/product/GROWBPX.jpg"
+  ],
+  "page": "https://www.adorama.com/green-go-wireless-beltpack-x-intercom-system/p/growbpx",
+  "source": "distributor",
+  "note": "Adorama, Wireless Beltpack X"
+ },
+ {
+  "key": "High | End Systems Road Hog 4",
+  "title": "High End Systems Road Hog 4",
+  "items": [
+   "LIGLIGHIGLICOHOG4RH"
+  ],
+  "candidates": [
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Live_Events/Hog_Consoles/RoadHog4-21_4.0_960x300.jpg",
+   "https://www.etcconnect.com/uploadedImages/Main_Site/Images/Products/Live_Events/Hog_Consoles/Road_Hog_4-21/RoadHogCombo.jpg"
+  ],
+  "page": "https://www.etcconnect.com/Products/Legacy/Live-Events-High-End-Systems/Consoles/Hog-4-Consoles/Road-Hog-4/Features.aspx",
+  "source": "manufacturer",
+  "note": "Road Hog 4-21 (close successor of Road Hog 4); wide banner shot"
+ },
+ {
+  "key": "K&M | Speaker pole with M20 screw end 1,45m",
+  "title": "K&M Speaker pole with M20 screw end 1,45m",
+  "items": [
+   "AUDSPEKMRISTKMS145"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_19/195851/14743481_800.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/km_21334_distanz_rod_m20_880_mm.htm",
+  "source": "distributor",
+  "note": "K&M 21334 M20 distance rod (880 mm variant; 1.45 m version not found, same look)"
+ },
+ {
+  "key": "K&M | Speaker stand with ring lock",
+  "title": "K&M Speaker stand with ring lock",
+  "items": [
+   "AUDSPEKMRISTKMSSRL"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_10/104904/1855349_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_10/104904/1855354_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/104904.jpg"
+  ],
+  "page": "https://www.thomann.de/de/km_21436.htm",
+  "source": "distributor",
+  "note": "Thomann, K&M 21436 ring-lock speaker stand (assumed model)"
  },
  {
   "key": "L-Acoustics | A10 FOCUS",
@@ -1594,6 +2566,32 @@
   "note": "WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
  },
  {
+  "key": "L-Acoustics | LA4X - LA-RAK + AES",
+  "title": "L-Acoustics LA4X - LA-RAK + AES",
+  "items": [
+   "AUDAMPLAC3XLA4X"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA4X_Perspective-768x349.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/la4x/",
+  "source": "manufacturer",
+  "note": "Single LA4X render (rack of 3 not shown); full-size likely same URL without -768x349. LA-RAK II AVB image if a rack shot is preferred: https://www.l-acoustics.com/wp-content/uploads/2022/10/3DR_LA-RAK_II_AVB_01-768x349.png"
+ },
+ {
+  "key": "L-Acoustics | LA8 - LA-RAK + AES",
+  "title": "L-Acoustics LA8 - LA-RAK + AES",
+  "items": [
+   "AUDAMPLAC3XLA8L"
+  ],
+  "candidates": [
+   "https://sharetribe.imgix.net/653f6985-d80a-45ef-b0d6-9412d2305b81/69e5532c-155e-412e-b567-50eb7d839d5d?auto=format&crop=edges&fit=crop&h=753&w=800&s=efbefe764b427e11a04c34fb122d97f0"
+  ],
+  "page": "https://gearsource.com/product/larak-aes/012227",
+  "source": "other",
+  "note": "Gearsource used listing og:image (imgix URL without file extension, LA-RAK AES); verify"
+ },
+ {
   "key": "L-Acoustics | Lasermount for K1",
   "title": "L-Acoustics Lasermount for K1",
   "items": [
@@ -1924,6 +2922,33 @@
   "note": "TECH TOOLCASE II. WordPress original (thumbnail suffix dropped) first, listed thumbnail second"
  },
  {
+  "key": "L-Acoustics | T",
+  "title": "L-Acoustics T",
+  "items": [
+   "AUDFULLAC5XT"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/02/3DR_5XT_3_4_Avant_Catalogue_01.png"
+  ],
+  "page": "https://www.l-acoustics.com/products/5xt/",
+  "source": "manufacturer",
+  "note": "5XT (per example_name), 800x800 3/4 front"
+ },
+ {
+  "key": "L-Acoustics | T + ETR5 bracket",
+  "title": "L-Acoustics T + ETR5 bracket",
+  "items": [
+   "AUDFULLAC5XTETR"
+  ],
+  "candidates": [
+   "https://www.l-acoustics.com/wp-content/uploads/2021/02/3DR_5XT_3_4_Avant_Catalogue_01.png",
+   "https://www.l-acoustics.com/wp-content/uploads/2021/03/006-3DR_ETR5_01-300x300.jpg"
+  ],
+  "page": "https://www.l-acoustics.com/products/5xt/",
+  "source": "manufacturer",
+  "note": "5XT 3/4 front render + small ETR5 bracket render"
+ },
+ {
   "key": "L-Acoustics | Wall mount for SYVA",
   "title": "L-Acoustics Wall mount for SYVA",
   "items": [
@@ -2145,6 +3170,118 @@
   "note": null
  },
  {
+  "key": "Luminex | GigaCore 10 Neutrik DUO MMF",
+  "title": "Luminex GigaCore 10 Neutrik DUO MMF",
+  "items": [
+   "LIGITNLUMITNELU10"
+  ],
+  "candidates": [
+   "https://www.luminex.be/wp-content/uploads/2025/02/GigaCore-10i-Front-Cam-Straight.png",
+   "https://www.luminex.be/wp-content/uploads/2025/02/GigaCore-10i-Front-Cam-Iso.png"
+  ],
+  "page": "https://www.luminex.be/products/gigacore/gigacore-10i/",
+  "source": "manufacturer",
+  "note": "GigaCore 10i (successor of GigaCore 10; front panel differs, no Neutrik DUO fiber shown)"
+ },
+ {
+  "key": "Luminex | GigaCore 14R POE",
+  "title": "Luminex GigaCore 14R POE",
+  "items": [
+   "LIGITNLUMITNELU14R"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/LUM-GC-14RPOE.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/LUM-GC-14RPOE.JPG"
+  ],
+  "page": "https://www.markertek.com/product/lum-gc-14rpoe/luminex-gigacore-14rpoe-rackmount-touring-12-port-ethercon-2-sfp-port-poe-gigabit-ethernet-switch-dante-aes-switch",
+  "source": "distributor",
+  "note": "Markertek hi-res images of GigaCore 14RPoE"
+ },
+ {
+  "key": "Luminex | GigaCore 16 RFO Neutrik DUO MMF POE",
+  "title": "Luminex GigaCore 16 RFO Neutrik DUO MMF POE",
+  "items": [
+   "LIGITNLUMITNELU16RFO"
+  ],
+  "candidates": [
+   "https://cdn.shopify.com/s/files/1/0054/9466/9382/files/19a02e6cc48254ea3692e2d4575dc390.image.500x500_3ec720fe-86f3-4eaa-86eb-818d365ccce1.jpg?v=1688479809"
+  ],
+  "page": "https://musicredone.com/products/luminex-lu0100056-06-gigacore-16rfo-pre-configured-ethernet-switch-w-neutrik-duo-smf",
+  "source": "other",
+  "note": "Shop listing for DUO SMF variant (looks same as MMF); ~500px"
+ },
+ {
+  "key": "Luminex | GigaCore 30i - 10Gb POE ++",
+  "title": "Luminex GigaCore 30i - 10Gb POE ++",
+  "items": [
+   "LIGITNLUMITNELU30I"
+  ],
+  "candidates": [
+   "https://www.luminex.be/wp-content/uploads/2025/02/GigaCore-30i-Front-Cam-Straight.jpg",
+   "https://www.luminex.be/wp-content/uploads/2025/02/GC-30i-Front-Cam-Iso.png",
+   "https://www.luminex.be/wp-content/uploads/2022/08/GigaCore-30i_transparent.png"
+  ],
+  "page": "https://luminex.be/?p=14442",
+  "source": "manufacturer",
+  "note": "Luminex product page"
+ },
+ {
+  "key": "Luminex | Luminode12 Ethernet to DMX convertor",
+  "title": "Luminex Luminode12 Ethernet to DMX convertor",
+  "items": [
+   "LIGACCLUMLUMINO"
+  ],
+  "candidates": [
+   "https://www.luminex.be/wp-content/uploads/2025/02/LumiNode-12-Front-Cam-Iso.png",
+   "https://www.luminex.be/wp-content/uploads/2025/02/LumiNode-12-Front-Cam-Straight.png",
+   "https://www.luminex.be/wp-content/uploads/2019/03/Luminode_12-1.png"
+  ],
+  "page": "https://www.luminex.be/products/luminode/luminode-12/",
+  "source": "manufacturer",
+  "note": "LumiNode 12"
+ },
+ {
+  "key": "Luminex | RDM DMX booster lumisplit 2.10",
+  "title": "Luminex RDM DMX booster lumisplit 2.10",
+  "items": [
+   "LIGACCLUMRDMDMX"
+  ],
+  "candidates": [
+   "https://www.luminex.be/wp-content/uploads/2017/01/LumiSplit-2.10-front.png",
+   "https://www.luminex.be/wp-content/uploads/2017/02/Lumisplit210_front-and-back.jpg"
+  ],
+  "page": "https://www.luminex.be/products/lumisplit/lumisplit-2-10/",
+  "source": "manufacturer",
+  "note": "front view"
+ },
+ {
+  "key": "Luxibel | B Blast Pro RGB LED strobe bar IP65",
+  "title": "Luxibel B Blast Pro RGB LED strobe bar IP65",
+  "items": [
+   "LIGLEDLUXBBLAST"
+  ],
+  "candidates": [
+   "https://www.luxibel.com/wp-content/uploads/2023/11/WEB_0001s_0008_B-BLAST-PRO_FRONT.png",
+   "https://www.luxibel.com/wp-content/uploads/2023/11/B-BLAST-PRO_perspective_0.png"
+  ],
+  "page": "https://www.luxibel.com/product/strobe-bars/b-blast-pro/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Luxibel | B Blinded",
+  "title": "Luxibel B Blinded",
+  "items": [
+   "LIGLEDLUXLILEBBLINDED"
+  ],
+  "candidates": [
+   "https://cpc.farnell.com/productimages/large/en_GB/DP36009-40.jpg"
+  ],
+  "page": null,
+  "source": "other",
+  "note": "Reused from Luxibel B Blinded 1 in earlier batch; may be the 1-cell variant"
+ },
+ {
   "key": "Luxibel | B Blinded 1",
   "title": "Luxibel B Blinded 1",
   "items": [
@@ -2156,6 +3293,19 @@
   "page": "https://cpc.farnell.com/luxibel/b-blinded-1/led-single-blinder/dp/DP36009",
   "source": "distributor",
   "note": "luxibel.com not reachable; CPC Farnell image"
+ },
+ {
+  "key": "Luxibel | B Expo FloodDL60",
+  "title": "Luxibel B Expo FloodDL60",
+  "items": [
+   "LIGLEDLUXBEXPOF"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/1117573/4328561/6bd4906b/1684145908Luxibel%20B%20EXPOFLOODDL60.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.co.uk/outdoor-light/luxibel-b-expoflooddl60-ip66-led-wash-effect-with-cri-95",
+  "source": "distributor",
+  "note": "Bax-shop og:image"
  },
  {
   "key": "Luxibel | B Expo100MWW",
@@ -2173,6 +3323,19 @@
   "note": "luxibel.com not reachable; Thomann images, first not visually verified as front view"
  },
  {
+  "key": "Luxibel | B Expo200MWW",
+  "title": "Luxibel B Expo200MWW",
+  "items": [
+   "LIGLEDLUXLILEBEXPO200W"
+  ],
+  "candidates": [
+   "https://www.luxibel.com/wp-content/uploads/2023/11/Flip_0002__0001s_0009_B-EXPO200MWW-200MCW350M-500TW_PERSPECTIVE.png"
+  ],
+  "page": "https://www.luxibel.com/product/end-of-life/b-expo200mww",
+  "source": "manufacturer",
+  "note": "Shared Expo family image (end of life)"
+ },
+ {
   "key": "Luxibel | B PAr105 RGBW V2",
   "title": "Luxibel B PAr105 RGBW V2",
   "items": [
@@ -2188,6 +3351,20 @@
   "note": "luxibel.com not reachable; Thomann images"
  },
  {
+  "key": "Luxibel | B PAr180 RGBW V2",
+  "title": "Luxibel B PAr180 RGBW V2",
+  "items": [
+   "LIGLEDLUXBPAR18"
+  ],
+  "candidates": [
+   "https://www.luxibel.com/wp-content/uploads/2023/11/Luxibel-B-PAR180RGBW-V2_standing-perspective.png",
+   "https://www.luxibel.com/wp-content/uploads/2023/11/WEB_0009_B-PAR180RGBW_FRONT.png"
+  ],
+  "page": "https://www.luxibel.com/product/pars/b-par180rgbw-v2/",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
   "key": "Luxibel | B Par360Z",
   "title": "Luxibel B Par360Z",
   "items": [
@@ -2201,6 +3378,130 @@
   "page": "https://www.thomann.de/be/luxibel_b_par_360_z.htm",
   "source": "distributor",
   "note": "luxibel.com not reachable; Thomann images"
+ },
+ {
+  "key": "MA | Grand MA3 full size",
+  "title": "MA Grand MA3 full size",
+  "items": [
+   "LIGLIGMALICOMAGR3"
+  ],
+  "candidates": [
+   "https://xom.malighting.com/xom-rest/assets/8c87901f-9cae-4149-9cf5-4250c1e677f7/preview?mimeType=image%2Fpng&width=1170&height=700",
+   "https://xom.malighting.com/xom-rest/assets/6640ad53-f734-4fef-b1b1-d5f23151100c/preview?mimeType=image%2Fpng&width=1170&height=700"
+  ],
+  "page": "https://www.malighting.com/product/grandma3-full-size-4010500/",
+  "source": "manufacturer",
+  "note": "MA asset server PNG renditions (no file extension in URL); first gallery images"
+ },
+ {
+  "key": "MA | Grand MA3 light",
+  "title": "MA Grand MA3 light",
+  "items": [
+   "LIGLIGMALICOMAGR3LIGHT"
+  ],
+  "candidates": [
+   "https://xom.malighting.com/xom-rest/assets/22ea1a65-8443-46b1-87a1-e075ba751ce0/preview?mimeType=image%2Fpng&width=650&height=385"
+  ],
+  "page": "https://www.malighting.com/product/grandma3-light-4010502/",
+  "source": "manufacturer",
+  "note": "650x385 preview from product listing; product page fetch was blocked"
+ },
+ {
+  "key": "MA | Lightcommander 24 / 6",
+  "title": "MA Lightcommander 24 / 6",
+  "items": [
+   "LIGLIGMALICOMA24"
+  ],
+  "candidates": [
+   "https://cuesale.com/wp-content/uploads/2024/08/ma-lightcommander-II-24-6-1.jpg",
+   "https://img.audiofanzine.com/images/u/product/normal/ma-lighting-lightcommander-ii-24-6-42205.jpg"
+  ],
+  "page": "https://cuesale.com/product/ma-lighting-lightcommander-ii-24-6/",
+  "source": "other",
+  "note": "Lightcommander II 24/6 (used-gear shop / Audiofanzine); discontinued product"
+ },
+ {
+  "key": "MA | Lightcommander 48 / 6",
+  "title": "MA Lightcommander 48 / 6",
+  "items": [
+   "LIGLIGMALICOMA48"
+  ],
+  "candidates": [
+   "https://xom.malighting.com/xom-rest/assets/afe3872a-b29e-4eca-b986-c2c7e7f39f11/preview?mimeType=image%2Fpng&width=1170&height=700"
+  ],
+  "page": "https://www.malighting.com/product-archive/product/ma-lightcommander-ii-48-6-120202/",
+  "source": "manufacturer",
+  "note": "MA Lightcommander II 48/6 (archive); PNG via preview endpoint"
+ },
+ {
+  "key": "MA | Processing unit M - 4096 parameters",
+  "title": "MA Processing unit M - 4096 parameters",
+  "items": [
+   "LIGLIGMALIACMA3PUM"
+  ],
+  "candidates": [
+   "https://xom.malighting.com/xom-rest/assets/fff9dc32-473f-4d03-862a-dd1d4bac4f05/preview?mimeType=image%2Fpng&width=1170&height=700",
+   "https://xom.malighting.com/xom-rest/assets/ea6cf092-1804-4986-9b03-2a53caaa601f/preview?mimeType=image%2Fpng&width=1170&height=700"
+  ],
+  "page": "https://www.malighting.com/product/grandma3-processing-unit-m-4010510/",
+  "source": "manufacturer",
+  "note": "grandMA3 processing unit M; MA asset server PNG renditions"
+ },
+ {
+  "key": "MA | Processing unit XL - 16384 parameters",
+  "title": "MA Processing unit XL - 16384 parameters",
+  "items": [
+   "LIGLIGMALIACMA3PUXL"
+  ],
+  "candidates": [
+   "https://xom.malighting.com/xom-rest/assets/d7826640-bb2e-4474-83a6-ba4e233494ab/preview?mimeType=image%2Fpng&width=1170&height=700",
+   "https://xom.malighting.com/xom-rest/assets/cf8c0ee0-3661-4051-8868-121374e32ed1/preview?mimeType=image%2Fpng&width=1170&height=700"
+  ],
+  "page": "https://www.malighting.com/product/grandma3-processing-unit-xl-4010508/",
+  "source": "manufacturer",
+  "note": "grandMA3 processing unit XL; PNG preview endpoint"
+ },
+ {
+  "key": "MDG | ATMe - haze generator incl. oil",
+  "title": "MDG ATMe - haze generator incl. oil",
+  "items": [
+   "LIGSMOMDGATMEHA"
+  ],
+  "candidates": [
+   "https://mdgfog.s3.amazonaws.com/uploads/img/atme-7.png",
+   "https://mdgfog.s3.ca-central-1.amazonaws.com/uploads/img-tiny/ATMe-B.png",
+   "https://mdgfog.s3.amazonaws.com/uploads/img-tiny/atme-a-8986f5.png"
+  ],
+  "page": "https://www.mdgfog.com/en/atme?market=1",
+  "source": "manufacturer",
+  "note": "MDG site; img-tiny path may be small"
+ },
+ {
+  "key": "MDG | theONE - smoke / haze generator - case incl. CO2 bottle",
+  "title": "MDG theONE - smoke / haze generator - case incl. CO2 bottle",
+  "items": [
+   "LIGSMOMDGTHEONE"
+  ],
+  "candidates": [
+   "https://cdn11.bigcommerce.com/s-dd19b/products/30755/images/127087/theone-touring-front-fan-down-d3eb74__42686.1712080392.386.513.png?c=2"
+  ],
+  "page": "https://goknight.com/mdg-mdgtheone-theone-dual-fog-haze-single-high-output-generator-touring/",
+  "source": "distributor",
+  "note": "theONE touring version (in case); medium-size image"
+ },
+ {
+  "key": "Midas | DL 251",
+  "title": "Midas DL 251",
+  "items": [
+   "AUDDIGMIDDL251"
+  ],
+  "candidates": [
+   "https://cuesale.com/wp-content/uploads/2025/08/midas-dl251-mint-1.jpg",
+   "https://cuesale.com/wp-content/uploads/2025/08/midas-dl251-mint-2.jpg"
+  ],
+  "page": "https://cuesale.com/product/midas-dl251-stage-box/",
+  "source": "other",
+  "note": "Used-gear dealer photos (real unit, maybe not white background)"
  },
  {
   "key": "NEXT | Deck 0,1 m",
@@ -2513,6 +3814,327 @@
   "note": null
  },
  {
+  "key": "NEXT | Truss - NH32 - Ladder - Corner 45° / 90° horizontal",
+  "title": "NEXT Truss - NH32 - Ladder - Corner 45° / 90° horizontal",
+  "items": [
+   "RIGTRUNEXTRNH32BL45HL90H"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.co.uk/next-truss-nx/next-truss-nx32-c90f-horizontal-ladder-truss-corner-90",
+  "source": "distributor",
+  "note": "NX32-C90F horizontal ladder corner 90"
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Ladder - T vertical",
+  "title": "NEXT Truss - NH32 - Ladder - T vertical",
+  "items": [
+   "RIGTRUNEXTRNH32BTV"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-c3t-hf-partie-t-3-voies-horizontal",
+  "source": "distributor",
+  "note": "Image is the horizontal T (NX32-C3T-HF), not vertical"
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square",
+  "title": "NEXT Truss - NH32 - Square",
+  "items": [
+   "RIGTRUNEXTRNH34B021",
+   "RIGTRUNEXTRNH34B040",
+   "RIGTRUNEXTRNH34B079",
+   "RIGTRUNEXTRNH34B025",
+   "RIGTRUNEXTRNH34B029",
+   "RIGTRUNEXTRNH34B050",
+   "RIGTRUNEXTRNH34B071",
+   "RIGTRUNEXTRNH34B100",
+   "RIGTRUNEXTRNH34B200",
+   "RIGTRUNEXTRNH34B300"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Base plate",
+  "title": "NEXT Truss - NH32 - Square - Base plate",
+  "items": [
+   "RIGTRUNEXTRNH34BPLB"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Book corner",
+  "title": "NEXT Truss - NH32 - Square - Book corner",
+  "items": [
+   "RIGTRUNEXTRNH34BBC2"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Box corner",
+  "title": "NEXT Truss - NH32 - Square - Box corner",
+  "items": [
+   "RIGTRUNEXTRNH34BBOXE"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Box corner 5-way",
+  "title": "NEXT Truss - NH32 - Square - Box corner 5-way",
+  "items": [
+   "RIGTRUNEXTRNH34BBOX"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Box corner mount rack 10,5 cm",
+  "title": "NEXT Truss - NH32 - Square - Box corner mount rack 10,5 cm",
+  "items": [
+   "RIGTRUNEXTRNH34BATT105"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Box corner mount rack 21 cm",
+  "title": "NEXT Truss - NH32 - Square - Box corner mount rack 21 cm",
+  "items": [
+   "RIGTRUNEXTRNH34BATT210"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Box corner mount rack 35,5 cm",
+  "title": "NEXT Truss - NH32 - Square - Box corner mount rack 35,5 cm",
+  "items": [
+   "RIGTRUNEXTRNH34BATT355"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Box corner mount rack 7,5 cm",
+  "title": "NEXT Truss - NH32 - Square - Box corner mount rack 7,5 cm",
+  "items": [
+   "RIGTRUNEXTRNH34BATT75"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Corner 120° horizontal / vertical",
+  "title": "NEXT Truss - NH32 - Square - Corner 120° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH34BL120"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Corner 135 horizontal / vertical",
+  "title": "NEXT Truss - NH32 - Square - Corner 135 horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH34BL135"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Corner 45° / 60° horizontal / vertical",
+  "title": "NEXT Truss - NH32 - Square - Corner 45° / 60° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH34BL45L60"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Corner 90° + apex down",
+  "title": "NEXT Truss - NH32 - Square - Corner 90° + apex down",
+  "items": [
+   "RIGTRUNEXTRNH34BL90D"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Corner 90° horizontal / vertical",
+  "title": "NEXT Truss - NH32 - Square - Corner 90° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH34BL90"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Cross + down 0,0,71 m",
+  "title": "NEXT Truss - NH32 - Square - Cross + down 0,0,71 m",
+  "items": [
+   "RIGTRUNEXTRNH34BXD"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - Cross 0,0,71 m",
+  "title": "NEXT Truss - NH32 - Square - Cross 0,0,71 m",
+  "items": [
+   "RIGTRUNEXTRNH34BX"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - T horizontal / vertical + apex down 0,0,50 m",
+  "title": "NEXT Truss - NH32 - Square - T horizontal / vertical + apex down 0,0,50 m",
+  "items": [
+   "RIGTRUNEXTRNH34BTD"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - T horizontal / vertical + apex down 0,50 m",
+  "title": "NEXT Truss - NH32 - Square - T horizontal / vertical + apex down 0,50 m",
+  "items": [
+   "RIGTRUNEXTRNH34BTDL"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
+  "key": "NEXT | Truss - NH32 - Square - T horizontal / vertical 0,0,50 m",
+  "title": "NEXT Truss - NH32 - Square - T horizontal / vertical 0,0,50 m",
+  "items": [
+   "RIGTRUNEXTRNH34BT",
+   "RIGTRUNEXTRNH34BTM"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/618817/2099901/17c8b813/1583591314NX32-1.png?key=og",
+   "https://static.bax-shop.es/image/product/618840/2099973/78b45fdc/1583596018NX32-C90F.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619255/2101397/fb920c20/1583826300NX32-C3T-HF.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx32-l100-structure-truss-echelle-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH32), not this exact part. Bax Music sells NH32 (formerly NX32) as a 2-chord LADDER truss, not square; your keys say 'Square' for most items, so check the series. Images: straight 1 m, horizontal corner 90, T horizontal."
+ },
+ {
   "key": "NEXT | Truss - NH32- ladder",
   "title": "NEXT Truss - NH32- ladder",
   "items": [
@@ -2618,6 +4240,189 @@
   "note": null
  },
  {
+  "key": "NEXT | Truss - NH34 - Square - Box corner mount rack 10,5 cm",
+  "title": "NEXT Truss - NH34 - Square - Box corner mount rack 10,5 cm",
+  "items": [
+   "RIGTRUNEXTRNH34ATT105"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Box corner mount rack 21,5 cm",
+  "title": "NEXT Truss - NH34 - Square - Box corner mount rack 21,5 cm",
+  "items": [
+   "RIGTRUNEXTRNH34ATT215"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Box corner mount rack 35,5 cm",
+  "title": "NEXT Truss - NH34 - Square - Box corner mount rack 35,5 cm",
+  "items": [
+   "RIGTRUNEXTRNH34ATT355"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Box corner mount rack 7,5 cm",
+  "title": "NEXT Truss - NH34 - Square - Box corner mount rack 7,5 cm",
+  "items": [
+   "RIGTRUNEXTRNH34ATT75"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Corner 120° / 135° horizontal / vertical",
+  "title": "NEXT Truss - NH34 - Square - Corner 120° / 135° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH34L120L135"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Corner 45° / 60° horizontal / vertical",
+  "title": "NEXT Truss - NH34 - Square - Corner 45° / 60° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH34L45L60"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/621399/5377858/04723e30/1724069757NH34-L45.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.co.uk/next-truss-nx/next-truss-nh44-l45-square-truss-corner-section-45cm",
+  "source": "distributor",
+  "note": "Image file is NH34-L45 (on Bax UK page that is titled NH44-L45)"
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Corner 90° + apex down",
+  "title": "NEXT Truss - NH34 - Square - Corner 90° + apex down",
+  "items": [
+   "RIGTRUNEXTRNH34L90D"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620272/2103154/a4a2ae86/1583923536NX34-C3.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx34-c3-truss-carre-3-voies",
+  "source": "distributor",
+  "note": "NH34-L90D 3-way corner"
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Corner 90° horizontal / vertical",
+  "title": "NEXT Truss - NH34 - Square - Corner 90° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH34L60"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nh34-l90-truss-carre-90-cm",
+  "source": "distributor",
+  "note": "NH34-L90 corner 90"
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Cross + down 0,0,71 m",
+  "title": "NEXT Truss - NH34 - Square - Cross + down 0,0,71 m",
+  "items": [
+   "RIGTRUNEXTRNH34XD"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Cross + down 1 m",
+  "title": "NEXT Truss - NH34 - Square - Cross + down 1 m",
+  "items": [
+   "RIGTRUNEXTRNH34XDL"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Cross 0,0,50 m",
+  "title": "NEXT Truss - NH34 - Square - Cross 0,0,50 m",
+  "items": [
+   "RIGTRUNEXTRNH34XM"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss/next-truss-nh34-x-4-weg-x-deel-vierkant-truss",
+  "source": "distributor",
+  "note": "NH34-X 4-way cross; shown size not confirmed"
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Cross 0,0,71 m",
+  "title": "NEXT Truss - NH34 - Square - Cross 0,0,71 m",
+  "items": [
+   "RIGTRUNEXTRNH34X"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss/next-truss-nh34-x-4-weg-x-deel-vierkant-truss",
+  "source": "distributor",
+  "note": "NH34-X 4-way cross; shown size not confirmed"
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - Cross 1 m",
+  "title": "NEXT Truss - NH34 - Square - Cross 1 m",
+  "items": [
+   "RIGTRUNEXTRNH34XL"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss/next-truss-nh34-x-4-weg-x-deel-vierkant-truss",
+  "source": "distributor",
+  "note": "NH34-X 4-way cross; shown size not confirmed"
+ },
+ {
   "key": "NEXT | Truss - NH34 - Square - Heavy duty base plate round",
   "title": "NEXT Truss - NH34 - Square - Heavy duty base plate round",
   "items": [
@@ -2645,6 +4450,81 @@
   "page": "https://www.next-truss.com/product/square-baseplate-nx-h30-40-800x800-black/",
   "source": "manufacturer",
   "note": "BASE-NX30-40 square 80cm (black/galvanized)"
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - T horizontal / vertical + apex down 0,0,50 m",
+  "title": "NEXT Truss - NH34 - Square - T horizontal / vertical + apex down 0,0,50 m",
+  "items": [
+   "RIGTRUNEXTRNH34TD"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - T horizontal / vertical + apex down 0,50 m",
+  "title": "NEXT Truss - NH34 - Square - T horizontal / vertical + apex down 0,50 m",
+  "items": [
+   "RIGTRUNEXTRNH34TDL"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - T horizontal 0,0,50 m",
+  "title": "NEXT Truss - NH34 - Square - T horizontal 0,0,50 m",
+  "items": [
+   "RIGTRUNEXTRNH34TM"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - T horizontal 0,0,71 m",
+  "title": "NEXT Truss - NH34 - Square - T horizontal 0,0,71 m",
+  "items": [
+   "RIGTRUNEXTRNH34T"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss - NH34 - Square - T horizontal 1 m",
+  "title": "NEXT Truss - NH34 - Square - T horizontal 1 m",
+  "items": [
+   "RIGTRUNEXTRNH34TL"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
  },
  {
   "key": "NEXT | Truss - NH44 - Square",
@@ -2697,6 +4577,21 @@
   "note": "Square baseplates NPLB-24/34/44/52 (shared image)"
  },
  {
+  "key": "NEXT | Truss - NH44 - Square - Book corner",
+  "title": "NEXT Truss - NH44 - Square - Book corner",
+  "items": [
+   "RIGTRUNEXTRNH44BC",
+   "RIGTRUNEXTRNH44BBC"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
   "key": "NEXT | Truss - NH44 - Square - Box corner",
   "title": "NEXT Truss - NH44 - Square - Box corner",
   "items": [
@@ -2723,6 +4618,181 @@
   "page": "https://www.next-truss.com/product/nx-nh44-boxcorner-re-inforced-heavy-duty/",
   "source": "manufacturer",
   "note": null
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Box corner mount rack 21 cm",
+  "title": "NEXT Truss - NH44 - Square - Box corner mount rack 21 cm",
+  "items": [
+   "RIGTRUNEXTRNH44AT210",
+   "RIGTRUNEXTRNH44BATT210"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Box corner mount rack 30,5 cm",
+  "title": "NEXT Truss - NH44 - Square - Box corner mount rack 30,5 cm",
+  "items": [
+   "RIGTRUNEXTRNH44ATT305",
+   "RIGTRUNEXTRNH44BATT305"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Box corner mount rack 7,5 cm",
+  "title": "NEXT Truss - NH44 - Square - Box corner mount rack 7,5 cm",
+  "items": [
+   "RIGTRUNEXTRNH44ATT75",
+   "RIGTRUNEXTRNH44BATT75"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Corner 120° / 171° horizontal / vertical",
+  "title": "NEXT Truss - NH44 - Square - Corner 120° / 171° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH44BL135L171"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Corner 120° horizontal / vertical",
+  "title": "NEXT Truss - NH44 - Square - Corner 120° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH44L120"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Corner 135° horizontal / vertical",
+  "title": "NEXT Truss - NH44 - Square - Corner 135° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH44L135"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Corner 155° horizontal / vertical",
+  "title": "NEXT Truss - NH44 - Square - Corner 155° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH44L155"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Corner 45° / 60° horizontal / vertical",
+  "title": "NEXT Truss - NH44 - Square - Corner 45° / 60° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH44L45L60"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Corner 90° + apex down",
+  "title": "NEXT Truss - NH44 - Square - Corner 90° + apex down",
+  "items": [
+   "RIGTRUNEXTRNH44L90D",
+   "RIGTRUNEXTRNH44BL90D"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Corner 90° horizontal / vertical",
+  "title": "NEXT Truss - NH44 - Square - Corner 90° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNH44L90",
+   "RIGTRUNEXTRNH44BL90"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Cross + down 0,0,81 m",
+  "title": "NEXT Truss - NH44 - Square - Cross + down 0,0,81 m",
+  "items": [
+   "RIGTRUNEXTRNH44XD",
+   "RIGTRUNEXTRNH44BXD"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - Cross 0,0,81 m",
+  "title": "NEXT Truss - NH44 - Square - Cross 0,0,81 m",
+  "items": [
+   "RIGTRUNEXTRNH44X",
+   "RIGTRUNEXTRNH44BX"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
  },
  {
   "key": "NEXT | Truss - NH44 - Square - Heavy duty base plate round",
@@ -2754,6 +4824,36 @@
   "note": "BASE-NX30-40 square 80cm (black/galvanized)"
  },
  {
+  "key": "NEXT | Truss - NH44 - Square - T horizontal / vertical + apex down 0,0,60 m",
+  "title": "NEXT Truss - NH44 - Square - T horizontal / vertical + apex down 0,0,60 m",
+  "items": [
+   "RIGTRUNEXTRNH44TD",
+   "RIGTRUNEXTRNH44BTD"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss - NH44 - Square - T horizontal / vertical 0,0,60 m",
+  "title": "NEXT Truss - NH44 - Square - T horizontal / vertical 0,0,60 m",
+  "items": [
+   "RIGTRUNEXTRNH44T",
+   "RIGTRUNEXTRNH44BT"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
   "key": "NEXT | Truss - NS52 - Square",
   "title": "NEXT Truss - NS52 - Square",
   "items": [
@@ -2778,6 +4878,19 @@
   "note": null
  },
  {
+  "key": "NEXT | Truss - NS52 - Square - Book corner",
+  "title": "NEXT Truss - NS52 - Square - Book corner",
+  "items": [
+   "RIGTRUNEXTRNS52BBC"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/624480/3763428/19054a2d/1660120160NS52-Square-Truss-NEXT-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-ns52-100-vierkant-truss-1-0-m-50-x-4-mm",
+  "source": "distributor",
+  "note": "Series photo (NS52), not this exact part. Bax Music: NS52 52 cm square truss, straight 1 m."
+ },
+ {
   "key": "NEXT | Truss - NS52 - Square - Box corner 5-way",
   "title": "NEXT Truss - NS52 - Square - Box corner 5-way",
   "items": [
@@ -2790,6 +4903,37 @@
   "page": "https://www.next-truss.com/product/boxcorner-ns52-re-inforced-heavy-duty/",
   "source": "manufacturer",
   "note": null
+ },
+ {
+  "key": "NEXT | Truss - NS52 - Square - Corner 160° horizontal / vertical",
+  "title": "NEXT Truss - NS52 - Square - Corner 160° horizontal / vertical",
+  "items": [
+   "RIGTRUNEXTRNS52BL160"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/624480/3763428/19054a2d/1660120160NS52-Square-Truss-NEXT-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-ns52-100-vierkant-truss-1-0-m-50-x-4-mm",
+  "source": "distributor",
+  "note": "Series photo (NS52), not this exact part. Bax Music: NS52 52 cm square truss, straight 1 m."
+ },
+ {
+  "key": "NEXT | Truss - NSL52 - Square",
+  "title": "NEXT Truss - NSL52 - Square",
+  "items": [
+   "RIGTRUNEXTRNSL52B050",
+   "RIGTRUNEXTRNSL52B069",
+   "RIGTRUNEXTRNSL52B080",
+   "RIGTRUNEXTRNSL52B100",
+   "RIGTRUNEXTRNSL52B200",
+   "RIGTRUNEXTRNSL52B300"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/624480/3763428/19054a2d/1660120160NS52-Square-Truss-NEXT-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-ns52-100-vierkant-truss-1-0-m-50-x-4-mm",
+  "source": "distributor",
+  "note": "Series photo (NSL52), not this exact part. Fallback: no NSL52-specific image found; this is the NS52 52 cm square truss, which looks similar but is a different (heavier) series."
  },
  {
   "key": "NEXT | Truss - NSPR36 - Prerig - Rectangle",
@@ -2890,6 +5034,146 @@
   "note": "NBC-30 book corner (3x series)"
  },
  {
+  "key": "NEXT | Truss - NX33 - Triangle - Corner 120° / 135° horizontal",
+  "title": "NEXT Truss - NX33 - Triangle - Corner 120° / 135° horizontal",
+  "items": [
+   "RIGTRUNEXTRNX33L120L135"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Corner 45° / 60° / 90° horizontal",
+  "title": "NEXT Truss - NX33 - Triangle - Corner 45° / 60° / 90° horizontal",
+  "items": [
+   "RIGTRUNEXTRNX33L45L60L90"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nx33-c90-driehoektruss-hoekdeel-90-graden",
+  "source": "distributor",
+  "note": "Corner 90 image only"
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Corner 90° horizontal",
+  "title": "NEXT Truss - NX33 - Triangle - Corner 90° horizontal",
+  "items": [
+   "RIGTRUNEXTRNX33BL90"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nx33-c90-driehoektruss-hoekdeel-90-graden",
+  "source": "distributor",
+  "note": "NX33-C90 corner 90"
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Corner 90° horizontal + apex up left",
+  "title": "NEXT Truss - NX33 - Triangle - Corner 90° horizontal + apex up left",
+  "items": [
+   "RIGTRUNEXTRNX33BL90UL"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Corner 90° horizontal + apex up right",
+  "title": "NEXT Truss - NX33 - Triangle - Corner 90° horizontal + apex up right",
+  "items": [
+   "RIGTRUNEXTRNX33BL90UR"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Corner 90° vertical",
+  "title": "NEXT Truss - NX33 - Triangle - Corner 90° vertical",
+  "items": [
+   "RIGTRUNEXTRNX33U90",
+   "RIGTRUNEXTRNX33BU90"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Corner 90° vertical + apex up left",
+  "title": "NEXT Truss - NX33 - Triangle - Corner 90° vertical + apex up left",
+  "items": [
+   "RIGTRUNEXTRNX33L90UL"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Corner 90° vertical + apex up right",
+  "title": "NEXT Truss - NX33 - Triangle - Corner 90° vertical + apex up right",
+  "items": [
+   "RIGTRUNEXTRNX33L90UR"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Cross horizontal",
+  "title": "NEXT Truss - NX33 - Triangle - Cross horizontal",
+  "items": [
+   "RIGTRUNEXTRNH33X",
+   "RIGTRUNEXTRNH33BX"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - Cross horizontal + apex up",
+  "title": "NEXT Truss - NX33 - Triangle - Cross horizontal + apex up",
+  "items": [
+   "RIGTRUNEXTRNX33XU",
+   "RIGTRUNEXTRNX33BXU"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619852/5367114/039fbcb6/1723535617nh33xud.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/fr/next-truss-nx/next-truss-nx33-c6-partie-x-6-voies-structure-truss-triangulaire",
+  "source": "distributor",
+  "note": "NH33-XUD 6-way (cross + up + down); closest match"
+ },
+ {
   "key": "NEXT | Truss - NX33 - Triangle - Heavy duty base plate round",
   "title": "NEXT Truss - NX33 - Triangle - Heavy duty base plate round",
   "items": [
@@ -2917,6 +5201,269 @@
   "page": "https://www.next-truss.com/product/square-baseplate-nx-h30-40-800x800-black/",
   "source": "manufacturer",
   "note": "BASE-NX30-40 square 80cm (black/galvanized)"
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - T horizontal",
+  "title": "NEXT Truss - NX33 - Triangle - T horizontal",
+  "items": [
+   "RIGTRUNEXTRNX33T",
+   "RIGTRUNEXTRNX33BT"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - T horizontal + apex up",
+  "title": "NEXT Truss - NX33 - Triangle - T horizontal + apex up",
+  "items": [
+   "RIGTRUNEXTRNX33TU",
+   "RIGTRUNEXTRNX33BTU"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - T horizontal + apex up + apex down",
+  "title": "NEXT Truss - NX33 - Triangle - T horizontal + apex up + apex down",
+  "items": [
+   "RIGTRUNEXTRNX33TUD",
+   "RIGTRUNEXTRNX33BTUD"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619802/3763101/21ee8765/1660112690NH33-TUD.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-c5-v-partie-x-5-voies-vertical",
+  "source": "distributor",
+  "note": "NH33-TUD 5-way"
+ },
+ {
+  "key": "NEXT | Truss - NX33 - Triangle - T vertical",
+  "title": "NEXT Truss - NX33 - Triangle - T vertical",
+  "items": [
+   "RIGTRUNEXTRNX33071U",
+   "RIGTRUNEXTRNX33B071U"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss Circle - NH33 - Triangle",
+  "title": "NEXT Truss Circle - NH33 - Triangle",
+  "items": [
+   "RIGTRUNEXTRCINH330100P1",
+   "RIGTRUNEXTRCINH330200P4",
+   "RIGTRUNEXTRCINH330300P4",
+   "RIGTRUNEXTRCINH330400P4",
+   "RIGTRUNEXTRCINH330400P8",
+   "RIGTRUNEXTRCINH330500P8",
+   "RIGTRUNEXTRCINH330600P8",
+   "RIGTRUNEXTRCINH330700P8",
+   "RIGTRUNEXTRCINH330750P6",
+   "RIGTRUNEXTRCINH330800P8",
+   "RIGTRUNEXTRCINH330900P8",
+   "RIGTRUNEXTRCINH331000P8",
+   "RIGTRUNEXTRCINH331200P12",
+   "RIGTRUNEXTRCINH331400P12",
+   "RIGTRUNEXTRCINH33B0500P4",
+   "RIGTRUNEXTRCINH33B0600P8",
+   "RIGTRUNEXTRCINH33B0700P8"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619802/3763101/21ee8765/1660112690NH33-TUD.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NH33), not this exact part. Bax Music: NH33 triangle truss (formerly NX33). Straight 1 m; no circle image found."
+ },
+ {
+  "key": "NEXT | Truss Circle - NH34 - Square",
+  "title": "NEXT Truss Circle - NH34 - Square",
+  "items": [
+   "RIGTRUNEXTRCINH340200P4",
+   "RIGTRUNEXTRCINH340250P4",
+   "RIGTRUNEXTRCINH340300P4",
+   "RIGTRUNEXTRCINH340400P6",
+   "RIGTRUNEXTRCINH340400P4",
+   "RIGTRUNEXTRCINH340500P4",
+   "RIGTRUNEXTRCINH340500P8",
+   "RIGTRUNEXTRCINH340600P8",
+   "RIGTRUNEXTRCINH340700P8",
+   "RIGTRUNEXTRCINH340750P8",
+   "RIGTRUNEXTRCINH340800P8",
+   "RIGTRUNEXTRCINH340800P12",
+   "RIGTRUNEXTRCINH340900P8",
+   "RIGTRUNEXTRCINH340900P12",
+   "RIGTRUNEXTRCINH341000P12",
+   "RIGTRUNEXTRCINH341000P16",
+   "RIGTRUNEXTRCINH341200P12",
+   "RIGTRUNEXTRCINH341200P16",
+   "RIGTRUNEXTRCINH341400P16",
+   "RIGTRUNEXTRCINH341500P16",
+   "RIGTRUNEXTRCINH341600P24",
+   "RIGTRUNEXTRCINH34B0200P4",
+   "RIGTRUNEXTRCINH34B0300P4",
+   "RIGTRUNEXTRCINH34B0400P4",
+   "RIGTRUNEXTRCINH34B0500P4",
+   "RIGTRUNEXTRCINH34B0500P8",
+   "RIGTRUNEXTRCINH34B0600P8",
+   "RIGTRUNEXTRCINH34B0700P8",
+   "RIGTRUNEXTRCINH34B0800P8",
+   "RIGTRUNEXTRCINH34B0800P12",
+   "RIGTRUNEXTRCINH34B0900P12",
+   "RIGTRUNEXTRCINH34B1000P12",
+   "RIGTRUNEXTRCINH34B1000P16",
+   "RIGTRUNEXTRCINH34B1100P12",
+   "RIGTRUNEXTRCINH34B1200P16",
+   "RIGTRUNEXTRCINH34B1400P16",
+   "RIGTRUNEXTRCINH34B1500P16",
+   "RIGTRUNEXTRCINH34B1600P24"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/620117/3763163/bf8e3727/1660114333NH34-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/620253/5367119/112b688a/1723535981nh34l90.jpg?key=og",
+   "https://static.bax-shop.nl/image/product/620298/2103203/51bff466/1583924569NX34-C4CR.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.be/nl/next-truss-nx/next-truss-nh34-100-vierkant-truss-1-0-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH34), not this exact part. Bax Music: NH34 (formerly NX34) 29 cm square truss. Straight, corner 90, cross."
+ },
+ {
+  "key": "NEXT | Truss Circle - NH44 - Square",
+  "title": "NEXT Truss Circle - NH44 - Square",
+  "items": [
+   "RIGTRUNEXTRCINH440200P4",
+   "RIGTRUNEXTRCINH440250P4",
+   "RIGTRUNEXTRCINH440300P2",
+   "RIGTRUNEXTRCINH440400P4",
+   "RIGTRUNEXTRCINH440500P8",
+   "RIGTRUNEXTRCINH440600P8",
+   "RIGTRUNEXTRCINH440700P8",
+   "RIGTRUNEXTRCINH440800P12",
+   "RIGTRUNEXTRCINH440900P8",
+   "RIGTRUNEXTRCINH440900P12",
+   "RIGTRUNEXTRCINH441000P12",
+   "RIGTRUNEXTRCINH441000P8",
+   "RIGTRUNEXTRCINH441000P16",
+   "RIGTRUNEXTRCINH441200P12",
+   "RIGTRUNEXTRCINH441200P16",
+   "RIGTRUNEXTRCINH441400P16",
+   "RIGTRUNEXTRCINH441500P16",
+   "RIGTRUNEXTRCINH441600P20",
+   "RIGTRUNEXTRCINH441800P24",
+   "RIGTRUNEXTRCINH442000P16",
+   "RIGTRUNEXTRCINH442000P24",
+   "RIGTRUNEXTRCINH442400P24",
+   "RIGTRUNEXTRCINH442500P24",
+   "RIGTRUNEXTRCINH443000P24",
+   "RIGTRUNEXTRCINH443000P32",
+   "RIGTRUNEXTRCINH444000P48",
+   "RIGTRUNEXTRCINH44B0400P4",
+   "RIGTRUNEXTRCINH44B0500P8",
+   "RIGTRUNEXTRCINH44B0700P8",
+   "RIGTRUNEXTRCINH44B1000P12",
+   "RIGTRUNEXTRCINH44B1000P16",
+   "RIGTRUNEXTRCINH44B120012P",
+   "RIGTRUNEXTRCINH44B120016P",
+   "RIGTRUNEXTRCINH44B1400P16",
+   "RIGTRUNEXTRCINH44B1500P12",
+   "RIGTRUNEXTRCINH44B1500P16",
+   "RIGTRUNEXTRCINH44B1600P20",
+   "RIGTRUNEXTRCINH44B1800P16",
+   "RIGTRUNEXTRCINH44B2000P24",
+   "RIGTRUNEXTRCINH44B2400P24",
+   "RIGTRUNEXTRCINH44B2500P24",
+   "RIGTRUNEXTRCINH44B3000P24",
+   "RIGTRUNEXTRCINH44B3000P32",
+   "RIGTRUNEXTRCINH44B4000P48",
+   "RIGTRUNEXTRCINH44B5000P36"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/620964/3763344/bc88e1ca/1660117717NH44-Square-Truss-NEXT-Truss.jpg?key=og",
+   "https://static.bax-shop.es/image/product/621406/2821387/c6355ff1/1618839073NH44-Square-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-nh44-350-vierkant-truss-3-5-m-48-x-3-mm",
+  "source": "distributor",
+  "note": "Series photo (NH44), not this exact part. Bax Music: NH44 (formerly NX44) 40 cm square truss, straight sections."
+ },
+ {
+  "key": "NEXT | Truss Circle - NS52 - Square",
+  "title": "NEXT Truss Circle - NS52 - Square",
+  "items": [
+   "RIGTRUNEXTRCINS52B1500P12",
+   "RIGTRUNEXTRCINS52B2000P24",
+   "RIGTRUNEXTRCINS52B3000P32",
+   "RIGTRUNEXTRCINS52B5000P48"
+  ],
+  "candidates": [
+   "https://static.bax-shop.nl/image/product/624480/3763428/19054a2d/1660120160NS52-Square-Truss-NEXT-Truss.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.nl/next-truss-nx/next-truss-ns52-100-vierkant-truss-1-0-m-50-x-4-mm",
+  "source": "distributor",
+  "note": "Series photo (NS52), not this exact part. Bax Music: NS52 52 cm square truss, straight 1 m."
+ },
+ {
+  "key": "NEXT | Truss Circle - NX33 - Triangle",
+  "title": "NEXT Truss Circle - NX33 - Triangle",
+  "items": [
+   "RIGTRUNEXTRCINX33B0200P2",
+   "RIGTRUNEXTRCINX33B0300P4",
+   "RIGTRUNEXTRCINX33B0400P4",
+   "RIGTRUNEXTRCINX33B0500P4",
+   "RIGTRUNEXTRCINX33B0500P8",
+   "RIGTRUNEXTRCINX33B0600P8",
+   "RIGTRUNEXTRCINX33B0700P8",
+   "RIGTRUNEXTRCINX33B0800P12",
+   "RIGTRUNEXTRCINX33B0900P12",
+   "RIGTRUNEXTRCINX33B1000P12",
+   "RIGTRUNEXTRCINX33B1200P16"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
+ },
+ {
+  "key": "NEXT | Truss Circle - NX33 -Triangle",
+  "title": "NEXT Truss Circle - NX33 -Triangle",
+  "items": [
+   "RIGTRUNEXTRCINX330200P2",
+   "RIGTRUNEXTRCINX330300P4",
+   "RIGTRUNEXTRCINX330400P4",
+   "RIGTRUNEXTRCINX330500P8",
+   "RIGTRUNEXTRCINX330600P8",
+   "RIGTRUNEXTRCINX330700P8",
+   "RIGTRUNEXTRCINX330800P12",
+   "RIGTRUNEXTRCINX330900P12",
+   "RIGTRUNEXTRCINX331000P8",
+   "RIGTRUNEXTRCINX331000P12",
+   "RIGTRUNEXTRCINX331200P16"
+  ],
+  "candidates": [
+   "https://static.bax-shop.es/image/product/619367/3761596/006392b1/1660055147NH33.jpg?key=og",
+   "https://static.bax-shop.es/image/product/619496/2102192/8189c88f/1583839335NX33-C90.jpg?key=og"
+  ],
+  "page": "https://www.bax-shop.fr/next-truss-nx/next-truss-nx33-l100-structure-truss-triangulaire-1-m",
+  "source": "distributor",
+  "note": "Series photo (NX33), not this exact part. NX33 was renamed NH33 (29 cm triangle). Straight 1 m + corner 90 from Bax Music."
  },
  {
   "key": "NEXT | Truss Solid hanging truss adapter for NX/NH34",
@@ -2958,6 +5505,199 @@
   "page": "https://www.next-truss.com/product/adjustable-stairs-40-75/",
   "source": "manufacturer",
   "note": "Adjustable stairs 40/75 + stair handrail (separate images)"
+ },
+ {
+  "key": "Netgear | M4250-10G2XF - 1GB PoE++ - 1GB - SFP+ - 720W max",
+  "title": "Netgear M4250-10G2XF - 1GB PoE++ - 1GB - SFP+ - 720W max",
+  "items": [
+   "VIDITNETVIITM425010G2XF"
+  ],
+  "candidates": [
+   "https://avlgear.com/cdn/shop/files/077934791d6f993cad284d524d85f7b0.jpg?v=1772475906&width=1214",
+   "https://avlgear.com/cdn/shop/files/c96ff933932edcfecc2baefb737293a1.jpg?v=1772475906&width=1214"
+  ],
+  "page": "https://avlgear.com/collections/network-switches/products/netgear-m4250-10g2xf-poe-av-network-switch",
+  "source": "other",
+  "note": "M4250-10G2XF-PoE++ (GSM4212UX) from AV retailer"
+ },
+ {
+  "key": "Netgear | M4250-26G4F - 1GB PoE++ - 1GB - SFP - 1440W max",
+  "title": "Netgear M4250-26G4F - 1GB PoE++ - 1GB - SFP - 1440W max",
+  "items": [
+   "VIDITNETM42502"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/GSM4230UP-100NAS.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/GSM4230UP-100NAS.JPG"
+  ],
+  "page": "https://www.markertek.com/product/gsm4230up-100nas/netgear-av-line-m4250-series-gsm4230up-30-port-24x-poe-1440w-2x-1g-4x-sfp-managed-ethernet-switch",
+  "source": "distributor",
+  "note": "GSM4230UP = M4250-26G4F-PoE++ (1440W)"
+ },
+ {
+  "key": "Neumann | KK 104-S condenser capsule for SKM5200",
+  "title": "Neumann KK 104-S condenser capsule for SKM5200",
+  "items": [
+   "AUDWIRNEUKK104S"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/KK-104-S_Neumann-Microphone_Head_M.png/Zz1iYzRiMzc4MmU3YWExMWYwYTM1NGVhNTViNWQyZmI4Ng==?width=730&format=webp&quality=80"
+  ],
+  "page": "https://www.neumann.com/en-us/products/microphones/kk-104-s",
+  "source": "manufacturer",
+  "note": "Served as webp via format param"
+ },
+ {
+  "key": "Neumann | KM184, KM185",
+  "title": "Neumann KM184, KM185",
+  "items": [
+   "AUDMICNEUKM184K"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_12/120310/6686876_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_12/120310/6686896_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/120310.jpg"
+  ],
+  "page": "https://www.thomann.de/de/neumann_km184.htm",
+  "source": "distributor",
+  "note": "Thomann KM184 (KM185 looks identical)"
+ },
+ {
+  "key": "Neumann | KMS 105",
+  "title": "Neumann KMS 105",
+  "items": [
+   "AUDMICNEUKMS105"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_14/144972/14732611_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_14/144972/14732616_800.jpg"
+  ],
+  "page": "https://www.thomann.de/de/neumann_kms105.htm",
+  "source": "distributor",
+  "note": "Thomann"
+ },
+ {
+  "key": "Neumann | TLM 103",
+  "title": "Neumann TLM 103",
+  "items": [
+   "AUDMICNEUTLM103"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/TLM-103-Frontal_Neumann-Studio-Microphone_G.jpg/Zz1iNzVkMThiYWU3YzUxMWYwYmZiMmJlYjQzYzY2MTIyYQ==?width=1600&format=webp&quality=80"
+  ],
+  "page": "https://www.neumann.com/en-us/products/microphones/tlm-103",
+  "source": "manufacturer",
+  "note": "nickel front view"
+ },
+ {
+  "key": "Neumann | TLM 170",
+  "title": "Neumann TLM 170",
+  "items": [
+   "AUDMICNEUTLM170"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/TLM-170_Neumann-Studio-Microphone_H.png/Zz1lNGY2MDI5Y2U3YWIxMWYwYTg2NmNlM2Q3NWM0MGYwNw==?width=730&format=webp&quality=80"
+  ],
+  "page": "https://www.neumann.com/en-us/products/historical/tlm-170",
+  "source": "manufacturer",
+  "note": "Neumann historical TLM 170 page; asset CDN rendition (webp). Current TLM 170 R looks near identical: https://www.neumann.com/en-us/products/microphones/tlm-170-r"
+ },
+ {
+  "key": "Neumann | TLM 193",
+  "title": "Neumann TLM 193",
+  "items": [
+   "AUDMICNEUTLM193"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_10/105824/7479764_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/105824.jpg"
+  ],
+  "page": "https://www.thomann.de/de/neumann_tlm_193.htm",
+  "source": "distributor",
+  "note": "Thomann"
+ },
+ {
+  "key": "Panasonic | AV-HS6000 multiformat HD mixer",
+  "title": "Panasonic AV-HS6000 multiformat HD mixer",
+  "items": [
+   "VIDPROPANAVHS60"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/av-hs6000_front01_high_1436492260_0.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/styles/social/public/media/image/2023-04/av-hs6000front01high16x9v2-min.jpg.webp"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/broadcast-proav/av-hs6000",
+  "source": "manufacturer",
+  "note": "Control panel front view"
+ },
+ {
+  "key": "Panasonic | AW-RP150",
+  "title": "Panasonic AW-RP150",
+  "items": [
+   "VIDHOTPANAWRP15"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/AW-RP150.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/styles/social/public/media/image/2024-10/aw-rp150slanthigh15399327986077.jpg.webp"
+  ],
+  "page": "https://eu.connect.panasonic.com/ch/de/broadcast-proav/aw-rp150",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Panasonic | AW-RP60",
+  "title": "Panasonic AW-RP60",
+  "items": [
+   "VIDHOTPANAWRP60"
+  ],
+  "candidates": [
+   "https://www.videocraft.com.au/cdn/shop/files/panasonic-camera-accessories-default-title-panasonic-aw-rp60-remote-camera-controller-30571726012545.jpg?crop=center&height=1500&v=1747047155&width=1500",
+   "https://www.videocraft.com.au/cdn/shop/files/panasonic-camera-accessories-default-title-panasonic-aw-rp60-remote-camera-controller-30571727847553.jpg?crop=center&height=1500&v=1747047155&width=1500"
+  ],
+  "page": "https://www.videocraft.com.au/products/panasonic-aw-rp60-remote-camera-controller",
+  "source": "distributor",
+  "note": "Videocraft AU"
+ },
+ {
+  "key": "Panasonic | AW-UE100KE",
+  "title": "Panasonic AW-UE100KE",
+  "items": [
+   "VIDHOTPANAWUE10"
+  ],
+  "candidates": [
+   "https://www.scan.co.uk/images/products/xlarge/3496049-xl-a.jpg",
+   "https://www.scan.co.uk/images/products/xlarge/3496049-xl-b.jpg"
+  ],
+  "page": "https://www.scan.co.uk/products/panasonic-aw-ue100k-ptz-camera-4k-60p-50p-1-25-type-mos-sensor-24x-optical-zoom-741-angle-of-view-bl",
+  "source": "other",
+  "note": "Scan UK, AW-UE100K (black)"
+ },
+ {
+  "key": "Panasonic | AW-UE145KE",
+  "title": "Panasonic AW-UE145KE",
+  "items": [
+   "VIDHOTPANAWUE14"
+  ],
+  "candidates": [
+   "https://pro-av.panasonic.net/en/products/aw-ue160/img/index/main_product.png"
+  ],
+  "page": "https://pro-av.panasonic.net/en/products/aw-ue160/",
+  "source": "manufacturer",
+  "note": "AW-UE145 page not found; close sibling AW-UE160 shown - verify look"
+ },
+ {
+  "key": "Panasonic | AW-UE150",
+  "title": "Panasonic AW-UE150",
+  "items": [
+   "VIDHOTPANAWUE15"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/UE150_WH_BK_slant_menu.jpg",
+   "https://eu.connect.panasonic.com/sites/default/files/styles/social/public/media/image/2022-10/ue150whbkslantmenu.jpg.webp"
+  ],
+  "page": "https://eu.connect.panasonic.com/gb/en/broadcast-proav/remote-ptz-camera-systems/aw-ue150",
+  "source": "manufacturer",
+  "note": "Shows white and black versions together"
  },
  {
   "key": "Panasonic | ET-D3LES20 - 16/10 1,7-2,4",
@@ -3307,6 +6047,19 @@
   "note": "Panasonic product-images thumbnail (small size)"
  },
  {
+  "key": "Panasonic | Kairos IP live production switcher 4K/SDI/NDI/ST2110 - desk + CPU unit",
+  "title": "Panasonic Kairos IP live production switcher 4K/SDI/NDI/ST2110 - desk + CPU unit",
+  "items": [
+   "VIDPROPANKAIROS"
+  ],
+  "candidates": [
+   "https://videoguys.com/cdn/shop/files/KAIROSSDIKIT_001.png?v=1738854994"
+  ],
+  "page": "https://videoguys.com/products/panasonic-connect-kc200l1-kit-with-touch-control-panel-software",
+  "source": "other",
+  "note": "Kairos Core 200 kit image (Videoguys); may not show the exact desk panel"
+ },
+ {
   "key": "Panasonic | PT-RCQ10",
   "title": "Panasonic PT-RCQ10",
   "items": [
@@ -3410,6 +6163,185 @@
   "page": "https://eu.connect.panasonic.com/gb/en/projectors/pt-rz990rz990l",
   "source": "manufacturer",
   "note": null
+ },
+ {
+  "key": "Panasonic | TH-65EQ2W 65\" - 4K",
+  "title": "Panasonic TH-65EQ2W 65\" - 4K",
+  "items": [
+   "VIDDISPANTH65EQ"
+  ],
+  "candidates": [
+   "https://creationnetworks.net/cdn/shop/files/eq2_main_5103e635-aba1-4e78-9efb-ad9820c04fbe.jpg?v=1784786871&width=1500"
+  ],
+  "page": "https://creationnetworks.net/products/panasonic-th-65eq2w-65-4k-uhd-500cd-m2-sdm-led-lcd-display",
+  "source": "other",
+  "note": "EQ2 series main image from retailer"
+ },
+ {
+  "key": "Panasonic | TH-86EQ2W 86\" - 4K",
+  "title": "Panasonic TH-86EQ2W 86\" - 4K",
+  "items": [
+   "VIDDISPANTH86EQ"
+  ],
+  "candidates": [
+   "https://store.ear.net/cdn/shop/products/TH-86EQ2W1_1946x.jpg?v=1660065221",
+   "https://store.ear.net/cdn/shop/products/TH-86EQ2W2_1946x.png?v=1660065221"
+  ],
+  "page": "https://store.ear.net/products/pan-th86eq2w",
+  "source": "other",
+  "note": "US AV reseller (EAR) shop images"
+ },
+ {
+  "key": "Panasonic | TH-98SQ1 98\" - 4K",
+  "title": "Panasonic TH-98SQ1 98\" - 4K",
+  "items": [
+   "VIDDISPANTH98SQ"
+  ],
+  "candidates": [
+   "https://eu.connect.panasonic.com/sites/default/files/styles/social/public/media/image/2026-04/sq1series-fronthighrestransparent-featuredimage.webp",
+   "https://eu.connect.panasonic.com/sites/default/files/media/image/2024-04/98sq1_back_high.jpg"
+  ],
+  "page": "https://eu.connect.panasonic.com/de/de/products/professional-displays/th-98sq1",
+  "source": "manufacturer",
+  "note": "First is SQ1 series front (1280x640); second is rear view"
+ },
+ {
+  "key": "Pioneer | CDJ-2000 NEXUS 2",
+  "title": "Pioneer CDJ-2000 NEXUS 2",
+  "items": [
+   "AUDPLAPIOCDJ200"
+  ],
+  "candidates": [
+   "https://www.pioneerdj.com/product-images/1578/f02df8bc-4f62-437d-acee-a7ed625c8755/cdj-2000nxs2_1.png",
+   "https://www.pioneerdj.com/product-images/1579/84f4fe61-47c2-4e80-865c-e45014876b96/cdj-2000nxs2_2.png"
+  ],
+  "page": "https://www.pioneerdj.com/en/product/dj-players-turntables/cdj-2000nxs2/",
+  "source": "manufacturer",
+  "note": "CDJ-2000NXS2 gallery"
+ },
+ {
+  "key": "Pioneer | CDJ-3000",
+  "title": "Pioneer CDJ-3000",
+  "items": [
+   "AUDPLAPIOCDJ300"
+  ],
+  "candidates": [
+   "https://store.djtechtools.com/cdn/shop/files/Pioneer_cdj-3000_top.jpg?v=1691703028&width=3840",
+   "https://store.djtechtools.com/cdn/shop/files/Pioneer_cdj-3000_hero.jpg?v=1691703008",
+   "https://store.djtechtools.com/cdn/shop/files/Pioneer_cdj-3000_front_angle.jpg?v=1691703012&width=3840"
+  ],
+  "page": "https://store.djtechtools.com/products/pioneer-cdj-3000",
+  "source": "other",
+  "note": "DJ TechTools store images"
+ },
+ {
+  "key": "Pioneer | DJM 900 Nexus 2",
+  "title": "Pioneer DJM 900 Nexus 2",
+  "items": [
+   "AUDDJPIODJM900"
+  ],
+  "candidates": [
+   "https://www.pioneerdj.com/product-images/1802/fa17949d-a1ac-487e-906d-fe1d8aa28179/djm-900nxs2_1.png",
+   "https://www.pioneerdj.com/product-images/1803/e55c3083-6fb6-4044-8d1b-66110c3f3401/djm-900nxs2_2.png"
+  ],
+  "page": "https://www.pioneerdj.com/en/product/dj-mixers/djm-900nxs2/",
+  "source": "manufacturer",
+  "note": "DJM-900NXS2"
+ },
+ {
+  "key": "Pioneer | DJM-V10",
+  "title": "Pioneer DJM-V10",
+  "items": [
+   "AUDDJPIODJMV10"
+  ],
+  "candidates": [
+   "https://shop.showtec.co.uk/cdn/shop/files/PIODJMV10.P_Pioneer_DJ_DJM-V10_Image_1.jpg?v=1787672315&width=1946",
+   "https://shop.showtec.co.uk/cdn/shop/files/PIODJMV10.P_Pioneer_DJ_DJM-V10_Image_2.jpg?v=1787672315&width=1946"
+  ],
+  "page": "https://shop.showtec.co.uk/products/pioneer-djm-v10",
+  "source": "distributor",
+  "note": "Showtec UK shop"
+ },
+ {
+  "key": "Radial | USB Pro Stereo D.I. for USB source",
+  "title": "Radial USB Pro Stereo D.I. for USB source",
+  "items": [
+   "AUDDIBRADUSBPRO"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_32/325942/13775016_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_32/325942/13775006_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/radial_engineering_usb_pro.htm",
+  "source": "distributor",
+  "note": "Thomann"
+ },
+ {
+  "key": "Robert | Juliat 10 - 25° - 4 Knives",
+  "title": "Robert Juliat 10 - 25° - 4 Knives",
+  "items": [
+   "LIGPROROBLIPR710SX"
+  ],
+  "candidates": [
+   "https://www.robertjuliat.com/images/PhotosHD_Products/PhotoWebHD_614SX.png",
+   "https://www.robertjuliat.com/images/produits_pics/611SX_small.png"
+  ],
+  "page": "https://www.robertjuliat.com/profilespots/600SX.html",
+  "source": "manufacturer",
+  "note": "Exact model unclear; 600SX series (611SX is 11-26°, only small image) - 614SX HD shown as close lookalike"
+ },
+ {
+  "key": "Robert | Juliat Arthur 1014LT - 800W",
+  "title": "Robert Juliat Arthur 1014LT - 800W",
+  "items": [
+   "LIGLEDROBLIFSAR"
+  ],
+  "candidates": [
+   "https://www.lsionline.com/wp-content/uploads/2020/05/arthur-800w-ledhd-3c.jpg"
+  ],
+  "page": "https://www.lsionline.com/news/robert-juliat-releases-arthur-led-followspot",
+  "source": "other",
+  "note": "LSi press photo of Arthur 800W LED followspot (may be the standard Arthur, LT has longer lens)"
+ },
+ {
+  "key": "Robert | Juliat Cyrano - HMI 2 500 3-8°",
+  "title": "Robert Juliat Cyrano - HMI 2 500 3-8°",
+  "items": [
+   "LIGFOLROBLIFSCY"
+  ],
+  "candidates": [
+   "https://www.robertjuliat.com/images/PhotosHD_Products/PhotoWebHD_CYRANO_1015.png",
+   "https://www.robertjuliat.com/images/PhotosHD_Products/PhotoWeb_CYRANO_1015.png"
+  ],
+  "page": "https://www.robertjuliat.com/followspots/cyrano.html",
+  "source": "manufacturer",
+  "note": "Cyrano 1015 HD image"
+ },
+ {
+  "key": "Robert | Juliat Heloise - HMI 2 500 15-29°",
+  "title": "Robert Juliat Heloise - HMI 2 500 15-29°",
+  "items": [
+   "LIGFOLROBLIFSHE"
+  ],
+  "candidates": [
+   "https://store.gl-events.com/medias/576352.jpg?context=bWFzdGVyfGltYWdlc3w0MTAzNzZ8aW1hZ2UvanBlZ3xpbWFnZXMvaGQxL2hkZS84ODM2MzI1NzM2NDc4LmpwZ3xiZTVkZDAyMmVhOTQ5ZTI4NDlhZjk5MWY1MjcwZTM1ZTQyMmQ1NTQ5NzdmMmVmYTgzNmNhNzBjNzY3ZTg3OWRl"
+  ],
+  "page": "https://store.gl-events.com/en/event-solutions/audiovisual/lighting/traditional-projectors/robert-juliat-heloise-2500-w-follow-spotlight/p/576352",
+  "source": "other",
+  "note": "GL events rental store image"
+ },
+ {
+  "key": "Robert | Juliat OZ - 600W",
+  "title": "Robert Juliat OZ - 600W",
+  "items": [
+   "LIGLEDROBLIFSOZ"
+  ],
+  "candidates": [
+   "https://www.robertjuliat.com/images/PhotosHD_Products/PhotoWebHD_OZ_1169.png"
+  ],
+  "page": "https://www.robertjuliat.com/followspots/oz.html",
+  "source": "manufacturer",
+  "note": "Oz 1169 HD image"
  },
  {
   "key": "Roe | Black Marble 4 - deep black matte version",
@@ -3651,6 +6583,59 @@
   "note": null
  },
  {
+  "key": "Samsung | PM55F-BC capacitive touch 55”",
+  "title": "Samsung PM55F-BC capacitive touch 55”",
+  "items": [
+   "VIDDISSAMPM55FB"
+  ],
+  "candidates": [
+   "https://images.samsung.com/is/image/samsung/ch-interactive-display-pmf-bc-series-lh55pmfxtbc-en-001-front-black-61497989"
+  ],
+  "page": "https://www.samsung.com/ch/business/smart-signage/others/interactive-display-pmf-bc-series-lh55pmfxtbc-en/",
+  "source": "manufacturer",
+  "note": "Scene7 dynamic image URL (no file extension, serves JPEG)"
+ },
+ {
+  "key": "Samsung | QM55 55\" - 4K",
+  "title": "Samsung QM55 55\" - 4K",
+  "items": [
+   "VIDDISSAMQM5555"
+  ],
+  "candidates": [
+   "https://static01.galaxus.com/productimages/1/9/7/8/1/3/7/1/6/7/3/0/5/9/5/9/1/9/8/7e98db8a-f955-4fc6-b18c-aa4d3fcbab08_cropped.jpg_720.jpeg"
+  ],
+  "page": "https://digitec.ch/en/s1/product/samsung-qm55c-3840-x-2160-pixels-55-digital-signage-36372744?tagIds=538",
+  "source": "other",
+  "note": "Samsung QM55C (digitec/galaxus); exact generation of QM55 unknown"
+ },
+ {
+  "key": "Samsung | QM75 75\" - 4K",
+  "title": "Samsung QM75 75\" - 4K",
+  "items": [
+   "VIDDISSAMQM7575"
+  ],
+  "candidates": [
+   "https://images.samsung.com/is/image/samsung/p6pim/us/lh75qmcebgcxgo/gallery/us-smart-signage-qm32c-565384-lh75qmcebgcxgo-549168038?%24product-details-jpg%24",
+   "https://images.samsung.com/is/image/samsung/p6pim/us/lh75qmcebgcxgo/gallery/us-smart-signage-qm32c-565384-lh75qmcebgcxgo-549168025?%24product-details-jpg%24"
+  ],
+  "page": "https://www.samsung.com/us/business/displays/4k-uhd/qm-series/qmc-series-75-lh75qmcebgcxgo/",
+  "source": "manufacturer",
+  "note": "QM75C (LH75QMC); Samsung Scene7 image endpoint (jpg preset, no extension)"
+ },
+ {
+  "key": "Samsung | QM98 98\" - 4K",
+  "title": "Samsung QM98 98\" - 4K",
+  "items": [
+   "VIDDISSAMQM9898"
+  ],
+  "candidates": [
+   "https://images.samsung.com/is/image/samsung/p6pim/ae/lh98qmtbpgcxue/gallery/ae-smart-signage-qm98t-b-b2c-lh98qmtbpgcxue-532610635?$1164_776_PNG$"
+  ],
+  "page": "https://www.samsung.com/ae/smart-signage/uhd-4k-signage/qm98t-b-98-inch-uhd-4k-500nit-ip5x-lh98qmtbpgcxue/",
+  "source": "manufacturer",
+  "note": "QM98T-B front view (exact generation unknown; may be QM98F/QM98N)"
+ },
+ {
   "key": "Sennheiser | AB 9000 antenna booster 470 - 638 MHz",
   "title": "Sennheiser AB 9000 antenna booster 470 - 638 MHz",
   "items": [
@@ -3675,6 +6660,19 @@
   "page": "https://markertek.com/product/senn-ac-3200-ii/sennheiser-ac-3200-ii-1ru-active-high-power-8-1-broadband-rf-antenna-combiner-max-250mw-input-power",
   "source": "distributor",
   "note": "AC 3200-II, Markertek"
+ },
+ {
+  "key": "Sennheiser | AD3700 directional antenna 470 - 866 MHz",
+  "title": "Sennheiser AD3700 directional antenna 470 - 866 MHz",
+  "items": [
+   "AUDWIRSEN2XAD37"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/square_louped_ad_3700_01_sq_accessory_sennheiser.png/Zz1lZGNhYTM3ZWU3YzMxMWYwYmZiMmJlYjQzYzY2MTIyYQ==?width=1920&format=webp&quality=80"
+  ],
+  "page": "https://www.sennheiser.com/en-us/catalog/products/wireless-systems/ad-3700/ad-3700-502197",
+  "source": "manufacturer",
+  "note": "Sennheiser asset CDN"
  },
  {
   "key": "Sennheiser | Circular polarized helical antenna 450 - 960 MHz",
@@ -3747,6 +6745,19 @@
   "page": "https://muzeekworld.com/collections/sennheiser-wireless-systems/products/sennheiser-em-9046-su-flexible-digital-transmission-with-superior-audio-quality-and-ease-of-use",
   "source": "distributor",
   "note": "Retailer image, medium size; verify"
+ },
+ {
+  "key": "Sennheiser | EM3732-II + AD3700 470 - 638 MHz",
+  "title": "Sennheiser EM3732-II + AD3700 470 - 638 MHz",
+  "items": [
+   "AUDWIRSEN4XEM37"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/EM-3732II-Front.png/Zz05NmNmZjk5OGU3YzMxMWYwYjk1OWNlM2Q3NWM0MGYwNw==?width=1920&format=webp&quality=80"
+  ],
+  "page": "https://www.sennheiser.com/en-us/catalog/products/wireless-systems/em-3732-ii/em-3732-ii-504076",
+  "source": "manufacturer",
+  "note": "EM 3732-II receiver front; AD 3700 antenna not shown"
  },
  {
   "key": "Sennheiser | HSP4-3 cardioid headset (beige)",
@@ -3875,6 +6886,19 @@
   "note": "Assumed A 1031-U; only small thumbnail found"
  },
  {
+  "key": "Sennheiser | SK5212-II bodypack 470 - 638 MHz",
+  "title": "Sennheiser SK5212-II bodypack 470 - 638 MHz",
+  "items": [
+   "AUDWIRSENSK5212"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/SK-5212-IIFront.png/Zz1lYjkzODE0OGU3YzMxMWYwYjk1OWNlM2Q3NWM0MGYwNw==?width=1920&format=webp&quality=80"
+  ],
+  "page": "https://www.sennheiser.com/en-us/catalog/products/wireless-systems/sk-5212-ii/sk-5212-ii-504084",
+  "source": "manufacturer",
+  "note": "Served as webp via format param"
+ },
+ {
   "key": "Sennheiser | SKM 9000 handheld 470 - 558 / 550 - 638 MHz",
   "title": "Sennheiser SKM 9000 handheld 470 - 558 / 550 - 638 MHz",
   "items": [
@@ -3918,6 +6942,19 @@
   "note": "Discontinued vintage mic; images from used-gear reseller studio, verify"
  },
  {
+  "key": "Sennheiser | Sennheiser EM3732-II double receiver 470 - 638 MHz",
+  "title": "Sennheiser Sennheiser EM3732-II double receiver 470 - 638 MHz",
+  "items": [
+   "AUDWIRSENMIHFSEEM3732L"
+  ],
+  "candidates": [
+   "https://assets.sennheiser.com/assets/EM-3732II-Front.png/Zz05NmNmZjk5OGU3YzMxMWYwYjk1OWNlM2Q3NWM0MGYwNw==?width=1920&format=webp&quality=80"
+  ],
+  "page": "https://www.sennheiser.com/en-cn/catalog/products/wireless-systems/em-3732-ii/em-3732-ii-504077",
+  "source": "manufacturer",
+  "note": "Sennheiser asset CDN (webp via query)"
+ },
+ {
   "key": "Sennheiser | Sennheiser MKE1-4 omni-directional lavalier (black)",
   "title": "Sennheiser Sennheiser MKE1-4 omni-directional lavalier (black)",
   "items": [
@@ -3931,6 +6968,19 @@
   "note": null
  },
  {
+  "key": "Shure | AD1 bodypack transmitter 470 - 636 MHz",
+  "title": "Shure AD1 bodypack transmitter 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUAD1BOD"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/6b3/75b/e5-/setcard/a7a7bc0b15e1d982190e00ce108c148d.jpeg"
+  ],
+  "page": "https://www.shure.com/en-MEA/products/wireless-systems/axient_digital/ad1",
+  "source": "manufacturer",
+  "note": "og:image"
+ },
+ {
   "key": "Shure | AD2 handheld transmitter + Beta 58 470 - 636 MHz",
   "title": "Shure AD2 handheld transmitter + Beta 58 470 - 636 MHz",
   "items": [
@@ -3942,6 +6992,85 @@
   "page": "https://www.shure.com/en-US/products/accessories/rpw184",
   "source": "manufacturer",
   "note": "AD2/B58A related-product thumbnail on RPW184 page"
+ },
+ {
+  "key": "Shure | AD4D dual channel digital receiver 470 - 636 MHz",
+  "title": "Shure AD4D dual channel digital receiver 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUAD4DDU"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/e06/d5d/f2-/setcard/abaede228e5ae5aa9bb22cd44fda51bf.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/wireless-systems/axient_digital/ad4d",
+  "source": "manufacturer",
+  "note": "og:image from shure.com"
+ },
+ {
+  "key": "Shure | AD4Q quad channel digital receiver + antenna 470 - 636 MHz",
+  "title": "Shure AD4Q quad channel digital receiver + antenna 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUMIHFSHAD4QA2"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/6fd/720/d4-/setcard/9fac1eac2df87b1e7ecdac443a200928.jpeg"
+  ],
+  "page": "https://www.shure.com/en-EU/products/wireless-systems/axient_digital/ad4q",
+  "source": "manufacturer",
+  "note": "Receiver only; antennas not shown"
+ },
+ {
+  "key": "Shure | AD4Q quad channel digital receiver 470 - 636 MHz",
+  "title": "Shure AD4Q quad channel digital receiver 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUAD4QQU"
+  ],
+  "candidates": [
+   "https://www.fullcompass.com/common/products/lgr/291763.jpg",
+   "https://www.fullcompass.com/common/products/lgr/291764.jpg"
+  ],
+  "page": "https://www.fullcompass.com/prod/533277-shure-ad4qus-four-channel-digital-wireless-receiver",
+  "source": "other",
+  "note": "Full Compass, AD4QUS (US variant, same unit)"
+ },
+ {
+  "key": "Shure | AD610E showlink access point 470 - 960 MHz",
+  "title": "Shure AD610E showlink access point 470 - 960 MHz",
+  "items": [
+   "AUDWIRSHUAD610E"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/6f8/e6b/66-/setcard/cebc48cf6e7c77f849947cdbbeae821d.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/ad610",
+  "source": "manufacturer",
+  "note": "Shure og:image (setcard size)"
+ },
+ {
+  "key": "Shure | ADX1 bodypack transmitter 470 - 636 MHz",
+  "title": "Shure ADX1 bodypack transmitter 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUADX1BO"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/180/0fa/08-/setcard/b7d32d450abec9172df66402b718a32d.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/wireless-systems/axient_digital/adx1",
+  "source": "manufacturer",
+  "note": "og:image from shure.com"
+ },
+ {
+  "key": "Shure | ADX1M micro bodypack transmitter (LEMO) 470 - 636 MHz",
+  "title": "Shure ADX1M micro bodypack transmitter (LEMO) 470 - 636 MHz",
+  "items": [
+   "AUDWIRSHUADX1MM"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/86e/c89/d1-/setcard/04e91c6d2336e72f19f2c4822287ff27.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/wireless-systems/axient_digital/adx1m",
+  "source": "manufacturer",
+  "note": null
  },
  {
   "key": "Shure | ADX2 handheld transmitter + Beta 58 470 - 636 MHz",
@@ -3968,6 +7097,34 @@
   "page": "https://www.shure.com/en-US/products/accessories/rpw184",
   "source": "manufacturer",
   "note": "ADX2FD/B58 related-product thumbnail on RPW184 page"
+ },
+ {
+  "key": "Shure | Beta 52A",
+  "title": "Shure Beta 52A",
+  "items": [
+   "AUDMICSHUBETA52"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_10/105760/7811102_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/105760.jpg"
+  ],
+  "page": "https://www.thomann.de/de/shure_beta_52.htm",
+  "source": "distributor",
+  "note": "Thomann"
+ },
+ {
+  "key": "Shure | Beta 56A",
+  "title": "Shure Beta 56A",
+  "items": [
+   "AUDMICSHUBETA56"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_10/105761/7406380_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_10/105761/7406385_800.jpg"
+  ],
+  "page": "https://www.thomann.de/de/shure_beta_56.htm",
+  "source": "distributor",
+  "note": "Thomann"
  },
  {
   "key": "Shure | Beta 57A",
@@ -3997,6 +7154,114 @@
   "note": "og:image"
  },
  {
+  "key": "Shure | Beta 87A",
+  "title": "Shure Beta 87A",
+  "items": [
+   "AUDMICSHUBETA87"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/70e/9a4/ec-/setcard/49a6f60c177aae7a6ca66cf99db12947.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/microphones/beta_87a",
+  "source": "manufacturer",
+  "note": "og:image"
+ },
+ {
+  "key": "Shure | Beta 91A",
+  "title": "Shure Beta 91A",
+  "items": [
+   "AUDMICSHUBETA91"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/570/c68/c3-/setcard/23309ae1ef81986353cdf8c74d90f64c.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/microphones/beta_91a",
+  "source": "manufacturer",
+  "note": "og:image from shure.com"
+ },
+ {
+  "key": "Shure | Beta 98A-D",
+  "title": "Shure Beta 98A-D",
+  "items": [
+   "AUDMICSHUMICRSHB98D"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/c52/ba8/0c-/original/441c6ba9f7d1824afdc775262ae39125.webp",
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/ce0/992/2a-/setcard/f051a2ded92046984611ca88af31c63c.jpeg"
+  ],
+  "page": "https://www.shure.com/en-EU/products/microphones/beta_98ad_c",
+  "source": "manufacturer",
+  "note": "Beta 98AD/C; second image is near-identical Beta 98A/C"
+ },
+ {
+  "key": "Shure | Beta 98A/C",
+  "title": "Shure Beta 98A/C",
+  "items": [
+   "AUDMICSHUMICRSHB98AC"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/ce0/992/2a-/setcard/f051a2ded92046984611ca88af31c63c.jpeg"
+  ],
+  "page": "https://www.shure.com/en-MEA/products/microphones/beta_98a_c",
+  "source": "manufacturer",
+  "note": "Shure og:image"
+ },
+ {
+  "key": "Shure | Domed helical antenna 460 - 900 MHz",
+  "title": "Shure Domed helical antenna 460 - 900 MHz",
+  "items": [
+   "AUDINESHUDOMEDH"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/c18/867/2a-/setcard/d2d060278934ebc4b04c2ed4aa5b0070.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/ha-8089",
+  "source": "manufacturer",
+  "note": "HA-8089 helical antenna (assumed model)"
+ },
+ {
+  "key": "Shure | KSM137",
+  "title": "Shure KSM137",
+  "items": [
+   "AUDMICSHUKSM137"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/a84/0b5/59-/setcard/e2d408dcf8be5da8b8acd13950f623bc.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/microphones/ksm137",
+  "source": "manufacturer",
+  "note": "og:image from shure.com"
+ },
+ {
+  "key": "Shure | KSM8, KSM8 nickel",
+  "title": "Shure KSM8, KSM8 nickel",
+  "items": [
+   "AUDMICSHUKSM8KS"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_37/379653/11391334_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_37/379658/11361244_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_37/379653/11391319_800.jpg"
+  ],
+  "page": "https://www.thomann.de/be/shure_ksm8_b.htm",
+  "source": "distributor",
+  "note": "Thomann: KSM8 black (379653) and KSM8 nickel (379658, https://www.thomann.de/be/shure_ksm8_n.htm)"
+ },
+ {
+  "key": "Shure | KSM9",
+  "title": "Shure KSM9",
+  "items": [
+   "AUDMICSHUKSM9"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_19/194364/14595578_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/194364.jpg"
+  ],
+  "page": "https://www.thomann.de/de/shure_ksm_9_cg.htm",
+  "source": "distributor",
+  "note": "Thomann; KSM9 CG (charcoal grey) handheld version"
+ },
+ {
   "key": "Shure | KSM9 capsule",
   "title": "Shure KSM9 capsule",
   "items": [
@@ -4008,6 +7273,46 @@
   "page": "https://www.shure.com/en-US/products/accessories/rpw184",
   "source": "manufacturer",
   "note": "RPW184 wireless KSM9 cartridge; og:image"
+ },
+ {
+  "key": "Shure | MX418 supercardioid, cardioid gooseneck",
+  "title": "Shure MX418 supercardioid, cardioid gooseneck",
+  "items": [
+   "AUDMICSHUMX418S"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_21/210347/11195454_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_21/210347/11195464_800.jpg"
+  ],
+  "page": "https://www.thomann.de/de/shure_mx418_sc.htm",
+  "source": "distributor",
+  "note": "MX418 S/C on Thomann"
+ },
+ {
+  "key": "Shure | P10R IEM + SE215 ears",
+  "title": "Shure P10R IEM + SE215 ears",
+  "items": [
+   "AUDINESHUSPSHPSM110ER"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/b3d/115/07-/setcard/ac51950f613ca0248467cc7a63b978bf.jpeg"
+  ],
+  "page": "https://www.shure.com/en-MEA/products/in-ear-monitoring/psm1000",
+  "source": "manufacturer",
+  "note": "PSM1000 system image (close; not P10R alone)"
+ },
+ {
+  "key": "Shure | P10R+ IEM + SE215 ears",
+  "title": "Shure P10R+ IEM + SE215 ears",
+  "items": [
+   "AUDINESHUSPSHPSM110R"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/c42/9c9/e4-/setcard/553598046bac2752eed5ed0a7fd4b896.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/in-ear-monitoring/psm1000/p10rp",
+  "source": "manufacturer",
+  "note": "P10R+ bodypack only; SE215 not pictured"
  },
  {
   "key": "Shure | SM 57",
@@ -4037,6 +7342,19 @@
   "note": "from Related Products thumbnail on SM57 page"
  },
  {
+  "key": "Shure | SM 81",
+  "title": "Shure SM 81",
+  "items": [
+   "AUDMICSHUSM81"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/a80/c0e/fd-/setcard/ce0554c5a98d4d62e1cf507cad0fc144.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/microphones/sm81",
+  "source": "manufacturer",
+  "note": "og:image"
+ },
+ {
   "key": "Shure | SM58 with on/off switch",
   "title": "Shure SM58 with on/off switch",
   "items": [
@@ -4050,6 +7368,60 @@
   "note": "standard SM58 image (no switch visible); SM58S page not reached"
  },
  {
+  "key": "Shure | UA844 active antenna splitter + antenna 470 - 960 MHz",
+  "title": "Shure UA844 active antenna splitter + antenna 470 - 960 MHz",
+  "items": [
+   "AUDWIRSHUUA844A"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/6f8/07b/2a-/setcard/5dc9d3e64aaa92a9c959f1ef9bbed0a3.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/ua844p",
+  "source": "manufacturer",
+  "note": "UA844+ (current version of UA844); antennas not shown"
+ },
+ {
+  "key": "Shure | UA845 active antenna splitter + antenna 500 - 900 MHz",
+  "title": "Shure UA845 active antenna splitter + antenna 500 - 900 MHz",
+  "items": [
+   "AUDWIRSHUUA845A"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/549/2ef/c1-/setcard/5f45082dd425412462578da6f3dc45e3.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/ua845uwb",
+  "source": "manufacturer",
+  "note": "UA845UWB (current wideband version), antennas not pictured"
+ },
+ {
+  "key": "Shure | UA860SWB omni directional antenna 470 - 1100 MHz",
+  "title": "Shure UA860SWB omni directional antenna 470 - 1100 MHz",
+  "items": [
+   "AUDWIRSHU2XUA86"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_19/191380/10633452_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_19/191380/10633447_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/191380.jpg"
+  ],
+  "page": "https://www.thomann.de/de/shure_ua860_swb.htm",
+  "source": "distributor",
+  "note": "Thomann"
+ },
+ {
+  "key": "Shure | ULXD1 bodypack transmitter",
+  "title": "Shure ULXD1 bodypack transmitter",
+  "items": [
+   "AUDWIRSHUULXD1B"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/a0a/c6b/28-/setcard/73167ef4f4c40e32e7b2acec5bd46931.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/wireless-systems/ulx-d_digital_wireless/ulxd1",
+  "source": "manufacturer",
+  "note": "og:image"
+ },
+ {
   "key": "Shure | ULXD2 handheld transmitter + Beta 58",
   "title": "Shure ULXD2 handheld transmitter + Beta 58",
   "items": [
@@ -4061,5 +7433,336 @@
   "page": "https://www.shure.com/en-US/products/accessories/rpw184",
   "source": "manufacturer",
   "note": "ULXD2/B58 related-product thumbnail on RPW184 page"
+ },
+ {
+  "key": "Shure | ULXD4 double receiver",
+  "title": "Shure ULXD4 double receiver",
+  "items": [
+   "AUDWIRSHUULXD4D"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/e56/bfb/5a-/original/f57b35ec5c33ecffc76308949745308c.webp"
+  ],
+  "page": "https://www.shure.com/en-US/products/wireless-systems/ulx-d_digital_wireless/ulxd4d",
+  "source": "manufacturer",
+  "note": "ULXD4D dual-channel receiver image"
+ },
+ {
+  "key": "Shure | ULXD4 quad receiver",
+  "title": "Shure ULXD4 quad receiver",
+  "items": [
+   "AUDWIRSHUULXD4Q"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/8ed/a9e/17-/setcard/e5ed31006c35010746bf58406c28c521.jpeg"
+  ],
+  "page": "https://www.shure.com/en-MEA/products/wireless-systems/ulx-d_digital_wireless/ulxd4q",
+  "source": "manufacturer",
+  "note": "ULXD4Q"
+ },
+ {
+  "key": "Shure | ULXD4 quad receiver + antenna",
+  "title": "Shure ULXD4 quad receiver + antenna",
+  "items": [
+   "AUDWIRSHU2XULXD"
+  ],
+  "candidates": [
+   "https://www.markertek.com/productImage/alternate-1/hi-res/SH-ULXD4Q-G57.JPG",
+   "https://www.markertek.com/productImage/alternate-2/hi-res/SH-ULXD4Q-G57.JPG"
+  ],
+  "page": "https://www.markertek.com/product/sh-ulxd4q-g57/shure-ulxd4q-digital-4-channel-wireless-receiver-g57-470-608mhz",
+  "source": "distributor",
+  "note": "Markertek ULXD4Q (G57 band; same unit)"
+ },
+ {
+  "key": "ShurePA821 | 8 Ch. ant. combiner + antenna 470 - 865 MHz",
+  "title": "ShurePA821 8 Ch. ant. combiner + antenna 470 - 865 MHz",
+  "items": [
+   "AUDINESHU8CHANT"
+  ],
+  "candidates": [
+   "https://products.shureweb.eu/shure_product_db/product_main_images/files/8c0/056/cc-/setcard/432ecb49f19722b3fa8e62d0f40b5ced.jpeg"
+  ],
+  "page": "https://www.shure.com/en-US/products/accessories/pa821a",
+  "source": "manufacturer",
+  "note": "PA821A (current version of PA821)"
+ },
+ {
+  "key": "Tascam | SS-CDR1",
+  "title": "Tascam SS-CDR1",
+  "items": [
+   "AUDPLATASSSCDR1"
+  ],
+  "candidates": [
+   "https://cuesale.com/wp-content/uploads/2024/06/tascam-ss-cdr1-1.jpg",
+   "https://cuesale.com/wp-content/uploads/2024/06/tascam-ss-cdr1-2.jpg",
+   "https://cuesale.com/wp-content/uploads/2024/06/tascam-ss-cdr1-3.jpg"
+  ],
+  "page": "https://cuesale.com/product/tascam-ss-cdr1-solid-state-recorder/",
+  "source": "other",
+  "note": "Discontinued model; reseller photos"
+ },
+ {
+  "key": "Tascam | SS-CDR200",
+  "title": "Tascam SS-CDR200",
+  "items": [
+   "AUDPLATASSSCDR2"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_41/413958/12371437_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/413958.jpg"
+  ],
+  "page": "https://www.thomann.de/de/tascam_ss_cdr250n.htm",
+  "source": "distributor",
+  "note": "Close model: SS-CDR250N (successor, similar 1U front); SS-CDR200 not listed"
+ },
+ {
+  "key": "Technics | SL-1210 MK7",
+  "title": "Technics SL-1210 MK7",
+  "items": [
+   "AUDPLATECSL1210"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_47/479661/14704906_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_47/479661/14704896_800.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/technics_sl_1210_mk_7.htm",
+  "source": "distributor",
+  "note": "Thomann"
+ },
+ {
+  "key": "Verlinde | SR10 1000KG - chain 20 m",
+  "title": "Verlinde SR10 1000KG - chain 20 m",
+  "items": [
+   "RIGRIGVERSR1010"
+  ],
+  "candidates": [
+   "https://www.10kused.com/wp-content/uploads/2020/03/10Kused-Verlinde-Stagemaker-SR.jpg"
+  ],
+  "page": "https://www.10kused.com/product/verlinde-stagemaker-sr-10-d8-1000kg-40m-chain-vl-255726230751/",
+  "source": "other",
+  "note": "Generic Stagemaker SR image from used dealer"
+ },
+ {
+  "key": "Yamaha | CL1",
+  "title": "Yamaha CL1",
+  "items": [
+   "AUDDIGYAMCL1"
+  ],
+  "candidates": [
+   "https://ro.yamaha.com/en/files/EDE97677368147FB9C9D4DE34463F4F8_12073_tcm133-1645820.jpg?impolicy=resize&imwid=735&imhei=735"
+  ],
+  "page": "https://ro.yamaha.com/en/business/audio/products/mixers/cl-series/",
+  "source": "manufacturer",
+  "note": "Yamaha CL1 from CL series page"
+ },
+ {
+  "key": "Yamaha | CL3",
+  "title": "Yamaha CL3",
+  "items": [
+   "AUDDIGYAMCL3"
+  ],
+  "candidates": [
+   "https://th.yamaha.com/en/files/573AA58F172E4174BE9EDF3A950861E5_12073_tcm156-1652419.jpg?impolicy=resize&imwid=735&imhei=735"
+  ],
+  "page": "https://th.yamaha.com/en/products/proaudio/mixers/cl_series",
+  "source": "manufacturer",
+  "note": "Yamaha CL series page, CL3 main image (assigned by page position)"
+ },
+ {
+  "key": "Yamaha | CL5",
+  "title": "Yamaha CL5",
+  "items": [
+   "AUDDIGYAMCL5"
+  ],
+  "candidates": [
+   "https://uk.yamaha.com/en/files/FA594699D32949AFBDFC2243FFFFDC9D_12073_tcm117-1684937.jpg",
+   "https://uk.yamaha.com/en/files/photoviewer_mixer_CL5_overhead_tcm117-1676330.jpg"
+  ],
+  "page": "https://uk.yamaha.com/en/products/proaudio/mixers/cl_series/features.html",
+  "source": "manufacturer",
+  "note": "Yamaha UK CL series page"
+ },
+ {
+  "key": "Yamaha | CSD-R7 + HY144",
+  "title": "Yamaha CSD-R7 + HY144",
+  "items": [
+   "AUDDIGYAMCSDR7H"
+  ],
+  "candidates": [
+   "https://usa.yamaha.com/files/Image-Main_d204dab68eb456b578f5f9109c24edf5.jpg?impolicy=resize&imwid=4000&imhei=4000"
+  ],
+  "page": "https://usa.yamaha.com/products/proaudio/mixers/rivage_pm/components.html",
+  "source": "manufacturer",
+  "note": "CSD-R7 surface; HY144-D card image: https://usa.yamaha.com/files/HY144-D_c35498333d40a11222ef70b56d52c8f5.jpg?impolicy=resize&imwid=4096&imhei=4096"
+ },
+ {
+  "key": "Yamaha | MG12XU",
+  "title": "Yamaha MG12XU",
+  "items": [
+   "AUDANAYAMMG12XU"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_33/333834/8414184_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_33/333834/8414174_800.jpg",
+   "https://www.thomann.de/thumb/opengraph/pics/prod/333834.jpg"
+  ],
+  "page": "https://www.thomann.de/de/yamaha_mg12_xu.htm",
+  "source": "distributor",
+  "note": "Thomann"
+ },
+ {
+  "key": "Yamaha | QL1",
+  "title": "Yamaha QL1",
+  "items": [
+   "AUDDIGYAMQL1"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_33/335836/15055600_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_33/335836/15055590_800.jpg"
+  ],
+  "page": "https://www.thomann.co.uk/yamaha_ql1.htm",
+  "source": "distributor",
+  "note": "Thomann"
+ },
+ {
+  "key": "Yamaha | QL5",
+  "title": "Yamaha QL5",
+  "items": [
+   "AUDDIGYAMQL5"
+  ],
+  "candidates": [
+   "https://ca.yamaha.com/fr/files/F6A3BCE3447E429FB3CC6FA85C6EFC25_12073_tcm155-1673140.jpg",
+   "https://ca.yamaha.com/fr/files/photoviewer_mixers_ql5_overhead_tcm155-1634359.jpg"
+  ],
+  "page": "https://ca.yamaha.com/fr/business/audio/products/mixers/ql-series",
+  "source": "manufacturer",
+  "note": "Yamaha QL series page, QL5 main + overhead"
+ },
+ {
+  "key": "Yamaha | RI8-D",
+  "title": "Yamaha RI8-D",
+  "items": [
+   "AUDDIGYAMRI8D"
+  ],
+  "candidates": [
+   "https://uk.yamaha.com/en/files/photoviewer_interface_Ri8-D_Front_tcm117-1724573.jpg",
+   "https://uk.yamaha.com/en/files/photoviewer_interface_Ri8-D_Tilt_tcm117-1706069.jpg"
+  ],
+  "page": "https://uk.yamaha.com/en/products/proaudio/mixers/cl_series/features.html",
+  "source": "manufacturer",
+  "note": "From CL series page lineup"
+ },
+ {
+  "key": "Yamaha | RIO1608-D",
+  "title": "Yamaha RIO1608-D",
+  "items": [
+   "AUDDIGYAMKIDECLRIO16"
+  ],
+  "candidates": [
+   "https://my.yamaha.com/en/files/rio1608-d2_tilt_a_tcm147-1639078.jpg",
+   "https://my.yamaha.com/en/files/A9A2CF8F189449309AF07A000350DCB9_12073_tcm147-1648247.jpg?impolicy=resize&imwid=735&imhei=735"
+  ],
+  "page": "https://my.yamaha.com/en/business/audio/products/interfaces/r-series-adda-2/",
+  "source": "manufacturer",
+  "note": "Rio1608-D2 (successor, near-identical look); second image may be a lineup shot"
+ },
+ {
+  "key": "Yamaha | RIO1608-D + RIO3224-D + Luminex GigaCore 12 switch",
+  "title": "Yamaha RIO1608-D + RIO3224-D + Luminex GigaCore 12 switch",
+  "items": [
+   "AUDDIGYAMKIDECLRIO48"
+  ],
+  "candidates": [
+   "https://in.yamaha.com/en/files/1B9DA74123BC4ECE8412A54CC38C8C7A_12073_tcm142-1632580.jpg?impolicy=resize&imwid=735&imhei=735",
+   "https://in.yamaha.com/en/files/A9A2CF8F189449309AF07A000350DCB9_12073_tcm142-1648247.jpg?impolicy=resize&imwid=735&imhei=735",
+   "https://avlgear.com/cdn/shop/files/f01ed947-2138-4231-be7f-760eace201a9.jpg?v=1737160479&width=1000"
+  ],
+  "page": "https://in.yamaha.com/products/proaudio/interfaces/r_series_adda_2/index.html",
+  "source": "manufacturer",
+  "note": "Images of Rio3224-D2 and Rio1608-D2 (2nd gen, very close to Rio-D); GigaCore 12 not pictured"
+ },
+ {
+  "key": "Yamaha | RIO1608-D2",
+  "title": "Yamaha RIO1608-D2",
+  "items": [
+   "AUDDIGYAMKIDEYARIO16"
+  ],
+  "candidates": [
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_61/610190/20101532_800.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_61/610190/20101530_800.jpg"
+  ],
+  "page": "https://www.thomann.de/de/yamaha_rio1608_d3.htm",
+  "source": "distributor",
+  "note": "Close model: RIO1608-D3 (successor, near-identical front); D2 not listed"
+ },
+ {
+  "key": "Yamaha | RIO3224-D + Luminex GigaCore 12 switch",
+  "title": "Yamaha RIO3224-D + Luminex GigaCore 12 switch",
+  "items": [
+   "AUDDIGYAMKIDECLRIO32"
+  ],
+  "candidates": [
+   "https://ro.yamaha.com/en/files/1B9DA74123BC4ECE8412A54CC38C8C7A_12073_tcm133-1632580.jpg?impolicy=resize&imwid=735&imhei=735"
+  ],
+  "page": "https://ro.yamaha.com/en/business/audio/products/interfaces/r-series-adda-2/",
+  "source": "manufacturer",
+  "note": "Rio3224-D2 image (close successor of Rio3224-D); switch not shown"
+ },
+ {
+  "key": "Yamaha | RIO3224-D2 + Luminex GigaCore 12 switch",
+  "title": "Yamaha RIO3224-D2 + Luminex GigaCore 12 switch",
+  "items": [
+   "AUDDIGYAMKIDEYARIO32"
+  ],
+  "candidates": [
+   "https://th.yamaha.com/en/files/1B9DA74123BC4ECE8412A54CC38C8C7A_12073_tcm156-1632580.jpg?impolicy=resize&imwid=735&imhei=735"
+  ],
+  "page": "https://th.yamaha.com/en/products/proaudio/mixers/cl_series",
+  "source": "manufacturer",
+  "note": "Rio3224-D2 only; switch not shown"
+ },
+ {
+  "key": "Yamaha | RIO3224-D2 + RIO1608-D2 + Luminex Gigacore 12 switch",
+  "title": "Yamaha RIO3224-D2 + RIO1608-D2 + Luminex Gigacore 12 switch",
+  "items": [
+   "AUDDIGYAMKIDEYARIO48"
+  ],
+  "candidates": [
+   "https://uk.yamaha.com/en/files/1B9DA74123BC4ECE8412A54CC38C8C7A_12073_tcm117-1632580.jpg",
+   "https://uk.yamaha.com/en/files/A9A2CF8F189449309AF07A000350DCB9_12073_tcm117-1648247.jpg"
+  ],
+  "page": "https://uk.yamaha.com/en/business/audio/products/interfaces/r-series-adda-2/",
+  "source": "manufacturer",
+  "note": "Rio3224-D2 and Rio1608-D2 images; set includes Gigacore 12 (not pictured)"
+ },
+ {
+  "key": "Yamaha | RO8-D",
+  "title": "Yamaha RO8-D",
+  "items": [
+   "AUDDIGYAMRO8D"
+  ],
+  "candidates": [
+   "https://usa.yamaha.com/files/photoviewer_interface_Ro8-D_Front_418f5354e673eb84c0411f82b5a7221d.jpg?impolicy=resize&imwid=2000&imhei=750",
+   "https://usa.yamaha.com/files/photoviewer_interface_Ro8-D_Tilt_64070189133c3776a23193fddb3247b4.jpg?impolicy=resize&imwid=735&imhei=735"
+  ],
+  "page": "https://usa.yamaha.com/products/proaudio/mixers/rivage_pm/components.html",
+  "source": "manufacturer",
+  "note": null
+ },
+ {
+  "key": "Yamaha | TF1",
+  "title": "Yamaha TF1",
+  "items": [
+   "AUDDIGYAMTF1"
+  ],
+  "candidates": [
+   "https://img.kirstein.de/out/pictures/generated/product/1/2000_2000_75/7892e096cf8ceabccc1a93719ff77_1.jpg",
+   "https://img.kirstein.de/out/pictures/generated/product/2/2000_2000_75/7892e096cf8ceabccc1a93719ff77_2.jpg",
+   "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_36/367423/10023013_800.jpg"
+  ],
+  "page": "https://www.kirstein.de/en/Live-Studio/Mixers/Digital-Mixing-Desks/Yamaha-TF-1-Digital-Mixer.html",
+  "source": "distributor",
+  "note": "Kirstein 2000px images; Thomann image from TF-1 bundle page"
  }
 ]
