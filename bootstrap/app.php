@@ -6,6 +6,7 @@ use App\Http\Middleware\EnsureNavAccess;
 use App\Http\Middleware\EnsureRight;
 use App\Http\Middleware\LogoutBlockedMembers;
 use App\Http\Middleware\LogoutDisabledUsers;
+use App\Http\Middleware\RunBackgroundChecks;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             SetLocale::class,
             LogoutDisabledUsers::class,
             LogoutBlockedMembers::class,
+            RunBackgroundChecks::class,
         ]);
         // Afrit 6 members and staff each have their own login page and home.
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('afrit6', 'afrit6/*') ? route('afrit6.login') : route('login'));
