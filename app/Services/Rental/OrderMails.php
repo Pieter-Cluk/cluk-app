@@ -86,6 +86,57 @@ class OrderMails
         ));
     }
 
+    /** A change to a sub-hire the partner already confirmed: said clearly in the subject and the first line. */
+    public static function subhireAdjustment(SubhireRequest $r, User $by, array $changes, ?string $message = null): bool
+    {
+        $r->loadMissing(['supplier', 'lines']);
+        if (! $r->sent_to) {
+            return false;
+        }
+        $lang = $r->supplier->language ?: 'en';
+
+        return self::send($r->sent_to, $lang, function () use ($r, $by, $changes, $message) {
+            $was = [];
+            foreach ($changes as [$k, $a, $b]) {
+                $was[] = $k === 'qty'
+                    ? __('mails.subhire.change_qty', ['name' => $a, 'was' => $b[0], 'now' => $b[1]])
+                    : __('mails.subhire.change_'.$k, ['was' => self::when($a), 'now' => self::when($b)]);
+            }
+
+            return new Confirmation(
+                subject: __('mails.subhire.adjust_subject', ['number' => $r->confirm_number]),
+                greeting: __('mails.hello_plain'),
+                intro: array_values(array_filter([__('mails.subhire.adjust_intro', ['number' => $r->confirm_number]), ...array_map(fn ($w) => '• '.$w, $was ?: [__('mails.subhire.no_changes')]), $message])),
+                details: array_filter([
+                    __('mails.label.our_ref') => $r->confirm_number.' ('.$r->number.')',
+                    __('mails.label.your_ref') => $r->their_ref,
+                    __('mails.label.delivery') => self::when($r->delivery_at).' · '.self::warehouse(),
+                    __('mails.label.return_partner') => self::when($r->return_at),
+                ]),
+                rows: $r->lines->map(fn ($l) => [(string) $l->qty, $l->name, $l->amount_cents ? Pricing::eur($l->amount_cents) : ''])->all(),
+                totals: $r->total_cents ? [__('quotes.total_excl') => Pricing::eur($r->total_cents)] : [],
+                next: [__('mails.subhire.adjust_next')],
+                signer: $by,
+            );
+        });
+    }
+
+    /** The order behind a confirmed sub-hire is cancelled. */
+    public static function subhireCancelled(SubhireRequest $r, string $reason, User $by): bool
+    {
+        $r->loadMissing(['supplier', 'lines']);
+
+        return self::send($r->sent_to, $r->supplier->language ?: 'en', fn () => new Confirmation(
+            subject: __('mails.subhire.cancel_subject', ['number' => $r->confirm_number]),
+            greeting: __('mails.hello_plain'),
+            intro: [__('mails.subhire.cancel_intro', ['number' => $r->confirm_number])],
+            details: array_filter([__('mails.label.our_ref') => $r->confirm_number.' ('.$r->number.')', __('mails.label.your_ref') => $r->their_ref]),
+            rows: $r->lines->map(fn ($l) => [(string) $l->qty, $l->name, ''])->all(),
+            next: [__('mails.subhire.cancel_next')],
+            signer: $by,
+        ));
+    }
+
     public static function orderConfirmation(Order $o, User $by): bool
     {
         $o->loadMissing(['lines', 'contact', 'quote']);

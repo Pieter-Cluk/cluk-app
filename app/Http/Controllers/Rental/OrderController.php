@@ -11,6 +11,7 @@ use App\Models\Rental\Order;
 use App\Models\Rental\OrderAsset;
 use App\Models\Rental\OrderLine;
 use App\Models\User;
+use App\Services\Rental\OrderChanges;
 use App\Services\Rental\Orders;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,6 +60,7 @@ class OrderController extends Controller
             'canWork' => $this->canWork($me, $order),
             'canSubhire' => $me->canUseModule('purchasing', 2),
             'canApprove' => $me->hasRight('orders.approve'),
+            'canChange' => $this->canChange($me, $order),
             'suppliers' => Company::active()->where('is_supplier', true)->orderBy('name')->get(['id', 'name', 'supplies']),
             'assignees' => User::where('status', User::STATUS_ACTIVE)->orderBy('first_name')->get()
                 ->filter(fn (User $u) => $u->canUseModule('dryhire', 2) && $me->canHandTaskTo($u))->values(),
@@ -200,10 +202,42 @@ class OrderController extends Controller
         return back()->with('status', $sent ? __('orders.flash.approved', ['email' => $order->customer_email]) : __('orders.flash.approved_no_mail'));
     }
 
+    /** Who may change a won order: dry-hire or sales from level 2. */
+    private function canChange(User $me, Order $order): bool
+    {
+        return in_array($order->status, ['allocation', 'approved'], true) && ! $order->returned_at && ($me->canUseModule('dryhire', 2) || $me->canUseModule('sales', 2));
+    }
+
+    /** Logistics change: other out / use times after the quote was won. */
+    public function times(Request $request, Order $order): RedirectResponse
+    {
+        $me = $request->user();
+        abort_unless($this->canChange($me, $order), 403);
+        $d = $request->validate([
+            'out_from' => ['required', 'date'], 'out_until' => ['required', 'date', 'after:out_from'],
+            'use_from' => ['required', 'date'], 'use_until' => ['required', 'date', 'after_or_equal:use_from'],
+            'move_subhire' => ['boolean'],
+        ]);
+        $released = OrderChanges::changeTimes($order, $d, $request->boolean('move_subhire'), $me);
+        $adjust = $order->subhires()->where('status', 'accepted')->get()->filter(fn ($r) => $r->changes())->count();
+
+        return back()->with('status', __('orders.change.times_saved').($released ? ' '.__('orders.change.released', ['list' => implode(', ', $released)]) : '').($adjust ? ' '.trans_choice('orders.change.tell_partners', $adjust, ['n' => $adjust]) : ''));
+    }
+
+    /** The customer changes or cancels: back to a new quote version. */
+    public function reopen(Request $request, Order $order): RedirectResponse
+    {
+        $me = $request->user();
+        abort_unless($this->canChange($me, $order) && ! $order->loaded_at, 403);
+        $quote = OrderChanges::reopen($order, $request->validate(['reason' => ['required', 'string', 'max:500']])['reason'], $me);
+
+        return redirect()->route('quotes.show', $quote)->with('status', __('orders.change.reopened', ['code' => $quote->code()]));
+    }
+
     public function cancel(Request $request, Order $order): RedirectResponse
     {
         $me = $request->user();
-        abort_unless($order->isInAllocation() && $me->canUseModule('dryhire', 3), 403);
+        abort_unless(($order->isInAllocation() && $me->canUseModule('dryhire', 3)) || ($order->status === 'reopened' && ($me->canUseModule('dryhire', 2) || $me->canUseModule('sales', 2))), 403);
         Orders::cancel($order, $request->validate(['reason' => ['required', 'string', 'max:500']])['reason'], $me);
 
         return back()->with('status', __('orders.flash.cancelled'));

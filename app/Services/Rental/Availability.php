@@ -28,7 +28,9 @@ class Availability
 
     public function __construct(private Carbon $from, private Carbon $until, private ?string $exceptQuoteNumber = null, private ?int $exceptOrderId = null)
     {
-        $quotes = Quote::holding()->whereDoesntHave('order')
+        // A reopened order keeps holding its stock; its new quote version must not count twice.
+        $reopened = Quote::whereIn('id', Order::where('status', 'reopened')->pluck('quote_id'))->pluck('number');
+        $quotes = Quote::holding()->whereDoesntHave('order')->whereNotIn('number', $reopened)
             ->where('out_from', '<', $until)->where('out_until', '>', $from)
             ->when($exceptQuoteNumber, fn ($q) => $q->where('number', '!=', $exceptQuoteNumber))
             ->with('lines.item.contents')->get();
@@ -40,7 +42,7 @@ class Availability
             }
         }
 
-        $orders = Order::open()->overlapping($from, $until)
+        $orders = Order::whereIn('status', [...Order::OPEN, 'reopened'])->overlapping($from, $until)
             ->when($exceptOrderId, fn ($q) => $q->whereKeyNot($exceptOrderId))
             ->with(['lines.item.contents', 'lines.subhireLines.request', 'lines.assets'])->get();
         foreach ($orders as $order) {

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 #[Fillable([
     'number', 'confirm_number', 'order_id', 'supplier_id', 'status', 'delivery_at', 'return_at', 'sent_to', 'sent_at',
     'their_ref', 'note', 'extra_cents', 'extra_text', 'total_cents', 'answered_at', 'accepted_at', 'accepted_by_id', 'created_by_id',
-    'received_at', 'received_by_id', 'in_photos', 'in_note', 'handed_back_at', 'handed_back_by_id', 'out_photos', 'out_note',
+    'confirmed_snapshot', 'adjusted_at', 'adjust_count', 'received_at', 'received_by_id', 'in_photos', 'in_note', 'handed_back_at', 'handed_back_by_id', 'out_photos', 'out_note',
 ])]
 class SubhireRequest extends Model
 {
@@ -25,7 +26,7 @@ class SubhireRequest extends Model
 
     protected function casts(): array
     {
-        return ['delivery_at' => 'datetime', 'return_at' => 'datetime', 'sent_at' => 'datetime', 'answered_at' => 'datetime', 'accepted_at' => 'datetime', 'received_at' => 'datetime', 'handed_back_at' => 'datetime', 'in_photos' => 'array', 'out_photos' => 'array', 'extra_cents' => 'integer', 'total_cents' => 'integer'];
+        return ['delivery_at' => 'datetime', 'return_at' => 'datetime', 'sent_at' => 'datetime', 'answered_at' => 'datetime', 'accepted_at' => 'datetime', 'confirmed_snapshot' => 'array', 'adjusted_at' => 'datetime', 'adjust_count' => 'integer', 'received_at' => 'datetime', 'handed_back_at' => 'datetime', 'in_photos' => 'array', 'out_photos' => 'array', 'extra_cents' => 'integer', 'total_cents' => 'integer'];
     }
 
     public function order(): BelongsTo
@@ -56,6 +57,52 @@ class SubhireRequest extends Model
     public function handedBackBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'handed_back_by_id');
+    }
+
+    /** Dates and quantities as they stand now, to compare with what the partner confirmed. */
+    public function snapshot(): array
+    {
+        $this->loadMissing('lines');
+
+        return [
+            'delivery_at' => $this->delivery_at?->toIso8601String(), 'return_at' => $this->return_at?->toIso8601String(),
+            'lines' => $this->lines->mapWithKeys(fn ($l) => [(string) $l->id => ['name' => $l->name, 'qty' => $l->qty]])->all(),
+        ];
+    }
+
+    /** Confirmed before (has an SHC number): any new message to the partner is an adjustment. */
+    public function wasConfirmed(): bool
+    {
+        return $this->confirm_number !== null;
+    }
+
+    /** What changed since the partner's last confirmation: [label, was, now] rows. */
+    public function changes(): array
+    {
+        $old = $this->confirmed_snapshot;
+        if (! $old) {
+            return [];
+        }
+        $now = $this->snapshot();
+        $rows = [];
+        foreach (['delivery_at', 'return_at'] as $k) {
+            if (($old[$k] ?? null) !== $now[$k]) {
+                $rows[] = [$k, $old[$k] ? Carbon::parse($old[$k]) : null, $now[$k] ? Carbon::parse($now[$k]) : null];
+            }
+        }
+        foreach ($old['lines'] ?? [] as $id => $l) {
+            $n = $now['lines'][$id]['qty'] ?? 0;
+            if ($n !== $l['qty']) {
+                $rows[] = ['qty', $l['name'], [$l['qty'], $n]];
+            }
+        }
+        foreach ($now['lines'] as $id => $l) {
+            if (! isset($old['lines'][$id])) {
+                $rows[] = ['qty', $l['name'], [0, $l['qty']]];
+            }
+        }
+
+        return $rows;
     }
 
     public function code(): string

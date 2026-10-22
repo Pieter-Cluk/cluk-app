@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Rental;
 use App\Http\Controllers\Controller;
 use App\Models\Rental\SubhireLine;
 use App\Models\Rental\SubhireRequest;
+use App\Services\Rental\OrderChanges;
 use App\Services\Rental\OrderMails;
 use App\Services\Rental\Orders;
 use Illuminate\Http\RedirectResponse;
@@ -44,7 +45,7 @@ class SubhireController extends Controller
             'r' => $subhire,
             'canWork' => $request->user()->canUseModule('purchasing', 2),
             'seeMargin' => $request->user()->hasRight('finance.see_margins'),
-            'editable' => in_array($subhire->status, ['draft', 'sent'], true),
+            'editable' => in_array($subhire->status, ['draft', 'sent'], true) || ($subhire->status === 'accepted' && ! $subhire->handed_back_at),
         ]);
     }
 
@@ -57,7 +58,8 @@ class SubhireController extends Controller
     /** Type the partner's answer: their reference, dates, prices per line, extra costs. */
     public function update(Request $request, SubhireRequest $subhire): RedirectResponse
     {
-        $this->guard($request, $subhire, ['draft', 'sent']);
+        $this->guard($request, $subhire, ['draft', 'sent', 'accepted']);
+        abort_if($subhire->handed_back_at, 409);
         $d = $request->validate([
             'their_ref' => ['nullable', 'string', 'max:80'],
             'delivery_at' => ['required', 'date'],
@@ -132,6 +134,12 @@ class SubhireController extends Controller
     public function resend(Request $request, SubhireRequest $subhire): RedirectResponse
     {
         $this->guard($request, $subhire, ['sent']);
+        if ($subhire->wasConfirmed()) {
+            // Confirmed before: say clearly that this is an adjustment.
+            OrderChanges::sendAdjustment($subhire, $request->user());
+
+            return back()->with('status', __('orders.change.adjust_sent', ['to' => $subhire->sent_to]));
+        }
         OrderMails::priceRequest($subhire, $request->user());
 
         return back()->with('status', __('orders.flash.reminded', ['to' => $subhire->sent_to]));
@@ -140,8 +148,21 @@ class SubhireController extends Controller
     public function cancel(Request $request, SubhireRequest $subhire): RedirectResponse
     {
         $this->guard($request, $subhire, ['draft', 'sent']);
+        if ($subhire->wasConfirmed() && $subhire->sent_to) {
+            OrderMails::subhireCancelled($subhire, '', $request->user());
+        }
         $subhire->update(['status' => 'cancelled']);
 
         return redirect()->route('orders.show', $subhire->order_id)->with('status', __('orders.flash.subhire_cancelled'));
+    }
+
+    /** Tell the partner what changed on a confirmed sub-hire. */
+    public function adjust(Request $request, SubhireRequest $subhire): RedirectResponse
+    {
+        $this->guard($request, $subhire, ['sent', 'accepted']);
+        abort_unless($subhire->wasConfirmed() && $subhire->sent_to, 409);
+        OrderChanges::sendAdjustment($subhire, $request->user(), $request->validate(['message' => ['nullable', 'string', 'max:1000']])['message'] ?? null);
+
+        return back()->with('status', __('orders.change.adjust_sent', ['to' => $subhire->sent_to]));
     }
 }

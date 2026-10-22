@@ -24,6 +24,9 @@ class Orders
         if ($existing = $quote->order) {
             return $existing;
         }
+        if ($reopened = OrderChanges::takeBack($quote)) {
+            return $reopened;
+        }
 
         return DB::transaction(function () use ($quote) {
             $quote->loadMissing('lines.item');
@@ -180,10 +183,17 @@ class Orders
             throw ValidationException::withMessages(['price' => __('orders.errors.prices_first')]);
         }
         $request->recalculate();
-        $request->update(['status' => 'accepted', 'confirm_number' => SubhireRequest::nextNumber('SHC'), 'accepted_at' => now(), 'accepted_by_id' => $by->id, 'answered_at' => $request->answered_at ?? now()]);
-        AuditLog::record('subhire.accepted', $request, ['supplier' => $request->supplier->name, 'total' => Pricing::eur($request->total_cents)], $by);
-        if ($request->sent_to) {
-            OrderMails::subhireConfirmation($request, $by);
+        $again = $request->wasConfirmed();
+        $request->update(['status' => 'accepted', 'confirm_number' => $request->confirm_number ?? SubhireRequest::nextNumber('SHC'), 'accepted_at' => now(), 'accepted_by_id' => $by->id, 'answered_at' => $request->answered_at ?? now()]);
+        AuditLog::record('subhire.accepted', $request, ['supplier' => $request->supplier->name, 'total' => Pricing::eur($request->total_cents), 'again' => $again ?: null], $by);
+        if ($again) {
+            // Confirmed before: the partner gets an adjustment, not a second confirmation.
+            OrderChanges::sendAdjustment($request->fresh('lines'), $by);
+        } else {
+            if ($request->sent_to) {
+                OrderMails::subhireConfirmation($request, $by);
+            }
+            $request->update(['confirmed_snapshot' => $request->fresh('lines')->snapshot()]);
         }
     }
 
@@ -216,7 +226,15 @@ class Orders
         DB::transaction(function () use ($order, $reason, $by) {
             $order->update(['status' => 'cancelled', 'cancelled_at' => now(), 'cancel_reason' => $reason]);
             $order->assets()->delete();
-            $order->subhires()->whereIn('status', ['draft', 'sent'])->update(['status' => 'cancelled']);
+            foreach ($order->subhires()->whereIn('status', ['draft', 'sent', 'accepted'])->with('supplier')->get() as $r) {
+                // A partner who had confirmed gets a cancellation; open requests just close.
+                if ($r->wasConfirmed() && ! $r->handed_back_at && $r->sent_to) {
+                    OrderMails::subhireCancelled($r, $reason, $by);
+                }
+                if ($r->status !== 'accepted' || ! $r->received_at) {
+                    $r->update(['status' => 'cancelled']);
+                }
+            }
             AuditLog::record('order.cancelled', $order, ['reason' => $reason], $by);
         });
     }

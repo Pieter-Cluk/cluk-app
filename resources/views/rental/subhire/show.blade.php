@@ -12,6 +12,14 @@
     </div>
     @include('partials.flash')
 
+    @if ($r->wasConfirmed() && in_array($r->status, ['sent', 'accepted'], true) && $changes = $r->changes())
+        <div class="flash flash-err">
+            <b>{{ __('orders.change.sub_changed', ['number' => $r->confirm_number]) }}</b>
+            <ul>@foreach ($changes as [$k, $a, $b])<li>{{ $k === 'qty' ? __('mails.subhire.change_qty', ['name' => $a, 'was' => $b[0], 'now' => $b[1]]) : __('mails.subhire.change_'.$k, ['was' => $a?->format('d/m H:i') ?? '—', 'now' => $b?->format('d/m H:i') ?? '—']) }}</li>@endforeach</ul>
+        </div>
+    @elseif ($r->wasConfirmed() && $r->status === 'sent')
+        <p class="flash flash-err">{{ __('orders.change.sub_reopened', ['number' => $r->confirm_number]) }}</p>
+    @endif
     <p class="muted">{{ __('orders.sub_state.'.$r->status, ['to' => $r->sent_to, 'date' => $r->sent_at?->format('d/m/Y H:i'), 'by' => $r->acceptedBy?->name, 'when' => $r->accepted_at?->format('d/m/Y H:i')]) }}</p>
 
     <div class="split">
@@ -107,6 +115,15 @@
                         @unless ($r->hasPrices())<small class="muted">{{ __('orders.errors.prices_first') }}</small>@endunless
                         <form method="post" action="{{ route('subhire.na', $r) }}" class="mt">@csrf<button class="btn" type="submit">{{ __('orders.na_go') }}</button></form>
                         <form method="post" action="{{ route('subhire.resend', $r) }}" class="mt">@csrf<button class="btn" type="submit">{{ __('orders.remind') }}</button></form>
+                    @endif
+                    @if ($r->wasConfirmed() && in_array($r->status, ['sent', 'accepted'], true) && $r->sent_to)
+                        <form method="post" action="{{ route('subhire.adjust', $r) }}" class="stack-sm mt">@csrf
+                            <b>{{ __('orders.change.adjust_title') }}</b>
+                            <small class="muted">{{ __('orders.change.adjust_hint', ['to' => $r->sent_to]) }}</small>
+                            <textarea name="message" rows="2" maxlength="1000" placeholder="{{ __('orders.change.adjust_message') }}" aria-label="{{ __('orders.change.adjust_message') }}"></textarea>
+                            <div><button class="btn" type="submit">{{ __('orders.change.adjust_go') }}</button></div>
+                            @if ($r->adjusted_at)<small class="muted">{{ trans_choice('orders.change.adjusted_n', $r->adjust_count, ['n' => $r->adjust_count, 'date' => $r->adjusted_at->format('d/m H:i')]) }}</small>@endif
+                        </form>
                     @endif
                     @if (in_array($r->status, ['draft', 'sent'], true))
                         <details class="mt"><summary>{{ __('orders.sub_cancel') }}</summary><form method="post" action="{{ route('subhire.cancel', $r) }}" class="mt">@csrf<button class="btn btn-danger" type="submit">{{ __('orders.sub_cancel_go') }}</button></form></details>

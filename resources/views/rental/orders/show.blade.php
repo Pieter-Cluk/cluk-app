@@ -158,6 +158,14 @@
             @include('finance._send', ['type' => 'rental', 'id' => $order->id])
         @elseif ($order->status === 'cancelled')
             <div><h2>{{ __('orders.states.cancelled') }}</h2><p class="muted">{{ $order->cancel_reason }}</p></div>
+        @elseif ($order->status === 'reopened')
+            @php($newest = \App\Models\Sales\Quote::where('number', $order->quote?->number)->orderByDesc('version')->first())
+            <div>
+                <h2>{{ __('orders.states.reopened') }}</h2>
+                <p class="muted">{{ __('orders.change.reopened_by', ['name' => \App\Models\User::find($order->reopened_by_id)?->name ?? '—', 'date' => $order->reopened_at?->format('d/m/Y H:i'), 'reason' => $order->reopen_reason]) }}</p>
+                <p class="muted small">{{ __('orders.change.reopened_hint') }}</p>
+            </div>
+            @if ($newest)<a class="primary" href="{{ route('quotes.show', $newest) }}">{{ __('orders.change.open_quote', ['code' => $newest->code()]) }}</a>@endif
         @else
             <div>
                 <h2>{{ __('orders.summary.'.$state) }}</h2>
@@ -173,6 +181,33 @@
             </div>
         @endif
     </section>
+
+    @if ($canChange)
+        <details class="card" @if ($errors->hasAny(['out_from', 'out_until', 'use_from', 'use_until'])) open @endif>
+            <summary><b>{{ __('orders.change.title') }}</b> <span class="muted small">{{ __('orders.change.title_hint') }}</span></summary>
+            <form method="post" action="{{ route('orders.times', $order) }}" class="stack-sm mt">@csrf
+                <div class="form-grid">
+                    <label class="field"><span>{{ __('orders.change.out_from') }}</span><input type="datetime-local" name="out_from" value="{{ old('out_from', $order->out_from->format('Y-m-d\\TH:i')) }}" required @readonly($order->loaded_at)></label>
+                    <label class="field"><span>{{ __('orders.change.out_until') }}</span><input type="datetime-local" name="out_until" value="{{ old('out_until', $order->out_until->format('Y-m-d\\TH:i')) }}" required></label>
+                    <label class="field"><span>{{ __('orders.change.use_from') }}</span><input type="date" name="use_from" value="{{ old('use_from', $order->use_from->format('Y-m-d')) }}" required></label>
+                    <label class="field"><span>{{ __('orders.change.use_until') }}</span><input type="date" name="use_until" value="{{ old('use_until', $order->use_until->format('Y-m-d')) }}" required></label>
+                </div>
+                @if ($order->subhires->whereIn('status', ['draft', 'sent', 'accepted'])->isNotEmpty())
+                    <input type="hidden" name="move_subhire" value="0"><label class="check"><input type="checkbox" name="move_subhire" value="1" checked> {{ __('orders.change.move_subhire') }}</label>
+                @endif
+                <small class="muted">{{ $order->loaded_at ? __('orders.change.loaded_hint') : __('orders.change.times_hint') }}</small>
+                <div><button class="btn" type="submit">{{ __('orders.change.times_go') }}</button></div>
+            </form>
+            @unless ($order->loaded_at)
+                <form method="post" action="{{ route('orders.reopen', $order) }}" class="stack-sm mt pf-late">@csrf
+                    <b>{{ __('orders.change.reopen') }}</b>
+                    <small>{{ __('orders.change.reopen_hint') }}</small>
+                    <input name="reason" required maxlength="500" placeholder="{{ __('orders.change.reopen_reason') }}" aria-label="{{ __('orders.change.reopen_reason') }}">
+                    <div><button class="btn" type="submit">{{ __('orders.change.reopen_go') }}</button></div>
+                </form>
+            @endunless
+        </details>
+    @endif
 
     @if ($order->status === 'approved')
         <section class="card">
@@ -195,7 +230,7 @@
         </section>
     @endif
 
-    @if ($order->isInAllocation() && auth()->user()->canUseModule('dryhire', 3))
+    @if (($order->isInAllocation() && auth()->user()->canUseModule('dryhire', 3)) || ($order->status === 'reopened' && (auth()->user()->canUseModule('dryhire', 2) || auth()->user()->canUseModule('sales', 2))))
         <details class="card">
             <summary>{{ __('orders.cancel') }}</summary>
             <form method="post" action="{{ route('orders.cancel', $order) }}" class="stack-sm mt">
