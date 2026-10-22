@@ -287,6 +287,9 @@ return [
     'previous' => '← Vorige',
     'next' => 'Volgende →',
     'instructions' => [
+        'why_no_code' => 'Enkel voor aanmelden met een code: vink links “Mag aanmelden met een code per e-mail” aan, vul “Aanmeldcodes sturen naar” in en sla op.',
+        'why_no_address' => 'Vul links eerst “Aanmeldcodes sturen naar” in en sla op.',
+        'why_disabled' => 'Deze persoon is uitgeschakeld: schakel eerst in.',
         'go' => 'Aanmeldinstructies sturen',
         'hint' => 'Mailt hoe aanmelden werkt, naar :email. Stuur het opnieuw wanneer nodig.',
         'sent' => 'Aanmeldinstructies gestuurd naar :email.',

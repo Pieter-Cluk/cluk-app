@@ -86,6 +86,7 @@ class EmailCodeLoginTest extends TestCase
     {
         $admin = User::factory()->create(['role_id' => Role::where('slug', 'admin')->value('id'), 'locale' => 'en']);
         $this->actingAs($admin)->get('/settings/users/new')->assertOk()->assertSee('May sign in with a code by email');
+        $this->actingAs($admin)->get('/settings/users/'.$admin->id)->assertSee('Send sign-in instructions')->assertSee('Only for sign-in with a code');
         $role = Role::where('slug', 'warehouse')->value('id');
         $this->actingAs($admin)->post('/settings/users', ['first_name' => 'Free', 'last_name' => 'Lancer', 'email' => 'free@gmail.com', 'locale' => 'en', 'role_id' => $role, 'email_login' => '1'])->assertSessionHasErrors('email_login');
         $this->actingAs($admin)->post('/settings/users', ['first_name' => 'Free', 'last_name' => 'Lancer', 'email' => 'free@cluk.live', 'locale' => 'en', 'role_id' => $role, 'email_login' => '1'])->assertSessionHasErrors('code_email');

@@ -287,6 +287,9 @@ return [
     'previous' => '← Précédent',
     'next' => 'Suivant →',
     'instructions' => [
+        'why_no_code' => 'Uniquement pour la connexion par code : cochez « Peut se connecter avec un code par e-mail » à gauche, remplissez « Envoyer les codes de connexion à » et enregistrez.',
+        'why_no_address' => 'Remplissez d’abord « Envoyer les codes de connexion à » à gauche et enregistrez.',
+        'why_disabled' => 'Cette personne est désactivée : réactivez-la d’abord.',
         'go' => 'Envoyer les instructions de connexion',
         'hint' => 'Envoie comment se connecter, à :email. Renvoyez-le si besoin.',
         'sent' => 'Instructions envoyées à :email.',

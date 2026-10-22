@@ -287,6 +287,9 @@ return [
     'previous' => '← Anterior',
     'next' => 'Siguiente →',
     'instructions' => [
+        'why_no_code' => 'Solo para entrar con código: marca a la izquierda «Puede entrar con un código por correo», rellena «Enviar los códigos de acceso a» y guarda.',
+        'why_no_address' => 'Rellena primero «Enviar los códigos de acceso a» a la izquierda y guarda.',
+        'why_disabled' => 'Esta persona está desactivada: actívala primero.',
         'go' => 'Enviar instrucciones de acceso',
         'hint' => 'Envía cómo entrar, a :email. Reenvíalo cuando haga falta.',
         'sent' => 'Instrucciones enviadas a :email.',

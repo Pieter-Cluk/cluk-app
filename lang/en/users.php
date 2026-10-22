@@ -287,6 +287,9 @@ return [
     'previous' => '← Previous',
     'next' => 'Next →',
     'instructions' => [
+        'why_no_code' => 'Only for sign-in with a code: tick “May sign in with a code by email” on the left, fill in “Send sign-in codes to” and save.',
+        'why_no_address' => 'Fill in “Send sign-in codes to” on the left and save first.',
+        'why_disabled' => 'This person is disabled: enable them first.',
         'go' => 'Send sign-in instructions',
         'hint' => 'Emails how to sign in, to :email. Send it again whenever needed.',
         'sent' => 'Sign-in instructions sent to :email.',
