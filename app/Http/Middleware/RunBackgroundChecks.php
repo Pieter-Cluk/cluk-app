@@ -35,7 +35,7 @@ class RunBackgroundChecks
                 Birthdays::sendToday($now->copy()->startOfDay());
             }
             if (Cache::add('jobs:vies:'.$now->format('Y-m-d-H'), 1, 3700)) {
-                ViesRecheck::run(app(Vies::class), 5);
+                ViesRecheck::run(app(Vies::class), 3, 1); // one try each: never keep a page waiting long
             }
         } catch (Throwable $e) {
             Log::warning('Background checks failed', ['error' => mb_substr($e->getMessage(), 0, 300)]);
