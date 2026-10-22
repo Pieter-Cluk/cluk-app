@@ -1,0 +1,74 @@
+name: Website check
+
+# Started by hand. Lists the dry-hire items and sales products ticked
+# "Show on the website" and whether each is ready for the catalogue
+# (photo, descriptions in EN/NL/FR/ES, price, stock). Read-only.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read the products on one.com
+        env:
+          SSH_HOST: ssh.cys6r88bx.service.one
+          SSH_USER: cys6r88bx_ssh
+          SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
+        run: |
+          set +e
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass >/dev/null
+          export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          sshpass -e ssh -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
+          W=$(readlink -f ~/webroots/by-route/app.cluk.live_)
+          cd "$W/app" || exit 1
+          echo "== deployed revision: $(cat REVISION 2>/dev/null || echo unknown)"
+          F=$(mktemp /tmp/webcheck.XXXX.php)
+          cat > "$F" <<'PHP'
+          <?php
+          require getcwd().'/vendor/autoload.php';
+          $app = require getcwd().'/bootstrap/app.php';
+          $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+          use Illuminate\Support\Facades\DB;
+          use Illuminate\Support\Facades\Schema;
+          foreach (['equipment_items', 'sales_items'] as $t) {
+              echo "$t.on_website column: ".(Schema::hasColumn($t, 'on_website') ? 'yes' : 'NO (migration not run yet)').PHP_EOL;
+          }
+          if (! Schema::hasColumn('equipment_items', 'on_website')) { exit; }
+          $eq = App\Models\Equipment\Item::query()->where('kind', 'item')->get();
+          echo PHP_EOL."== DRY-HIRE: ".$eq->where('on_website', true)->count()." of ".$eq->count()." items ticked".PHP_EOL;
+          echo "number | name | category > sub | brand | stock | price/day | photos | descriptions | active".PHP_EOL;
+          foreach ($eq->where('on_website', true)->sortBy(['category', 'subcategory', 'name']) as $i) {
+              $d = array_keys(array_filter((array) ($i->descriptions ?? [])));
+              echo implode(' | ', [$i->number, $i->name, ($i->category ?: '-').' > '.($i->subcategory ?: '-'), $i->brand ?: '-',
+                  $i->totalQty(), '€ '.number_format($i->day_price_cents / 100, 2, ',', '.'),
+                  $i->photos()->count().($i->photo_path ? ' (main set)' : ' (no main)'),
+                  $d ? implode(',', $d) : 'none', $i->active ? 'yes' : 'NO']).PHP_EOL;
+          }
+          echo PHP_EOL."== categories in the whole dry-hire list (items, ticked)".PHP_EOL;
+          foreach ($eq->groupBy(fn ($i) => ($i->category ?: '-').' > '.($i->subcategory ?: '-'))->sortKeys() as $k => $g) {
+              echo "$k: ".$g->count().', '.$g->where('on_website', true)->count().PHP_EOL;
+          }
+          $s = App\Models\ProductSales\SalesItem::query()->get();
+          echo PHP_EOL."== SALES: ".$s->where('on_website', true)->count()." of ".$s->count()." products ticked".PHP_EOL;
+          echo "number | brand type | category | stock | list price | photo | description | active".PHP_EOL;
+          foreach ($s->where('on_website', true)->sortBy(['category', 'type']) as $i) {
+              echo implode(' | ', [$i->number, trim(($i->brand ?? '').' '.$i->type), $i->category ?: '-', $i->stock_qty,
+                  '€ '.number_format($i->list_price_cents / 100, 2, ',', '.'), $i->photo_path ? 'yes' : 'no',
+                  $i->description ? 'yes' : 'no', $i->active ? 'yes' : 'NO']).PHP_EOL;
+          }
+          PHP
+          php "$F"; rm -f "$F"
+          REMOTE
+          echo "ssh exit: $?" >> report.txt
+
+      - name: Report
+        if: always()
+        run: |
+          head -c 60000 report.txt | split -b 3500 - part_
+          for f in part_*; do
+            body=$(sed 's/%/%25/g' "$f" | sed ':a;N;$!ba;s/\n/%0A/g')
+            echo "::notice title=website check ($f)::${body}"
+          done
