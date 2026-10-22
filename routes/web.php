@@ -19,6 +19,7 @@ use App\Http\Controllers\Factory\FactoryPublicController;
 use App\Http\Controllers\Factory\FactoryTaskController;
 use App\Http\Controllers\Finance\PreInvoiceController;
 use App\Http\Controllers\ManagementController;
+use App\Http\Controllers\Me\MeController;
 use App\Http\Controllers\Media\MessageController;
 use App\Http\Controllers\Media\MessagePublicController;
 use App\Http\Controllers\MediaController;
@@ -52,7 +53,7 @@ use App\Services\Finance\PreInvoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/dashboard');
+Route::get('/', fn (Request $request) => redirect($request->user('web')?->homeUrl() ?? '/dashboard'));
 
 // Website form → Incoming (token in the X-Intake-Token header).
 Route::post('/intake', [IncomingController::class, 'intake'])->middleware('throttle:30,1')->name('intake');
@@ -554,11 +555,22 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/{subhire}/adjust', [SubhireController::class, 'adjust'])->whereNumber('subhire')->name('subhire.adjust');
     });
 
+    // Under your name: My preferences, My profile, Notifications.
+    Route::prefix('me')->group(function () {
+        Route::get('/preferences', [MeController::class, 'preferences'])->name('me.preferences');
+        Route::put('/preferences', [MeController::class, 'save'])->name('me.preferences.save');
+        Route::post('/theme', [MeController::class, 'theme'])->name('me.theme');
+        Route::post('/sign-out-others', [MeController::class, 'logoutOthers'])->name('me.logout_others');
+        Route::get('/profile', [MeController::class, 'profile'])->name('me.profile');
+        Route::put('/profile', [MeController::class, 'saveProfile'])->name('me.profile.save');
+        Route::redirect('/notifications', '/me/preferences#notifications')->name('me.notifications');
+    });
+
     // Every menu item gets its address now; screens not built yet show
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

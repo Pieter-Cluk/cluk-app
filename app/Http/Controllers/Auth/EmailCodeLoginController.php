@@ -87,6 +87,6 @@ class EmailCodeLoginController extends Controller
         $request->session()->regenerate();
         AuditLog::record('auth.login', $user, ['with' => 'email code'], $user);
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended($user->homeUrl());
     }
 }

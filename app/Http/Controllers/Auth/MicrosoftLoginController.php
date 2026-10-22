@@ -65,7 +65,7 @@ class MicrosoftLoginController extends Controller
         $request->session()->regenerate();
         AuditLog::record('auth.login', $user, [], $user);
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended($user->homeUrl());
     }
 
     public function logout(Request $request): RedirectResponse

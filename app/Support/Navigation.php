@@ -49,6 +49,14 @@ class Navigation
         ];
     }
 
+    /** Can this person open the menu item with this key? */
+    public static function allows(User $user, string $key): bool
+    {
+        $item = self::item($key);
+
+        return $item !== null && self::canSee($item, $user);
+    }
+
     /** @return array<string, mixed>|null */
     public static function item(string $key): ?array
     {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Navigation;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -22,6 +23,7 @@ use Illuminate\Notifications\Notifiable;
 #[Fillable([
     'first_name', 'last_name', 'email', 'password', 'microsoft_id', 'title', 'department',
     'phone', 'mobile', 'location', 'locale', 'status', 'is_commercial', 'email_login', 'code_email', 'role_id', 'reports_to_id',
+    'theme', 'density', 'start_page', 'notify', 'daily_at', 'daily_sent_on', 'away_from', 'away_until', 'away_delegate_id',
 ])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
@@ -41,6 +43,10 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_commercial' => 'boolean',
             'email_login' => 'boolean',
+            'notify' => 'array',
+            'daily_sent_on' => 'date',
+            'away_from' => 'date',
+            'away_until' => 'date',
         ];
     }
 
@@ -52,6 +58,39 @@ class User extends Authenticatable
     protected function initials(): Attribute
     {
         return Attribute::get(fn () => mb_strtoupper(mb_substr($this->first_name, 0, 1).mb_substr($this->last_name, 0, 1)));
+    }
+
+    /** Emails about what happens to your work; each can be switched off in My preferences. */
+    public const MAIL_EVENTS = ['quote_answered', 'order_handed', 'pf_back'];
+
+    /** Where "my start page" can point (menu key => route name). */
+    public const START_PAGES = ['dashboard' => 'dashboard', 'management' => 'management', 'sales' => 'deals.index', 'companies' => 'companies.index', 'afrit6' => 'afrit6.staff.index', 'warehouse' => 'warehouse.index', 'dryhire' => 'equipment.index'];
+
+    public function wantsMail(string $event): bool
+    {
+        return (bool) ($this->notify[$event] ?? true);
+    }
+
+    /** Away today, with someone who takes over the emails meant for this person. */
+    public function awayNow(): bool
+    {
+        return $this->away_delegate_id && $this->away_from && $this->away_until && today()->between($this->away_from, $this->away_until);
+    }
+
+    public function awayDelegate(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'away_delegate_id');
+    }
+
+    /** The page that opens after signing in (falls back to the dashboard when the module is not open to them). */
+    public function homeUrl(): string
+    {
+        $key = $this->start_page;
+        if ($key && isset(self::START_PAGES[$key]) && Navigation::allows($this, $key)) {
+            return route(self::START_PAGES[$key]);
+        }
+
+        return route('dashboard');
     }
 
     public function role(): BelongsTo

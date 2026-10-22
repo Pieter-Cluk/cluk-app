@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Notifications\QuoteAnswered;
 use App\Services\Afrit6\Pricing;
 use App\Services\Factory\Bookings;
-use App\Support\SafeMail;
+use App\Support\StaffMail;
 
 /** What happens when the customer accepts, asks for a change or declines. */
 class QuoteAnswer
@@ -71,7 +71,7 @@ class QuoteAnswer
     {
         $owner = $quote->owner ?? $quote->deal?->owner;
         if ($owner) {
-            SafeMail::notify($owner, (new QuoteAnswered($quote, $what))->locale($owner->locale ?: 'en'));
+            StaffMail::send($owner, 'quote_answered', (new QuoteAnswered($quote, $what))->locale($owner->locale ?: 'en'));
         }
     }
 }

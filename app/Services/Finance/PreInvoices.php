@@ -17,7 +17,7 @@ use App\Models\VatRate;
 use App\Models\Warehouse\Charge;
 use App\Notifications\Confirmation;
 use App\Services\Afrit6\Pricing;
-use App\Support\SafeMail;
+use App\Support\StaffMail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -192,7 +192,7 @@ class PreInvoices
         $pf->update(['status' => 'back', 'back_note' => __('finance.reasons.'.$reason).' · '.$note]);
         AuditLog::record('finance.pf_back', $pf, ['reason' => __('finance.reasons.'.$reason), 'note' => $note], $by);
         if ($pf->madeBy && ! $pf->madeBy->is($by)) {
-            SafeMail::notify($pf->madeBy, (new Confirmation(
+            StaffMail::send($pf->madeBy, 'pf_back', (new Confirmation(
                 subject: __('finance.mail.back_subject', ['number' => $pf->number], $pf->madeBy->locale ?: 'en'),
                 greeting: __('mails.hello', ['name' => $pf->madeBy->first_name], $pf->madeBy->locale ?: 'en'),
                 intro: [__('finance.mail.back_intro', ['number' => $pf->number, 'customer' => $pf->customerName()], $pf->madeBy->locale ?: 'en'), $pf->back_note],

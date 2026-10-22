@@ -38,7 +38,7 @@ class DashboardController extends Controller
         return view('dashboard', [
             'user' => $u, 'money' => $money, 'type' => $type, 'tab' => $tab, 'who' => $who,
             'kpi' => $this->kpis($u, $money),
-            'tasks' => $this->tasks($u, $who),
+            'tasks' => self::tasks($u, $who),
             'motion' => $this->motion($u, $type, $tab),
             'pipeline' => $u->canUseModule('sales') ? $this->pipeline() : null,
             'shortages' => $u->canUseModule('dryhire', 2) ? Order::with('company')->where('status', 'allocation')->orderBy('out_from')->get()->filter(fn ($o) => $o->state() === 'subhire')->take(5)->values() : null,
@@ -76,7 +76,8 @@ class DashboardController extends Controller
     }
 
     /** Things waiting for a person: mine, or everyone's. */
-    private function tasks(User $u, string $who): array
+    /** The task tiles; also used for the daily summary email. */
+    public static function tasks(User $u, string $who): array
     {
         $t = [];
         $mine = fn ($q) => $who === 'me' ? $q->where(fn ($w) => $w->whereNull('assignee_id')->orWhere('assignee_id', $u->id)) : $q;

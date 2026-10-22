@@ -11,6 +11,7 @@ use App\Notifications\Confirmation;
 use App\Services\Afrit6\Pricing;
 use App\Support\InLocale;
 use App\Support\SafeMail;
+use App\Support\StaffMail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
@@ -211,6 +212,6 @@ class OrderMails
             button: [__('mails.order.staff_button'), route('orders.show', $o)],
         ))->locale($locale);
 
-        return SafeMail::notify($seller, $mail);
+        return StaffMail::send($seller, 'order_handed', $mail);
     }
 }

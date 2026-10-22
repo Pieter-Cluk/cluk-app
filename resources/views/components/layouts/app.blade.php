@@ -2,18 +2,18 @@
 @php($nav = \App\Support\Navigation::for(auth()->user()))
 @php($user = auth()->user())
 <!doctype html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ app()->getLocale() }}" @if (in_array($user?->theme, ['light', 'dark'], true)) data-theme="{{ $user->theme }}" @endif>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ $title ?? 'CLUK' }} · CLUK</title>
 <link rel="stylesheet" href="{{ asset('css/cluk.css') }}">
 <script>
-    // Day / night mode: the person's choice, else the device setting.
-    try { const t = localStorage.getItem('cluk-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    // Day / night mode: the choice in My preferences, else the device setting.
+    try { localStorage.removeItem('cluk-theme'); } catch (e) {}
 </script>
 </head>
-<body>
+<body @class(['density-compact' => $user?->density === 'compact'])>
 <div class="app">
     <input type="checkbox" id="nav-open" class="nav-toggle" aria-hidden="true">
     <aside class="side">
@@ -58,7 +58,7 @@
                 <details class="um">
                     <summary aria-label="{{ __('nav.account_menu') }}"><span class="um-name">{{ $user->name }}</span><x-avatar :who="$user"/></summary>
                     <div class="um-pop">
-                        <div class="um-head"><x-avatar :who="$user" size="lg"/><div><b>{{ $user->name }}</b><small>{{ $user->email }}</small><small>{{ __('nav.role') }}: {{ $user->role?->name ?? '—' }}</small></div></div>
+                        <div class="um-head"><x-avatar :who="$user" size="lg"/><div><b>{{ $user->name }}</b><small>{{ $user->email }}</small><small>{{ __('nav.role') }}: {{ $user->role?->name ?? '—' }}</small>@if ($user->awayNow())<small class="um-away">{{ __('me.away.badge', ['date' => $user->away_until->format('d/m')]) }}</small>@endif</div></div>
                         <div class="um-sep"></div>
                         @foreach ($nav['account'] as $item)
                             <a class="um-item" href="{{ url($item['path']) }}"><x-icon :name="$item['icon']"/>{{ __('nav.items.'.$item['key']) }}</a>
@@ -80,7 +80,11 @@
         const root = document.documentElement;
         const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
         const label = () => { const t = isDark() ? btn.dataset.day : btn.dataset.night; btn.setAttribute('aria-label', t); btn.title = t; btn.classList.toggle('is-dark', isDark()); };
-        btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; try { localStorage.setItem('cluk-theme', root.dataset.theme); } catch (e) {} label(); });
+        btn.addEventListener('click', () => {
+            root.dataset.theme = isDark() ? 'light' : 'dark';
+            label();
+            fetch(@js(route('me.theme')), {method: 'POST', headers: {'X-CSRF-TOKEN': @js(csrf_token()), 'Content-Type': 'application/json', 'Accept': 'application/json'}, body: JSON.stringify({theme: root.dataset.theme})}).catch(() => {});
+        });
         label();
     })();
 </script>
