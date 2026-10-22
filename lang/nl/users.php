@@ -186,6 +186,8 @@ return [
             'warehouse_checked' => 'Gecontroleerd op de testbank',
             'warehouse_charges_approved' => 'Retourkosten goedgekeurd',
             'warehouse_zone_saved' => 'Magazijnzone bewaard',
+            'warehouse_subhire_in' => 'Bijhuur ontvangen van de partner',
+            'warehouse_subhire_back' => 'Bijhuur teruggegeven aan de partner',
             'finance_pf_made' => 'Proforma gemaakt',
             'finance_pf_sent' => 'Proforma goedgekeurd en gefactureerd',
             'finance_pf_back' => 'Proforma teruggestuurd',

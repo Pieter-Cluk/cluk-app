@@ -7,6 +7,7 @@ use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
 use App\Models\Rental\Order;
 use App\Models\Rental\OrderLine;
+use App\Models\Rental\SubhireRequest;
 use App\Models\User;
 use App\Models\Warehouse\Charge;
 use App\Models\Warehouse\Check;
@@ -183,11 +184,21 @@ class Moves
     /** Own pieces of an order: serial lines with their assets, counted lines with a quantity. */
     public static function pickLines(Order $order)
     {
-        return $order->lines()->with(['item', 'assets.asset'])->get()->filter(fn (OrderLine $l) => $l->needsStock() && $l->ownAllocated() > 0)->values();
+        return $order->lines()->with(['item', 'assets.asset', 'subhireLines.request.supplier'])->get()
+            ->filter(fn (OrderLine $l) => $l->needsStock() && ($l->ownAllocated() > 0 || $l->rentedQty() > 0))->values();
+    }
+
+    /** Sub-hire for this order that the partner has not delivered yet (counted and photographed on the phone). */
+    public static function subhireWaiting(Order $order)
+    {
+        return SubhireRequest::with('supplier')->where('order_id', $order->id)->where('status', 'accepted')->whereNull('received_at')->get();
     }
 
     public static function isPicked(Order $order): bool
     {
+        if (self::subhireWaiting($order)->isNotEmpty()) {
+            return false;
+        }
         foreach (self::pickLines($order) as $l) {
             if ($l->bySerial()) {
                 if ($l->assets->contains(fn ($oa) => ! ($oa->asset->location === 'DISPATCH' && $oa->asset->out_order_id === $order->id))) {

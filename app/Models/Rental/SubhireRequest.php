@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 #[Fillable([
     'number', 'confirm_number', 'order_id', 'supplier_id', 'status', 'delivery_at', 'return_at', 'sent_to', 'sent_at',
     'their_ref', 'note', 'extra_cents', 'extra_text', 'total_cents', 'answered_at', 'accepted_at', 'accepted_by_id', 'created_by_id',
+    'received_at', 'received_by_id', 'in_photos', 'in_note', 'handed_back_at', 'handed_back_by_id', 'out_photos', 'out_note',
 ])]
 class SubhireRequest extends Model
 {
@@ -24,7 +25,7 @@ class SubhireRequest extends Model
 
     protected function casts(): array
     {
-        return ['delivery_at' => 'datetime', 'return_at' => 'datetime', 'sent_at' => 'datetime', 'answered_at' => 'datetime', 'accepted_at' => 'datetime', 'extra_cents' => 'integer', 'total_cents' => 'integer'];
+        return ['delivery_at' => 'datetime', 'return_at' => 'datetime', 'sent_at' => 'datetime', 'answered_at' => 'datetime', 'accepted_at' => 'datetime', 'received_at' => 'datetime', 'handed_back_at' => 'datetime', 'in_photos' => 'array', 'out_photos' => 'array', 'extra_cents' => 'integer', 'total_cents' => 'integer'];
     }
 
     public function order(): BelongsTo
@@ -45,6 +46,16 @@ class SubhireRequest extends Model
     public function acceptedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'accepted_by_id');
+    }
+
+    public function receivedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'received_by_id');
+    }
+
+    public function handedBackBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'handed_back_by_id');
     }
 
     public function code(): string

@@ -186,6 +186,8 @@ return [
             'warehouse_checked' => 'Checked on the test bench',
             'warehouse_charges_approved' => 'Return charges approved',
             'warehouse_zone_saved' => 'Warehouse zone saved',
+            'warehouse_subhire_in' => 'Sub-hire received from the partner',
+            'warehouse_subhire_back' => 'Sub-hire handed back to the partner',
             'finance_pf_made' => 'Proforma made',
             'finance_pf_sent' => 'Proforma approved and invoiced',
             'finance_pf_back' => 'Proforma sent back',

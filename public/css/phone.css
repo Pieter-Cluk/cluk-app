@@ -86,3 +86,9 @@
 .ph-opt-row span{display:grid}
 .ph-opt-row small{color:var(--muted)}
 .ph-select{width:100%;min-height:44px;margin-top:6px}
+.tag-sub{background:#efe6fb;color:#5b3a99}
+.ph-sub{display:block;margin-top:4px;color:var(--warning-text,#8a6216)}
+.ph-sub-ok{color:var(--brand-strong,#327b1d)}
+.tag-sub.tag-late{background:var(--danger-bg);color:var(--danger-text)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tag-sub:not(.tag-late){background:#2d2340;color:#c9b2f0}}
+:root[data-theme="dark"] .tag-sub:not(.tag-late){background:#2d2340;color:#c9b2f0}

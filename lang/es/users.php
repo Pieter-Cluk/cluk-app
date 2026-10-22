@@ -186,6 +186,8 @@ return [
             'warehouse_checked' => 'Controlado en el banco de pruebas',
             'warehouse_charges_approved' => 'Cargos de retorno aprobados',
             'warehouse_zone_saved' => 'Zona de almacén guardada',
+            'warehouse_subhire_in' => 'Subalquiler recibido del socio',
+            'warehouse_subhire_back' => 'Subalquiler devuelto al socio',
             'finance_pf_made' => 'Proforma creada',
             'finance_pf_sent' => 'Proforma aprobada y facturada',
             'finance_pf_back' => 'Proforma devuelta',

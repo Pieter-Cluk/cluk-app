@@ -20,6 +20,19 @@
         <p class="muted">{{ __('warehouse.home.no_picks') }}</p>
     @endforelse
 
+    @php($sub = \App\Http\Controllers\Warehouse\PhoneSubhireController::openTasks((int) config('warehouse.pick_days')))
+    @if ($sub['in']->isNotEmpty() || $sub['back']->isNotEmpty())
+        <h2 class="ph-h">{{ __('warehouse.sub.home') }}</h2>
+        @foreach ($sub['in'] as $r)
+            <a class="ph-task" href="{{ route('w.sub', [$r, 'in']) }}"><span @class(['tag', 'tag-sub', 'tag-late' => $r->delivery_at?->isPast()])>{{ __('warehouse.sub.tag_in') }}</span><b>{{ $r->supplier->name }}</b>
+                <small>{{ $r->order->title }} · {{ __('warehouse.sub.expected', ['when' => $r->delivery_at ? $fmt($r->delivery_at) : '—']) }}</small><small class="ph-prog">{{ trans_choice('warehouse.sub.pieces', $r->lines->sum('qty'), ['n' => $r->lines->sum('qty')]) }}</small></a>
+        @endforeach
+        @foreach ($sub['back'] as $r)
+            <a class="ph-task" href="{{ route('w.sub', [$r, 'back']) }}"><span @class(['tag', 'tag-sub', 'tag-late' => $r->return_at?->isPast()])>{{ __('warehouse.sub.tag_back') }}</span><b>{{ $r->supplier->name }}</b>
+                <small>{{ $r->order->title }} · {{ __('warehouse.sub.back_by', ['when' => $r->return_at ? $fmt($r->return_at) : '—']) }}</small><small class="ph-prog">{{ trans_choice('warehouse.sub.pieces', $r->lines->sum('received_qty'), ['n' => $r->lines->sum('received_qty')]) }}</small></a>
+        @endforeach
+    @endif
+
     <h2 class="ph-h">{{ __('warehouse.home.returns') }}</h2>
     @forelse ($returns as $o)
         @php($left = \App\Models\Equipment\Asset::where('out_order_id', $o->id)->where('status', 'out')->count())

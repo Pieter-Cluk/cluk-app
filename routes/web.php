@@ -41,6 +41,7 @@ use App\Http\Controllers\WallController;
 use App\Http\Controllers\Warehouse\LocationController;
 use App\Http\Controllers\Warehouse\PhoneAfrit6Controller;
 use App\Http\Controllers\Warehouse\PhoneController;
+use App\Http\Controllers\Warehouse\PhoneSubhireController;
 use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Services\Finance\PreInvoices;
 use Illuminate\Http\Request;
@@ -373,6 +374,8 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/afrit6', [PhoneAfrit6Controller::class, 'index'])->middleware('nav:afrit6')->name('a6');
         Route::get('/afrit6/{task}', [PhoneAfrit6Controller::class, 'show'])->whereNumber('task')->middleware('nav:afrit6')->name('a6.show');
         Route::get('/delivery', [PhoneAfrit6Controller::class, 'delivery'])->name('delivery');
+        Route::get('/subhire/{subhire}/{dir}', [PhoneSubhireController::class, 'show'])->whereNumber('subhire')->whereIn('dir', PhoneSubhireController::DIRS)->name('sub');
+        Route::get('/subhire/{subhire}/{dir}/photos/{i}', [PhoneSubhireController::class, 'media'])->whereNumber(['subhire', 'i'])->whereIn('dir', PhoneSubhireController::DIRS)->name('sub.media');
         Route::middleware('level:warehouse,2')->group(function () {
             Route::post('/scan', [PhoneController::class, 'scanPost'])->middleware('throttle:120,1')->name('scan.post');
             Route::post('/scan/cancel', [PhoneController::class, 'cancel'])->name('scan.cancel');
@@ -384,6 +387,9 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/clean/{asset}', [PhoneController::class, 'cleanSave'])->whereNumber('asset')->name('clean.save');
             Route::post('/check/{asset}', [PhoneController::class, 'checkSave'])->whereNumber('asset')->name('check.save');
             Route::post('/delivery', [PhoneAfrit6Controller::class, 'deliveryStore'])->name('delivery.store');
+            Route::post('/subhire/{subhire}/{dir}/lines/{line}', [PhoneSubhireController::class, 'count'])->whereNumber(['subhire', 'line'])->whereIn('dir', PhoneSubhireController::DIRS)->name('sub.count');
+            Route::post('/subhire/{subhire}/{dir}/photo', [PhoneSubhireController::class, 'photo'])->whereNumber('subhire')->whereIn('dir', PhoneSubhireController::DIRS)->name('sub.photo');
+            Route::post('/subhire/{subhire}/{dir}/done', [PhoneSubhireController::class, 'done'])->whereNumber('subhire')->whereIn('dir', PhoneSubhireController::DIRS)->name('sub.done');
             Route::middleware('nav:afrit6')->group(function () {
                 Route::post('/afrit6/{task}/photo', [PhoneAfrit6Controller::class, 'photo'])->whereNumber('task')->name('a6.photo');
                 Route::post('/afrit6/{task}/scan', [PhoneAfrit6Controller::class, 'scan'])->whereNumber('task')->name('a6.scan');

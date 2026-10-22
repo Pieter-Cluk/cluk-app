@@ -79,8 +79,21 @@
     stopBtn && stopBtn.addEventListener('click', () => { stop(); try { localStorage.setItem('cluk-camera', '0'); } catch (e) {} });
     // A label opened with the phone's own camera app lands here with ?scanned=…
     if (box.dataset.scanned) { input.value = box.dataset.scanned; form.submit(); return; }
-    // Camera was on last time: turn it on again.
-    try { if (localStorage.getItem('cluk-camera') === '1' && navigator.mediaDevices) start(); } catch (e) {}
+    // Turn the camera on by itself when it was on last time, or when the browser
+    // already has permission for this site (so nobody has to tap "allow" again).
+    (async function () {
+        if (!navigator.mediaDevices) return;
+        let wanted = false;
+        try { wanted = localStorage.getItem('cluk-camera') === '1'; } catch (e) {}
+        try {
+            if (navigator.permissions) {
+                const p = await navigator.permissions.query({ name: 'camera' });
+                if (p.state === 'granted') { let off = false; try { off = localStorage.getItem('cluk-camera') === '0'; } catch (e) {} wanted = !off; }
+                if (p.state === 'denied') { note.hidden = false; return; }
+            }
+        } catch (e) { /* Safari: no camera permission query */ }
+        if (wanted) start();
+    })();
     window.addEventListener('pagehide', stop);
 })();
 

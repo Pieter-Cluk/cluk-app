@@ -186,6 +186,8 @@ return [
             'warehouse_checked' => 'Contrôlée sur le banc de test',
             'warehouse_charges_approved' => 'Frais de retour approuvés',
             'warehouse_zone_saved' => 'Zone d’entrepôt enregistrée',
+            'warehouse_subhire_in' => 'Sous-location reçue du partenaire',
+            'warehouse_subhire_back' => 'Sous-location rendue au partenaire',
             'finance_pf_made' => 'Proforma créé',
             'finance_pf_sent' => 'Proforma approuvé et facturé',
             'finance_pf_back' => 'Proforma renvoyé',

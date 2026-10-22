@@ -71,6 +71,17 @@
         </div>
 
         <aside class="stack">
+            @foreach (['in' => $r->received_at, 'back' => $r->handed_back_at] as $dir => $when)
+                @if ($when)
+                    <section class="card">
+                        <h2>{{ __('warehouse.sub.title_'.$dir) }}</h2>
+                        <p class="muted">{{ __('warehouse.sub.closed_'.$dir, ['when' => $when->format('d/m/Y H:i'), 'name' => ($dir === 'in' ? $r->receivedBy : $r->handedBackBy)?->name ?? '—']) }}</p>
+                        <ul class="plain-list">@foreach ($r->lines as $l)<li>{{ $l->name }} · <b>{{ $dir === 'in' ? $l->received_qty : $l->back_qty }} / {{ $dir === 'in' ? $l->qty : $l->received_qty }}</b></li>@endforeach</ul>
+                        @if ($dir === 'in' ? $r->in_note : $r->out_note)<p>“{{ $dir === 'in' ? $r->in_note : $r->out_note }}”</p>@endif
+                        <div class="sh-photos">@foreach (($dir === 'in' ? $r->in_photos : $r->out_photos) ?? [] as $i => $ph)<a href="{{ route('w.sub.media', [$r, $dir, $i]) }}" target="_blank"><img src="{{ route('w.sub.media', [$r, $dir, $i]) }}" alt="" loading="lazy" width="96" height="96"></a>@endforeach</div>
+                    </section>
+                @endif
+            @endforeach
             @if ($seeMargin)
                 @php($rev = $r->revenueCents())
                 @php($margin = $rev - $r->total_cents)

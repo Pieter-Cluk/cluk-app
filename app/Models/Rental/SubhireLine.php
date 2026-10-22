@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['request_id', 'order_line_id', 'item_id', 'name', 'qty', 'last_price_cents', 'price_cents', 'factor', 'discount_bp', 'amount_cents'])]
+#[Fillable(['request_id', 'order_line_id', 'item_id', 'name', 'qty', 'last_price_cents', 'price_cents', 'factor', 'discount_bp', 'amount_cents', 'received_qty', 'back_qty'])]
 class SubhireLine extends Model
 {
     protected function casts(): array
     {
-        return ['qty' => 'integer', 'last_price_cents' => 'integer', 'price_cents' => 'integer', 'factor' => 'decimal:2', 'discount_bp' => 'integer', 'amount_cents' => 'integer'];
+        return ['qty' => 'integer', 'last_price_cents' => 'integer', 'price_cents' => 'integer', 'factor' => 'decimal:2', 'discount_bp' => 'integer', 'amount_cents' => 'integer', 'received_qty' => 'integer', 'back_qty' => 'integer'];
     }
 
     public function request(): BelongsTo
