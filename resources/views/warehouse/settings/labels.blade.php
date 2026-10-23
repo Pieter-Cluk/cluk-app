@@ -33,7 +33,7 @@
 <div class="bar"><a href="{{ $back ?? url()->previous() }}" onclick="var a = this; if (history.length <= 1) { window.close(); } setTimeout(function () { location.href = a.href; }, 150); return false;">← {{ __('warehouse.labels.back') }}</a><button type="button" onclick="window.print()">{{ __('equipment.print') }}</button><span>{{ __('warehouse.settings.labels_hint', ['n' => $labels->count()]) }}</span></div>
 <div class="sheet">
     @foreach ($labels as $l)
-        <div @class(['label', 'beam' => ! $l['zone'] && ($layout ?? 'beam') === 'beam'])>{!! \App\Support\QrSvg::make(route('w.loc', $l['code']), true) !!}<div class="txt"><b @class(['m' => mb_strlen($l['code']) > 5 && mb_strlen($l['code']) <= 7, 's' => mb_strlen($l['code']) > 7])>{{ $l['code'] }}</b><span>{{ $l['name'] }}</span><small>CLUK · {{ __('warehouse.settings.scan_to_move') }}</small></div></div>
+        <div @class(['label', 'beam' => ! $l['zone'] && ($layout ?? 'beam') === 'beam'])>{!! \App\Support\QrSvg::make(strtoupper(route('w.loc', $l['code'])), true) !!}<div class="txt"><b @class(['m' => mb_strlen($l['code']) > 5 && mb_strlen($l['code']) <= 7, 's' => mb_strlen($l['code']) > 7])>{{ $l['code'] }}</b><span>{{ $l['name'] }}</span><small>CLUK · {{ __('warehouse.settings.scan_to_move') }}</small></div></div>
     @endforeach
 </div>
 </body>

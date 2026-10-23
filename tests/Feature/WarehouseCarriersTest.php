@@ -213,7 +213,8 @@ class WarehouseCarriersTest extends TestCase
     {
         [$p, $order] = $this->job();
         $barndoor = Item::create(['number' => 'LIGACCELASOLIBARNDOOR', 'kind' => 'item', 'name' => 'Elation Sol I Barndoor', 'type' => 'Sol I Barndoor', 'serial' => false, 'stock_qty' => 3]);
-        $label = 'https://app.cluk.live/i/LIGACCELASOLIBARNDOOR';
+        $label = 'HTTPS://APP.CLUK.LIVE/I/LIGACCELASOLIBARNDOOR'; // labels write the link in capitals
+        $this->actingAs($this->crew)->get('/I/LIGACCELASOLIBARNDOOR')->assertRedirect(route('equipment.show', $barndoor));
         // Without an open box: it is recognised and explained.
         $this->scan($label)->assertSessionHasNoErrors()->assertSessionHas('status');
         // Into a box: +1 per scan, never more than in stock.

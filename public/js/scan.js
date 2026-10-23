@@ -13,7 +13,8 @@
     const startBtn = box.querySelector('[data-scan-start]');
     const stopBtn = box.querySelector('[data-scan-stop]');
     const note = box.querySelector('[data-scan-note]');
-    let stream = null, timer = null, detector = null, canvas = null, busy = false;
+    const tools = box.querySelector('[data-scan-tools]');
+    let stream = null, track = null, timer = null, detector = null, canvas = null, busy = false, torch = false;
 
     function send(code) {
         if (busy) return;
@@ -29,25 +30,91 @@
         await new Promise((ok, fail) => { const s = document.createElement('script'); s.src = box.dataset.jsqr; s.onload = ok; s.onerror = fail; document.head.appendChild(s); });
     }
 
+    // The middle of the picture at full sharpness (small labels lose their detail when the whole picture is shrunk).
+    function grab(part) {
+        const w = video.videoWidth, h = video.videoHeight;
+        if (!w) return null;
+        const side = Math.min(w, h) * part;
+        const sx = (w - side) / 2, sy = (h - side) / 2;
+        const size = Math.min(side, 1100);
+        canvas = canvas || document.createElement('canvas');
+        canvas.width = size; canvas.height = size;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(video, sx, sy, side, side, 0, 0, size, size);
+        return ctx;
+    }
+
+    let turn = 0;
     async function tick() {
-        if (!stream || video.readyState < 2) return;
+        if (!stream || busy || video.readyState < 2) return;
         try {
             if (detector) {
                 const found = await detector.detect(video);
-                if (found.length) send(found[0].rawValue);
+                if (found.length) return send(found[0].rawValue);
+                // Small code far away: look again in the middle, enlarged.
+                const ctx = grab(0.6);
+                if (ctx) {
+                    const again = await detector.detect(canvas);
+                    if (again.length) send(again[0].rawValue);
+                }
                 return;
             }
-            canvas = canvas || document.createElement('canvas');
-            const w = video.videoWidth, h = video.videoHeight;
-            if (!w) return;
-            const scale = Math.min(1, 640 / w);
-            canvas.width = w * scale; canvas.height = h * scale;
-            const ctx = canvas.getContext('2d', { willReadFrequently: true });
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            // jsQR (iPhone): alternate between the middle (small labels) and a wider part of the picture.
+            turn = (turn + 1) % 3;
+            const ctx = grab(turn === 2 ? 0.95 : 0.6);
+            if (!ctx) return;
             const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const res = window.jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
             if (res && res.data) send(res.data);
         } catch (e) { /* keep trying */ }
+    }
+
+    // The main back camera: some phones give the ultra-wide (which cannot focus close by) for "environment".
+    async function backCamera() {
+        try {
+            const cams = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput' && d.label);
+            const back = cams.filter(d => /back|rear|achter|arrière|trasera|environment|facing back/i.test(d.label));
+            const main = back.find(d => /^back camera$/i.test(d.label.trim()))
+                || back.find(d => !/ultra|wide|tele|depth|macro|dual|triple/i.test(d.label))
+                || null;
+            return main ? main.deviceId : null;
+        } catch (e) { return null; }
+    }
+
+    function constraints(deviceId) {
+        const video = { width: { ideal: 1920 }, height: { ideal: 1080 }, advanced: [{ focusMode: 'continuous' }] };
+        if (deviceId) video.deviceId = { exact: deviceId }; else video.facingMode = { ideal: 'environment' };
+        return { video, audio: false };
+    }
+
+    function setupTools() {
+        if (!tools || !track || !track.getCapabilities) return;
+        const caps = track.getCapabilities();
+        tools.innerHTML = '';
+        if (caps.focusMode && caps.focusMode.includes('continuous')) track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {});
+        if (caps.zoom && caps.zoom.max > 1) {
+            const steps = [1, 2, 3].filter(z => z >= caps.zoom.min && z <= caps.zoom.max);
+            steps.forEach(z => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.textContent = z + '×'; b.className = 'ph-cam-tool';
+                b.addEventListener('click', () => {
+                    track.applyConstraints({ advanced: [{ zoom: z }] }).catch(() => {});
+                    tools.querySelectorAll('.ph-cam-tool').forEach(x => x.classList.toggle('on', x === b));
+                    try { localStorage.setItem('cluk-zoom', String(z)); } catch (e) {}
+                });
+                tools.appendChild(b);
+            });
+            let z = 1; try { z = parseFloat(localStorage.getItem('cluk-zoom')) || 1; } catch (e) {}
+            const pick = [...tools.children].find(x => x.textContent === z + '×');
+            if (pick) pick.click();
+        }
+        if (caps.torch) {
+            const t = document.createElement('button');
+            t.type = 'button'; t.textContent = '💡'; t.className = 'ph-cam-tool'; t.setAttribute('aria-label', 'Light');
+            t.addEventListener('click', () => { torch = !torch; track.applyConstraints({ advanced: [{ torch }] }).catch(() => {}); t.classList.toggle('on', torch); });
+            tools.appendChild(t);
+        }
     }
 
     async function start() {
@@ -57,11 +124,19 @@
                 if (formats.includes('qr_code')) detector = new window.BarcodeDetector({ formats: ['qr_code'] });
             }
             if (!detector) await loadJsQR();
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+            stream = await navigator.mediaDevices.getUserMedia(constraints(null));
+            // With permission the camera names are known: switch to the main back camera when we got another one.
+            const main = await backCamera();
+            if (main && stream.getVideoTracks()[0].getSettings().deviceId !== main) {
+                stream.getTracks().forEach(t => t.stop());
+                stream = await navigator.mediaDevices.getUserMedia(constraints(main));
+            }
+            track = stream.getVideoTracks()[0];
             video.srcObject = stream;
             await video.play();
             box.classList.add('scan-on');
-            timer = setInterval(tick, 250);
+            setupTools();
+            timer = setInterval(tick, 160);
             try { localStorage.setItem('cluk-camera', '1'); } catch (e) {}
         } catch (e) {
             note.hidden = false;
@@ -71,7 +146,7 @@
     function stop() {
         clearInterval(timer);
         if (stream) stream.getTracks().forEach(t => t.stop());
-        stream = null;
+        stream = null; track = null;
         box.classList.remove('scan-on');
     }
 

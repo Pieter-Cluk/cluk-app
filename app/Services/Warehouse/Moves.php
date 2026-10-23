@@ -37,12 +37,12 @@ class Moves
     {
         $raw = trim($raw);
         // Label of a counted item (…/i/NUMBER): no own piece code, it is the item itself.
-        if (preg_match('#/i/([A-Za-z0-9\-_.&]+)/?$#', $raw, $m)) {
+        if (preg_match('#/i/([A-Za-z0-9\-_.&]+)/?$#i', $raw, $m)) {
             $item = Item::where('number', strtoupper(rawurldecode($m[1])))->where('serial', false)->first();
 
             return $item ? ['type' => 'item', 'model' => $item] : null;
         }
-        if (preg_match('#/(a|l)/([A-Za-z0-9\-]+)/?$#', $raw, $m)) {
+        if (preg_match('#/(a|l)/([A-Za-z0-9\-]+)/?$#i', $raw, $m)) {
             $raw = $m[2];
         }
         $code = strtoupper($raw);

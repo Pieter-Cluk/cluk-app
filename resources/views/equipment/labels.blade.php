@@ -26,11 +26,11 @@
 <div class="sheet">
     @if (! empty($bulk))
         @for ($i = 0; $i < $bulk['qty']; $i++)
-            <div class="label">{!! \App\Support\QrSvg::make(route('equipment.item.scan', $bulk['item']->number), true) !!}<b class="s">{{ $bulk['item']->type ?: $bulk['item']->name }}</b><small>{{ $bulk['item']->number }}</small></div>
+            <div class="label">{!! \App\Support\QrSvg::make(strtoupper(route('equipment.item.scan', $bulk['item']->number)), true) !!}<b class="s">{{ $bulk['item']->type ?: $bulk['item']->name }}</b><small>{{ $bulk['item']->number }}</small></div>
         @endfor
     @endif
     @foreach ($assets as $a)
-        <div class="label">{!! \App\Support\QrSvg::make(route('equipment.scan', $a->code), true) !!}<b @class(['m' => strlen($a->code) > 9 && strlen($a->code) <= 13, 's' => strlen($a->code) > 13])>{{ $a->code }}</b>@if ($a->serial_number)<small>SN {{ $a->serial_number }}</small>@endif</div>
+        <div class="label">{!! \App\Support\QrSvg::make(strtoupper(route('equipment.scan', $a->code)), true) !!}<b @class(['m' => strlen($a->code) > 9 && strlen($a->code) <= 13, 's' => strlen($a->code) > 13])>{{ $a->code }}</b>@if ($a->serial_number)<small>SN {{ $a->serial_number }}</small>@endif</div>
     @endforeach
 </div>
 </body>

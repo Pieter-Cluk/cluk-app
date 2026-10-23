@@ -26,7 +26,7 @@
 .ph-scan{margin:0 0 14px}
 .ph-cam{position:relative;background:#0f1310;border-radius:12px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
 .ph-cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
-.ph-cam-frame{display:none;position:absolute;inset:18% 24%;border:3px solid rgba(255,255,255,.85);border-radius:12px}
+.ph-cam-frame{display:none;position:absolute;inset:20% 20%;border:3px solid rgba(255,255,255,.85);border-radius:12px}
 .ph-cam-stop{display:none;position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.5);color:#fff;border-color:rgba(255,255,255,.4)}
 .scan-on video,.scan-on .ph-cam-frame,.scan-on .ph-cam-stop{display:block}
 .scan-on .ph-cam-start{display:none}
@@ -97,3 +97,7 @@
 .ph-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}
 .ph-seg button{min-height:52px;padding:0 6px;min-width:0;border:2px solid var(--line);border-radius:10px;background:var(--surface,#fff);font-size:16px;font-weight:700;color:inherit}
 .ph-seg .ph-seg-on{border-color:var(--brand);background:var(--brand);color:#fff}
+.ph-cam-tools{display:none;position:absolute;left:10px;bottom:10px;gap:6px}
+.scan-on .ph-cam-tools{display:flex}
+.ph-cam-tool{min-width:44px;min-height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.5);color:#fff;font-weight:700;font-size:15px}
+.ph-cam-tool.on{background:#52ae32;border-color:#52ae32}

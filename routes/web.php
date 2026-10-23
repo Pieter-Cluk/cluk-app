@@ -338,6 +338,9 @@ Route::middleware('auth:web')->group(function () {
     // A scanned QR label opens the asset card.
     Route::get('/a/{code}', [AssetController::class, 'byCode'])->where('code', '[A-Za-z0-9\-]+')->middleware('nav:dryhire')->name('equipment.scan');
     Route::get('/i/{number}', [AssetController::class, 'byNumber'])->where('number', '[A-Za-z0-9\-_.&]+')->middleware('nav:dryhire')->name('equipment.item.scan');
+    // Labels write the link in capitals (a smaller QR code with bigger squares): /A/…, /I/… work the same.
+    Route::get('/A/{code}', [AssetController::class, 'byCode'])->where('code', '[A-Za-z0-9\-]+')->middleware('nav:dryhire');
+    Route::get('/I/{number}', [AssetController::class, 'byNumber'])->where('number', '[A-Za-z0-9\-_.&]+')->middleware('nav:dryhire');
 
     // Afrit 6 for staff: registrations to approve and members.
     Route::middleware('nav:afrit6')->prefix('afrit6-staff')->name('afrit6.staff.')->group(function () {
@@ -470,6 +473,7 @@ Route::middleware('auth:web')->group(function () {
 
     // Warehouse: the app on the crew's phone (scan the piece, then where it goes).
     Route::get('/l/{code}', fn (string $code) => redirect()->route('w.scan', ['scanned' => strtoupper($code)]))->where('code', '[A-Za-z0-9\-]+')->middleware('nav:warehouse')->name('w.loc');
+    Route::get('/L/{code}', fn (string $code) => redirect()->route('w.scan', ['scanned' => strtoupper($code)]))->where('code', '[A-Za-z0-9\-]+')->middleware('nav:warehouse');
     Route::prefix('w')->name('w.')->middleware('nav:warehouse')->group(function () {
         Route::get('/', [PhoneController::class, 'home'])->name('home');
         Route::get('/scan', [PhoneController::class, 'scan'])->name('scan');

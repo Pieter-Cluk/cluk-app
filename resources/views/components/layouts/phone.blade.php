@@ -37,6 +37,6 @@
     <a href="{{ route('w.scan') }}" @class(['on' => request()->routeIs('w.scan')])>▣ {{ __('warehouse.tabs.scan') }}</a>
     <a href="{{ route('warehouse.index') }}">{{ __('warehouse.tabs.office') }}</a>
 </nav>
-<script src="{{ asset('js/scan.js') }}?v=1" defer></script>
+<script src="{{ asset('js/scan.js') }}?v=2" defer></script>
 </body>
 </html>

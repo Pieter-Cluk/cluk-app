@@ -60,6 +60,9 @@ class LabelPrintTest extends TestCase
         $this->assertSame(3, substr_count($r->getContent(), '<div class="label">'));
         $r->assertSee('Sol I Interconnect Cable')->assertSee('size: 25mm 25mm', false);
         $this->actingAs($w)->get('/i/CAB-SOLLINK')->assertRedirect(route('equipment.show', $cable));
+        $this->actingAs($w)->get('/A/LT-0142')->assertRedirect();
+        // The scan app reads old (small letters) and new (capitals) labels.
+        $this->actingAs($w)->post('/w/scan', ['code' => 'HTTPS://APP.CLUK.LIVE/A/LT-0142'])->assertSessionHasNoErrors();
         // On the item card: tick the pieces and print only those.
         $this->actingAs($this->as('admin'))->get(route('equipment.show', $item))->assertOk()->assertSee('name="assets[]"', false);
         $r = $this->actingAs($this->as('admin'))->get(route('equipment.labels', ['assets' => [$a->id]]))->assertOk();
