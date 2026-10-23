@@ -40,9 +40,10 @@ abstract class Provider
     /** Get a fresh access token when it is about to run out. */
     public function refresh(Account $a): void {}
 
+    /** Built from APP_URL, so it is always exactly the address registered with the platform (https, no proxy surprises). */
     public function redirectUri(): string
     {
-        return route('social.callback', $this->key());
+        return rtrim((string) config('app.url'), '/').'/social/connect/'.$this->key().'/callback';
     }
 
     // ── Helpers for the providers ───────────────────────────────────────────
