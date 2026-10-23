@@ -161,7 +161,7 @@ def main():
     zips = find_zips(op, start, page)
     print('zip files offered:', sorted(zips))
     if mode == 'probe':
-        for path in ['/kbo-open-data/affiliation/prexml?form=', '/kbo-open-data/affiliation/index?lang=en']:
+        for path in ['/kbo-open-data/affiliation/prexml?form=', '/kbo-open-data/affiliation/prews?form=']:
             url, body = get(op, BASE + path)
             p = Forms(); p.feed(body)
             print('== page', path, '->', urllib.parse.urlparse(url).path)
