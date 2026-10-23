@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Models\Web\CustomerAccount;
 use App\Services\Web\Baskets;
 use App\Services\Web\CustomerAuth;
+use App\Services\Website\Tracking;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,6 +37,7 @@ class AccountController extends SiteController
         if ($why) {
             return back()->withInput($request->only('email'))->withErrors(['email' => __('web.api.login_'.$why)]);
         }
+        Tracking::linkAccount($request, CustomerAuth::current());
 
         return redirect()->intended(route('site.account'));
     }
@@ -67,7 +69,7 @@ class AccountController extends SiteController
             'password' => ['required', 'string', 'min:10', 'max:200', 'confirmed'],
             'terms' => ['accepted'],
         ]);
-        CustomerAuth::register($d + ['locale' => $locale]);
+        Tracking::linkAccount($request, CustomerAuth::register($d + ['locale' => $locale]), 'register');
 
         return redirect()->route('site.account.login')->with('notice', __('web.api.registered'));
     }
@@ -194,6 +196,7 @@ class AccountController extends SiteController
         $this->locale($request);
         $d = $request->validate(['message' => ['nullable', 'string', 'max:5000'], 'page' => ['nullable', 'string', 'max:300']]);
         $msg = Baskets::submitDryHire(CustomerAuth::current(), $d);
+        Tracking::linkRequest($request, $msg);
 
         return response()->json(['ok' => true, 'ref' => 'W-'.$msg->id]);
     }
@@ -203,6 +206,7 @@ class AccountController extends SiteController
         $this->locale($request);
         $d = $request->validate(['po_number' => ['nullable', 'string', 'max:60'], 'message' => ['nullable', 'string', 'max:5000']]);
         $q = Baskets::submitSales(CustomerAuth::current(), $d);
+        Tracking::record($request, 'order', ['section' => 'sales', 'label' => $q->number, 'meta' => ['sales_quote_id' => $q->id, 'net_cents' => (int) $q->net_cents]]);
 
         return response()->json(['ok' => true, 'number' => $q->number]);
     }

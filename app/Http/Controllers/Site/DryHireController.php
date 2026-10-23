@@ -94,6 +94,7 @@ class DryHireController extends SiteController
         abort_if(empty($d['lines']) && blank($d['message'] ?? null), 422, __('site.js.need_lines'));
 
         $msg = WebRequests::dryHire($d, $locale);
+        \App\Services\Website\Tracking::linkRequest($request, $msg);
 
         return response()->json(['ok' => true, 'ref' => 'W-'.$msg->id]);
     }

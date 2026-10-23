@@ -11,6 +11,7 @@
         <a href="{{ $app }}/book">{{ __('site.nav.factory') }}</a>
         <a href="{{ $app }}/afrit6">{{ __('site.nav.afrit6') }}</a>
         <a href="mailto:{{ $co?->email ?: 'info@cluk.live' }}">{{ __('site.footer.contact') }}</a>
+        <a href="#cookies" data-cookie-settings>{{ __('site.consent.settings') }}</a>
       </nav>
       <div class="social">
         <a href="{{ config('website.social.instagram') }}" aria-label="Instagram" rel="noopener" target="_blank">@include('site._icon', ['i' => 'ig'])</a>

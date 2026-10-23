@@ -186,6 +186,7 @@ class SalesController extends SiteController
             'page' => ['nullable', 'string', 'max:300'],
         ]);
         $msg = WebRequests::sales($d, $locale);
+        \App\Services\Website\Tracking::linkRequest($request, $msg);
 
         return response()->json(['ok' => true, 'ref' => 'W-'.$msg->id]);
     }

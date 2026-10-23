@@ -161,4 +161,9 @@ return [
         'send_dryhire' => 'Enviar mi solicitud', 'list' => 'lista :price', 'off' => '−:p%', 'in_stock' => ':n en stock', 'lead' => 'lo pedimos para ti',
         'no_price' => 'Este producto aún no tiene precio de lista: pídenos un presupuesto.',
     ],
+    'consent' => [
+        'title' => 'Cookies en cluk.live',
+        'text' => 'Usamos cookies necesarias para que la web funcione (idioma, cestas, inicio de sesión). Con tu permiso también guardamos estadísticas: qué páginas y productos miras, para que nuestro equipo te ayude mejor. Nunca las vendemos ni las usamos para anuncios de terceros.',
+        'all' => 'Aceptar estadísticas', 'necessary' => 'Solo las necesarias', 'settings' => 'Configuración de cookies',
+    ],
 ];

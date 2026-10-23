@@ -164,4 +164,9 @@ return [
         'send_dryhire' => 'Send my request', 'list' => 'list :price', 'off' => '−:p%', 'in_stock' => ':n in stock', 'lead' => 'ordered for you',
         'no_price' => 'This product has no list price yet: ask us for a quote.',
     ],
+    'consent' => [
+        'title' => 'Cookies on cluk.live',
+        'text' => 'We use necessary cookies to make the site work (language, baskets, logins). With your OK we also keep statistics: which pages and products you look at, so our team can help you better. We never sell this and never use it for ads from others.',
+        'all' => 'Accept statistics', 'necessary' => 'Only necessary', 'settings' => 'Cookie settings',
+    ],
 ];
