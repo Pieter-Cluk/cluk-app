@@ -170,6 +170,7 @@ return [
         'title' => 'Actualités', 'meta' => 'Les dernières nouvelles de CLUK : nouveau matériel, événements à la Factory, Afrit 6 et notre gamme en vente, depuis notre Facebook et Instagram.',
         'intro' => 'Des gens, du matériel, des espaces et des histoires, directement de notre Facebook et Instagram.',
         'all' => 'Tout', 'all_news' => 'Toutes les actualités', 'latest' => 'Derniers messages', 'on' => 'sur :platform', 'open' => 'Ouvrir sur :platform',
+        'strip_title' => 'Actualités :part', 'more' => 'Plus d’actualités',
         'empty' => 'Pas encore de messages ici.', 'follow' => 'Suivez-nous', 'video' => 'Vidéo', 'filter' => 'Afficher les actualités sur',
     ],
 ];

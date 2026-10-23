@@ -173,6 +173,7 @@ return [
         'title' => 'News', 'meta' => 'The latest from CLUK: new gear, events at Factory, Afrit 6 and our sales range, from our Facebook and Instagram.',
         'intro' => 'People, gear, spaces and stories, straight from our Facebook and Instagram.',
         'all' => 'All', 'all_news' => 'All news', 'latest' => 'Latest posts', 'on' => 'on :platform', 'open' => 'Open on :platform',
+        'strip_title' => 'Latest from :part', 'more' => 'More news',
         'empty' => 'No posts here yet.', 'follow' => 'Follow us', 'video' => 'Video', 'filter' => 'Show news about',
     ],
 ];

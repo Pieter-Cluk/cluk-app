@@ -170,6 +170,7 @@ return [
         'title' => 'Nieuws', 'meta' => 'Het laatste nieuws van CLUK: nieuw materiaal, events in Factory, Afrit 6 en ons verkoopgamma, van onze Facebook en Instagram.',
         'intro' => 'Mensen, materiaal, ruimtes en verhalen, rechtstreeks van onze Facebook en Instagram.',
         'all' => 'Alles', 'all_news' => 'Al het nieuws', 'latest' => 'Laatste berichten', 'on' => 'op :platform', 'open' => 'Openen op :platform',
+        'strip_title' => 'Nieuws van :part', 'more' => 'Meer nieuws',
         'empty' => 'Hier staan nog geen berichten.', 'follow' => 'Volg ons', 'video' => 'Video', 'filter' => 'Toon nieuws over',
     ],
 ];

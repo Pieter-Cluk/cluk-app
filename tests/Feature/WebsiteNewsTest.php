@@ -61,4 +61,15 @@ class WebsiteNewsTest extends TestCase
         $this->get('/site/news/image/'.Post::where('external_id', 'p6')->value('id'))->assertNotFound(); // LinkedIn is not on the website
         $this->get('/site/news/video/'.$k2->id)->assertNotFound(); // no video kept for this post
     }
+
+    public function test_the_strip_for_platform_pages(): void
+    {
+        $this->posts();
+        $html = view('site._news-strip', ['part' => 'afrit6'])->render();
+        $this->assertStringContainsString('Latest from Afrit 6', $html);
+        $this->assertStringContainsString('Two desks free at Afrit 6', $html);
+        $this->assertStringNotContainsString('Team lunch', $html);
+        \App\Models\Social\Post::query()->delete();
+        $this->assertSame('', trim(view('site._news-strip', ['part' => 'afrit6'])->render())); // nothing shown without posts
+    }
 }
