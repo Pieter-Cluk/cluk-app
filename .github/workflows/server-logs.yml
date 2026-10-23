@@ -39,7 +39,7 @@ jobs:
           echo "== upload limits (PHP)"; php -r 'echo "upload_max_filesize=".ini_get("upload_max_filesize")." post_max_size=".ini_get("post_max_size")." gd=".(function_exists("imagecreatefromstring")?"yes":"no")." exif=".(function_exists("exif_read_data")?"yes":"no").PHP_EOL;'
           echo "== secret lengths"
           for k in MICROSOFT_CLIENT_SECRET DB_PASSWORD INTAKE_TOKEN; do v=$(grep "^$k=" .env | cut -d= -f2- | tr -d '"'); echo "$k: ${#v} chars"; done
-          echo; echo "== website products"
+          echo; echo "== website catalogue check"
           F=$(mktemp /tmp/webcheck.XXXX.php)
           cat > "$F" <<'PHP'
           <?php
@@ -48,32 +48,50 @@ jobs:
           $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
           use Illuminate\Support\Facades\DB;
           use Illuminate\Support\Facades\Schema;
-          foreach (['equipment_items', 'sales_items'] as $t) {
-              echo "$t.on_website column: ".(Schema::hasColumn($t, 'on_website') ? 'yes' : 'NO (migration not run yet)').PHP_EOL;
+          $tables = ['product_categories', 'product_subcategories', 'product_attributes', 'product_attribute_options', 'product_subcategory_attribute', 'product_tags', 'equipment_item_options', 'equipment_item_tag'];
+          $miss = array_filter($tables, fn ($t) => ! Schema::hasTable($t));
+          echo 'tables: '.($miss ? 'MISSING '.implode(', ', $miss) : 'all '.count($tables).' present').PHP_EOL;
+          foreach (['category_id', 'subcategory_id', 'search_words', 'on_website'] as $c) { echo "equipment_items.$c: ".(Schema::hasColumn('equipment_items', $c) ? 'yes' : 'NO').PHP_EOL; }
+          if ($miss) { exit; }
+          $L = ['en', 'nl', 'fr', 'es'];
+          $nm = fn ($j) => json_decode((string) $j, true) ?: [];
+          $gaps = fn ($j) => implode(',', array_filter($L, fn ($l) => trim((string) ($nm($j)[$l] ?? '')) === ''));
+          $cats = DB::table('product_categories')->orderBy('sort')->get();
+          $subs = DB::table('product_subcategories')->orderBy('sort')->get();
+          $items = DB::table('equipment_items')->where('kind', 'item')->get(['id', 'number', 'name', 'category_id', 'subcategory_id', 'on_website', 'active', 'descriptions', 'photo_path', 'search_words']);
+          $web = $items->where('on_website', 1)->where('active', 1);
+          echo PHP_EOL."== lists".PHP_EOL;
+          echo 'categories '.$cats->count().' (active '.$cats->where('active', 1)->count().'), subcategories '.$subs->count().', attributes '.DB::table('product_attributes')->count().' with '.DB::table('product_attribute_options')->count().' choices, tags '.DB::table('product_tags')->count().PHP_EOL;
+          $tr = $cats->filter(fn ($c) => $gaps($c->name))->map(fn ($c) => $c->code.' missing '.$gaps($c->name))->merge($subs->filter(fn ($s) => $gaps($s->name))->map(fn ($s) => $s->code.' missing '.$gaps($s->name)));
+          echo 'names missing a language: '.($tr->count() ? $tr->implode('; ') : 'none').PHP_EOL;
+          echo PHP_EOL."== items (kind item: ".$items->count().")".PHP_EOL;
+          echo 'without category: '.$items->whereNull('category_id')->count().', without subcategory: '.$items->whereNull('subcategory_id')->count().PHP_EOL;
+          $bad = $items->filter(fn ($i) => $i->subcategory_id && optional($subs->firstWhere('id', $i->subcategory_id))->category_id != $i->category_id);
+          echo 'subcategory not in its category: '.$bad->count().($bad->count() ? ' e.g. '.$bad->take(5)->pluck('number')->implode(', ') : '').PHP_EOL;
+          $offSub = $items->filter(fn ($i) => $i->subcategory_id && ! optional($subs->firstWhere('id', $i->subcategory_id))->active);
+          echo 'in a switched-off subcategory: '.$offSub->count().PHP_EOL;
+          $opt = DB::table('equipment_item_options')->count(); $tg = DB::table('equipment_item_tag')->count();
+          echo "attribute values set: $opt on ".DB::table('equipment_item_options')->distinct()->count('item_id')." items; tags set: $tg on ".DB::table('equipment_item_tag')->distinct()->count('item_id').' items; items with search words: '.$items->filter(fn ($i) => trim((string) $i->search_words) !== '')->count().PHP_EOL;
+          $wrongAttr = DB::table('equipment_item_options as io')->join('product_attribute_options as o', 'o.id', '=', 'io.option_id')->join('equipment_items as i', 'i.id', '=', 'io.item_id')
+              ->leftJoin('product_subcategory_attribute as sa', fn ($j) => $j->on('sa.attribute_id', '=', 'o.attribute_id')->on('sa.subcategory_id', '=', 'i.subcategory_id'))->whereNull('sa.attribute_id')->count();
+          echo "attribute values on a subcategory that doesn't use that attribute: $wrongAttr".PHP_EOL;
+          echo PHP_EOL."== what the website gets: ".$web->count()." active items ticked".PHP_EOL;
+          echo 'ticked without category/subcategory: '.$web->filter(fn ($i) => ! $i->category_id || ! $i->subcategory_id)->count().', without photo: '.$web->whereNull('photo_path')->count().', descriptions in all 4 languages: '.$web->filter(fn ($i) => ! $gaps($i->descriptions ?? '{}'))->count().PHP_EOL;
+          foreach ($cats as $c) {
+              $ci = $items->where('category_id', $c->id); $cw = $web->where('category_id', $c->id);
+              echo $c->code.' '.($nm($c->name)['en'] ?? '?').' (nl: '.($nm($c->name)['nl'] ?? '?').'): '.$ci->count().' items, '.$cw->count().' on web'.($c->active ? '' : ' [OFF]').PHP_EOL;
+              foreach ($subs->where('category_id', $c->id) as $s) {
+                  $n = $items->where('subcategory_id', $s->id)->count(); $w = $web->where('subcategory_id', $s->id)->count();
+                  echo '   '.$s->code.' '.($nm($s->name)['en'] ?? '?').": $n, web $w".($s->active ? '' : ' [OFF]').PHP_EOL;
+              }
           }
-          if (! Schema::hasColumn('equipment_items', 'on_website')) { exit; }
-          $eq = App\Models\Equipment\Item::query()->where('kind', 'item')->get();
-          echo PHP_EOL."== DRY-HIRE: ".$eq->where('on_website', true)->count()." of ".$eq->count()." items ticked".PHP_EOL;
-          echo "number | name | category > sub | brand | stock | price/day | photos | descriptions | active".PHP_EOL;
-          foreach ($eq->where('on_website', true)->sortBy(['category', 'subcategory', 'name']) as $i) {
-              $d = array_keys(array_filter((array) ($i->descriptions ?? [])));
-              echo implode(' | ', [$i->number, $i->name, ($i->category ?: '-').' > '.($i->subcategory ?: '-'), $i->brand ?: '-',
-                  $i->totalQty(), '€ '.number_format($i->day_price_cents / 100, 2, ',', '.'),
-                  $i->photos()->count().($i->photo_path ? ' (main set)' : ' (no main)'),
-                  $d ? implode(',', $d) : 'none', $i->active ? 'yes' : 'NO']).PHP_EOL;
-          }
-          echo PHP_EOL."== dry-hire categories: items, ticked, subcategories, pieces".PHP_EOL;
-          foreach ($eq->groupBy(fn ($i) => $i->category ?: '-')->sortKeys() as $k => $g) {
-              echo "$k: ".$g->count().', '.$g->where('on_website', true)->count().', '.$g->pluck('subcategory')->unique()->count().', '.$g->sum(fn ($i) => $i->totalQty()).PHP_EOL;
-          }
-          echo "items with any pieces or stock: ".$eq->filter(fn ($i) => $i->totalQty() > 0)->count().PHP_EOL;
-          $s = App\Models\ProductSales\SalesItem::query()->get();
-          echo PHP_EOL."== SALES: ".$s->where('on_website', true)->count()." of ".$s->count()." products ticked".PHP_EOL;
-          echo "number | brand type | category | stock | list price | photo | description | active".PHP_EOL;
-          foreach ($s->where('on_website', true)->sortBy(['category', 'type']) as $i) {
-              echo implode(' | ', [$i->number, trim(($i->brand ?? '').' '.$i->type), $i->category ?: '-', $i->stock_qty,
-                  '€ '.number_format($i->list_price_cents / 100, 2, ',', '.'), $i->photo_path ? 'yes' : 'no',
-                  $i->description ? 'yes' : 'no', $i->active ? 'yes' : 'NO']).PHP_EOL;
+          echo PHP_EOL."== ticked items with their new place".PHP_EOL;
+          $optRows = DB::table('equipment_item_options as io')->join('product_attribute_options as o', 'o.id', '=', 'io.option_id')->join('product_attributes as a', 'a.id', '=', 'o.attribute_id')->whereIn('io.item_id', $web->pluck('id'))->get(['io.item_id', 'a.key', 'o.value'])->groupBy('item_id');
+          $tagRows = DB::table('equipment_item_tag as it')->join('product_tags as t', 't.id', '=', 'it.tag_id')->whereIn('it.item_id', $web->pluck('id'))->get(['it.item_id', 't.slug'])->groupBy('item_id');
+          foreach ($web->sortBy('name') as $i) {
+              $c = $cats->firstWhere('id', $i->category_id); $s = $subs->firstWhere('id', $i->subcategory_id);
+              $a = ($optRows[$i->id] ?? collect())->map(fn ($r) => $r->key.'='.$r->value)->implode(' ');
+              echo $i->name.' | '.($c ? $nm($c->name)['en'] : '-').' > '.($s ? $nm($s->name)['en'] : '-').($a ? ' | '.$a : '').(isset($tagRows[$i->id]) ? ' | #'.$tagRows[$i->id]->pluck('slug')->implode(' #') : '').PHP_EOL;
           }
           PHP
           php "$F"; rm -f "$F"
@@ -83,8 +101,17 @@ jobs:
       - name: Report
         if: always()
         run: |
-          head -c 60000 report.txt | split -b 3500 - part_
+          sed '/== website catalogue check/,$d' report.txt | head -c 30000 | split -b 3500 - part_
           for f in part_*; do
             body=$(sed 's/%/%25/g' "$f" | sed ':a;N;$!ba;s/\n/%0A/g')
             echo "::notice title=log ($f)::${body}"
+          done
+
+      - name: Website report
+        if: always()
+        run: |
+          sed -n '/== website catalogue check/,$p' report.txt | head -c 34000 | split -b 3400 - web_
+          for f in web_*; do
+            body=$(sed 's/%/%25/g' "$f" | sed ':a;N;$!ba;s/\n/%0A/g')
+            echo "::notice title=website ($f)::${body}"
           done
