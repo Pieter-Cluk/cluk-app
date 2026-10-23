@@ -447,5 +447,8 @@ return [
         'find' => 'Chercher',
         'limited' => 'Seuls les 300 premiers sont affichés : cherchez pour affiner.',
         'selected' => ':n sélectionnées',
+        'back' => 'Retour',
+        'layout' => 'Emplacements étagère et palette',
+        'layouts' => ['beam' => 'Petit, centré (lisses de rayonnage)', 'large' => 'Grand (remplit l’étiquette)'],
     ],
 ];

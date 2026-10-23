@@ -36,6 +36,13 @@ class LabelPrintTest extends TestCase
 
         $r = $this->actingAs($w)->post('/warehouse/labels/locations', ['codes' => ['ga1a1', 'CLEAN', 'NOPE']])->assertOk();
         $r->assertSee('GA1A1')->assertSee('size: 102mm 59mm', false)->assertSee('<path d="M', false)->assertDontSee('NOPE');
+        // Shelf and pallet places get the smaller, centred beam layout by default; zones stay large. A back link leads out.
+        $this->assertSame(1, substr_count($r->getContent(), 'class="label beam"'));
+        $r->assertSee('← Back', false);
+        $big = $this->actingAs($w)->post('/warehouse/labels/locations', ['codes' => ['GA1A1'], 'layout' => 'large'])->assertOk();
+        $this->assertSame(0, substr_count($big->getContent(), 'class="label beam"'));
+        $this->actingAs($w)->post('/warehouse/labels/locations', ['codes' => ['GA1A1'], 'layout' => 'huge'])->assertSessionHasErrors('layout');
+        $this->actingAs($w)->get('/warehouse/labels')->assertSee('Small, centred (rack beams)');
 
         $item = Item::create(['number' => 'LT-SP', 'name' => 'Robe Spiider', 'serial' => true]);
         $a = Asset::create(['item_id' => $item->id, 'code' => 'LT-0142', 'serial_number' => '3021-0142', 'status' => Asset::AVAILABLE]);

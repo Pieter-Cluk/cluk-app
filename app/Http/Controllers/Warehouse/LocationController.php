@@ -121,7 +121,8 @@ class LocationController extends Controller
     }
 
     /**
-     * Location labels on Dymo 2112290 (59 × 102 mm): ?zone=CLEAN, ?p=GA1A1, ?rack=GA1, ?row=GA.
+     * Location labels on Dymo 2112290 (59 × 102 mm): ?zone=CLEAN, ?p=GA1A1, ?rack=GA1, ?row=GA;
+     * ?layout=large prints shelf and pallet places full size instead of the smaller beam layout.
      */
     public function labels(Request $request): View
     {
@@ -136,6 +137,8 @@ class LocationController extends Controller
         abort_if(! $codes, 404);
         $labels = LabelController::locationLabels($codes);
 
-        return view('warehouse.settings.labels', ['labels' => $labels]);
+        $layout = in_array($request->query('layout'), LabelController::LAYOUTS, true) ? $request->query('layout') : 'beam';
+
+        return view('warehouse.settings.labels', ['labels' => $labels, 'layout' => $layout, 'back' => url()->previous(route('locations.positions'))]);
     }
 }

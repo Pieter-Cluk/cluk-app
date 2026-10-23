@@ -23,6 +23,8 @@
             <div class="lbl-bar">
                 <label class="check"><input type="checkbox" data-all><span>{{ __('warehouse.labels.select_all') }}</span></label>
                 <span class="muted" data-count>0</span>
+                <label class="inline-form small">{{ __('warehouse.labels.layout') }}
+                    <select name="layout">@foreach (\App\Http\Controllers\Warehouse\LabelController::LAYOUTS as $lay)<option value="{{ $lay }}">{{ __('warehouse.labels.layouts.'.$lay) }}</option>@endforeach</select></label>
                 @if ($canPrint)<button class="primary" type="submit" data-print disabled>{{ __('warehouse.labels.print') }}</button>@endif
             </div>
             <section class="card card-flush">

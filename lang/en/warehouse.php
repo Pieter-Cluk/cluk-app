@@ -447,5 +447,8 @@ return [
         'find' => 'Search',
         'limited' => 'Only the first 300 are shown: search to narrow down.',
         'selected' => ':n selected',
+        'back' => 'Back',
+        'layout' => 'Shelf and pallet places',
+        'layouts' => ['beam' => 'Small, centred (rack beams)', 'large' => 'Large (fills the label)'],
     ],
 ];

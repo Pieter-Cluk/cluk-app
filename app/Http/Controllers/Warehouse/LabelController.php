@@ -17,6 +17,12 @@ use Illuminate\View\View;
  */
 class LabelController extends Controller
 {
+    /**
+     * Layouts for shelf and pallet places, on the same 59 × 102 mm label: "beam" is a smaller print,
+     * centred both ways, for the narrow rack beams; "large" fills the label. Zone labels are always large.
+     */
+    public const LAYOUTS = ['beam', 'large'];
+
     public function index(Request $request): View
     {
         $tab = $request->query('tab') === 'items' ? 'items' : 'locations';
@@ -51,9 +57,9 @@ class LabelController extends Controller
 
     public function locations(Request $request): View
     {
-        $codes = $request->validate(['codes' => ['required', 'array', 'max:800'], 'codes.*' => ['string', 'max:20']])['codes'];
+        $d = $request->validate(['codes' => ['required', 'array', 'max:800'], 'codes.*' => ['string', 'max:20'], 'layout' => ['nullable', 'in:'.implode(',', self::LAYOUTS)]]);
 
-        return view('warehouse.settings.labels', ['labels' => self::locationLabels($codes)]);
+        return view('warehouse.settings.labels', ['labels' => self::locationLabels($d['codes']), 'layout' => $d['layout'] ?? 'beam', 'back' => route('warehouse.labels')]);
     }
 
     public function items(Request $request): View
@@ -66,7 +72,7 @@ class LabelController extends Controller
         return view('equipment.labels', ['assets' => $assets]);
     }
 
-    /** @return Collection<int, array{code: string, name: string}> */
+    /** @return Collection<int, array{code: string, name: string, zone: bool}> */
     public static function locationLabels(array $codes): Collection
     {
         $codes = array_values(array_unique(array_map(fn ($c) => strtoupper((string) $c), $codes)));
@@ -74,10 +80,10 @@ class LabelController extends Controller
         $positions = Position::whereIn('code', $codes)->get()->keyBy('code');
         $labels = collect($codes)->map(function (string $c) use ($zones, $positions) {
             if ($z = $zones->get($c)) {
-                return ['code' => $z->code, 'name' => $z->label()];
+                return ['code' => $z->code, 'name' => $z->label(), 'zone' => true];
             }
             if ($p = $positions->get($c)) {
-                return ['code' => $p->code, 'name' => self::positionName($p)];
+                return ['code' => $p->code, 'name' => self::positionName($p), 'zone' => false];
             }
 
             return null;

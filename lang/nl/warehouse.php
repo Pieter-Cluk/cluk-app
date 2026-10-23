@@ -447,5 +447,8 @@ return [
         'find' => 'Zoeken',
         'limited' => 'Alleen de eerste 300 worden getoond: zoek om te verfijnen.',
         'selected' => ':n geselecteerd',
+        'back' => 'Terug',
+        'layout' => 'Rek- en palletplaatsen',
+        'layouts' => ['beam' => 'Klein, gecentreerd (rekliggers)', 'large' => 'Groot (vult het etiket)'],
     ],
 ];

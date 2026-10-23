@@ -447,5 +447,8 @@ return [
         'find' => 'Buscar',
         'limited' => 'Solo se muestran las primeras 300: busca para afinar.',
         'selected' => ':n seleccionadas',
+        'back' => 'Volver',
+        'layout' => 'Huecos de estantería y palé',
+        'layouts' => ['beam' => 'Pequeño, centrado (largueros)', 'large' => 'Grande (llena la etiqueta)'],
     ],
 ];
