@@ -20,6 +20,7 @@
             @endforeach
         </tbody>
     </table>
+    @include('warehouse._carriers-with', ['tag' => 'div', 'class' => 'doc-blank'])
     <p class="doc-summary">☐ {{ __('docs.ret.complete') }} &nbsp; ☐ {{ __('docs.ret.partial') }} &nbsp; ☐ {{ __('docs.ret.released') }} &nbsp; ☐ {{ __('docs.ret.hold') }}</p>
 @endsection
 @section('notes')

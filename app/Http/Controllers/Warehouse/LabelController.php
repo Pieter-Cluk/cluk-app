@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 use App\Models\Equipment\Asset;
+use App\Models\Warehouse\Carrier;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
 use Illuminate\Http\Request;
@@ -38,6 +39,7 @@ class LabelController extends Controller
             return view('warehouse.labels', [
                 'tab' => $tab, 'floor' => $floor, 'row' => $row,
                 'zones' => $floor || $row ? collect() : Zone::where('active', true)->where('type', '!=', 'storage')->orderBy('sort')->get(),
+                'carriers' => $floor || $row ? collect() : Carrier::where('active', true)->orderBy('kind')->orderBy('code')->get(),
                 'positions' => $positions,
                 'rows' => Position::where('active', true)->when($floor, fn ($q) => $q->where('floor', $floor))->distinct()->orderBy('row')->pluck('row'),
             ]);
@@ -78,7 +80,11 @@ class LabelController extends Controller
         $codes = array_values(array_unique(array_map(fn ($c) => strtoupper((string) $c), $codes)));
         $zones = Zone::whereIn('code', $codes)->get()->keyBy('code');
         $positions = Position::whereIn('code', $codes)->get()->keyBy('code');
-        $labels = collect($codes)->map(function (string $c) use ($zones, $positions) {
+        $carriers = Carrier::whereIn('code', $codes)->get()->keyBy('code');
+        $labels = collect($codes)->map(function (string $c) use ($zones, $positions, $carriers) {
+            if ($k = $carriers->get($c)) {
+                return ['code' => $k->code, 'name' => $k->label(), 'zone' => true];
+            }
             if ($z = $zones->get($c)) {
                 return ['code' => $z->code, 'name' => $z->label(), 'zone' => true];
             }

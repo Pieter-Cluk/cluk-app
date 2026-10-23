@@ -3,6 +3,7 @@
 namespace App\Models\Equipment;
 
 use App\Models\Rental\Order;
+use App\Models\Warehouse\Carrier;
 use App\Models\Warehouse\Move;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 /** One physical piece of a serial item, with its own code and QR label. */
 #[Fillable([
     'item_id', 'code', 'serial_number', 'status', 'location', 'out_order_id', 'repair_released_at', 'purchase_date', 'purchase_price_cents',
-    'supplier', 'warranty_until', 'note', 'retired_reason', 'retired_at', 'label_printed_at',
+    'supplier', 'warranty_until', 'note', 'retired_reason', 'retired_at', 'label_printed_at', 'carrier_id',
 ])]
 class Asset extends Model
 {
@@ -55,6 +56,12 @@ class Asset extends Model
     public function outOrder(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'out_order_id');
+    }
+
+    /** The light dolly or storage box this piece is in (if any). */
+    public function carrier(): BelongsTo
+    {
+        return $this->belongsTo(Carrier::class, 'carrier_id');
     }
 
     /** Next free code for an item's prefix: LT-0001, LT-0002, … */

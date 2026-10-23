@@ -12,6 +12,9 @@
         @include('warehouse.phone._scanbox', ['action' => route('w.pick.scan', $order), 'placeholder' => __('warehouse.pick.scan_piece')])
     @endif
 
+    @include('warehouse._carriers-with')
+    <p class="muted small">{{ __('warehouse.carriers.pick_hint') }}</p>
+
     <ul class="ph-lines">
         @foreach ($lines as $l)
             @php($subWait = $l->subhireLines->contains(fn ($s) => $s->request->status === 'accepted' && ! $s->request->received_at))

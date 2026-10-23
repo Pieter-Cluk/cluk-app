@@ -7,9 +7,11 @@ use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
 use App\Models\Rental\Order;
 use App\Models\Rental\OrderLine;
+use App\Models\Warehouse\Carrier;
 use App\Models\Warehouse\Check;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
+use App\Services\Warehouse\Carriers;
 use App\Services\Warehouse\Checks;
 use App\Services\Warehouse\Moves;
 use App\Support\Images;
@@ -47,12 +49,21 @@ class PhoneController extends Controller
         return $id ? Asset::with('item')->find($id) : null;
     }
 
+    /** The dolly or box that is "open": scanned pieces go in it, a scanned place moves it. */
+    private function openCarrier(Request $request): ?Carrier
+    {
+        $id = $request->session()->get('w.carrier');
+
+        return $id ? Carrier::with('assets.item')->find($id) : null;
+    }
+
     public function scan(Request $request): View
     {
         $pending = $this->pending($request);
         $here = null;
         if ($code = $request->session()->get('w.here')) {
-            $here = ['code' => $code, 'label' => Moves::label($code), 'assets' => Asset::with('item')->where('location', $code)->orderBy('code')->limit(60)->get()];
+            $here = ['code' => $code, 'label' => Moves::label($code), 'assets' => Asset::with('item')->where('location', $code)->whereNull('carrier_id')->orderBy('code')->limit(60)->get(),
+                'carriers' => Carrier::withCount('assets')->where('location', $code)->where('active', true)->orderBy('code')->get()];
         }
         $next = [];
         if ($pending) {
@@ -61,7 +72,7 @@ class PhoneController extends Controller
             $next = collect($next)->map(fn ($c) => $c === Zone::RACKS ? __('warehouse.zone_names.RACKS') : Moves::label($c))->all();
         }
 
-        return view('warehouse.phone.scan', ['pending' => $pending, 'next' => $next, 'here' => $here, 'scanned' => $request->query('scanned')]);
+        return view('warehouse.phone.scan', ['pending' => $pending, 'next' => $next, 'here' => $here, 'scanned' => $request->query('scanned'), 'carrier' => $this->openCarrier($request)]);
     }
 
     public function scanPost(Request $request): RedirectResponse
@@ -72,6 +83,32 @@ class PhoneController extends Controller
             return redirect()->route('w.scan')->withErrors(['code' => __('warehouse.errors.unknown', ['code' => mb_strimwidth($code, 0, 40, '…')])]);
         }
         $request->session()->forget('w.here');
+        $open = $this->openCarrier($request);
+        // A dolly or box: put the waiting piece in it, or open it (scan pieces to fill it, a place to move it).
+        if ($found['type'] === 'carrier') {
+            $carrier = $found['model'];
+            if ($pending = $this->pending($request)) {
+                Carriers::pack($pending, $carrier, $request->user());
+                $request->session()->forget('w.pending');
+                $request->session()->put('w.carrier', $carrier->id);
+
+                return redirect()->route('w.scan')->with('status', __('warehouse.carriers.packed', ['code' => $pending->code, 'carrier' => $carrier->code]));
+            }
+            $request->session()->put('w.carrier', $carrier->id);
+
+            return redirect()->route('w.scan');
+        }
+        if ($found['type'] === 'asset' && $open) {
+            Carriers::pack($found['model'], $open, $request->user());
+
+            return redirect()->route('w.scan')->with('status', __('warehouse.carriers.packed', ['code' => $found['model']->code, 'carrier' => $open->code]));
+        }
+        if ($found['type'] !== 'asset' && $open) {
+            $n = Carriers::move($open, $found['model'], $request->user());
+            $request->session()->forget('w.carrier');
+
+            return redirect()->route('w.scan')->with('status', trans_choice('warehouse.carriers.moved', $n, ['n' => $n, 'carrier' => $open->code, 'place' => Moves::label($found['model']->code)]));
+        }
         if ($found['type'] === 'asset') {
             $asset = $found['model'];
             // Scanned the piece that waits for its next step: open that step.
@@ -111,9 +148,25 @@ class PhoneController extends Controller
 
     public function cancel(Request $request): RedirectResponse
     {
-        $request->session()->forget(['w.pending', 'w.here']);
+        $request->session()->forget(['w.pending', 'w.here', 'w.carrier']);
 
         return redirect()->route('w.scan');
+    }
+
+    /** Stop filling the dolly or box at the return: next pieces come in loose (or scan another dolly). */
+    public function returnCarrierDone(Request $request, Order $order): RedirectResponse
+    {
+        $request->session()->forget('w.ret_carrier');
+
+        return back();
+    }
+
+    /** Take a piece out of the open dolly or box. */
+    public function carrierOut(Request $request, Asset $asset): RedirectResponse
+    {
+        Carriers::unpack($asset, $request->user());
+
+        return redirect()->route('w.scan')->with('status', __('warehouse.carriers.taken_out', ['code' => $asset->code]));
     }
 
     // ------------------------------------------------------------------ picking
@@ -129,6 +182,11 @@ class PhoneController extends Controller
     {
         abort_unless($order->status === 'approved' && ! $order->loaded_at, 409);
         $found = Moves::resolve((string) $request->validate(['code' => ['required', 'string', 'max:200']])['code']);
+        if (($found['type'] ?? null) === 'carrier') {
+            $n = Carriers::pick($order, $found['model'], $request->user());
+
+            return back()->with('status', trans_choice('warehouse.carriers.picked', $n, ['n' => $n, 'carrier' => $found['model']->code]));
+        }
         if (($found['type'] ?? null) !== 'asset') {
             throw ValidationException::withMessages(['code' => __('warehouse.errors.scan_a_piece')]);
         }
@@ -165,12 +223,21 @@ class PhoneController extends Controller
     {
         abort_unless($order->loaded_at, 404);
 
-        return view('warehouse.phone.return', ['order' => $order->load('company'), 'lines' => Moves::pickLines($order)]);
+        [$forOrder, $carrierId] = session('w.ret_carrier', [null, null]);
+
+        return view('warehouse.phone.return', ['order' => $order->load('company'), 'lines' => Moves::pickLines($order),
+            'retCarrier' => $forOrder === $order->id ? Carrier::withCount('assets')->find($carrierId) : null]);
     }
 
     public function returnScan(Request $request, Order $order): RedirectResponse
     {
         $found = Moves::resolve((string) $request->validate(['code' => ['required', 'string', 'max:200']])['code']);
+        if (($found['type'] ?? null) === 'carrier') {
+            Carriers::returnIn($order, $found['model'], $request->user());
+            $request->session()->put('w.ret_carrier', [$order->id, $found['model']->id]);
+
+            return back()->with('status', __('warehouse.carriers.returned', ['carrier' => $found['model']->code]));
+        }
         if (($found['type'] ?? null) !== 'asset') {
             throw ValidationException::withMessages(['code' => __('warehouse.errors.scan_a_piece')]);
         }
@@ -179,9 +246,12 @@ class PhoneController extends Controller
             throw ValidationException::withMessages(['code' => __('warehouse.errors.not_out_with', ['code' => $asset->code, 'order' => $order->number])]);
         }
         $inbound = Zone::where('type', 'inbound')->where('active', true)->orderBy('sort')->firstOrFail();
-        Moves::move($asset, $inbound, $request->user());
+        // The dolly or box scanned last for this return gets the piece.
+        [$forOrder, $carrierId] = $request->session()->get('w.ret_carrier', [null, null]);
+        $into = $forOrder === $order->id ? Carrier::find($carrierId) : null;
+        Moves::move($asset, $inbound, $request->user(), $into);
 
-        return back()->with('status', __('warehouse.ret.in', ['code' => $asset->code, 'place' => $inbound->label()]));
+        return back()->with('status', __('warehouse.ret.in', ['code' => $asset->code, 'place' => $inbound->label()]).($into ? ' '.__('warehouse.carriers.in_it', ['carrier' => $into->code]) : ''));
     }
 
     public function returnClose(Request $request, Order $order): RedirectResponse

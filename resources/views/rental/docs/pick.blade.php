@@ -36,6 +36,7 @@
             @endforeach
         </tbody>
     </table>
+    @include('warehouse._carriers-with', ['tag' => 'div', 'class' => 'doc-blank'])
     <p class="doc-summary"><b>{{ __('docs.summary') }}:</b> {{ trans_choice('docs.lines_count', $lines->count(), ['n' => $lines->count()]) }} · {{ __('docs.pieces', ['n' => $lines->sum(fn ($l) => $l->pieces())]) }}@if ($kg > 0) · {{ number_format($kg, 0, ',', '.') }} kg @endif</p>
 @endsection
 @section('notes')

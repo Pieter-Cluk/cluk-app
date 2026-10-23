@@ -92,3 +92,4 @@
 .tag-sub.tag-late{background:var(--danger-bg);color:var(--danger-text)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tag-sub:not(.tag-late){background:#2d2340;color:#c9b2f0}}
 :root[data-theme="dark"] .tag-sub:not(.tag-late){background:#2d2340;color:#c9b2f0}
+.ph-inline{display:inline;float:right;margin:0}

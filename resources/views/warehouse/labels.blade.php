@@ -34,10 +34,13 @@
                         @foreach ($zones as $z)
                             <tr><td><input type="checkbox" name="codes[]" value="{{ $z->code }}" aria-label="{{ $z->code }}"></td><td><b>{{ $z->code }}</b></td><td>{{ $z->label() }}</td></tr>
                         @endforeach
+                        @foreach ($carriers ?? [] as $k)
+                            <tr><td><input type="checkbox" name="codes[]" value="{{ $k->code }}" aria-label="{{ $k->code }}"></td><td><b>{{ $k->code }}</b></td><td>{{ $k->label() }}</td></tr>
+                        @endforeach
                         @foreach ($positions as $p)
                             <tr><td><input type="checkbox" name="codes[]" value="{{ $p->code }}" aria-label="{{ $p->code }}"></td><td><b>{{ $p->code }}</b></td><td>{{ \App\Http\Controllers\Warehouse\LabelController::positionName($p) }}</td></tr>
                         @endforeach
-                        @if ($zones->isEmpty() && $positions->isEmpty())<tr><td colspan="3" class="muted">{{ __('warehouse.labels.none') }}</td></tr>@endif
+                        @if ($zones->isEmpty() && $positions->isEmpty() && empty($carriers?->count()))<tr><td colspan="3" class="muted">{{ __('warehouse.labels.none') }}</td></tr>@endif
                     </tbody>
                 </table>
             </section>

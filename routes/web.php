@@ -485,11 +485,13 @@ Route::middleware('auth:web')->group(function () {
         Route::middleware('level:warehouse,2')->group(function () {
             Route::post('/scan', [PhoneController::class, 'scanPost'])->middleware('throttle:120,1')->name('scan.post');
             Route::post('/scan/cancel', [PhoneController::class, 'cancel'])->name('scan.cancel');
+            Route::post('/carrier/out/{asset}', [PhoneController::class, 'carrierOut'])->whereNumber('asset')->name('carrier.out');
             Route::post('/pick/{order}/scan', [PhoneController::class, 'pickScan'])->whereNumber('order')->name('pick.scan');
             Route::post('/pick/{order}/lines/{line}', [PhoneController::class, 'pickCount'])->whereNumber(['order', 'line'])->name('count');
             Route::post('/pick/{order}/load', [PhoneController::class, 'load'])->whereNumber('order')->name('load');
             Route::post('/return/{order}/scan', [PhoneController::class, 'returnScan'])->whereNumber('order')->name('return.scan');
             Route::post('/return/{order}/close', [PhoneController::class, 'returnClose'])->whereNumber('order')->name('return.close');
+            Route::post('/return/{order}/carrier-done', [PhoneController::class, 'returnCarrierDone'])->whereNumber('order')->name('return.carrier_done');
             Route::post('/clean/{asset}', [PhoneController::class, 'cleanSave'])->whereNumber('asset')->name('clean.save');
             Route::post('/check/{asset}', [PhoneController::class, 'checkSave'])->whereNumber('asset')->name('check.save');
             Route::post('/delivery', [PhoneAfrit6Controller::class, 'deliveryStore'])->name('delivery.store');

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** One scan that moved something: the movement log. */
-#[Fillable(['asset_id', 'item_id', 'qty', 'from_code', 'to_code', 'kind', 'order_id', 'user_id', 'note'])]
+#[Fillable(['asset_id', 'item_id', 'qty', 'from_code', 'to_code', 'kind', 'order_id', 'user_id', 'note', 'carrier_id'])]
 class Move extends Model
 {
     protected $table = 'warehouse_moves';

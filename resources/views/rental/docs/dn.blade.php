@@ -13,6 +13,7 @@
             @endforeach
         </tbody>
     </table>
+    @include('warehouse._carriers-with', ['tag' => 'div', 'class' => 'doc-blank'])
     <div class="doc-blank"><b>{{ __('docs.handover_notes') }}</b><span></span><span></span></div>
 @endsection
 @section('notes')

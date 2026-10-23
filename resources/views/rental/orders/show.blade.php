@@ -210,6 +210,7 @@
     @endif
 
     @if ($order->status === 'approved')
+        @include('warehouse._carriers-with', ['class' => 'card'])
         <section class="card">
             <h2>{{ __('docs.title') }}</h2>
             <div class="doc-links">
