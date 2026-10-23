@@ -34,6 +34,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('afrit6', 'afrit6/*') ? route('afrit6.login') : route('login'));
         $middleware->redirectUsersTo(fn (Request $request) => $request->is('afrit6', 'afrit6/*') ? route('afrit6.portal') : route('dashboard'));
         $middleware->validateCsrfTokens(except: ['intake']);
+        // Website consent and visitor cookies are set by the page script, so they are not encrypted.
+        $middleware->encryptCookies(except: ['cluk_consent', 'cluk_vid']);
         $middleware->alias([
             'nav' => EnsureNavAccess::class,
             'level' => EnsureModuleLevel::class,

@@ -161,4 +161,9 @@ return [
         'send_dryhire' => 'Verstuur mijn aanvraag', 'list' => 'lijst :price', 'off' => '−:p%', 'in_stock' => ':n op voorraad', 'lead' => 'wordt besteld',
         'no_price' => 'Dit product heeft nog geen lijstprijs: vraag ons een offerte.',
     ],
+    'consent' => [
+        'title' => 'Cookies op cluk.live',
+        'text' => 'We gebruiken noodzakelijke cookies om de site te laten werken (taal, winkelmanden, inloggen). Met je akkoord houden we ook statistieken bij: welke pagina’s en producten je bekijkt, zodat ons team je beter kan helpen. We verkopen dit nooit en gebruiken het nooit voor advertenties van anderen.',
+        'all' => 'Statistieken aanvaarden', 'necessary' => 'Alleen noodzakelijke', 'settings' => 'Cookie-instellingen',
+    ],
 ];

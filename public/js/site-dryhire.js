@@ -251,8 +251,10 @@
   function open(d) { lastFocus = document.activeElement; openD = d; d.classList.add('on'); scrim.classList.add('on'); setTimeout(function () { var f = d.querySelector('button, input'); if (f) f.focus(); }, 60); }
   function close() { if (!openD) return; openD.classList.remove('on'); scrim.classList.remove('on'); $('aside').classList.remove('on'); openD = null; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
 
+  var T_ = function (type, d) { if (window.cluk) window.cluk.track(type, Object.assign({ section: 'dryhire' }, d)); };
   function showItem(id) {
     var it = byId[id]; if (!it) return;
+    T_('product', { item_id: id, label: it.nm });
     var q = S.basket.get(id) || 1;
     $('pd').innerHTML = '<div class="dhead"><span class="eyebrow" style="color:var(--muted)">' + esc((catById[it.c] || {}).name) + ' · ' + esc((subById[it.s] || {}).name) + '</span><button class="x" type="button" data-close aria-label="' + esc(T.close) + '">✕</button></div>' +
       '<div class="dbody" id="pdBody"><div class="gallery">' + visual(it, []).replace('class="plate"', 'class="plate big"') + '</div><div><h2 id="pdTitle" style="font:800 30px/1.05 var(--sans);letter-spacing:-.03em;margin:0 0 6px">' + esc(it.nm) + '</h2><span class="note" style="font-family:ui-monospace,Menlo,monospace">' + esc(it.n) + '</span></div><p class="note">…</p></div>' +
@@ -291,6 +293,7 @@
   function add(id, q) {
     q = Math.max(1, Math.min(99999, q || ((S.basket.get(id) || 0) + 1)));
     S.basket.set(id, q); save(); fab(true); push(id);
+    T_('add', { item_id: id, label: (byId[id] || {}).nm, meta: { qty: q } });
     document.querySelectorAll('[data-add="' + id + '"]').forEach(function (b) { b.classList.add('in'); b.innerHTML = check; b.setAttribute('aria-label', T.in_request); });
   }
   var form = { name: '', company: '', vat: '', email: '', phone: '', message: '' };
@@ -360,7 +363,8 @@
 
   // ---------- events ----------
   var timer, scrollToResults = function () { var top = $('cats').closest('nav').getBoundingClientRect().top + scrollY - 64; if (scrollY < top - 10 || scrollY > top + 400) window.scrollTo({ top: top, behavior: 'smooth' }); };
-  $('q').addEventListener('input', function (e) { clearTimeout(timer); timer = setTimeout(function () { S.q = e.target.value.trim(); render(); }, 110); });
+  $('q').addEventListener('input', function (e) { clearTimeout(timer); timer = setTimeout(function () { S.q = e.target.value.trim(); render(); }, 110);
+    clearTimeout(window.__st); window.__st = setTimeout(function () { if (S.q.length > 1) T_('search', { label: S.q, meta: { results: filtered().list.length } }); }, 1500); });
   $('q').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); scrollToResults(); } });
   $('clear').addEventListener('click', function () { $('q').value = ''; S.q = ''; render(); $('q').focus(); });
   document.querySelectorAll('[data-q]').forEach(function (b) { b.addEventListener('click', function () { $('q').value = b.dataset.q; S.q = b.dataset.q; render(); scrollToResults(); }); });

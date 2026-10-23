@@ -121,6 +121,7 @@
   function add(btn, q) {
     var id = btn.dataset.add, priced = +btn.dataset.price > 0;
     q = q || 1;
+    if (window.cluk) window.cluk.track('add', { section: 'sales', item_id: +id, label: btn.dataset.name, meta: { qty: q } });
     if (CU && priced) { setServer(id, serverQty(id) + q); }
     else { var l = B.lines[id]; B.lines[id] = { q: (l ? l.q : 0) + q, name: btn.dataset.name, price: +btn.dataset.price || 0, code: btn.dataset.code }; save(); }
     badge(true);

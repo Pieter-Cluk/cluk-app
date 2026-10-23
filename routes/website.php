@@ -4,6 +4,7 @@ use App\Http\Controllers\Site\AccountController;
 use App\Http\Controllers\Site\DryHireController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\SalesController;
+use App\Http\Controllers\Site\TrackController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,9 @@ $site = function () {
     Route::get('/sales/photo/{item}/{w}', [SalesController::class, 'photo'])->whereNumber(['item', 'w'])->name('sales.photo');
     Route::get('/sales/document/{doc}', [SalesController::class, 'document'])->whereNumber('doc')->name('sales.document');
     Route::post('/sales/request', [SalesController::class, 'request'])->middleware('throttle:6,1')->name('sales.request');
+    // Visitor behaviour (only with consent).
+    Route::post('/t', [TrackController::class, 'store'])->middleware('throttle:240,1')->name('track');
+
     // Customer accounts (My CLUK) and the baskets kept on the server.
     Route::get('/account/login', [AccountController::class, 'login'])->name('account.login');
     Route::post('/account/login', [AccountController::class, 'doLogin'])->middleware('throttle:10,1')->name('account.login.post');

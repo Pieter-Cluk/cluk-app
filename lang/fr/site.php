@@ -161,4 +161,9 @@ return [
         'send_dryhire' => 'Envoyer ma demande', 'list' => 'catalogue :price', 'off' => '−:p%', 'in_stock' => ':n en stock', 'lead' => 'commandé pour vous',
         'no_price' => 'Ce produit n’a pas encore de prix catalogue : demandez-nous un devis.',
     ],
+    'consent' => [
+        'title' => 'Cookies sur cluk.live',
+        'text' => 'Nous utilisons des cookies nécessaires au fonctionnement du site (langue, paniers, connexion). Avec votre accord, nous tenons aussi des statistiques : les pages et produits que vous consultez, pour que notre équipe puisse mieux vous aider. Nous ne les vendons jamais et ne les utilisons jamais pour la publicité de tiers.',
+        'all' => 'Accepter les statistiques', 'necessary' => 'Uniquement les nécessaires', 'settings' => 'Paramètres des cookies',
+    ],
 ];

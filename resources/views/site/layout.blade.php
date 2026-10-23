@@ -22,6 +22,11 @@
 @include('site._header', ['active' => $active ?? null])
 @yield('content')
 @include('site._footer')
+<div class="consent" id="consent" role="dialog" aria-labelledby="consentTitle" hidden>
+  <div><b id="consentTitle">{{ __('site.consent.title') }}</b><p>{{ __('site.consent.text') }}</p></div>
+  <div class="consent-btns"><button type="button" class="c-no" data-consent="necessary">{{ __('site.consent.necessary') }}</button><button type="button" class="c-yes" data-consent="all">{{ __('site.consent.all') }}</button></div>
+</div>
+<script type="application/json" id="site-cfg">{"track":"{{ route('site.track') }}","section":"@yield('section', $active ?? '')"}</script>
 <script src="{{ asset('js/site.js') }}?v={{ @filemtime(public_path('js/site.js')) }}" defer></script>
 @stack('scripts')
 </body>

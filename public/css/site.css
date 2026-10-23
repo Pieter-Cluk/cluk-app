@@ -578,3 +578,13 @@ mark { background: rgba(92,191,58,.3); color: inherit; padding: 0 1px; }
 .reqbtn.has .n { background: #0b1a06; color: var(--green); }
 .reqbtn.bump { animation: bump .35s; }
 @media (max-width: 640px) { .reqbtn .bl { display: none; } }
+
+/* cookie consent */
+.consent { position: fixed; z-index: 60; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); max-width: 880px; margin: 0 auto; background: #0a0a0a; color: #fff; border: 2px solid var(--green); padding: 16px 18px; display: flex; gap: 18px; align-items: center; box-shadow: 0 20px 60px rgba(0,0,0,.4); font: 400 14px/1.5 var(--body); }
+.consent b { font: 400 20px var(--display); text-transform: uppercase; letter-spacing: .01em; }
+.consent p { margin: 4px 0 0; color: #cfd4cb; }
+.consent-btns { display: grid; gap: 8px; flex: none; }
+.consent button { border: 1.5px solid var(--green); padding: 9px 14px; font: 700 14px var(--label); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.consent .c-yes { background: var(--green); color: #0a0a0a; }
+.consent .c-no { background: transparent; color: #fff; border-color: #6b6f68; }
+@media (max-width: 640px) { .consent { flex-direction: column; align-items: stretch; } .consent-btns { grid-template-columns: 1fr 1fr; } }
