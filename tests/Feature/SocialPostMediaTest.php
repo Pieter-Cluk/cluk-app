@@ -88,7 +88,8 @@ class SocialPostMediaTest extends TestCase
         $this->assertFalse($photo->fresh()->on_website);
 
         // The Factory booking page shows the #CLUKfactory post.
-        $this->get('/book')->assertOk()->assertSee('Latest from Cluk Factory')->assertSee('New lights');
+        $this->get('/book')->assertOk()->assertSee('cluk-strip', false)->assertSee('New lights');
+        $this->get('/afrit6')->assertOk()->assertDontSee('cluk-strip', false); // no #CLUKafrit6 posts yet
     }
 
     public function test_videos_above_60_mb_are_not_kept(): void

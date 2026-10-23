@@ -167,8 +167,6 @@ return [
         'all' => 'Accepter les statistiques', 'necessary' => 'Uniquement les nécessaires', 'settings' => 'Paramètres des cookies',
     ],
     'news' => [
-        'latest_factory' => 'Les dernières de Cluk Factory',
-        'latest_afrit6' => 'Les dernières d’Afrit 6',
         'title' => 'Actualités', 'meta' => 'Les dernières nouvelles de CLUK : nouveau matériel, événements à la Factory, Afrit 6 et notre gamme en vente, depuis notre Facebook et Instagram.',
         'intro' => 'Des gens, du matériel, des espaces et des histoires, directement de notre Facebook et Instagram.',
         'all' => 'Tout', 'all_news' => 'Toutes les actualités', 'latest' => 'Derniers messages', 'on' => 'sur :platform', 'open' => 'Ouvrir sur :platform',

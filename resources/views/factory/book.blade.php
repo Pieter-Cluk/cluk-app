@@ -40,6 +40,7 @@
             <p><a href="{{ route('factory.book') }}">{{ __('factory.book.another') }}</a></p>
         </section>
     </main>
+    @include('site._news-strip', ['part' => 'factory'])
 @else
 <form method="post" action="{{ route('factory.book.store') }}" class="wrap" id="fb-form">
     @csrf
@@ -148,6 +149,7 @@
         <small class="muted">{!! __('factory.book.terms', ['link' => '<a href="'.e(route('terms', app()->getLocale())).'" target="_blank" rel="noopener">'.e(__('mails.terms')).'</a>']) !!}</small>
     </aside>
 </form>
+@include('site._news-strip', ['part' => 'factory'])
 @php($jsTexts = ['months' => array_map(fn ($m) => \Illuminate\Support\Carbon::create(2026, $m, 1)->locale(app()->getLocale())->translatedFormat('F'), range(1, 12)), 'dows' => array_map(fn ($d) => \Illuminate\Support\Carbon::create(2026, 10, 19)->addDays($d)->locale(app()->getLocale())->translatedFormat('D'), range(0, 6)), 'event' => __('factory.book.tag_event'), 'bu' => __('factory.book.tag_bu'), 'bd' => __('factory.book.tag_bd'), 'booked' => __('factory.book.tag_booked'), 'option' => __('factory.book.tag_option'), 'from' => __('factory.from', ['amount' => '#']), 'custom' => __('factory.custom'), 'days' => __('factory.book.x_days'), 'adv' => __('factory.book.plus_adv'), 'same' => __('factory.book.same_day'), 'locale' => app()->getLocale()])
 <script>
 (() => {
@@ -220,7 +222,6 @@
 })();
 </script>
 @endif
-@include('site._feed-strip', ['posts' => rescue(fn () => \App\Services\Website\SocialFeed::for('factory', 4), collect(), false), 'title' => __('site.news.latest_factory')])
 <footer class="fb-foot">Cluk Factory · Karreweg 17B, 9870 Zulte, Belgium · <a href="https://cluk.live">cluk.live</a> · {{ __('factory.book.footer') }}</footer>
 </body>
 </html>
