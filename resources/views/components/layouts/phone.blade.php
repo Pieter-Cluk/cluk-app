@@ -16,6 +16,7 @@
 <script>
     try { const t = localStorage.getItem('cluk-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
+@include('partials.favicon')
 </head>
 <body class="ph-body">
 <header class="ph-top">

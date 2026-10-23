@@ -8,6 +8,7 @@
 <title>Cluk Factory · {{ __('factory.book.title') }}</title>
 <meta name="description" content="{{ __('factory.book.tagline') }}">
 <link rel="stylesheet" href="{{ asset('css/factory.css') }}">
+@include('partials.favicon')
 </head>
 <body class="fb">
 <header class="hero">

@@ -12,6 +12,7 @@
     // Day / night mode: the choice in My preferences, else the device setting.
     try { localStorage.removeItem('cluk-theme'); } catch (e) {}
 </script>
+@include('partials.favicon')
 </head>
 <body @class(['density-compact' => $user?->density === 'compact'])>
 <div class="app">

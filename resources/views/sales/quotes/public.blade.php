@@ -8,6 +8,7 @@
 <meta name="robots" content="noindex">
 <title>{{ $quote->title }} · CLUK</title>
 <link rel="stylesheet" href="{{ asset('css/cluk.css') }}">
+@include('partials.favicon')
 </head>
 <body class="doc-body">
 <header class="pub-top">

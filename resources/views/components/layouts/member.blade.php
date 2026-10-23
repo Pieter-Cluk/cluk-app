@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ $title ? $title.' · ' : '' }}Afrit 6</title>
 <link rel="stylesheet" href="{{ asset('css/cluk.css') }}">
+@include('partials.favicon')
 </head>
 <body>
 <div class="login member">

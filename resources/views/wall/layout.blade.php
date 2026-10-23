@@ -7,6 +7,7 @@
 <meta name="robots" content="noindex">
 <title>CLUK · @yield('title')</title>
 <link rel="stylesheet" href="{{ asset('css/wall.css') }}">
+@include('partials.favicon')
 </head>
 <body class="wall">
 <div class="top">
