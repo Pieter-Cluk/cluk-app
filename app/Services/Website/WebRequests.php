@@ -84,4 +84,55 @@ class WebRequests
 
         return $msg;
     }
+
+    /** A quote request for sales products from a visitor who is not signed in (list prices). */
+    public static function sales(array $d, string $locale): IncomingMessage
+    {
+        $qty = collect($d['lines'] ?? [])->mapWithKeys(fn ($l) => [(int) $l['id'] => (int) $l['qty']])->filter(fn ($q) => $q > 0);
+        $items = SalesCatalogue::query()->whereKey($qty->keys())->get()->keyBy('id');
+        $lines = $qty->filter(fn ($q, $id) => $items->has($id))->map(fn ($q, $id) => [
+            'sales_item_id' => $id, 'number' => $items[$id]->number, 'name' => $items[$id]->name(), 'manufacturer_code' => $items[$id]->manufacturer_code,
+            'qty' => $q, 'list_price_cents' => (int) $items[$id]->list_price_cents,
+        ])->values();
+        $total = $lines->sum(fn ($l) => $l['qty'] * $l['list_price_cents']);
+
+        $body = InLocale::run('en', fn () => implode("\n", array_filter([
+            __('site.sales_request.heading'),
+            '',
+            ...$lines->map(fn ($l) => $l['list_price_cents'] > 0
+                ? __('site.sales_request.line', ['qty' => $l['qty'], 'name' => $l['name'], 'number' => $l['number'], 'price' => Pricing::eur($l['list_price_cents'])])
+                : __('site.sales_request.line_on_request', ['qty' => $l['qty'], 'name' => $l['name'], 'number' => $l['number']]))->all(),
+            '',
+            $total ? __('site.sales_request.total', ['amount' => Pricing::eur($total)]) : null,
+            ! empty($d['delivery']) ? __('site.sales_request.delivery_'.$d['delivery']) : null,
+            ! empty($d['company']) ? __('site.request.company', ['v' => $d['company']]) : null,
+            ! empty($d['vat']) ? __('site.request.vat', ['v' => $d['vat']]) : null,
+            __('site.request.language', ['v' => config('cluk.locales.'.$locale, $locale)]),
+            ! empty($d['message']) ? "\n".__('site.request.message')."\n".$d['message'] : null,
+        ], fn ($v) => $v !== null)));
+
+        $msg = new IncomingMessage([
+            'channel' => 'website', 'module' => 'sales', 'received_at' => now(),
+            'subject' => InLocale::run('en', fn () => __('site.sales_request.subject', ['n' => $lines->count()])),
+            'body' => Str::limit($body, 60000, ''),
+            'payload' => ['type' => 'sales', 'locale' => $locale, 'lines' => $lines->all(), 'total_cents' => $total, 'delivery' => $d['delivery'] ?? null, 'vat' => $d['vat'] ?? null, 'page' => $d['page'] ?? null],
+            'from_name' => $d['name'], 'from_email' => Str::lower($d['email']), 'from_phone' => $d['phone'] ?? null, 'company_name' => $d['company'] ?? null,
+        ]);
+        $msg->matchKnown();
+        $msg->save();
+
+        $mail = InLocale::run($locale, fn () => new Confirmation(
+            subject: __('site.sales_request.mail_subject'),
+            greeting: ($first = Str::before(trim($d['name']), ' ')) !== '' ? __('mails.hello', ['name' => $first]) : __('mails.hello_plain'),
+            intro: [__('site.sales_request.mail_intro')],
+            details: [__('site.request.mail_ref') => 'W-'.$msg->id],
+            next: [__('site.sales_request.mail_next')],
+            rows: $lines->map(fn ($l) => [$l['qty'], $l['name'], $l['list_price_cents'] ? Pricing::eur($l['qty'] * $l['list_price_cents']) : '–'])->all(),
+            totals: $total ? [__('site.sales_request.mail_total') => Pricing::eur($total)] : [],
+            team: __('site.sales_request.mail_team'),
+        ))->locale($locale);
+        SafeMail::notify(Notification::route('mail', $msg->from_email), $mail);
+
+        return $msg;
+    }
 }
