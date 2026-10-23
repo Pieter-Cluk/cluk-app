@@ -4,7 +4,9 @@ body.fb{margin:0;background:#0b0d0b;color:#f1f4f0;font-family:Arial,"Helvetica N
   --panel:#141814;--panel2:#1a1f1a;--line:#2c332c;--ink:#f1f4f0;--muted:#a3ada2;--g:#6cc04a;--g2:#8fd673;--gt:#1d2b17;--amber:#e8b860;--red:#ef6f62}
 .fb a{color:var(--g2)}
 .hero{position:relative;padding:56px 48px 40px;background:radial-gradient(1200px 400px at 70% 0%,#1d2b17 0%,#0b0d0b 70%);border-bottom:1px solid var(--line)}
-.fb-langs{position:absolute;top:18px;right:24px;display:flex;gap:4px}
+.fb-top{position:absolute;top:14px;right:24px;display:flex;align-items:center;gap:10px}
+.fb-langs{display:flex;gap:4px}
+@media (max-width:520px){.fb-top{right:12px;left:12px;justify-content:space-between}.fb-top .sw-pop{right:auto;left:0}}
 .fb-langs a{color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;padding:10px 6px}
 .fb-langs a.on{color:#fff;text-decoration:underline;text-underline-offset:5px}
 .wm{font-weight:800;font-size:64px;line-height:1;color:var(--g);letter-spacing:-2px}

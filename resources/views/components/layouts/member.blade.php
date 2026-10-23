@@ -11,6 +11,8 @@
 <div class="login member">
     <header class="login-top member-top">
         <a class="member-brand" href="{{ route('afrit6.login') }}"><span class="six">6</span> AFRIT 6</a>
+        <div class="member-right">
+        @include('partials.site-switch', ['current' => 'afrit6'])
         <nav class="login-langs" aria-label="{{ __('login.language') }}">
             @foreach (config('cluk.locales') as $code => $name)
                 <form method="post" action="{{ route('locale.switch', $code) }}">
@@ -19,6 +21,7 @@
                 </form>
             @endforeach
         </nav>
+        </div>
     </header>
     <main class="login-main member-main">
         <div @class(['login-box', 'member-box-wide' => $wide])>

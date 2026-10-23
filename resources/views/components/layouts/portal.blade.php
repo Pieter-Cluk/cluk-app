@@ -16,6 +16,7 @@
             <span class="a6-word">AFRIT 6</span>
         </a>
         <div class="p-right">
+            @include('partials.site-switch', ['current' => 'afrit6'])
             <details class="um langs">
                 <summary class="iconbtn" aria-label="{{ __('login.language') }}">{{ strtoupper(app()->getLocale()) }}</summary>
                 <div class="um-pop um-small">

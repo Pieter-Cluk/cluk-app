@@ -11,11 +11,14 @@
 </head>
 <body class="fb">
 <header class="hero">
+    <div class="fb-top">
+    @include('partials.site-switch', ['current' => 'factory'])
     <nav class="fb-langs" aria-label="{{ __('login.language') }}">
         @foreach (config('cluk.locales') as $code => $name)
             <a href="?lang={{ $code }}" @class(['on' => app()->getLocale() === $code]) lang="{{ $code }}" title="{{ $name }}">{{ strtoupper($code) }}</a>
         @endforeach
     </nav>
+    </div>
     <div class="wm">cluk</div>
     <div class="wm2">FACTORY</div>
     <p class="claim">{{ mb_strtoupper(__('factory.book.tagline')) }}</p>
