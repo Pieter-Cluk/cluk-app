@@ -57,6 +57,8 @@ use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Http\Controllers\Web\CustomerVerifyController;
 use App\Http\Controllers\WebAccountController;
 use App\Http\Controllers\WebStatsController;
+use App\Http\Controllers\Social\PlanController as SocialPlanController;
+use App\Http\Controllers\Social\SocialController;
 use App\Services\Finance\PreInvoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -71,6 +73,9 @@ Route::post('/intake', [IncomingController::class, 'intake'])->middleware('throt
 
 // Website login: the "confirm my email" link (signed, 48 hours). The sign-in and basket pages are on the website.
 Route::get('/account/verify/{account}/{hash}', CustomerVerifyController::class)->whereNumber('account')->middleware('signed')->name('customer.verify');
+
+// Pictures and videos of a planned social post, for Facebook, Instagram and LinkedIn to fetch (signed link, 3 days).
+Route::get('/social/media/{plan}/{i}/{f}', [SocialController::class, 'media'])->whereNumber(['plan', 'i'])->middleware('signed')->name('social.media');
 
 // Brand logos (public: the website shows them).
 Route::get('/brand-logo/{brand}', [BrandController::class, 'logo'])->whereNumber('brand')->name('brand.logo');
@@ -192,6 +197,28 @@ Route::middleware('auth:web')->group(function () {
             Route::delete('/{message}', [MessageController::class, 'destroy'])->whereNumber('message')->name('messages.destroy');
         });
     });
+    // Media › Social media: dashboard of the connected accounts, and posts planned in CLUK.
+    Route::prefix('media/social')->middleware('nav:social')->name('social.')->group(function () {
+        Route::get('/', [SocialController::class, 'index'])->name('index');
+        Route::middleware('right:social.connect')->group(function () {
+            Route::get('/connect/{provider}', [SocialController::class, 'connect'])->whereIn('provider', ['meta', 'linkedin', 'google'])->name('connect');
+            Route::post('/accounts/{account}/disconnect', [SocialController::class, 'disconnect'])->whereNumber('account')->name('disconnect');
+            Route::post('/sync', [SocialController::class, 'sync'])->middleware('throttle:6,1')->name('sync');
+        });
+        Route::get('/posts', [SocialPlanController::class, 'index'])->name('plans');
+        Route::get('/posts/{plan}', [SocialPlanController::class, 'show'])->whereNumber('plan')->name('plans.show');
+        Route::get('/posts/new', [SocialPlanController::class, 'create'])->name('plans.create');
+        Route::post('/posts', [SocialPlanController::class, 'store'])->name('plans.store');
+        Route::get('/posts/{plan}/edit', [SocialPlanController::class, 'edit'])->whereNumber('plan')->name('plans.edit');
+        Route::put('/posts/{plan}', [SocialPlanController::class, 'update'])->whereNumber('plan')->name('plans.update');
+        Route::delete('/posts/{plan}', [SocialPlanController::class, 'destroy'])->whereNumber('plan')->name('plans.destroy');
+        Route::middleware('right:social.publish')->group(function () {
+            Route::post('/posts/{plan}/unschedule', [SocialPlanController::class, 'unschedule'])->whereNumber('plan')->name('plans.unschedule');
+            Route::post('/posts/{plan}/retry', [SocialPlanController::class, 'retry'])->whereNumber('plan')->name('plans.retry');
+        });
+    });
+    // Back from the platform's sign-in (an address the platforms know; must stay the same).
+    Route::get('/social/connect/{provider}/callback', [SocialController::class, 'callback'])->whereIn('provider', ['meta', 'linkedin', 'google'])->middleware('right:social.connect')->name('social.callback');
     Route::get('/management', ManagementController::class)->middleware('nav:management')->name('management');
     Route::get('/management/website', WebStatsController::class)->middleware('nav:management')->name('management.website');
 
@@ -646,7 +673,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

@@ -71,6 +71,8 @@ return [
         'products.classify',
         'sales.approve_low_margin',
         'sales.edit_items',
+        'social.connect',
+        'social.publish',
         'users.manage',
         'warehouse.release_repair',
         'warehouse.setup_locations',

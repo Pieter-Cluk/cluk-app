@@ -50,6 +50,10 @@ return [
             'approve_low_margin' => 'Ventas: aprobar presupuestos con menos del 10 % de margen',
             'edit_items' => 'Artículos de venta: añadir y editar',
         ],
+        'social' => [
+            'connect' => 'Redes sociales: conectar y desconectar cuentas',
+            'publish' => 'Redes sociales: programar y publicar posts',
+        ],
         'users' => [
             'manage' => 'Gestionar usuarios y roles',
         ],

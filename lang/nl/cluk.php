@@ -50,6 +50,10 @@ return [
             'approve_low_margin' => 'Verkoop: offertes onder 10% marge goedkeuren',
             'edit_items' => 'Verkoopartikelen: toevoegen en bewerken',
         ],
+        'social' => [
+            'connect' => 'Sociale media: accounts koppelen en ontkoppelen',
+            'publish' => 'Sociale media: posts plannen en publiceren',
+        ],
         'users' => [
             'manage' => 'Gebruikers en rollen beheren',
         ],

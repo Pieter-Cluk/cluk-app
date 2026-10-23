@@ -50,6 +50,10 @@ return [
             'approve_low_margin' => 'Sales: approve quotes under 10% margin',
             'edit_items' => 'Sales items: add and edit',
         ],
+        'social' => [
+            'connect' => 'Social media: connect and disconnect accounts',
+            'publish' => 'Social media: plan and publish posts',
+        ],
         'users' => [
             'manage' => 'Manage users and roles',
         ],

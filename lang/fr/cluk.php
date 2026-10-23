@@ -50,6 +50,10 @@ return [
             'approve_low_margin' => 'Ventes : approuver les devis sous 10 % de marge',
             'edit_items' => 'Articles de vente : ajouter et modifier',
         ],
+        'social' => [
+            'connect' => 'Réseaux sociaux : connecter et déconnecter des comptes',
+            'publish' => 'Réseaux sociaux : planifier et publier des posts',
+        ],
         'users' => [
             'manage' => 'Gérer les utilisateurs et les rôles',
         ],
