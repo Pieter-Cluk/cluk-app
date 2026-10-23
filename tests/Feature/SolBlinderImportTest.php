@@ -31,5 +31,16 @@ class SolBlinderImportTest extends TestCase
         $this->assertSame('HireHop barcode 810008264874 · last PAT test 12/08/2026', $a->note);
         $this->assertSame(Asset::AVAILABLE, $a->status);
         $this->assertNull($a->label_printed_at);
+
+        // The accessories: counted, 120 each, in their subcategories.
+        $acc = require database_path('migrations/2026_10_23_001500_add_sol_i_accessories.php');
+        $acc->up();
+        $barndoor = Item::where('number', 'LIGACCELASOLIBARNDOOR')->firstOrFail();
+        $this->assertSame([false, 120, 314, 10450, 'Lighting accessories'], [$barndoor->serial, $barndoor->stock_qty, $barndoor->day_price_cents, $barndoor->catalog_price_cents, $barndoor->subcategory]);
+        $this->assertSame('Truss accessories', Item::where('number', 'RIGTACTAFQUICKCLAMP')->value('subcategory'));
+        $this->assertSame(7, Item::where('number', 'like', '%SOLI%')->orWhere('number', 'RIGTACTAFQUICKCLAMP')->count() - 1);
+        Item::where('number', 'LIGACCELASOLIOMEGA')->update(['stock_qty' => 100]);
+        $acc->up(); // a second run keeps the stock
+        $this->assertSame(100, Item::where('number', 'LIGACCELASOLIOMEGA')->value('stock_qty'));
     }
 }
