@@ -19,6 +19,7 @@ use App\Models\Sales\Quote;
 use App\Models\User;
 use App\Models\Warehouse\Charge;
 use App\Models\Warehouse\Delivery;
+use App\Models\Web\CustomerAccount;
 use App\Services\WallData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -111,6 +112,9 @@ class DashboardController extends Controller
         }
         if ($u->canUseModule('afrit6')) {
             $t[] = ['n' => ServiceRequest::open()->when($who === 'me', fn ($q) => $q->where('assignee_id', $u->id))->where('status', '!=', 'pending')->count(), 'key' => 'afrit6_tasks', 'url' => route('afrit6.staff.tasks', ['who' => $who === 'me' ? 'mine' : null]), 'tone' => 'info'];
+        }
+        if ($u->canUseModule('companies', 2)) {
+            $t[] = ['n' => CustomerAccount::where('status', 'pending')->whereNotNull('email_verified_at')->count(), 'key' => 'web_accounts', 'url' => route('web-accounts.index'), 'tone' => 'warn'];
         }
         $t[] = ['n' => PreInvoice::where('status', 'back')->when($who === 'me', fn ($q) => $q->where('made_by_id', $u->id))->count(), 'key' => 'pf_back', 'url' => route('finance.index', ['f' => 'back']), 'tone' => 'warn'];
         if ($u->canUseModule('preinvoice', 2)) {

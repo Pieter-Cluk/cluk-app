@@ -2,6 +2,7 @@
 
 use App\Models\Member;
 use App\Models\User;
+use App\Models\Web\CustomerAccount;
 
 return [
 
@@ -49,6 +50,12 @@ return [
             'driver' => 'session',
             'provider' => 'members',
         ],
+
+        // Customers who sign in on the website (cluk.live), separate from staff and members.
+        'customer' => [
+            'driver' => 'session',
+            'provider' => 'customers',
+        ],
     ],
 
     /*
@@ -77,6 +84,11 @@ return [
         'members' => [
             'driver' => 'eloquent',
             'model' => Member::class,
+        ],
+
+        'customers' => [
+            'driver' => 'eloquent',
+            'model' => CustomerAccount::class,
         ],
 
         // 'users' => [

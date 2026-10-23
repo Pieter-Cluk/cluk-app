@@ -100,6 +100,8 @@ return [
     'mine' => 'Mijn',
     'everyone' => 'Iedereen',
     'tasks' => [
+        'web_accounts' => 'Website-logins goed te keuren',
+        'web_accounts_s' => 'klanten die zich registreerden op de website',
         'incoming' => 'Nieuw in Inkomend',
         'incoming_s' => 'website-, mail- en telefoonaanvragen',
         'deals_soon' => 'Deals met een event binnen 14 dagen',

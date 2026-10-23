@@ -100,6 +100,8 @@ return [
     'mine' => 'Las mías',
     'everyone' => 'Todos',
     'tasks' => [
+        'web_accounts' => 'Accesos de la web por aprobar',
+        'web_accounts_s' => 'clientes registrados en la web',
         'incoming' => 'Nuevo en Entrante',
         'incoming_s' => 'solicitudes de web, correo y teléfono',
         'deals_soon' => 'Deals con un evento en 14 días',

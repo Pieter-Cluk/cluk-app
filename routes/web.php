@@ -51,6 +51,8 @@ use App\Http\Controllers\Warehouse\PhoneAfrit6Controller;
 use App\Http\Controllers\Warehouse\PhoneController;
 use App\Http\Controllers\Warehouse\PhoneSubhireController;
 use App\Http\Controllers\Warehouse\WarehouseController;
+use App\Http\Controllers\Web\CustomerVerifyController;
+use App\Http\Controllers\WebAccountController;
 use App\Services\Finance\PreInvoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +64,9 @@ Route::get('/', fn (Request $request) => redirect($request->user('web')?->homeUr
 
 // Website form → Incoming (token in the X-Intake-Token header).
 Route::post('/intake', [IncomingController::class, 'intake'])->middleware('throttle:30,1')->name('intake');
+
+// Website login: the "confirm my email" link (signed, 48 hours). The sign-in and basket pages are on the website.
+Route::get('/account/verify/{account}/{hash}', CustomerVerifyController::class)->whereNumber('account')->middleware('signed')->name('customer.verify');
 
 // CLUK's general terms and conditions (linked from quotes, emails and documents).
 Route::get('/terms/{lang?}', function (?string $lang = null) {
@@ -215,6 +220,13 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'])->whereNumber('company')->name('companies.restore');
         });
         Route::put('/companies/{company}/vat', [CompanyController::class, 'updateVat'])->whereNumber('company')->middleware('right:finance.vat_treatment')->name('companies.vat');
+        Route::get('/companies/website-logins', [WebAccountController::class, 'index'])->name('web-accounts.index');
+        Route::middleware('level:companies,2')->group(function () {
+            Route::post('/companies/website-logins/{account}/approve', [WebAccountController::class, 'approve'])->whereNumber('account')->name('web-accounts.approve');
+            Route::post('/companies/website-logins/{account}/block', [WebAccountController::class, 'block'])->whereNumber('account')->name('web-accounts.block');
+            Route::post('/companies/website-logins/{account}/unblock', [WebAccountController::class, 'unblock'])->whereNumber('account')->name('web-accounts.unblock');
+            Route::post('/companies/website-logins/{account}/reset', [WebAccountController::class, 'sendReset'])->whereNumber('account')->name('web-accounts.reset');
+        });
         Route::get('/companies/{company}', [CompanyController::class, 'show'])->whereNumber('company')->name('companies.show');
     });
 

@@ -62,9 +62,9 @@ class DryHireCatalogue
             ->withCount(['assets as pieces' => fn ($q) => $q->where('status', '!=', Asset::RETIRED)])
             ->orderBy('name')->get();
 
-        $cats = Category::where('active', true)->orderBy('sort')->get();
+        $cats = Category::of('dryhire')->where('active', true)->orderBy('sort')->get();
         $subs = Subcategory::where('active', true)->with('attrs:id')->orderBy('sort')->get();
-        $attrs = Attribute::with(['options' => fn ($q) => $q->where('active', true)])->orderBy('sort')->get();
+        $attrs = Attribute::of('dryhire')->with(['options' => fn ($q) => $q->where('active', true)])->orderBy('sort')->get();
 
         $rows = $items->map(function (Item $i) {
             $qty = $i->kind === 'package' ? 0 : ($i->serial ? (int) $i->pieces : (int) $i->stock_qty);
@@ -97,7 +97,7 @@ class DryHireCatalogue
             'subs' => $subs->filter(fn ($s) => $used->contains('s', $s->id))->map(fn ($s) => ['id' => $s->id, 'c' => $s->category_id, 'slug' => $s->slug, 'name' => $s->label($locale), 'a' => $s->attrs->pluck('id')->all()])->values()->all(),
             'attrs' => $attrs->map(fn ($a) => ['id' => $a->id, 'key' => $a->key, 'name' => $a->label($locale),
                 'o' => $a->options->map(fn ($o) => ['id' => $o->id, 'l' => $o->setRelation('attribute', $a)->display($locale)])->values()->all()])->values()->all(),
-            'tags' => Tag::where('active', true)->orderBy('sort')->get()->map(fn ($t) => ['id' => $t->id, 'slug' => $t->slug, 'name' => $t->label($locale)])->values()->all(),
+            'tags' => Tag::of('dryhire')->where('active', true)->orderBy('sort')->get()->map(fn ($t) => ['id' => $t->id, 'slug' => $t->slug, 'name' => $t->label($locale)])->values()->all(),
             'factor' => config('rental.factor'),
             'stats' => [
                 'products' => count($rows),

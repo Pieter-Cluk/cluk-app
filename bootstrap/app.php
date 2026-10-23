@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Middleware\EnsureActiveMember;
+use App\Http\Middleware\EnsureCustomer;
 use App\Http\Middleware\EnsureModuleLevel;
 use App\Http\Middleware\EnsureNavAccess;
 use App\Http\Middleware\EnsureRight;
+use App\Http\Middleware\LogoutBlockedCustomers;
 use App\Http\Middleware\LogoutBlockedMembers;
 use App\Http\Middleware\LogoutDisabledUsers;
 use App\Http\Middleware\RunBackgroundChecks;
@@ -25,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             SetLocale::class,
             LogoutDisabledUsers::class,
             LogoutBlockedMembers::class,
+            LogoutBlockedCustomers::class,
             RunBackgroundChecks::class,
         ]);
         // Afrit 6 members and staff each have their own login page and home.
@@ -36,6 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'level' => EnsureModuleLevel::class,
             'right' => EnsureRight::class,
             'member.active' => EnsureActiveMember::class,
+            'customer.auth' => EnsureCustomer::class,
             'throttle' => ThrottlePerPerson::class,
         ]);
     })

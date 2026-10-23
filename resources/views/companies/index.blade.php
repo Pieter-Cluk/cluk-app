@@ -6,9 +6,12 @@
             <div class="kicker">{{ mb_strtoupper(__('nav.groups.commercial')) }}</div>
             <h1>{{ __('nav.items.companies') }}</h1>
         </div>
-        @if ($canEdit)
-            <a class="primary" href="{{ route('companies.create', $view === 'suppliers' ? ['type' => 'supplier'] : []) }}">{{ __($view === 'suppliers' ? 'companies.index.new_supplier' : 'companies.index.new_company') }}</a>
-        @endif
+        <div class="inline-form">
+            <a class="btn" href="{{ route('web-accounts.index') }}">{{ __('web.staff.title') }}@php($pend = \App\Models\Web\CustomerAccount::where('status', 'pending')->whereNotNull('email_verified_at')->count())@if ($pend) <span class="pill pill-warn">{{ $pend }}</span>@endif</a>
+            @if ($canEdit)
+                <a class="primary" href="{{ route('companies.create', $view === 'suppliers' ? ['type' => 'supplier'] : []) }}">{{ __($view === 'suppliers' ? 'companies.index.new_supplier' : 'companies.index.new_company') }}</a>
+            @endif
+        </div>
     </div>
     @include('partials.flash')
 

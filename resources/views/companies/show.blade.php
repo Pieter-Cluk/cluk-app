@@ -147,6 +147,20 @@
                 @endif
             </section>
 
+            @php($logins = \App\Models\Web\CustomerAccount::where('company_id', $company->id)->orWhereIn('contact_id', $company->contacts->pluck('id'))->orderBy('first_name')->get())
+            <section class="card">
+                <div class="card-head"><h2>{{ __('web.staff.card_title') }}</h2><a href="{{ route('web-accounts.index') }}">{{ __('web.staff.all') }} →</a></div>
+                @forelse ($logins as $l)
+                    <div class="contact"><div><b>{{ $l->name() }}</b> · {{ $l->email }} <span @class(['pill', 'pill-ok' => $l->status === 'active', 'pill-warn' => $l->status === 'pending', 'pill-off' => $l->status === 'blocked'])>{{ __('web.statuses.'.$l->status) }}</span>
+                        @php($n = \App\Services\Web\Baskets::counts($l))
+                        <br><small class="muted">{{ $l->last_login_at ? __('web.staff.last_login', ['date' => $l->last_login_at->format('d/m/Y H:i')]) : __('web.staff.never') }}@if ($n['requests']) · {{ __('web.staff.requests', ['n' => $n['requests']]) }}@endif @if ($n['orders']) · {{ __('web.staff.orders', ['n' => $n['orders']]) }}@endif @if ($n['in_baskets']) · {{ __('web.staff.in_baskets', ['n' => $n['in_baskets']]) }}@endif</small></div>
+                        @if ($canEdit && $l->status !== 'blocked')<form method="post" action="{{ route('web-accounts.reset', $l) }}">@csrf<button class="linkbtn" type="submit">{{ __('web.staff.send_reset') }}</button></form>@endif
+                    </div>
+                @empty
+                    <p class="muted">{{ __('web.staff.no_logins') }}</p>
+                @endforelse
+            </section>
+
             <section class="card">
                 <h2>{{ __('companies.fields.notes') }} <span class="muted small">· {{ __('companies.fields.notes_hint') }}</span></h2>
                 @if ($canEdit)
