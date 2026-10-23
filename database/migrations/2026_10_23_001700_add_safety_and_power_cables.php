@@ -6,18 +6,19 @@ use App\Models\Product\Subcategory;
 use Illuminate\Database\Migrations\Migration;
 
 /**
- * Dry-hire: safety cables and the power cables for the fixtures, counted items.
- * Stock starts at 0 (to be counted) and they stay out of the quote search until
- * they have a price. Runs once; an item that is already there is left alone.
+ * Dry-hire: safety cables and the 1.5 m power cables for the fixtures. Each piece gets
+ * its own QR label: labels are printed in advance and a piece only counts once its
+ * label is scanned (so stock grows as pieces are found). They stay out of the quote
+ * search until they have a price. Runs once; an item that is already there is left alone.
  */
 return new class extends Migration
 {
     // number, name, brand, type, subcategory slug
     private const ITEMS = [
         ['RIGHARSAFETYCABLE', 'Safety cable (steel wire)', null, 'Safety cable', 'rigging-hardware-and-load-cells'],
-        ['POWCABTRUECONCEE', 'Power cable Truecon – CEE 3-pole', 'Neutrik', 'Truecon – CEE 3-pole', 'power-cables-and-kits'],
-        ['POWCABTRUECONSCHUKO', 'Power cable Truecon – Schuko', 'Neutrik', 'Truecon – Schuko', 'power-cables-and-kits'],
-        ['POWCABPOWERCONSCHUKO', 'Power cable Powercon – Schuko', 'Neutrik', 'Powercon – Schuko', 'power-cables-and-kits'],
+        ['POWCABTRUECONCEE', 'Power cable Truecon – CEE 3-pole 1.5 m', 'Neutrik', 'Truecon – CEE 3-pole 1.5 m', 'power-cables-and-kits'],
+        ['POWCABTRUECONSCHUKO', 'Power cable Truecon – Schuko 1.5 m', 'Neutrik', 'Truecon – Schuko 1.5 m', 'power-cables-and-kits'],
+        ['POWCABPOWERCONSCHUKO', 'Power cable Powercon – Schuko 1.5 m', 'Neutrik', 'Powercon – Schuko 1.5 m', 'power-cables-and-kits'],
     ];
 
     public function up(): void
@@ -32,7 +33,7 @@ return new class extends Migration
                 continue;
             }
             $item = new Item(['number' => $number, 'kind' => 'item', 'brand' => $brand, 'type' => $type, 'name' => $name, 'unit' => 'pcs',
-                'serial' => false, 'stock_qty' => 0, 'day_price_cents' => 0, 'price_unit' => 'day', 'in_search' => false, 'on_website' => false, 'active' => true,
+                'serial' => true, 'stock_qty' => 0, 'day_price_cents' => 0, 'price_unit' => 'day', 'in_search' => false, 'on_website' => false, 'active' => true,
                 'search_words' => strtolower($type).' '.($slug === 'power-cables-and-kits' ? 'stroomkabel power cable' : 'safety veiligheidskabel')]);
             if ($sub = Subcategory::where('slug', $slug)->first()) {
                 $item->placeIn($sub);
@@ -40,7 +41,7 @@ return new class extends Migration
             $item->save();
             $added++;
         }
-        AuditLog::record('import.done', null, ['file' => 'Safety and power cables (to be counted)', 'equipment' => ['created' => $added, 'updated' => 0, 'skipped' => count(self::ITEMS) - $added]]);
+        AuditLog::record('import.done', null, ['file' => 'Safety and power cables (pieces added as they are found)', 'equipment' => ['created' => $added, 'updated' => 0, 'skipped' => count(self::ITEMS) - $added]]);
     }
 
     public function down(): void {}

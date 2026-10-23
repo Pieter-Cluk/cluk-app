@@ -76,7 +76,7 @@ class Availability
         }
 
         return $item->serial
-            ? $item->assets()->whereNotIn('status', [Asset::RETIRED, Asset::REPAIR])->count()
+            ? $item->assets()->whereNotIn('status', [Asset::RETIRED, Asset::REPAIR, Asset::LABEL])->count()
             : (int) $item->stock_qty;
     }
 
@@ -116,7 +116,7 @@ class Availability
      */
     public function freeAssets(Item $item): Collection
     {
-        return $item->assets()->whereNotIn('status', [Asset::RETIRED, Asset::REPAIR])->orderByRaw("status = 'available' desc")->orderBy('code')->get()
+        return $item->assets()->whereNotIn('status', [Asset::RETIRED, Asset::REPAIR, Asset::LABEL])->orderByRaw("status = 'available' desc")->orderBy('code')->get()
             ->reject(fn (Asset $a) => isset($this->bookedAssets[$a->id]))->values();
     }
 }

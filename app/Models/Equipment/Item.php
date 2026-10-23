@@ -125,7 +125,7 @@ class Item extends Model
             return 0;
         }
 
-        return $this->serial ? $this->assets->where('status', '!=', Asset::RETIRED)->count() : $this->stock_qty;
+        return $this->serial ? $this->assets->whereNotIn('status', [Asset::RETIRED, Asset::LABEL])->count() : $this->stock_qty;
     }
 
     /** Pieces in the warehouse and rentable now (planning per date comes with order allocation). */

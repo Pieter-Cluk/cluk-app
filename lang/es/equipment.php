@@ -136,6 +136,7 @@ return [
         'check' => 'En control',
         'repair' => 'En reparación',
         'retired' => 'De baja',
+        'label' => 'Solo etiqueta (aún no encontrado)',
     ],
     'reasons' => [
         'sold' => 'Vendido',
@@ -159,6 +160,7 @@ return [
         'saved' => 'Guardado.',
         'retired' => 'La pieza está de baja.',
         'assets_added' => ':count pieza añadida.|:count piezas añadidas.',
+        'labels_reserved' => '{1} 1 etiqueta lista para imprimir.|[2,*] :count etiquetas listas para imprimir.',
     ],
     'errors' => [
         'has_assets' => 'Este artículo tiene piezas con etiqueta QR. Dalas de baja antes de pasar a contado.',
@@ -189,4 +191,10 @@ return [
     'only_web' => 'Solo en la web',
     'web_pill' => 'Web',
     'web_failed' => 'No se pudo guardar. Inténtalo de nuevo.',
+    'reserve' => [
+        'title' => 'Etiquetas para piezas por encontrar',
+        'hint' => 'Para piezas aún sin contar (cables, eslingas…): imprime las etiquetas ahora; no cuentan. Cuando encuentres una pieza, pégale una etiqueta y escanéala en la app de almacén: desde entonces está en stock.',
+        'how_many' => 'Cuántas etiquetas',
+        'go' => 'Crear e imprimir las etiquetas',
+    ],
 ];

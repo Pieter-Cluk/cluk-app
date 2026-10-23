@@ -44,6 +44,8 @@ return [
         'empty_place' => 'Nothing here.',
         'here_hint' => 'Scan a piece to move it.',
         'hint' => 'Every move is a scan: first the piece, then the place. The app only allows moves that fit the route.',
+        'registered' => ':code · :name found and in stock. Now scan where it goes.',
+        'registered_in' => ':code · :name found, in stock and in :carrier.',
     ],
     'pick' => [
         'title' => 'Picking',
@@ -161,6 +163,7 @@ return [
         'lost' => 'Written off',
         'pack' => 'Put in a dolly/box',
         'unpack' => 'Taken out of a dolly/box',
+        'register' => 'Found (label scanned)',
     ],
     'errors' => [
         'unknown' => '“:code” is not a piece or a place we know.',

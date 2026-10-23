@@ -44,6 +44,8 @@ return [
         'empty_place' => 'Aquí no hay nada.',
         'here_hint' => 'Escanea una pieza para moverla.',
         'hint' => 'Cada movimiento es un escaneo: primero la pieza, luego el lugar. La app solo permite movimientos que siguen la ruta.',
+        'registered' => ':code · :name encontrado y en stock. Escanea ahora dónde va.',
+        'registered_in' => ':code · :name encontrado, en stock y en :carrier.',
     ],
     'pick' => [
         'title' => 'Preparación',
@@ -161,6 +163,7 @@ return [
         'lost' => 'Dado de baja',
         'pack' => 'Metido en dolly/caja',
         'unpack' => 'Sacado de dolly/caja',
+        'register' => 'Encontrado (etiqueta escaneada)',
     ],
     'errors' => [
         'unknown' => '“:code” no es una pieza ni un lugar conocido.',

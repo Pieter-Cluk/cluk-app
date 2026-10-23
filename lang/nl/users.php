@@ -240,6 +240,7 @@ return [
             'user_door_code_set' => 'Deurcode ingesteld',
             'user_door_code_changed' => 'Deurcode gewijzigd',
             'user_door_code_removed' => 'Deurcode verwijderd',
+            'equipment_labels_reserved' => 'Labels geprint voor stuks die nog gevonden moeten worden',
             'equipment_photo_approved' => 'Productfoto van het web gekozen',
             'user_instructions_sent' => 'Aanmeldinstructies gestuurd',
             'messages_created' => 'Bericht gemaakt',

@@ -136,6 +136,7 @@ return [
         'check' => 'In the check',
         'repair' => 'In repair',
         'retired' => 'Retired',
+        'label' => 'Label only (not found yet)',
     ],
     'reasons' => [
         'sold' => 'Sold',
@@ -159,6 +160,7 @@ return [
         'saved' => 'Saved.',
         'retired' => 'The piece is out of service.',
         'assets_added' => ':count piece added.|:count pieces added.',
+        'labels_reserved' => '{1} 1 label ready to print.|[2,*] :count labels ready to print.',
     ],
     'errors' => [
         'has_assets' => 'This item has pieces with QR labels. Retire them before switching to counted.',
@@ -189,4 +191,10 @@ return [
     'only_web' => 'Only on the website',
     'web_pill' => 'Web',
     'web_failed' => 'Could not save. Please try again.',
+    'reserve' => [
+        'title' => 'Labels for pieces still to find',
+        'hint' => 'For pieces you don’t have counted yet (cables, safeties…): print labels now; they don’t count. When you come across a piece, stick a label on it and scan it in the warehouse app: from then on it is in stock.',
+        'how_many' => 'How many labels',
+        'go' => 'Make and print the labels',
+    ],
 ];

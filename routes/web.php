@@ -322,6 +322,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/items/{item}/components', [ItemController::class, 'addComponent'])->whereNumber('item')->name('equipment.components.store');
             Route::delete('/items/{item}/components/{child}', [ItemController::class, 'removeComponent'])->whereNumber(['item', 'child'])->name('equipment.components.destroy');
             Route::post('/items/{item}/assets', [ItemController::class, 'addAssets'])->whereNumber('item')->name('equipment.assets.store');
+            Route::post('/items/{item}/labels', [ItemController::class, 'reserveLabels'])->whereNumber('item')->name('equipment.assets.reserve');
             Route::post('/items/{item}/photos', [PictureController::class, 'storeItemPhotos'])->whereNumber('item')->name('equipment.photos.store');
             Route::post('/items/{item}/photos/{photo}/main', [PictureController::class, 'mainItemPhoto'])->whereNumber(['item', 'photo'])->name('equipment.photos.main');
             Route::delete('/items/{item}/photos/{photo}', [PictureController::class, 'destroyItemPhoto'])->whereNumber(['item', 'photo'])->name('equipment.photos.destroy');

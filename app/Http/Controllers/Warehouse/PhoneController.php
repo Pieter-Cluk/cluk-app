@@ -8,6 +8,7 @@ use App\Models\Equipment\Item;
 use App\Models\Rental\Order;
 use App\Models\Rental\OrderLine;
 use App\Models\Warehouse\Check;
+use App\Models\Warehouse\Move;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
 use App\Services\Warehouse\Carriers;
@@ -90,6 +91,20 @@ class PhoneController extends Controller
             return redirect()->route('w.scan')->withErrors(['code' => __('warehouse.errors.unknown', ['code' => mb_strimwidth($code, 0, 40, '…')])]);
         }
         $request->session()->forget('w.here');
+        // A label printed in advance, scanned for the first time: the piece is found and now in stock.
+        if ($found['type'] === 'asset' && $found['model']->status === Asset::LABEL) {
+            $asset = $found['model'];
+            $asset->update(['status' => Asset::AVAILABLE]);
+            Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'kind' => 'register', 'user_id' => $request->user()->id]);
+            if ($open = $this->openCarrier($request)) {
+                Carriers::pack($asset->fresh('item'), $open, $request->user());
+
+                return redirect()->route('w.scan')->with('status', __('warehouse.scan.registered_in', ['code' => $asset->code, 'name' => $asset->item->name, 'carrier' => $open->code]));
+            }
+            $request->session()->put('w.pending', $asset->id);
+
+            return redirect()->route('w.scan')->with('status', __('warehouse.scan.registered', ['code' => $asset->code, 'name' => $asset->item->name]));
+        }
         $open = $this->openCarrier($request);
         // A dolly or box: put the waiting piece in it, or open it (scan pieces to fill it, a place to move it).
         if ($carrier = self::asCase($found)) {

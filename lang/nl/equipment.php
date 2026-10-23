@@ -136,6 +136,7 @@ return [
         'check' => 'In controle',
         'repair' => 'In herstelling',
         'retired' => 'Uit dienst',
+        'label' => 'Enkel label (nog niet gevonden)',
     ],
     'reasons' => [
         'sold' => 'Verkocht',
@@ -159,6 +160,7 @@ return [
         'saved' => 'Opgeslagen.',
         'retired' => 'Het stuk is uit dienst.',
         'assets_added' => ':count stuk toegevoegd.|:count stukken toegevoegd.',
+        'labels_reserved' => '{1} 1 label klaar om te printen.|[2,*] :count labels klaar om te printen.',
     ],
     'errors' => [
         'has_assets' => 'Dit artikel heeft stukken met QR-labels. Neem ze eerst uit dienst voor je naar geteld gaat.',
@@ -189,4 +191,10 @@ return [
     'only_web' => 'Alleen op de website',
     'web_pill' => 'Web',
     'web_failed' => 'Kon niet opslaan. Probeer opnieuw.',
+    'reserve' => [
+        'title' => 'Labels voor stuks die je nog moet vinden',
+        'hint' => 'Voor stuks die nog niet geteld zijn (kabels, safeties…): print nu labels; ze tellen niet mee. Kom je een stuk tegen, kleef er een label op en scan het in de magazijn-app: vanaf dan is het in voorraad.',
+        'how_many' => 'Hoeveel labels',
+        'go' => 'Labels maken en printen',
+    ],
 ];

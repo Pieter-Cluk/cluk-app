@@ -44,6 +44,8 @@ return [
         'empty_place' => 'Rien ici.',
         'here_hint' => 'Scannez une pièce pour la déplacer.',
         'hint' => 'Chaque mouvement est un scan : d’abord la pièce, puis la place. L’app n’accepte que les mouvements qui suivent le parcours.',
+        'registered' => ':code · :name trouvé et en stock. Scannez maintenant où il va.',
+        'registered_in' => ':code · :name trouvé, en stock et dans :carrier.',
     ],
     'pick' => [
         'title' => 'Préparation',
@@ -161,6 +163,7 @@ return [
         'lost' => 'Sorti du stock',
         'pack' => 'Mis dans un dolly/une caisse',
         'unpack' => 'Sorti d’un dolly/une caisse',
+        'register' => 'Trouvé (étiquette scannée)',
     ],
     'errors' => [
         'unknown' => '« :code » n’est ni une pièce ni une place connue.',

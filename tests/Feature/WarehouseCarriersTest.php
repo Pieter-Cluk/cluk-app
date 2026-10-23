@@ -159,4 +159,33 @@ class WarehouseCarriersTest extends TestCase
         $this->scan('LT-0001')->assertSessionHasErrors('code');
         $this->assertNull($p[1]->fresh()->case_id);
     }
+
+    public function test_labels_for_pieces_still_to_find_count_only_once_scanned(): void
+    {
+        $admin = User::factory()->create(['role_id' => Role::where('slug', 'admin')->value('id'), 'locale' => 'en']);
+        $cable = Item::create(['number' => 'POWCABTRUECONCEE', 'kind' => 'item', 'name' => 'Power cable Truecon – CEE 3-pole 1.5 m', 'serial' => true]);
+        $this->actingAs($admin)->get(route('equipment.show', $cable))->assertOk()->assertSee('Labels for pieces still to find');
+        $this->actingAs($admin)->post(route('equipment.assets.reserve', $cable), ['labels' => 5])->assertSessionHas('print');
+        $this->assertSame(5, $cable->assets()->where('status', Asset::LABEL)->count());
+        $this->assertSame(0, $cable->fresh()->totalQty());
+        $this->assertSame(0, $cable->fresh()->availableQty());
+
+        // Found one: scan its label, it is in stock and waits for its place.
+        $code = $cable->assets()->orderBy('code')->value('code');
+        $this->scan($code)->assertSessionHasNoErrors();
+        $this->assertSame(1, $cable->fresh()->totalQty());
+        $this->scan('GA1B1')->assertSessionHasNoErrors();
+        $this->assertSame([Asset::AVAILABLE, 'GA1B1'], [self::case($code)->status, self::case($code)->location]);
+        // Scanning it again does not add another one.
+        $this->scan($code);
+        $this->actingAs($this->crew)->post('/w/scan/cancel');
+        $this->assertSame(1, $cable->fresh()->totalQty());
+
+        // Found straight into an open box.
+        $second = $cable->assets()->where('status', Asset::LABEL)->orderBy('code')->value('code');
+        $this->scan('BOX-03');
+        $this->scan($second)->assertSessionHasNoErrors();
+        $this->assertSame(self::case('BOX-03')->id, self::case($second)->case_id);
+        $this->assertSame(2, $cable->fresh()->totalQty());
+    }
 }

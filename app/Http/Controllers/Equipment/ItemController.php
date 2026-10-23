@@ -307,6 +307,27 @@ class ItemController extends Controller
             ->with('print', $codes);
     }
 
+    /**
+     * QR labels for pieces we still have to find (cables, safeties…): the pieces exist only
+     * as a label and do not count. Scanning one on the phone puts that piece in stock.
+     */
+    public function reserveLabels(Request $request, Item $item): RedirectResponse
+    {
+        abort_unless($item->serial, 404);
+        $count = (int) $request->validate(['labels' => ['required', 'integer', 'min:1', 'max:200']])['labels'];
+        $codes = DB::transaction(function () use ($item, $count) {
+            $codes = [];
+            for ($i = 0; $i < $count; $i++) {
+                $codes[] = $item->assets()->create(['code' => Asset::nextCode($item), 'status' => Asset::LABEL])->code;
+            }
+
+            return $codes;
+        });
+        AuditLog::record('equipment.labels_reserved', $item, ['count' => $count, 'codes' => $codes[0].($count > 1 ? ' – '.end($codes) : '')]);
+
+        return redirect()->route('equipment.show', $item)->with('status', trans_choice('equipment.flash.labels_reserved', $count, ['count' => $count]))->with('print', $codes);
+    }
+
     public function photo(Item $item): Response
     {
         abort_unless($item->photo_path && Storage::disk('local')->exists($item->photo_path), 404);

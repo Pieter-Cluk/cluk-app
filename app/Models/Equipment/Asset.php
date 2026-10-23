@@ -30,6 +30,9 @@ class Asset extends Model
 
     public const RETIRED = 'retired';
 
+    /** A QR label printed in advance; the piece is not found yet and does not count. The first scan puts it in stock. */
+    public const LABEL = 'label';
+
     public const STATUSES = [self::AVAILABLE, self::OUT, self::CHECK, self::REPAIR, self::RETIRED];
 
     public const RETIRE_REASONS = ['sold', 'lost', 'stolen', 'broken'];

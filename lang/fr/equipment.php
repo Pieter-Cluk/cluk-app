@@ -136,6 +136,7 @@ return [
         'check' => 'En contrôle',
         'repair' => 'En réparation',
         'retired' => 'Retiré',
+        'label' => 'Étiquette seule (pas encore trouvé)',
     ],
     'reasons' => [
         'sold' => 'Vendu',
@@ -159,6 +160,7 @@ return [
         'saved' => 'Enregistré.',
         'retired' => 'La pièce est hors service.',
         'assets_added' => ':count pièce ajoutée.|:count pièces ajoutées.',
+        'labels_reserved' => '{1} 1 étiquette prête à imprimer.|[2,*] :count étiquettes prêtes à imprimer.',
     ],
     'errors' => [
         'has_assets' => 'Cet article a des pièces avec étiquettes QR. Mettez-les hors service avant de passer en compté.',
@@ -189,4 +191,10 @@ return [
     'only_web' => 'Seulement sur le site web',
     'web_pill' => 'Web',
     'web_failed' => 'Enregistrement impossible. Réessayez.',
+    'reserve' => [
+        'title' => 'Étiquettes pour les pièces à trouver',
+        'hint' => 'Pour les pièces pas encore comptées (câbles, élingues…) : imprimez les étiquettes maintenant ; elles ne comptent pas. Quand vous trouvez une pièce, collez-y une étiquette et scannez-la dans l’app entrepôt : dès lors elle est en stock.',
+        'how_many' => 'Combien d’étiquettes',
+        'go' => 'Créer et imprimer les étiquettes',
+    ],
 ];

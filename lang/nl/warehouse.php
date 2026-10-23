@@ -44,6 +44,8 @@ return [
         'empty_place' => 'Hier ligt niets.',
         'here_hint' => 'Scan een stuk om het te verplaatsen.',
         'hint' => 'Elke beweging is een scan: eerst het stuk, dan de plaats. De app laat enkel bewegingen toe die passen in de route.',
+        'registered' => ':code · :name gevonden en in voorraad. Scan nu waar het naartoe gaat.',
+        'registered_in' => ':code · :name gevonden, in voorraad en in :carrier.',
     ],
     'pick' => [
         'title' => 'Picken',
@@ -161,6 +163,7 @@ return [
         'lost' => 'Afgeschreven',
         'pack' => 'In dolly/box gelegd',
         'unpack' => 'Uit dolly/box gehaald',
+        'register' => 'Gevonden (label gescand)',
     ],
     'errors' => [
         'unknown' => '“:code” is geen gekend stuk of plaats.',

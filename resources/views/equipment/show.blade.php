@@ -102,7 +102,7 @@
                                         @if ($canEdit)<td>@if ($a->status !== 'retired')<input type="checkbox" name="assets[]" value="{{ $a->id }}" aria-label="{{ $a->code }}">@endif</td>@endif
                                         <td><a href="{{ route('equipment.assets.show', $a) }}"><b>{{ $a->code }}</b></a></td>
                                         <td>{{ $a->serial_number ?? '—' }}</td>
-                                        <td><span @class(['pill', 'pill-ok' => $a->status === 'available', 'pill-info' => $a->status === 'out', 'pill-warn' => $a->status === 'repair', 'pill-off' => $a->status === 'retired'])>{{ __('equipment.statuses.'.$a->status) }}</span></td>
+                                        <td><span @class(['pill', 'pill-ok' => $a->status === 'available', 'pill-info' => $a->status === 'out', 'pill-warn' => $a->status === 'repair', 'pill-off' => in_array($a->status, ['retired', 'label'], true)])>{{ __('equipment.statuses.'.$a->status) }}</span></td>
                                         <td>{{ $a->location ?? '—' }}</td>
                                         <td class="muted small">{{ $a->label_printed_at ? $a->label_printed_at->format('d/m/Y') : __('equipment.not_printed') }}</td>
                                     </tr>
@@ -126,6 +126,13 @@
                                 <label class="field"><span>{{ __('equipment.fields.supplier') }}</span><input name="supplier" maxlength="160" value="{{ old('supplier') }}"></label>
                             @endif
                             <div class="span-2"><button class="btn" type="submit">{{ __('equipment.add_assets_btn') }}</button></div>
+                        </form>
+                        <form method="post" action="{{ route('equipment.assets.reserve', $item) }}" class="form-grid pad">
+                            @csrf
+                            <h3 class="h3 span-2">{{ __('equipment.reserve.title') }}</h3>
+                            <p class="muted small span-2">{{ __('equipment.reserve.hint') }}</p>
+                            <label class="field"><span>{{ __('equipment.reserve.how_many') }}</span><input type="number" name="labels" min="1" max="200" value="20"></label>
+                            <div class="span-2"><button class="btn" type="submit">{{ __('equipment.reserve.go') }}</button></div>
                         </form>
                     @endif
                 </section>
