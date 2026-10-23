@@ -8,6 +8,7 @@ use App\Services\Social\Media;
 use App\Services\Social\Provider;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use Throwable;
 
@@ -53,9 +54,21 @@ class Meta extends Provider
         $long = $this->ok(Http::timeout(20)->get($this->g('oauth/access_token'), [
             'grant_type' => 'fb_exchange_token', 'client_id' => config('social.meta.app_id'), 'client_secret' => config('social.meta.app_secret'), 'fb_exchange_token' => $short,
         ]), 'Meta long-lived token')['access_token'] ?? $short;
-        $pages = $this->ok(Http::timeout(20)->get($this->g('me/accounts'), [
-            'fields' => 'id,name,access_token,link,picture{url},instagram_business_account{id,username,name,profile_picture_url}', 'limit' => 100, 'access_token' => $long,
-        ]), 'Meta pages')['data'] ?? [];
+        $fields = 'id,name,access_token,link,picture{url},instagram_business_account{id,username,name,profile_picture_url}';
+        $pages = $this->ok(Http::timeout(20)->get($this->g('me/accounts'), ['fields' => $fields, 'limit' => 100, 'access_token' => $long]), 'Meta pages')['data'] ?? [];
+        if (! $pages) {
+            // Facebook Login for Business: pages shared through a business portfolio are listed there.
+            $pages = $this->businessPages($long, $fields);
+        }
+        if (! $pages) {
+            $granted = [];
+            try {
+                $granted = collect($this->ok(Http::timeout(20)->get($this->g('me/permissions'), ['access_token' => $long]), 'Meta permissions')['data'] ?? [])
+                    ->map(fn ($p) => $p['permission'].':'.$p['status'])->all();
+            } catch (Throwable) {
+            }
+            Log::warning('Meta sign-in: no pages shared', ['granted' => $granted]);
+        }
         $out = [];
         foreach ($pages as $p) {
             $out[] = ['platform' => 'facebook', 'external_id' => (string) $p['id'], 'name' => $p['name'], 'url' => $p['link'] ?? 'https://www.facebook.com/'.$p['id'],
@@ -68,6 +81,31 @@ class Meta extends Provider
         }
 
         return $out;
+    }
+
+    /** Pages of the business portfolios the sign-in gave access to (owned and client pages), with their page tokens. */
+    private function businessPages(string $token, string $fields): array
+    {
+        $pages = [];
+        try {
+            foreach ($this->ok(Http::timeout(20)->get($this->g('me/businesses'), ['fields' => 'id,name', 'limit' => 50, 'access_token' => $token]), 'Meta businesses')['data'] ?? [] as $b) {
+                foreach (['owned_pages', 'client_pages'] as $edge) {
+                    try {
+                        foreach ($this->ok(Http::timeout(20)->get($this->g($b['id'].'/'.$edge), ['fields' => $fields, 'limit' => 100, 'access_token' => $token]), 'Meta business pages')['data'] ?? [] as $p) {
+                            if (! empty($p['access_token'])) {
+                                $pages[$p['id']] = $p;
+                            }
+                        }
+                    } catch (Throwable $e) {
+                        Log::warning('Meta business pages', ['business' => $b['id'], 'edge' => $edge, 'error' => mb_substr($e->getMessage(), 0, 300)]);
+                    }
+                }
+            }
+        } catch (Throwable $e) {
+            Log::warning('Meta businesses', ['error' => mb_substr($e->getMessage(), 0, 300)]);
+        }
+
+        return array_values($pages);
     }
 
     // ── Figures ─────────────────────────────────────────────────────────────

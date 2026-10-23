@@ -29,6 +29,8 @@ class SocialMediaTest extends TestCase
     /** @var array<int, string> */
     private array $calls = [];
 
+    private bool $viaBusiness = false;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -42,7 +44,16 @@ class SocialMediaTest extends TestCase
             if (str_contains($u, 'oauth/access_token')) {
                 return Http::response(['access_token' => 'user-token']);
             }
-            if (str_contains($u, 'me/accounts')) {
+            if (str_contains($u, 'me/accounts') && $this->viaBusiness) {
+                return Http::response(['data' => []]);
+            }
+            if (str_contains($u, 'me/businesses')) {
+                return Http::response(['data' => [['id' => '1721139235236275', 'name' => 'CLUK']]]);
+            }
+            if (str_contains($u, '1721139235236275/client_pages')) {
+                return Http::response(['data' => []]);
+            }
+            if (str_contains($u, 'me/accounts') || str_contains($u, '1721139235236275/owned_pages')) {
                 return Http::response(['data' => [[
                     'id' => '804529296069585', 'name' => 'CLUK', 'access_token' => 'page-token', 'link' => 'https://www.facebook.com/cluk',
                     'instagram_business_account' => ['id' => '17841475959694719', 'username' => 'cluk_group', 'name' => 'CLUK'],
@@ -125,6 +136,13 @@ class SocialMediaTest extends TestCase
 
         $this->actingAs($boss)->get('/media/social')->assertOk()->assertSee('CLUK')->assertSee('@cluk_group')->assertDontSee('No accounts connected yet');
         $this->actingAs($boss)->get('/media/social?d=7')->assertOk();
+    }
+
+    public function test_pages_shared_through_the_business_portfolio_are_found_too(): void
+    {
+        $this->viaBusiness = true;
+        $this->connect($this->as('sales', ['social.connect']));
+        $this->assertEqualsCanonicalizing(['facebook', 'instagram'], Account::pluck('platform')->all());
     }
 
     public function test_drafts_planning_and_publishing(): void
