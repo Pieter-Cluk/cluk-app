@@ -9,6 +9,8 @@ return [
     'meta' => [
         'app_id' => env('META_APP_ID'),
         'app_secret' => env('META_APP_SECRET'),
+        // Facebook Login for Business: the configuration that says which pages, accounts and permissions are asked.
+        'config_id' => env('META_CONFIG_ID'),
         'version' => env('META_GRAPH_VERSION', 'v23.0'),
         'scopes' => ['pages_show_list', 'pages_read_engagement', 'pages_manage_posts', 'read_insights', 'business_management',
             'instagram_basic', 'instagram_content_publish', 'instagram_manage_insights'],

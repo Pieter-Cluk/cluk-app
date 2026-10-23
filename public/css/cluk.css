@@ -91,7 +91,7 @@ a{color:var(--brand-strong)}
 .flash-err{background:var(--danger-bg);color:var(--danger-text)}
 .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .field-search{flex:1 1 260px;background:var(--surface);border:1px solid var(--line)}
-select,input[type=text],input[type=email],input:not([type]),input[type=search],input[type=number],input[type=date],input[type=datetime-local],input[type=tel],textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px;min-height:44px}
+select,input[type=text],input[type=email],input[type=url],input:not([type]),input[type=search],input[type=number],input[type=date],input[type=datetime-local],input[type=tel],textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px;min-height:44px}
 .field-search input{border:0;padding:0;min-height:42px}
 select:focus,input:focus,textarea:focus{outline:2px solid var(--brand);outline-offset:-1px}
 .segmented{display:inline-flex;flex-wrap:wrap;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px;align-self:flex-start}
@@ -911,3 +911,10 @@ fieldset.checks{border:0;padding:0;min-width:0}
 .sm-connect{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:8px}
 .sm-prov{display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid var(--line);border-radius:10px;align-items:flex-start}
 @media (max-width:900px){.sm-two{grid-template-columns:1fr}}
+.sm-media{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.sm-media-item{display:flex;flex-direction:column;gap:4px;font-size:12px}
+.sm-media-item img{width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.sm-video{display:inline-block;padding:8px 10px;border-radius:8px;background:var(--hover,#f2f4f2);font-size:13px}
+.sm-target{padding:8px 0;border-top:1px solid var(--line)}
+.sm-target textarea{width:100%;margin-top:6px}
+.sm-preview{max-width:100%;border-radius:8px}

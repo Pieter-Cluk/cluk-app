@@ -6,6 +6,7 @@ use App\Services\Credit\RegistryImport;
 use App\Services\Crm\Birthdays;
 use App\Services\Me\DailySummary;
 use App\Services\Media\Messages;
+use App\Services\Social\Social;
 use App\Services\Vies;
 use App\Services\ViesRecheck;
 use App\Services\Website\WebActivity;
@@ -56,6 +57,13 @@ class RunBackgroundChecks
             // Company register (KBO web service): the oldest data first, a few every 10 minutes.
             if (Cache::add('jobs:kbo:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 10), 1, 700)) {
                 RegistryImport::refreshStale((int) config('services.kbo_ws.per_run', 5));
+            }
+            // Social media: planned posts go out on time; the figures of one account at a time every 15 minutes.
+            if (Cache::add('jobs:social:'.$now->format('Y-m-d-H-i'), 1, 120)) {
+                Social::publishDue();
+            }
+            if (Cache::add('jobs:socialsync:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 15), 1, 1000)) {
+                Social::syncDue(1);
             }
         } catch (Throwable $e) {
             Log::warning('Background checks failed', ['error' => mb_substr($e->getMessage(), 0, 300)]);

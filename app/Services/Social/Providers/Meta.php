@@ -35,10 +35,14 @@ class Meta extends Provider
 
     public function authUrl(string $state): string
     {
+        // With a Login for Business configuration the permissions come from that configuration; otherwise from the scopes.
+        $ask = filled(config('social.meta.config_id'))
+            ? ['config_id' => config('social.meta.config_id'), 'override_default_response_type' => 'true']
+            : ['scope' => implode(',', config('social.meta.scopes'))];
+
         return 'https://www.facebook.com/'.config('social.meta.version').'/dialog/oauth?'.http_build_query([
-            'client_id' => config('social.meta.app_id'), 'redirect_uri' => $this->redirectUri(), 'state' => $state,
-            'response_type' => 'code', 'scope' => implode(',', config('social.meta.scopes')),
-        ]);
+            'client_id' => config('social.meta.app_id'), 'redirect_uri' => $this->redirectUri(), 'state' => $state, 'response_type' => 'code',
+        ] + $ask);
     }
 
     public function connect(string $code): array
@@ -225,6 +229,7 @@ class Meta extends Provider
             return 'processing';
         }
         if ($status === 'ERROR' || $status === 'EXPIRED') {
+            $t->update(['container_id' => null]); // a next try starts with a fresh upload
             throw new RuntimeException(__('social.errors.ig_processing', ['status' => $status]));
         }
         $id = (string) $this->ok(Http::timeout(60)->asForm()->post($this->g($a->external_id.'/media_publish'), ['creation_id' => $t->container_id, 'access_token' => $a->token]), 'Instagram publish')['id'];

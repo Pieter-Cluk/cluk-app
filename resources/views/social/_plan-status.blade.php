@@ -1,0 +1,1 @@
+<span @class(['pill', 'pill-ok' => $p->status === 'done', 'pill-warn' => in_array($p->status, ['partly', 'failed'], true), 'pill-off' => $p->status === 'draft'])>{{ __('social.plans.statuses.'.$p->status) }}</span>

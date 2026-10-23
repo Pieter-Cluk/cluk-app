@@ -13,6 +13,7 @@ use App\Services\Crm\Birthdays;
 use App\Services\Equipment\PhotoSuggestions;
 use App\Services\Media\Messages;
 use App\Services\Media\Translator;
+use App\Services\Social\Social;
 use App\Services\Vies;
 use App\Services\ViesRecheck;
 use App\Services\Website\WebActivity;
@@ -178,3 +179,9 @@ Artisan::command('cluk:kbo-refresh {--n=50 : How many companies at most}', funct
 Artisan::command('cluk:web-prune', function () {
     $this->line(json_encode(WebActivity::prune()));
 })->purpose('Delete website statistics older than 13 months (also runs daily by itself)');
+
+// Social media: publish planned posts and refresh the figures of the accounts.
+Artisan::command('cluk:social', function () {
+    $this->line(json_encode(['published' => Social::publishDue(), 'refreshed' => Social::syncDue(3)]));
+})->purpose('Publish planned social posts and refresh social figures');
+Schedule::command('cluk:social')->everyMinute()->withoutOverlapping();

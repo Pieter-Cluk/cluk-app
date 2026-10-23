@@ -39,12 +39,14 @@ class PlanController extends Controller
     public function create(Request $request): View
     {
         abort_unless(SocialController::canPlan($request), 403);
+
         return $this->form($request, new Plan(['body' => '']));
     }
 
     public function edit(Request $request, Plan $plan): View
     {
         abort_unless(SocialController::canPlan($request), 403);
+
         return $this->form($request, $plan->load('targets.account'));
     }
 
@@ -125,7 +127,7 @@ class PlanController extends Controller
         }
 
         $plan->fill(['title' => $d['title'], 'body' => $d['body'], 'link_url' => $d['link_url'] ?? null, 'media' => $media->values()->all(),
-            'scheduled_at' => $when?->copy()->utc(), 'status' => $d['action'] === 'draft' ? 'draft' : 'scheduled',
+            'scheduled_at' => $when?->copy()->timezone(config('app.timezone')), 'status' => $d['action'] === 'draft' ? 'draft' : 'scheduled',
             'scheduled_by_id' => $d['action'] === 'draft' ? $plan->scheduled_by_id : $request->user()->id])->save();
         foreach ($removed as $m) {
             Storage::disk('local')->delete($m['path']);

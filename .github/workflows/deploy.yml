@@ -8,6 +8,8 @@ name: Deploy to app.cluk.live
 #   INTAKE_TOKEN (optional: lets the cluk.live website form post into Incoming)
 #   ANTHROPIC_API_KEY (optional: translates Media › Messages texts with Claude)
 #   KBO_WS_USER, KBO_WS_PASSWORD (optional: live KBO register lookups for the credit check)
+#   META_APP_ID, META_APP_SECRET, META_CONFIG_ID (optional: Media › Social media, Facebook and Instagram)
+#   LINKEDIN_CLIENT_ID, LINKEDIN_CLIENT_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (optional: Social media)
 
 on:
   workflow_dispatch:
@@ -75,6 +77,13 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           KBO_WS_USER: ${{ secrets.KBO_WS_USER }}
           KBO_WS_PASSWORD: ${{ secrets.KBO_WS_PASSWORD }}
+          META_APP_ID: ${{ secrets.META_APP_ID }}
+          META_APP_SECRET: ${{ secrets.META_APP_SECRET }}
+          META_CONFIG_ID: ${{ secrets.META_CONFIG_ID }}
+          LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
+          LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         run: |
           trim() { printf '%s' "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'; }
           cat > /tmp/env.new <<EOF
@@ -109,6 +118,13 @@ jobs:
           ANTHROPIC_API_KEY="$(trim "$ANTHROPIC_API_KEY")"
           KBO_WS_USER="$(trim "$KBO_WS_USER")"
           KBO_WS_PASSWORD="$(trim "$KBO_WS_PASSWORD")"
+          META_APP_ID="$(trim "$META_APP_ID")"
+          META_APP_SECRET="$(trim "$META_APP_SECRET")"
+          META_CONFIG_ID="$(trim "$META_CONFIG_ID")"
+          LINKEDIN_CLIENT_ID="$(trim "$LINKEDIN_CLIENT_ID")"
+          LINKEDIN_CLIENT_SECRET="$(trim "$LINKEDIN_CLIENT_SECRET")"
+          GOOGLE_CLIENT_ID="$(trim "$GOOGLE_CLIENT_ID")"
+          GOOGLE_CLIENT_SECRET="$(trim "$GOOGLE_CLIENT_SECRET")"
           EOF
           sed -i 's/^[[:space:]]*//' /tmp/env.new
 

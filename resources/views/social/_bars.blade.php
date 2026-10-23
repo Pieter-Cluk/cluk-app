@@ -9,19 +9,19 @@
 @endphp
 <svg viewBox="0 0 {{ $W }} {{ $H }}" class="sm-chart" role="img" aria-label="{{ $label }}">
     @foreach ([0, 0.5, 1] as $f)
-        @php($yy = $pt + ($H - $pt - $pb) * (1 - $f))
+        @php $yy = $pt + ($H - $pt - $pb) * (1 - $f); @endphp
         <line x1="{{ $pl }}" x2="{{ $W - $pr }}" y1="{{ round($yy, 1) }}" y2="{{ round($yy, 1) }}" class="sm-grid"/>
         <text x="{{ $pl - 6 }}" y="{{ round($yy, 1) + 4 }}" text-anchor="end" class="sm-axis">{{ $fmt($max * $f) }}</text>
     @endforeach
-    @php($i = 0)
+    @php $i = 0; @endphp
     @foreach ($weeks as $monday => $platforms)
-        @php($base = $H - $pb)
+        @php $base = $H - $pb; @endphp
         @foreach ($platforms as $platform => $v)
-            @php($h = ($H - $pt - $pb) * ($v[$field] ?? 0) / $max)
+            @php $h = ($H - $pt - $pb) * ($v[$field] ?? 0) / $max; @endphp
             @if ($h > 0)<rect x="{{ round($pl + $i * $bw + $bw * 0.15, 1) }}" y="{{ round($base - $h, 1) }}" width="{{ round($bw * 0.7, 1) }}" height="{{ round($h, 1) }}" fill="{{ \App\Services\Social\Dashboard::COLORS[$platform] ?? '#888' }}"><title>{{ __('social.week_of', ['date' => \Illuminate\Support\Carbon::parse($monday)->format('d/m')]) }} · {{ __('social.platforms.'.$platform) }}: {{ number_format($v[$field] ?? 0, 0, ',', '.') }}</title></rect>@endif
-            @php($base -= $h)
+            @php $base -= $h; @endphp
         @endforeach
         @if ($n <= 14 || $i % 2 === 0)<text x="{{ round($pl + $i * $bw + $bw / 2, 1) }}" y="{{ $H - 6 }}" text-anchor="middle" class="sm-axis">{{ \Illuminate\Support\Carbon::parse($monday)->format('d/m') }}</text>@endif
-        @php($i++)
+        @php $i++; @endphp
     @endforeach
 </svg>

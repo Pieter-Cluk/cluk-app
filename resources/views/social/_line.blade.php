@@ -13,7 +13,7 @@
 @endphp
 <svg viewBox="0 0 {{ $W }} {{ $H }}" class="sm-chart" role="img" aria-label="{{ $label }}">
     @foreach ([0, 0.5, 1] as $f)
-        @php($v = $min + ($max - $min) * $f)
+        @php $v = $min + ($max - $min) * $f; @endphp
         <line x1="{{ $pl }}" x2="{{ $W - $pr }}" y1="{{ round($y($v), 1) }}" y2="{{ round($y($v), 1) }}" class="sm-grid"/>
         <text x="{{ $pl - 6 }}" y="{{ round($y($v), 1) + 4 }}" text-anchor="end" class="sm-axis">{{ $fmt($v) }}</text>
     @endforeach
@@ -23,12 +23,12 @@
     @endif
     @foreach ($series as $platform => $points)
         @php
-            $d = ''; $i = 0;
+            $path = ''; $i = 0;
             foreach ($points as $v) {
-                if ($v !== null) { $d .= ($d === '' ? 'M' : 'L').round($x($i), 1).' '.round($y($v), 1).' '; }
+                if ($v !== null) { $path .= ($path === '' ? 'M' : 'L').round($x($i), 1).' '.round($y($v), 1).' '; }
                 $i++;
             }
         @endphp
-        <path d="{{ trim($d) }}" fill="none" stroke="{{ \App\Services\Social\Dashboard::COLORS[$platform] ?? '#888' }}" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="{{ trim($path) }}" fill="none" stroke="{{ \App\Services\Social\Dashboard::COLORS[$platform] ?? '#888' }}" stroke-width="2.5" stroke-linejoin="round"/>
     @endforeach
 </svg>

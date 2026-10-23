@@ -12,6 +12,10 @@ class Daily extends Model
     protected $table = 'social_daily';
 
     public $timestamps = false;
+
+    /** Stored as a plain date (Y-m-d), so looking a day up works the same in MariaDB and SQLite. */
+    protected $dateFormat = 'Y-m-d';
+
     protected function casts(): array
     {
         return ['date' => 'date'];
