@@ -193,6 +193,7 @@ return [
         'carrier_picked_already' => ':carrier is al gepickt voor :order.',
         'carrier_not_on_order' => ':carrier bevat stuks die niet op :order staan: :codes. Haal ze er eerst uit.',
         'carrier_not_out_with' => ':carrier is niet weg met :order.',
+        'carrier_in_carrier' => 'Een case kan niet in een andere case.',
     ],
     'zone_names' => [
         'INBOUND' => 'Inbound',
@@ -462,6 +463,7 @@ return [
     ],
     'carriers' => [
         'kinds' => ['dolly' => 'Lichtdolly', 'box' => 'Opbergbox'],
+        'contents' => 'Bevat',
         'packed' => ':code zit in :carrier. Scan meer stuks om toe te voegen, of scan een plaats om hem te verplaatsen.',
         'moved' => '{0} :carrier (leeg) staat nu in :place.|{1} :carrier met 1 stuk staat nu in :place.|[2,*] :carrier met :n stuks staat nu in :place.',
         'taken_out' => ':code is uit de dolly/box gehaald.',

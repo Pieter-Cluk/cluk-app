@@ -9,7 +9,6 @@ use App\Models\Rental\Order;
 use App\Models\Rental\OrderAsset;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Warehouse\Carrier;
 use App\Models\Warehouse\Move;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,6 +28,12 @@ class WarehouseCarriersTest extends TestCase
         $this->seed(RoleSeeder::class);
         Storage::fake('local');
         $this->crew = User::factory()->create(['role_id' => Role::where('slug', 'warehouse')->value('id'), 'locale' => 'en']);
+        (require database_path('migrations/2026_10_23_001600_dollies_and_boxes_as_case_items.php'))->seed();
+    }
+
+    private static function case(string $code): Asset
+    {
+        return Asset::where('code', $code)->firstOrFail();
     }
 
     private function scan(string $code)
@@ -55,17 +60,23 @@ class WarehouseCarriersTest extends TestCase
         return [$p, $order];
     }
 
-    public function test_the_dollies_and_boxes_exist_with_labels(): void
+    public function test_the_dollies_and_boxes_are_case_items_with_small_labels(): void
     {
-        $this->assertSame(6, Carrier::where('kind', 'dolly')->count());
-        $this->assertSame(22, Carrier::where('kind', 'box')->count());
-        $this->assertTrue(Carrier::where('code', 'DOLLY-06')->exists() && Carrier::where('code', 'BOX-22')->exists());
-        // Small square labels, with the items (not the big location labels).
-        $this->actingAs($this->crew)->get('/warehouse/labels')->assertOk()->assertDontSee('DOLLY-01');
-        $this->actingAs($this->crew)->get('/warehouse/labels?tab=items&q=dolly')->assertOk()->assertSee('DOLLY-01')->assertDontSee('BOX-01');
-        $ids = Carrier::whereIn('code', ['DOLLY-01', 'BOX-12'])->pluck('id')->all();
-        $r = $this->actingAs($this->crew)->post('/warehouse/labels/items', ['carriers' => $ids])->assertOk();
-        $r->assertSee('BOX-12')->assertSee('Light dolly')->assertSee('size: 25mm 25mm', false)->assertSee('<path d="M', false);
+        $dolly = Item::where('number', 'CASLIGHTDOLLY')->firstOrFail();
+        $box = Item::where('number', 'CASSTORAGEBOX')->firstOrFail();
+        $this->assertSame(['case', 0, false], [$dolly->kind, $dolly->day_price_cents, $dolly->in_search]);
+        $this->assertSame(6, $dolly->assets()->count());
+        $this->assertSame(22, $box->assets()->count());
+        $this->assertTrue(self::case('DOLLY-06')->isContainer());
+        // In the Cases tab; more pieces get the next code.
+        $admin = User::factory()->create(['role_id' => Role::where('slug', 'admin')->value('id'), 'locale' => 'en']);
+        $this->actingAs($admin)->get(route('equipment.index', ['kind' => 'case']))->assertOk()->assertSee('Light dolly (meat rack)')->assertSee('Storage box');
+        $this->actingAs($admin)->post(route('equipment.assets.store', $dolly), ['count' => 2])->assertSessionHasNoErrors();
+        $this->assertTrue(Asset::where('code', 'DOLLY-07')->exists() && Asset::where('code', 'DOLLY-08')->exists());
+        // Small square labels like any piece.
+        $this->actingAs($this->crew)->get('/warehouse/labels?tab=items&q=DOLLY')->assertOk()->assertSee('DOLLY-01');
+        $r = $this->actingAs($this->crew)->post('/warehouse/labels/items', ['ids' => [self::case('BOX-12')->id]])->assertOk();
+        $r->assertSee('BOX-12')->assertSee('size: 25mm 25mm', false);
     }
 
     public function test_fill_a_dolly_and_move_it_with_one_scan(): void
@@ -74,8 +85,8 @@ class WarehouseCarriersTest extends TestCase
         // Piece first, then the dolly: it goes in, and the dolly stays open.
         $this->scan('LT-0001');
         $this->scan('https://app.cluk.live/l/DOLLY-01')->assertSessionHasNoErrors();
-        $dolly = Carrier::where('code', 'DOLLY-01')->first();
-        $this->assertSame($dolly->id, $p[1]->fresh()->carrier_id);
+        $dolly = self::case('DOLLY-01');
+        $this->assertSame($dolly->id, $p[1]->fresh()->case_id);
         // More pieces go straight in.
         $this->scan('LT-0002')->assertSessionHasNoErrors();
         $this->scan('LT-0002')->assertSessionHasErrors('code'); // already in it
@@ -84,14 +95,14 @@ class WarehouseCarriersTest extends TestCase
         $this->scan('GA2B1')->assertSessionHasNoErrors();
         $this->assertSame('GA2B1', $dolly->fresh()->location);
         $this->assertSame(['GA2B1', 'GA2B1', 'GA1B1'], [$p[1]->fresh()->location, $p[2]->fresh()->location, $p[3]->fresh()->location]);
-        $this->assertSame(2, Move::where('carrier_id', $dolly->id)->where('kind', 'move')->count());
+        $this->assertSame(2, Move::where('case_id', $dolly->id)->where('kind', 'move')->count());
         // Scanning the place shows the dolly.
         $this->scan('GA2B1');
-        $this->actingAs($this->crew)->get('/w/scan')->assertSee('Light dolly DOLLY-01');
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('DOLLY-01');
         // Moving one piece on its own takes it out of the dolly.
         $this->scan('LT-0002');
         $this->scan('GA3B1')->assertSessionHasNoErrors();
-        $this->assertNull($p[2]->fresh()->carrier_id);
+        $this->assertNull($p[2]->fresh()->case_id);
         // A dolly cannot go to cleaning.
         $this->scan('DOLLY-01');
         $this->scan('CLEAN')->assertSessionHasErrors('code');
@@ -100,7 +111,7 @@ class WarehouseCarriersTest extends TestCase
     public function test_pick_a_dolly_load_it_and_return_piece_by_piece(): void
     {
         [$p, $order] = $this->job();
-        $dolly = Carrier::where('code', 'DOLLY-02')->first();
+        $dolly = self::case('DOLLY-02');
         // A dolly holding a piece that is not on the order cannot be picked.
         foreach (['LT-0001', 'LT-0002', 'LT-0003'] as $c) {
             $this->scan('DOLLY-02');
@@ -115,7 +126,7 @@ class WarehouseCarriersTest extends TestCase
         $this->actingAs($this->crew)->post('/w/pick/'.$order->id.'/scan', ['code' => 'DOLLY-02'])->assertSessionHasNoErrors();
         $this->assertSame(['DISPATCH', 'DISPATCH'], [$p[1]->fresh()->location, $p[2]->fresh()->location]);
         $this->assertSame($order->id, $dolly->fresh()->out_order_id);
-        $this->actingAs($this->crew)->get('/w/pick/'.$order->id)->assertSee('Light dolly DOLLY-02');
+        $this->actingAs($this->crew)->get('/w/pick/'.$order->id)->assertSee('Light dolly (meat rack) DOLLY-02');
         $this->actingAs($this->crew)->post('/w/pick/'.$order->id.'/load')->assertRedirect('/w');
         $this->assertSame('OUT', $dolly->fresh()->location);
         $this->actingAs(User::factory()->create(['role_id' => Role::where('slug', 'admin')->value('id'), 'locale' => 'en']))->get(route('orders.doc', [$order, 'dn']))->assertOk()->assertSee('DOLLY-02');
@@ -123,21 +134,21 @@ class WarehouseCarriersTest extends TestCase
         // Return: the dolly comes back empty; only scanned pieces count, and they go in the dolly scanned before.
         $this->actingAs($this->crew)->post('/w/return/'.$order->id.'/scan', ['code' => 'DOLLY-02'])->assertSessionHasNoErrors();
         $this->assertSame(['INBOUND', null], [$dolly->fresh()->location, $dolly->fresh()->out_order_id]);
-        $this->assertSame(0, $dolly->assets()->count());
+        $this->assertSame(0, $dolly->packed()->count());
         $this->assertSame(Asset::OUT, $p[1]->fresh()->status);
-        $box = Carrier::where('code', 'BOX-05')->first();
-        $box->update(['out_order_id' => $order->id, 'location' => 'OUT']);
+        $box = self::case('BOX-05');
+        $box->update(['out_order_id' => $order->id, 'location' => 'OUT', 'status' => Asset::OUT]);
         $this->actingAs($this->crew)->post('/w/return/'.$order->id.'/scan', ['code' => 'LT-0001'])->assertSessionHasNoErrors();
         $this->actingAs($this->crew)->post('/w/return/'.$order->id.'/scan', ['code' => 'BOX-05']);
         $this->actingAs($this->crew)->post('/w/return/'.$order->id.'/scan', ['code' => 'LT-0002'])->assertSessionHasNoErrors();
-        $this->assertSame($dolly->id, $p[1]->fresh()->carrier_id);
-        $this->assertSame($box->id, $p[2]->fresh()->carrier_id); // pieces may change dolly
+        $this->assertSame($dolly->id, $p[1]->fresh()->case_id);
+        $this->assertSame($box->id, $p[2]->fresh()->case_id); // pieces may change dolly
         $this->assertSame([Asset::CHECK, 'INBOUND'], [$p[2]->fresh()->status, $p[2]->fresh()->location]);
         $this->assertNotNull($order->fresh()->returned_at);
         // Moving a piece on to cleaning takes it out of its box.
         $this->scan('LT-0002');
         $this->scan('CLEAN');
-        $this->assertNull($p[2]->fresh()->carrier_id);
+        $this->assertNull($p[2]->fresh()->case_id);
     }
 
     public function test_only_stored_pieces_go_in_a_dolly(): void
@@ -146,6 +157,6 @@ class WarehouseCarriersTest extends TestCase
         $p[1]->update(['status' => Asset::CHECK, 'location' => 'INBOUND']);
         $this->scan('BOX-01');
         $this->scan('LT-0001')->assertSessionHasErrors('code');
-        $this->assertNull($p[1]->fresh()->carrier_id);
+        $this->assertNull($p[1]->fresh()->case_id);
     }
 }

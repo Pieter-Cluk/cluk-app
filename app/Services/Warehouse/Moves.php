@@ -9,7 +9,6 @@ use App\Models\Rental\Order;
 use App\Models\Rental\OrderLine;
 use App\Models\Rental\SubhireRequest;
 use App\Models\User;
-use App\Models\Warehouse\Carrier;
 use App\Models\Warehouse\Charge;
 use App\Models\Warehouse\Check;
 use App\Models\Warehouse\Move;
@@ -32,7 +31,7 @@ class Moves
      * What a scanned text is: a piece, a zone or a position. Labels hold the full
      * address (…/a/LT-0142 or …/l/CLEAN); typed codes work too.
      *
-     * @return array{type: string, model: Asset|Zone|Position|Carrier}|null
+     * @return array{type: string, model: Asset|Zone|Position}|null
      */
     public static function resolve(string $raw): ?array
     {
@@ -52,9 +51,6 @@ class Moves
         }
         if ($p = Position::where('code', $code)->where('active', true)->first()) {
             return ['type' => 'position', 'model' => $p];
-        }
-        if ($c = Carrier::byCode($code)) {
-            return ['type' => 'carrier', 'model' => $c];
         }
 
         return null;
@@ -148,9 +144,9 @@ class Moves
 
     /**
      * Move a piece after a scan. Returns what the phone should open next (clean, check) or null.
-     * A piece moved on its own leaves its dolly or box; moved with it ($with), it stays in.
+     * A piece moved on its own leaves its case (dolly, box); moved with it ($with), it stays in.
      */
-    public static function move(Asset $asset, Zone|Position $to, User $by, ?Carrier $with = null): ?string
+    public static function move(Asset $asset, Zone|Position $to, User $by, ?Asset $with = null): ?string
     {
         self::check($asset, $to);
         $toZone = $to instanceof Zone ? $to : Zone::where('type', 'storage')->orderBy('sort')->first();
@@ -159,7 +155,7 @@ class Moves
             $from = $asset->location;
             $kind = 'move';
             $orderId = null;
-            $data = ['location' => $to->code, 'carrier_id' => $with?->id];
+            $data = ['location' => $to->code, 'case_id' => $with?->id];
             if ($asset->status === Asset::OUT || $from === self::OUT) {
                 $kind = 'return';
                 $orderId = $asset->out_order_id;
@@ -174,7 +170,7 @@ class Moves
                 default => $data += in_array($asset->status, [Asset::REPAIR, Asset::OUT], true) || $kind === 'return' ? ['status' => Asset::CHECK] : [],
             };
             $asset->update($data);
-            Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $from, 'to_code' => $to->code, 'kind' => $kind, 'order_id' => $orderId, 'user_id' => $by->id, 'carrier_id' => $with?->id]);
+            Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $from, 'to_code' => $to->code, 'kind' => $kind, 'order_id' => $orderId, 'user_id' => $by->id, 'case_id' => $with?->id]);
             if ($toZone?->type === 'cleaning') {
                 Check::openFor($asset);
             }
@@ -220,7 +216,7 @@ class Moves
     }
 
     /** Pick one piece for an order. Picked on its own it leaves its dolly or box; picked with it ($with), it stays in. */
-    public static function pick(Order $order, Asset $asset, User $by, ?Carrier $with = null): void
+    public static function pick(Order $order, Asset $asset, User $by, ?Asset $with = null): void
     {
         $fail = fn (string $key) => throw ValidationException::withMessages(['code' => __('warehouse.errors.'.$key, ['code' => $asset->code, 'order' => $order->number])]);
         if (! $order->assets()->where('asset_id', $asset->id)->exists()) {
@@ -234,8 +230,8 @@ class Moves
         }
         $dispatch = Zone::where('type', 'dispatch')->orderBy('sort')->firstOrFail();
         $from = $asset->location;
-        $asset->update(['location' => $dispatch->code, 'out_order_id' => $order->id, 'carrier_id' => $with?->id]);
-        Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $from, 'to_code' => $dispatch->code, 'kind' => 'pick', 'order_id' => $order->id, 'user_id' => $by->id, 'carrier_id' => $with?->id]);
+        $asset->update(['location' => $dispatch->code, 'out_order_id' => $order->id, 'case_id' => $with?->id]);
+        Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $from, 'to_code' => $dispatch->code, 'kind' => 'pick', 'order_id' => $order->id, 'user_id' => $by->id, 'case_id' => $with?->id]);
     }
 
     public static function count(OrderLine $line, string $field, int $delta, User $by): void
@@ -262,8 +258,8 @@ class Moves
                 $oa->asset->update(['status' => Asset::OUT, 'location' => self::OUT, 'out_order_id' => $order->id]);
                 Move::create(['asset_id' => $oa->asset_id, 'item_id' => $oa->asset->item_id, 'from_code' => 'DISPATCH', 'to_code' => self::OUT, 'kind' => 'load', 'order_id' => $order->id, 'user_id' => $by->id]);
             }
-            // Dollies and boxes picked with this order go on the truck too (no charge).
-            Carrier::where('out_order_id', $order->id)->update(['location' => self::OUT]);
+            // Dollies and boxes that go with this order (not on it, no charge) go on the truck too.
+            Asset::where('out_order_id', $order->id)->whereNotIn('id', $order->assets()->pluck('asset_id'))->update(['status' => Asset::OUT, 'location' => self::OUT]);
             $order->update(['loaded_at' => now(), 'loaded_by_id' => $by->id]);
             AuditLog::record('order.loaded', $order, [], $by);
         });
@@ -277,7 +273,7 @@ class Moves
         if (! $order->loaded_at) {
             return false;
         }
-        if (Asset::where('out_order_id', $order->id)->where('status', Asset::OUT)->exists()) {
+        if (Asset::where('out_order_id', $order->id)->where('status', Asset::OUT)->whereIn('id', $order->assets()->pluck('asset_id'))->exists()) {
             return false;
         }
 
@@ -298,7 +294,7 @@ class Moves
      */
     public static function closeReturn(Order $order, User $by): int
     {
-        if (Asset::where('out_order_id', $order->id)->where('status', Asset::OUT)->exists()) {
+        if (Asset::where('out_order_id', $order->id)->where('status', Asset::OUT)->whereIn('id', $order->assets()->pluck('asset_id'))->exists()) {
             throw ValidationException::withMessages(['code' => __('warehouse.errors.serial_still_out')]);
         }
 

@@ -193,6 +193,7 @@ return [
         'carrier_picked_already' => ':carrier est déjà préparé pour :order.',
         'carrier_not_on_order' => ':carrier contient des pièces qui ne sont pas sur :order : :codes. Sortez-les d’abord.',
         'carrier_not_out_with' => ':carrier n’est pas sorti avec :order.',
+        'carrier_in_carrier' => 'Un case ne peut pas aller dans un autre case.',
     ],
     'zone_names' => [
         'INBOUND' => 'Inbound',
@@ -462,6 +463,7 @@ return [
     ],
     'carriers' => [
         'kinds' => ['dolly' => 'Dolly lumière', 'box' => 'Caisse de rangement'],
+        'contents' => 'Contient',
         'packed' => ':code est dans :carrier. Scannez d’autres pièces à ajouter, ou un emplacement pour le déplacer.',
         'moved' => '{0} :carrier (vide) est maintenant à :place.|{1} :carrier avec 1 pièce est maintenant à :place.|[2,*] :carrier avec :n pièces est maintenant à :place.',
         'taken_out' => ':code est sorti du dolly/de la caisse.',

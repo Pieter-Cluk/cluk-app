@@ -2,19 +2,19 @@
     @if ($carrier)
         <section class="ph-card ph-pending">
             <small class="ph-step">{{ __('warehouse.carriers.step') }}</small>
-            <b>{{ $carrier->label() }}</b>
+            <b>{{ $carrier->item->name }} · {{ $carrier->code }}</b>
             <small>{{ __('warehouse.scan.now', ['place' => \App\Services\Warehouse\Moves::label($carrier->location)]) }}@if ($carrier->outOrder) · {{ __('warehouse.carriers.with_order', ['order' => $carrier->outOrder->number]) }}@endif</small>
-            @if ($carrier->assets->isEmpty())
+            @if ($carrier->packed->isEmpty())
                 <p class="muted">{{ __('warehouse.carriers.empty') }}</p>
             @else
                 <ul class="ph-list">
-                    @foreach ($carrier->assets as $a)
+                    @foreach ($carrier->packed as $a)
                         <li><b>{{ $a->code }}</b> {{ $a->item->name }}
                             @unless ($carrier->out_order_id)<form method="post" action="{{ route('w.carrier.out', $a) }}" class="ph-inline">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.carriers.take_out') }}</button></form>@endunless</li>
                     @endforeach
                 </ul>
             @endif
-            <small>{{ trans_choice('warehouse.carriers.count', $carrier->assets->count(), ['n' => $carrier->assets->count()]) }}</small>
+            <small>{{ trans_choice('warehouse.carriers.count', $carrier->packed->count(), ['n' => $carrier->packed->count()]) }}</small>
             <form method="post" action="{{ route('w.scan.cancel') }}">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.carriers.close') }}</button></form>
         </section>
     @elseif ($pending)
@@ -35,7 +35,7 @@
         <section class="ph-card">
             <b>{{ $here['label'] }}</b> <small class="muted">{{ $here['code'] }}</small>
             @foreach ($here['carriers'] as $c)
-                <p><b>{{ $c->label() }}</b> <small class="muted">· {{ trans_choice('warehouse.carriers.count', $c->assets_count, ['n' => $c->assets_count]) }}</small></p>
+                <p><b>{{ $c->item->name }} · {{ $c->code }}</b> <small class="muted">· {{ trans_choice('warehouse.carriers.count', $c->packed_count, ['n' => $c->packed_count]) }}</small></p>
             @endforeach
             @if ($here['assets']->isEmpty() && $here['carriers']->isEmpty())
                 <p class="muted">{{ __('warehouse.scan.empty_place') }}</p>

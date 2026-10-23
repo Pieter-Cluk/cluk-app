@@ -16,7 +16,8 @@
             <section class="card">
                 <h2>{{ __('equipment.details') }}</h2>
                 <dl class="facts">
-                    <dt>{{ __('equipment.fields.location') }}</dt><dd>{{ $asset->location ? \App\Services\Warehouse\Moves::label($asset->location).($asset->location !== \App\Services\Warehouse\Moves::label($asset->location) ? ' · '.$asset->location : '') : '—' }}@if ($asset->outOrder) · {{ $asset->outOrder->number }}@endif @if ($asset->carrier) · {{ __('warehouse.carriers.in_it', ['carrier' => $asset->carrier->code]) }}@endif</dd>
+                    <dt>{{ __('equipment.fields.location') }}</dt><dd>{{ $asset->location ? \App\Services\Warehouse\Moves::label($asset->location).($asset->location !== \App\Services\Warehouse\Moves::label($asset->location) ? ' · '.$asset->location : '') : '—' }}@if ($asset->outOrder) · {{ $asset->outOrder->number }}@endif @if ($asset->container) · {{ __('warehouse.carriers.in_it', ['carrier' => $asset->container->code]) }}@endif</dd>
+                    @if ($asset->isContainer())<dt>{{ __('warehouse.carriers.contents') }}</dt><dd>{{ $asset->packed->isEmpty() ? __('warehouse.carriers.empty') : $asset->packed->pluck('code')->implode(', ') }}</dd>@endif
                     <dt>{{ __('equipment.fields.purchase_date') }}</dt><dd>{{ $asset->purchase_date?->format('d/m/Y') ?? '—' }}</dd>
                     @if ($canMoney)
                         <dt>{{ __('equipment.fields.purchase_price') }}</dt><dd>{{ $asset->purchase_price_cents !== null ? $eur($asset->purchase_price_cents) : '—' }}</dd>

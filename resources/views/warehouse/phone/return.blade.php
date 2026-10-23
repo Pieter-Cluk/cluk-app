@@ -13,8 +13,8 @@
     @if ($retCarrier)
         <section class="ph-card ph-pending">
             <small class="ph-step">{{ __('warehouse.carriers.ret_step') }}</small>
-            <b>{{ $retCarrier->label() }}</b>
-            <small>{{ trans_choice('warehouse.carriers.count', $retCarrier->assets_count, ['n' => $retCarrier->assets_count]) }}</small>
+            <b>{{ $retCarrier->item->name }} · {{ $retCarrier->code }}</b>
+            <small>{{ trans_choice('warehouse.carriers.count', $retCarrier->packed_count, ['n' => $retCarrier->packed_count]) }}</small>
             <form method="post" action="{{ route('w.return.carrier_done', $order) }}">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.carriers.ret_done') }}</button></form>
         </section>
     @endif

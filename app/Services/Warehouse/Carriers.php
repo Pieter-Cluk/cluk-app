@@ -5,7 +5,6 @@ namespace App\Services\Warehouse;
 use App\Models\Equipment\Asset;
 use App\Models\Rental\Order;
 use App\Models\User;
-use App\Models\Warehouse\Carrier;
 use App\Models\Warehouse\Move;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
@@ -13,9 +12,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Light dollies and storage boxes: put pieces in, move the whole dolly with one
- * scan, pick it for an order (it goes with the customer at no charge) and scan
- * it back in at the return. A piece moved or picked on its own leaves its dolly.
+ * Cases (light dollies, storage boxes, flight cases…): pieces of a dry-hire item of the
+ * kind "case". Put pieces in, move the whole case with one scan, pick it for an order
+ * (a case that is not on the order goes with it at no charge) and, at the return, scan
+ * the case and then every piece that goes in it. A piece moved or picked on its own
+ * leaves its case.
  */
 class Carriers
 {
@@ -24,14 +25,23 @@ class Carriers
         throw ValidationException::withMessages(['code' => __('warehouse.errors.'.$key, $r)]);
     }
 
-    /** Put a piece in a dolly or box. It takes the place of the dolly (when the dolly has one). */
-    public static function pack(Asset $asset, Carrier $carrier, User $by): void
+    /** Is this case with a customer (out with or picked for an order)? */
+    private static function away(Asset $case): bool
     {
-        $r = ['code' => $asset->code, 'carrier' => $carrier->code];
-        if ($carrier->out_order_id) {
-            self::fail('carrier_out', $r + ['order' => $carrier->outOrder?->number ?? '—']);
+        return (bool) $case->out_order_id;
+    }
+
+    /** Put a piece in a case. It takes the place of the case (when the case has one). */
+    public static function pack(Asset $asset, Asset $case, User $by): void
+    {
+        $r = ['code' => $asset->code, 'carrier' => $case->code];
+        if (self::away($case)) {
+            self::fail('carrier_out', $r + ['order' => $case->outOrder?->number ?? '—']);
         }
-        if ($asset->carrier_id === $carrier->id) {
+        if ($asset->isContainer()) {
+            self::fail('carrier_in_carrier', $r);
+        }
+        if ($asset->case_id === $case->id) {
             self::fail('carrier_already', $r);
         }
         if ($asset->status === Asset::RETIRED) {
@@ -40,106 +50,126 @@ class Carriers
         if ($asset->status !== Asset::AVAILABLE || $asset->out_order_id) {
             self::fail('carrier_store_first', $r);
         }
-        DB::transaction(function () use ($asset, $carrier, $by) {
+        DB::transaction(function () use ($asset, $case, $by) {
             $from = $asset->location;
-            $asset->update(['carrier_id' => $carrier->id, 'location' => $carrier->location ?? $asset->location]);
-            Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $from, 'to_code' => $carrier->code, 'kind' => 'pack', 'user_id' => $by->id, 'carrier_id' => $carrier->id]);
+            $asset->update(['case_id' => $case->id, 'location' => $case->location ?? $asset->location]);
+            Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $from, 'to_code' => $case->code, 'kind' => 'pack', 'user_id' => $by->id, 'case_id' => $case->id]);
         });
     }
 
-    /** Take a piece out of its dolly or box (it stays where the dolly is). */
+    /** Take a piece out of its case (it stays where the case is). */
     public static function unpack(Asset $asset, User $by): void
     {
-        $carrier = $asset->carrier;
-        if (! $carrier) {
+        $case = $asset->container;
+        if (! $case) {
             return;
         }
-        if ($carrier->out_order_id) {
-            self::fail('carrier_out', ['carrier' => $carrier->code, 'order' => $carrier->outOrder?->number ?? '—']);
+        if (self::away($case)) {
+            self::fail('carrier_out', ['carrier' => $case->code, 'order' => $case->outOrder?->number ?? '—']);
         }
-        $asset->update(['carrier_id' => null]);
-        Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $carrier->code, 'to_code' => $asset->location, 'kind' => 'unpack', 'user_id' => $by->id, 'carrier_id' => $carrier->id]);
+        $asset->update(['case_id' => null]);
+        Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $case->code, 'to_code' => $asset->location, 'kind' => 'unpack', 'user_id' => $by->id, 'case_id' => $case->id]);
     }
 
-    /** Move a dolly or box with everything in it to a rack place (or a storage zone). Returns the number of pieces moved. */
-    public static function move(Carrier $carrier, Zone|Position $to, User $by): int
+    /** Move a case with everything in it to a rack place (or storage, inbound). Returns the number of pieces moved. */
+    public static function move(Asset $case, Zone|Position $to, User $by): int
     {
-        $r = ['carrier' => $carrier->code, 'place' => Moves::label($to->code)];
-        if ($carrier->out_order_id) {
-            self::fail('carrier_out', $r + ['order' => $carrier->outOrder?->number ?? '—']);
+        $r = ['carrier' => $case->code, 'place' => Moves::label($to->code)];
+        if (self::away($case)) {
+            self::fail('carrier_out', $r + ['order' => $case->outOrder?->number ?? '—']);
         }
-        if ($to instanceof Zone && $to->type !== 'storage' && $to->type !== 'inbound') {
+        if ($case->status !== Asset::AVAILABLE) {
+            self::fail('carrier_store_first', ['code' => $case->code]);
+        }
+        if ($to instanceof Zone && ! in_array($to->type, ['storage', 'inbound'], true)) {
             self::fail('carrier_to_rack', $r);
         }
         if ($to instanceof Position && ! in_array($to->use, ['rental', 'spare'], true)) {
             self::fail('not_rental_place', ['place' => $to->code]);
         }
-        $pieces = $carrier->assets()->with('item')->get()->reject(fn (Asset $a) => $a->location === $to->code);
+        $pieces = $case->packed()->with('item')->get()->reject(fn (Asset $a) => $a->location === $to->code);
         // Every piece must be allowed to go there; otherwise nothing moves and the crew sees why.
         foreach ($pieces as $a) {
             Moves::check($a, $to);
         }
 
-        return DB::transaction(function () use ($carrier, $to, $by, $pieces) {
+        return DB::transaction(function () use ($case, $to, $by, $pieces) {
             foreach ($pieces as $a) {
-                Moves::move($a, $to, $by, $carrier);
+                Moves::move($a, $to, $by, $case);
             }
-            $carrier->update(['location' => $to->code]);
+            $from = $case->location;
+            $case->update(['location' => $to->code]);
+            Move::create(['asset_id' => $case->id, 'item_id' => $case->item_id, 'from_code' => $from, 'to_code' => $to->code, 'kind' => 'move', 'user_id' => $by->id]);
 
             return $pieces->count();
         });
     }
 
     /**
-     * Pick a dolly or box for an order: every piece in it must be on the order; they are
-     * picked together and the dolly goes with the order (no charge). Returns the number of pieces picked.
+     * Pick a case for an order: every piece in it must be on the order; they are picked
+     * together. The case itself is picked when it is on the order, otherwise it goes
+     * with the order at no charge. Returns the number of pieces picked.
      */
-    public static function pick(Order $order, Carrier $carrier, User $by): int
+    public static function pick(Order $order, Asset $case, User $by): int
     {
-        $r = ['carrier' => $carrier->code, 'order' => $order->number];
-        if ($carrier->out_order_id === $order->id) {
+        $r = ['carrier' => $case->code, 'order' => $order->number];
+        if ($case->out_order_id === $order->id) {
             self::fail('carrier_picked_already', $r);
         }
-        if ($carrier->out_order_id) {
-            self::fail('carrier_out', $r + ['order' => $carrier->outOrder?->number ?? '—']);
+        if (self::away($case)) {
+            self::fail('carrier_out', $r + ['order' => $case->outOrder?->number ?? '—']);
         }
-        $pieces = $carrier->assets()->get();
         $onOrder = $order->assets()->pluck('asset_id')->all();
+        $pieces = $case->packed()->get();
         $strangers = $pieces->reject(fn (Asset $a) => in_array($a->id, $onOrder, true));
         if ($strangers->isNotEmpty()) {
             self::fail('carrier_not_on_order', $r + ['codes' => $strangers->pluck('code')->implode(', ')]);
         }
+        if ($case->status !== Asset::AVAILABLE) {
+            self::fail('not_rentable', ['code' => $case->code]);
+        }
         $dispatch = Zone::where('type', 'dispatch')->orderBy('sort')->firstOrFail();
 
-        return DB::transaction(function () use ($order, $carrier, $by, $pieces, $dispatch) {
+        return DB::transaction(function () use ($order, $case, $by, $pieces, $dispatch, $onOrder) {
             $n = 0;
             foreach ($pieces as $a) {
                 if ($a->location === $dispatch->code && $a->out_order_id === $order->id) {
-                    continue; // picked before it went in the dolly
+                    continue; // picked before it went in the case
                 }
-                Moves::pick($order, $a, $by, $carrier);
+                Moves::pick($order, $a, $by, $case);
                 $n++;
             }
-            $carrier->update(['location' => $dispatch->code, 'out_order_id' => $order->id]);
+            if (in_array($case->id, $onOrder, true)) {
+                Moves::pick($order, $case, $by);
+            } else {
+                $from = $case->location;
+                $case->update(['location' => $dispatch->code, 'out_order_id' => $order->id]);
+                Move::create(['asset_id' => $case->id, 'item_id' => $case->item_id, 'from_code' => $from, 'to_code' => $dispatch->code, 'kind' => 'pick', 'order_id' => $order->id, 'user_id' => $by->id]);
+            }
 
             return $n;
         });
     }
 
     /**
-     * Back from a job: the dolly or box comes in through Inbound, empty. What was in it is not
-     * trusted: every piece is scanned in on its own and goes in the dolly scanned before it
-     * (pieces may change dolly; what counts is that every piece is back).
+     * Back from a job: the case comes in through Inbound, empty. What was in it is not
+     * trusted: every piece is scanned in on its own and goes in the case scanned before it
+     * (pieces may change case; what counts is that every piece is back).
      */
-    public static function returnIn(Order $order, Carrier $carrier, User $by): void
+    public static function returnIn(Order $order, Asset $case, User $by): void
     {
-        if ($carrier->out_order_id !== $order->id) {
-            self::fail('carrier_not_out_with', ['carrier' => $carrier->code, 'order' => $order->number]);
+        if ($case->out_order_id !== $order->id || $case->status !== Asset::OUT) {
+            self::fail('carrier_not_out_with', ['carrier' => $case->code, 'order' => $order->number]);
         }
         $inbound = Zone::where('type', 'inbound')->where('active', true)->orderBy('sort')->firstOrFail();
-        DB::transaction(function () use ($carrier, $inbound) {
-            Asset::where('carrier_id', $carrier->id)->update(['carrier_id' => null]);
-            $carrier->update(['location' => $inbound->code, 'out_order_id' => null]);
+        DB::transaction(function () use ($order, $case, $by, $inbound) {
+            Asset::where('case_id', $case->id)->update(['case_id' => null]);
+            if ($order->assets()->where('asset_id', $case->id)->exists()) {
+                Moves::move($case, $inbound, $by); // a hired case goes the normal way: cleaning and the check
+            } else {
+                $case->update(['location' => $inbound->code, 'status' => Asset::AVAILABLE, 'out_order_id' => null]);
+                Move::create(['asset_id' => $case->id, 'item_id' => $case->item_id, 'from_code' => Moves::OUT, 'to_code' => $inbound->code, 'kind' => 'return', 'order_id' => $order->id, 'user_id' => $by->id]);
+            }
         });
     }
 }

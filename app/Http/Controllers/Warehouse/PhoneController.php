@@ -7,7 +7,6 @@ use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
 use App\Models\Rental\Order;
 use App\Models\Rental\OrderLine;
-use App\Models\Warehouse\Carrier;
 use App\Models\Warehouse\Check;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
@@ -49,12 +48,20 @@ class PhoneController extends Controller
         return $id ? Asset::with('item')->find($id) : null;
     }
 
-    /** The dolly or box that is "open": scanned pieces go in it, a scanned place moves it. */
-    private function openCarrier(Request $request): ?Carrier
+    /** The case (dolly, box…) that is "open": scanned pieces go in it, a scanned place moves it. */
+    private function openCarrier(Request $request): ?Asset
     {
         $id = $request->session()->get('w.carrier');
 
-        return $id ? Carrier::with('assets.item')->find($id) : null;
+        return $id ? Asset::with(['item', 'packed.item', 'outOrder'])->find($id) : null;
+    }
+
+    /** A case that is stored (not on its way through cleaning or the check) works as a dolly or box. */
+    private static function asCase(?array $found): ?Asset
+    {
+        $a = ($found['type'] ?? null) === 'asset' ? $found['model'] : null;
+
+        return $a && $a->isContainer() && ($a->status === Asset::AVAILABLE || $a->status === Asset::OUT) ? $a : null;
     }
 
     public function scan(Request $request): View
@@ -62,8 +69,8 @@ class PhoneController extends Controller
         $pending = $this->pending($request);
         $here = null;
         if ($code = $request->session()->get('w.here')) {
-            $here = ['code' => $code, 'label' => Moves::label($code), 'assets' => Asset::with('item')->where('location', $code)->whereNull('carrier_id')->orderBy('code')->limit(60)->get(),
-                'carriers' => Carrier::withCount('assets')->where('location', $code)->where('active', true)->orderBy('code')->get()];
+            $all = Asset::with('item')->withCount('packed')->where('location', $code)->whereNull('case_id')->orderBy('code')->limit(80)->get();
+            $here = ['code' => $code, 'label' => Moves::label($code), 'carriers' => $all->filter->isContainer()->values(), 'assets' => $all->reject->isContainer()->values()];
         }
         $next = [];
         if ($pending) {
@@ -85,8 +92,7 @@ class PhoneController extends Controller
         $request->session()->forget('w.here');
         $open = $this->openCarrier($request);
         // A dolly or box: put the waiting piece in it, or open it (scan pieces to fill it, a place to move it).
-        if ($found['type'] === 'carrier') {
-            $carrier = $found['model'];
+        if ($carrier = self::asCase($found)) {
             if ($pending = $this->pending($request)) {
                 Carriers::pack($pending, $carrier, $request->user());
                 $request->session()->forget('w.pending');
@@ -98,7 +104,7 @@ class PhoneController extends Controller
 
             return redirect()->route('w.scan');
         }
-        if ($found['type'] === 'asset' && $open) {
+        if ($found['type'] === 'asset' && $open && $open->id !== $found['model']->id) {
             Carriers::pack($found['model'], $open, $request->user());
 
             return redirect()->route('w.scan')->with('status', __('warehouse.carriers.packed', ['code' => $found['model']->code, 'carrier' => $open->code]));
@@ -182,8 +188,8 @@ class PhoneController extends Controller
     {
         abort_unless($order->status === 'approved' && ! $order->loaded_at, 409);
         $found = Moves::resolve((string) $request->validate(['code' => ['required', 'string', 'max:200']])['code']);
-        if (($found['type'] ?? null) === 'carrier') {
-            $n = Carriers::pick($order, $found['model'], $request->user());
+        if ($case = self::asCase($found)) {
+            $n = Carriers::pick($order, $case, $request->user());
 
             return back()->with('status', trans_choice('warehouse.carriers.picked', $n, ['n' => $n, 'carrier' => $found['model']->code]));
         }
@@ -226,14 +232,14 @@ class PhoneController extends Controller
         [$forOrder, $carrierId] = session('w.ret_carrier', [null, null]);
 
         return view('warehouse.phone.return', ['order' => $order->load('company'), 'lines' => Moves::pickLines($order),
-            'retCarrier' => $forOrder === $order->id ? Carrier::withCount('assets')->find($carrierId) : null]);
+            'retCarrier' => $forOrder === $order->id ? Asset::with('item')->withCount('packed')->find($carrierId) : null]);
     }
 
     public function returnScan(Request $request, Order $order): RedirectResponse
     {
         $found = Moves::resolve((string) $request->validate(['code' => ['required', 'string', 'max:200']])['code']);
-        if (($found['type'] ?? null) === 'carrier') {
-            Carriers::returnIn($order, $found['model'], $request->user());
+        if (($case = self::asCase($found)) && $case->out_order_id === $order->id && $case->status === Asset::OUT) {
+            Carriers::returnIn($order, $case, $request->user());
             $request->session()->put('w.ret_carrier', [$order->id, $found['model']->id]);
 
             return back()->with('status', __('warehouse.carriers.returned', ['carrier' => $found['model']->code]));
@@ -248,7 +254,7 @@ class PhoneController extends Controller
         $inbound = Zone::where('type', 'inbound')->where('active', true)->orderBy('sort')->firstOrFail();
         // The dolly or box scanned last for this return gets the piece.
         [$forOrder, $carrierId] = $request->session()->get('w.ret_carrier', [null, null]);
-        $into = $forOrder === $order->id ? Carrier::find($carrierId) : null;
+        $into = $forOrder === $order->id ? Asset::find($carrierId) : null;
         Moves::move($asset, $inbound, $request->user(), $into);
 
         return back()->with('status', __('warehouse.ret.in', ['code' => $asset->code, 'place' => $inbound->label()]).($into ? ' '.__('warehouse.carriers.in_it', ['carrier' => $into->code]) : ''));

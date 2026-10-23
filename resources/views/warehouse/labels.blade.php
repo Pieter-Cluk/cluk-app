@@ -59,13 +59,10 @@
                 <table class="table">
                     <thead><tr><th class="w-check"></th><th>{{ __('warehouse.labels.code') }}</th><th>{{ __('warehouse.labels.item') }}</th><th>{{ __('warehouse.labels.serial') }}</th><th>{{ __('warehouse.labels.printed') }}</th></tr></thead>
                     <tbody>
-                        @foreach ($carriers as $k)
-                            <tr><td><input type="checkbox" name="carriers[]" value="{{ $k->id }}" aria-label="{{ $k->code }}"></td><td><b>{{ $k->code }}</b></td><td>{{ __('warehouse.carriers.kinds.'.$k->kind) }}</td><td>—</td><td class="muted">—</td></tr>
-                        @endforeach
                         @forelse ($assets as $a)
                             <tr><td><input type="checkbox" name="ids[]" value="{{ $a->id }}" aria-label="{{ $a->code }}"></td><td><b>{{ $a->code }}</b></td><td>{{ $a->item?->name }}</td><td>{{ $a->serial_number ?: '—' }}</td><td class="muted">{{ $a->label_printed_at?->format('d/m/Y') ?? __('warehouse.labels.never') }}</td></tr>
                         @empty
-                            @if ($carriers->isEmpty())<tr><td colspan="5" class="muted">{{ __('warehouse.labels.none') }}</td></tr>@endif
+                            <tr><td colspan="5" class="muted">{{ __('warehouse.labels.none') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>
