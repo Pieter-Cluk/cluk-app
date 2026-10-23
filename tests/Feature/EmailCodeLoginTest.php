@@ -47,7 +47,7 @@ class EmailCodeLoginTest extends TestCase
         $u = $this->freelancer();
         $this->get('/login')->assertSee('Sign in with a code by email');
         // The example address shows as text, not as code.
-        $this->get('/login/code')->assertSee('placeholder="name@cluk.live"', false)->assertDontSee('EmailCodeLoginController');
+        $this->get('/login/code')->assertSee('placeholder="name@cluk.live"', false)->assertDontSee('EmailCodeLoginController')->assertSee('rel="apple-touch-icon"', false);
         $this->post('/login/code', ['email' => 'Jens@cluk.live'])->assertRedirect('/login/code');
         $this->get('/login/code')->assertSee('a code is on its way');
         $code = $this->codeFor($u);
