@@ -257,4 +257,16 @@ class UserController extends Controller
             ->reject(fn (User $m) => $user !== null && ($m->is($user) || $m->reportsToUser($user)))
             ->values();
     }
+
+    /** The person's door code (Net2). Only people with the right "See and change door codes"; every change is logged, the code itself never. */
+    public function doorCode(Request $request, User $user): RedirectResponse
+    {
+        $data = $request->validate(['door_code' => ['nullable', 'string', 'regex:/^[0-9 ]{4,12}$/']]);
+        $code = isset($data['door_code']) ? preg_replace('/\s+/', '', $data['door_code']) : null;
+        $had = filled($user->door_code);
+        $user->forceFill(['door_code' => $code ?: null])->save();
+        AuditLog::record($code ? ($had ? 'user.door_code_changed' : 'user.door_code_set') : 'user.door_code_removed', $user, [], $request->user());
+
+        return back()->with('status', __('users.door.saved'));
+    }
 }

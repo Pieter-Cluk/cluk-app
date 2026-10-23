@@ -104,6 +104,22 @@
                 @endif
             </section>
 
+            <section class="card">
+                <h2>{{ __('users.door.title') }}</h2>
+                @if ($me->hasRight('afrit6.door_codes'))
+                    <form method="post" action="{{ route('settings.users.door', $user) }}" class="inline-form">
+                        @csrf @method('put')
+                        <input name="door_code" inputmode="numeric" autocomplete="off" pattern="[0-9 ]{4,12}" value="{{ old('door_code', $user->door_code) }}" aria-label="{{ __('users.door.title') }}">
+                        <button class="btn" type="submit">{{ __('users.door.save') }}</button>
+                    </form>
+                    @error('door_code')<small class="txt-danger">{{ $message }}</small>@enderror
+                    <p class="muted small">{{ __('users.door.hint') }}</p>
+                @else
+                    <p>{{ $user->door_code ? __('users.door.set') : __('users.door.none') }}</p>
+                    <p class="muted small">{{ __('users.door.no_right') }}</p>
+                @endif
+            </section>
+
             @if ($user->directReports->isNotEmpty())
                 <section class="card">
                     <h2>{{ __('users.edit.direct_reports') }}</h2>

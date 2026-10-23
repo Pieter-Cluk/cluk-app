@@ -25,7 +25,7 @@ use Illuminate\Notifications\Notifiable;
     'phone', 'mobile', 'location', 'locale', 'status', 'is_commercial', 'email_login', 'code_email', 'role_id', 'reports_to_id',
     'theme', 'density', 'start_page', 'notify', 'daily_at', 'daily_sent_on', 'away_from', 'away_until', 'away_delegate_id',
 ])]
-#[Hidden(['password', 'remember_token'])]
+#[Hidden(['password', 'remember_token', 'door_code'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -39,6 +39,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'door_code' => 'encrypted',
             'last_seen_at' => 'datetime',
             'password' => 'hashed',
             'is_commercial' => 'boolean',

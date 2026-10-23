@@ -26,6 +26,11 @@
         </section>
 
         <section class="card">
+            <h2>{{ __('users.door.title') }}</h2>
+            @if ($u->door_code)<p class="door-code"><b>{{ $u->door_code }}</b></p><p class="muted small">{{ __('users.door.own_hint') }}</p>@else<p class="muted">{{ __('users.door.own_none') }}</p>@endif
+        </section>
+
+        <section class="card">
             <h2>{{ __('me.profile.access') }}</h2>
             <p class="muted">{{ __('me.profile.access_hint') }}</p>
             <div class="table-wrap">
