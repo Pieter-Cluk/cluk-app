@@ -55,6 +55,9 @@ use App\Services\Finance\PreInvoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// The public website (cluk.live, or /site as preview) comes first.
+require __DIR__.'/website.php';
+
 Route::get('/', fn (Request $request) => redirect($request->user('web')?->homeUrl() ?? '/dashboard'));
 
 // Website form → Incoming (token in the X-Intake-Token header).

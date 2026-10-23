@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 /** A request that came in (website form, email, social, WhatsApp, phone, visit) and still has to be handled. */
 #[Fillable([
-    'channel', 'subject', 'body', 'from_name', 'from_email', 'from_phone', 'company_name', 'module',
+    'channel', 'subject', 'body', 'payload', 'from_name', 'from_email', 'from_phone', 'company_name', 'module',
     'company_id', 'contact_id', 'status', 'deal_id', 'handled_by_id', 'handled_at', 'handled_note', 'received_at',
 ])]
 class IncomingMessage extends Model
@@ -23,7 +23,7 @@ class IncomingMessage extends Model
 
     protected function casts(): array
     {
-        return ['received_at' => 'datetime', 'handled_at' => 'datetime'];
+        return ['received_at' => 'datetime', 'handled_at' => 'datetime', 'payload' => 'array'];
     }
 
     public function company(): BelongsTo

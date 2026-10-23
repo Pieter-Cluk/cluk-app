@@ -61,6 +61,7 @@ jobs:
       - name: Build for production
         run: |
           composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-progress
+          bash deploy/fetch-fonts.sh || echo "::warning title=Fonts::website fonts could not be downloaded; the site uses the fallback fonts"
           echo "$GITHUB_SHA" > REVISION
           tar --exclude=.git --exclude=.github --exclude=tests --exclude=node_modules \
               --exclude='.env*' --exclude='storage/logs/*' -czf /tmp/build.tgz .
