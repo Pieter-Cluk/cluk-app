@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
+use App\Services\Warehouse\Carriers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 /** One piece: its card, editing, retiring and the QR labels. */
@@ -26,6 +28,20 @@ class AssetController extends Controller
             'canRetire' => $user->canUseModule('dryhire', 3) || $user->hasRight('warehouse.write_off'),
             'activity' => AuditLog::with('actor')->where('subject_type', $asset->getMorphClass())->where('subject_id', $asset->id)->latest('id')->limit(30)->get(),
         ]);
+    }
+
+    /** From the office: put this piece on a rack place or in a case; for a case, move it with its contents. */
+    public function place(Request $request, Asset $asset): RedirectResponse
+    {
+        $place = $request->validate(['place' => ['required', 'string', 'max:120']])['place'];
+        try {
+            $where = Carriers::place($asset->load('item'), $place, $request->user());
+        } catch (ValidationException $e) {
+            throw ValidationException::withMessages(['place' => $e->validator->errors()->first()]);
+        }
+        AuditLog::record('equipment.placed', $asset->item, ['codes' => $asset->code, 'place' => $where]);
+
+        return back()->with('status', trans_choice('equipment.place.done', 1, ['n' => 1, 'place' => $where]));
     }
 
     /** A scanned label of a counted item opens the item card. */

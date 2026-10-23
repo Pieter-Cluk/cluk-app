@@ -198,7 +198,9 @@ return [
         'carrier_not_out_with' => ':carrier no está fuera con :order.',
         'carrier_in_carrier' => 'Un case no puede ir dentro de otro case.',
         'carrier_not_in' => ':code no está en :carrier.',
-        'carrier_more_than_stock' => 'Solo hay :n de :code en stock: ya están todos en cases.',
+        'carrier_more_than_stock' => 'Hay :n de :code en stock: habría más en cajas y cases de los que tenemos.',
+        'office_not_a_case' => ':code no es una caja, dolly o case.',
+        'office_rack_only' => ':code va desde la oficina a un hueco o al almacén, no a :place.',
     ],
     'zone_names' => [
         'INBOUND' => 'Inbound',

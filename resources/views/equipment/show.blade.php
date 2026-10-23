@@ -19,6 +19,21 @@
         </div>
     </div>
     @include('partials.flash')
+    @if ($canEdit && ! $item->serial && $item->kind === 'item')
+        @php($inCases = \App\Models\Equipment\CaseItem::with('container')->where('item_id', $item->id)->where('qty', '>', 0)->get())
+        <section class="card">
+            <h2>{{ __('equipment.place.counted_title') }}</h2>
+            @if ($inCases->isNotEmpty())<p>{{ $inCases->map(fn ($c) => $c->qty.' × '.__('warehouse.carriers.in_it', ['carrier' => $c->container->code]))->implode(' · ') }} <span class="muted">· {{ trans_choice('warehouse.labels.in_stock', $item->stock_qty, ['n' => $item->stock_qty]) }}</span></p>@endif
+            <form method="post" action="{{ route('equipment.counted.place', $item) }}" class="inline-form">@csrf
+                <input type="number" name="qty" value="1" min="-10000" max="10000" style="width:6em" aria-label="{{ __('warehouse.labels.how_many') }}">
+                <input name="place" list="place-codes" placeholder="BOX-01" required aria-label="{{ __('equipment.place.title') }}" style="width:9em">
+                <button class="btn" type="submit">{{ __('equipment.place.counted_go') }}</button>
+            </form>
+            @error('place')<p class="txt-danger small">{{ $message }}</p>@enderror
+            <p class="muted small">{{ __('equipment.place.counted_hint') }}</p>
+        </section>
+    @endif
+    <datalist id="place-codes">@foreach (\App\Models\Equipment\Asset::whereHas('item', fn ($q) => $q->where('kind', 'case'))->where('status', '!=', 'retired')->orderBy('code')->pluck('code') as $c)<option value="{{ $c }}">@endforeach</datalist>
     @if ($codes = session('print'))
         <div class="flash flash-ok"><a href="{{ route('equipment.labels', ['codes' => implode(',', $codes)]) }}" target="_blank" rel="noopener">{{ trans_choice('equipment.print_new', count($codes), ['count' => count($codes)]) }} →</a></div>
     @endif
@@ -85,14 +100,18 @@
 
             @if ($item->serial)
                 <section class="card card-flush">
-                    <form method="get" action="{{ route('equipment.labels') }}" target="_blank" class="lbl-pick">
+                    <form method="post" action="{{ route('equipment.assets.place', $item) }}" class="lbl-pick">@csrf
                     <div class="bill-head lbl-bar"><b>{{ __('equipment.assets') }}</b> <span class="muted">· {{ $item->assets->count() }}</span>
                         @if ($canEdit && $item->assets->isNotEmpty())
                             <label class="check"><input type="checkbox" data-all><span>{{ __('warehouse.labels.select_all') }}</span></label>
                             <span class="muted" data-count>0</span>
-                            <button class="btn" type="submit" data-print disabled>{{ __('warehouse.labels.print') }}</button>
+                            <button class="btn" type="submit" data-print disabled formaction="{{ route('equipment.labels') }}" formmethod="get" formtarget="_blank"
+                                onclick="var t = this.form.querySelector('[name=_token]'); t.disabled = true; setTimeout(function () { t.disabled = false; }, 500);">{{ __('warehouse.labels.print') }}</button>
+                            <span class="inline-form"><input name="place" list="place-codes" placeholder="{{ __('equipment.place.placeholder') }}" aria-label="{{ __('equipment.place.title') }}" style="width:11em">
+                                <button class="btn" type="submit" data-print disabled>{{ __('equipment.place.go') }}</button></span>
                         @endif
                     </div>
+                    @error('place')<p class="flash flash-err">{{ $message }}</p>@enderror
                     <div class="table-wrap">
                         <table class="table">
                             <thead><tr>@if ($canEdit)<th class="w-check"></th>@endif<th>{{ __('equipment.fields.code') }}</th><th>{{ __('equipment.fields.serial_number') }}</th><th>{{ __('equipment.fields.status') }}</th><th>{{ __('equipment.fields.location') }}</th><th>{{ __('equipment.label') }}</th></tr></thead>
@@ -103,7 +122,7 @@
                                         <td><a href="{{ route('equipment.assets.show', $a) }}"><b>{{ $a->code }}</b></a></td>
                                         <td>{{ $a->serial_number ?? '—' }}</td>
                                         <td><span @class(['pill', 'pill-ok' => $a->status === 'available', 'pill-info' => $a->status === 'out', 'pill-warn' => $a->status === 'repair', 'pill-off' => in_array($a->status, ['retired', 'label'], true)])>{{ __('equipment.statuses.'.$a->status) }}</span></td>
-                                        <td>{{ $a->location ?? '—' }}</td>
+                                        <td>{{ $a->location ?? '—' }}@if ($a->case_id) <small class="muted">· {{ __('warehouse.carriers.in_it', ['carrier' => $a->container?->code]) }}</small>@endif</td>
                                         <td class="muted small">{{ $a->label_printed_at ? $a->label_printed_at->format('d/m/Y') : __('equipment.not_printed') }}</td>
                                     </tr>
                                 @empty
@@ -113,6 +132,7 @@
                         </table>
                     </div>
                     </form>
+                    @if ($canEdit)<p class="muted small pad">{{ __('equipment.place.hint') }}</p>@endif
                     @if ($canEdit)
                         <form method="post" action="{{ route('equipment.assets.store', $item) }}" class="form-grid pad">
                             @csrf
@@ -193,12 +213,12 @@
     </div>
     <script>
         document.querySelectorAll('.lbl-pick').forEach(function (f) {
-            var boxes = f.querySelectorAll('tbody input[type=checkbox]'), all = f.querySelector('[data-all]'), count = f.querySelector('[data-count]'), btn = f.querySelector('[data-print]');
+            var boxes = f.querySelectorAll('tbody input[type=checkbox]'), all = f.querySelector('[data-all]'), count = f.querySelector('[data-count]'), btns = f.querySelectorAll('[data-print]');
             if (!all) return;
             function update() {
                 var n = f.querySelectorAll('tbody input:checked').length;
                 count.textContent = @js(__('warehouse.labels.selected')).replace(':n', n);
-                btn.disabled = n === 0;
+                btns.forEach(function (b) { b.disabled = n === 0; });
                 all.checked = n > 0 && n === boxes.length;
             }
             all.addEventListener('change', function () { boxes.forEach(function (b) { b.checked = all.checked; }); update(); });

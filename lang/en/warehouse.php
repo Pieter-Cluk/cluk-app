@@ -198,7 +198,9 @@ return [
         'carrier_not_out_with' => ':carrier is not out with :order.',
         'carrier_in_carrier' => 'A case cannot go in another case.',
         'carrier_not_in' => ':code is not in :carrier.',
-        'carrier_more_than_stock' => 'There are only :n of :code in stock: all of them are in cases already.',
+        'carrier_more_than_stock' => 'There are :n of :code in stock: that would put more in boxes and cases than we have.',
+        'office_not_a_case' => ':code is not a box, dolly or case.',
+        'office_rack_only' => ':code goes to a rack place or storage from the office, not to :place.',
     ],
     'zone_names' => [
         'INBOUND' => 'Inbound',

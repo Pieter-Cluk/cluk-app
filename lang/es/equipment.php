@@ -197,4 +197,16 @@ return [
         'how_many' => 'Cuántas etiquetas',
         'go' => 'Crear e imprimir las etiquetas',
     ],
+    'place' => [
+        'title' => '¿Dónde está?',
+        'placeholder' => 'GA1B1 o BOX-01',
+        'go' => 'Ponerlo ahí',
+        'hint' => 'Un hueco (p. ej. GA1B1) pone ahí las piezas marcadas. Un código de caja, dolly o case (p. ej. BOX-01) las mete dentro: lo siguen cuando se mueve. No hace falta escanear.',
+        'case_hint' => 'Un hueco mueve este case ahí, con todo su contenido.',
+        'done' => '{1} 1 pieza está ahora en :place.|[2,*] :n piezas están ahora en :place.',
+        'counted_title' => 'En cajas y cases',
+        'counted_go' => 'Meter',
+        'counted_hint' => 'Escribe cuántas y el código de la caja/case (un menos las saca). Nunca más en cajas que en stock.',
+        'counted_done' => 'Ahora :n en :case.',
+    ],
 ];

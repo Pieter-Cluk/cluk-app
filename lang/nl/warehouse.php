@@ -198,7 +198,9 @@ return [
         'carrier_not_out_with' => ':carrier is niet weg met :order.',
         'carrier_in_carrier' => 'Een case kan niet in een andere case.',
         'carrier_not_in' => ':code zit niet in :carrier.',
-        'carrier_more_than_stock' => 'Er zijn maar :n van :code in voorraad: die zitten allemaal al in cases.',
+        'carrier_more_than_stock' => 'Er zijn :n van :code in voorraad: zo zouden er meer in boxen en cases zitten dan we hebben.',
+        'office_not_a_case' => ':code is geen box, dolly of case.',
+        'office_rack_only' => ':code gaat vanuit het kantoor naar een rekplaats of opslag, niet naar :place.',
     ],
     'zone_names' => [
         'INBOUND' => 'Inbound',

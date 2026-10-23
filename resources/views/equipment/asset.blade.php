@@ -33,7 +33,15 @@
 
             @if ($canEdit && ! $retired)
                 <section class="card">
-                    <h2>{{ __('equipment.edit_asset') }}</h2>
+                    <h2>{{ __('equipment.place.title') }}</h2>
+                    <form method="post" action="{{ route('equipment.assets.place_one', $asset) }}" class="inline-form">@csrf
+                        <input name="place" list="place-codes" required placeholder="{{ __('equipment.place.placeholder') }}" aria-label="{{ __('equipment.place.title') }}">
+                        <button class="btn" type="submit">{{ __('equipment.place.go') }}</button>
+                    </form>
+                    @error('place')<p class="txt-danger small">{{ $message }}</p>@enderror
+                    <datalist id="place-codes">@foreach (\App\Models\Equipment\Asset::whereHas('item', fn ($q) => $q->where('kind', 'case'))->where('status', '!=', 'retired')->where('id', '!=', $asset->id)->orderBy('code')->pluck('code') as $c)<option value="{{ $c }}">@endforeach</datalist>
+                    <p class="muted small">{{ $asset->isContainer() ? __('equipment.place.case_hint') : __('equipment.place.hint') }}</p>
+                    <h2 class="mt">{{ __('equipment.edit_asset') }}</h2>
                     <form method="post" action="{{ route('equipment.assets.update', $asset) }}" class="form-grid">
                         @csrf @method('PUT')
                         <label class="field"><span>{{ __('equipment.fields.serial_number') }}</span><input name="serial_number" maxlength="80" value="{{ old('serial_number', $asset->serial_number) }}"></label>

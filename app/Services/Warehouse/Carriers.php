@@ -59,7 +59,7 @@ class Carriers
         });
     }
 
-    /** One more (+1) or one less (−1) of a counted item in a case. Never more in cases than in stock. */
+    /** More (+n) or less (−n) of a counted item in a case. Never more in cases than in stock. */
     public static function packCount(Item $item, Asset $case, int $delta, User $by): int
     {
         $r = ['code' => $item->type ?: $item->name, 'carrier' => $case->code];
@@ -212,5 +212,48 @@ class Carriers
                 Move::create(['asset_id' => $case->id, 'item_id' => $case->item_id, 'from_code' => Moves::OUT, 'to_code' => $inbound->code, 'kind' => 'return', 'order_id' => $order->id, 'user_id' => $by->id]);
             }
         });
+    }
+
+    /**
+     * From the office: put a piece where it is (no scanning). The code is a rack place
+     * or storage (the piece goes there) or a case (it goes in and follows the case).
+     * For a case itself: the case moves there with everything in it. Returns where it is now.
+     */
+    public static function place(Asset $piece, string $code, User $by): string
+    {
+        $found = Moves::resolve($code);
+        $target = $found['model'] ?? null;
+        if (! $target || ($found['type'] ?? null) === 'item') {
+            self::fail('unknown', ['code' => mb_strimwidth($code, 0, 40, '…')]);
+        }
+        if ($target instanceof Asset) {
+            if (! $target->isContainer()) {
+                self::fail('office_not_a_case', ['code' => $target->code]);
+            }
+            self::pack($piece, $target, $by);
+
+            return $target->code;
+        }
+        if ($piece->isContainer()) {
+            self::move($piece, $target, $by);
+
+            return $target->code;
+        }
+        if ($piece->status !== Asset::AVAILABLE || $piece->out_order_id) {
+            self::fail('carrier_store_first', ['code' => $piece->code]);
+        }
+        if ($target instanceof Zone && $target->type !== 'storage') {
+            self::fail('office_rack_only', ['code' => $piece->code, 'place' => Moves::label($target->code)]);
+        }
+        if ($target instanceof Position && ! in_array($target->use, ['rental', 'spare'], true)) {
+            self::fail('not_rental_place', ['place' => $target->code]);
+        }
+        DB::transaction(function () use ($piece, $target, $by) {
+            $from = $piece->location;
+            $piece->update(['location' => $target->code, 'case_id' => null]);
+            Move::create(['asset_id' => $piece->id, 'item_id' => $piece->item_id, 'from_code' => $from, 'to_code' => $target->code, 'kind' => 'move', 'user_id' => $by->id, 'note' => 'office']);
+        });
+
+        return $target->code;
     }
 }

@@ -11,6 +11,8 @@ use App\Models\Product\Category;
 use App\Models\Product\Subcategory;
 use App\Models\Product\Tag;
 use App\Services\Products\Classification;
+use App\Services\Warehouse\Carriers;
+use App\Services\Warehouse\Moves;
 use App\Support\Images;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -326,6 +328,51 @@ class ItemController extends Controller
         AuditLog::record('equipment.labels_reserved', $item, ['count' => $count, 'codes' => $codes[0].($count > 1 ? ' – '.end($codes) : '')]);
 
         return redirect()->route('equipment.show', $item)->with('status', trans_choice('equipment.flash.labels_reserved', $count, ['count' => $count]))->with('print', $codes);
+    }
+
+    /** From the office: put the ticked pieces on a rack place or in a case (they follow the case). */
+    public function placePieces(Request $request, Item $item): RedirectResponse
+    {
+        $d = $request->validate(['assets' => ['required', 'array', 'max:500'], 'assets.*' => ['integer'], 'place' => ['required', 'string', 'max:120']]);
+        $done = [];
+        $errors = [];
+        foreach ($item->assets()->with('item')->whereIn('id', $d['assets'])->orderBy('code')->get() as $a) {
+            try {
+                $where = Carriers::place($a, $d['place'], $request->user());
+                $done[] = $a->code;
+            } catch (ValidationException $e) {
+                $errors[] = $e->validator->errors()->first();
+            }
+        }
+        if ($done) {
+            AuditLog::record('equipment.placed', $item, ['codes' => implode(', ', $done), 'place' => $where]);
+        }
+        $back = redirect()->route('equipment.show', $item);
+        if ($done) {
+            $back->with('status', trans_choice('equipment.place.done', count($done), ['n' => count($done), 'place' => $where]));
+        }
+
+        return $errors ? $back->withErrors(['place' => implode(' ', array_unique($errors))]) : $back;
+    }
+
+    /** From the office: put a number of a counted item in a case (or take them out with a minus). */
+    public function placeCounted(Request $request, Item $item): RedirectResponse
+    {
+        abort_if($item->serial, 404);
+        $d = $request->validate(['qty' => ['required', 'integer', 'between:-10000,10000', 'not_in:0'], 'place' => ['required', 'string', 'max:120']]);
+        $found = Moves::resolve($d['place']);
+        $case = ($found['type'] ?? null) === 'asset' && $found['model']->isContainer() ? $found['model'] : null;
+        if (! $case) {
+            throw ValidationException::withMessages(['place' => __('warehouse.errors.office_not_a_case', ['code' => mb_strimwidth($d['place'], 0, 40, '…')])]);
+        }
+        try {
+            $n = Carriers::packCount($item, $case, (int) $d['qty'], $request->user());
+        } catch (ValidationException $e) {
+            throw ValidationException::withMessages(['place' => $e->validator->errors()->first()]);
+        }
+        AuditLog::record('equipment.placed', $item, ['codes' => $d['qty'].' × '.$item->number, 'place' => $case->code]);
+
+        return redirect()->route('equipment.show', $item)->with('status', __('equipment.place.counted_done', ['n' => $n, 'case' => $case->code]));
     }
 
     public function photo(Item $item): Response

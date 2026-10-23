@@ -197,4 +197,16 @@ return [
         'how_many' => 'How many labels',
         'go' => 'Make and print the labels',
     ],
+    'place' => [
+        'title' => 'Where is it?',
+        'placeholder' => 'GA1B1 or BOX-01',
+        'go' => 'Put it there',
+        'hint' => 'A rack place (e.g. GA1B1) puts the ticked pieces there. A box, dolly or case code (e.g. BOX-01) puts them in it: they then follow it when it moves. No scanning needed.',
+        'case_hint' => 'A rack place moves this case there, with everything in it.',
+        'done' => '{1} 1 piece is now in :place.|[2,*] :n pieces are now in :place.',
+        'counted_title' => 'In boxes and cases',
+        'counted_go' => 'Put in',
+        'counted_hint' => 'Type how many and the box/case code (a minus takes them out). Never more in boxes than in stock.',
+        'counted_done' => 'Now :n in :case.',
+    ],
 ];

@@ -246,4 +246,32 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame(1, $line->fresh()->returned_qty);
         $this->assertSame(1, self::case('BOX-01')->counted()->value('qty'));
     }
+
+    public function test_prep_from_the_office_without_scanning(): void
+    {
+        [$p] = $this->job();
+        $admin = User::factory()->create(['role_id' => Role::where('slug', 'admin')->value('id'), 'locale' => 'en']);
+        $item = $p[1]->item;
+        $this->actingAs($admin)->get(route('equipment.show', $item))->assertOk()->assertSee('Put it there')->assertSee('<option value="BOX-02">', false);
+        // Tick two pieces and put them in a box; then put the box on a rack: they follow.
+        $this->actingAs($admin)->post(route('equipment.assets.place', $item), ['assets' => [$p[1]->id, $p[2]->id], 'place' => 'BOX-02'])->assertSessionHasNoErrors();
+        $this->assertSame([self::case('BOX-02')->id, self::case('BOX-02')->id], [$p[1]->fresh()->case_id, $p[2]->fresh()->case_id]);
+        $this->actingAs($admin)->post(route('equipment.assets.place_one', self::case('BOX-02')), ['place' => 'GA3B2'])->assertSessionHasNoErrors();
+        $this->assertSame(['GA3B2', 'GA3B2'], [$p[1]->fresh()->location, $p[2]->fresh()->location]);
+        // A piece straight onto a rack place (out of its box); not to cleaning.
+        $this->actingAs($admin)->post(route('equipment.assets.place_one', $p[2]), ['place' => 'GA1B2'])->assertSessionHasNoErrors();
+        $this->actingAs($admin)->post(route('equipment.assets.place_one', $p[3]), ['place' => 'PRE-LIGHT'])->assertSessionHasErrors('place');
+        $this->assertSame(['GA1B2', null], [$p[2]->fresh()->location, $p[2]->fresh()->case_id]);
+        $this->actingAs($admin)->post(route('equipment.assets.place', $item), ['assets' => [$p[3]->id], 'place' => 'CLEAN'])->assertSessionHasErrors('place');
+        $this->actingAs($admin)->post(route('equipment.assets.place', $item), ['assets' => [$p[3]->id], 'place' => 'LT-0002'])->assertSessionHasErrors('place');
+
+        // Counted: put 12 in a box from the office, never more than in stock.
+        $barndoor = Item::create(['number' => 'LIGACCELASOLIBARNDOOR', 'kind' => 'item', 'name' => 'Elation Sol I Barndoor', 'type' => 'Sol I Barndoor', 'serial' => false, 'stock_qty' => 20]);
+        $this->actingAs($admin)->get(route('equipment.show', $barndoor))->assertOk()->assertSee('In boxes and cases');
+        $this->actingAs($admin)->post(route('equipment.counted.place', $barndoor), ['qty' => 12, 'place' => 'BOX-04'])->assertSessionHasNoErrors();
+        $this->actingAs($admin)->post(route('equipment.counted.place', $barndoor), ['qty' => 9, 'place' => 'BOX-05'])->assertSessionHasErrors('place');
+        $this->actingAs($admin)->post(route('equipment.counted.place', $barndoor), ['qty' => -2, 'place' => 'BOX-04'])->assertSessionHasNoErrors();
+        $this->assertSame(10, self::case('BOX-04')->counted()->value('qty'));
+        $this->actingAs($admin)->get(route('equipment.show', $barndoor))->assertSee('10 × in BOX-04');
+    }
 }

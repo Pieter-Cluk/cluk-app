@@ -323,10 +323,13 @@ Route::middleware('auth:web')->group(function () {
             Route::delete('/items/{item}/components/{child}', [ItemController::class, 'removeComponent'])->whereNumber(['item', 'child'])->name('equipment.components.destroy');
             Route::post('/items/{item}/assets', [ItemController::class, 'addAssets'])->whereNumber('item')->name('equipment.assets.store');
             Route::post('/items/{item}/labels', [ItemController::class, 'reserveLabels'])->whereNumber('item')->name('equipment.assets.reserve');
+            Route::post('/items/{item}/place', [ItemController::class, 'placePieces'])->whereNumber('item')->name('equipment.assets.place');
+            Route::post('/items/{item}/place-counted', [ItemController::class, 'placeCounted'])->whereNumber('item')->name('equipment.counted.place');
             Route::post('/items/{item}/photos', [PictureController::class, 'storeItemPhotos'])->whereNumber('item')->name('equipment.photos.store');
             Route::post('/items/{item}/photos/{photo}/main', [PictureController::class, 'mainItemPhoto'])->whereNumber(['item', 'photo'])->name('equipment.photos.main');
             Route::delete('/items/{item}/photos/{photo}', [PictureController::class, 'destroyItemPhoto'])->whereNumber(['item', 'photo'])->name('equipment.photos.destroy');
             Route::put('/assets/{asset}', [AssetController::class, 'update'])->whereNumber('asset')->name('equipment.assets.update');
+            Route::post('/assets/{asset}/place', [AssetController::class, 'place'])->whereNumber('asset')->name('equipment.assets.place_one');
             Route::get('/labels', [AssetController::class, 'labels'])->name('equipment.labels');
             Route::get('/photos-found', [PhotoSuggestionController::class, 'index'])->name('equipment.photos.found');
             Route::get('/photos-found/{suggestion}/{i}', [PhotoSuggestionController::class, 'image'])->whereNumber(['suggestion', 'i'])->name('equipment.photos.found.image');

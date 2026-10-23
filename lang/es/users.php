@@ -241,6 +241,7 @@ return [
             'user_door_code_changed' => 'Código de puerta cambiado',
             'user_door_code_removed' => 'Código de puerta quitado',
             'equipment_labels_reserved' => 'Etiquetas impresas para piezas por encontrar',
+            'equipment_placed' => 'Piezas colocadas (oficina)',
             'equipment_photo_approved' => 'Foto de producto elegida de la web',
             'user_instructions_sent' => 'Instrucciones de acceso enviadas',
             'messages_created' => 'Mensaje creado',

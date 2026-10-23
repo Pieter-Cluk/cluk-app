@@ -197,4 +197,16 @@ return [
         'how_many' => 'Combien d’étiquettes',
         'go' => 'Créer et imprimer les étiquettes',
     ],
+    'place' => [
+        'title' => 'Où est-ce ?',
+        'placeholder' => 'GA1B1 ou BOX-01',
+        'go' => 'Le mettre là',
+        'hint' => 'Un emplacement (p. ex. GA1B1) y met les pièces cochées. Un code de caisse, dolly ou case (p. ex. BOX-01) les met dedans : elles le suivent quand il bouge. Pas besoin de scanner.',
+        'case_hint' => 'Un emplacement y déplace ce case, avec tout son contenu.',
+        'done' => '{1} 1 pièce est maintenant à :place.|[2,*] :n pièces sont maintenant à :place.',
+        'counted_title' => 'Dans des caisses et cases',
+        'counted_go' => 'Mettre dedans',
+        'counted_hint' => 'Indiquez combien et le code de la caisse/du case (un moins les sort). Jamais plus dans les caisses qu’en stock.',
+        'counted_done' => 'Maintenant :n dans :case.',
+    ],
 ];
