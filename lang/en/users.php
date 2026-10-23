@@ -223,6 +223,8 @@ return [
             'products_brand_saved' => 'Brand changed',
             'products_brand_deleted' => 'Brand deleted',
             'products_brand_merged' => 'Brands merged',
+            'sales_customer_discount' => 'Customer discount set',
+            'sales_customer_discount_removed' => 'Customer discount removed',
             'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',

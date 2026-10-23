@@ -274,4 +274,18 @@ return [
         'mail_intro' => 'Como prometimos, los documentos de :item.',
         'mail_links' => 'Descargue los archivos aquí (enlaces válidos 30 días):',
     ],
+    'discounts' => [
+        'title' => 'Descuentos de venta por marca',
+        'intro' => 'El descuento que este cliente obtiene sobre nuestros precios de catálogo. Con sesión iniciada en la web ve su propio precio de compra; las nuevas líneas de presupuesto también reciben el descuento.',
+        'none' => 'Sin descuentos: precios de catálogo.',
+        'all_other' => 'Todas las demás marcas',
+        'discount' => 'Descuento',
+        'note' => 'Nota (interna)',
+        'add' => '+ Añadir o cambiar un descuento',
+        'remove' => 'Quitar',
+        'hint' => 'Volver a fijar una marca la cambia. Cada cambio queda en el registro de auditoría.',
+        'low_margin' => 'margen más bajo :pct%',
+        'saved' => 'Descuento guardado.',
+        'removed' => 'Descuento quitado.',
+    ],
 ];

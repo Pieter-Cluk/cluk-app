@@ -75,3 +75,14 @@ These are for the sales pages of the website.
 - `manufacturer_code` is the item code in the manufacturer's catalogue. Show it on the product page; customers often search on it.
 - `ean` is the barcode.
 - Supplier article numbers (`sales_item_suppliers.supplier_ref`) are internal only. Don't show them on the website.
+
+## The customer's own sales prices
+
+Staff set a discount per brand on the customer card. They can also set one for "all other brands".
+
+**On the website**
+- Signed-in customer: show `CustomerPrices::priceCents($account, $salesItem)` as their price, with the list price struck through when `discountBp(...)` > 0.
+- Guests and private customers (no company) see the list price.
+- `Baskets::show($account, 'sales')` already uses these prices. Each line has `price_cents` (their price), `list_price_cents` and `discount_pct`.
+- `submitSales` orders at the same prices.
+- Prices are excl. VAT.

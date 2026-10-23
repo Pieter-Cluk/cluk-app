@@ -223,6 +223,8 @@ return [
             'products_brand_saved' => 'Marca cambiada',
             'products_brand_deleted' => 'Marca eliminada',
             'products_brand_merged' => 'Marcas unidas',
+            'sales_customer_discount' => 'Descuento de cliente fijado',
+            'sales_customer_discount_removed' => 'Descuento de cliente quitado',
             'equipment_photo_approved' => 'Foto de producto elegida de la web',
             'user_instructions_sent' => 'Instrucciones de acceso enviadas',
             'messages_created' => 'Mensaje creado',

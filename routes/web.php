@@ -25,6 +25,7 @@ use App\Http\Controllers\Media\MessageController;
 use App\Http\Controllers\Media\MessagePublicController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
+use App\Http\Controllers\ProductSales\CustomerDiscountController;
 use App\Http\Controllers\ProductSales\ItemController as SalesItemController;
 use App\Http\Controllers\ProductSales\SalesPublicController;
 use App\Http\Controllers\ProductSales\SalesQuoteController;
@@ -222,6 +223,10 @@ Route::middleware('auth:web')->group(function () {
         Route::middleware('level:companies,3')->group(function () {
             Route::post('/companies/{company}/archive', [CompanyController::class, 'archive'])->whereNumber('company')->name('companies.archive');
             Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'])->whereNumber('company')->name('companies.restore');
+        });
+        Route::middleware('right:sales.approve_low_margin')->group(function () {
+            Route::post('/companies/{company}/discounts', [CustomerDiscountController::class, 'store'])->whereNumber('company')->name('companies.discounts.store');
+            Route::delete('/companies/{company}/discounts/{discount}', [CustomerDiscountController::class, 'destroy'])->whereNumber(['company', 'discount'])->name('companies.discounts.destroy');
         });
         Route::put('/companies/{company}/vat', [CompanyController::class, 'updateVat'])->whereNumber('company')->middleware('right:finance.vat_treatment')->name('companies.vat');
         Route::get('/companies/website-logins', [WebAccountController::class, 'index'])->name('web-accounts.index');

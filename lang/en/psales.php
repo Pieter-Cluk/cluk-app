@@ -274,4 +274,18 @@ return [
         'mail_intro' => 'As promised, the documents for :item.',
         'mail_links' => 'Download the files here (links valid for 30 days):',
     ],
+    'discounts' => [
+        'title' => 'Sales discounts per brand',
+        'intro' => 'The discount this customer gets on our list prices. Signed in on the website, they see their own purchase price; new quote lines get the discount too.',
+        'none' => 'No discounts: list prices.',
+        'all_other' => 'All other brands',
+        'discount' => 'Discount',
+        'note' => 'Note (internal)',
+        'add' => '+ Add or change a discount',
+        'remove' => 'Remove',
+        'hint' => 'Setting a brand again changes it. Every change is in the audit log.',
+        'low_margin' => 'lowest margin :pct%',
+        'saved' => 'Discount saved.',
+        'removed' => 'Discount removed.',
+    ],
 ];

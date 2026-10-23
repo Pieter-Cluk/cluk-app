@@ -274,4 +274,18 @@ return [
         'mail_intro' => 'Comme promis, les documents pour :item.',
         'mail_links' => 'Téléchargez les fichiers ici (liens valables 30 jours) :',
     ],
+    'discounts' => [
+        'title' => 'Remises de vente par marque',
+        'intro' => 'La remise que ce client obtient sur nos prix catalogue. Connecté au site web, il voit son propre prix d’achat ; les nouvelles lignes d’offre reçoivent aussi la remise.',
+        'none' => 'Pas de remises : prix catalogue.',
+        'all_other' => 'Toutes les autres marques',
+        'discount' => 'Remise',
+        'note' => 'Remarque (interne)',
+        'add' => '+ Ajouter ou modifier une remise',
+        'remove' => 'Supprimer',
+        'hint' => 'Définir à nouveau une marque la modifie. Chaque modification figure dans le journal d’audit.',
+        'low_margin' => 'marge la plus basse :pct%',
+        'saved' => 'Remise enregistrée.',
+        'removed' => 'Remise supprimée.',
+    ],
 ];

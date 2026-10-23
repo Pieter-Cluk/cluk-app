@@ -274,4 +274,18 @@ return [
         'mail_intro' => 'Zoals beloofd de documenten voor :item.',
         'mail_links' => 'Download de bestanden hier (links 30 dagen geldig):',
     ],
+    'discounts' => [
+        'title' => 'Verkoopkortingen per merk',
+        'intro' => 'De korting die deze klant krijgt op onze lijstprijzen. Aangemeld op de website ziet hij zijn eigen aankoopprijs; nieuwe offertelijnen krijgen de korting ook.',
+        'none' => 'Geen kortingen: lijstprijzen.',
+        'all_other' => 'Alle andere merken',
+        'discount' => 'Korting',
+        'note' => 'Opmerking (intern)',
+        'add' => '+ Korting toevoegen of wijzigen',
+        'remove' => 'Verwijderen',
+        'hint' => 'Een merk opnieuw instellen wijzigt het. Elke wijziging staat in het auditlog.',
+        'low_margin' => 'laagste marge :pct%',
+        'saved' => 'Korting opgeslagen.',
+        'removed' => 'Korting verwijderd.',
+    ],
 ];

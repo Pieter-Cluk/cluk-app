@@ -223,6 +223,8 @@ return [
             'products_brand_saved' => 'Merk gewijzigd',
             'products_brand_deleted' => 'Merk verwijderd',
             'products_brand_merged' => 'Merken samengevoegd',
+            'sales_customer_discount' => 'Klantkorting ingesteld',
+            'sales_customer_discount_removed' => 'Klantkorting verwijderd',
             'equipment_photo_approved' => 'Productfoto van het web gekozen',
             'user_instructions_sent' => 'Aanmeldinstructies gestuurd',
             'messages_created' => 'Bericht gemaakt',

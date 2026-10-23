@@ -12,6 +12,7 @@ use App\Models\Web\BasketLine;
 use App\Models\Web\CustomerAccount;
 use App\Notifications\Confirmation;
 use App\Services\Afrit6\Pricing;
+use App\Services\ProductSales\CustomerPrices;
 use App\Services\ProductSales\SalesFlow;
 use App\Services\Website\DryHireCatalogue;
 use App\Services\Website\WebRequests;
@@ -27,7 +28,7 @@ use Illuminate\Validation\ValidationException;
  * The two baskets of a website login, kept on the server so they follow the
  * customer to every device:
  *  - dryhire: items and dates of use, sent to the team as a request (Deals › Incoming);
- *  - sales: products at list price, ordered directly on invoice (a sales quote, accepted).
+ *  - sales: products at the customer's price (list minus their brand discount), ordered directly on invoice (a sales quote, accepted).
  * Only what the website shows can go in a basket.
  */
 class Baskets
@@ -122,12 +123,14 @@ class Baskets
         $col = self::column($kind);
         $lines = $basket->lines()->get();
         $items = self::query($kind)->whereKey($lines->pluck($col))->get()->keyBy('id');
-        $rows = $lines->filter(fn (BasketLine $l) => $items->has($l->{$col}))->map(function (BasketLine $l) use ($items, $col, $kind) {
+        $rows = $lines->filter(fn (BasketLine $l) => $items->has($l->{$col}))->map(function (BasketLine $l) use ($items, $col, $kind, $a) {
             $i = $items[$l->{$col}];
-            $price = $kind === Basket::DRYHIRE ? (int) $i->day_price_cents : (int) $i->list_price_cents;
+            // Sales: the customer's own price (list price minus their discount for this brand).
+            $price = $kind === Basket::DRYHIRE ? (int) $i->day_price_cents : CustomerPrices::priceCents($a, $i);
 
             return ['id' => $i->id, 'number' => $i->number, 'name' => $kind === Basket::DRYHIRE ? (string) $i->name : $i->name(),
-                'qty' => $l->qty, 'price_cents' => $price, 'amount_cents' => $price * $l->qty] + ($kind === Basket::SALES ? ['in_stock' => (int) $i->stock_qty] : []);
+                'qty' => $l->qty, 'price_cents' => $price, 'amount_cents' => $price * $l->qty]
+                + ($kind === Basket::SALES ? ['list_price_cents' => (int) $i->list_price_cents, 'discount_pct' => CustomerPrices::discountBp($a, $i) / 100, 'in_stock' => (int) $i->stock_qty] : []);
         })->values();
         $sum = (int) $rows->sum('amount_cents');
 
@@ -196,7 +199,7 @@ class Baskets
     }
 
     /**
-     * Order the sales basket on invoice: a sales quote at list price, accepted
+     * Order the sales basket on invoice: a sales quote at the customer's prices, accepted
      * by the customer straight away (the same as accepting a quote online:
      * stock is reserved, missing quantities are asked from the suppliers and
      * the customer gets the order confirmation). $d: po_number, message.
@@ -228,7 +231,7 @@ class Baskets
             foreach ($lines as $l) {
                 $i = $items[$l->sales_item_id];
                 $q->lines()->create(['sales_item_id' => $i->id, 'kind' => 'item', 'name' => $i->name(), 'description' => $i->description, 'qty' => $l->qty,
-                    'list_cents' => $i->list_price_cents, 'cost_cents' => $i->costCents(), 'position' => ++$pos]);
+                    'list_cents' => $i->list_price_cents, 'discount_bp' => CustomerPrices::discountBp($a, $i), 'cost_cents' => $i->costCents(), 'position' => ++$pos]);
             }
             $q->recalculate();
             AuditLog::record('web.order_placed', $a, ['email' => $a->email, 'number' => $q->number, 'total' => Pricing::eur($q->net_cents)]);

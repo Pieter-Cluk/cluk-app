@@ -9,6 +9,7 @@ use App\Models\CompanyDetail;
 use App\Models\ProductSales\SalesItem;
 use App\Models\ProductSales\SalesQuote;
 use App\Models\ProductSales\SalesQuoteLine;
+use App\Services\ProductSales\CustomerPrices;
 use App\Services\ProductSales\SalesFlow;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -104,7 +105,7 @@ class SalesQuoteController extends Controller
         if ($d['kind'] === 'item') {
             $item = SalesItem::with('suppliers')->findOrFail($d['item_id']);
             $quote->lines()->create(['sales_item_id' => $item->id, 'kind' => 'item', 'name' => $item->name(), 'description' => $item->description, 'qty' => $d['qty'] ?? 1,
-                'list_cents' => $item->list_price_cents, 'cost_cents' => $item->costCents(), 'position' => $pos]);
+                'list_cents' => $item->list_price_cents, 'discount_bp' => CustomerPrices::discountBp($quote->company, $item), 'cost_cents' => $item->costCents(), 'position' => $pos]);
         } else {
             $quote->lines()->create(['kind' => $d['kind'], 'name' => $d['name'], 'qty' => 1, 'position' => $pos]);
         }
