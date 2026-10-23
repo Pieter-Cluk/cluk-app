@@ -226,6 +226,8 @@ return [
             'sales_customer_discount' => 'Conditions de vente modifiées',
             'sales_customer_discount_removed' => 'Condition de vente supprimée',
             'data_exported' => 'Données exportées',
+            'crm_registry_changed' => 'Données du registre modifiées',
+            'crm_registry_import' => 'Données du registre mises à jour (BCE)',
             'equipment_photo_approved' => 'Photo produit choisie sur le web',
             'user_instructions_sent' => 'Instructions de connexion envoyées',
             'messages_created' => 'Message créé',

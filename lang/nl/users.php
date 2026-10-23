@@ -226,6 +226,8 @@ return [
             'sales_customer_discount' => 'Verkoopvoorwaarden gewijzigd',
             'sales_customer_discount_removed' => 'Verkoopvoorwaarde verwijderd',
             'data_exported' => 'Gegevens geëxporteerd',
+            'crm_registry_changed' => 'Registergegevens gewijzigd',
+            'crm_registry_import' => 'Registergegevens bijgewerkt (KBO)',
             'equipment_photo_approved' => 'Productfoto van het web gekozen',
             'user_instructions_sent' => 'Aanmeldinstructies gestuurd',
             'messages_created' => 'Bericht gemaakt',

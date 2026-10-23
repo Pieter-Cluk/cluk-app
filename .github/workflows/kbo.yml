@@ -1,0 +1,62 @@
+name: KBO update
+
+# Company register data (KBO/BCE open data) for the credit check on the
+# customer card. Every Monday morning, or by hand:
+#  - probe: log in and list the files offered (to check the account works);
+#  - update: download the newest full extract, keep only our own companies
+#    (enterprise numbers asked from the app) and import them on the server.
+# Needs the secrets KBO_USER and KBO_PASSWORD (free account on kbopub.economie.fgov.be).
+
+on:
+  schedule:
+    - cron: '30 5 * * 1'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: probe or update
+        default: update
+
+concurrency: kbo
+
+jobs:
+  kbo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SSH_HOST: ssh.cys6r88bx.service.one
+      SSH_USER: cys6r88bx_ssh
+      SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
+      KBO_USER: ${{ secrets.KBO_USER }}
+      KBO_PASSWORD: ${{ secrets.KBO_PASSWORD }}
+      MODE: ${{ inputs.mode || 'update' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+      - name: Check the secrets
+        run: |
+          if [ -z "$KBO_USER" ] || [ -z "$KBO_PASSWORD" ]; then echo "::error title=KBO::Add the secrets KBO_USER and KBO_PASSWORD first."; exit 1; fi
+      - name: Server access
+        if: env.MODE == 'update'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass >/dev/null
+          echo "SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')" >> "$GITHUB_ENV"
+          mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+      - name: Our enterprise numbers
+        if: env.MODE == 'update'
+        run: |
+          sshpass -e ssh -o ConnectTimeout=30 "$SSH_USER@$SSH_HOST" 'cd $(readlink -f ~/webroots/by-route/app.cluk.live_)/app && php artisan cluk:kbo-numbers' > numbers.json
+          echo "::notice title=numbers::$(python3 -c 'import json;print(len(json.load(open("numbers.json"))))') Belgian companies"
+      - name: KBO open data
+        run: python3 .github/scripts/kbo.py "$MODE" | tee kbo.log
+      - name: Import on the server
+        if: env.MODE == 'update'
+        run: |
+          gzip -9 kbo.json
+          sshpass -e scp -o ConnectTimeout=30 kbo.json.gz "$SSH_USER@$SSH_HOST:kbo.json.gz"
+          sshpass -e ssh -o ConnectTimeout=30 "$SSH_USER@$SSH_HOST" 'APP=$(readlink -f ~/webroots/by-route/app.cluk.live_)/app && gunzip -f ~/kbo.json.gz && mv ~/kbo.json "$APP/storage/app/kbo.json" && cd "$APP" && php artisan cluk:kbo-import storage/app/kbo.json && rm -f storage/app/kbo.json' | tee import.log
+      - name: Report
+        if: always()
+        run: |
+          body=$(cat kbo.log import.log 2>/dev/null | tail -c 3500 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
+          echo "::notice title=KBO report::${body}"

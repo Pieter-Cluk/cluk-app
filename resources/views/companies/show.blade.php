@@ -179,6 +179,7 @@
         </div>
 
         <aside class="stack">
+            @include('companies._credit')
             <section class="card">
                 <h2>{{ __('companies.vat.title') }} · {{ $vatRate?->percent() ?? '—' }}</h2>
                 <p class="muted small">{{ __('companies.vat.intro') }}</p>
@@ -225,7 +226,6 @@
                     <dt>{{ __('companies.fields.email') }}</dt><dd>{{ $company->email ?? '—' }}</dd>
                     <dt>{{ __('companies.fields.website') }}</dt><dd>{{ $company->website ?? '—' }}</dd>
                 </dl>
-                <p class="muted small">{{ __('companies.show.later') }}</p>
             </section>
 
             @if ($canArchive)

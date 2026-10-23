@@ -226,6 +226,8 @@ return [
             'sales_customer_discount' => 'Condiciones de venta cambiadas',
             'sales_customer_discount_removed' => 'Condición de venta quitada',
             'data_exported' => 'Datos exportados',
+            'crm_registry_changed' => 'Datos del registro cambiados',
+            'crm_registry_import' => 'Datos del registro actualizados (KBO)',
             'equipment_photo_approved' => 'Foto de producto elegida de la web',
             'user_instructions_sent' => 'Instrucciones de acceso enviadas',
             'messages_created' => 'Mensaje creado',

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /** A customer, a supplier, or both. */
 #[Fillable([
@@ -43,6 +44,11 @@ class Company extends Model
     public function accountOwner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'account_owner_id');
+    }
+
+    public function registry(): HasOne
+    {
+        return $this->hasOne(CompanyRegistry::class);
     }
 
     public function contacts(): BelongsToMany

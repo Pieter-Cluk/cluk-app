@@ -226,6 +226,8 @@ return [
             'sales_customer_discount' => 'Sales conditions changed',
             'sales_customer_discount_removed' => 'Sales condition removed',
             'data_exported' => 'Data exported',
+            'crm_registry_changed' => 'Register data changed',
+            'crm_registry_import' => 'Register data updated (KBO)',
             'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',

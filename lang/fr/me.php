@@ -41,6 +41,7 @@ return [
             'quote_answered' => 'Un client accepte ou refuse votre devis',
             'order_handed' => 'Une de vos commandes est transmise à l’entrepôt',
             'pf_back' => 'Une proforma vous est renvoyée',
+            'credit_alert' => 'Le contrôle de crédit d’un client passe au rouge',
         ],
         'daily' => 'Résumé quotidien',
         'daily_hint' => 'Un e-mail les jours ouvrables avec vos tâches ouvertes. Pas de tâches, pas d’e-mail.',

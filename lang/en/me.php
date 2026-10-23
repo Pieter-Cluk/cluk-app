@@ -41,6 +41,7 @@ return [
             'quote_answered' => 'A customer accepts or declines your quote',
             'order_handed' => 'An order of yours is handed over to the warehouse',
             'pf_back' => 'A proforma comes back to you',
+            'credit_alert' => 'A customer’s credit check turns red',
         ],
         'daily' => 'Daily summary',
         'daily_hint' => 'One email on working days with your open tasks. No tasks, no email.',

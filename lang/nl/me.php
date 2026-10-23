@@ -41,6 +41,7 @@ return [
             'quote_answered' => 'Een klant aanvaardt of weigert je offerte',
             'order_handed' => 'Een order van jou wordt overgedragen aan het magazijn',
             'pf_back' => 'Een proforma komt bij je terug',
+            'credit_alert' => 'De kredietcheck van een klant wordt rood',
         ],
         'daily' => 'Dagelijkse samenvatting',
         'daily_hint' => 'Eén e-mail op werkdagen met je open taken. Geen taken, geen e-mail.',

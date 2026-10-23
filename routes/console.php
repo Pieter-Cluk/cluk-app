@@ -4,6 +4,7 @@ use App\Models\AuditLog;
 use App\Models\Equipment\PhotoSuggestion;
 use App\Models\Role;
 use App\Services\Backup\Backups;
+use App\Services\Credit\RegistryImport;
 use App\Services\Crm\Birthdays;
 use App\Services\Equipment\PhotoSuggestions;
 use App\Services\Media\Messages;
@@ -132,3 +133,21 @@ Artisan::command('cluk:photo-suggestions {--limit=40}', function () {
     $this->info("added/updated {$added}; still to fetch {$left}; ".json_encode($c));
     $this->line('LEFT='.$left);
 })->purpose('Fetch the product photos found on the web, for review');
+
+// KBO/BCE register data: the workflow "KBO update" asks for our enterprise numbers,
+// filters the official extract on them and hands the result back to import.
+Artisan::command('cluk:kbo-numbers', function () {
+    $this->line(json_encode(RegistryImport::numbers()));
+})->purpose('Print the enterprise numbers of our Belgian companies (JSON)');
+
+Artisan::command('cluk:kbo-import {file : JSON made by the KBO update workflow}', function (string $file) {
+    $data = json_decode((string) file_get_contents($file), true);
+    if (! is_array($data) || ! isset($data['enterprises'])) {
+        $this->error('Not a KBO extract.');
+
+        return 1;
+    }
+    $r = RegistryImport::run($data);
+    AuditLog::record('crm.registry_import', null, $r + ['snapshot' => $data['snapshot'] ?? null]);
+    $this->line(json_encode($r));
+})->purpose('Store the filtered KBO/BCE extract per company');

@@ -41,6 +41,7 @@ return [
             'quote_answered' => 'Un cliente acepta o rechaza tu presupuesto',
             'order_handed' => 'Un pedido tuyo pasa al almacén',
             'pf_back' => 'Una proforma vuelve a ti',
+            'credit_alert' => 'El control de crédito de un cliente se pone en rojo',
         ],
         'daily' => 'Resumen diario',
         'daily_hint' => 'Un correo los días laborables con tus tareas abiertas. Sin tareas, sin correo.',
