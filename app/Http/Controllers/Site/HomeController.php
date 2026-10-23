@@ -11,6 +11,6 @@ class HomeController extends SiteController
     {
         $this->locale($request);
 
-        return view('site.home');
+        return view('site.home', ['mix' => \App\Services\Website\SocialFeed::mix(4), 'list' => \App\Services\Website\SocialFeed::for(null, 14)]);
     }
 }

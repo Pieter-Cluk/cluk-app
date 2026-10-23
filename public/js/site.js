@@ -42,3 +42,19 @@
   window.cluk = { track: track };
   track('view');
 })();
+
+// Post videos: play muted while on screen, pause when scrolled away (not with reduced motion or data saver).
+(function () {
+  var vids = document.querySelectorAll('video[data-auto]');
+  if (!vids.length) return;
+  var calm = matchMedia('(prefers-reduced-motion: reduce)').matches || (navigator.connection && navigator.connection.saveData);
+  if (calm || !('IntersectionObserver' in window)) { vids.forEach(function (v) { v.preload = 'metadata'; }); return; }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      var v = e.target;
+      if (e.isIntersecting && e.intersectionRatio >= 0.5) { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      else v.pause();
+    });
+  }, { threshold: [0, 0.5] });
+  vids.forEach(function (v) { v.muted = true; io.observe(v); });
+})();

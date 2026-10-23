@@ -166,4 +166,10 @@ return [
         'text' => 'We gebruiken noodzakelijke cookies om de site te laten werken (taal, winkelmanden, inloggen). Met je akkoord houden we ook statistieken bij: welke pagina’s en producten je bekijkt, zodat ons team je beter kan helpen. We verkopen dit nooit en gebruiken het nooit voor advertenties van anderen.',
         'all' => 'Statistieken aanvaarden', 'necessary' => 'Alleen noodzakelijke', 'settings' => 'Cookie-instellingen',
     ],
+    'news' => [
+        'title' => 'Nieuws', 'meta' => 'Het laatste nieuws van CLUK: nieuw materiaal, events in Factory, Afrit 6 en ons verkoopgamma, van onze Facebook en Instagram.',
+        'intro' => 'Mensen, materiaal, ruimtes en verhalen, rechtstreeks van onze Facebook en Instagram.',
+        'all' => 'Alles', 'all_news' => 'Al het nieuws', 'latest' => 'Laatste berichten', 'on' => 'op :platform', 'open' => 'Openen op :platform',
+        'empty' => 'Hier staan nog geen berichten.', 'follow' => 'Volg ons', 'video' => 'Video', 'filter' => 'Toon nieuws over',
+    ],
 ];

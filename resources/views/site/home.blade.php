@@ -20,6 +20,28 @@
   <a class="tile light" href="{{ $app }}/afrit6"><div class="txt"><h2>{{ __('site.nav.afrit6') }}</h2><div class="lab">{{ __('site.home.afrit6_t') }}</div></div><div class="img" style="background-image:url('{{ asset('images/site/afrit6.jpg') }}')"></div><div class="cta"><span>{{ __('site.home.afrit6_c') }}</span>@include('site._icon', ['i' => 'arrow'])</div></a>
 </section>
 
+@if ($mix->isNotEmpty())
+<section class="hnews gut">
+  <div class="hn-head">
+    <h2>{{ __('site.home.news_title') }}</h2>
+    <p class="lab">{{ __('site.home.news_text') }}</p>
+    <div class="hn-links"><a class="follow" href="{{ route('site.news') }}"><span>{{ __('site.news.all_news') }}</span>@include('site._icon', ['i' => 'arrow'])</a></div>
+  </div>
+  <div class="hn-body">
+    <div class="hn-list">
+      <h3 class="lab">{{ __('site.news.latest') }}</h3>
+      <ol>
+        @foreach ($list as $p)
+          <li><a href="{{ $p['url'] }}" target="_blank" rel="noopener">
+            <span class="hl-meta">@include('site._icon', ['i' => $p['platform'] === 'instagram' ? 'ig' : 'fb'])<time datetime="{{ $p['date']->toIso8601String() }}">{{ $p['date']->locale(app()->getLocale())->translatedFormat('j M') }}</time>@foreach ($p['sections'] as $sct)<span class="ntag">{{ __('site.nav.'.$sct) }}</span>@endforeach</span>
+            <b>{{ $p['title'] ?: \Illuminate\Support\Str::limit($p['text'], 80) }}</b></a></li>
+        @endforeach
+      </ol>
+    </div>
+    <div class="hn-frames">@foreach ($mix as $p)@include('site._post', ['p' => $p, 'size' => 'big'])@endforeach</div>
+  </div>
+</section>
+@else
 <section class="home-news gut">
   <div class="intro">
     <h2>{{ __('site.home.news_title') }}</h2>
@@ -33,5 +55,6 @@
     <a class="post" href="{{ config('website.social.linkedin') }}" target="_blank" rel="noopener"><div class="img" style="background-image:url('{{ asset('images/site/n3.jpg') }}')"></div><div class="src">@include('site._icon', ['i' => 'li'])LinkedIn</div><h3><span>{{ __('site.home.posts.2') }}</span>@include('site._icon', ['i' => 'arrow'])</h3></a>
   </div>
 </section>
+@endif
 </main>
 @endsection
