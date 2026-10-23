@@ -18,8 +18,14 @@ class DryHireController extends SiteController
     {
         $locale = $this->locale($request);
 
+        $cust = \App\Services\Web\CustomerAuth::current();
         $cfg = [
-            't' => array_merge(__('site.js'), [
+            'customer' => $cust ? ['name' => $cust->name(), 'first' => $cust->first_name] : null,
+            'acct' => [
+                'login' => route('site.account.login'), 'set' => route('site.account.basket.set', 'dryhire'), 'merge' => route('site.account.basket.merge', 'dryhire'),
+                'dates' => route('site.account.basket.dates'), 'send' => route('site.account.basket.send'),
+            ],
+            't' => array_merge(__('site.js'), __('site.ajs'), [
                 'type' => __('site.dryhire.type'), 'tags' => __('site.dryhire.tags'), 'all' => __('site.dryhire.all'),
                 'show_all' => __('site.dryhire.show_all_brands'), 'show_fewer' => __('site.dryhire.show_fewer'),
             ]),

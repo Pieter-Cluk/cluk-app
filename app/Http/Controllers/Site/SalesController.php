@@ -22,12 +22,19 @@ class SalesController extends SiteController
 {
     private function common(string $locale): array
     {
+        $cust = CustomerAuth::current();
+
         return [
             'locale' => $locale,
             'tree' => SalesCatalogue::tree(),
-            'customer' => CustomerAuth::current(),
+            'customer' => $cust,
             'cfg' => [
-                't' => __('site.sjs') + ['s_none' => __('site.sales.s_none')],
+                'customer' => $cust ? ['name' => $cust->name(), 'first' => $cust->first_name, 'email' => $cust->email, 'company' => $cust->company?->name ?? $cust->company_name] : null,
+                'acct' => [
+                    'login' => route('site.account.login'), 'show' => route('site.account.basket', 'sales'), 'set' => route('site.account.basket.set', 'sales'),
+                    'merge' => route('site.account.basket.merge', 'sales'), 'order' => route('site.account.basket.order'),
+                ],
+                't' => __('site.sjs') + __('site.ajs') + ['s_none' => __('site.sales.s_none')],
                 's' => ['products' => __('site.sales.s_products'), 'categories' => __('site.sales.s_categories'), 'brands' => __('site.sales.s_brands'),
                     'view_all' => __('site.sales.view_all'), 'more' => __('site.sales.more'), 'less' => __('site.sales.less')],
                 'locale' => $locale,

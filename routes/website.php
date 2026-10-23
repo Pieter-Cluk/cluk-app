@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Site\AccountController;
 use App\Http\Controllers\Site\DryHireController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\SalesController;
@@ -27,6 +28,28 @@ $site = function () {
     Route::get('/sales/photo/{item}/{w}', [SalesController::class, 'photo'])->whereNumber(['item', 'w'])->name('sales.photo');
     Route::get('/sales/document/{doc}', [SalesController::class, 'document'])->whereNumber('doc')->name('sales.document');
     Route::post('/sales/request', [SalesController::class, 'request'])->middleware('throttle:6,1')->name('sales.request');
+    // Customer accounts (My CLUK) and the baskets kept on the server.
+    Route::get('/account/login', [AccountController::class, 'login'])->name('account.login');
+    Route::post('/account/login', [AccountController::class, 'doLogin'])->middleware('throttle:10,1')->name('account.login.post');
+    Route::get('/account/register', [AccountController::class, 'register'])->name('account.register');
+    Route::post('/account/register', [AccountController::class, 'doRegister'])->middleware('throttle:5,1')->name('account.register.post');
+    Route::get('/account/forgot', [AccountController::class, 'forgot'])->name('account.forgot');
+    Route::post('/account/forgot', [AccountController::class, 'doForgot'])->middleware('throttle:5,1')->name('account.forgot.post');
+    Route::get('/account/reset', [AccountController::class, 'reset'])->name('account.reset');
+    Route::post('/account/reset', [AccountController::class, 'doReset'])->middleware('throttle:10,1')->name('account.reset.post');
+    Route::post('/account/logout', [AccountController::class, 'logout'])->name('account.logout');
+    Route::middleware('customer.auth')->group(function () {
+        Route::get('/account', [AccountController::class, 'show'])->name('account');
+        Route::post('/account/profile', [AccountController::class, 'profile'])->name('account.profile');
+        Route::post('/account/password', [AccountController::class, 'password'])->middleware('throttle:10,1')->name('account.password');
+        Route::get('/account/basket/{kind}', [AccountController::class, 'basket'])->whereIn('kind', ['dryhire', 'sales'])->name('account.basket');
+        Route::post('/account/basket/{kind}/set', [AccountController::class, 'basketSet'])->whereIn('kind', ['dryhire', 'sales'])->middleware('throttle:240,1')->name('account.basket.set');
+        Route::post('/account/basket/{kind}/merge', [AccountController::class, 'basketMerge'])->whereIn('kind', ['dryhire', 'sales'])->name('account.basket.merge');
+        Route::post('/account/basket/dryhire/dates', [AccountController::class, 'basketDates'])->name('account.basket.dates');
+        Route::post('/account/basket/dryhire/send', [AccountController::class, 'sendDryHire'])->middleware('throttle:6,1')->name('account.basket.send');
+        Route::post('/account/basket/sales/order', [AccountController::class, 'orderSales'])->middleware('throttle:6,1')->name('account.basket.order');
+    });
+
     Route::get('/sales/{cat}/{sub?}', [SalesController::class, 'category'])->where(['cat' => '[a-z0-9-]+', 'sub' => '[a-z0-9-]+'])->name('sales.category');
 };
 
