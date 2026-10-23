@@ -153,7 +153,7 @@ return [
     'label_hint' => 'Dymo LabelWriter 550 avec étiquettes carrées 1933083 (25 × 25 mm). Le scan ouvre cette fiche.',
     'print' => 'Imprimer l’étiquette QR',
     'labels_title' => ':count étiquettes QR',
-    'labels_hint' => ':count étiquettes · choisissez la Dymo LabelWriter 550 et le format 25 × 25 mm dans la fenêtre d’impression.',
+    'labels_hint' => ':count étiquettes · choisissez la Dymo LabelWriter 550 et, comme format de papier, « 11353 Multi Purpose » dans les réglages d’impression.',
     'flash' => [
         'created' => 'Article ajouté.',
         'saved' => 'Enregistré.',

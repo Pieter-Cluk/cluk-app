@@ -153,7 +153,7 @@ return [
     'label_hint' => 'Dymo LabelWriter 550 con etiquetas cuadradas 1933083 (25 × 25 mm). Al escanear se abre esta ficha.',
     'print' => 'Imprimir etiqueta QR',
     'labels_title' => ':count etiquetas QR',
-    'labels_hint' => ':count etiquetas · elige la Dymo LabelWriter 550 y el tamaño 25 × 25 mm en la ventana de impresión.',
+    'labels_hint' => ':count etiquetas · elige la Dymo LabelWriter 550 y, como tamaño de papel, “11353 Multi Purpose” en los ajustes de impresión.',
     'flash' => [
         'created' => 'Artículo añadido.',
         'saved' => 'Guardado.',

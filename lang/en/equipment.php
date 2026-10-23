@@ -153,7 +153,7 @@ return [
     'label_hint' => 'Dymo LabelWriter 550 with square 1933083 labels (25 × 25 mm). Scanning opens this card.',
     'print' => 'Print QR label',
     'labels_title' => ':count QR labels',
-    'labels_hint' => ':count labels · choose the Dymo LabelWriter 550 and the 25 × 25 mm label size in the print window.',
+    'labels_hint' => ':count labels · choose the Dymo LabelWriter 550 and, as paper size, “11353 Multi Purpose” in the print settings.',
     'flash' => [
         'created' => 'Item added.',
         'saved' => 'Saved.',

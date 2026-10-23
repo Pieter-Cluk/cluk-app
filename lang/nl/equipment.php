@@ -153,7 +153,7 @@ return [
     'label_hint' => 'Dymo LabelWriter 550 met vierkante 1933083-labels (25 × 25 mm). Scannen opent deze fiche.',
     'print' => 'QR-label printen',
     'labels_title' => ':count QR-labels',
-    'labels_hint' => ':count labels · kies de Dymo LabelWriter 550 en het labelformaat 25 × 25 mm in het printvenster.',
+    'labels_hint' => ':count labels · kies de Dymo LabelWriter 550 en als papierformaat “11353 Multi Purpose” in de printerinstellingen.',
     'flash' => [
         'created' => 'Artikel toegevoegd.',
         'saved' => 'Opgeslagen.',
