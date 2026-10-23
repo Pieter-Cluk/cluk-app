@@ -37,6 +37,9 @@ return [
         'gdpr' => [
             'export_erase' => 'GDPR-export en wissen',
         ],
+        'help' => [
+            'manage' => 'Help: artikels schrijven en vragen beantwoorden',
+        ],
         'orders' => [
             'approve' => 'Orders: goedkeuren en orderbevestiging sturen',
         ],

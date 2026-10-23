@@ -192,6 +192,8 @@ return [
             'warehouse_zone_saved' => 'Warehouse zone saved',
             'backup_made' => 'Backup made',
             'equipment_website' => 'Website visibility changed',
+            'help_article_saved' => 'Help article saved',
+            'help_article_deleted' => 'Help article deleted',
             'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',

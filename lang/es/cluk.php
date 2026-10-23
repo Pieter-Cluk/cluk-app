@@ -37,6 +37,9 @@ return [
         'gdpr' => [
             'export_erase' => 'Exportación y borrado RGPD',
         ],
+        'help' => [
+            'manage' => 'Ayuda: escribir artículos y responder preguntas',
+        ],
         'orders' => [
             'approve' => 'Pedidos: aprobar y enviar la confirmación',
         ],

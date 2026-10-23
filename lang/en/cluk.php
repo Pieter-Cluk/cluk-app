@@ -37,6 +37,9 @@ return [
         'gdpr' => [
             'export_erase' => 'GDPR export and erase',
         ],
+        'help' => [
+            'manage' => 'Help: write articles and answer questions',
+        ],
         'orders' => [
             'approve' => 'Orders: approve and send the order confirmation',
         ],

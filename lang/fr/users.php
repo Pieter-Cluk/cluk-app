@@ -192,6 +192,8 @@ return [
             'warehouse_zone_saved' => 'Zone d’entrepôt enregistrée',
             'backup_made' => 'Sauvegarde effectuée',
             'equipment_website' => 'Visibilité sur le site web modifiée',
+            'help_article_saved' => 'Article d’aide enregistré',
+            'help_article_deleted' => 'Article d’aide supprimé',
             'equipment_photo_approved' => 'Photo produit choisie sur le web',
             'user_instructions_sent' => 'Instructions de connexion envoyées',
             'messages_created' => 'Message créé',

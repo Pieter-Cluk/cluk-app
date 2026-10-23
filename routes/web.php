@@ -18,6 +18,7 @@ use App\Http\Controllers\Factory\FactoryController;
 use App\Http\Controllers\Factory\FactoryPublicController;
 use App\Http\Controllers\Factory\FactoryTaskController;
 use App\Http\Controllers\Finance\PreInvoiceController;
+use App\Http\Controllers\Help\HelpController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\Me\MeController;
 use App\Http\Controllers\Media\MessageController;
@@ -555,6 +556,26 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/{subhire}/adjust', [SubhireController::class, 'adjust'])->whereNumber('subhire')->name('subhire.adjust');
     });
 
+    // Help & shortcuts: search the answers, download forms, ask the admin.
+    Route::prefix('help')->group(function () {
+        Route::get('/', [HelpController::class, 'index'])->name('help.index');
+        Route::post('/ask', [HelpController::class, 'ask'])->middleware('throttle:10,60')->name('help.ask');
+        Route::get('/files/{file}', [HelpController::class, 'file'])->whereNumber('file')->name('help.file');
+        Route::middleware('right:help.manage|users.manage')->group(function () {
+            Route::get('/manage', [HelpController::class, 'manage'])->name('help.manage');
+            Route::get('/new', [HelpController::class, 'create'])->name('help.create');
+            Route::post('/articles', [HelpController::class, 'store'])->name('help.store');
+            Route::get('/articles/{article}/edit', [HelpController::class, 'edit'])->name('help.edit');
+            Route::put('/articles/{article}', [HelpController::class, 'update'])->name('help.update');
+            Route::delete('/articles/{article}', [HelpController::class, 'destroy'])->name('help.destroy');
+            Route::post('/questions/{question}/answer', [HelpController::class, 'answer'])->whereNumber('question')->name('help.answer');
+            Route::post('/questions/{question}/close', [HelpController::class, 'close'])->whereNumber('question')->name('help.close');
+            Route::post('/files', [HelpController::class, 'upload'])->name('help.upload');
+            Route::delete('/files/{file}', [HelpController::class, 'removeFile'])->whereNumber('file')->name('help.file.remove');
+        });
+        Route::get('/{article}', [HelpController::class, 'show'])->name('help.show');
+    });
+
     // Under your name: My preferences, My profile, Notifications.
     Route::prefix('me')->group(function () {
         Route::get('/preferences', [MeController::class, 'preferences'])->name('me.preferences');
@@ -570,7 +591,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

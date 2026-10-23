@@ -88,5 +88,22 @@
         label();
     })();
 </script>
+@if ($user)
+<script>
+    // Keyboard shortcuts (listed in Help): "?" opens Help, "g" then a letter jumps to a module.
+    (function () {
+        const map = @js(collect(\App\Http\Controllers\Help\HelpController::shortcuts($user))->mapWithKeys(fn ($k) => [$k['keys'] => $k['url']]));
+        let g = 0;
+        document.addEventListener('keydown', function (e) {
+            const t = e.target;
+            if (e.ctrlKey || e.metaKey || e.altKey || (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))) return;
+            if (e.key === '?' && map['?']) { location.href = map['?']; return; }
+            if (e.key === 'g') { g = Date.now(); return; }
+            if (g && Date.now() - g < 1200 && map['g ' + e.key]) { location.href = map['g ' + e.key]; }
+            g = 0;
+        });
+    })();
+</script>
+@endif
 </body>
 </html>
