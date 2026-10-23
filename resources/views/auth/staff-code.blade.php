@@ -27,7 +27,7 @@
                 @else
                     <p>{{ __('login.code.intro', ['domain' => \App\Http\Controllers\Auth\EmailCodeLoginController::domain()]) }}</p>
                     <form method="post" action="{{ route('login.code.send') }}" class="stack-sm">@csrf
-                        <label class="field"><span>{{ __('login.code.email') }}</span><input type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" placeholder="name@{{ \App\Http\Controllers\Auth\EmailCodeLoginController::domain() }}"></label>
+                        <label class="field"><span>{{ __('login.code.email') }}</span><input type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" placeholder="{{ 'name@'.\App\Http\Controllers\Auth\EmailCodeLoginController::domain() }}"></label>
                         @error('email')<div class="login-error" role="alert">{{ $message }}</div>@enderror
                         <button class="primary" type="submit">{{ __('login.code.send') }}</button>
                     </form>
