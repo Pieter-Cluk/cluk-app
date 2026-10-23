@@ -70,18 +70,32 @@ class QrSvg
         ]);
     }
 
-    /** The lower-case "c" of the CLUK logo: a thick ring, open to the right. */
+    /**
+     * The CLUK "c" as on our equipment: a thick c, open to the right with
+     * straight cut ends, inside a thin outer arc with the same opening.
+     * Proportions taken from the mark (outer arc = 1).
+     */
     private static function letter(int $size, int $space, string $color): string
     {
         $c = $size / 2;
-        $stroke = $space * 0.22;
-        $r = $space / 2 - $stroke / 2 - 0.55;
-        $a = deg2rad(42);
-        $x = round($c + $r * cos($a), 3);
-        $y1 = round($c - $r * sin($a), 3);
-        $y2 = round($c + $r * sin($a), 3);
-        $r = round($r, 3);
+        $outer = $space / 2 - 0.45;                     // keep a little white around it
+        $thin = max(0.35, $outer * 0.035);              // the thin arc must still print on a 25 mm label
+        $rThin = $outer - $thin / 2;
+        $cOut = $outer * 0.89;                          // the thick c: outer edge
+        $cIn = $outer * 0.57;                           //                inner edge
+        $rC = ($cOut + $cIn) / 2;
+        $arc = function (float $r, float $deg) use ($c) {
+            $a = deg2rad($deg);
 
-        return '<path d="M'.$x.' '.$y1.' A'.$r.' '.$r.' 0 1 0 '.$x.' '.$y2.'" fill="none" stroke="'.e($color).'" stroke-width="'.round($stroke, 3).'"/>';
+            return [round($c + $r * cos($a), 3), round($c - $r * sin($a), 3), round($c + $r * sin($a), 3)];
+        };
+        [$x1, $y1a, $y1b] = $arc($rC, 40);
+        [$x2, $y2a, $y2b] = $arc($rThin, 39);
+        $col = e($color);
+
+        return '<g fill="none" stroke="'.$col.'" stroke-linecap="butt">'
+            .'<path d="M'.$x1.' '.$y1a.' A'.round($rC, 3).' '.round($rC, 3).' 0 1 0 '.$x1.' '.$y1b.'" stroke-width="'.round($cOut - $cIn, 3).'"/>'
+            .'<path d="M'.$x2.' '.$y2a.' A'.round($rThin, 3).' '.round($rThin, 3).' 0 1 0 '.$x2.' '.$y2b.'" stroke-width="'.round($thin, 3).'"/>'
+            .'</g>';
     }
 }
