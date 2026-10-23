@@ -29,7 +29,7 @@ return [
         'route_hint' => 'Inbound → Cleaning → Pre-check → Test bench → Post-check → Racks. Broken pieces go to Repair. A piece can only be rented again once it is scanned into a rack.',
     ],
     'scan' => [
-        'step1' => 'Step 1: scan the piece (or a place to see what is there)',
+        'step1' => 'Step 1: scan a piece, a box/dolly/case (to fill or empty it), or a place to see what is there',
         'step2' => 'Step 2: scan where you put it',
         'now' => 'now: :place',
         'next' => 'may go to: :places',
@@ -197,6 +197,7 @@ return [
         'carrier_not_on_order' => ':carrier holds pieces that are not on :order: :codes. Take them out first.',
         'carrier_not_out_with' => ':carrier is not out with :order.',
         'carrier_in_carrier' => 'A case cannot go in another case.',
+        'carrier_not_in' => ':code is not in :carrier.',
     ],
     'zone_names' => [
         'INBOUND' => 'Inbound',
@@ -472,6 +473,10 @@ return [
     'carriers' => [
         'kinds' => ['dolly' => 'Light dolly', 'box' => 'Storage box'],
         'contents' => 'Contains',
+        'mode_add' => 'Add pieces',
+        'mode_remove' => 'Take out pieces',
+        'step_add' => 'Scan the pieces that go in. Scan a place to move the whole case.',
+        'step_remove' => 'Scan the pieces you take out. Scan a place to move the whole case.',
         'packed' => ':code is in :carrier. Scan more pieces to add, or scan a place to move it.',
         'moved' => '{0} :carrier (empty) is now in :place.|{1} :carrier with 1 piece is now in :place.|[2,*] :carrier with :n pieces is now in :place.',
         'taken_out' => ':code is out of the dolly/box.',

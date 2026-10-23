@@ -188,4 +188,24 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame(self::case('BOX-03')->id, self::case($second)->case_id);
         $this->assertSame(2, $cable->fresh()->totalQty());
     }
+
+    public function test_add_and_take_out_buttons(): void
+    {
+        [$p] = $this->job();
+        $this->scan('BOX-07');
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('Add pieces')->assertSee('Take out pieces')->assertSee('Scan the pieces that go in');
+        $this->scan('LT-0001');
+        $this->scan('LT-0002');
+        $this->assertSame(2, self::case('BOX-07')->packed()->count());
+        // Switch to taking out: a scan removes the piece; one that is not in the box is refused.
+        $this->actingAs($this->crew)->post('/w/carrier/mode', ['mode' => 'remove'])->assertRedirect('/w/scan');
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('Scan the pieces you take out');
+        $this->scan('LT-0001')->assertSessionHasNoErrors();
+        $this->assertNull($p[1]->fresh()->case_id);
+        $this->scan('LT-0003')->assertSessionHasErrors('code');
+        $this->assertSame(1, self::case('BOX-07')->packed()->count());
+        // A place still moves the whole box.
+        $this->scan('GA2B1')->assertSessionHasNoErrors();
+        $this->assertSame('GA2B1', $p[2]->fresh()->location);
+    }
 }

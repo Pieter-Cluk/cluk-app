@@ -29,7 +29,7 @@ return [
         'route_hint' => 'Inbound → Nettoyage → Pré-contrôle → Banc de test → Post-contrôle → Racks. Les pièces en panne vont en Réparation. Une pièce n’est louable qu’une fois scannée dans un rack.',
     ],
     'scan' => [
-        'step1' => 'Étape 1 : scannez la pièce (ou une place pour voir ce qu’il y a)',
+        'step1' => 'Étape 1 : scannez une pièce, une caisse/un dolly/un case (pour le remplir ou le vider), ou un emplacement pour voir ce qui s’y trouve',
         'step2' => 'Étape 2 : scannez où vous la posez',
         'now' => 'actuellement : :place',
         'next' => 'peut aller vers : :places',
@@ -197,6 +197,7 @@ return [
         'carrier_not_on_order' => ':carrier contient des pièces qui ne sont pas sur :order : :codes. Sortez-les d’abord.',
         'carrier_not_out_with' => ':carrier n’est pas sorti avec :order.',
         'carrier_in_carrier' => 'Un case ne peut pas aller dans un autre case.',
+        'carrier_not_in' => ':code n’est pas dans :carrier.',
     ],
     'zone_names' => [
         'INBOUND' => 'Inbound',
@@ -472,6 +473,10 @@ return [
     'carriers' => [
         'kinds' => ['dolly' => 'Dolly lumière', 'box' => 'Caisse de rangement'],
         'contents' => 'Contient',
+        'mode_add' => 'Ajouter des pièces',
+        'mode_remove' => 'Sortir des pièces',
+        'step_add' => 'Scannez les pièces qui y entrent. Scannez un emplacement pour déplacer tout le case.',
+        'step_remove' => 'Scannez les pièces que vous sortez. Scannez un emplacement pour déplacer tout le case.',
         'packed' => ':code est dans :carrier. Scannez d’autres pièces à ajouter, ou un emplacement pour le déplacer.',
         'moved' => '{0} :carrier (vide) est maintenant à :place.|{1} :carrier avec 1 pièce est maintenant à :place.|[2,*] :carrier avec :n pièces est maintenant à :place.',
         'taken_out' => ':code est sorti du dolly/de la caisse.',

@@ -1,8 +1,14 @@
 <x-layouts.phone :title="__('warehouse.tabs.scan')" :back="route('w.home')">
     @if ($carrier)
         <section class="ph-card ph-pending">
-            <small class="ph-step">{{ __('warehouse.carriers.step') }}</small>
             <b>{{ $carrier->item->name }} · {{ $carrier->code }}</b>
+            @unless ($carrier->out_order_id)
+                <form method="post" action="{{ route('w.carrier.mode') }}" class="ph-seg">@csrf
+                    <button type="submit" name="mode" value="add" @class(['ph-seg-on' => $mode === 'add'])>＋ {{ __('warehouse.carriers.mode_add') }}</button>
+                    <button type="submit" name="mode" value="remove" @class(['ph-seg-on' => $mode === 'remove'])>－ {{ __('warehouse.carriers.mode_remove') }}</button>
+                </form>
+                <small class="ph-step">{{ __('warehouse.carriers.step_'.$mode) }}</small>
+            @endunless
             <small>{{ __('warehouse.scan.now', ['place' => \App\Services\Warehouse\Moves::label($carrier->location)]) }}@if ($carrier->outOrder) · {{ __('warehouse.carriers.with_order', ['order' => $carrier->outOrder->number]) }}@endif</small>
             @if ($carrier->packed->isEmpty())
                 <p class="muted">{{ __('warehouse.carriers.empty') }}</p>

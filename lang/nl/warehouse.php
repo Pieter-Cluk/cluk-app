@@ -29,7 +29,7 @@ return [
         'route_hint' => 'Inbound → Opkuis → Pre-check → Testbank → Post-check → Rekken. Defecte stukken gaan naar Herstelling. Een stuk is pas weer verhuurbaar als het in een rek gescand is.',
     ],
     'scan' => [
-        'step1' => 'Stap 1: scan het stuk (of een plaats om te zien wat er ligt)',
+        'step1' => 'Stap 1: scan een stuk, een box/dolly/case (om te vullen of leeg te maken), of een plaats om te zien wat er ligt',
         'step2' => 'Stap 2: scan waar je het legt',
         'now' => 'nu: :place',
         'next' => 'mag naar: :places',
@@ -197,6 +197,7 @@ return [
         'carrier_not_on_order' => ':carrier bevat stuks die niet op :order staan: :codes. Haal ze er eerst uit.',
         'carrier_not_out_with' => ':carrier is niet weg met :order.',
         'carrier_in_carrier' => 'Een case kan niet in een andere case.',
+        'carrier_not_in' => ':code zit niet in :carrier.',
     ],
     'zone_names' => [
         'INBOUND' => 'Inbound',
@@ -472,6 +473,10 @@ return [
     'carriers' => [
         'kinds' => ['dolly' => 'Lichtdolly', 'box' => 'Opbergbox'],
         'contents' => 'Bevat',
+        'mode_add' => 'Stuks toevoegen',
+        'mode_remove' => 'Stuks eruit halen',
+        'step_add' => 'Scan de stuks die erin gaan. Scan een plaats om de hele case te verplaatsen.',
+        'step_remove' => 'Scan de stuks die je eruit haalt. Scan een plaats om de hele case te verplaatsen.',
         'packed' => ':code zit in :carrier. Scan meer stuks om toe te voegen, of scan een plaats om hem te verplaatsen.',
         'moved' => '{0} :carrier (leeg) staat nu in :place.|{1} :carrier met 1 stuk staat nu in :place.|[2,*] :carrier met :n stuks staat nu in :place.',
         'taken_out' => ':code is uit de dolly/box gehaald.',

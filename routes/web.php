@@ -488,6 +488,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/scan', [PhoneController::class, 'scanPost'])->middleware('throttle:120,1')->name('scan.post');
             Route::post('/scan/cancel', [PhoneController::class, 'cancel'])->name('scan.cancel');
             Route::post('/carrier/out/{asset}', [PhoneController::class, 'carrierOut'])->whereNumber('asset')->name('carrier.out');
+            Route::post('/carrier/mode', [PhoneController::class, 'carrierMode'])->name('carrier.mode');
             Route::post('/pick/{order}/scan', [PhoneController::class, 'pickScan'])->whereNumber('order')->name('pick.scan');
             Route::post('/pick/{order}/lines/{line}', [PhoneController::class, 'pickCount'])->whereNumber(['order', 'line'])->name('count');
             Route::post('/pick/{order}/load', [PhoneController::class, 'load'])->whereNumber('order')->name('load');

@@ -29,7 +29,7 @@ return [
         'route_hint' => 'Inbound → Limpieza → Pre-control → Banco de pruebas → Post-control → Estanterías. Las piezas rotas van a Reparación. Una pieza solo se puede alquilar al escanearla en una estantería.',
     ],
     'scan' => [
-        'step1' => 'Paso 1: escanea la pieza (o un lugar para ver qué hay)',
+        'step1' => 'Paso 1: escanea una pieza, una caja/dolly/case (para llenarlo o vaciarlo), o un lugar para ver qué hay',
         'step2' => 'Paso 2: escanea dónde la dejas',
         'now' => 'ahora: :place',
         'next' => 'puede ir a: :places',
@@ -197,6 +197,7 @@ return [
         'carrier_not_on_order' => ':carrier contiene piezas que no están en :order: :codes. Sácalas primero.',
         'carrier_not_out_with' => ':carrier no está fuera con :order.',
         'carrier_in_carrier' => 'Un case no puede ir dentro de otro case.',
+        'carrier_not_in' => ':code no está en :carrier.',
     ],
     'zone_names' => [
         'INBOUND' => 'Inbound',
@@ -472,6 +473,10 @@ return [
     'carriers' => [
         'kinds' => ['dolly' => 'Dolly de luces', 'box' => 'Caja de almacenaje'],
         'contents' => 'Contiene',
+        'mode_add' => 'Añadir piezas',
+        'mode_remove' => 'Sacar piezas',
+        'step_add' => 'Escanea las piezas que entran. Escanea un lugar para mover todo el case.',
+        'step_remove' => 'Escanea las piezas que sacas. Escanea un lugar para mover todo el case.',
         'packed' => ':code está en :carrier. Escanea más piezas para añadir, o un lugar para moverlo.',
         'moved' => '{0} :carrier (vacío) está ahora en :place.|{1} :carrier con 1 pieza está ahora en :place.|[2,*] :carrier con :n piezas está ahora en :place.',
         'taken_out' => ':code ha salido del dolly/la caja.',

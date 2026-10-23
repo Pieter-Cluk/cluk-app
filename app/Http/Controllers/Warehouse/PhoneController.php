@@ -80,7 +80,8 @@ class PhoneController extends Controller
             $next = collect($next)->map(fn ($c) => $c === Zone::RACKS ? __('warehouse.zone_names.RACKS') : Moves::label($c))->all();
         }
 
-        return view('warehouse.phone.scan', ['pending' => $pending, 'next' => $next, 'here' => $here, 'scanned' => $request->query('scanned'), 'carrier' => $this->openCarrier($request)]);
+        return view('warehouse.phone.scan', ['pending' => $pending, 'next' => $next, 'here' => $here, 'scanned' => $request->query('scanned'),
+            'carrier' => $this->openCarrier($request), 'mode' => $request->session()->get('w.carrier_mode', 'add')]);
     }
 
     public function scanPost(Request $request): RedirectResponse
@@ -112,12 +113,23 @@ class PhoneController extends Controller
                 Carriers::pack($pending, $carrier, $request->user());
                 $request->session()->forget('w.pending');
                 $request->session()->put('w.carrier', $carrier->id);
+                $request->session()->put('w.carrier_mode', 'add');
 
                 return redirect()->route('w.scan')->with('status', __('warehouse.carriers.packed', ['code' => $pending->code, 'carrier' => $carrier->code]));
             }
             $request->session()->put('w.carrier', $carrier->id);
+            $request->session()->put('w.carrier_mode', 'add');
 
             return redirect()->route('w.scan');
+        }
+        if ($found['type'] === 'asset' && $open && $open->id !== $found['model']->id && $request->session()->get('w.carrier_mode') === 'remove') {
+            $piece = $found['model'];
+            if ($piece->case_id !== $open->id) {
+                return redirect()->route('w.scan')->withErrors(['code' => __('warehouse.errors.carrier_not_in', ['code' => $piece->code, 'carrier' => $open->code])]);
+            }
+            Carriers::unpack($piece, $request->user());
+
+            return redirect()->route('w.scan')->with('status', __('warehouse.carriers.taken_out', ['code' => $piece->code]));
         }
         if ($found['type'] === 'asset' && $open && $open->id !== $found['model']->id) {
             Carriers::pack($found['model'], $open, $request->user());
@@ -169,7 +181,7 @@ class PhoneController extends Controller
 
     public function cancel(Request $request): RedirectResponse
     {
-        $request->session()->forget(['w.pending', 'w.here', 'w.carrier']);
+        $request->session()->forget(['w.pending', 'w.here', 'w.carrier', 'w.carrier_mode']);
 
         return redirect()->route('w.scan');
     }
@@ -180,6 +192,14 @@ class PhoneController extends Controller
         $request->session()->forget('w.ret_carrier');
 
         return back();
+    }
+
+    /** Add or take out: what scanning a piece does while a case is open. */
+    public function carrierMode(Request $request): RedirectResponse
+    {
+        $request->session()->put('w.carrier_mode', $request->validate(['mode' => ['required', 'in:add,remove']])['mode']);
+
+        return redirect()->route('w.scan');
     }
 
     /** Take a piece out of the open dolly or box. */
