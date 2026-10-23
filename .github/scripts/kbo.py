@@ -161,6 +161,15 @@ def main():
     zips = find_zips(op, start, page)
     print('zip files offered:', sorted(zips))
     if mode == 'probe':
+        for path in ['/kbo-open-data/affiliation/prexml?form=', '/kbo-open-data/affiliation/index?lang=en']:
+            url, body = get(op, BASE + path)
+            p = Forms(); p.feed(body)
+            print('== page', path, '->', urllib.parse.urlparse(url).path)
+            for f in p.forms:
+                print('form', f['method'], f['action'], [(i.get('name'), i.get('type'), (i.get('value') or '')[:40] if (i.get('type') or '') in ('checkbox', 'radio', 'submit') else '') for i in f['inputs']])
+            print('links', sorted(set(h for h in p.links if 'lang=' not in h))[:40])
+            text = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', re.sub(r'(?s)<(script|style).*?</\1>', ' ', body)))
+            print('text', text[:1500])
         return
     name = latest_full(zips)
     print('downloading', name)
