@@ -71,4 +71,9 @@ return [
         'attribute_in_use' => 'Des articles de ces sous-catégories ont encore une valeur pour cet attribut.',
         'exists' => 'Cela existe déjà.',
     ],
+    'catalogues' => [
+        'dryhire' => 'Location sèche',
+        'sales' => 'Produits de vente',
+    ],
+    'category' => 'Catégorie',
 ];

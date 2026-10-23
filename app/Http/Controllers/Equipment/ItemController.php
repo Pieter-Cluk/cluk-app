@@ -70,8 +70,8 @@ class ItemController extends Controller
 
         return view('equipment.index', ['onlyWeb' => $onlyWeb,
             'items' => $items, 'kind' => $kind, 'cat' => $cat, 'sub' => $sub, 'tag' => $tag, 'opts' => $opts, 'subcategory' => $subcategory, 'q' => $q, 'counts' => $counts, 'showInactive' => $showInactive,
-            'categories' => Category::with('subcategories')->where('active', true)->orderBy('sort')->get(),
-            'tags' => Tag::where('active', true)->orderBy('sort')->get(),
+            'categories' => Category::of(Item::CATALOGUE)->with('subcategories')->where('active', true)->orderBy('sort')->get(),
+            'tags' => Tag::of(Item::CATALOGUE)->where('active', true)->orderBy('sort')->get(),
             'canEdit' => $request->user()->canUseModule('dryhire', 2),
         ]);
     }
@@ -93,12 +93,12 @@ class ItemController extends Controller
 
     public function create(Request $request): View
     {
-        return view('equipment.form', ['item' => new Item(['kind' => $request->query('kind', 'item'), 'serial' => true, 'unit' => 'pcs', 'in_search' => true, 'active' => true])] + Classification::forForm());
+        return view('equipment.form', ['item' => new Item(['kind' => $request->query('kind', 'item'), 'serial' => true, 'unit' => 'pcs', 'in_search' => true, 'active' => true])] + Classification::forForm(Item::CATALOGUE));
     }
 
     public function edit(Item $item): View
     {
-        return view('equipment.form', ['item' => $item->load(['options', 'tags'])] + Classification::forForm());
+        return view('equipment.form', ['item' => $item->load(['options', 'tags'])] + Classification::forForm(Item::CATALOGUE));
     }
 
     public function store(Request $request): RedirectResponse

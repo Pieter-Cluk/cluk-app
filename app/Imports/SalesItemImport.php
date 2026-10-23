@@ -4,8 +4,10 @@ namespace App\Imports;
 
 use App\Models\Company;
 use App\Models\ProductSales\SalesItem;
+use App\Services\Products\Classification;
 use App\Support\VatNumber;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Sales products (Product sales › Items) from a spreadsheet. An existing item is
@@ -32,6 +34,9 @@ class SalesItemImport extends Importer
             'type' => ['Type', 'Model', 'Product', 'Product name', 'Name', 'Naam', 'Modèle', 'Modelo'],
             'description' => ['Description', 'Omschrijving', 'Beschrijving', 'Désignation', 'Descripción'],
             'category' => ['Category', 'Categorie', 'Catégorie', 'Categoría'],
+            'subcategory' => ['Sub-Category', 'Subcategory', 'Subcategorie', 'Sous-catégorie', 'Subcategoría'],
+            'tags' => ['Tags', 'Labels', 'Étiquettes', 'Etiquetas'],
+            'search_words' => ['Search words', 'Zoekwoorden', 'Mots de recherche', 'Palabras de búsqueda'],
             'unit' => ['Unit', 'Eenheid', 'Unité', 'Unidad'],
             'list_price' => ['List price', 'Price', 'Sales price', 'Selling price', 'Verkoopprijs', 'Lijstprijs', 'Prijs', 'Prix', 'Precio'],
             'stock' => ['Stock', 'In stock', 'Quantity', 'Qty', 'Voorraad', 'Aantal', 'Quantité', 'Cantidad'],
@@ -71,9 +76,35 @@ class SalesItemImport extends Importer
         $isNew = $item === null;
         $item ??= new SalesItem(['number' => SalesItem::nextNumber(), 'unit' => 'piece', 'active' => true, 'list_price_cents' => 0, 'stock_qty' => 0]);
 
-        $category = self::clean($row['category'] ?? null);
-        if ($category) {
-            $category = collect(SalesItem::CATEGORIES)->first(fn ($c) => Importer::key($c) === Importer::key($category)) ?? Str::limit($category, 60, '');
+        // Category (and subcategory) must be in the sales lists; a category with one subcategory needs no subcategory column.
+        $class = null;
+        $catText = self::clean($row['category'] ?? null);
+        $subText = self::clean($row['subcategory'] ?? null);
+        $tags = array_values(array_filter(array_map('trim', preg_split('/[,;]/', (string) ($row['tags'] ?? '')))));
+        if ($catText !== null || $tags) {
+            $category = $catText !== null ? Classification::findCategory($catText, SalesItem::CATALOGUE) : $item->productCategory;
+            if ($catText !== null && ! $category) {
+                $this->report['skipped']++;
+                $this->message($line, 'error', __('import.errors.unknown_category', ['value' => $catText]));
+
+                return;
+            }
+            $active = $category ? $category->subcategories->where('active', true) : collect();
+            $sub = $subText !== null ? ($category ? Classification::findSubcategory($category, $subText) : null) : ($active->count() === 1 ? $active->first() : $item->productSubcategory);
+            if ($category && ! $sub) {
+                $this->report['skipped']++;
+                $this->message($line, 'error', $subText !== null ? __('import.errors.unknown_subcategory', ['value' => $subText]) : __('products.errors.subcategory_required'));
+
+                return;
+            }
+            try {
+                $class = Classification::check($sub?->category_id, $sub?->id, [], $tags, catalogue: SalesItem::CATALOGUE);
+            } catch (ValidationException $e) {
+                $this->report['skipped']++;
+                $this->message($line, 'error', implode(' ', $e->validator->errors()->all()));
+
+                return;
+            }
         }
         $unit = self::clean($row['unit'] ?? null);
         if ($unit && ! in_array(Str::lower($unit), SalesItem::UNITS, true)) {
@@ -82,7 +113,7 @@ class SalesItemImport extends Importer
         }
         $values = array_filter([
             'brand' => $brand, 'type' => Str::limit($type, 120, ''), 'description' => ($d = self::clean($row['description'] ?? null)) ? Str::limit($d, 300, '') : null,
-            'category' => $category, 'unit' => $unit ? Str::lower($unit) : null, 'ean' => ($e = self::clean($row['ean'] ?? null)) ? Str::limit($e, 32, '') : null,
+            'unit' => $unit ? Str::lower($unit) : null, 'ean' => ($e = self::clean($row['ean'] ?? null)) ? Str::limit($e, 32, '') : null,
         ], fn ($v) => $v !== null);
         foreach (['list_price' => 'list_price_cents'] as $col => $field) {
             if (($p = self::amount($row[$col] ?? null)) !== null) {
@@ -97,8 +128,17 @@ class SalesItemImport extends Importer
             }
         }
         $item->fill($values);
+        if ($class) {
+            $item->placeIn($class['sub']);
+            if (($w = self::clean($row['search_words'] ?? null)) !== null) {
+                $item->search_words = Str::limit($w, 1000, '');
+            }
+        }
         $changed = $item->isDirty();
         $item->save();
+        if ($class && $class['tags']) {
+            $changed = (bool) $item->tags()->syncWithoutDetaching($class['tags'])['attached'] || $changed;
+        }
 
         // Up to three suppliers with their article number, discount and delivery time.
         $pref = (int) (self::amount($row['preferred'] ?? null) ?? 0);

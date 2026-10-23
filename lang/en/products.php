@@ -71,4 +71,9 @@ return [
         'attribute_in_use' => 'Items in those subcategories still have a value for this attribute.',
         'exists' => 'This already exists.',
     ],
+    'catalogues' => [
+        'dryhire' => 'Dry-hire',
+        'sales' => 'Sales products',
+    ],
+    'category' => 'Category',
 ];

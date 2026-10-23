@@ -71,4 +71,9 @@ return [
         'attribute_in_use' => 'Hay artículos de esas subcategorías con un valor para este atributo.',
         'exists' => 'Ya existe.',
     ],
+    'catalogues' => [
+        'dryhire' => 'Alquiler en seco',
+        'sales' => 'Productos de venta',
+    ],
+    'category' => 'Categoría',
 ];

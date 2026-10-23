@@ -10,6 +10,7 @@ use App\Models\Product\AttributeOption;
 use App\Models\Product\Category;
 use App\Models\Product\Subcategory;
 use App\Models\Product\Tag;
+use App\Models\ProductSales\SalesItem;
 use App\Services\Media\Translator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,28 +29,52 @@ use Illuminate\View\View;
  */
 class ProductListController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $c = $this->catalogue($request);
+        $model = self::model($c);
+        [$optTable, $tagTable] = self::pivots($c);
+
         return view('settings.product-lists', [
-            'categories' => Category::with('subcategories')->orderBy('sort')->get(),
-            'attrList' => Attribute::with(['options', 'subcategories:id'])->orderBy('sort')->get(),
-            'tags' => Tag::orderBy('sort')->get(),
-            'subCounts' => Item::whereNotNull('subcategory_id')->selectRaw('subcategory_id, count(*) n')->groupBy('subcategory_id')->pluck('n', 'subcategory_id'),
-            'catCounts' => Item::whereNotNull('category_id')->selectRaw('category_id, count(*) n')->groupBy('category_id')->pluck('n', 'category_id'),
-            'optCounts' => DB::table('equipment_item_options')->selectRaw('option_id, count(*) n')->groupBy('option_id')->pluck('n', 'option_id'),
-            'tagCounts' => DB::table('equipment_item_tag')->selectRaw('tag_id, count(*) n')->groupBy('tag_id')->pluck('n', 'tag_id'),
-            'allSubs' => Subcategory::with('category')->orderBy('category_id')->orderBy('sort')->get(),
+            'catalogue' => $c,
+            'categories' => Category::of($c)->with('subcategories')->orderBy('sort')->get(),
+            'attrList' => Attribute::of($c)->with(['options', 'subcategories:id'])->orderBy('sort')->get(),
+            'tags' => Tag::of($c)->orderBy('sort')->get(),
+            'subCounts' => $model::whereNotNull('subcategory_id')->selectRaw('subcategory_id, count(*) n')->groupBy('subcategory_id')->pluck('n', 'subcategory_id'),
+            'catCounts' => $model::whereNotNull('category_id')->selectRaw('category_id, count(*) n')->groupBy('category_id')->pluck('n', 'category_id'),
+            'optCounts' => DB::table($optTable)->selectRaw('option_id, count(*) n')->groupBy('option_id')->pluck('n', 'option_id'),
+            'tagCounts' => DB::table($tagTable)->selectRaw('tag_id, count(*) n')->groupBy('tag_id')->pluck('n', 'tag_id'),
+            'allSubs' => Subcategory::with('category')->whereHas('category', fn ($q) => $q->where('catalogue', $c))->orderBy('category_id')->orderBy('sort')->get(),
             'canTranslate' => Translator::available(),
         ]);
+    }
+
+    /** Which catalogue the screen works on: ?c=sales, else dry-hire. */
+    private function catalogue(Request $request): string
+    {
+        return in_array($request->input('c'), Category::CATALOGUES, true) ? $request->input('c') : 'dryhire';
+    }
+
+    /** @return class-string<Item|SalesItem> */
+    private static function model(string $catalogue): string
+    {
+        return $catalogue === 'sales' ? SalesItem::class : Item::class;
+    }
+
+    /** @return array{0: string, 1: string} attribute values table, tags table */
+    private static function pivots(string $catalogue): array
+    {
+        return $catalogue === 'sales' ? ['sales_item_options', 'sales_item_tag'] : ['equipment_item_options', 'equipment_item_tag'];
     }
 
     // ── Categories ───────────────────────────────────────────────────────────
 
     public function storeCategory(Request $request): RedirectResponse
     {
-        $d = $this->validateNamed($request, ['code' => ['required', 'string', 'max:6', 'regex:/^[A-Za-z0-9]+$/', Rule::unique('product_categories', 'code')]]);
-        $c = Category::create(['code' => strtoupper($d['code']), 'slug' => $this->freeSlug(Category::query(), $d['name']['en']), 'name' => $d['name'],
-            'sort' => (int) Category::max('sort') + 10, 'active' => false]);
+        $cat = $this->catalogue($request);
+        $d = $this->validateNamed($request, ['code' => ['required', 'string', 'max:6', 'regex:/^[A-Za-z0-9]+$/', Rule::unique('product_categories', 'code')->where('catalogue', $cat)]]);
+        $c = Category::create(['catalogue' => $cat, 'code' => strtoupper($d['code']), 'slug' => $this->freeSlug(Category::of($cat), $d['name']['en']), 'name' => $d['name'],
+            'sort' => (int) Category::of($cat)->max('sort') + 10, 'active' => false]);
         AuditLog::record('products.category_added', $c, ['name' => $c->label('en')], $request->user());
 
         return back()->with('status', __('products.flash.added_hidden'));
@@ -58,8 +83,8 @@ class ProductListController extends Controller
     public function updateCategory(Request $request, Category $category): RedirectResponse
     {
         $d = $this->validateNamed($request, [
-            'code' => ['required', 'string', 'max:6', 'regex:/^[A-Za-z0-9]+$/', Rule::unique('product_categories', 'code')->ignore($category->id)],
-            'slug' => ['nullable', 'string', 'max:80', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::unique('product_categories', 'slug')->ignore($category->id)],
+            'code' => ['required', 'string', 'max:6', 'regex:/^[A-Za-z0-9]+$/', Rule::unique('product_categories', 'code')->where('catalogue', $category->catalogue)->ignore($category->id)],
+            'slug' => ['nullable', 'string', 'max:80', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::unique('product_categories', 'slug')->where('catalogue', $category->catalogue)->ignore($category->id)],
             'sort' => ['nullable', 'integer'], 'active' => ['nullable', 'boolean'],
         ]);
         $this->fillSafe($category, $d);
@@ -70,7 +95,7 @@ class ProductListController extends Controller
 
     public function destroyCategory(Request $request, Category $category): RedirectResponse
     {
-        if ($category->subcategories()->exists() || Item::where('category_id', $category->id)->exists()) {
+        if ($category->subcategories()->exists() || self::model($category->catalogue)::where('category_id', $category->id)->exists()) {
             throw ValidationException::withMessages(['category' => __('products.errors.in_use')]);
         }
         AuditLog::record('products.category_deleted', null, ['name' => $category->label('en')], $request->user());
@@ -99,14 +124,16 @@ class ProductListController extends Controller
             'sort' => ['nullable', 'integer'], 'active' => ['nullable', 'boolean'],
             'move_to' => ['nullable', 'integer', Rule::exists('product_subcategories', 'id')->where('active', true)],
         ]);
-        $inUse = Item::where('subcategory_id', $subcategory->id)->count();
+        $subcategory->loadMissing('category');
+        $model = self::model($subcategory->category->catalogue);
+        $inUse = $model::where('subcategory_id', $subcategory->id)->count();
         if (empty($d['active']) && $subcategory->active && $inUse) {
             // Switching off a subcategory that items use: they move first, keeping their numbers.
-            $to = isset($d['move_to']) ? Subcategory::find($d['move_to']) : null;
-            if (! $to || $to->is($subcategory)) {
+            $to = isset($d['move_to']) ? Subcategory::with('category')->find($d['move_to']) : null;
+            if (! $to || $to->is($subcategory) || $to->category->catalogue !== $subcategory->category->catalogue) {
                 throw ValidationException::withMessages(['move_to' => __('products.errors.move_first', ['n' => $inUse])]);
             }
-            foreach (Item::where('subcategory_id', $subcategory->id)->get() as $item) {
+            foreach ($model::where('subcategory_id', $subcategory->id)->get() as $item) {
                 $item->placeIn($to);
                 $item->save();
                 $item->options()->detach($item->options->filter(fn ($o) => ! $to->attrs->contains('id', $o->attribute_id))->pluck('id'));
@@ -115,7 +142,9 @@ class ProductListController extends Controller
         }
         $this->fillSafe($subcategory, $d);
         // The English name is also kept in the items' text column (read by the warehouse).
-        Item::where('subcategory_id', $subcategory->id)->update(['subcategory' => $subcategory->label('en')]);
+        if ($model === Item::class) {
+            Item::where('subcategory_id', $subcategory->id)->update(['subcategory' => $subcategory->label('en')]);
+        }
         $this->audit($request, 'products.subcategory_saved', $subcategory);
 
         return back()->with('status', __('products.flash.saved'));
@@ -123,7 +152,7 @@ class ProductListController extends Controller
 
     public function destroySubcategory(Request $request, Subcategory $subcategory): RedirectResponse
     {
-        if (Item::where('subcategory_id', $subcategory->id)->exists()) {
+        if (self::model($subcategory->category->catalogue)::where('subcategory_id', $subcategory->id)->exists()) {
             throw ValidationException::withMessages(['subcategory' => __('products.errors.in_use')]);
         }
         AuditLog::record('products.subcategory_deleted', null, ['name' => $subcategory->label('en')], $request->user());
@@ -136,12 +165,13 @@ class ProductListController extends Controller
 
     public function storeAttribute(Request $request): RedirectResponse
     {
+        $cat = $this->catalogue($request);
         $d = $this->validateNamed($request, ['multiple' => ['nullable', 'boolean'], 'unit' => ['nullable', 'string', 'max:10']]);
         $key = Str::slug($d['name']['en'], '_');
-        if (Attribute::where('key', $key)->exists()) {
+        if (Attribute::of($cat)->where('key', $key)->exists()) {
             throw ValidationException::withMessages(['name.en' => __('products.errors.exists')]);
         }
-        $a = Attribute::create(['key' => $key, 'name' => $d['name'], 'multiple' => (bool) ($d['multiple'] ?? false), 'unit' => $d['unit'] ?? null, 'sort' => (int) Attribute::max('sort') + 10]);
+        $a = Attribute::create(['catalogue' => $cat, 'key' => $key, 'name' => $d['name'], 'multiple' => (bool) ($d['multiple'] ?? false), 'unit' => $d['unit'] ?? null, 'sort' => (int) Attribute::of($cat)->max('sort') + 10]);
         AuditLog::record('products.attribute_added', $a, ['name' => $a->label('en')], $request->user());
 
         return back()->with('status', __('products.flash.saved'));
@@ -151,10 +181,13 @@ class ProductListController extends Controller
     {
         $d = $this->validateNamed($request, ['unit' => ['nullable', 'string', 'max:10'], 'subs' => ['nullable', 'array'], 'subs.*' => ['integer', 'exists:product_subcategories,id']]);
         $before = $attribute->subcategories()->pluck('product_subcategories.id')->all();
-        $after = array_map('intval', $d['subs'] ?? []);
+        // Only subcategories of the attribute's own catalogue.
+        $after = Subcategory::whereIn('id', array_map('intval', $d['subs'] ?? []))->whereHas('category', fn ($q) => $q->where('catalogue', $attribute->catalogue))->pluck('id')->all();
         $removed = array_diff($before, $after);
-        if ($removed && DB::table('equipment_item_options')->join('equipment_items', 'equipment_items.id', '=', 'equipment_item_options.item_id')
-            ->whereIn('equipment_items.subcategory_id', $removed)->whereIn('option_id', $attribute->options()->pluck('id'))->exists()) {
+        [$optTable] = self::pivots($attribute->catalogue);
+        [$itemTable, $fk] = $attribute->catalogue === 'sales' ? ['sales_items', 'sales_item_id'] : ['equipment_items', 'item_id'];
+        if ($removed && DB::table($optTable)->join($itemTable, $itemTable.'.id', '=', $optTable.'.'.$fk)
+            ->whereIn($itemTable.'.subcategory_id', $removed)->whereIn('option_id', $attribute->options()->pluck('id'))->exists()) {
             throw ValidationException::withMessages(['subs' => __('products.errors.attribute_in_use')]);
         }
         $attribute->fill(['name' => $d['name'], 'unit' => $d['unit'] ?? null])->save();
@@ -187,7 +220,7 @@ class ProductListController extends Controller
 
     public function destroyOption(Request $request, AttributeOption $option): RedirectResponse
     {
-        if (DB::table('equipment_item_options')->where('option_id', $option->id)->exists()) {
+        if (DB::table('equipment_item_options')->where('option_id', $option->id)->exists() || DB::table('sales_item_options')->where('option_id', $option->id)->exists()) {
             throw ValidationException::withMessages(['option' => __('products.errors.in_use')]);
         }
         AuditLog::record('products.option_deleted', null, ['value' => $option->value], $request->user());
@@ -200,8 +233,9 @@ class ProductListController extends Controller
 
     public function storeTag(Request $request): RedirectResponse
     {
+        $cat = $this->catalogue($request);
         $d = $this->validateNamed($request);
-        $t = Tag::create(['slug' => $this->freeSlug(Tag::query(), $d['name']['en']), 'name' => $d['name'], 'sort' => (int) Tag::max('sort') + 10, 'active' => true]);
+        $t = Tag::create(['catalogue' => $cat, 'slug' => $this->freeSlug(Tag::of($cat), $d['name']['en']), 'name' => $d['name'], 'sort' => (int) Tag::of($cat)->max('sort') + 10, 'active' => true]);
         AuditLog::record('products.tag_added', $t, ['name' => $t->label('en')], $request->user());
 
         return back()->with('status', __('products.flash.saved'));
@@ -218,7 +252,7 @@ class ProductListController extends Controller
 
     public function destroyTag(Request $request, Tag $tag): RedirectResponse
     {
-        if (DB::table('equipment_item_tag')->where('tag_id', $tag->id)->exists()) {
+        if (DB::table(self::pivots($tag->catalogue)[1])->where('tag_id', $tag->id)->exists()) {
             throw ValidationException::withMessages(['tag' => __('products.errors.in_use')]);
         }
         AuditLog::record('products.tag_deleted', null, ['name' => $tag->label('en')], $request->user());
@@ -254,7 +288,7 @@ class ProductListController extends Controller
         }
         $m->save();
         if ($m instanceof Category) {
-            Item::where('category_id', $m->id)->update(['category' => $m->label('en')]);
+            self::model($m->catalogue)::where('category_id', $m->id)->update(['category' => $m->label('en')]);
         }
     }
 

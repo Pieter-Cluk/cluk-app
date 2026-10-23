@@ -4,7 +4,7 @@
 </div>
 <label class="field"><span>{{ __('psales.items.description') }}</span><input name="description" maxlength="300" value="{{ old('description', $it->description) }}"></label>
 <div class="inline-form">
-    <label class="field"><span>{{ __('psales.items.category') }}</span><select name="category"><option value="">—</option>@foreach (\App\Models\ProductSales\SalesItem::CATEGORIES as $c)<option value="{{ $c }}" @selected(old('category', $it->category) === $c)>{{ __('psales.cats.'.$c) }}</option>@endforeach</select></label>
+    @include('products._place', ['p' => $it])
     <label class="field"><span>{{ __('psales.items.unit') }}</span><select name="unit">@foreach (\App\Models\ProductSales\SalesItem::UNITS as $u)<option value="{{ $u }}" @selected(old('unit', $it->unit) === $u)>{{ __('psales.units.'.$u) }}</option>@endforeach</select></label>
 </div>
 <div class="inline-form">
@@ -14,3 +14,4 @@
     <label class="field"><span>{{ __('psales.items.ean') }}</span><input name="ean" maxlength="32" value="{{ old('ean', $it->ean ?? '') }}" inputmode="numeric"></label>
 </div>
 <label class="check"><input type="hidden" name="on_website" value="0"><input type="checkbox" name="on_website" value="1" @checked(old('on_website', $it->on_website ?? false)) @disabled(! auth()->user()->hasRight('equipment.website'))><span>{{ __('psales.items.on_website') }}<br><small>{{ __('equipment.on_website_hint') }}</small></span></label>
+@include('products._tags', ['p' => $it])

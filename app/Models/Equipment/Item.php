@@ -3,13 +3,12 @@
 namespace App\Models\Equipment;
 
 use App\Models\Product\AttributeOption;
-use App\Models\Product\Category;
+use App\Models\Product\Classified;
 use App\Models\Product\Subcategory;
 use App\Models\Product\Tag;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -25,7 +24,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class Item extends Model
 {
+    use Classified;
+
     protected $table = 'equipment_items';
+
+    public const CATALOGUE = 'dryhire';
 
     public const KINDS = ['item', 'package', 'case', 'service'];
 
@@ -38,16 +41,6 @@ class Item extends Model
             'stock_qty' => 'integer', 'day_price_cents' => 'integer', 'catalog_price_cents' => 'integer',
             'weight_kg' => 'float', 'width_m' => 'float', 'length_m' => 'float', 'height_m' => 'float',
         ];
-    }
-
-    public function productCategory(): BelongsTo
-    {
-        return $this->belongsTo(Category::class, 'category_id');
-    }
-
-    public function productSubcategory(): BelongsTo
-    {
-        return $this->belongsTo(Subcategory::class, 'subcategory_id');
     }
 
     /** Chosen attribute values (length, band, colour…). */
@@ -73,12 +66,6 @@ class Item extends Model
             'category_id' => $sub?->category_id, 'subcategory_id' => $sub?->id,
             'category' => $sub?->category->label('en'), 'subcategory' => $sub?->label('en'),
         ]);
-    }
-
-    /** "Square truss · NH34 · Black · 2 m" style chips for lists and quote search. */
-    public function optionLabels(): array
-    {
-        return $this->options->sortBy(fn ($o) => [$o->attribute?->sort, $o->sort])->map(fn ($o) => $o->display())->values()->all();
     }
 
     public function photos(): HasMany

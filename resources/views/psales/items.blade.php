@@ -14,7 +14,7 @@
     <form method="get" class="inline-form mt"><input name="q" value="{{ $q }}" placeholder="{{ __('psales.items.search') }}" aria-label="{{ __('psales.items.search') }}"><button class="btn" type="submit">{{ __('psales.items.find') }}</button></form>
     <nav class="chips mt">
         <a @class(['chip', 'chip-on' => ! $cat]) href="{{ route('psales.items', array_filter(['q' => $q])) }}">{{ __('psales.items.all') }}</a>
-        @foreach (\App\Models\ProductSales\SalesItem::CATEGORIES as $c)<a @class(['chip', 'chip-on' => $cat === $c]) href="{{ route('psales.items', array_filter(['cat' => $c, 'q' => $q])) }}">{{ __('psales.cats.'.$c) }}</a>@endforeach
+        @foreach ($categories as $c)@if ($c->active)<a @class(['chip', 'chip-on' => $cat === $c->id]) href="{{ route('psales.items', array_filter(['cat' => $c->id, 'q' => $q])) }}">{{ $c->label() }}</a>@endif @endforeach
     </nav>
 
     <div class="split mt">
@@ -50,7 +50,8 @@
                     <dl class="facts">
                         <dt>{{ __('psales.items.list_price') }}</dt><dd><b>{{ $eur($sel->list_price_cents) }}</b> {{ __('psales.excl') }}</dd>
                         <dt>{{ __('psales.items.stock') }}</dt><dd>{{ $sel->stock_qty }} {{ __('psales.units.'.$sel->unit) }}@if ($sel->reserved()) · {{ __('psales.items.reserved', ['n' => $sel->reserved()]) }}@endif @if ($sel->min_stock) · {{ __('psales.items.min', ['n' => $sel->min_stock]) }}@endif</dd>
-                        <dt>{{ __('psales.items.category') }}</dt><dd>{{ $sel->category ? __('psales.cats.'.$sel->category) : '—' }}</dd>
+                        <dt>{{ __('psales.items.category') }}</dt><dd>@if ($sel->productCategory){{ $sel->productCategory->label() }}@if ($sel->productSubcategory) · {{ $sel->productSubcategory->label() }}@endif @else{{ $sel->category ?? '—' }}@endif
+                            @foreach ($sel->optionLabels() as $l)<span class="chip-attr">{{ $l }}</span>@endforeach @foreach ($sel->tags as $t)<span class="pill">{{ $t->label() }}</span>@endforeach</dd>
                     </dl>
                     @if ($canEdit)
                         <details class="mt"><summary>{{ __('psales.items.edit') }}</summary>
@@ -130,4 +131,5 @@
             @endif
         </aside>
     </div>
+    @include('products._place-js')
 </x-layouts.app>

@@ -8,6 +8,7 @@ use App\Models\Product\AttributeOption;
 use App\Models\Product\Category;
 use App\Models\Product\Subcategory;
 use App\Models\Product\Tag;
+use App\Models\ProductSales\SalesItem;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 
@@ -24,10 +25,13 @@ class Classification
      * @param  list<int|string>  $tags  tag ids or slugs
      * @return array{sub: ?Subcategory, options: list<int>, tags: list<int>}
      */
-    public static function check(?int $categoryId, ?int $subcategoryId, array $values = [], array $tags = [], bool $byValue = false, string $field = ''): array
+    public static function check(?int $categoryId, ?int $subcategoryId, array $values = [], array $tags = [], bool $byValue = false, string $field = '', string $catalogue = 'dryhire'): array
     {
         $errors = [];
         $sub = $subcategoryId ? Subcategory::with(['category', 'attrs.options'])->find($subcategoryId) : null;
+        if ($sub && $sub->category->catalogue !== $catalogue) {
+            $sub = null; // a subcategory of the other catalogue is unknown here
+        }
         if ($subcategoryId && ! $sub) {
             $errors[$field.'subcategory_id'] = __('products.errors.unknown_subcategory');
         } elseif ($sub && $categoryId && $sub->category_id !== $categoryId) {
@@ -46,7 +50,7 @@ class Classification
             /** @var Attribute|null $attr */
             $attr = $allowed->get($key);
             if (! $attr) {
-                $name = Attribute::where('key', $key)->first()?->label() ?? $key;
+                $name = Attribute::of($catalogue)->where('key', $key)->first()?->label() ?? $key;
                 $errors[$field.'attr.'.$key] = __('products.errors.attribute_not_here', ['attr' => $name, 'sub' => $sub?->label() ?? '—']);
 
                 continue;
@@ -71,7 +75,7 @@ class Classification
 
         $tagIds = [];
         if ($tags) {
-            $known = Tag::all();
+            $known = Tag::of($catalogue)->get();
             foreach ($tags as $t) {
                 $tag = is_numeric($t) ? $known->firstWhere('id', (int) $t) : $known->first(fn (Tag $k) => self::same($k->slug, (string) $t) || collect($k->name)->contains(fn ($n) => self::same((string) $n, (string) $t)));
                 if (! $tag) {
@@ -91,7 +95,7 @@ class Classification
     }
 
     /** Save a checked classification on an item (after save, so it has an id). */
-    public static function apply(Item $item, array $checked, ?string $searchWords = null, bool $withTags = true): void
+    public static function apply(Item|SalesItem $item, array $checked, ?string $searchWords = null, bool $withTags = true): void
     {
         $item->placeIn($checked['sub']);
         if ($searchWords !== null) {
@@ -105,9 +109,9 @@ class Classification
     }
 
     /** Find a category by code or name in any language (import). */
-    public static function findCategory(string $text): ?Category
+    public static function findCategory(string $text, string $catalogue = 'dryhire'): ?Category
     {
-        return Category::all()->first(fn (Category $c) => self::same($c->code, $text) || collect($c->name)->contains(fn ($n) => self::same((string) $n, $text)));
+        return Category::of($catalogue)->with('subcategories')->get()->first(fn (Category $c) => self::same($c->code, $text) || collect($c->name)->contains(fn ($n) => self::same((string) $n, $text)));
     }
 
     public static function findSubcategory(Category $cat, string $text): ?Subcategory
@@ -124,12 +128,12 @@ class Classification
     }
 
     /** All lists for a form: categories with their subcategories, attributes with options and the subcategories they apply to. */
-    public static function forForm(): array
+    public static function forForm(string $catalogue = 'dryhire'): array
     {
         return [
-            'categories' => Category::with(['subcategories.attrs'])->orderBy('sort')->get(),
-            'attrList' => Attribute::with(['options' => fn ($q) => $q->where('active', true), 'subcategories:id'])->orderBy('sort')->get(),
-            'tags' => Tag::where('active', true)->orderBy('sort')->get(),
+            'categories' => Category::of($catalogue)->with(['subcategories.attrs'])->orderBy('sort')->get(),
+            'attrList' => Attribute::of($catalogue)->with(['options' => fn ($q) => $q->where('active', true), 'subcategories:id'])->orderBy('sort')->get(),
+            'tags' => Tag::of($catalogue)->where('active', true)->orderBy('sort')->get(),
         ];
     }
 

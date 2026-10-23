@@ -71,4 +71,9 @@ return [
         'attribute_in_use' => 'Artikels in die subcategorieën hebben nog een waarde voor deze eigenschap.',
         'exists' => 'Dit bestaat al.',
     ],
+    'catalogues' => [
+        'dryhire' => 'Dryhire',
+        'sales' => 'Verkoopproducten',
+    ],
+    'category' => 'Categorie',
 ];

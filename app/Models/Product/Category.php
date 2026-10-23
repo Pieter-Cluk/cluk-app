@@ -7,12 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** Level 1 of the catalogue (Audio, Lighting…). The website links to the slug, never to the name. */
-#[Fillable(['code', 'slug', 'old_slugs', 'name', 'sort', 'active'])]
+#[Fillable(['catalogue', 'code', 'slug', 'old_slugs', 'name', 'sort', 'active'])]
 class Category extends Model
 {
     use Translated;
 
     protected $table = 'product_categories';
+
+    /** The two catalogues: dry-hire (rental) and sales; each has its own lists. */
+    public const CATALOGUES = ['dryhire', 'sales'];
+
+    public function scopeOf($q, string $catalogue)
+    {
+        return $q->where('catalogue', $catalogue);
+    }
 
     protected function casts(): array
     {

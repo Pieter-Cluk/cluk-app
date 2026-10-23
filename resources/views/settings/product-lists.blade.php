@@ -17,7 +17,10 @@
     @include('partials.flash')
     @if ($errors->any())<div class="flash flash-err">{{ $errors->first() }}</div>@endif
 
-    <section class="card">
+    <nav class="tabs">
+        @foreach (\App\Models\Product\Category::CATALOGUES as $cat)<a @class(['tab', 'tab-on' => $catalogue === $cat]) href="{{ route('settings.products.index', ['c' => $cat]) }}">{{ __('products.catalogues.'.$cat) }}</a>@endforeach
+    </nav>
+    <section class="card mt">
         <h2>{{ __('products.safe_title') }}</h2>
         <ul class="plain-list">@foreach (__('products.safe_rules') as $r)<li>{{ $r }}</li>@endforeach</ul>
     </section>
@@ -80,7 +83,7 @@
         </section>
     @endforeach
     <details class="card mt"><summary>{{ __('products.add_category') }}</summary>
-        <form method="post" action="{{ route('settings.products.category.store') }}" class="pl-form">@csrf
+        <form method="post" action="{{ route('settings.products.category.store') }}" class="pl-form">@csrf<input type="hidden" name="c" value="{{ $catalogue }}">
             <div class="pl-grid">{!! $names(null) !!}<label class="field"><span>{{ __('products.code') }}</span><input name="code" maxlength="6" required></label></div>
             @if ($canTranslate)<label class="check"><input type="checkbox" name="translate" value="1" checked><span>{{ __('products.translate') }}</span></label>@endif
             <button class="primary" type="submit">{{ __('products.add') }}</button>
@@ -115,7 +118,7 @@
         </section>
     @endforeach
     <details class="card mt"><summary>{{ __('products.add_attribute') }}</summary>
-        <form method="post" action="{{ route('settings.products.attribute.store') }}" class="pl-form">@csrf
+        <form method="post" action="{{ route('settings.products.attribute.store') }}" class="pl-form">@csrf<input type="hidden" name="c" value="{{ $catalogue }}">
             <div class="pl-grid">{!! $names(null) !!}<label class="field"><span>{{ __('products.unit') }}</span><input name="unit" maxlength="10" class="w-sm"></label></div>
             <label class="check"><input type="checkbox" name="multiple" value="1"><span>{{ __('products.several_hint') }}</span></label>
             @if ($canTranslate)<label class="check"><input type="checkbox" name="translate" value="1" checked><span>{{ __('products.translate') }}</span></label>@endif
@@ -134,7 +137,7 @@
             @unless ($tagCounts[$t->id] ?? 0)<form method="post" action="{{ route('settings.products.tag.destroy', $t) }}">@csrf @method('delete')<button class="linkbtn" type="submit">{{ __('products.delete') }}</button></form>@endunless
         </details>@endforeach</div>
         <details class="mt"><summary>{{ __('products.add_tag') }}</summary>
-            <form method="post" action="{{ route('settings.products.tag.store') }}" class="pl-form">@csrf
+            <form method="post" action="{{ route('settings.products.tag.store') }}" class="pl-form">@csrf<input type="hidden" name="c" value="{{ $catalogue }}">
                 <div class="pl-grid">{!! $names(null) !!}</div>
                 @if ($canTranslate)<label class="check"><input type="checkbox" name="translate" value="1" checked><span>{{ __('products.translate') }}</span></label>@endif
                 <button class="primary" type="submit">{{ __('products.add') }}</button>

@@ -17,43 +17,14 @@
                     <select name="kind">@foreach (\App\Models\Equipment\Item::KINDS as $k)<option value="{{ $k }}" @selected($v('kind', $item->kind) === $k)>{{ __('equipment.kinds.'.$k) }}</option>@endforeach</select>
                 </label>
                 <label class="field span-2"><span>{{ __('equipment.fields.name') }}</span><input name="name" required maxlength="255" value="{{ $v('name', $item->name) }}"></label>
-                @php($catId = (int) $v('category_id', $item->category_id))
-                @php($subId = (int) $v('subcategory_id', $item->subcategory_id))
-                <label class="field"><span>{{ __('equipment.fields.category') }}</span>
-                    <select name="category_id" class="js-cat"><option value="">—</option>@foreach ($categories as $c)@if ($c->active || $c->id === $catId)<option value="{{ $c->id }}" data-code="{{ $c->code }}" @selected($catId === $c->id)>{{ $c->label() }}</option>@endif @endforeach</select>
-                    @error('category_id')<small class="error">{{ $message }}</small>@enderror
-                </label>
-                <label class="field"><span>{{ __('equipment.fields.subcategory') }}</span>
-                    <select name="subcategory_id" class="js-sub"><option value="">—</option>@foreach ($categories as $c)@foreach ($c->subcategories as $sc)@if ($sc->active || $sc->id === $subId)<option value="{{ $sc->id }}" data-cat="{{ $c->id }}" data-code="{{ $sc->code }}" @selected($subId === $sc->id)>{{ $sc->label() }}</option>@endif @endforeach @endforeach</select>
-                    @error('subcategory_id')<small class="error">{{ $message }}</small>@enderror
-                    @if ($item->exists && $item->legacy_subcategory)<small class="muted">{{ __('products.was', ['old' => trim($item->legacy_category.' › '.$item->legacy_subcategory, ' ›')]) }}</small>@endif
-                </label>
-                @php($chosen = collect(old('attr', null) ?? $item->options->groupBy('attribute_id')->map(fn ($g) => $g->pluck('id')->all())->mapWithKeys(fn ($ids, $aid) => [$attrList->firstWhere('id', $aid)?->key => $ids])->all()))
-                @foreach ($attrList as $a)
-                    @php($mine = collect((array) ($chosen[$a->key] ?? []))->map(fn ($x) => (int) $x)->all())
-                    <div class="field js-attr" data-subs="{{ $a->subcategories->pluck('id')->join(',') }}" hidden>
-                        <span>{{ $a->label() }}@if ($a->unit) ({{ $a->unit }})@endif</span>
-                        @if ($a->multiple)
-                            <div class="checks-inline">@foreach ($a->options as $o)<label class="check"><input type="checkbox" name="attr[{{ $a->key }}][]" value="{{ $o->id }}" @checked(in_array($o->id, $mine, true))><span>{{ $o->display() }}</span></label>@endforeach</div>
-                        @else
-                            <select name="attr[{{ $a->key }}]" aria-label="{{ $a->label() }}"><option value="">—</option>@foreach ($a->options as $o)<option value="{{ $o->id }}" @selected(in_array($o->id, $mine, true))>{{ $o->display() }}</option>@endforeach</select>
-                        @endif
-                        @error('attr.'.$a->key)<small class="error">{{ $message }}</small>@enderror
-                    </div>
-                @endforeach
+                @include('products._place', ['p' => $item])
                 <label class="field"><span>{{ __('equipment.fields.brand') }}</span><input name="brand" maxlength="80" value="{{ $v('brand', $item->brand) }}"></label>
                 <label class="field"><span>{{ __('equipment.fields.type') }}</span><input name="type" maxlength="255" value="{{ $v('type', $item->type) }}"></label>
                 <label class="field"><span>{{ __('equipment.fields.unit') }}</span><input name="unit" required maxlength="12" value="{{ $v('unit', $item->unit ?? 'pcs') }}"></label>
                 <label class="check"><input type="checkbox" name="serial" value="1" @checked($v('serial', $item->serial))><span>{{ __('equipment.fields.serial') }}<br><small>{{ __('equipment.serial_hint') }}</small></span></label>
                 <label class="field"><span>{{ __('equipment.fields.stock_qty') }}</span><input type="number" name="stock_qty" min="0" value="{{ $v('stock_qty', $item->stock_qty) }}"><small>{{ __('equipment.stock_hint') }}</small></label>
             </div>
-            @if ($tags->isNotEmpty())
-                <div class="field mt"><span>{{ __('products.tags') }}</span>
-                    @php($myTags = collect(old('tags', $item->exists ? $item->tags->pluck('id')->all() : []))->map(fn ($x) => (int) $x)->all())
-                    <div class="checks-inline">@foreach ($tags as $t)<label class="check"><input type="checkbox" name="tags[]" value="{{ $t->id }}" @checked(in_array($t->id, $myTags, true))><span>{{ $t->label() }}</span></label>@endforeach</div>
-                </div>
-            @endif
-            <label class="field mt"><span>{{ __('products.search_words') }}</span><textarea name="search_words" rows="2" maxlength="1000" placeholder="{{ __('products.search_words_placeholder') }}">{{ $v('search_words', $item->search_words) }}</textarea><small>{{ __('products.search_words_hint') }}</small></label>
+            @include('products._tags', ['p' => $item])
         </section>
         @unless ($item->exists)
             <section class="card">
@@ -103,24 +74,10 @@
             </div>
         </section>
     </form>
+    @include('products._place-js')
     <script>
     (() => {
-        // Subcategories follow the category; attributes show only for the subcategories they apply to.
         const cat = document.querySelector('.js-cat'), sub = document.querySelector('.js-sub');
-        const attrs = document.querySelectorAll('.js-attr');
-        const filterSubs = () => {
-            sub.querySelectorAll('option[data-cat]').forEach(o => { o.hidden = cat.value !== '' && o.dataset.cat !== cat.value; });
-            if (sub.selectedOptions[0]?.hidden) sub.value = '';
-        };
-        const showAttrs = () => attrs.forEach(el => {
-            const on = sub.value !== '' && el.dataset.subs.split(',').includes(sub.value);
-            el.hidden = !on;
-            el.querySelectorAll('select, input').forEach(i => { i.disabled = !on; });
-        });
-        cat.addEventListener('change', () => { filterSubs(); showAttrs(); });
-        sub.addEventListener('change', () => { const o = sub.selectedOptions[0]; if (o?.dataset.cat) cat.value = o.dataset.cat; filterSubs(); showAttrs(); });
-        filterSubs(); showAttrs();
-
         // New items: suggest the number from the codes of the lists + brand + type. An existing number never changes.
         const f = document.querySelector('[data-codes]');
         if (!f || @js($item->exists)) return;

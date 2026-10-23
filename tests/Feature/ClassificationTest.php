@@ -3,12 +3,14 @@
 namespace Tests\Feature;
 
 use App\Imports\EquipmentImport;
+use App\Imports\SalesItemImport;
 use App\Models\AuditLog;
 use App\Models\Equipment\Item;
 use App\Models\Product\Attribute;
 use App\Models\Product\AttributeOption;
 use App\Models\Product\Category;
 use App\Models\Product\Subcategory;
+use App\Models\ProductSales\SalesItem;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\Products\ItemSearch;
@@ -48,9 +50,10 @@ class ClassificationTest extends TestCase
 
     public function test_the_agreed_lists_are_in_place(): void
     {
-        $this->assertSame(7, Category::count());
-        $this->assertSame(57, Subcategory::count());
-        $this->assertSame(['AUD', 'LIG', 'VID', 'RIG', 'POW', 'STA', 'CAB'], Category::orderBy('sort')->pluck('code')->all());
+        $this->assertSame(7, Category::of('dryhire')->count());
+        $this->assertSame(57, Subcategory::whereHas('category', fn ($q) => $q->where('catalogue', 'dryhire'))->count());
+        $this->assertSame(['AUD', 'LIG', 'VID', 'RIG', 'POW', 'STA', 'CAB'], Category::of('dryhire')->orderBy('sort')->pluck('code')->all());
+        $this->assertSame(['AUD', 'LIG', 'VID', 'CON', 'RIG', 'CSM', 'CAS', 'OTH'], Category::of('sales')->orderBy('sort')->pluck('code')->all());
         $this->assertSame('Vierkante truss', Subcategory::where('code', 'SQU')->first()->label('nl'));
         $this->assertSame('Zwart', AttributeOption::find(self::opt('colour', 'black'))->display('nl'));
         $this->assertSame('2,5 m', AttributeOption::find(self::opt('length', '2.5'))->display('nl'));
@@ -226,5 +229,42 @@ class ClassificationTest extends TestCase
         $migration->down();
         $this->assertSame(['Audio', 'Full range & tops'], [Item::where('number', 'AUDFULLAC4XK1')->value('category'), Item::where('number', 'AUDFULLAC4XK1')->value('subcategory')]);
         $migration->up();
+    }
+
+    public function test_sales_products_have_their_own_lists(): void
+    {
+        $admin = $this->as('admin', ['products.classify', 'sales.edit_items']);
+        $csm = Category::of('sales')->where('code', 'CSM')->first();
+        $gen = $csm->subcategories()->first();
+
+        // A dry-hire subcategory is not accepted for a sales product, and the reverse.
+        $this->actingAs($admin)->post('/product-sales/items', ['brand' => 'Le Mark', 'type' => 'Gaffer 50 mm', 'unit' => 'roll', 'list_price' => '12', 'subcategory_id' => self::sub('SQU')])
+            ->assertSessionHasErrors('subcategory_id');
+        $this->actingAs($admin)->post('/product-sales/items', ['brand' => 'Le Mark', 'type' => 'Gaffer 50 mm', 'unit' => 'roll', 'list_price' => '12', 'category_id' => $csm->id, 'subcategory_id' => $gen->id,
+            'search_words' => 'tape, gaffa'])->assertSessionHasNoErrors();
+        $tape = SalesItem::where('type', 'Gaffer 50 mm')->firstOrFail();
+        $this->assertSame(['Consumables', 'tape, gaffa'], [$tape->category, $tape->search_words]);
+        $this->actingAs($this->as('asset-manager'))->post('/dry-hire/items', $this->form(['subcategory_id' => $gen->id]))->assertSessionHasErrors('subcategory_id');
+        $this->actingAs($admin)->get('/product-sales/items?cat='.$csm->id)->assertOk()->assertSee('Gaffer 50 mm');
+
+        // Settings: the sales tab manages its own lists.
+        $this->actingAs($admin)->get('/settings/product-categories?c=sales')->assertOk()->assertSee('Consumables')->assertDontSee('Square truss');
+        $this->actingAs($admin)->post('/settings/product-categories/categories', ['c' => 'sales', 'name' => ['en' => 'Batteries'], 'code' => 'BAT'])->assertSessionHasNoErrors();
+        $this->assertSame('sales', Category::where('code', 'BAT')->value('catalogue'));
+        $this->actingAs($admin)->post('/settings/product-categories/categories', ['c' => 'sales', 'name' => ['en' => 'Audio again'], 'code' => 'AUD'])->assertSessionHasErrors('code');
+        $this->actingAs($admin)->post('/settings/product-categories/categories/'.$csm->id.'/subcategories', ['name' => ['en' => 'Tape'], 'code' => 'TAP'])->assertSessionHasNoErrors();
+
+        // Import: category from the sales list (any language); a category with one active subcategory needs no subcategory.
+        $r = (new SalesItemImport)->run([['Brand', 'Type', 'Category', 'Sub-Category', 'List price'],
+            ['Duracell', 'AA', 'Batteries', null, '1'],
+            ['Le Mark', 'Gaffer 25 mm', 'Verbruiksgoederen', 'Tape', '9'],
+            ['Le Mark', 'Gaffer 19 mm', 'Consumables', null, '8'],
+            ['X', 'Y', 'Square truss', null, '1']]);
+        $this->assertSame(2, $r['created']);
+        $this->assertSame('Tape', SalesItem::where('type', 'Gaffer 25 mm')->first()->productSubcategory->label('en'));
+        $errors = collect($r['messages'])->where('level', 'error')->pluck('text', 'row');
+        $this->assertStringContainsString('Choose a subcategory', $errors[2]); // Batteries has no subcategory yet
+        $this->assertSame('General', SalesItem::where('type', 'Gaffer 19 mm')->first()->productSubcategory->label('en')); // the new Tape is still hidden
+        $this->assertStringContainsString('Unknown category “Square truss”', $errors[5]);
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Contact;
 use App\Models\ProductSales\ItemDocument;
 use App\Models\ProductSales\SalesItem;
 use App\Notifications\Confirmation;
+use App\Services\Products\Classification;
 use App\Support\Images;
 use App\Support\InLocale;
 use App\Support\SafeMail;
@@ -25,14 +26,15 @@ class ItemController extends Controller
 {
     public function index(Request $request): View
     {
-        $cat = in_array($request->query('cat'), SalesItem::CATEGORIES, true) ? $request->query('cat') : null;
+        $cat = (int) $request->query('cat', 0) ?: null;
         $q = trim((string) $request->query('q'));
         $items = SalesItem::with('suppliers')->where('active', true)
-            ->when($cat, fn ($w) => $w->where('category', $cat))
-            ->when($q !== '', fn ($w) => $w->where(fn ($x) => $x->where('number', 'like', "%{$q}%")->orWhere('brand', 'like', "%{$q}%")->orWhere('type', 'like', "%{$q}%")->orWhere('description', 'like', "%{$q}%")))
+            ->when($cat, fn ($w) => $w->where('category_id', $cat))
+            ->when($q !== '', fn ($w) => $w->where(fn ($x) => $x->where('number', 'like', "%{$q}%")->orWhere('brand', 'like', "%{$q}%")->orWhere('type', 'like', "%{$q}%")->orWhere('description', 'like', "%{$q}%")->orWhere('search_words', 'like', "%{$q}%")))
             ->withCount('documents')->orderBy('brand')->orderBy('type')->paginate(60)->withQueryString();
-        $sel = $request->query('item') ? SalesItem::with(['suppliers', 'documents.user'])->find($request->query('item')) : null;
-        $sel ??= $items->first()?->load(['suppliers', 'documents.user']);
+        $with = ['suppliers', 'documents.user', 'productCategory', 'productSubcategory', 'options.attribute', 'tags'];
+        $sel = $request->query('item') ? SalesItem::with($with)->find($request->query('item')) : null;
+        $sel ??= $items->first()?->load($with);
 
         return view('psales.items', [
             'items' => $items, 'sel' => $sel, 'cat' => $cat, 'q' => $q,
@@ -40,14 +42,16 @@ class ItemController extends Controller
             'suppliers' => $request->user()->hasRight('sales.edit_items') ? Company::where('is_supplier', true)->orderBy('name')->get(['id', 'name']) : collect(),
             'contacts' => $sel ? Contact::with('companies')->whereNotNull('email')->orderBy('first_name')->limit(300)->get() : collect(),
             'new' => $request->boolean('new'),
-        ]);
+        ] + Classification::forForm(SalesItem::CATALOGUE));
     }
 
     private function rules(): array
     {
         return [
             'brand' => ['nullable', 'string', 'max:80'], 'type' => ['required', 'string', 'max:120'], 'description' => ['nullable', 'string', 'max:300'],
-            'category' => ['nullable', Rule::in(SalesItem::CATEGORIES)], 'unit' => ['required', Rule::in(SalesItem::UNITS)],
+            'category_id' => ['nullable', 'integer'], 'subcategory_id' => ['nullable', 'integer'], 'attr' => ['nullable', 'array'], 'attr.*' => ['nullable'],
+            'tags' => ['nullable', 'array'], 'tags.*' => ['integer'], 'search_words' => ['nullable', 'string', 'max:1000'],
+            'unit' => ['required', Rule::in(SalesItem::UNITS)],
             'list_price' => ['required', 'numeric', 'min:0', 'max:1000000'], 'stock_qty' => ['nullable', 'integer', 'min:0', 'max:1000000'], 'min_stock' => ['nullable', 'integer', 'min:0', 'max:100000'],
             'ean' => ['nullable', 'string', 'max:32'], 'on_website' => ['nullable', 'boolean'],
         ];
@@ -55,14 +59,24 @@ class ItemController extends Controller
 
     private function data(array $d): array
     {
-        return ['brand' => $d['brand'] ?? null, 'type' => $d['type'], 'description' => $d['description'] ?? null, 'category' => $d['category'] ?? null, 'unit' => $d['unit'],
+        return ['brand' => $d['brand'] ?? null, 'type' => $d['type'], 'description' => $d['description'] ?? null, 'unit' => $d['unit'],
             'list_price_cents' => (int) round($d['list_price'] * 100), 'stock_qty' => (int) ($d['stock_qty'] ?? 0), 'min_stock' => (int) ($d['min_stock'] ?? 0), 'ean' => $d['ean'] ?? null]
             + (auth()->user()?->hasRight('equipment.website') ? ['on_website' => (bool) ($d['on_website'] ?? false)] : []);
     }
 
+    /** Category, subcategory, attributes and tags from the sales lists (Settings › Product categories › Sales products). */
+    private function checkClass(array $d): array
+    {
+        return Classification::check(isset($d['category_id']) ? (int) $d['category_id'] : null, isset($d['subcategory_id']) ? (int) $d['subcategory_id'] : null,
+            $d['attr'] ?? [], $d['tags'] ?? [], catalogue: SalesItem::CATALOGUE);
+    }
+
     public function store(Request $request): RedirectResponse
     {
-        $item = SalesItem::create($this->data($request->validate($this->rules())) + ['number' => SalesItem::nextNumber()]);
+        $d = $request->validate($this->rules());
+        $class = $this->checkClass($d);
+        $item = SalesItem::create($this->data($d) + ['number' => SalesItem::nextNumber()]);
+        Classification::apply($item, $class, $d['search_words'] ?? '');
         AuditLog::record('psales.item_created', $item, ['number' => $item->number], $request->user());
 
         return redirect()->route('psales.items', ['item' => $item->id])->with('status', __('psales.items.created', ['number' => $item->number]));
@@ -71,7 +85,10 @@ class ItemController extends Controller
     public function update(Request $request, SalesItem $item): RedirectResponse
     {
         $old = $item->only(['list_price_cents', 'stock_qty']);
-        $item->update($this->data($request->validate($this->rules())));
+        $d = $request->validate($this->rules());
+        $class = $this->checkClass($d);
+        $item->update($this->data($d));
+        Classification::apply($item, $class, $d['search_words'] ?? '');
         AuditLog::record('psales.item_updated', $item, ['number' => $item->number, 'price' => $old['list_price_cents'] !== $item->list_price_cents ? $old['list_price_cents'].' → '.$item->list_price_cents : null], $request->user());
 
         return back()->with('status', __('psales.items.saved'));

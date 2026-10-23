@@ -8,12 +8,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** A property with fixed choices (length, frequency band, colour…), shown only for its subcategories. */
-#[Fillable(['key', 'name', 'multiple', 'unit', 'sort'])]
+#[Fillable(['catalogue', 'key', 'name', 'multiple', 'unit', 'sort'])]
 class Attribute extends Model
 {
     use Translated;
 
     protected $table = 'product_attributes';
+
+    /** The two catalogues: dry-hire (rental) and sales; each has its own lists. */
+    public const CATALOGUES = ['dryhire', 'sales'];
+
+    public function scopeOf($q, string $catalogue)
+    {
+        return $q->where('catalogue', $catalogue);
+    }
 
     protected function casts(): array
     {

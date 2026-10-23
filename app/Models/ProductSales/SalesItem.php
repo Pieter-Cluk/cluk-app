@@ -3,6 +3,10 @@
 namespace App\Models\ProductSales;
 
 use App\Models\Company;
+use App\Models\Product\AttributeOption;
+use App\Models\Product\Classified;
+use App\Models\Product\Subcategory;
+use App\Models\Product\Tag;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,16 +14,35 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /** A product we sell. No assets: stock is a number. */
-#[Fillable(['number', 'brand', 'type', 'description', 'category', 'unit', 'list_price_cents', 'stock_qty', 'min_stock', 'photo_path', 'active', 'ean', 'on_website'])]
+#[Fillable(['number', 'brand', 'type', 'description', 'category', 'unit', 'list_price_cents', 'stock_qty', 'min_stock', 'photo_path', 'active', 'ean', 'on_website', 'category_id', 'subcategory_id', 'search_words'])]
 class SalesItem extends Model
 {
-    public const CATEGORIES = ['Audio', 'Light', 'Video', 'Connectors', 'Rigging', 'Consumables', 'Cases', 'Other'];
+    use Classified;
+
+    public const CATALOGUE = 'sales';
 
     public const UNITS = ['piece', 'set', 'roll', 'box', 'meter'];
 
     protected function casts(): array
     {
         return ['list_price_cents' => 'integer', 'stock_qty' => 'integer', 'min_stock' => 'integer', 'active' => 'boolean', 'on_website' => 'boolean'];
+    }
+
+    public function options(): BelongsToMany
+    {
+        return $this->belongsToMany(AttributeOption::class, 'sales_item_options', 'sales_item_id', 'option_id');
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'sales_item_tag', 'sales_item_id', 'tag_id')->orderBy('sort');
+    }
+
+    /** Put the product in a sales subcategory; the English category name is also kept in the old text column. */
+    public function placeIn(?Subcategory $sub): void
+    {
+        $sub?->loadMissing('category');
+        $this->forceFill(['category_id' => $sub?->category_id, 'subcategory_id' => $sub?->id, 'category' => $sub?->category->label('en')]);
     }
 
     public function suppliers(): BelongsToMany
