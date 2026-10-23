@@ -42,7 +42,7 @@ class SalesController extends SiteController
         $c = $this->common($locale);
         $newTag = Tag::of('sales')->where('slug', 'new')->first();
         $new = SalesCatalogue::query()->when($newTag, fn ($q) => $q->whereHas('tags', fn ($t) => $t->whereKey($newTag->id)), fn ($q) => $q->latest('id'))->latest('id')->limit(8)->get();
-        $new->each(fn ($i) => $i->price_cents = \App\Services\ProductSales\CustomerPrices::priceCents($c['customer'], $i));
+        SalesCatalogue::withPrices($new, $c['customer']);
 
         return view('site.sales.home', $c + ['brands' => SalesCatalogue::brands(), 'new' => $new, 'total' => SalesCatalogue::query()->count()]);
     }

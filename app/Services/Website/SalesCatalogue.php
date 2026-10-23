@@ -9,7 +9,7 @@ use App\Models\Product\Subcategory;
 use App\Models\Product\Tag;
 use App\Models\ProductSales\SalesItem;
 use App\Models\Web\CustomerAccount;
-use App\Services\ProductSales\CustomerPrices;
+use App\Services\Web\Prices;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -123,8 +123,9 @@ class SalesCatalogue
             self::searchQuery($base, $words);
         }
         $all = $base->get();
+        $prices = Prices::for($who, $all);
         foreach ($all as $i) {
-            $i->price_cents = CustomerPrices::priceCents($who, $i);
+            $i->price_cents = $prices[$i->id]['price_cents'] ?? (int) $i->list_price_cents;
             $i->score = $words ? self::score($i, $words) : 0;
             $i->opt_ids = $i->options->pluck('id')->all();
             $i->tag_ids = $i->tags->pluck('id')->all();
@@ -216,7 +217,7 @@ class SalesCatalogue
         }
         $found = self::searchQuery(self::query(), $words)->limit(400)->get();
         $products = $found->sortByDesc(fn ($i) => self::score($i, $words))->take(6)->values()
-            ->map(fn ($i) => ['name' => $i->name(), 'code' => $i->manufacturer_code ?: $i->number, 'price' => CustomerPrices::priceCents($who, $i),
+            ->map(fn ($i) => ['name' => $i->name(), 'code' => $i->manufacturer_code ?: $i->number, 'price' => Prices::for($who, $i)['price_cents'],
                 'photo' => $i->photo_path ? route('site.sales.photo', ['item' => $i->id, 'w' => 480]).'?v='.substr(md5($i->photo_path), 0, 8) : null,
                 'url' => route('site.sales.product', self::slug($i))]);
         $needle = Str::lower(Str::ascii(implode(' ', $words)));
@@ -239,13 +240,21 @@ class SalesCatalogue
 
         return [
             'item' => $i,
-            'price' => CustomerPrices::priceCents($who, $i),
-            'discount' => CustomerPrices::discountBp($who, $i),
+            'price' => ($p = Prices::for($who, $i))['price_cents'],
+            'discount' => $p['discount_pct'],
             'options' => $i->options->map(fn ($o) => [$o->attribute?->label($locale), $o->display($locale)])->values()->all(),
             'tags' => $i->tags->filter->active->map(fn ($t) => ['slug' => $t->slug, 'name' => $t->label($locale)])->values()->all(),
             'documents' => $i->documents->map(fn ($d) => ['id' => $d->id, 'kind' => $d->kind, 'name' => $d->name])->values()->all(),
-            'related' => $related->each(fn ($r) => $r->price_cents = CustomerPrices::priceCents($who, $r)),
+            'related' => self::withPrices($related, $who),
         ];
+    }
+
+    /** Sets price_cents (the customer's own price, or the list price) on each product. */
+    public static function withPrices(Collection $items, ?CustomerAccount $who): Collection
+    {
+        $p = Prices::for($who, $items);
+
+        return $items->each(fn ($i) => $i->price_cents = $p[$i->id]['price_cents'] ?? (int) $i->list_price_cents);
     }
 
     /** Web-sized photo (same rules as the dry-hire photos). */
