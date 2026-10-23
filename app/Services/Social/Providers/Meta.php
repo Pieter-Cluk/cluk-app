@@ -184,7 +184,7 @@ class Meta extends Provider
 
             return;
         }
-        $posts = $this->ok(Http::timeout(20)->get($this->g($a->external_id.'/posts'), [
+        $posts = $this->ok(Http::timeout(20)->get($this->g($a->external_id.'/published_posts'), [
             'fields' => 'id,message,created_time,permalink_url,full_picture,shares,reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0)', 'limit' => 25, 'access_token' => $a->token,
         ]), 'Facebook posts')['data'] ?? [];
         foreach ($posts as $p) {
