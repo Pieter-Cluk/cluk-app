@@ -19,6 +19,7 @@
 
     <nav class="tabs">
         @foreach (\App\Models\Product\Category::CATALOGUES as $cat)<a @class(['tab', 'tab-on' => $catalogue === $cat]) href="{{ route('settings.products.index', ['c' => $cat]) }}">{{ __('products.catalogues.'.$cat) }}</a>@endforeach
+        <a class="tab" href="{{ route('settings.products.brands') }}">{{ __('products.brands.tab') }}</a>
     </nav>
     <section class="card mt">
         <h2>{{ __('products.safe_title') }}</h2>

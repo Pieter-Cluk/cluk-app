@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\Product\Brand;
 use App\Models\ProductSales\ItemDocument;
 use App\Models\ProductSales\SalesItem;
 use App\Notifications\Confirmation;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -27,22 +29,45 @@ class ItemController extends Controller
     public function index(Request $request): View
     {
         $cat = (int) $request->query('cat', 0) ?: null;
+        $brand = (int) $request->query('brand', 0) ?: null;
         $q = trim((string) $request->query('q'));
         $items = SalesItem::with('suppliers')->where('active', true)
             ->when($cat, fn ($w) => $w->where('category_id', $cat))
-            ->when($q !== '', fn ($w) => $w->where(fn ($x) => $x->where('number', 'like', "%{$q}%")->orWhere('brand', 'like', "%{$q}%")->orWhere('type', 'like', "%{$q}%")->orWhere('description', 'like', "%{$q}%")->orWhere('search_words', 'like', "%{$q}%")))
+            ->when($brand, fn ($w) => $w->where('brand_id', $brand))
+            ->when($q !== '', fn ($w) => self::search($w, $q))
             ->withCount('documents')->orderBy('brand')->orderBy('type')->paginate(60)->withQueryString();
-        $with = ['suppliers', 'documents.user', 'productCategory', 'productSubcategory', 'options.attribute', 'tags'];
+        $with = ['suppliers', 'documents.user', 'productCategory', 'productSubcategory', 'options.attribute', 'tags', 'brandRef'];
         $sel = $request->query('item') ? SalesItem::with($with)->find($request->query('item')) : null;
         $sel ??= $items->first()?->load($with);
 
         return view('psales.items', [
-            'items' => $items, 'sel' => $sel, 'cat' => $cat, 'q' => $q,
+            'items' => $items, 'sel' => $sel, 'cat' => $cat, 'q' => $q, 'brand' => $brand,
+            'brands' => Brand::orderBy('name')->get(['id', 'name', 'kind', 'active']),
             'canEdit' => $request->user()->hasRight('sales.edit_items'), 'seeCost' => $request->user()->hasRight('finance.see_margins'),
             'suppliers' => $request->user()->hasRight('sales.edit_items') ? Company::where('is_supplier', true)->orderBy('name')->get(['id', 'name']) : collect(),
             'contacts' => $sel ? Contact::with('companies')->whereNotNull('email')->orderBy('first_name')->limit(300)->get() : collect(),
             'new' => $request->boolean('new'),
         ] + Classification::forForm(SalesItem::CATALOGUE));
+    }
+
+    /**
+     * Every word must match one of: our number, brand, type, description, search
+     * words, the manufacturer's code, the EAN or a supplier's article number.
+     * Codes also match without spaces, dashes or dots ("SM58-LCE" = "sm58lce").
+     */
+    public static function search($w, string $q)
+    {
+        foreach (preg_split('/\s+/', $q) as $word) {
+            $like = '%'.$word.'%';
+            $bare = preg_replace('/[\s.\-\/]/', '', Str::lower($word));
+            $w->where(fn ($x) => $x->where('number', 'like', $like)->orWhere('brand', 'like', $like)->orWhere('type', 'like', $like)
+                ->orWhere('description', 'like', $like)->orWhere('search_words', 'like', $like)->orWhere('ean', 'like', $like)
+                ->orWhere('manufacturer_code', 'like', $like)
+                ->when($bare !== '', fn ($y) => $y->orWhereRaw("replace(replace(replace(lower(manufacturer_code), '-', ''), '.', ''), ' ', '') like ?", ['%'.$bare.'%']))
+                ->orWhereHas('suppliers', fn ($s) => $s->where('sales_item_suppliers.supplier_ref', 'like', $like)));
+        }
+
+        return $w;
     }
 
     private function rules(): array
@@ -53,14 +78,15 @@ class ItemController extends Controller
             'tags' => ['nullable', 'array'], 'tags.*' => ['integer'], 'search_words' => ['nullable', 'string', 'max:1000'],
             'unit' => ['required', Rule::in(SalesItem::UNITS)],
             'list_price' => ['required', 'numeric', 'min:0', 'max:1000000'], 'stock_qty' => ['nullable', 'integer', 'min:0', 'max:1000000'], 'min_stock' => ['nullable', 'integer', 'min:0', 'max:100000'],
-            'ean' => ['nullable', 'string', 'max:32'], 'on_website' => ['nullable', 'boolean'],
+            'ean' => ['nullable', 'string', 'max:32'], 'on_website' => ['nullable', 'boolean'], 'manufacturer_code' => ['nullable', 'string', 'max:60'],
         ];
     }
 
     private function data(array $d): array
     {
         return ['brand' => $d['brand'] ?? null, 'type' => $d['type'], 'description' => $d['description'] ?? null, 'unit' => $d['unit'],
-            'list_price_cents' => (int) round($d['list_price'] * 100), 'stock_qty' => (int) ($d['stock_qty'] ?? 0), 'min_stock' => (int) ($d['min_stock'] ?? 0), 'ean' => $d['ean'] ?? null]
+            'list_price_cents' => (int) round($d['list_price'] * 100), 'stock_qty' => (int) ($d['stock_qty'] ?? 0), 'min_stock' => (int) ($d['min_stock'] ?? 0), 'ean' => $d['ean'] ?? null,
+            'manufacturer_code' => ($m = trim((string) ($d['manufacturer_code'] ?? ''))) !== '' ? $m : null]
             + (auth()->user()?->hasRight('equipment.website') ? ['on_website' => (bool) ($d['on_website'] ?? false)] : []);
     }
 
@@ -113,18 +139,20 @@ class ItemController extends Controller
     public function supplier(Request $request, SalesItem $item): RedirectResponse
     {
         $d = $request->validate(['company_id' => ['required', 'integer', 'exists:companies,id'], 'discount' => ['required', 'numeric', 'min:0', 'max:100'],
-            'lead_days' => ['required', 'integer', 'min:0', 'max:365'], 'preferred' => ['boolean'], 'remove' => ['boolean']]);
+            'lead_days' => ['required', 'integer', 'min:0', 'max:365'], 'preferred' => ['boolean'], 'remove' => ['boolean'],
+            'supplier_ref' => ['nullable', 'string', 'max:60']]);
         if ($request->boolean('remove')) {
             $item->suppliers()->detach($d['company_id']);
         } else {
             if ($request->boolean('preferred') || $item->suppliers()->count() === 0) {
                 $item->suppliers()->newPivotQuery()->update(['preferred' => false]);
             }
+            $ref = trim((string) ($d['supplier_ref'] ?? ''));
             $item->suppliers()->syncWithoutDetaching([$d['company_id'] => ['discount_bp' => (int) round($d['discount'] * 100), 'lead_days' => $d['lead_days'],
-                'preferred' => $request->boolean('preferred') || $item->suppliers()->count() === 0]]);
+                'preferred' => $request->boolean('preferred') || $item->suppliers()->count() === 0] + ($ref !== '' ? ['supplier_ref' => $ref] : [])]);
             Company::whereKey($d['company_id'])->update(['is_supplier' => true]);
         }
-        AuditLog::record('psales.item_supplier', $item, ['supplier' => Company::find($d['company_id'])?->name, 'discount' => $d['discount'].'%'], $request->user());
+        AuditLog::record('psales.item_supplier', $item, ['supplier' => Company::find($d['company_id'])?->name, 'discount' => $d['discount'].'%', 'ref' => $d['supplier_ref'] ?? null], $request->user());
 
         return back()->with('status', __('psales.items.saved'));
     }

@@ -72,7 +72,7 @@
         @foreach ($q->lines as $l)<form id="rm-{{ $l->id }}" method="post" action="{{ route('psales.lines.remove', [$q, $l]) }}">@csrf @method('DELETE')</form>@endforeach
         <section class="card mt">
             <form method="post" action="{{ route('psales.lines.add', $q) }}" class="inline-form">@csrf<input type="hidden" name="kind" value="item">
-                <select name="item_id" required aria-label="{{ __('psales.add_item') }}" class="ps-pick"><option value="">{{ __('psales.add_item') }}</option>@foreach ($items as $it)<option value="{{ $it->id }}">{{ $it->number }} · {{ $it->brand }} {{ $it->type }} · {{ $eur($it->list_price_cents) }}@if ($it->stock_qty) · {{ __('psales.items.in_stock', ['n' => $it->stock_qty]) }}@endif</option>@endforeach</select>
+                <select name="item_id" required aria-label="{{ __('psales.add_item') }}" class="ps-pick"><option value="">{{ __('psales.add_item') }}</option>@foreach ($items as $it)<option value="{{ $it->id }}">{{ $it->number }} · {{ $it->brand }} {{ $it->type }}@if ($it->manufacturer_code) ({{ $it->manufacturer_code }})@endif · {{ $eur($it->list_price_cents) }}@if ($it->stock_qty) · {{ __('psales.items.in_stock', ['n' => $it->stock_qty]) }}@endif</option>@endforeach</select>
                 <input type="number" name="qty" min="1" value="1" class="w-xs" aria-label="{{ __('psales.cols.qty') }}"><button class="btn" type="submit">{{ __('psales.add') }}</button>
             </form>
             <form method="post" action="{{ route('psales.lines.add', $q) }}" class="inline-form mt">@csrf

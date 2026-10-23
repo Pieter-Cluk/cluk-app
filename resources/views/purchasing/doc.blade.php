@@ -25,7 +25,7 @@
         <thead><tr><th class="num">{{ __('quotes.cols.qty') }}</th><th>{{ __('quotes.cols.description') }}</th>@if ($isPo)<th>{{ __('purchasing.delivery_us') }}</th><th class="num">{{ __('purchasing.net') }}</th><th class="num">{{ __('quotes.cols.amount') }}</th>@else<th>{{ __('purchasing.net') }}</th><th>{{ __('purchasing.delivery_us') }}</th>@endif</tr></thead>
         <tbody>
             @foreach ($doc->lines as $l)
-                <tr><td class="num">{{ $l->qty }}</td><td>{{ $l->name }}@if ($l->item)<br><small>{{ $l->item->number }}</small>@endif</td>
+                <tr><td class="num">{{ $l->qty }}</td><td>{{ $l->name }}@if ($l->item)<br><small>{{ $l->item->orderCodes($isPo ? $doc->supplier : null) }}</small>@endif</td>
                     @if ($isPo)<td>{{ $l->delivery_date?->format('d/m/Y') ?? '—' }}</td><td class="num nowrap">{{ $eur($l->unit_cents) }}</td><td class="num nowrap">{{ $eur($l->amount_cents) }}</td>@else<td>__________</td><td>__________</td>@endif</tr>
             @endforeach
         </tbody>

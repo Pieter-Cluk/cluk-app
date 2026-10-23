@@ -1,7 +1,9 @@
 <div class="inline-form">
-    <label class="field"><span>{{ __('psales.items.brand') }}</span><input name="brand" maxlength="80" value="{{ old('brand', $it->brand) }}"></label>
+    <label class="field"><span>{{ __('psales.items.brand') }}</span><input name="brand" maxlength="80" value="{{ old('brand', $it->brand) }}" list="brand-list" autocomplete="off"><small>{{ __('psales.items.brand_hint') }}</small></label>
     <label class="field"><span>{{ __('psales.items.type') }}</span><input name="type" required maxlength="120" value="{{ old('type', $it->type) }}"></label>
+    <label class="field"><span>{{ __('psales.items.manufacturer_code') }}</span><input name="manufacturer_code" maxlength="60" value="{{ old('manufacturer_code', $it->manufacturer_code) }}"><small>{{ __('psales.items.manufacturer_code_hint') }}</small></label>
 </div>
+@once<datalist id="brand-list">@foreach (\App\Models\Product\Brand::where('active', true)->orderBy('name')->pluck('name') as $b)<option value="{{ $b }}"></option>@endforeach</datalist>@endonce
 <label class="field"><span>{{ __('psales.items.description') }}</span><input name="description" maxlength="300" value="{{ old('description', $it->description) }}"></label>
 <div class="inline-form">
     @include('products._place', ['p' => $it])

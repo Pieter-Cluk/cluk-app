@@ -37,6 +37,7 @@ use App\Http\Controllers\Sales\DealController;
 use App\Http\Controllers\Sales\IncomingController;
 use App\Http\Controllers\Sales\QuoteController;
 use App\Http\Controllers\Settings\AuditLogController;
+use App\Http\Controllers\Settings\BrandController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
 use App\Http\Controllers\Settings\DocumentController;
 use App\Http\Controllers\Settings\ImportController;
@@ -67,6 +68,9 @@ Route::post('/intake', [IncomingController::class, 'intake'])->middleware('throt
 
 // Website login: the "confirm my email" link (signed, 48 hours). The sign-in and basket pages are on the website.
 Route::get('/account/verify/{account}/{hash}', CustomerVerifyController::class)->whereNumber('account')->middleware('signed')->name('customer.verify');
+
+// Brand logos (public: the website shows them).
+Route::get('/brand-logo/{brand}', [BrandController::class, 'logo'])->whereNumber('brand')->name('brand.logo');
 
 // CLUK's general terms and conditions (linked from quotes, emails and documents).
 Route::get('/terms/{lang?}', function (?string $lang = null) {
@@ -492,6 +496,11 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/tags', [ProductListController::class, 'storeTag'])->name('tag.store');
         Route::put('/tags/{tag}', [ProductListController::class, 'updateTag'])->whereNumber('tag')->name('tag.update');
         Route::delete('/tags/{tag}', [ProductListController::class, 'destroyTag'])->whereNumber('tag')->name('tag.destroy');
+        Route::get('/brands', [BrandController::class, 'index'])->name('brands');
+        Route::post('/brands', [BrandController::class, 'store'])->name('brand.store');
+        Route::put('/brands/{brand}', [BrandController::class, 'update'])->whereNumber('brand')->name('brand.update');
+        Route::delete('/brands/{brand}', [BrandController::class, 'destroy'])->whereNumber('brand')->name('brand.destroy');
+        Route::post('/brands/{brand}/merge', [BrandController::class, 'merge'])->whereNumber('brand')->name('brand.merge');
     });
 
     // Settings › Warehouse locations: zones, route, storage positions, labels.

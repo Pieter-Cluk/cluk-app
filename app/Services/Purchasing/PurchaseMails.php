@@ -42,7 +42,7 @@ class PurchaseMails
                 __('purchasing.mail.needed') => $pq->needed_by?->locale(app()->getLocale())->translatedFormat('j F Y'),
                 __('purchasing.mail.deliver_to') => self::deliverTo(),
             ]),
-            rows: $lines->map(fn ($l) => [(string) $l->qty, $l->name.($l->item ? ' · '.$l->item->number : ''), ''])->values()->all(),
+            rows: $lines->map(fn ($l) => [(string) $l->qty, $l->name.($l->item ? ' · '.$l->item->orderCodes($s) : ''), ''])->values()->all(),
             next: [__('purchasing.mail.request_next')],
             signer: $by,
         ));
@@ -55,7 +55,7 @@ class PurchaseMails
             greeting: __('mails.hello_plain'),
             intro: [__('purchasing.mail.order_intro')],
             details: [__('mails.label.our_ref') => $po->number, __('purchasing.mail.deliver_to') => self::deliverTo()],
-            rows: $po->lines->map(fn ($l) => [(string) $l->qty, $l->name.($l->delivery_date ? ' · '.$l->delivery_date->format('d/m/Y') : ''), Pricing::eur($l->amount_cents)])->all(),
+            rows: $po->lines->map(fn ($l) => [(string) $l->qty, $l->name.($l->item ? ' · '.$l->item->orderCodes($po->supplier) : '').($l->delivery_date ? ' · '.$l->delivery_date->format('d/m/Y') : ''), Pricing::eur($l->amount_cents)])->all(),
             totals: [__('purchasing.total_excl') => Pricing::eur($po->total_cents)],
             next: [__('purchasing.mail.order_next')],
             signer: $by,

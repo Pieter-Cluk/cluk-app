@@ -57,3 +57,21 @@ The baskets are kept on the server, so they follow the customer to every device.
 - **Dashboard**: a task for logins that are waiting.
 
 **Texts**: all in `lang/*/web.php` (keys `api.*`, `basket.*`, `order.*`).
+
+## Sales catalogue: brands and codes
+
+These are for the sales pages of the website.
+
+**Brands**
+- Model: `App\Models\Product\Brand`, linked from `SalesItem::brandRef()` through `brand_id`. `SalesItem::brand` keeps the name as text.
+- `kind`: `own` (our own products), `distributed` (we are the distributor) or `other`. Show own and distributed first.
+- `slug` is for brand pages. `old_slugs` holds earlier slugs: redirect them to the current one. `Brand::findByName()` finds a brand by name, slug or old slug.
+- `introText($locale)` gives the brand's text, with English as the fallback.
+- The logo is at `route('brand.logo', $brand)` (public); `logo_path` is empty when there is no logo.
+- Only show brands with `active = true`.
+
+**Codes**
+- Our S-number (`number`) is the main product number.
+- `manufacturer_code` is the item code in the manufacturer's catalogue. Show it on the product page; customers often search on it.
+- `ean` is the barcode.
+- Supplier article numbers (`sales_item_suppliers.supplier_ref`) are internal only. Don't show them on the website.

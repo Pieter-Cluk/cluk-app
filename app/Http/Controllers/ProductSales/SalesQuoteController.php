@@ -62,7 +62,7 @@ class SalesQuoteController extends Controller
         return view('psales.show', [
             'q' => $quote, 'seeCost' => $u->hasRight('finance.see_margins') || $u->hasRight('sales.approve_low_margin'),
             'canWork' => $u->canUseModule('sales', 2), 'canApprove' => $u->hasRight('sales.approve_low_margin'),
-            'items' => SalesItem::where('active', true)->orderBy('brand')->orderBy('type')->get(['id', 'number', 'brand', 'type', 'list_price_cents', 'stock_qty']),
+            'items' => SalesItem::where('active', true)->orderBy('brand')->orderBy('type')->get(['id', 'number', 'brand', 'type', 'manufacturer_code', 'list_price_cents', 'stock_qty']),
             'activity' => AuditLog::with('actor')->where('subject_type', $quote->getMorphClass())->where('subject_id', $quote->id)->latest('id')->limit(20)->get(),
         ]);
     }

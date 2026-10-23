@@ -31,6 +31,7 @@ class SalesItemImport extends Importer
         return [
             'number' => ['Number', 'Item number', 'S-number', 'Nummer', 'Artikelnummer', 'Numéro', 'Número'],
             'brand' => ['Brand', 'Merk', 'Marque', 'Marca', 'Manufacturer', 'Fabrikant'],
+            'manufacturer_code' => ['Manufacturer code', 'Manufacturer item code', 'Manufacturer part number', 'MPN', 'Part number', 'Fabrikantcode', 'Artikelcode fabrikant', 'Code fabricant', 'Référence fabricant', 'Código del fabricante'],
             'type' => ['Type', 'Model', 'Product', 'Product name', 'Name', 'Naam', 'Modèle', 'Modelo'],
             'description' => ['Description', 'Omschrijving', 'Beschrijving', 'Désignation', 'Descripción'],
             'category' => ['Category', 'Categorie', 'Catégorie', 'Categoría'],
@@ -113,7 +114,8 @@ class SalesItemImport extends Importer
         }
         $values = array_filter([
             'brand' => $brand, 'type' => Str::limit($type, 120, ''), 'description' => ($d = self::clean($row['description'] ?? null)) ? Str::limit($d, 300, '') : null,
-            'unit' => $unit ? Str::lower($unit) : null, 'ean' => ($e = self::clean($row['ean'] ?? null)) ? Str::limit($e, 32, '') : null,
+            'unit' => $unit ? Str::lower($unit) : null,
+            'manufacturer_code' => ($m = self::clean($row['manufacturer_code'] ?? null)) ? Str::limit($m, 60, '') : null, 'ean' => ($e = self::clean($row['ean'] ?? null)) ? Str::limit($e, 32, '') : null,
         ], fn ($v) => $v !== null);
         foreach (['list_price' => 'list_price_cents'] as $col => $field) {
             if (($p = self::amount($row[$col] ?? null)) !== null) {

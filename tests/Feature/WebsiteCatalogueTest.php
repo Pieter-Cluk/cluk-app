@@ -6,6 +6,7 @@ use App\Models\Equipment\Item;
 use App\Models\Product\Subcategory;
 use App\Models\Sales\IncomingMessage;
 use App\Notifications\Confirmation;
+use App\Services\Website\DryHireCatalogue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -37,7 +38,7 @@ class WebsiteCatalogueTest extends TestCase
         $this->assertContains($sub->id, $ids);
         $this->assertNotContains(Item::where('number', 'OLD')->value('id'), $ids);
         $this->assertNotContains(Item::where('number', 'SRV')->value('id'), $ids);
-        $this->assertSame(\App\Services\Website\DryHireCatalogue::query()->count(), $data['stats']['products']);
+        $this->assertSame(DryHireCatalogue::query()->count(), $data['stats']['products']);
         $this->assertSame(4, collect($data['items'])->firstWhere('id', $sub->id)['q']);
         $this->assertContains('Subwoofers', array_column($data['subs'], 'name'));
         $this->assertSame(9500, collect($data['items'])->firstWhere('id', $sub->id)['p']);

@@ -11,18 +11,21 @@
     </div>
     @include('partials.flash')
     @include('psales._tabs')
-    <form method="get" class="inline-form mt"><input name="q" value="{{ $q }}" placeholder="{{ __('psales.items.search') }}" aria-label="{{ __('psales.items.search') }}"><button class="btn" type="submit">{{ __('psales.items.find') }}</button></form>
+    <form method="get" class="inline-form mt">@if ($cat)<input type="hidden" name="cat" value="{{ $cat }}">@endif
+        <input name="q" value="{{ $q }}" placeholder="{{ __('psales.items.search') }}" aria-label="{{ __('psales.items.search') }}" class="ps-search">
+        <select name="brand" aria-label="{{ __('psales.items.brand') }}" onchange="this.form.submit()"><option value="">{{ __('psales.items.all_brands') }}</option>@foreach ($brands as $b)<option value="{{ $b->id }}" @selected($brand === $b->id)>{{ $b->name }}@if ($b->kind !== 'other') · {{ __('products.brand_kinds.'.$b->kind) }}@endif</option>@endforeach</select>
+        <button class="btn" type="submit">{{ __('psales.items.find') }}</button></form>
     <nav class="chips mt">
-        <a @class(['chip', 'chip-on' => ! $cat]) href="{{ route('psales.items', array_filter(['q' => $q])) }}">{{ __('psales.items.all') }}</a>
-        @foreach ($categories as $c)@if ($c->active)<a @class(['chip', 'chip-on' => $cat === $c->id]) href="{{ route('psales.items', array_filter(['cat' => $c->id, 'q' => $q])) }}">{{ $c->label() }}</a>@endif @endforeach
+        <a @class(['chip', 'chip-on' => ! $cat]) href="{{ route('psales.items', array_filter(['q' => $q, 'brand' => $brand])) }}">{{ __('psales.items.all') }}</a>
+        @foreach ($categories as $c)@if ($c->active)<a @class(['chip', 'chip-on' => $cat === $c->id]) href="{{ route('psales.items', array_filter(['cat' => $c->id, 'q' => $q, 'brand' => $brand])) }}">{{ $c->label() }}</a>@endif @endforeach
     </nav>
 
     <div class="split mt">
         <section class="card card-flush">
             <ul class="inbox">
                 @forelse ($items as $it)
-                    <li><a @class(['inbox-item', 'is-on' => $sel?->is($it) && ! $new]) href="{{ route('psales.items', array_filter(['item' => $it->id, 'cat' => $cat, 'q' => $q])) }}">
-                        <span class="inbox-main"><b>{{ $it->name() }}@if ($it->on_website) <span class="pill">{{ __('equipment.web_pill') }}</span>@endif</b><small class="muted">{{ $it->number }} · {{ $it->documents_count ? trans_choice('psales.items.pdfs', $it->documents_count, ['n' => $it->documents_count]) : __('psales.items.no_pdfs') }}</small></span>
+                    <li><a @class(['inbox-item', 'is-on' => $sel?->is($it) && ! $new]) href="{{ route('psales.items', array_filter(['item' => $it->id, 'cat' => $cat, 'q' => $q, 'brand' => $brand])) }}">
+                        <span class="inbox-main"><b>{{ $it->name() }}@if ($it->on_website) <span class="pill">{{ __('equipment.web_pill') }}</span>@endif</b><small class="muted">{{ $it->number }}@if ($it->manufacturer_code) · {{ $it->manufacturer_code }}@endif · {{ $it->documents_count ? trans_choice('psales.items.pdfs', $it->documents_count, ['n' => $it->documents_count]) : __('psales.items.no_pdfs') }}</small></span>
                         <span class="inbox-side"><b>{{ $eur($it->list_price_cents) }}</b><small class="muted">{{ $it->stock_qty > 0 ? __('psales.items.in_stock', ['n' => $it->stock_qty]) : __('psales.items.order_it') }}</small></span>
                     </a></li>
                 @empty
@@ -48,6 +51,8 @@
                         <div><div class="kicker">{{ $sel->number }}</div><h2>{{ $sel->name() }}</h2><p class="muted">{{ $sel->description }}</p></div>
                     </div>
                     <dl class="facts">
+                        @if ($sel->brandRef)<dt>{{ __('psales.items.brand') }}</dt><dd>{{ $sel->brandRef->name }}@if ($sel->brandRef->kind !== 'other') <span class="pill">{{ __('products.brand_kinds.'.$sel->brandRef->kind) }}</span>@endif</dd>@endif
+                        <dt>{{ __('psales.items.codes') }}</dt><dd>{{ $sel->number }}@if ($sel->manufacturer_code) · {{ __('psales.items.code_mfr', ['code' => $sel->manufacturer_code]) }}@endif @if ($sel->ean) · EAN {{ $sel->ean }}@endif</dd>
                         <dt>{{ __('psales.items.list_price') }}</dt><dd><b>{{ $eur($sel->list_price_cents) }}</b> {{ __('psales.excl') }}</dd>
                         <dt>{{ __('psales.items.stock') }}</dt><dd>{{ $sel->stock_qty }} {{ __('psales.units.'.$sel->unit) }}@if ($sel->reserved()) · {{ __('psales.items.reserved', ['n' => $sel->reserved()]) }}@endif @if ($sel->min_stock) · {{ __('psales.items.min', ['n' => $sel->min_stock]) }}@endif</dd>
                         <dt>{{ __('psales.items.category') }}</dt><dd>@if ($sel->productCategory){{ $sel->productCategory->label() }}@if ($sel->productSubcategory) · {{ $sel->productSubcategory->label() }}@endif @else{{ $sel->category ?? '—' }}@endif
@@ -70,7 +75,7 @@
                     <h2>{{ __('psales.items.suppliers') }}</h2>
                     @if ($sel->suppliers->isEmpty())<p class="muted">{{ __('psales.items.no_suppliers') }}</p>@endif
                     @foreach ($sel->suppliers as $s)
-                        <div class="p-line"><span><b>{{ $s->name }}</b>@if ($s->pivot->preferred) <span class="pill pill-ok">{{ __('psales.items.preferred') }}</span>@endif<br><small class="muted">{{ __('psales.items.discount_lead', ['disc' => $pct($s->pivot->discount_bp), 'days' => $s->pivot->lead_days]) }}</small></span>
+                        <div class="p-line"><span><b>{{ $s->name }}</b>@if ($s->pivot->preferred) <span class="pill pill-ok">{{ __('psales.items.preferred') }}</span>@endif<br><small class="muted">{{ __('psales.items.discount_lead', ['disc' => $pct($s->pivot->discount_bp), 'days' => $s->pivot->lead_days]) }}@if ($s->pivot->supplier_ref) · {{ __('psales.items.code_supplier', ['code' => $s->pivot->supplier_ref]) }}@endif</small></span>
                             @if ($seeCost)<span>{{ $eur($sel->costCents($s)) }}</span>@endif</div>
                     @endforeach
                     @if ($canEdit)
@@ -78,7 +83,9 @@
                             <form method="post" action="{{ route('psales.items.supplier', $sel) }}" class="stack-sm mt">@csrf
                                 <label class="field"><span>{{ __('psales.items.supplier') }}</span><select name="company_id" required>@foreach ($suppliers as $c)<option value="{{ $c->id }}">{{ $c->name }}</option>@endforeach</select></label>
                                 <div class="inline-form"><label class="field"><span>{{ __('psales.items.discount') }} %</span><input type="number" step="0.1" min="0" max="100" name="discount" value="0" class="w-sm"></label>
-                                    <label class="field"><span>{{ __('psales.items.lead') }}</span><input type="number" min="0" max="365" name="lead_days" value="5" class="w-sm"></label></div>
+                                    <label class="field"><span>{{ __('psales.items.lead') }}</span><input type="number" min="0" max="365" name="lead_days" value="5" class="w-sm"></label>
+                                    <label class="field"><span>{{ __('psales.items.supplier_ref') }}</span><input name="supplier_ref" maxlength="60"></label></div>
+                                <small class="muted">{{ __('psales.items.supplier_ref_hint') }}</small>
                                 <input type="hidden" name="preferred" value="0"><label class="check"><input type="checkbox" name="preferred" value="1"> {{ __('psales.items.preferred') }}</label>
                                 <div><button class="btn" type="submit">{{ __('psales.save') }}</button></div>
                             </form>
