@@ -23,6 +23,7 @@ return [
         'stopped' => 'KBO: de onderneming is stopgezet.',
         'young' => 'Jonge onderneming: gestart op :date.',
         'vies_invalid' => 'Btw-nummer is niet geldig (VIES).',
+        'vies_invalid_registered' => 'Niet btw-geregistreerd volgens VIES (de onderneming zelf is actief): controleer de btw op facturen.',
         'overdue' => ':n factuur/facturen vervallen, tot :days dagen.',
         'paid_late' => ':n van de laatste :of facturen te laat betaald, gemiddeld :days dagen.',
     ],

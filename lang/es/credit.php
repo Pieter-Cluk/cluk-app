@@ -23,6 +23,7 @@ return [
         'stopped' => 'Registro (KBO): la empresa está dada de baja.',
         'young' => 'Empresa joven: empezó el :date.',
         'vies_invalid' => 'El número de IVA no es válido (VIES).',
+        'vies_invalid_registered' => 'Sin registro de IVA en VIES (la empresa en sí está activa): revisa el IVA en las facturas.',
         'overdue' => ':n factura(s) vencida(s), hasta :days días.',
         'paid_late' => ':n de las últimas :of facturas pagadas con retraso, de media :days días.',
     ],

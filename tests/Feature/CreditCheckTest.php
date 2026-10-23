@@ -101,6 +101,10 @@ class CreditCheckTest extends TestCase
         $foreign->forceFill(['vies_status' => 'invalid'])->save();
         $this->assertSame('red', CreditCheck::for($foreign->fresh())['level']);
         $this->assertSame('unknown', CreditCheck::for($this->company('Nobody', null))['level']);
+        // A non-profit without VAT registration but active in the register: orange, not red.
+        $asbl = $this->company('Demo asbl', 'BE0555555555', ['vies_status' => 'invalid']);
+        CompanyRegistry::create(['company_id' => $asbl->id, 'enterprise_number' => '0555.555.555', 'status' => 'AC', 'situation_code' => '000', 'start_date' => '2001-01-01', 'snapshot_date' => today()]);
+        $this->assertSame('orange', CreditCheck::for($asbl->fresh())['level']);
 
         // Our proformas: 20 days overdue → orange, 75 days → red.
         $nl = $this->company('Demo NL BV', 'NL123456789B01', ['country' => 'NL', 'vies_status' => 'valid']);

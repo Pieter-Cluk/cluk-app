@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
  * sources and our own figures, each with its reason:
  * - register (KBO/BCE): stopped, bankrupt, in liquidation or reorganisation → red;
  *   another unusual situation, not found, or younger than 2 years → orange;
- * - VIES: VAT number not valid → red;
+ * - VIES: VAT number not valid → red (orange when the register shows an active company: no VAT registration, e.g. a non-profit);
  * - our proformas: more than 60 days overdue → red; overdue or often paid late → orange.
  * Annual accounts (NBB) follow when that connection is active.
  */
@@ -53,7 +53,10 @@ class CreditCheck
         if ($c->vies_status) {
             $sources[] = 'vies';
             if ($c->vies_status === 'invalid') {
-                $add('red', 'vies_invalid');
+                // A company the register shows as active and normal is not a credit risk because it has no VAT
+                // number (non-profits, small exempt firms): then it is only a point for the invoice.
+                $registered = $reg && $reg->found && $reg->isActive() && $reg->isNormal();
+                $add($registered ? 'orange' : 'red', $registered ? 'vies_invalid_registered' : 'vies_invalid');
             }
         }
 

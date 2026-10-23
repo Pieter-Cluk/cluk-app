@@ -23,6 +23,7 @@ return [
         'stopped' => 'BCE : l’entreprise est arrêtée.',
         'young' => 'Jeune entreprise : début le :date.',
         'vies_invalid' => 'Le numéro de TVA n’est pas valide (VIES).',
+        'vies_invalid_registered' => 'Pas assujetti à la TVA selon VIES (l’entreprise elle-même est active) : vérifiez la TVA sur les factures.',
         'overdue' => ':n facture(s) échue(s), jusqu’à :days jours.',
         'paid_late' => ':n des :of dernières factures payées en retard, en moyenne :days jours.',
     ],

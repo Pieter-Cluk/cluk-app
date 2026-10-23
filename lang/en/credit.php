@@ -23,6 +23,7 @@ return [
         'stopped' => 'Register (KBO): the company is stopped.',
         'young' => 'Young company: started on :date.',
         'vies_invalid' => 'VAT number is not valid (VIES).',
+        'vies_invalid_registered' => 'Not registered for VAT in VIES (the company itself is active): check the VAT on invoices.',
         'overdue' => ':n invoice(s) overdue, up to :days days.',
         'paid_late' => 'Paid :n of the last :of invoices late, on average :days days.',
     ],
