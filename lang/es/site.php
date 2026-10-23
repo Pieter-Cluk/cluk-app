@@ -166,4 +166,10 @@ return [
         'text' => 'Usamos cookies necesarias para que la web funcione (idioma, cestas, inicio de sesión). Con tu permiso también guardamos estadísticas: qué páginas y productos miras, para que nuestro equipo te ayude mejor. Nunca las vendemos ni las usamos para anuncios de terceros.',
         'all' => 'Aceptar estadísticas', 'necessary' => 'Solo las necesarias', 'settings' => 'Configuración de cookies',
     ],
+    'news' => [
+        'title' => 'Noticias', 'meta' => 'Lo último de CLUK: equipos nuevos, eventos en Factory, Afrit 6 y nuestra gama de venta, desde nuestro Facebook e Instagram.',
+        'intro' => 'Personas, equipos, espacios e historias, directamente de nuestro Facebook e Instagram.',
+        'all' => 'Todo', 'all_news' => 'Todas las noticias', 'latest' => 'Últimas publicaciones', 'on' => 'en :platform', 'open' => 'Abrir en :platform',
+        'empty' => 'Todavía no hay publicaciones.', 'follow' => 'Síguenos', 'video' => 'Vídeo', 'filter' => 'Mostrar noticias de',
+    ],
 ];

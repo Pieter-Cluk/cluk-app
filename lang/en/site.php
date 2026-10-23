@@ -169,4 +169,10 @@ return [
         'text' => 'We use necessary cookies to make the site work (language, baskets, logins). With your OK we also keep statistics: which pages and products you look at, so our team can help you better. We never sell this and never use it for ads from others.',
         'all' => 'Accept statistics', 'necessary' => 'Only necessary', 'settings' => 'Cookie settings',
     ],
+    'news' => [
+        'title' => 'News', 'meta' => 'The latest from CLUK: new gear, events at Factory, Afrit 6 and our sales range, from our Facebook and Instagram.',
+        'intro' => 'People, gear, spaces and stories, straight from our Facebook and Instagram.',
+        'all' => 'All', 'all_news' => 'All news', 'latest' => 'Latest posts', 'on' => 'on :platform', 'open' => 'Open on :platform',
+        'empty' => 'No posts here yet.', 'follow' => 'Follow us', 'video' => 'Video', 'filter' => 'Show news about',
+    ],
 ];

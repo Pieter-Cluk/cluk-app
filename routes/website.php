@@ -3,6 +3,7 @@
 use App\Http\Controllers\Site\AccountController;
 use App\Http\Controllers\Site\DryHireController;
 use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\Site\NewsController;
 use App\Http\Controllers\Site\SalesController;
 use App\Http\Controllers\Site\TrackController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,11 @@ $site = function () {
     Route::get('/sales/photo/{item}/{w}', [SalesController::class, 'photo'])->whereNumber(['item', 'w'])->name('sales.photo');
     Route::get('/sales/document/{doc}', [SalesController::class, 'document'])->whereNumber('doc')->name('sales.document');
     Route::post('/sales/request', [SalesController::class, 'request'])->middleware('throttle:6,1')->name('sales.request');
+    // News: Facebook and Instagram posts (pictures and videos served from our server).
+    Route::get('/news', [NewsController::class, 'index'])->name('news');
+    Route::get('/news/image/{post}', [NewsController::class, 'image'])->whereNumber('post')->name('social.image');
+    Route::get('/news/video/{post}', [NewsController::class, 'video'])->whereNumber('post')->name('social.video');
+
     // Visitor behaviour (only with consent).
     Route::post('/t', [TrackController::class, 'store'])->middleware('throttle:240,1')->name('track');
 

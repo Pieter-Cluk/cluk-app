@@ -52,7 +52,7 @@ class SalesController extends SiteController
         $new = SalesCatalogue::query()->when($newTag, fn ($q) => $q->whereHas('tags', fn ($t) => $t->whereKey($newTag->id)), fn ($q) => $q->latest('id'))->latest('id')->limit(8)->get();
         SalesCatalogue::withPrices($new, $c['customer']);
 
-        return view('site.sales.home', $c + ['brands' => SalesCatalogue::brands(), 'new' => $new, 'total' => SalesCatalogue::query()->count()]);
+        return view('site.sales.home', $c + ['brands' => SalesCatalogue::brands(), 'new' => $new, 'total' => SalesCatalogue::query()->count(), 'news' => \App\Services\Website\SocialFeed::for('sales', 5)]);
     }
 
     public function category(Request $request, string $cat, ?string $sub = null): mixed

@@ -8,12 +8,20 @@
   <section class="promo" aria-label="{{ __('site.sales.news') }}">
     <div class="newsf">
       <h2>{{ __('site.sales.news') }}</h2>
+      @if ($news->isNotEmpty())
+      <ol>
+        @foreach ($news as $p)
+          <li><a href="{{ $p['url'] }}" target="_blank" rel="noopener"><span class="meta">@include('site._icon', ['i' => $p['platform'] === 'instagram' ? 'ig' : 'fb'])<time datetime="{{ $p['date']->toIso8601String() }}">{{ $p['date']->locale(app()->getLocale())->translatedFormat('j M') }}</time></span><b>{{ $p['title'] ?: \Illuminate\Support\Str::limit($p['text'], 80) }}</b></a></li>
+        @endforeach
+      </ol>
+      @else
       <ol>
         @foreach (__('site.sales.news_items') as $k => $n)
           <li><a href="{{ route('site.sales.new') }}"><span class="meta"><span class="tag {{ ['promo-t', 'new-t', '', ''][$k] ?? '' }}">{{ __('site.sales.'.['tag_promo', 'tag_new', 'tag_event', 'tag_tip'][$k % 4]) }}</span></span><b>{{ $n }}</b></a></li>
         @endforeach
       </ol>
-      <a class="all" href="{{ route('site.sales.new') }}">{{ __('site.sales.all_news') }} <span aria-hidden="true">→</span></a>
+      @endif
+      <a class="all" href="{{ route('site.news', ['part' => 'sales']) }}">{{ __('site.sales.all_news') }} <span aria-hidden="true">→</span></a>
     </div>
     <div class="slider" id="slider" aria-roledescription="carousel" aria-label="{{ __('site.sales.news') }}">
       @foreach (__('site.sales.slides') as $k => $s)

@@ -10,6 +10,7 @@
         <a href="{{ Route::has('site.sales') ? route('site.sales') : route('site.home').'#sales' }}">{{ __('site.nav.sales') }}</a>
         <a href="{{ $app }}/book">{{ __('site.nav.factory') }}</a>
         <a href="{{ $app }}/afrit6">{{ __('site.nav.afrit6') }}</a>
+        <a href="{{ route('site.news') }}">{{ __('site.news.title') }}</a>
         <a href="mailto:{{ $co?->email ?: 'info@cluk.live' }}">{{ __('site.footer.contact') }}</a>
         <a href="#cookies" data-cookie-settings>{{ __('site.consent.settings') }}</a>
       </nav>
