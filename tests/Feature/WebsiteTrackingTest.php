@@ -20,7 +20,7 @@ class WebsiteTrackingTest extends TestCase
     public function test_nothing_is_kept_without_consent(): void
     {
         $this->postJson('/site/t', ['type' => 'view', 'path' => '/site/dry-hire'])->assertNoContent();
-        $this->withUnencryptedCookies(['cluk_consent' => 'necessary', 'cluk_vid' => self::VID])->postJson('/site/t', ['type' => 'view'])->assertNoContent();
+        $this->withCredentials()->withUnencryptedCookies(['cluk_consent' => 'necessary', 'cluk_vid' => self::VID])->postJson('/site/t', ['type' => 'view'])->assertNoContent();
         $this->assertSame(0, DB::table('web_visitors')->count());
         $this->get('/site')->assertOk()->assertSee('Accept statistics')->assertSee('Cookie settings');
     }
@@ -33,12 +33,12 @@ class WebsiteTrackingTest extends TestCase
         $k2->save();
         $c = ['cluk_consent' => 'all', 'cluk_vid' => self::VID];
 
-        $this->withUnencryptedCookies($c)->postJson('/site/t', ['type' => 'view', 'section' => 'dryhire', 'path' => '/site/dry-hire?utm_source=linkedin', 'referrer' => 'https://www.linkedin.com/', 'utm' => ['source' => 'linkedin']])->assertNoContent();
-        $this->withUnencryptedCookies($c)->postJson('/site/t', ['type' => 'search', 'section' => 'dryhire', 'label' => 'k2'])->assertNoContent();
-        $this->withUnencryptedCookies($c)->postJson('/site/t', ['type' => 'product', 'section' => 'dryhire', 'item_id' => $k2->id, 'label' => 'L-Acoustics K2'])->assertNoContent();
-        $this->withUnencryptedCookies($c)->postJson('/site/t', ['type' => 'order'])->assertStatus(422); // only the server records orders
+        $this->withCredentials()->withUnencryptedCookies($c)->postJson('/site/t', ['type' => 'view', 'section' => 'dryhire', 'path' => '/site/dry-hire?utm_source=linkedin', 'referrer' => 'https://www.linkedin.com/', 'utm' => ['source' => 'linkedin']])->assertNoContent();
+        $this->withCredentials()->withUnencryptedCookies($c)->postJson('/site/t', ['type' => 'search', 'section' => 'dryhire', 'label' => 'k2'])->assertNoContent();
+        $this->withCredentials()->withUnencryptedCookies($c)->postJson('/site/t', ['type' => 'product', 'section' => 'dryhire', 'item_id' => $k2->id, 'label' => 'L-Acoustics K2'])->assertNoContent();
+        $this->withCredentials()->withUnencryptedCookies($c)->postJson('/site/t', ['type' => 'order'])->assertStatus(422); // only the server records orders
 
-        $this->withUnencryptedCookies($c)->postJson('/site/dry-hire/request', ['name' => 'Lotte Peeters', 'email' => 'lotte@example.be', 'first_day' => now()->addDay()->toDateString(), 'last_day' => now()->addDays(2)->toDateString(),
+        $this->withCredentials()->withUnencryptedCookies($c)->postJson('/site/dry-hire/request', ['name' => 'Lotte Peeters', 'email' => 'lotte@example.be', 'first_day' => now()->addDay()->toDateString(), 'last_day' => now()->addDays(2)->toDateString(),
             'lines' => [['id' => $k2->id, 'qty' => 4]]])->assertOk();
 
         $v = DB::table('web_visitors')->where('uuid', self::VID)->first();
