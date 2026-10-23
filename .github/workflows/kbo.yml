@@ -1,7 +1,7 @@
 name: KBO update
 
 # Company register data (KBO/BCE open data) for the credit check on the
-# customer card. Every Monday morning, or by hand:
+# customer card. Every Tuesday morning (KBO publishes a new file on the Monday after the first Sunday of the month), or by hand:
 #  - probe: log in and list the files offered (to check the account works);
 #  - update: download the newest full extract, keep only our own companies
 #    (enterprise numbers asked from the app) and import them on the server.
@@ -9,7 +9,7 @@ name: KBO update
 
 on:
   schedule:
-    - cron: '30 5 * * 1'
+    - cron: '30 5 * * 2'
   workflow_dispatch:
     inputs:
       mode:
