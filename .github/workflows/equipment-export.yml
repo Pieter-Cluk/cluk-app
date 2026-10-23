@@ -22,9 +22,14 @@ jobs:
           mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           sshpass -e ssh -o ConnectTimeout=30 "$SSH_USER@$SSH_HOST" "cd \$(readlink -f ~/webroots/by-route/app.cluk.live_)/app && php -r 'require \"vendor/autoload.php\"; \$app = require \"bootstrap/app.php\"; \$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); echo json_encode(Illuminate\Support\Facades\DB::table(\"equipment_items\")->select(\"id\",\"number\",\"kind\",\"name\",\"brand\",\"type\",\"category\",\"subcategory\",\"active\",\"serial\")->orderBy(\"number\")->get());'" > equipment.json
           echo "::notice title=export::$(wc -c < equipment.json) bytes"
-          # Also as compressed chunks in the run notes (the artifact may not be reachable everywhere).
           gzip -9c equipment.json | base64 -w0 > eq.b64
-          n=0; while [ $((n*3500)) -lt $(wc -c < eq.b64) ]; do echo "::notice title=part $n::$(cut -c$((n*3500+1))-$(((n+1)*3500)) eq.b64)"; n=$((n+1)); done
+      # Also as compressed chunks in the run notes (the artifact may not be reachable from everywhere); max 10 notes per step.
+      - name: Notes 0-8
+        run: for n in 0 1 2 3 4 5 6 7 8; do c=$(cut -c$((n*3500+1))-$(((n+1)*3500)) eq.b64); [ -n "$c" ] && echo "::notice title=part $n::$c"; done; true
+      - name: Notes 9-17
+        run: for n in 9 10 11 12 13 14 15 16 17; do c=$(cut -c$((n*3500+1))-$(((n+1)*3500)) eq.b64); [ -n "$c" ] && echo "::notice title=part $n::$c"; done; true
+      - name: Notes 18-26
+        run: for n in 18 19 20 21 22 23 24 25 26; do c=$(cut -c$((n*3500+1))-$(((n+1)*3500)) eq.b64); [ -n "$c" ] && echo "::notice title=part $n::$c"; done; true
       - uses: actions/upload-artifact@v4
         with:
           name: equipment
