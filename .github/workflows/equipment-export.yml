@@ -1,0 +1,29 @@
+name: Equipment export
+
+# Exports the dry-hire item list (number, name, brand, type, category,
+# subcategory) from the live app as a JSON file, kept 3 days as a run
+# artifact. Used to plan the new categories. Started by hand.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Export from the server
+        env:
+          SSH_HOST: ssh.cys6r88bx.service.one
+          SSH_USER: cys6r88bx_ssh
+          SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass >/dev/null
+          export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          sshpass -e ssh -o ConnectTimeout=30 "$SSH_USER@$SSH_HOST" "cd \$(readlink -f ~/webroots/by-route/app.cluk.live_)/app && php -r 'require \"vendor/autoload.php\"; \$app = require \"bootstrap/app.php\"; \$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); echo json_encode(Illuminate\Support\Facades\DB::table(\"equipment_items\")->select(\"id\",\"number\",\"kind\",\"name\",\"brand\",\"type\",\"category\",\"subcategory\",\"active\",\"serial\")->orderBy(\"number\")->get());'" > equipment.json
+          echo "::notice title=export::$(wc -c < equipment.json) bytes"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: equipment
+          path: equipment.json
+          retention-days: 3
