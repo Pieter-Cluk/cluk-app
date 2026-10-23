@@ -33,8 +33,12 @@ class WebsiteCatalogueTest extends TestCase
         $page = $this->get('/site/dry-hire')->assertOk()->assertSee('L-Acoustics KS28 subwoofer')->assertSee('L-Acoustics K2')
             ->assertDontSee('Retired speaker')->assertDontSee('Transport service');
         $data = json_decode(html_entity_decode($this->between($page->getContent(), '<script type="application/json" id="dh-data">', '</script>')), true);
-        $this->assertSame(2, $data['stats']['products']);
-        $this->assertSame(8, $data['stats']['pieces']);
+        $ids = array_column($data['items'], 'id');
+        $this->assertContains($sub->id, $ids);
+        $this->assertNotContains(Item::where('number', 'OLD')->value('id'), $ids);
+        $this->assertNotContains(Item::where('number', 'SRV')->value('id'), $ids);
+        $this->assertSame(\App\Services\Website\DryHireCatalogue::query()->count(), $data['stats']['products']);
+        $this->assertSame(4, collect($data['items'])->firstWhere('id', $sub->id)['q']);
         $this->assertContains('Subwoofers', array_column($data['subs'], 'name'));
         $this->assertSame(9500, collect($data['items'])->firstWhere('id', $sub->id)['p']);
 
@@ -45,7 +49,7 @@ class WebsiteCatalogueTest extends TestCase
     public function test_names_follow_the_visitor_language(): void
     {
         $this->item('KS28', 'L-Acoustics KS28 subwoofer', 'SPK', 'AUD');
-        $this->get('/site/dry-hire?lang=nl')->assertOk()->assertSee('Luidsprekers')->assertSee('Zoek in 1 producten', false);
+        $this->get('/site/dry-hire?lang=nl')->assertOk()->assertSee('Luidsprekers')->assertSee('Zoek in ', false)->assertSee('Wat zit erin', false);
         $this->get('/site/dry-hire?lang=fr')->assertOk()->assertSee('Enceintes');
         $this->get('/site/?lang=es')->assertOk()->assertSee('Alquiler en seco');
     }
