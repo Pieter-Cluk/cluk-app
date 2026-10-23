@@ -22,6 +22,9 @@ jobs:
           mkdir -p ~/.ssh && ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           sshpass -e ssh -o ConnectTimeout=30 "$SSH_USER@$SSH_HOST" "cd \$(readlink -f ~/webroots/by-route/app.cluk.live_)/app && php -r 'require \"vendor/autoload.php\"; \$app = require \"bootstrap/app.php\"; \$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); echo json_encode(Illuminate\Support\Facades\DB::table(\"equipment_items\")->select(\"id\",\"number\",\"kind\",\"name\",\"brand\",\"type\",\"category\",\"subcategory\",\"active\",\"serial\")->orderBy(\"number\")->get());'" > equipment.json
           echo "::notice title=export::$(wc -c < equipment.json) bytes"
+          # Also as compressed chunks in the run notes (the artifact may not be reachable everywhere).
+          gzip -9c equipment.json | base64 -w0 > eq.b64
+          n=0; while [ $((n*3500)) -lt $(wc -c < eq.b64) ]; do echo "::notice title=part $n::$(cut -c$((n*3500+1))-$(((n+1)*3500)) eq.b64)"; n=$((n+1)); done
       - uses: actions/upload-artifact@v4
         with:
           name: equipment
