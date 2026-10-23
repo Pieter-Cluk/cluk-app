@@ -18,5 +18,5 @@
     <span class="nsrc">@include('site._icon', ['i' => $p['platform'] === 'instagram' ? 'ig' : 'fb']){{ __('site.news.on', ['platform' => $pf]) }} · <time datetime="{{ $p['date']->toIso8601String() }}">{{ $p['date']->locale(app()->getLocale())->translatedFormat('j M Y') }}</time></span>
     @foreach ($p['sections'] as $s)<span class="ntag">{{ $labels[$s] }}</span>@endforeach
   </div>
-  <h3><a href="{{ $p['url'] }}" target="_blank" rel="noopener">{{ $p['title'] ?: \Illuminate\Support\Str::limit($p['text'], 90) }}</a></h3>
+  <h3><a href="{{ $p['url'] }}" target="_blank" rel="noopener">{{ $p['title'] ?: (\Illuminate\Support\Str::limit($p['text'], 90) ?: ucfirst((string) $p['platform']).' · '.$p['date']->locale(app()->getLocale())->translatedFormat('j F Y')) }}</a></h3>
 </article>
