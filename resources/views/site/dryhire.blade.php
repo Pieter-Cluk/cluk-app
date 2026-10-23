@@ -30,8 +30,10 @@
   </div>
 </section>
 
-<nav class="catbar" aria-label="{{ __('site.dryhire.categories') }}"><div class="row gut" id="cats">
+<nav class="catbar" aria-label="{{ __('site.dryhire.categories') }}"><div class="catrow gut"><div class="row" id="cats">
   @foreach ($data['cats'] as $c)<a class="chip" href="?cat={{ $c['slug'] }}">{{ $c['name'] }}</a>@endforeach
+</div>
+  <button class="reqbtn" id="fab" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16l-1.5 12h-13z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg><span class="bl">{{ __('site.js.request_btn') }}</span><span class="n num" id="fabN">0</span></button>
 </div></nav>
 
 <div class="dh-main gut">
@@ -66,7 +68,6 @@
   </main>
 </div>
 
-<button class="btn fab" id="fab" type="button" hidden><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16l-1.5 12h-13z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg><span>{{ __('site.js.request_btn') }}</span><span class="n" id="fabN">0</span></button>
 <div class="scrim" id="scrim"></div>
 <div class="drawer" id="pd" role="dialog" aria-modal="true" aria-labelledby="pdTitle"></div>
 <div class="drawer" id="bk" role="dialog" aria-modal="true" aria-labelledby="bkTitle"></div>

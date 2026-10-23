@@ -533,3 +533,48 @@ mark { background: rgba(92,191,58,.3); color: inherit; padding: 0 1px; }
   .sph-none .t { font-size: 18px; }
   .sgrid.as-list .sbody { grid-template-columns: 1fr; }
 }
+
+/* ---------- customer account ---------- */
+.acc { max-width: 980px; margin: 0 auto; padding-block: 48px 110px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.acc-card { border: 2px solid var(--fg); padding: 28px; display: grid; gap: 14px; background: #fff; }
+.acc-card.wide { grid-column: 1 / -1; max-width: 720px; justify-self: center; width: 100%; }
+.acc-card h1, .acc-page h1 { margin: 0; font: 400 clamp(40px, 5vw, 64px)/.95 var(--display); text-transform: uppercase; }
+.acc-side { background: var(--green); padding: 28px; display: grid; gap: 12px; }
+.acc-side h2 { margin: 0; font: 400 32px/1 var(--display); text-transform: uppercase; }
+.acc-side p { margin: 0; }
+.acc-form { display: grid; gap: 14px; }
+.acc-form select { width: 100%; background: #fff; border: 1px solid var(--line-strong); border-radius: 3px; padding: 10px 12px; font-size: 15px; }
+.acc-links { margin: 0; font-size: 14px; }
+.acc-links a { text-decoration: underline; }
+.acc-ok { margin: 0; background: #e8f5e1; border-left: 4px solid var(--green); padding: 10px 12px; }
+.acc-err { background: #fdecea; border-left: 4px solid #b3261e; padding: 10px 12px; color: #7a1c15; display: grid; gap: 4px; }
+.acc-page { max-width: 1100px; margin: 0 auto; padding-block: 34px 110px; display: grid; gap: 30px; }
+.acc-page .lhead { grid-template-columns: 1fr auto; align-items: end; }
+.acc-page .lhead p { grid-column: 1; margin: 0; }
+.acc-page .lhead form { grid-column: 2; grid-row: 1 / span 2; }
+.acc-block h2 { margin: 0 0 12px; font-size: 22px; font-weight: 800; letter-spacing: -.02em; border-bottom: 2px solid var(--fg); padding-bottom: 8px; }
+.acc-baskets { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.acc-basket { display: grid; gap: 4px; padding: 18px; border: 1px solid var(--line-strong); border-radius: 3px; }
+.acc-basket:hover { border-color: var(--fg); background: var(--tint); }
+.acc-basket span { color: var(--muted); font-size: 14px; }
+.acc-basket .go { color: var(--ink); font-weight: 700; }
+.acc-two { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.tbl { overflow-x: auto; }
+.tbl table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tbl th { text-align: left; font: 700 11px var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line-strong); }
+.tbl td { padding: 10px; border-bottom: 1px solid var(--line); }
+.tbl .r { text-align: right; }
+@media (max-width: 800px) { .acc, .acc-two, .acc-baskets { grid-template-columns: 1fr; } }
+.site-header .login-out { width: 100%; text-align: left; background: none; border: 0; border-top: 1px solid var(--rule); padding: 10px 16px; font: 600 13px var(--body); cursor: pointer; color: #3e423b; }
+.site-header .login-out:hover { background: var(--green); color: var(--black); }
+
+/* dry-hire: request button in the category bar */
+.catbar .catrow { display: flex; align-items: center; gap: 12px; max-width: 1440px; margin: 0 auto; }
+.catbar .catrow .row { flex: 1; min-width: 0; max-width: none; margin: 0; padding-left: 0; padding-right: 0; }
+.reqbtn { flex: none; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border: 1.5px solid var(--green); background: transparent; color: var(--green); border-radius: 3px; cursor: pointer; font-weight: 700; font-family: var(--sans); }
+.reqbtn svg { width: 18px; height: 18px; }
+.reqbtn .n { background: var(--surface2, #1b1e1a); color: var(--fg, #fff); border-radius: 20px; min-width: 22px; height: 22px; display: grid; place-items: center; font-size: 12px; padding: 0 6px; }
+.reqbtn.has { background: var(--green); color: #0b1a06; }
+.reqbtn.has .n { background: #0b1a06; color: var(--green); }
+.reqbtn.bump { animation: bump .35s; }
+@media (max-width: 640px) { .reqbtn .bl { display: none; } }

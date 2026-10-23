@@ -76,9 +76,17 @@
     if (p.get('cat')) { var c = D.cats.find(function (x) { return x.slug === p.get('cat'); }); if (c) S.cat = c.id; }
     if (p.get('add') && byId[+p.get('add')]) { S.basket.set(+p.get('add'), (S.basket.get(+p.get('add')) || 0) + 1); }
   })();
+  // Signed-in customers keep their basket on the server (Baskets); guests in this browser.
+  var CU = C.customer || null, A = C.acct || {};
   function save() {
-    try { localStorage.setItem(STORE, JSON.stringify({ lines: Array.from(S.basket.entries()), out: S.out, back: S.back })); } catch (e) {}
+    try { localStorage.setItem(STORE, JSON.stringify({ lines: CU ? [] : Array.from(S.basket.entries()), out: S.out, back: S.back })); } catch (e) {}
   }
+  function api(url, method, body) {
+    return fetch(url, { method: method || 'GET', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content }, body: body ? JSON.stringify(body) : undefined })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); });
+  }
+  function push(id) { if (CU) api(A.set, 'POST', { id: id, qty: S.basket.get(id) || 0 }).catch(function () {}); }
+  function pushDates() { if (CU && S.out && S.back) api(A.dates, 'POST', { first_day: S.out, last_day: S.back }).catch(function () {}); }
   function syncUrl() {
     var p = new URLSearchParams(location.search);
     ['q', 'cat', 'add'].forEach(function (k) { p.delete(k); });
@@ -277,12 +285,12 @@
   function days() { if (!S.out || !S.back) return 0; var d = Math.round((new Date(S.back) - new Date(S.out)) / 864e5) + 1; return d > 0 ? d : 0; }
   function fab(bump) {
     var n = 0; S.basket.forEach(function (q) { n += q; });
-    $('fab').hidden = !n; $('fabN').textContent = n;
+    $('fabN').textContent = n; $('fab').classList.toggle('has', n > 0);
     if (bump) { $('fab').classList.remove('bump'); void $('fab').offsetWidth; $('fab').classList.add('bump'); }
   }
   function add(id, q) {
     q = Math.max(1, Math.min(99999, q || ((S.basket.get(id) || 0) + 1)));
-    S.basket.set(id, q); save(); fab(true);
+    S.basket.set(id, q); save(); fab(true); push(id);
     document.querySelectorAll('[data-add="' + id + '"]').forEach(function (b) { b.classList.add('in'); b.innerHTML = check; b.setAttribute('aria-label', T.in_request); });
   }
   var form = { name: '', company: '', vat: '', email: '', phone: '', message: '' };
@@ -297,6 +305,7 @@
     var field = function (k, label, type, extra) { return '<div class="field"><label for="f_' + k + '">' + esc(label) + '</label>' + (type === 'textarea' ? '<textarea id="f_' + k + '" placeholder="' + esc(T.message_hint) + '">' + esc(form[k]) + '</textarea>' : '<input id="f_' + k + '" type="' + type + '" value="' + esc(form[k]) + '" ' + (extra || '') + '>') + '</div>'; };
     $('bk').innerHTML = '<div class="dhead"><h2 id="bkTitle">' + esc(T.your_request) + '</h2><button class="x" type="button" data-close aria-label="' + esc(T.close) + '">✕</button></div>' +
       '<div class="dbody">' +
+      (CU ? '<p class="note">' + esc(tr('signed_in', { name: CU.name })) + '</p>' : '<p class="note">' + esc(T.have_account) + ' <a href="' + esc(A.login) + '" style="text-decoration:underline">' + esc(T.log_in) + '</a></p>') +
       '<div class="dates"><div class="field"><label for="dOut">' + esc(T.first_day) + '</label><input id="dOut" type="date" value="' + S.out + '" min="' + new Date().toISOString().slice(0, 10) + '"></div><div class="field"><label for="dBack">' + esc(T.last_day) + '</label><input id="dBack" type="date" value="' + S.back + '" min="' + (S.out || '') + '"></div></div>' +
       '<div>' + (lines.length ? lines.map(function (l) {
         var it = l[0], q = l[1];
@@ -307,15 +316,30 @@
       '<div class="sum num"><div><span>' + esc(T.per_day_total) + '</span><span>' + eur(perDay) + '</span></div>' +
       (d ? '<div><span>' + esc(tr('days_factor', { d: d, f: fnum(f) })) + '</span><span>× ' + fnum(f) + '</span></div><div class="tot"><span>' + esc(T.estimate) + '</span><span>' + eur(Math.round(perDay * f)) + '</span></div>' : '<div><span class="note">' + esc(T.pick_dates) + '</span></div>') + '</div>' +
       '<p class="note">' + esc(T.factor_note) + '</p>' +
-      field('name', T.name, 'text', 'autocomplete="name" required') + field('company', T.company, 'text', 'autocomplete="organization"') + field('vat', T.vat, 'text') +
-      field('email', T.email, 'email', 'autocomplete="email" required') + field('phone', T.phone, 'tel', 'autocomplete="tel"') + field('message', T.message, 'textarea') +
+      (CU ? '' : field('name', T.name, 'text', 'autocomplete="name" required') + field('company', T.company, 'text', 'autocomplete="organization"') + field('vat', T.vat, 'text') +
+      field('email', T.email, 'email', 'autocomplete="email" required') + field('phone', T.phone, 'tel', 'autocomplete="tel"')) + field('message', T.message, 'textarea') +
       '<input class="hp" id="f_website_url" name="website_url" tabindex="-1" autocomplete="off" aria-hidden="true">' +
       '<p class="note">' + esc(T.privacy) + '</p><p class="err" id="err" role="alert"></p></div>' +
-      '<div class="dfoot"><button class="btn" type="button" id="send">' + esc(T.send) + '</button></div>';
+      '<div class="dfoot"><button class="btn" type="button" id="send">' + esc(CU ? T.send_dryhire : T.send) + '</button></div>';
   }
   function send(btn) {
     keepForm();
     var err = $('err');
+    if (CU) {
+      if (!days()) { err.textContent = T.need_dates; return; }
+      if (!S.basket.size) { err.textContent = T.need_lines; return; }
+      btn.disabled = true; btn.textContent = T.sending;
+      // make sure the server has the same lines and dates, then send
+      var all = []; S.basket.forEach(function (q, id) { all.push(api(A.set, 'POST', { id: id, qty: q })); });
+      all.push(api(A.dates, 'POST', { first_day: S.out, last_day: S.back }));
+      Promise.all(all).then(function () { return api(A.send, 'POST', { message: form.message, page: location.pathname + location.search }); }).then(function (res) {
+        if (!res.ok) { err.textContent = res.j.errors ? Object.values(res.j.errors)[0][0] : (res.j.message || T.error); btn.disabled = false; btn.textContent = T.send_dryhire; return; }
+        S.basket.clear(); save(); fab(); form.message = '';
+        document.querySelectorAll('.add.in').forEach(function (b) { b.classList.remove('in'); b.innerHTML = plus; b.setAttribute('aria-label', T.add); });
+        showBasket(CU.first);
+      }).catch(function () { err.textContent = T.error; btn.disabled = false; btn.textContent = T.send_dryhire; });
+      return;
+    }
     if (!form.name.trim() || !/^\S+@\S+\.\S+$/.test(form.email.trim())) { err.textContent = T.need_name_email; return; }
     if (!days()) { err.textContent = T.need_dates; return; }
     if (!S.basket.size && !form.message.trim()) { err.textContent = T.need_lines; return; }
@@ -377,13 +401,13 @@
   $('bk').addEventListener('click', function (e) {
     if (e.target.closest('[data-close]')) { keepForm(); close(); return; }
     var s = e.target.closest('[data-bstep]');
-    if (s) { keepForm(); var id = +s.dataset.id, q = (S.basket.get(id) || 1) + (+s.dataset.bstep); if (q < 1) { S.basket.delete(id); save(); fab(); render(); } else add(id, q); showBasket(); return; }
-    var r = e.target.closest('[data-rmb]'); if (r) { keepForm(); S.basket.delete(+r.dataset.rmb); save(); fab(); render(); showBasket(); return; }
+    if (s) { keepForm(); var id = +s.dataset.id, q = (S.basket.get(id) || 1) + (+s.dataset.bstep); if (q < 1) { S.basket.delete(id); save(); fab(); render(); push(id); } else add(id, q); showBasket(); return; }
+    var r = e.target.closest('[data-rmb]'); if (r) { keepForm(); S.basket.delete(+r.dataset.rmb); save(); fab(); render(); push(+r.dataset.rmb); showBasket(); return; }
     if (e.target.id === 'send') send(e.target);
   });
   $('bk').addEventListener('change', function (e) {
-    if (e.target.id === 'dOut') { keepForm(); S.out = e.target.value; if (S.back && S.back < S.out) S.back = S.out; save(); showBasket(); }
-    else if (e.target.id === 'dBack') { keepForm(); S.back = e.target.value; save(); showBasket(); }
+    if (e.target.id === 'dOut') { keepForm(); S.out = e.target.value; if (S.back && S.back < S.out) S.back = S.out; save(); pushDates(); showBasket(); }
+    else if (e.target.id === 'dBack') { keepForm(); S.back = e.target.value; save(); pushDates(); showBasket(); }
     else if (e.target.dataset.bq) { keepForm(); add(+e.target.dataset.bq, +e.target.value); showBasket(); }
   });
   $('filtersBtn').addEventListener('click', function () { $('aside').classList.add('on'); $('asideHead').hidden = false; scrim.classList.add('on'); openD = $('aside'); });
@@ -395,5 +419,15 @@
   });
 
   render(); fab();
-  if (new URLSearchParams(location.search).get('add') !== null) { showBasket(); open($('bk')); }
+  var qs = new URLSearchParams(location.search), openNow = qs.get('add') !== null || qs.get('basket') !== null;
+  if (CU) {
+    var local = []; S.basket.forEach(function (q, id) { local.push({ id: id, qty: q }); });
+    api(A.merge, 'POST', { lines: local, first_day: S.out, last_day: S.back }).then(function (res) {
+      if (!res.ok) return;
+      S.basket.clear(); res.j.lines.forEach(function (l) { S.basket.set(l.id, l.qty); });
+      if (res.j.first_day) { S.out = res.j.first_day; S.back = res.j.last_day; }
+      save(); fab(); render();
+      if (openNow) { showBasket(); open($('bk')); }
+    }).catch(function () {});
+  } else if (openNow) { showBasket(); open($('bk')); }
 })();
