@@ -10,6 +10,11 @@
         </div>
         <div class="inline-form">
             @if ($canEdit && $item->serial && $item->assets->where('status', '!=', 'retired')->isNotEmpty())<a class="btn" href="{{ route('equipment.labels', ['item' => $item->id]) }}" target="_blank" rel="noopener">{{ __('equipment.print_all') }}</a>@endif
+            @if ($canEdit && ! $item->serial && $item->kind === 'item')
+                <form method="get" action="{{ route('equipment.labels') }}" target="_blank" class="inline-form"><input type="hidden" name="bulk" value="{{ $item->id }}">
+                    <input type="number" name="qty" min="1" max="500" value="{{ max(1, min(500, (int) $item->stock_qty)) }}" style="width:6em" aria-label="{{ __('warehouse.labels.how_many') }}">
+                    <button class="btn" type="submit">{{ __('warehouse.labels.print_n') }}</button></form>
+            @endif
             @if ($canEdit)<a class="primary" href="{{ route('equipment.edit', $item) }}">{{ __('equipment.edit') }}</a>@endif
         </div>
     </div>

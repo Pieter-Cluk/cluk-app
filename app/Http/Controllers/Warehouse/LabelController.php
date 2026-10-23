@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 use App\Models\Equipment\Asset;
+use App\Models\Equipment\Item;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
 use Illuminate\Http\Request;
@@ -45,14 +46,29 @@ class LabelController extends Controller
 
         $q = trim((string) $request->query('q', ''));
         $new = $request->boolean('new');
+        // Every word must match somewhere: the piece's code or serial number, or the item's name, number, brand, type or search words.
+        $words = array_values(array_filter(preg_split('/\s+/', $q)));
+        $itemMatch = fn ($i, string $w) => $i->where(fn ($i) => $i->where('name', 'like', "%{$w}%")->orWhere('number', 'like', "%{$w}%")
+            ->orWhere('brand', 'like', "%{$w}%")->orWhere('type', 'like', "%{$w}%")->orWhere('search_words', 'like', "%{$w}%"));
         $assets = Asset::with('item:id,name,number')
             ->where('status', '!=', Asset::RETIRED)
             ->when($new, fn ($w) => $w->whereNull('label_printed_at'))
-            ->when($q !== '', fn ($w) => $w->where(fn ($w) => $w->where('code', 'like', "%{$q}%")->orWhere('serial_number', 'like', "%{$q}%")
-                ->orWhereHas('item', fn ($i) => $i->where('name', 'like', "%{$q}%")->orWhere('number', 'like', "%{$q}%"))))
+            ->when($words, function ($w) use ($words, $itemMatch) {
+                foreach ($words as $word) {
+                    $w->where(fn ($w) => $w->where('code', 'like', "%{$word}%")->orWhere('serial_number', 'like', "%{$word}%")
+                        ->orWhereHas('item', fn ($i) => $itemMatch($i, $word)));
+                }
+            })
             ->orderBy('code')->limit(300)->get();
+        // Counted items (no serial numbers): one label per piece with the item's QR code, as many as you want.
+        $counted = $words && ! $new ? Item::where('active', true)->where('serial', false)->where('kind', 'item')
+            ->where(function ($w) use ($words, $itemMatch) {
+                foreach ($words as $word) {
+                    $itemMatch($w, $word);
+                }
+            })->orderBy('name')->limit(50)->get() : collect();
 
-        return view('warehouse.labels', ['tab' => $tab, 'q' => $q, 'new' => $new, 'assets' => $assets]);
+        return view('warehouse.labels', ['tab' => $tab, 'q' => $q, 'new' => $new, 'assets' => $assets, 'counted' => $counted]);
     }
 
     public function locations(Request $request): View
@@ -64,6 +80,11 @@ class LabelController extends Controller
 
     public function items(Request $request): View
     {
+        if ($request->filled('bulk')) {
+            $d = $request->validate(['bulk' => ['required', 'integer'], 'qty' => ['required', 'integer', 'min:1', 'max:500']]);
+
+            return view('equipment.labels', ['assets' => collect(), 'bulk' => ['item' => Item::where('serial', false)->findOrFail($d['bulk']), 'qty' => (int) $d['qty']]]);
+        }
         $ids = $request->validate(['ids' => ['required', 'array', 'max:500'], 'ids.*' => ['integer']])['ids'];
         $assets = Asset::with('item')->whereIn('id', $ids)->where('status', '!=', Asset::RETIRED)->orderBy('code')->get();
         abort_if($assets->isEmpty(), 404);

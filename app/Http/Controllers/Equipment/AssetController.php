@@ -28,6 +28,12 @@ class AssetController extends Controller
         ]);
     }
 
+    /** A scanned label of a counted item opens the item card. */
+    public function byNumber(string $number): RedirectResponse
+    {
+        return redirect()->route('equipment.show', Item::where('number', strtoupper($number))->firstOrFail());
+    }
+
     /** A scanned QR code opens the asset card. */
     public function byCode(string $code): RedirectResponse
     {
@@ -86,6 +92,13 @@ class AssetController extends Controller
      */
     public function labels(Request $request): View
     {
+        // Counted items: N labels with the item's own QR code (opens the item card).
+        if ($request->query('bulk')) {
+            $item = Item::where('serial', false)->findOrFail((int) $request->query('bulk'));
+            $qty = max(1, min(500, (int) $request->query('qty', 1)));
+
+            return view('equipment.labels', ['assets' => collect(), 'bulk' => ['item' => $item, 'qty' => $qty]]);
+        }
         $ids = array_filter(array_map('intval', explode(',', (string) $request->query('assets', ''))));
         $codes = array_filter(explode(',', (string) $request->query('codes', '')));
         $assets = Asset::with('item')

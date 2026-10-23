@@ -53,6 +53,16 @@ class LabelPrintTest extends TestCase
         $this->assertNotNull($a->fresh()->label_printed_at);
         $this->actingAs($w)->get('/warehouse/labels?tab=items&new=1')->assertOk()->assertDontSee('LT-0142');
 
+        // Counted items: found by brand or search words, N labels with the item's QR code.
+        $cable = Item::create(['number' => 'CAB-SOLLINK', 'kind' => 'item', 'brand' => 'Elation', 'type' => 'Sol I Interconnect Cable', 'name' => 'Elation Sol I Interconnect Cable', 'serial' => false, 'stock_qty' => 120, 'search_words' => '1236300101']);
+        $this->actingAs($w)->get('/warehouse/labels?tab=items&q=elation+1236300101')->assertOk()->assertSee('Elation Sol I Interconnect Cable')->assertSee('value="120"', false);
+        $r = $this->actingAs($w)->post('/warehouse/labels/items', ['bulk' => $cable->id, 'qty' => 3])->assertOk();
+        $this->assertSame(3, substr_count($r->getContent(), '<div class="label">'));
+        $r->assertSee('Sol I Interconnect Cable')->assertSee('size: 25mm 25mm', false);
+        $this->actingAs($w)->get('/i/CAB-SOLLINK')->assertRedirect(route('equipment.show', $cable));
+        // Words in any order, across brand and name.
+        $this->actingAs($w)->get('/warehouse/labels?tab=items&q=spiider+robe')->assertSee('LT-0142');
+
         // View-only people can look but not print.
         $this->actingAs($this->as('read-only'))->post('/warehouse/labels/items', ['ids' => [$a->id]])->assertForbidden();
 

@@ -2,7 +2,7 @@
 <html lang="{{ app()->getLocale() }}">
 <head>
 <meta charset="utf-8">
-<title>{{ __('equipment.labels_title', ['count' => $assets->count()]) }}</title>
+<title>{{ __('equipment.labels_title', ['count' => $assets->count() + ($bulk['qty'] ?? 0)]) }}</title>
 <style>
     /* Dymo LabelWriter 550 · 1933083 square labels, 25 × 25 mm (paper size "11353 Multi Purpose" in the printer settings): one label per page.
        The QR code, code and serial number sit as one block in the exact middle of the label. */
@@ -22,8 +22,13 @@
 </style>
 </head>
 <body>
-<div class="bar"><a href="{{ url()->previous() }}" onclick="var a = this; if (history.length <= 1) { window.close(); } setTimeout(function () { location.href = a.href; }, 150); return false;">← {{ __('warehouse.labels.back') }}</a><button type="button" onclick="window.print()">{{ __('equipment.print') }}</button><span>{{ __('equipment.labels_hint', ['count' => $assets->count()]) }}</span></div>
+<div class="bar"><a href="{{ url()->previous() }}" onclick="var a = this; if (history.length <= 1) { window.close(); } setTimeout(function () { location.href = a.href; }, 150); return false;">← {{ __('warehouse.labels.back') }}</a><button type="button" onclick="window.print()">{{ __('equipment.print') }}</button><span>{{ __('equipment.labels_hint', ['count' => $assets->count() + ($bulk['qty'] ?? 0)]) }}</span></div>
 <div class="sheet">
+    @if (! empty($bulk))
+        @for ($i = 0; $i < $bulk['qty']; $i++)
+            <div class="label">{!! \App\Support\QrSvg::make(route('equipment.item.scan', $bulk['item']->number), true) !!}<b class="s">{{ $bulk['item']->type ?: $bulk['item']->name }}</b><small>{{ $bulk['item']->number }}</small></div>
+        @endfor
+    @endif
     @foreach ($assets as $a)
         <div class="label">{!! \App\Support\QrSvg::make(route('equipment.scan', $a->code), true) !!}<b @class(['m' => strlen($a->code) > 9 && strlen($a->code) <= 13, 's' => strlen($a->code) > 13])>{{ $a->code }}</b>@if ($a->serial_number)<small>SN {{ $a->serial_number }}</small>@endif</div>
     @endforeach

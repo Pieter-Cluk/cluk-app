@@ -49,6 +49,20 @@
             <label class="check"><input type="checkbox" name="new" value="1" @checked($new) onchange="this.form.submit()"><span>{{ __('warehouse.labels.never_printed') }}</span></label>
             <button class="btn" type="submit">{{ __('warehouse.labels.find') }}</button>
         </form>
+        @if ($counted->isNotEmpty())
+            <section class="card mt">
+                <h2>{{ __('warehouse.labels.counted_title') }}</h2>
+                <p class="muted small">{{ __('warehouse.labels.counted_hint') }}</p>
+                @foreach ($counted as $it)
+                    <form method="post" action="{{ route('warehouse.labels.items') }}" target="_blank" class="inline-form lbl-counted">@csrf
+                        <input type="hidden" name="bulk" value="{{ $it->id }}">
+                        <span><b>{{ $it->name }}</b> <small class="muted">{{ $it->number }} · {{ trans_choice('warehouse.labels.in_stock', $it->stock_qty, ['n' => $it->stock_qty]) }}</small></span>
+                        <input type="number" name="qty" min="1" max="500" value="{{ max(1, min(500, (int) $it->stock_qty)) }}" aria-label="{{ __('warehouse.labels.how_many') }}" style="width:6em">
+                        @if ($canPrint)<button class="btn" type="submit">{{ __('warehouse.labels.print_n') }}</button>@endif
+                    </form>
+                @endforeach
+            </section>
+        @endif
         <form method="post" action="{{ route('warehouse.labels.items') }}" target="_blank" class="lbl-pick mt">@csrf
             <div class="lbl-bar">
                 <label class="check"><input type="checkbox" data-all><span>{{ __('warehouse.labels.select_all') }}</span></label>

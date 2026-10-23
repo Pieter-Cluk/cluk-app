@@ -336,6 +336,7 @@ Route::middleware('auth:web')->group(function () {
     });
     // A scanned QR label opens the asset card.
     Route::get('/a/{code}', [AssetController::class, 'byCode'])->where('code', '[A-Za-z0-9\-]+')->middleware('nav:dryhire')->name('equipment.scan');
+    Route::get('/i/{number}', [AssetController::class, 'byNumber'])->where('number', '[A-Za-z0-9\-_.&]+')->middleware('nav:dryhire')->name('equipment.item.scan');
 
     // Afrit 6 for staff: registrations to approve and members.
     Route::middleware('nav:afrit6')->prefix('afrit6-staff')->name('afrit6.staff.')->group(function () {
