@@ -3,6 +3,7 @@
 namespace App\Services\Website;
 
 use App\Models\Social\Post;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -31,7 +32,8 @@ class SocialFeed
     {
         $stamp = (string) Post::max('updated_at').'|'.Post::count();
 
-        return Cache::remember('site.social.'.md5($stamp), 300, function () {
+        // The cache keeps plain arrays only (no objects), so the dates are added back afterwards.
+        $rows = Cache::remember('site.social.v2.'.md5($stamp), 300, function () {
             $hasHide = Schema::hasColumn('social_posts', 'on_website');
 
             return Post::with('account:id,platform,name,handle,url')
@@ -40,8 +42,10 @@ class SocialFeed
                 ->when($hasHide, fn ($q) => $q->where('on_website', true))
                 ->orderByDesc('published_at')->limit(300)->get()
                 ->map(fn (Post $p) => self::card($p))
-                ->filter(fn ($c) => $c['title'] !== '' || $c['has_media'])->values();
+                ->filter(fn ($c) => $c['title'] !== '' || $c['has_media'])->values()->all();
         });
+
+        return collect($rows)->map(fn ($c) => ['date' => Carbon::createFromTimestamp($c['ts'], config('app.timezone'))] + $c);
     }
 
     /** Posts for one part of the site, or every post when $section is null. */
@@ -105,7 +109,6 @@ class SocialFeed
         return [
             'id' => $p->id,
             'ts' => $p->published_at->timestamp,
-            'date' => $p->published_at,
             'platform' => $p->account?->platform,
             'account' => $p->account?->name,
             'url' => $p->permalink ?: $p->account?->url,
