@@ -7,7 +7,7 @@ update: download the newest Full extract, keep only the enterprise numbers
 
 Only the standard library; credentials come from KBO_USER / KBO_PASSWORD.
 """
-import csv, html.parser, http.cookiejar, io, json, os, re, sys, urllib.parse, urllib.request, zipfile
+import csv, html.parser, urllib.error, http.cookiejar, io, json, os, re, sys, urllib.parse, urllib.request, zipfile
 
 BASE = 'https://kbopub.economie.fgov.be'
 LOGIN = BASE + '/kbo-open-data/login?lang=en'
@@ -154,8 +154,56 @@ def filter_extract(path, numbers):
     return {'snapshot': snap, 'extract': meta.get('ExtractNumber'), 'numbers': sorted(want), 'enterprises': out, 'codes': codes}
 
 
+WSSE = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
+WSU = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'
+WS = {'prod': 'https://kbopub.economie.fgov.be/kbopubws180000/services/wsKBOPub',
+      'test': 'https://kbopub-acc.economie.fgov.be/kbopubws180000/services/wsKBOPub'}
+
+
+def ws_read(env, user, password, number):
+    """One ReadEnterpriseRequest with a WS-Security UsernameToken (PasswordDigest)."""
+    import base64, datetime, hashlib, uuid
+    from xml.sax.saxutils import escape
+    now = datetime.datetime.now(datetime.timezone.utc)
+    created = now.strftime('%Y-%m-%dT%H:%M:%S.') + f'{now.microsecond // 1000:03d}Z'
+    expires = (now + datetime.timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%S.000Z')
+    nonce = os.urandom(16)
+    digest = base64.b64encode(hashlib.sha1(nonce + created.encode() + password.encode()).digest()).decode()
+    body = f'''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mes="http://economie.fgov.be/kbopub/webservices/v1/messages" xmlns:dat="http://economie.fgov.be/kbopub/webservices/v1/datamodel">
+<soapenv:Header><wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="{WSSE}" xmlns:wsu="{WSU}">
+<wsu:Timestamp wsu:Id="TS-1"><wsu:Created>{created}</wsu:Created><wsu:Expires>{expires}</wsu:Expires></wsu:Timestamp>
+<wsse:UsernameToken wsu:Id="UT-1"><wsse:Username>{escape(user)}</wsse:Username>
+<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">{digest}</wsse:Password>
+<wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">{base64.b64encode(nonce).decode()}</wsse:Nonce>
+<wsu:Created>{created}</wsu:Created></wsse:UsernameToken></wsse:Security>
+<mes:RequestContext><mes:Id>{uuid.uuid4()}</mes:Id><mes:Language>nl</mes:Language><mes:Language>fr</mes:Language></mes:RequestContext></soapenv:Header>
+<soapenv:Body><mes:ReadEnterpriseRequest><dat:EnterpriseNumber>{number}</dat:EnterpriseNumber></mes:ReadEnterpriseRequest></soapenv:Body></soapenv:Envelope>'''
+    req = urllib.request.Request(WS[env], data=body.encode(), headers={'Content-Type': 'text/xml; charset=utf-8', 'SOAPAction': '""', 'User-Agent': UA})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return r.status, r.read().decode('utf-8', 'replace')
+    except urllib.error.HTTPError as e:
+        return e.code, e.read().decode('utf-8', 'replace')
+
+
+def ws_test():
+    import urllib.error  # noqa
+    for env, u, p in [('test', 'KBO_WS_TEST_USER', 'KBO_WS_TEST_PASSWORD'), ('prod', 'KBO_WS_USER', 'KBO_WS_PASSWORD')]:
+        if not os.environ.get(u) or not os.environ.get(p):
+            print(env, ': no secrets', u, p)
+            continue
+        code, xml = ws_read(env, os.environ[u].strip(), os.environ[p].strip(), '1010948054')
+        pick = lambda tag: re.findall(r'<(?:\w+:)?' + tag + r'>([^<]*)</', xml)
+        print(f'== {env}: HTTP {code}')
+        print('  status', pick('Code')[:4], pick('Description')[:1], 'balance', pick('AccountBalance'), 'snapshot', pick('SnapshotDate'))
+        print('  fault', pick('faultstring'))
+        print('  values', [v for v in pick('Value')][:8])
+
+
 def main():
     mode = sys.argv[1]
+    if mode == 'ws':
+        return ws_test()
     op = session()
     start, page = login(op)
     zips = find_zips(op, start, page)

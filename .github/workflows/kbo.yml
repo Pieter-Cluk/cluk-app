@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: probe or update
+        description: probe, update or ws (test the live web service)
         default: update
 
 concurrency: kbo
@@ -28,6 +28,10 @@ jobs:
       SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
       KBO_USER: ${{ secrets.KBO_USER }}
       KBO_PASSWORD: ${{ secrets.KBO_PASSWORD }}
+      KBO_WS_USER: ${{ secrets.KBO_WS_USER }}
+      KBO_WS_PASSWORD: ${{ secrets.KBO_WS_PASSWORD }}
+      KBO_WS_TEST_USER: ${{ secrets.KBO_WS_TEST_USER }}
+      KBO_WS_TEST_PASSWORD: ${{ secrets.KBO_WS_TEST_PASSWORD }}
       MODE: ${{ inputs.mode || 'update' }}
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +39,7 @@ jobs:
           sparse-checkout: .github/scripts
       - name: Check the secrets
         run: |
-          if [ -z "$KBO_USER" ] || [ -z "$KBO_PASSWORD" ]; then echo "::error title=KBO::Add the secrets KBO_USER and KBO_PASSWORD first."; exit 1; fi
+          if [ "$MODE" != ws ] && { [ -z "$KBO_USER" ] || [ -z "$KBO_PASSWORD" ]; }; then echo "::error title=KBO::Add the secrets KBO_USER and KBO_PASSWORD first."; exit 1; fi
       - name: Server access
         if: env.MODE == 'update'
         run: |
