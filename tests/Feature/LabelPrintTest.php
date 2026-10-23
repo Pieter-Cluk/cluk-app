@@ -60,6 +60,10 @@ class LabelPrintTest extends TestCase
         $this->assertSame(3, substr_count($r->getContent(), '<div class="label">'));
         $r->assertSee('Sol I Interconnect Cable')->assertSee('size: 25mm 25mm', false);
         $this->actingAs($w)->get('/i/CAB-SOLLINK')->assertRedirect(route('equipment.show', $cable));
+        // On the item card: tick the pieces and print only those.
+        $this->actingAs($this->as('admin'))->get(route('equipment.show', $item))->assertOk()->assertSee('name="assets[]"', false);
+        $r = $this->actingAs($this->as('admin'))->get(route('equipment.labels', ['assets' => [$a->id]]))->assertOk();
+        $this->assertSame(1, substr_count($r->getContent(), '<div class="label">'));
         // Words in any order, across brand and name.
         $this->actingAs($w)->get('/warehouse/labels?tab=items&q=spiider+robe')->assertSee('LT-0142');
 

@@ -85,13 +85,21 @@
 
             @if ($item->serial)
                 <section class="card card-flush">
-                    <div class="bill-head"><b>{{ __('equipment.assets') }}</b> <span class="muted">· {{ $item->assets->count() }}</span></div>
+                    <form method="get" action="{{ route('equipment.labels') }}" target="_blank" class="lbl-pick">
+                    <div class="bill-head lbl-bar"><b>{{ __('equipment.assets') }}</b> <span class="muted">· {{ $item->assets->count() }}</span>
+                        @if ($canEdit && $item->assets->isNotEmpty())
+                            <label class="check"><input type="checkbox" data-all><span>{{ __('warehouse.labels.select_all') }}</span></label>
+                            <span class="muted" data-count>0</span>
+                            <button class="btn" type="submit" data-print disabled>{{ __('warehouse.labels.print') }}</button>
+                        @endif
+                    </div>
                     <div class="table-wrap">
                         <table class="table">
-                            <thead><tr><th>{{ __('equipment.fields.code') }}</th><th>{{ __('equipment.fields.serial_number') }}</th><th>{{ __('equipment.fields.status') }}</th><th>{{ __('equipment.fields.location') }}</th><th>{{ __('equipment.label') }}</th></tr></thead>
+                            <thead><tr>@if ($canEdit)<th class="w-check"></th>@endif<th>{{ __('equipment.fields.code') }}</th><th>{{ __('equipment.fields.serial_number') }}</th><th>{{ __('equipment.fields.status') }}</th><th>{{ __('equipment.fields.location') }}</th><th>{{ __('equipment.label') }}</th></tr></thead>
                             <tbody>
                                 @forelse ($item->assets as $a)
                                     <tr @class(['is-off' => $a->status === 'retired'])>
+                                        @if ($canEdit)<td>@if ($a->status !== 'retired')<input type="checkbox" name="assets[]" value="{{ $a->id }}" aria-label="{{ $a->code }}">@endif</td>@endif
                                         <td><a href="{{ route('equipment.assets.show', $a) }}"><b>{{ $a->code }}</b></a></td>
                                         <td>{{ $a->serial_number ?? '—' }}</td>
                                         <td><span @class(['pill', 'pill-ok' => $a->status === 'available', 'pill-info' => $a->status === 'out', 'pill-warn' => $a->status === 'repair', 'pill-off' => $a->status === 'retired'])>{{ __('equipment.statuses.'.$a->status) }}</span></td>
@@ -99,11 +107,12 @@
                                         <td class="muted small">{{ $a->label_printed_at ? $a->label_printed_at->format('d/m/Y') : __('equipment.not_printed') }}</td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="5" class="muted">{{ __('equipment.no_assets') }}</td></tr>
+                                    <tr><td colspan="6" class="muted">{{ __('equipment.no_assets') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
+                    </form>
                     @if ($canEdit)
                         <form method="post" action="{{ route('equipment.assets.store', $item) }}" class="form-grid pad">
                             @csrf
@@ -175,4 +184,19 @@
             </section>
         </aside>
     </div>
+    <script>
+        document.querySelectorAll('.lbl-pick').forEach(function (f) {
+            var boxes = f.querySelectorAll('tbody input[type=checkbox]'), all = f.querySelector('[data-all]'), count = f.querySelector('[data-count]'), btn = f.querySelector('[data-print]');
+            if (!all) return;
+            function update() {
+                var n = f.querySelectorAll('tbody input:checked').length;
+                count.textContent = @js(__('warehouse.labels.selected')).replace(':n', n);
+                btn.disabled = n === 0;
+                all.checked = n > 0 && n === boxes.length;
+            }
+            all.addEventListener('change', function () { boxes.forEach(function (b) { b.checked = all.checked; }); update(); });
+            boxes.forEach(function (b) { b.addEventListener('change', update); });
+            update();
+        });
+    </script>
 </x-layouts.app>

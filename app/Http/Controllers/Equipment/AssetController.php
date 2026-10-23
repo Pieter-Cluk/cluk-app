@@ -99,7 +99,8 @@ class AssetController extends Controller
 
             return view('equipment.labels', ['assets' => collect(), 'bulk' => ['item' => $item, 'qty' => $qty]]);
         }
-        $ids = array_filter(array_map('intval', explode(',', (string) $request->query('assets', ''))));
+        $raw = $request->query('assets', '');
+        $ids = array_values(array_filter(array_map('intval', is_array($raw) ? $raw : explode(',', (string) $raw))));
         $codes = array_filter(explode(',', (string) $request->query('codes', '')));
         $assets = Asset::with('item')
             ->when($ids, fn ($q) => $q->whereIn('id', $ids))

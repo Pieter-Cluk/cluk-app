@@ -42,5 +42,11 @@ class SolBlinderImportTest extends TestCase
         Item::where('number', 'LIGACCELASOLIOMEGA')->update(['stock_qty' => 100]);
         $acc->up(); // a second run keeps the stock
         $this->assertSame(100, Item::where('number', 'LIGACCELASOLIOMEGA')->value('stock_qty'));
+
+        // Safety and power cables: counted, stock 0, not in the quote search until priced.
+        (require database_path('migrations/2026_10_23_001700_add_safety_and_power_cables.php'))->up();
+        $ce = Item::where('number', 'POWCABTRUECONCEE')->firstOrFail();
+        $this->assertSame([false, 0, false, 'Power cables & kits'], [$ce->serial, $ce->stock_qty, $ce->in_search, $ce->subcategory]);
+        $this->assertSame('Rigging hardware & load cells', Item::where('number', 'RIGHARSAFETYCABLE')->value('subcategory'));
     }
 }
