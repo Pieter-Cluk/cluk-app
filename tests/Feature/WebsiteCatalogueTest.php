@@ -105,7 +105,7 @@ class WebsiteCatalogueTest extends TestCase
 
     public function test_homepage_and_header_link_to_the_platform(): void
     {
-        $this->get('/site')->assertOk()->assertSee('Cluk it. Why not!')->assertSee(rtrim(config('app.url'), '/').'/afrit6', false)->assertSee('/site/dry-hire', false)->assertDontSee('CLUK Factory');
+        $this->get('/site')->assertOk()->assertSee('Cluk it. Why not!')->assertSee(rtrim(config('app.url'), '/').'/afrit6', false)->assertSee('/site/dry-hire', false)->assertDontSee('CLUK Factory')->assertSee('images/site/favicon.ico', false);
     }
 
     private function between(string $s, string $a, string $b): string

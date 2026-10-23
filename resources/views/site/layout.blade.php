@@ -12,7 +12,10 @@
 @endforeach
 @if (file_exists(public_path('fonts/site-fonts.css')))<link rel="stylesheet" href="{{ asset('fonts/site-fonts.css') }}">@endif
 <link rel="stylesheet" href="{{ asset('css/site.css') }}?v={{ @filemtime(public_path('css/site.css')) }}">
-<link rel="icon" href="{{ asset('favicon.ico') }}">
+<link rel="icon" href="{{ asset('images/site/favicon.ico') }}?v=2" sizes="48x48">
+<link rel="icon" href="{{ asset('images/site/icon-32.png') }}?v=2" type="image/png" sizes="32x32">
+<link rel="icon" href="{{ asset('images/site/icon-192.png') }}?v=2" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="{{ asset('images/site/apple-touch-icon.png') }}?v=2">
 @stack('head')
 </head>
 <body class="@yield('body')">
