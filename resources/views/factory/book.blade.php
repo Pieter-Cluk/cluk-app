@@ -220,6 +220,7 @@
 })();
 </script>
 @endif
+@include('site._feed-strip', ['posts' => rescue(fn () => \App\Services\Website\SocialFeed::for('factory', 4), collect(), false), 'title' => __('site.news.latest_factory')])
 <footer class="fb-foot">Cluk Factory · Karreweg 17B, 9870 Zulte, Belgium · <a href="https://cluk.live">cluk.live</a> · {{ __('factory.book.footer') }}</footer>
 </body>
 </html>

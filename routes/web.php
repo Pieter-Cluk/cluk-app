@@ -206,6 +206,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/sync', [SocialController::class, 'sync'])->middleware('throttle:6,1')->name('sync');
         });
         Route::get('/posts', [SocialPlanController::class, 'index'])->name('plans');
+        Route::post('/website/{post}', [SocialPlanController::class, 'website'])->whereNumber('post')->name('posts.website');
         Route::get('/posts/{plan}', [SocialPlanController::class, 'show'])->whereNumber('plan')->name('plans.show');
         Route::get('/posts/new', [SocialPlanController::class, 'create'])->name('plans.create');
         Route::post('/posts', [SocialPlanController::class, 'store'])->name('plans.store');

@@ -133,12 +133,19 @@ return [
     'status_error' => 'Laatste verversing mislukt',
     'week_of' => 'Week van :date',
     'plans' => [
+        'site_intro' => 'Facebook- en Instagramberichten zoals ze op de platforms staan. Vink een bericht uit om het van de CLUK-website te houden. Hashtags bepalen waar het op de site komt: #CLUKdryhire, #CLUKsales, #CLUKfactory, #CLUKafrit6 (geen tag: homepagina en nieuws).',
+        'site_col' => 'Website',
+        'site_show' => 'Tonen op de website',
+        'site_shown' => 'Het bericht staat op de website.',
+        'site_hidden' => 'Het bericht staat niet meer op de website.',
+        'video' => 'video',
         'intro' => 'Eén keer schrijven, op een gekozen moment op meerdere accounts posten.',
         'form_intro' => 'Eén tekst voor alle accounts, of een eigen tekst per account. Foto’s of één video; een link krijgt per platform trackingcodes.',
         'tabs' => [
             'planned' => 'Gepland',
             'drafts' => 'Concepten',
             'published' => 'Verstuurd',
+            'site' => 'Op de website',
         ],
         'cols' => [
             'post' => 'Bericht',

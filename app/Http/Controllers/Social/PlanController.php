@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Social\Account;
 use App\Models\Social\Plan;
+use App\Models\Social\Post;
 use App\Services\Social\Media;
 use App\Services\Social\Social;
 use Illuminate\Http\RedirectResponse;
@@ -25,7 +26,15 @@ class PlanController extends Controller
 {
     public function index(Request $request): View
     {
-        $tab = in_array($request->query('s'), ['planned', 'drafts', 'published'], true) ? $request->query('s') : 'planned';
+        $tab = in_array($request->query('s'), ['planned', 'drafts', 'published', 'site'], true) ? $request->query('s') : 'planned';
+        if ($tab === 'site') {
+            // Facebook and Instagram posts as they are on the platforms: tick which ones the website shows.
+            $posts = Post::with('account')->whereHas('account', fn ($q) => $q->whereIn('platform', ['facebook', 'instagram']))
+                ->whereNotNull('published_at')->latest('published_at')->paginate(40)->withQueryString();
+
+            return view('social.plans', ['plans' => null, 'posts' => $posts, 'tab' => $tab, 'canPost' => SocialController::canPlan($request),
+                'counts' => ['planned' => Plan::whereIn('status', ['scheduled', 'publishing'])->count(), 'drafts' => Plan::where('status', 'draft')->count()]]);
+        }
         $plans = Plan::with(['targets.account', 'createdBy'])
             ->when($tab === 'planned', fn ($q) => $q->whereIn('status', ['scheduled', 'publishing'])->orderBy('scheduled_at'))
             ->when($tab === 'drafts', fn ($q) => $q->where('status', 'draft')->latest())
@@ -188,5 +197,16 @@ class PlanController extends Controller
         $plan->delete();
 
         return redirect()->route('social.plans')->with('status', __('social.flash.deleted'));
+    }
+
+    /** Show a Facebook or Instagram post on the website, or not. */
+    public function website(Request $request, Post $post): RedirectResponse
+    {
+        abort_unless(SocialController::canPlan($request), 403);
+        $on = $request->boolean('on');
+        $post->forceFill(['on_website' => $on])->save();
+        AuditLog::record($on ? 'social.post_shown' : 'social.post_hidden', null, ['post' => mb_substr((string) $post->text, 0, 80), 'link' => $post->permalink], $request->user());
+
+        return back()->with('status', __($on ? 'social.plans.site_shown' : 'social.plans.site_hidden'));
     }
 }

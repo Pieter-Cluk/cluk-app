@@ -133,12 +133,19 @@ return [
     'status_error' => 'Dernière mise à jour échouée',
     'week_of' => 'Semaine du :date',
     'plans' => [
+        'site_intro' => 'Les publications Facebook et Instagram telles qu’elles sont sur les plateformes. Décochez une publication pour la garder hors du site CLUK. Les hashtags décident où elle apparaît : #CLUKdryhire, #CLUKsales, #CLUKfactory, #CLUKafrit6 (sans tag : accueil et actualités).',
+        'site_col' => 'Site',
+        'site_show' => 'Afficher sur le site',
+        'site_shown' => 'La publication est sur le site.',
+        'site_hidden' => 'La publication n’est plus sur le site.',
+        'video' => 'vidéo',
         'intro' => 'Écrire une fois, publier sur plusieurs comptes au moment choisi.',
         'form_intro' => 'Un texte pour tous les comptes, ou un texte propre par compte. Des photos ou une vidéo ; un lien reçoit des codes de suivi par plateforme.',
         'tabs' => [
             'planned' => 'Planifiées',
             'drafts' => 'Brouillons',
             'published' => 'Envoyées',
+            'site' => 'Sur le site',
         ],
         'cols' => [
             'post' => 'Publication',

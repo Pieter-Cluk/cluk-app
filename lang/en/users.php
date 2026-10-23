@@ -242,6 +242,8 @@ return [
             'user_door_code_removed' => 'Removed a door code',
             'equipment_labels_reserved' => 'Printed labels for pieces still to find',
             'equipment_placed' => 'Put pieces in place (office)',
+            'social_post_shown' => 'Post shown on the website',
+            'social_post_hidden' => 'Post hidden from the website',
             'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',

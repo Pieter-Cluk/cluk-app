@@ -170,6 +170,8 @@ return [
         'all' => 'Accept statistics', 'necessary' => 'Only necessary', 'settings' => 'Cookie settings',
     ],
     'news' => [
+        'latest_factory' => 'Latest from Cluk Factory',
+        'latest_afrit6' => 'Latest from Afrit 6',
         'title' => 'News', 'meta' => 'The latest from CLUK: new gear, events at Factory, Afrit 6 and our sales range, from our Facebook and Instagram.',
         'intro' => 'People, gear, spaces and stories, straight from our Facebook and Instagram.',
         'all' => 'All', 'all_news' => 'All news', 'latest' => 'Latest posts', 'on' => 'on :platform', 'open' => 'Open on :platform',

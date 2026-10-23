@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['account_id', 'external_id', 'published_at', 'kind', 'text', 'permalink', 'thumb_url', 'views', 'reach', 'likes', 'comments', 'shares', 'saves', 'clicks', 'plan_id'])]
+#[Fillable(['account_id', 'external_id', 'published_at', 'kind', 'text', 'permalink', 'thumb_url', 'video_url', 'thumb_path', 'video_path', 'on_website', 'views', 'reach', 'likes', 'comments', 'shares', 'saves', 'clicks', 'plan_id'])]
 class Post extends Model
 {
     protected $table = 'social_posts';
 
     protected function casts(): array
     {
-        return ['published_at' => 'datetime'];
+        return ['published_at' => 'datetime', 'on_website' => 'boolean'];
     }
 
     public function account(): BelongsTo

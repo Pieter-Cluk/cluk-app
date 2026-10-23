@@ -165,8 +165,12 @@ class Meta extends Provider
                 'fields' => 'id,caption,media_type,media_product_type,permalink,thumbnail_url,media_url,timestamp,like_count,comments_count', 'limit' => 25, 'access_token' => $a->token,
             ]), 'Instagram media')['data'] ?? [];
             foreach ($media as $i => $m) {
-                $values = ['published_at' => self::ts($m['timestamp'] ?? null), 'kind' => strtolower($m['media_product_type'] === 'REELS' ? 'reel' : ($m['media_type'] ?? 'post')),
-                    'text' => $m['caption'] ?? null, 'permalink' => $m['permalink'] ?? null, 'thumb_url' => $m['thumbnail_url'] ?? $m['media_url'] ?? null,
+                $isVideo = in_array($m['media_type'] ?? '', ['VIDEO', 'REELS'], true) || ($m['media_product_type'] ?? '') === 'REELS';
+                $values = ['published_at' => self::ts($m['timestamp'] ?? null), 'kind' => strtolower(($m['media_product_type'] ?? '') === 'REELS' ? 'reel' : ($m['media_type'] ?? 'post')),
+                    'text' => $m['caption'] ?? null, 'permalink' => $m['permalink'] ?? null,
+                    // A video: the mp4 (media_url) and its still (thumbnail_url); a picture: media_url.
+                    'thumb_url' => $isVideo ? ($m['thumbnail_url'] ?? null) : ($m['media_url'] ?? $m['thumbnail_url'] ?? null),
+                    'video_url' => $isVideo ? ($m['media_url'] ?? null) : null,
                     'likes' => $m['like_count'] ?? null, 'comments' => $m['comments_count'] ?? null];
                 if ($i < 12) { // reach and views for the latest ones
                     try {
@@ -185,12 +189,24 @@ class Meta extends Provider
             return;
         }
         $posts = $this->ok(Http::timeout(20)->get($this->g($a->external_id.'/published_posts'), [
-            'fields' => 'id,message,created_time,permalink_url,full_picture,shares,reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0)', 'limit' => 25, 'access_token' => $a->token,
+            'fields' => 'id,message,created_time,permalink_url,full_picture,shares,attachments{media_type,media,target,subattachments{media_type,media,target}},reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0)',
+            'limit' => 25, 'access_token' => $a->token,
         ]), 'Facebook posts')['data'] ?? [];
         foreach ($posts as $p) {
-            $this->post($a, (string) $p['id'], ['published_at' => self::ts($p['created_time'] ?? null), 'kind' => 'post', 'text' => $p['message'] ?? null,
-                'permalink' => $p['permalink_url'] ?? null, 'thumb_url' => $p['full_picture'] ?? null, 'likes' => $p['reactions']['summary']['total_count'] ?? null,
-                'comments' => $p['comments']['summary']['total_count'] ?? null, 'shares' => $p['shares']['count'] ?? 0]);
+            $att = $p['attachments']['data'][0] ?? [];
+            $first = $att['subattachments']['data'][0] ?? $att;
+            $type = strtolower((string) ($first['media_type'] ?? $att['media_type'] ?? ''));
+            $video = null;
+            if (str_contains($type, 'video') && ($vid = $first['target']['id'] ?? $att['target']['id'] ?? null)) {
+                try {
+                    $video = $this->ok(Http::timeout(20)->get($this->g($vid), ['fields' => 'source', 'access_token' => $a->token]), 'Facebook video')['source'] ?? null;
+                } catch (Throwable) {
+                }
+            }
+            $this->post($a, (string) $p['id'], ['published_at' => self::ts($p['created_time'] ?? null),
+                'kind' => $video ? 'video' : (isset($att['subattachments']) ? 'album' : ($type === 'photo' ? 'photo' : 'post')), 'text' => $p['message'] ?? null,
+                'permalink' => $p['permalink_url'] ?? null, 'thumb_url' => $p['full_picture'] ?? $first['media']['image']['src'] ?? null, 'video_url' => $video,
+                'likes' => $p['reactions']['summary']['total_count'] ?? null, 'comments' => $p['comments']['summary']['total_count'] ?? null, 'shares' => $p['shares']['count'] ?? 0]);
         }
     }
 

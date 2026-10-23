@@ -14,4 +14,5 @@
         <button class="ms-btn member-btn" type="submit">{{ __('afrit6.login.button') }}</button>
     </form>
     <p class="login-note">{{ __('afrit6.login.new') }} <a href="{{ route('afrit6.register') }}">{{ __('afrit6.login.register') }}</a></p>
+    @include('site._feed-strip', ['posts' => rescue(fn () => \App\Services\Website\SocialFeed::for('afrit6', 3), collect(), false), 'title' => __('site.news.latest_afrit6')])
 </x-layouts.member>

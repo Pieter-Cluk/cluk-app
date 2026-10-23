@@ -66,6 +66,7 @@ class Social
             if ($posts) {
                 $p->syncPosts($a);
                 $a->posts_synced_at = now();
+                PostMedia::keepFor($a);
             }
             $a->forceFill(['last_synced_at' => now(), 'status' => 'connected', 'last_error' => null])->save();
 
@@ -83,10 +84,11 @@ class Social
     {
         $n = 0;
         $due = Account::whereIn('status', ['connected', 'error'])->whereNotNull('token')
-            ->where(fn ($q) => $q->whereNull('last_synced_at')->orWhere('last_synced_at', '<', now()->subHours((int) config('social.sync_hours', 3))))
+            ->where(fn ($q) => $q->whereNull('last_synced_at')->orWhere('last_synced_at', '<', now()->subHours((int) config('social.sync_hours', 3)))
+                ->orWhere(fn ($q) => $q->where('status', 'error')->where('last_synced_at', '<', now()->subMinutes(30))))
             ->orderByRaw('last_synced_at is not null')->orderBy('last_synced_at')->limit($max)->get();
         foreach ($due as $a) {
-            $posts = ! $a->posts_synced_at || $a->posts_synced_at->lt(now()->subHours((int) config('social.posts_hours', 6)));
+            $posts = $a->status === 'error' || ! $a->posts_synced_at || $a->posts_synced_at->lt(now()->subHours((int) config('social.posts_hours', 6)));
             $n += (int) self::sync($a, $posts, $a->last_synced_at ? 4 : 90);
         }
 

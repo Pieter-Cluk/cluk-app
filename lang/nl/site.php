@@ -167,6 +167,8 @@ return [
         'all' => 'Statistieken aanvaarden', 'necessary' => 'Alleen noodzakelijke', 'settings' => 'Cookie-instellingen',
     ],
     'news' => [
+        'latest_factory' => 'Nieuw van Cluk Factory',
+        'latest_afrit6' => 'Nieuw van Afrit 6',
         'title' => 'Nieuws', 'meta' => 'Het laatste nieuws van CLUK: nieuw materiaal, events in Factory, Afrit 6 en ons verkoopgamma, van onze Facebook en Instagram.',
         'intro' => 'Mensen, materiaal, ruimtes en verhalen, rechtstreeks van onze Facebook en Instagram.',
         'all' => 'Alles', 'all_news' => 'Al het nieuws', 'latest' => 'Laatste berichten', 'on' => 'op :platform', 'open' => 'Openen op :platform',

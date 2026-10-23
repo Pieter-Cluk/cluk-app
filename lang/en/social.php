@@ -133,12 +133,19 @@ return [
     'status_error' => 'Last refresh failed',
     'week_of' => 'Week of :date',
     'plans' => [
+        'site_intro' => 'Facebook and Instagram posts as they are on the platforms. Untick a post to keep it off the CLUK website. Hashtags decide where on the site it shows: #CLUKdryhire, #CLUKsales, #CLUKfactory, #CLUKafrit6 (no tag: homepage and news).',
+        'site_col' => 'Website',
+        'site_show' => 'Show on the website',
+        'site_shown' => 'The post shows on the website.',
+        'site_hidden' => 'The post is no longer on the website.',
+        'video' => 'video',
         'intro' => 'Write once, post on several accounts at a chosen moment.',
         'form_intro' => 'One text for all accounts, or an own text per account. Pictures or one video; a link gets tracking codes per platform.',
         'tabs' => [
             'planned' => 'Planned',
             'drafts' => 'Drafts',
             'published' => 'Sent',
+            'site' => 'On the website',
         ],
         'cols' => [
             'post' => 'Post',

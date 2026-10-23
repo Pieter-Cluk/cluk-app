@@ -918,3 +918,5 @@ fieldset.checks{border:0;padding:0;min-width:0}
 .sm-target{padding:8px 0;border-top:1px solid var(--line)}
 .sm-target textarea{width:100%;margin-top:6px}
 .sm-preview{max-width:100%;border-radius:8px}
+.sm-site-row{display:flex;gap:12px;align-items:center}
+.sm-site-thumb{width:56px;height:56px;object-fit:cover;border-radius:8px;flex:none;background:var(--line)}
