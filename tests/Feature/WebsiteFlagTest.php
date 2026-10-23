@@ -25,11 +25,11 @@ class WebsiteFlagTest extends TestCase
     public function test_dry_hire_items_are_off_the_website_until_ticked(): void
     {
         $u = $this->admin();
-        $this->actingAs($u)->post('/dry-hire/items', ['number' => 'LT-A', 'kind' => 'item', 'name' => 'Robe Spiider', 'unit' => 'pcs', 'serial' => 1, 'day_price' => '65', 'active' => 1])->assertRedirect();
+        $this->actingAs($u)->post('/dry-hire/items', ['number' => 'LT-A', 'kind' => 'item', 'name' => 'Robe Spiider', 'unit' => 'pcs', 'serial' => 1, 'day_price' => '65', 'active' => 1, 'subcategory_id' => self::sub('MOV')])->assertRedirect();
         $a = Item::where('number', 'LT-A')->firstOrFail();
         $this->assertFalse($a->on_website);
 
-        $this->actingAs($u)->put('/dry-hire/items/'.$a->id, ['number' => 'LT-A', 'kind' => 'item', 'name' => 'Robe Spiider', 'unit' => 'pcs', 'serial' => 1, 'day_price' => '65', 'active' => 1, 'on_website' => 1])->assertRedirect();
+        $this->actingAs($u)->put('/dry-hire/items/'.$a->id, ['number' => 'LT-A', 'kind' => 'item', 'name' => 'Robe Spiider', 'unit' => 'pcs', 'serial' => 1, 'day_price' => '65', 'active' => 1, 'on_website' => 1, 'subcategory_id' => self::sub('MOV')])->assertRedirect();
         $this->assertTrue($a->fresh()->on_website);
         Item::create(['number' => 'LT-B', 'kind' => 'item', 'name' => 'Hidden one', 'serial' => false]);
 
@@ -61,7 +61,7 @@ class WebsiteFlagTest extends TestCase
         $this->actingAs($am)->get('/dry-hire')->assertOk()->assertDontSee('web-tick', false);
         $this->actingAs($am)->postJson('/dry-hire/items/'.$item->id.'/website', ['on' => true])->assertForbidden();
         // Without the right the edit form cannot change it either.
-        $this->actingAs($am)->put('/dry-hire/items/'.$item->id, ['number' => 'LT-C', 'kind' => 'item', 'name' => 'Claypaky Sharpy', 'unit' => 'pcs', 'active' => 1, 'on_website' => 1])->assertRedirect();
+        $this->actingAs($am)->put('/dry-hire/items/'.$item->id, ['number' => 'LT-C', 'kind' => 'item', 'name' => 'Claypaky Sharpy', 'unit' => 'pcs', 'active' => 1, 'on_website' => 1, 'subcategory_id' => self::sub('MOV')])->assertRedirect();
         $this->assertFalse($item->fresh()->on_website);
 
         $am->extraRights()->create(['right' => 'equipment.website']);

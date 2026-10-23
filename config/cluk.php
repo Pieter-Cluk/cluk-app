@@ -68,6 +68,7 @@ return [
         'gdpr.export_erase',
         'help.manage',
         'orders.approve',
+        'products.classify',
         'sales.approve_low_margin',
         'sales.edit_items',
         'users.manage',

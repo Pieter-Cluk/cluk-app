@@ -81,7 +81,7 @@ class EquipmentTest extends TestCase
         $am = $this->as('asset-manager'); // dry-hire level 3
         $this->actingAs($am)->post('/dry-hire/items', [
             'number' => 'lt-megap', 'kind' => 'item', 'name' => 'Robe MegaPointe', 'category' => 'Light', 'unit' => 'pcs',
-            'serial' => 1, 'day_price' => '85', 'catalog_price' => '14200', 'desc' => ['en' => 'Beam, spot and wash', 'nl' => 'Beam, spot en wash'],
+            'serial' => 1, 'day_price' => '85', 'catalog_price' => '14200', 'subcategory_id' => self::sub('MOV'), 'desc' => ['en' => 'Beam, spot and wash', 'nl' => 'Beam, spot en wash'],
             'in_search' => 1, 'active' => 1,
         ])->assertRedirect();
 
@@ -90,7 +90,7 @@ class EquipmentTest extends TestCase
         $this->assertSame('Beam, spot en wash', $item->description('nl'));
         $this->assertSame('Beam, spot and wash', $item->description('fr'), 'falls back to English');
 
-        $this->actingAs($am)->put('/dry-hire/items/'.$item->id, ['number' => 'LT-MEGAP', 'kind' => 'item', 'name' => 'Robe MegaPointe', 'unit' => 'pcs', 'serial' => 1, 'day_price' => '90', 'active' => 1])->assertRedirect();
+        $this->actingAs($am)->put('/dry-hire/items/'.$item->id, ['number' => 'LT-MEGAP', 'kind' => 'item', 'name' => 'Robe MegaPointe', 'unit' => 'pcs', 'serial' => 1, 'day_price' => '90', 'active' => 1, 'subcategory_id' => self::sub('MOV')])->assertRedirect();
         $this->assertSame(9000, $item->fresh()->day_price_cents);
         $this->assertTrue(AuditLog::where('action', 'equipment.item_updated')->exists());
 
@@ -180,9 +180,9 @@ class EquipmentTest extends TestCase
     {
         $rows = [
             ['Itemnumber', 'Category', 'Sub-Category', 'Unit', 'Brand', 'Type', 'Description', 'Catalog Price', 'Country of Origin', 'HS-Code', 'Weight (kg)', 'Width (m)', 'Length (m)', 'Height (m)', 'Volume (m³)', 'Serial number', 'Quantity', 'Rental price per day'],
-            ['LT-SPIIDER', 'Light', 'Moving head · wash', 'pcs', 'Robe', 'Spiider', 'LED wash beam', '9850', 'CZ', '9405.42.00', '13,5', '0.31', '0.39', '0.51', '=IF(COUNT(L2:N2)=3,ROUND(L2*M2*N2,4),"")', '3021-0142', null, '65'],
-            ['LT-SPIIDER', 'Light', 'Moving head · wash', 'pcs', 'Robe', 'Spiider', 'LED wash beam', '9850', 'CZ', '9405.42.00', '13,5', '0.31', '0.39', '0.51', null, '3021-0143', null, '65'],
-            ['AC-SC-060', 'Accessories', 'Safety cable', 'pcs', 'Doughty', 'Safety 60 cm', 'Safety cable 60 cm', '18', 'GB', null, '0.2', null, null, null, null, null, '42', '1'],
+            ['LT-SPIIDER', 'Lighting', 'Moving heads', 'pcs', 'Robe', 'Spiider', 'LED wash beam', '9850', 'CZ', '9405.42.00', '13,5', '0.31', '0.39', '0.51', '=IF(COUNT(L2:N2)=3,ROUND(L2*M2*N2,4),"")', '3021-0142', null, '65'],
+            ['LT-SPIIDER', 'Lighting', 'Moving heads', 'pcs', 'Robe', 'Spiider', 'LED wash beam', '9850', 'CZ', '9405.42.00', '13,5', '0.31', '0.39', '0.51', null, '3021-0143', null, '65'],
+            ['AC-SC-060', 'Rigging & truss', 'Rigging hardware & load cells', 'pcs', 'Doughty', 'Safety 60 cm', 'Safety cable 60 cm', '18', 'GB', null, '0.2', null, null, null, null, null, '42', '1'],
             ['', 'Light', null, null, null, null, null, null, null, null, null, null, null, null, null, null, '3', null],
         ];
         $report = (new EquipmentImport)->run($rows);

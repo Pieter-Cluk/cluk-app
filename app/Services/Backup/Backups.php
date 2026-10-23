@@ -184,6 +184,7 @@ class Backups
         $pdo = DB::connection()->getPdo();
         if (DB::connection()->getDriverName() === 'sqlite') {
             $pdo->exec('PRAGMA foreign_keys = OFF');
+            $pdo->exec('PRAGMA defer_foreign_keys = ON'); // inside a transaction the line above does nothing; this postpones the checks to the end
         }
         $buffer = '';
         $n = 0;

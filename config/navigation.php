@@ -47,6 +47,7 @@ return [
             ['key' => 'documents', 'path' => '/settings/documents', 'icon' => 'doc', 'module' => ['settings', 2]],
             ['key' => 'vat', 'path' => '/settings/vat-rates', 'icon' => 'percent', 'module' => ['settings', 2]],
             ['key' => 'locations', 'path' => '/settings/warehouse-locations', 'icon' => 'pin', 'right' => 'warehouse.setup_locations'],
+            ['key' => 'productlists', 'path' => '/settings/product-categories', 'icon' => 'tag', 'right' => 'products.classify'],
             ['key' => 'import', 'path' => '/settings/import', 'icon' => 'upload', 'module' => ['settings', 2]],
         ],
     ],

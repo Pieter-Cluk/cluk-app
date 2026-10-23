@@ -38,6 +38,9 @@ return [
     'vies_pending' => '{1} 1 entreprise importée a un numéro de TVA UE pas encore vérifié dans VIES.|[2,*] :count entreprises importées ont un numéro de TVA UE pas encore vérifié dans VIES.',
     'vies_check' => 'Vérifier les 15 suivantes dans VIES',
     'errors' => [
+        'no_category' => 'Nouvel article sans catégorie : remplissez Catégorie et Sous-catégorie (voir la feuille Lists).',
+        'unknown_category' => 'Catégorie inconnue « :value » (voir la feuille Lists ou Paramètres › Catégories de produits).',
+        'unknown_subcategory' => 'Sous-catégorie inconnue « :value » (voir la feuille Lists ou Paramètres › Catégories de produits).',
         'number_long' => 'Le numéro d’article « :number » dépasse 40 caractères : ligne ignorée.',
         'no_type' => 'Pas de type ou de nom de produit : ligne ignorée.',
         'missing_column' => 'La colonne « :column » manque. Gardez les noms de colonnes du modèle en ligne 1.',

@@ -43,6 +43,9 @@ return [
         'orders' => [
             'approve' => 'Orders: goedkeuren en orderbevestiging sturen',
         ],
+        'products' => [
+            'classify' => 'Producten: categorieën en eigenschappen beheren',
+        ],
         'sales' => [
             'approve_low_margin' => 'Verkoop: offertes onder 10% marge goedkeuren',
             'edit_items' => 'Verkoopartikelen: toevoegen en bewerken',

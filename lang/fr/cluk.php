@@ -43,6 +43,9 @@ return [
         'orders' => [
             'approve' => 'Commandes : approuver et envoyer la confirmation',
         ],
+        'products' => [
+            'classify' => 'Produits : gérer catégories et attributs',
+        ],
         'sales' => [
             'approve_low_margin' => 'Ventes : approuver les devis sous 10 % de marge',
             'edit_items' => 'Articles de vente : ajouter et modifier',

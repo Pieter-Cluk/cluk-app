@@ -10,6 +10,7 @@ use App\Models\Sales\Deal;
 use App\Models\Sales\Quote;
 use App\Models\Sales\QuoteLine;
 use App\Services\Afrit6\Pricing;
+use App\Services\Products\ItemSearch;
 use App\Services\Rental\Availability;
 use App\Services\Rental\QuoteAnswer;
 use App\Services\Rental\QuoteMails;
@@ -208,11 +209,12 @@ class QuoteController extends Controller
         $q = trim((string) $request->query('q'));
         $avail = new Availability($quote->out_from, $quote->out_until, $quote->number);
         $items = Item::active()->where('in_search', true)->where('kind', '!=', 'case')
-            ->when($q !== '', fn ($x) => $x->where(fn ($w) => $w->where('number', 'like', "%{$q}%")->orWhere('name', 'like', "%{$q}%")->orWhere('brand', 'like', "%{$q}%")))
-            ->with(['contents', 'assets'])->orderBy('name')->limit(12)->get();
+            ->when($q !== '', fn ($x) => ItemSearch::words($x, $q))
+            ->with(['contents', 'assets', 'productSubcategory', 'options.attribute'])->orderBy('name')->limit(12)->get();
 
         return response()->json($items->map(fn (Item $i) => [
-            'number' => $i->number, 'name' => $i->name, 'kind' => $i->kind, 'category' => $i->category,
+            'number' => $i->number, 'name' => $i->name, 'kind' => $i->kind, 'category' => $i->productSubcategory?->label() ?? $i->category,
+            'chips' => $i->optionLabels(),
             'price' => Pricing::eur((int) $i->day_price_cents), 'unit' => __('equipment.units.'.$i->price_unit),
             'free' => $avail->free($i),
         ])->values());

@@ -43,6 +43,9 @@ return [
         'orders' => [
             'approve' => 'Orders: approve and send the order confirmation',
         ],
+        'products' => [
+            'classify' => 'Products: manage categories and attributes',
+        ],
         'sales' => [
             'approve_low_margin' => 'Sales: approve quotes under 10% margin',
             'edit_items' => 'Sales items: add and edit',

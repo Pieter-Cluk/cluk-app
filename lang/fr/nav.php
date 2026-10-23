@@ -24,6 +24,7 @@ return [
         'company' => 'Coordonnées de l’entreprise',
         'documents' => 'Documents',
         'vat' => 'Taux de TVA',
+        'productlists' => 'Catégories de produits',
         'locations' => 'Emplacements d’entrepôt',
         'import' => 'Importer des données',
         'preferences' => 'Mes préférences',

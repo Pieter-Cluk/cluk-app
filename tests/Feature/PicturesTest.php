@@ -64,7 +64,7 @@ class PicturesTest extends TestCase
     public function test_photos_can_be_added_when_creating_an_item(): void
     {
         $this->actingAs($this->as('asset-manager'))->post('/dry-hire/items', [
-            'number' => 'AUDSPEQSCK12', 'kind' => 'item', 'name' => 'QSC K12', 'unit' => 'pcs', 'serial' => '1',
+            'number' => 'AUDSPEQSCK12', 'kind' => 'item', 'name' => 'QSC K12', 'unit' => 'pcs', 'serial' => '1', 'subcategory_id' => self::sub('SPK'),
             'photos' => [UploadedFile::fake()->image('k12.jpg', 600, 600)],
         ])->assertRedirect();
         $this->assertNotNull(Item::where('number', 'AUDSPEQSCK12')->value('photo_path'));

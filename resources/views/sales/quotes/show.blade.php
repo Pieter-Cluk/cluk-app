@@ -279,7 +279,7 @@
                         const free = i.free === null ? '' : ' · ' + @json(__('quotes.free', ['n' => '__N__'])).replace('__N__', i.free);
                         b.innerHTML = '<b></b><small></small>';
                         b.querySelector('b').textContent = i.name;
-                        b.querySelector('small').textContent = i.number + ' · ' + i.price + ' ' + i.unit + free;
+                        b.querySelector('small').textContent = i.number + ' · ' + (i.chips && i.chips.length ? i.chips.join(' · ') + ' · ' : '') + i.price + ' ' + i.unit + free;
                         b.addEventListener('click', () => { input.value = i.number; list.hidden = true; form.querySelector('[name=qty]').focus(); });
                         li.appendChild(b);
                         list.appendChild(li);

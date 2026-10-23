@@ -19,16 +19,36 @@
 
     <nav class="chips">
         @foreach (\App\Http\Controllers\Equipment\ItemController::FILTERS as $k)
-            <a href="{{ route('equipment.index', array_filter(['kind' => $k === 'all' ? null : $k, 'cat' => $cat ?: null, 'q' => $q ?: null, 'inactive' => $showInactive ? 1 : null, 'web' => $onlyWeb ? 1 : null])) }}" @class(['chip', 'chip-on' => $kind === $k])>{{ __('equipment.filters.'.$k) }} <span class="count">{{ $counts[$k] }}</span></a>
+            <a href="{{ route('equipment.index', array_filter(['kind' => $k === 'all' ? null : $k, 'cat' => $cat ?: null, 'sub' => $sub ?: null, 'tag' => $tag ?: null, 'opt' => $opts ?: null, 'q' => $q ?: null, 'inactive' => $showInactive ? 1 : null, 'web' => $onlyWeb ? 1 : null])) }}" @class(['chip', 'chip-on' => $kind === $k])>{{ __('equipment.filters.'.$k) }} <span class="count">{{ $counts[$k] }}</span></a>
         @endforeach
     </nav>
     <form method="get" class="filters">
         @if ($kind !== 'all')<input type="hidden" name="kind" value="{{ $kind }}">@endif
         <label class="field-search search"><x-icon name="search"/><input type="search" name="q" value="{{ $q }}" placeholder="{{ __('equipment.search') }}" aria-label="{{ __('equipment.search') }}"></label>
-        <select name="cat" aria-label="{{ __('equipment.fields.category') }}" onchange="this.form.submit()">
+        <select name="cat" aria-label="{{ __('equipment.fields.category') }}" onchange="this.form.sub && (this.form.sub.value = ''); this.form.submit()">
             <option value="">{{ __('equipment.all_categories') }}</option>
-            @foreach ($categories as $c)<option value="{{ $c }}" @selected($cat === $c)>{{ $c }}</option>@endforeach
+            @foreach ($categories as $c)<option value="{{ $c->id }}" @selected($cat === $c->id)>{{ $c->label() }}</option>@endforeach
         </select>
+        @if ($cat)
+            <select name="sub" aria-label="{{ __('equipment.fields.subcategory') }}" onchange="this.form.submit()">
+                <option value="">{{ __('products.all_subcategories') }}</option>
+                @foreach ($categories->firstWhere('id', $cat)?->subcategories ?? [] as $sc)@if ($sc->active)<option value="{{ $sc->id }}" @selected($sub === $sc->id)>{{ $sc->label() }}</option>@endif @endforeach
+            </select>
+        @endif
+        @if ($subcategory)
+            @foreach ($subcategory->attrs as $a)
+                <select name="opt[]" aria-label="{{ $a->label() }}" onchange="this.form.submit()">
+                    <option value="">{{ $a->label() }}: {{ __('products.any') }}</option>
+                    @foreach ($a->options as $o)@if ($o->active)<option value="{{ $o->id }}" @selected(in_array($o->id, $opts, true))>{{ $a->label() }}: {{ $o->display() }}</option>@endif @endforeach
+                </select>
+            @endforeach
+        @endif
+        @if ($tags->isNotEmpty())
+            <select name="tag" aria-label="{{ __('products.tags') }}" onchange="this.form.submit()">
+                <option value="">{{ __('products.all_tags') }}</option>
+                @foreach ($tags as $t)<option value="{{ $t->id }}" @selected($tag === $t->id)>{{ $t->label() }}</option>@endforeach
+            </select>
+        @endif
         <label class="check"><input type="checkbox" name="inactive" value="1" @checked($showInactive) onchange="this.form.submit()"><span>{{ __('equipment.show_inactive') }}</span></label>
         <label class="check"><input type="checkbox" name="web" value="1" @checked($onlyWeb) onchange="this.form.submit()"><span>{{ __('equipment.only_web') }}</span></label>
         <button class="btn" type="submit">{{ __('equipment.find') }}</button>
@@ -44,7 +64,7 @@
                             <td class="thumb">@if ($it->photo_path)<img src="{{ route('equipment.photo', $it) }}" alt="" width="40" height="40" loading="lazy">@else<span class="thumb-empty" aria-hidden="true"><x-icon name="box"/></span>@endif</td>
                             <td class="nowrap"><a href="{{ route('equipment.show', $it) }}"><b>{{ $it->number }}</b></a></td>
                             <td>{{ $it->name }}@if (! $it->active) <span class="pill pill-off">{{ __('equipment.inactive') }}</span>@endif<br><small class="muted">{{ trim($it->brand.' '.$it->type) }}</small></td>
-                            <td>{{ $it->category ?? '—' }}<br><small class="muted">{{ $it->subcategory }}</small></td>
+                            <td>{{ $it->productCategory?->label() ?? $it->category ?? '—' }}<br><small class="muted">{{ $it->productSubcategory?->label() ?? $it->subcategory }}</small>@foreach ($it->optionLabels() as $l)<span class="chip-attr">{{ $l }}</span>@endforeach @foreach ($it->tags as $t)<span class="pill">{{ $t->label() }}</span>@endforeach</td>
                             <td><span @class(['pill', 'pill-info' => $it->kind === 'package', 'pill-warn' => $it->kind === 'case', 'pill-off' => $it->kind === 'service', 'pill-ok' => $it->kind === 'item'])>{{ __('equipment.kinds.'.$it->kind) }}</span>@if ($it->kind === 'item' && ! $it->serial) <small class="muted">{{ __('equipment.counted') }}</small>@endif</td>
                             <td class="num nowrap">{{ $it->kind === 'service' ? '—' : ($it->kind === 'package' ? $it->availableQty() : $it->availableQty().' / '.$it->totalQty()) }}</td>
                             <td class="num nowrap">{{ $eur($it->day_price_cents) }}<br><small class="muted">{{ $it->kind === 'service' ? __('equipment.units.'.$it->price_unit) : __('equipment.per_day') }}</small></td>

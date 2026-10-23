@@ -125,11 +125,13 @@ class CrmExtrasTest extends TestCase
     {
         $long = str_repeat('Wireless microphones - Shure ULDX series (G51, H51 & K52) ', 6);
         $csv = "Itemnumber;Category;Sub-Category;Brand;Type;Name;Rental price per day\n"
-            ."AUDWIRSHU2XULXD;Audio;{$long};Shure;{$long};Shure {$long};110\n";
+            ."AUDWIRSHU2XULXD;Audio;Wireless microphones;Shure;{$long};Shure {$long};110\n"
+            ."AUDWIRSHU2XULXE;Audio;{$long};Shure;ULXD;Shure ULXD;110\n";
         $preview = $this->actingAs($this->admin)->post('/settings/import/preview', ['file' => UploadedFile::fake()->createWithContent('stock.csv', $csv), 'kind' => 'equipment'])->assertOk();
         $this->actingAs($this->admin)->post('/settings/import/run', ['token' => $preview->viewData('token')])->assertOk();
         $item = Item::where('number', 'AUDWIRSHU2XULXD')->firstOrFail();
-        $this->assertSame(160, mb_strlen($item->subcategory));
+        $this->assertSame('Wireless microphones', $item->subcategory);
+        $this->assertFalse(Item::where('number', 'AUDWIRSHU2XULXE')->exists(), 'a subcategory that is not in the lists is refused');
         $this->assertSame(255, mb_strlen($item->name));
         $this->assertSame(11000, $item->day_price_cents);
     }

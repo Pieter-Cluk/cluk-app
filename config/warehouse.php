@@ -18,6 +18,7 @@ return [
     // Function tests per item category (lower case); "default" for the others.
     'tests' => [
         'light' => ['power', 'pan_tilt', 'leds', 'zoom', 'dmx'],
+        'lighting' => ['power', 'pan_tilt', 'leds', 'zoom', 'dmx'],
         'audio' => ['power', 'sound', 'inputs', 'dsp'],
         'sound' => ['power', 'sound', 'inputs', 'dsp'],
         'video' => ['power', 'image', 'pixels', 'signal'],

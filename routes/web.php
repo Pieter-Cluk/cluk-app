@@ -40,6 +40,7 @@ use App\Http\Controllers\Settings\AuditLogController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
 use App\Http\Controllers\Settings\DocumentController;
 use App\Http\Controllers\Settings\ImportController;
+use App\Http\Controllers\Settings\ProductListController;
 use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\UserController;
 use App\Http\Controllers\Settings\VatRateController;
@@ -459,6 +460,25 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/charges/{order}/proforma', [WarehouseController::class, 'proforma'])->whereNumber('order')->name('warehouse.charges.proforma');
     });
 
+    // Settings › Product categories: the fixed lists behind the catalogue and the website.
+    Route::prefix('settings/product-categories')->middleware('right:products.classify')->name('settings.products.')->group(function () {
+        Route::get('/', [ProductListController::class, 'index'])->name('index');
+        Route::post('/categories', [ProductListController::class, 'storeCategory'])->name('category.store');
+        Route::put('/categories/{category}', [ProductListController::class, 'updateCategory'])->whereNumber('category')->name('category.update');
+        Route::delete('/categories/{category}', [ProductListController::class, 'destroyCategory'])->whereNumber('category')->name('category.destroy');
+        Route::post('/categories/{category}/subcategories', [ProductListController::class, 'storeSubcategory'])->whereNumber('category')->name('subcategory.store');
+        Route::put('/subcategories/{subcategory}', [ProductListController::class, 'updateSubcategory'])->whereNumber('subcategory')->name('subcategory.update');
+        Route::delete('/subcategories/{subcategory}', [ProductListController::class, 'destroySubcategory'])->whereNumber('subcategory')->name('subcategory.destroy');
+        Route::post('/attributes', [ProductListController::class, 'storeAttribute'])->name('attribute.store');
+        Route::put('/attributes/{attribute}', [ProductListController::class, 'updateAttribute'])->whereNumber('attribute')->name('attribute.update');
+        Route::post('/attributes/{attribute}/options', [ProductListController::class, 'storeOption'])->whereNumber('attribute')->name('option.store');
+        Route::put('/options/{option}', [ProductListController::class, 'updateOption'])->whereNumber('option')->name('option.update');
+        Route::delete('/options/{option}', [ProductListController::class, 'destroyOption'])->whereNumber('option')->name('option.destroy');
+        Route::post('/tags', [ProductListController::class, 'storeTag'])->name('tag.store');
+        Route::put('/tags/{tag}', [ProductListController::class, 'updateTag'])->whereNumber('tag')->name('tag.update');
+        Route::delete('/tags/{tag}', [ProductListController::class, 'destroyTag'])->whereNumber('tag')->name('tag.destroy');
+    });
+
     // Settings › Warehouse locations: zones, route, storage positions, labels.
     Route::prefix('settings/warehouse-locations')->middleware('nav:locations')->group(function () {
         Route::get('/', [LocationController::class, 'index'])->name('locations.index');
@@ -591,7 +611,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

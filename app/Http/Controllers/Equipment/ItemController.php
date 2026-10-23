@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
+use App\Models\Product\AttributeOption;
+use App\Models\Product\Category;
+use App\Models\Product\Subcategory;
+use App\Models\Product\Tag;
+use App\Services\Products\Classification;
 use App\Support\Images;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,7 +29,14 @@ class ItemController extends Controller
     public function index(Request $request): View
     {
         $kind = in_array($request->query('kind'), self::FILTERS, true) ? $request->query('kind') : 'all';
-        $cat = (string) $request->query('cat', '');
+        $cat = (int) $request->query('cat', 0);
+        $sub = (int) $request->query('sub', 0);
+        $tag = (int) $request->query('tag', 0);
+        $opts = array_values(array_filter(array_map('intval', (array) $request->query('opt', []))));
+        $subcategory = $sub ? Subcategory::with(['attrs.options'])->find($sub) : null;
+        if ($subcategory) {
+            $cat = $subcategory->category_id;
+        }
         $q = trim((string) $request->query('q', ''));
         $showInactive = $request->boolean('inactive');
         $onlyWeb = $request->boolean('web');
@@ -37,27 +49,36 @@ class ItemController extends Controller
 
         $items = (clone $base)
             ->when($kind !== 'all', fn ($w) => $w->where('kind', $kind))
-            ->when($cat !== '', fn ($w) => $w->where('category', $cat))
+            ->when($cat, fn ($w) => $w->where('category_id', $cat))
+            ->when($subcategory, fn ($w) => $w->where('subcategory_id', $subcategory->id))
+            ->when($tag, fn ($w) => $w->whereHas('tags', fn ($t) => $t->whereKey($tag)))
+            ->when($opts, function ($w) use ($opts) {
+                // Each chosen value must match (AND); values of the same attribute are alternatives (OR).
+                foreach (AttributeOption::whereIn('id', $opts)->get()->groupBy('attribute_id') as $group) {
+                    $w->whereHas('options', fn ($o) => $o->whereIn('product_attribute_options.id', $group->pluck('id')));
+                }
+            })
             ->when($q !== '', function ($w) use ($q) {
                 $like = '%'.mb_strtolower($q).'%';
                 $w->where(fn ($x) => $x->whereRaw('lower(number) like ?', [$like])->orWhereRaw('lower(name) like ?', [$like])
-                    ->orWhereRaw('lower(coalesce(brand, \'\')) like ?', [$like])->orWhereRaw('lower(coalesce(type, \'\')) like ?', [$like])
+                    ->orWhereRaw('lower(coalesce(brand, \'\')) like ?', [$like])->orWhereRaw('lower(coalesce(type, \'\')) like ?', [$like])->orWhereRaw('lower(coalesce(search_words, \'\')) like ?', [$like])
                     ->orWhereHas('assets', fn ($a) => $a->whereRaw('lower(coalesce(serial_number, \'\')) like ?', [$like])->orWhereRaw('lower(code) like ?', [$like])));
             })
-            ->with(['assets', 'contents.assets'])
+            ->with(['assets', 'contents.assets', 'productCategory', 'productSubcategory', 'options.attribute', 'tags'])
             ->orderBy('category')->orderBy('number')
             ->paginate(50)->withQueryString();
 
         return view('equipment.index', ['onlyWeb' => $onlyWeb,
-            'items' => $items, 'kind' => $kind, 'cat' => $cat, 'q' => $q, 'counts' => $counts, 'showInactive' => $showInactive,
-            'categories' => Item::query()->whereNotNull('category')->distinct()->orderBy('category')->pluck('category'),
+            'items' => $items, 'kind' => $kind, 'cat' => $cat, 'sub' => $sub, 'tag' => $tag, 'opts' => $opts, 'subcategory' => $subcategory, 'q' => $q, 'counts' => $counts, 'showInactive' => $showInactive,
+            'categories' => Category::with('subcategories')->where('active', true)->orderBy('sort')->get(),
+            'tags' => Tag::where('active', true)->orderBy('sort')->get(),
             'canEdit' => $request->user()->canUseModule('dryhire', 2),
         ]);
     }
 
     public function show(Request $request, Item $item): View
     {
-        $item->load(['assets', 'kit', 'contents.assets', 'photos']);
+        $item->load(['assets', 'kit', 'contents.assets', 'photos', 'productCategory', 'productSubcategory', 'options.attribute', 'tags']);
         $user = $request->user();
 
         return view('equipment.show', [
@@ -72,19 +93,21 @@ class ItemController extends Controller
 
     public function create(Request $request): View
     {
-        return view('equipment.form', ['item' => new Item(['kind' => $request->query('kind', 'item'), 'serial' => true, 'unit' => 'pcs', 'in_search' => true, 'active' => true])]);
+        return view('equipment.form', ['item' => new Item(['kind' => $request->query('kind', 'item'), 'serial' => true, 'unit' => 'pcs', 'in_search' => true, 'active' => true])] + Classification::forForm());
     }
 
     public function edit(Item $item): View
     {
-        return view('equipment.form', ['item' => $item]);
+        return view('equipment.form', ['item' => $item->load(['options', 'tags'])] + Classification::forForm());
     }
 
     public function store(Request $request): RedirectResponse
     {
         $request->validate(['photos' => ['nullable', 'array', 'max:12'], 'photos.*' => Images::rule()]);
         $item = new Item;
-        $item->fill($this->validated($request, $item))->save();
+        [$data, $class] = $this->validated($request, $item);
+        $item->fill($data)->save();
+        $this->classify($request, $item, $class);
         foreach ($request->file('photos', []) as $i => $file) {
             try {
                 $item->photos()->create(['path' => Images::store($file, 'equipment', 1600), 'position' => $i]);
@@ -100,12 +123,18 @@ class ItemController extends Controller
 
     public function update(Request $request, Item $item): RedirectResponse
     {
-        $item->fill($this->validated($request, $item));
+        [$data, $class] = $this->validated($request, $item);
+        $item->fill($data);
         if ($item->isDirty('serial') && ! $item->serial && $item->assets()->exists()) {
             throw ValidationException::withMessages(['serial' => __('equipment.errors.has_assets')]);
         }
         $changes = array_keys($item->getDirty());
+        $before = $this->classSnapshot($item);
         $item->save();
+        $this->classify($request, $item, $class);
+        if ($before !== $this->classSnapshot($item->fresh())) {
+            $changes[] = 'classification';
+        }
         if ($changes) {
             AuditLog::record('equipment.item_updated', $item, ['changes' => array_fill_keys(array_diff($changes, ['updated_at']), true)]);
         }
@@ -120,8 +149,13 @@ class ItemController extends Controller
             'number' => ['required', 'string', 'max:40', 'regex:/^[A-Z0-9][A-Z0-9._\-\/]*$/', Rule::unique('equipment_items', 'number')->ignore($item->id)],
             'kind' => ['required', Rule::in(Item::KINDS)],
             'name' => ['required', 'string', 'max:255'],
-            'category' => ['nullable', 'string', 'max:60'],
-            'subcategory' => ['nullable', 'string', 'max:160'],
+            'category_id' => ['nullable', 'integer'],
+            'subcategory_id' => ['nullable', 'integer'],
+            'attr' => ['nullable', 'array'],
+            'attr.*' => ['nullable'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['integer'],
+            'search_words' => ['nullable', 'string', 'max:1000'],
             'brand' => ['nullable', 'string', 'max:80'],
             'type' => ['nullable', 'string', 'max:255'],
             'unit' => ['required', 'string', 'max:12'],
@@ -143,10 +177,15 @@ class ItemController extends Controller
             'active' => ['nullable', 'boolean'],
         ]);
         $serial = in_array($d['kind'], ['item', 'case'], true) && ! empty($d['serial']);
+        // Category, subcategory, attributes and tags follow the fixed lists (Settings › Product categories).
+        $class = Classification::check(isset($d['category_id']) ? (int) $d['category_id'] : null, isset($d['subcategory_id']) ? (int) $d['subcategory_id'] : null, $d['attr'] ?? [], $d['tags'] ?? []);
+        if (! $class['sub'] && $d['kind'] !== 'service') {
+            throw ValidationException::withMessages(['subcategory_id' => __('products.errors.subcategory_required')]);
+        }
+        $class['search_words'] = $d['search_words'] ?? '';
 
-        return [
+        return [[
             'number' => $d['number'], 'kind' => $d['kind'], 'name' => $d['name'],
-            'category' => $d['category'] ?? null, 'subcategory' => $d['subcategory'] ?? null,
             'brand' => $d['brand'] ?? null, 'type' => $d['type'] ?? null, 'unit' => $d['unit'],
             'serial' => $serial, 'stock_qty' => $serial ? 0 : (int) ($d['stock_qty'] ?? 0),
             'day_price_cents' => (int) round(((float) ($d['day_price'] ?? 0)) * 100),
@@ -156,7 +195,24 @@ class ItemController extends Controller
             'origin' => isset($d['origin']) ? strtoupper($d['origin']) : null, 'hs_code' => $d['hs_code'] ?? null,
             'descriptions' => array_filter(array_intersect_key($d['desc'] ?? [], config('cluk.locales'))) ?: null,
             'in_search' => (bool) ($d['in_search'] ?? false), 'active' => (bool) ($d['active'] ?? false),
-        ] + (auth()->user()?->hasRight('equipment.website') ? ['on_website' => (bool) ($d['on_website'] ?? false)] : []);
+        ] + (auth()->user()?->hasRight('equipment.website') ? ['on_website' => (bool) ($d['on_website'] ?? false)] : []), $class];
+    }
+
+    /** Save category, subcategory, attributes, tags and search words. The item number is never changed. */
+    private function classify(Request $request, Item $item, array $class): void
+    {
+        if (! $class['sub'] && $item->kind === 'service') {
+            $item->forceFill(['search_words' => trim($class['search_words']) ?: null])->save();
+            $item->tags()->sync($class['tags']);
+
+            return;
+        }
+        Classification::apply($item, $class, $class['search_words']);
+    }
+
+    private function classSnapshot(Item $item): array
+    {
+        return [$item->subcategory_id, $item->search_words, $item->options()->pluck('product_attribute_options.id')->sort()->values()->all(), $item->tags()->pluck('product_tags.id')->sort()->values()->all()];
     }
 
     /** Dry-hire list: switch "Show on the website" with one click (extra right "equipment.website"). */

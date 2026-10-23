@@ -2,9 +2,14 @@
 
 namespace App\Models\Equipment;
 
+use App\Models\Product\AttributeOption;
+use App\Models\Product\Category;
+use App\Models\Product\Subcategory;
+use App\Models\Product\Tag;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -16,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'number', 'kind', 'category', 'subcategory', 'brand', 'type', 'name', 'unit', 'serial', 'stock_qty', 'position_code',
     'day_price_cents', 'price_unit', 'catalog_price_cents', 'weight_kg', 'width_m', 'length_m', 'height_m', 'origin', 'hs_code',
-    'descriptions', 'photo_path', 'in_search', 'on_website', 'active',
+    'descriptions', 'photo_path', 'in_search', 'on_website', 'active', 'category_id', 'subcategory_id', 'search_words',
 ])]
 class Item extends Model
 {
@@ -33,6 +38,47 @@ class Item extends Model
             'stock_qty' => 'integer', 'day_price_cents' => 'integer', 'catalog_price_cents' => 'integer',
             'weight_kg' => 'float', 'width_m' => 'float', 'length_m' => 'float', 'height_m' => 'float',
         ];
+    }
+
+    public function productCategory(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function productSubcategory(): BelongsTo
+    {
+        return $this->belongsTo(Subcategory::class, 'subcategory_id');
+    }
+
+    /** Chosen attribute values (length, band, colour…). */
+    public function options(): BelongsToMany
+    {
+        return $this->belongsToMany(AttributeOption::class, 'equipment_item_options', 'item_id', 'option_id');
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'equipment_item_tag', 'item_id', 'tag_id')->orderBy('sort');
+    }
+
+    /**
+     * Put the item in a subcategory (and its category). The English names are
+     * also written to the old text columns, which the warehouse still reads.
+     * The item number never changes.
+     */
+    public function placeIn(?Subcategory $sub): void
+    {
+        $sub?->loadMissing('category');
+        $this->forceFill([
+            'category_id' => $sub?->category_id, 'subcategory_id' => $sub?->id,
+            'category' => $sub?->category->label('en'), 'subcategory' => $sub?->label('en'),
+        ]);
+    }
+
+    /** "Square truss · NH34 · Black · 2 m" style chips for lists and quote search. */
+    public function optionLabels(): array
+    {
+        return $this->options->sortBy(fn ($o) => [$o->attribute?->sort, $o->sort])->map(fn ($o) => $o->display())->values()->all();
     }
 
     public function photos(): HasMany

@@ -140,8 +140,8 @@ class SheetReader
 
     private static function text(?SimpleXMLElement $node): string
     {
-        if ($node === null) {
-            return '';
+        if ($node === null || (! isset($node->t) && ! isset($node->r))) {
+            return ''; // an empty text cell (<c t="inlineStr"/>)
         }
         if (isset($node->t)) {
             return (string) $node->t;
