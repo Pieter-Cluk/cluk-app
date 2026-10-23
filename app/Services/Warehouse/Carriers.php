@@ -3,6 +3,8 @@
 namespace App\Services\Warehouse;
 
 use App\Models\Equipment\Asset;
+use App\Models\Equipment\CaseItem;
+use App\Models\Equipment\Item;
 use App\Models\Rental\Order;
 use App\Models\User;
 use App\Models\Warehouse\Move;
@@ -55,6 +57,30 @@ class Carriers
             $asset->update(['case_id' => $case->id, 'location' => $case->location ?? $asset->location]);
             Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $from, 'to_code' => $case->code, 'kind' => 'pack', 'user_id' => $by->id, 'case_id' => $case->id]);
         });
+    }
+
+    /** One more (+1) or one less (−1) of a counted item in a case. Never more in cases than in stock. */
+    public static function packCount(Item $item, Asset $case, int $delta, User $by): int
+    {
+        $r = ['code' => $item->type ?: $item->name, 'carrier' => $case->code];
+        if (self::away($case)) {
+            self::fail('carrier_out', $r + ['order' => $case->outOrder?->number ?? '—']);
+        }
+        $row = CaseItem::firstOrNew(['case_id' => $case->id, 'item_id' => $item->id]);
+        $new = (int) $row->qty + $delta;
+        if ($new < 0) {
+            self::fail('carrier_not_in', $r);
+        }
+        if ($delta > 0 && CaseItem::where('item_id', $item->id)->sum('qty') + $delta > $item->stock_qty) {
+            self::fail('carrier_more_than_stock', $r + ['n' => $item->stock_qty]);
+        }
+        DB::transaction(function () use ($row, $new, $item, $case, $delta, $by) {
+            $row->fill(['qty' => $new])->save();
+            Move::create(['item_id' => $item->id, 'qty' => $delta, 'from_code' => $delta > 0 ? null : $case->code, 'to_code' => $delta > 0 ? $case->code : null,
+                'kind' => $delta > 0 ? 'pack' : 'unpack', 'user_id' => $by->id, 'case_id' => $case->id]);
+        });
+
+        return $new;
     }
 
     /** Take a piece out of its case (it stays where the case is). */
@@ -121,17 +147,31 @@ class Carriers
         }
         $onOrder = $order->assets()->pluck('asset_id')->all();
         $pieces = $case->packed()->get();
-        $strangers = $pieces->reject(fn (Asset $a) => in_array($a->id, $onOrder, true));
+        $strangers = $pieces->reject(fn (Asset $a) => in_array($a->id, $onOrder, true))->pluck('code');
+        // Counted items in the case: on the order, and not more than still to pick.
+        $counted = [];
+        foreach ($case->counted()->with('item')->get() as $ci) {
+            $line = Moves::countedLine($order, $ci->item);
+            if (! $line || $line->picked_qty + $ci->qty > $line->ownAllocated()) {
+                $strangers->push($ci->qty.' × '.($ci->item->type ?: $ci->item->name));
+            } else {
+                $counted[] = [$line, $ci->qty];
+            }
+        }
         if ($strangers->isNotEmpty()) {
-            self::fail('carrier_not_on_order', $r + ['codes' => $strangers->pluck('code')->implode(', ')]);
+            self::fail('carrier_not_on_order', $r + ['codes' => $strangers->implode(', ')]);
         }
         if ($case->status !== Asset::AVAILABLE) {
             self::fail('not_rentable', ['code' => $case->code]);
         }
         $dispatch = Zone::where('type', 'dispatch')->orderBy('sort')->firstOrFail();
 
-        return DB::transaction(function () use ($order, $case, $by, $pieces, $dispatch, $onOrder) {
+        return DB::transaction(function () use ($order, $case, $by, $pieces, $dispatch, $onOrder, $counted) {
             $n = 0;
+            foreach ($counted as [$line, $qty]) {
+                Moves::count($line, 'picked_qty', $qty, $by);
+                $n += $qty;
+            }
             foreach ($pieces as $a) {
                 if ($a->location === $dispatch->code && $a->out_order_id === $order->id) {
                     continue; // picked before it went in the case
@@ -164,6 +204,7 @@ class Carriers
         $inbound = Zone::where('type', 'inbound')->where('active', true)->orderBy('sort')->firstOrFail();
         DB::transaction(function () use ($order, $case, $by, $inbound) {
             Asset::where('case_id', $case->id)->update(['case_id' => null]);
+            CaseItem::where('case_id', $case->id)->delete();
             if ($order->assets()->where('asset_id', $case->id)->exists()) {
                 Moves::move($case, $inbound, $by); // a hired case goes the normal way: cleaning and the check
             } else {

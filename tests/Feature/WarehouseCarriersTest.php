@@ -208,4 +208,41 @@ class WarehouseCarriersTest extends TestCase
         $this->scan('GA2B1')->assertSessionHasNoErrors();
         $this->assertSame('GA2B1', $p[2]->fresh()->location);
     }
+
+    public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void
+    {
+        [$p, $order] = $this->job();
+        $barndoor = Item::create(['number' => 'LIGACCELASOLIBARNDOOR', 'kind' => 'item', 'name' => 'Elation Sol I Barndoor', 'type' => 'Sol I Barndoor', 'serial' => false, 'stock_qty' => 3]);
+        $label = 'https://app.cluk.live/i/LIGACCELASOLIBARNDOOR';
+        // Without an open box: it is recognised and explained.
+        $this->scan($label)->assertSessionHasNoErrors()->assertSessionHas('status');
+        // Into a box: +1 per scan, never more than in stock.
+        $this->scan('BOX-01');
+        foreach ([1, 2, 3] as $i) {
+            $this->scan($label)->assertSessionHasNoErrors();
+        }
+        $this->scan($label)->assertSessionHasErrors('code');
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('3 ×')->assertSee('Sol I Barndoor');
+        $this->actingAs($this->crew)->post('/w/carrier/mode', ['mode' => 'remove']);
+        $this->scan($label)->assertSessionHasNoErrors();
+        $this->assertSame(2, self::case('BOX-01')->counted()->value('qty'));
+        $this->actingAs($this->crew)->post('/w/scan/cancel');
+
+        // The order also has 2 barndoors: picking the box picks them.
+        $line = $order->lines()->create(['kind' => 'item', 'item_id' => $barndoor->id, 'name' => 'Sol I Barndoor', 'qty' => 2, 'own_qty' => 2, 'amount_cents' => 1, 'position' => 1]);
+        $this->actingAs($this->crew)->post('/w/pick/'.$order->id.'/scan', ['code' => 'BOX-01'])->assertSessionHasNoErrors();
+        $this->assertSame(2, $line->fresh()->picked_qty);
+        $this->actingAs($this->crew)->post('/w/pick/'.$order->id.'/scan', ['code' => $label])->assertSessionHasErrors('code'); // all picked
+
+        // Scanning the label on the pick list of another job counts +1; at the return, +1 back.
+        foreach (['LT-0001', 'LT-0002'] as $c) {
+            $this->actingAs($this->crew)->post('/w/pick/'.$order->id.'/scan', ['code' => $c]);
+        }
+        $this->actingAs($this->crew)->post('/w/pick/'.$order->id.'/load')->assertRedirect('/w');
+        $this->actingAs($this->crew)->post('/w/return/'.$order->id.'/scan', ['code' => 'BOX-01'])->assertSessionHasNoErrors();
+        $this->assertSame(0, self::case('BOX-01')->counted()->count());
+        $this->actingAs($this->crew)->post('/w/return/'.$order->id.'/scan', ['code' => $label])->assertSessionHasNoErrors();
+        $this->assertSame(1, $line->fresh()->returned_qty);
+        $this->assertSame(1, self::case('BOX-01')->counted()->value('qty'));
+    }
 }

@@ -14,7 +14,7 @@
         <section class="ph-card ph-pending">
             <small class="ph-step">{{ __('warehouse.carriers.ret_step') }}</small>
             <b>{{ $retCarrier->item->name }} · {{ $retCarrier->code }}</b>
-            <small>{{ trans_choice('warehouse.carriers.count', $retCarrier->packed_count, ['n' => $retCarrier->packed_count]) }}</small>
+            <small>{{ trans_choice('warehouse.carriers.count', $retCarrier->packed_count + $retCarrier->counted->sum('qty'), ['n' => $retCarrier->packed_count + $retCarrier->counted->sum('qty')]) }}</small>
             <form method="post" action="{{ route('w.return.carrier_done', $order) }}">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.carriers.ret_done') }}</button></form>
         </section>
     @endif

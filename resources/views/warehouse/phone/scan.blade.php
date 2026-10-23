@@ -10,7 +10,7 @@
                 <small class="ph-step">{{ __('warehouse.carriers.step_'.$mode) }}</small>
             @endunless
             <small>{{ __('warehouse.scan.now', ['place' => \App\Services\Warehouse\Moves::label($carrier->location)]) }}@if ($carrier->outOrder) · {{ __('warehouse.carriers.with_order', ['order' => $carrier->outOrder->number]) }}@endif</small>
-            @if ($carrier->packed->isEmpty())
+            @if ($carrier->packed->isEmpty() && $carrier->counted->isEmpty())
                 <p class="muted">{{ __('warehouse.carriers.empty') }}</p>
             @else
                 <ul class="ph-list">
@@ -18,9 +18,13 @@
                         <li><b>{{ $a->code }}</b> {{ $a->item->name }}
                             @unless ($carrier->out_order_id)<form method="post" action="{{ route('w.carrier.out', $a) }}" class="ph-inline">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.carriers.take_out') }}</button></form>@endunless</li>
                     @endforeach
+                    @foreach ($carrier->counted as $ci)
+                        <li><b>{{ $ci->qty }} ×</b> {{ $ci->item->type ?: $ci->item->name }} <small class="muted">· {{ __('warehouse.carriers.counted') }}</small></li>
+                    @endforeach
                 </ul>
             @endif
-            <small>{{ trans_choice('warehouse.carriers.count', $carrier->packed->count(), ['n' => $carrier->packed->count()]) }}</small>
+            @php($total = $carrier->packed->count() + $carrier->counted->sum('qty'))
+            <small>{{ trans_choice('warehouse.carriers.count', $total, ['n' => $total]) }}</small>
             <form method="post" action="{{ route('w.scan.cancel') }}">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.carriers.close') }}</button></form>
         </section>
     @elseif ($pending)

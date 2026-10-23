@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 use App\Models\Equipment\Asset;
+use App\Models\Equipment\CaseItem;
 use App\Models\Equipment\Item;
 use App\Models\Rental\Order;
 use App\Models\Rental\OrderLine;
@@ -54,7 +55,7 @@ class PhoneController extends Controller
     {
         $id = $request->session()->get('w.carrier');
 
-        return $id ? Asset::with(['item', 'packed.item', 'outOrder'])->find($id) : null;
+        return $id ? Asset::with(['item', 'packed.item', 'counted.item', 'outOrder'])->find($id) : null;
     }
 
     /** A case that is stored (not on its way through cleaning or the check) works as a dolly or box. */
@@ -107,6 +108,18 @@ class PhoneController extends Controller
             return redirect()->route('w.scan')->with('status', __('warehouse.scan.registered', ['code' => $asset->code, 'name' => $asset->item->name]));
         }
         $open = $this->openCarrier($request);
+        // A counted item (its label has no piece code): one more or one less in the open case.
+        if ($found['type'] === 'item') {
+            $item = $found['model'];
+            $name = $item->type ?: $item->name;
+            if (! $open) {
+                return redirect()->route('w.scan')->with('status', __('warehouse.carriers.counted_info', ['name' => $name, 'n' => $item->stock_qty]));
+            }
+            $remove = $request->session()->get('w.carrier_mode') === 'remove';
+            $n = Carriers::packCount($item, $open, $remove ? -1 : 1, $request->user());
+
+            return redirect()->route('w.scan')->with('status', __($remove ? 'warehouse.carriers.counted_out' : 'warehouse.carriers.counted_in', ['name' => $name, 'carrier' => $open->code, 'n' => $n]));
+        }
         // A dolly or box: put the waiting piece in it, or open it (scan pieces to fill it, a place to move it).
         if ($carrier = self::asCase($found)) {
             if ($pending = $this->pending($request)) {
@@ -228,6 +241,18 @@ class PhoneController extends Controller
 
             return back()->with('status', trans_choice('warehouse.carriers.picked', $n, ['n' => $n, 'carrier' => $found['model']->code]));
         }
+        if (($found['type'] ?? null) === 'item') {
+            $line = Moves::countedLine($order, $found['model']);
+            if (! $line) {
+                throw ValidationException::withMessages(['code' => __('warehouse.errors.not_on_order', ['code' => $found['model']->type ?: $found['model']->name, 'order' => $order->number])]);
+            }
+            if ($line->picked_qty >= $line->ownAllocated()) {
+                throw ValidationException::withMessages(['code' => __('warehouse.errors.picked_already', ['code' => $found['model']->type ?: $found['model']->name])]);
+            }
+            Moves::count($line, 'picked_qty', 1, $request->user());
+
+            return back()->with('status', __('warehouse.carriers.counted_picked', ['name' => $line->name, 'n' => $line->fresh()->picked_qty, 'of' => $line->ownAllocated()]));
+        }
         if (($found['type'] ?? null) !== 'asset') {
             throw ValidationException::withMessages(['code' => __('warehouse.errors.scan_a_piece')]);
         }
@@ -267,7 +292,7 @@ class PhoneController extends Controller
         [$forOrder, $carrierId] = session('w.ret_carrier', [null, null]);
 
         return view('warehouse.phone.return', ['order' => $order->load('company'), 'lines' => Moves::pickLines($order),
-            'retCarrier' => $forOrder === $order->id ? Asset::with('item')->withCount('packed')->find($carrierId) : null]);
+            'retCarrier' => $forOrder === $order->id ? Asset::with(['item', 'counted'])->withCount('packed')->find($carrierId) : null]);
     }
 
     public function returnScan(Request $request, Order $order): RedirectResponse
@@ -278,6 +303,21 @@ class PhoneController extends Controller
             $request->session()->put('w.ret_carrier', [$order->id, $found['model']->id]);
 
             return back()->with('status', __('warehouse.carriers.returned', ['carrier' => $found['model']->code]));
+        }
+        if (($found['type'] ?? null) === 'item') {
+            $line = Moves::countedLine($order, $found['model']);
+            if (! $line || $line->returned_qty >= $line->picked_qty) {
+                throw ValidationException::withMessages(['code' => __('warehouse.errors.not_out_with', ['code' => $found['model']->type ?: $found['model']->name, 'order' => $order->number])]);
+            }
+            Moves::count($line, 'returned_qty', 1, $request->user());
+            [$forOrder, $carrierId] = $request->session()->get('w.ret_carrier', [null, null]);
+            if ($forOrder === $order->id && ($into = Asset::find($carrierId))) {
+                $row = CaseItem::firstOrNew(['case_id' => $into->id, 'item_id' => $found['model']->id]);
+                $row->fill(['qty' => (int) $row->qty + 1])->save();
+            }
+            Moves::maybeReturned($order->fresh());
+
+            return back()->with('status', __('warehouse.carriers.counted_back', ['name' => $line->name, 'n' => $line->fresh()->returned_qty, 'of' => $line->picked_qty]));
         }
         if (($found['type'] ?? null) !== 'asset') {
             throw ValidationException::withMessages(['code' => __('warehouse.errors.scan_a_piece')]);

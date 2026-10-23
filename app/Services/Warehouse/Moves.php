@@ -31,11 +31,17 @@ class Moves
      * What a scanned text is: a piece, a zone or a position. Labels hold the full
      * address (…/a/LT-0142 or …/l/CLEAN); typed codes work too.
      *
-     * @return array{type: string, model: Asset|Zone|Position}|null
+     * @return array{type: string, model: Asset|Zone|Position|Item}|null
      */
     public static function resolve(string $raw): ?array
     {
         $raw = trim($raw);
+        // Label of a counted item (…/i/NUMBER): no own piece code, it is the item itself.
+        if (preg_match('#/i/([A-Za-z0-9\-_.&]+)/?$#', $raw, $m)) {
+            $item = Item::where('number', strtoupper(rawurldecode($m[1])))->where('serial', false)->first();
+
+            return $item ? ['type' => 'item', 'model' => $item] : null;
+        }
         if (preg_match('#/(a|l)/([A-Za-z0-9\-]+)/?$#', $raw, $m)) {
             $raw = $m[2];
         }
@@ -51,6 +57,9 @@ class Moves
         }
         if ($p = Position::where('code', $code)->where('active', true)->first()) {
             return ['type' => 'position', 'model' => $p];
+        }
+        if ($i = Item::where('number', $code)->where('serial', false)->where('kind', 'item')->first()) {
+            return ['type' => 'item', 'model' => $i];
         }
 
         return null;
@@ -232,6 +241,12 @@ class Moves
         $from = $asset->location;
         $asset->update(['location' => $dispatch->code, 'out_order_id' => $order->id, 'case_id' => $with?->id]);
         Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $from, 'to_code' => $dispatch->code, 'kind' => 'pick', 'order_id' => $order->id, 'user_id' => $by->id, 'case_id' => $with?->id]);
+    }
+
+    /** The counted line of an order for this item (where scanning its label counts). */
+    public static function countedLine(Order $order, Item $item): ?OrderLine
+    {
+        return $order->lines()->with('item')->where('item_id', $item->id)->get()->first(fn (OrderLine $l) => $l->needsStock() && ! $l->bySerial());
     }
 
     public static function count(OrderLine $line, string $field, int $delta, User $by): void

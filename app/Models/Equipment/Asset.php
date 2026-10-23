@@ -72,6 +72,12 @@ class Asset extends Model
         return $this->hasMany(Asset::class, 'case_id')->orderBy('code');
     }
 
+    /** Counted items in this case (with how many). */
+    public function counted(): HasMany
+    {
+        return $this->hasMany(CaseItem::class, 'case_id')->where('qty', '>', 0);
+    }
+
     /** A piece of a case item can hold other pieces. */
     public function isContainer(): bool
     {
