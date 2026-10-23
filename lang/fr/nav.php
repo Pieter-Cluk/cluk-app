@@ -26,7 +26,7 @@ return [
         'vat' => 'Taux de TVA',
         'productlists' => 'Catégories de produits',
         'locations' => 'Emplacements d’entrepôt',
-        'import' => 'Importer des données',
+        'import' => 'Import et export',
         'preferences' => 'Mes préférences',
         'profile' => 'Mon profil',
         'notifications' => 'Notifications',

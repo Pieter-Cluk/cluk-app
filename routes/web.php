@@ -226,6 +226,7 @@ Route::middleware('auth:web')->group(function () {
         });
         Route::middleware('right:sales.approve_low_margin')->group(function () {
             Route::post('/companies/{company}/discounts', [CustomerDiscountController::class, 'store'])->whereNumber('company')->name('companies.discounts.store');
+            Route::post('/companies/{company}/net-prices', [CustomerDiscountController::class, 'net'])->whereNumber('company')->name('companies.discounts.net');
             Route::delete('/companies/{company}/discounts/{discount}', [CustomerDiscountController::class, 'destroy'])->whereNumber(['company', 'discount'])->name('companies.discounts.destroy');
         });
         Route::put('/companies/{company}/vat', [CompanyController::class, 'updateVat'])->whereNumber('company')->middleware('right:finance.vat_treatment')->name('companies.vat');
@@ -369,6 +370,7 @@ Route::middleware('auth:web')->group(function () {
         Route::middleware('nav:import')->group(function () {
             Route::get('/import', [ImportController::class, 'index'])->name('import.index');
             Route::get('/import/template', [ImportController::class, 'template'])->name('import.template');
+            Route::post('/import/export', [ImportController::class, 'export'])->middleware('throttle:10,1')->name('import.export');
             Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
             Route::post('/import/run', [ImportController::class, 'run'])->name('import.run');
             Route::post('/import/vies', [ImportController::class, 'vies'])->name('import.vies');

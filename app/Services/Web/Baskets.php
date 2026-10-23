@@ -125,12 +125,13 @@ class Baskets
         $items = self::query($kind)->whereKey($lines->pluck($col))->get()->keyBy('id');
         $rows = $lines->filter(fn (BasketLine $l) => $items->has($l->{$col}))->map(function (BasketLine $l) use ($items, $col, $kind, $a) {
             $i = $items[$l->{$col}];
-            // Sales: the customer's own price (list price minus their discount for this brand).
-            $price = $kind === Basket::DRYHIRE ? (int) $i->day_price_cents : CustomerPrices::priceCents($a, $i);
+            // Sales: the customer's own price (their standard sales conditions), the same as Prices::for() on the catalogue.
+            $p = $kind === Basket::SALES ? Prices::for($a, $i) : null;
+            $price = $kind === Basket::DRYHIRE ? (int) $i->day_price_cents : $p['price_cents'];
 
             return ['id' => $i->id, 'number' => $i->number, 'name' => $kind === Basket::DRYHIRE ? (string) $i->name : $i->name(),
                 'qty' => $l->qty, 'price_cents' => $price, 'amount_cents' => $price * $l->qty]
-                + ($kind === Basket::SALES ? ['list_price_cents' => (int) $i->list_price_cents, 'discount_pct' => CustomerPrices::discountBp($a, $i) / 100, 'in_stock' => (int) $i->stock_qty] : []);
+                + ($kind === Basket::SALES ? ['list_price_cents' => $p['list_cents'], 'discount_pct' => $p['discount_pct'], 'in_stock' => (int) $i->stock_qty] : []);
         })->values();
         $sum = (int) $rows->sum('amount_cents');
 
@@ -231,7 +232,7 @@ class Baskets
             foreach ($lines as $l) {
                 $i = $items[$l->sales_item_id];
                 $q->lines()->create(['sales_item_id' => $i->id, 'kind' => 'item', 'name' => $i->name(), 'description' => $i->description, 'qty' => $l->qty,
-                    'list_cents' => $i->list_price_cents, 'discount_bp' => CustomerPrices::discountBp($a, $i), 'cost_cents' => $i->costCents(), 'position' => ++$pos]);
+                    'cost_cents' => $i->costCents(), 'position' => ++$pos] + CustomerPrices::lineValues($a, $i));
             }
             $q->recalculate();
             AuditLog::record('web.order_placed', $a, ['email' => $a->email, 'number' => $q->number, 'total' => Pricing::eur($q->net_cents)]);

@@ -26,7 +26,7 @@ return [
         'vat' => 'Btw-tarieven',
         'productlists' => 'Productcategorieën',
         'locations' => 'Magazijnlocaties',
-        'import' => 'Gegevens importeren',
+        'import' => 'Importeren & exporteren',
         'preferences' => 'Mijn voorkeuren',
         'profile' => 'Mijn profiel',
         'notifications' => 'Meldingen',

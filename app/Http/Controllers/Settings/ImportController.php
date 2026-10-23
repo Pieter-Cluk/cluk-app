@@ -10,6 +10,10 @@ use App\Imports\Importer;
 use App\Imports\SalesItemImport;
 use App\Models\AuditLog;
 use App\Models\Company;
+use App\Models\Contact;
+use App\Models\Equipment\Item;
+use App\Models\ProductSales\SalesItem;
+use App\Services\Data\Exporter;
 use App\Services\Vies;
 use App\Support\SheetReader;
 use App\Support\VatNumber;
@@ -24,8 +28,9 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
 /**
- * Settings › Import data. Upload a spreadsheet, see exactly what would
- * happen (a dry run that is rolled back), then import for real.
+ * Settings › Import & export. Upload a spreadsheet, see exactly what would
+ * happen (a dry run that is rolled back), then import for real. Or export the
+ * same lists, in the same columns, to change them in Excel and import again.
  */
 class ImportController extends Controller
 {
@@ -35,8 +40,27 @@ class ImportController extends Controller
     public function index(): View
     {
         return view('settings.import', [
-            'viesPending' => $this->viesPendingQuery()->count(),
+            'viesPending' => $this->viesPendingQuery()->count(), 'exportCounts' => $this->exportCounts(),
         ]);
+    }
+
+    private function exportCounts(): array
+    {
+        return ['companies' => Company::active()->count(), 'contacts' => Contact::count(),
+            'equipment' => Item::where('active', true)->count(), 'salesitems' => SalesItem::where('active', true)->count()];
+    }
+
+    /** Export: the chosen lists in one workbook, with the import's column names. */
+    public function export(Request $request): BinaryFileResponse
+    {
+        $d = $request->validate(['kinds' => ['required', 'array', 'min:1'], 'kinds.*' => ['in:'.implode(',', Exporter::KINDS)], 'archived' => ['nullable', 'boolean']]);
+        $kinds = array_values(array_intersect(Exporter::KINDS, $d['kinds']));
+        Storage::disk('local')->makeDirectory('exports');
+        $path = Storage::disk('local')->path('exports/'.Str::uuid().'.xlsx');
+        [, $counts] = (new Exporter($request->user(), (bool) ($d['archived'] ?? false)))->workbook($kinds, $path);
+        AuditLog::record('data.exported', null, $counts + ['archived' => (bool) ($d['archived'] ?? false)], $request->user());
+
+        return response()->download($path, Exporter::fileName($kinds), ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])->deleteFileAfterSend();
     }
 
     public function template(): BinaryFileResponse
@@ -68,7 +92,7 @@ class ImportController extends Controller
         }
 
         return view('settings.import', [
-            'viesPending' => $this->viesPendingQuery()->count(),
+            'viesPending' => $this->viesPendingQuery()->count(), 'exportCounts' => $this->exportCounts(),
             'token' => $token,
             'fileName' => $file->getClientOriginalName(),
             'reports' => $reports,
@@ -90,7 +114,7 @@ class ImportController extends Controller
         AuditLog::record('import.done', null, ['file' => $meta['name']] + array_map(fn ($r) => array_intersect_key($r, array_flip(['created', 'updated', 'skipped'])), $reports));
 
         return view('settings.import', [
-            'viesPending' => $this->viesPendingQuery()->count(),
+            'viesPending' => $this->viesPendingQuery()->count(), 'exportCounts' => $this->exportCounts(),
             'fileName' => $meta['name'],
             'reports' => $reports,
             'dryRun' => false,

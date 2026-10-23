@@ -78,11 +78,35 @@ These are for the sales pages of the website.
 
 ## The customer's own sales prices
 
-Staff set a discount per brand on the customer card. They can also set one for "all other brands".
+Staff set **standard sales conditions** for each company on its customer card (Companies › card › Standard sales conditions). There are four kinds:
 
-**On the website**
-- Signed-in customer: show `CustomerPrices::priceCents($account, $salesItem)` as their price, with the list price struck through when `discountBp(...)` > 0.
-- Guests and private customers (no company) see the list price.
-- `Baskets::show($account, 'sales')` already uses these prices. Each line has `price_cents` (their price), `list_price_cents` and `discount_pct`.
-- `submitSales` orders at the same prices.
-- Prices are excl. VAT.
+- a default discount % on list prices;
+- a different % per brand;
+- a different % per sales category;
+- a fixed net price per product.
+
+**Priority:** product net price > brand % > category % > default % > list price.
+
+**One call for the website:**
+
+```php
+use App\Services\Web\Prices;
+
+Prices::for($account, $salesItem);   // ['list_cents' => 11900, 'price_cents' => 10115, 'discount_pct' => 15.0]
+Prices::for($account, $collection);  // the same, keyed by sales item id
+```
+
+- `$account` is `CustomerAuth::current()` or `null`.
+- Guests, logins that aren't active and private customers (no company) get the list price, with `discount_pct` = null.
+- `discount_pct` is null when there is no discount. For a net price it's the percentage that net price gives off the list price.
+- Amounts are in cents, excl. VAT.
+
+**Baskets:** `Baskets::show($account, 'sales')` uses the same call. Each line has `price_cents`, `list_price_cents` and `discount_pct`.
+
+**Orders:** `Baskets::submitSales` orders at exactly these prices.
+- A % becomes the line's discount on the list price.
+- A net price becomes the line's price.
+
+So the order always matches what the customer saw.
+
+**Staff quotes:** staff get the same prices automatically on new sales quote lines for that company.

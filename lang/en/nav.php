@@ -26,7 +26,7 @@ return [
         'vat' => 'VAT rates',
         'productlists' => 'Product categories',
         'locations' => 'Warehouse locations',
-        'import' => 'Import data',
+        'import' => 'Import & export',
         'preferences' => 'My preferences',
         'profile' => 'My profile',
         'notifications' => 'Notifications',

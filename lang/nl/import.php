@@ -33,7 +33,7 @@ return [
     'how_3' => 'Lege cellen wissen nooit wat al in de app staat.',
     'how_4' => 'Foute btw-nummers, onbekende landen of accountbeheerders worden per rij gemeld; de rest van de rij wordt toch geïmporteerd.',
     'how_5' => 'Materiaal: rijen met hetzelfde artikelnummer vormen één artikel; een rij met een serienummer wordt een stuk met een eigen QR-label, een rij met een aantal is getelde stock.',
-    'later' => 'Verkoopartikelen kunnen geïmporteerd worden zodra die module live is.',
+    'later' => 'Tip: exporteer eerst, pas het bestand aan in Excel en importeer het opnieuw om veel rijen tegelijk bij te werken.',
     'vies_title' => 'VIES-controle',
     'vies_pending' => '{1} 1 geïmporteerd bedrijf heeft een EU-btw-nummer dat nog niet in VIES gecontroleerd is.|[2,*] :count geïmporteerde bedrijven hebben een EU-btw-nummer dat nog niet in VIES gecontroleerd is.',
     'vies_check' => 'Volgende 15 controleren in VIES',
@@ -65,5 +65,15 @@ return [
     ],
     'flash' => [
         'vies_checked' => ':count bedrijven gecontroleerd in VIES. Nog te controleren: :left.',
+    ],
+    'export' => [
+        'title' => 'Exporteren',
+        'intro' => 'Download de lijsten als Excel-bestand, met dezelfde kolommen als de import. Pas het aan in Excel en importeer het opnieuw: rijen worden gekoppeld op nummer, btw-nummer en e-mail.',
+        'what' => 'Wat exporteren',
+        'count' => '{0} geen|{1} 1 rij|[2,*] :count rijen',
+        'archived' => 'Ook gearchiveerde bedrijven en uitgeschakelde artikels',
+        'no_cost' => 'Aankoopkortingen en kostprijzen blijven leeg: je kan geen marges zien.',
+        'go' => 'Downloaden (.xlsx)',
+        'hint' => 'Elke export staat in het activiteitenlog. Contacten zijn persoonsgegevens: bewaar het bestand veilig en verwijder het als je klaar bent.',
     ],
 ];

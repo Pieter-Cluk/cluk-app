@@ -43,6 +43,7 @@
     @endisset
 
     <div class="split">
+        <div class="stack">
         <form class="card" method="post" action="{{ route('settings.import.preview') }}" enctype="multipart/form-data">
             @csrf
             <h2>{{ __('import.upload_title') }}</h2>
@@ -58,6 +59,22 @@
             </div>
             <div class="form-actions"><button class="primary" type="submit">{{ __('import.check') }}</button></div>
         </form>
+
+        <form class="card" method="post" action="{{ route('settings.import.export') }}" id="export">
+            @csrf
+            <h2>{{ __('import.export.title') }}</h2>
+            <p class="muted">{{ __('import.export.intro') }}</p>
+            <fieldset class="checks" aria-label="{{ __('import.export.what') }}">
+                @foreach (\App\Services\Data\Exporter::KINDS as $k)
+                    <label class="check"><input type="checkbox" name="kinds[]" value="{{ $k }}" checked> <span>{{ __('import.kinds.'.$k) }} <small class="muted">· {{ trans_choice('import.export.count', $exportCounts[$k] ?? 0, ['count' => $exportCounts[$k] ?? 0]) }}</small></span></label>
+                @endforeach
+            </fieldset>
+            <label class="check mt"><input type="checkbox" name="archived" value="1"> <span>{{ __('import.export.archived') }}</span></label>
+            @unless (auth()->user()->hasRight('finance.see_margins'))<p class="muted small">{{ __('import.export.no_cost') }}</p>@endunless
+            <div class="form-actions"><button class="primary" type="submit">{{ __('import.export.go') }}</button></div>
+            <p class="muted small">{{ __('import.export.hint') }}</p>
+        </form>
+        </div>
 
         <aside class="stack">
             <section class="card">

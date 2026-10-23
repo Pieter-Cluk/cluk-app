@@ -148,39 +148,7 @@
             </section>
 
             @php($logins = \App\Models\Web\CustomerAccount::where('company_id', $company->id)->orWhereIn('contact_id', $company->contacts->pluck('id'))->orderBy('first_name')->get())
-            @if (auth()->user()->canUseModule('sales', 1) || auth()->user()->hasRight('sales.approve_low_margin'))
-                @php($discounts = \App\Models\ProductSales\CustomerDiscount::with(['brand', 'setBy'])->where('company_id', $company->id)->get()->sortBy(fn ($d) => $d->brand ? '0'.$d->brand->name : '1'))
-                @php($canDisc = auth()->user()->hasRight('sales.approve_low_margin'))
-                @php($seeMargin = auth()->user()->hasRight('finance.see_margins'))
-                <section class="card">
-                    <div class="card-head"><h2>{{ __('psales.discounts.title') }}</h2></div>
-                    <p class="muted small">{{ __('psales.discounts.intro') }}</p>
-                    @forelse ($discounts as $d)
-                        @php($low = $seeMargin && $d->brand ? \App\Models\ProductSales\SalesItem::with('suppliers')->where('active', true)->where('brand_id', $d->brand_id)->where('list_price_cents', '>', 0)->get()
-                            ->filter(fn ($i) => $i->suppliers->isNotEmpty())->map(fn ($i) => (($p = $i->list_price_cents * (1 - $d->discount_bp / 10000)) - $i->costCents()) / max(1, $p))->min() : null)
-                        <div class="contact"><div><b>{{ $d->brand?->name ?? __('psales.discounts.all_other') }}</b> · <b>{{ rtrim(rtrim(number_format($d->discount_bp / 100, 2, ',', ''), '0'), ',') }}%</b>
-                            @if ($low !== null && $low < 0.10)<span class="pill pill-warn">{{ __('psales.discounts.low_margin', ['pct' => number_format($low * 100, 1, ',', '')]) }}</span>@endif
-                            <br><small class="muted">@if ($d->note){{ $d->note }} · @endif{{ $d->setBy?->first_name }} · {{ $d->updated_at->format('d/m/Y') }}</small></div>
-                            @if ($canDisc)<form method="post" action="{{ route('companies.discounts.destroy', [$company, $d]) }}">@csrf @method('DELETE')<button class="linkbtn" type="submit">{{ __('psales.discounts.remove') }}</button></form>@endif
-                        </div>
-                    @empty
-                        <p class="muted">{{ __('psales.discounts.none') }}</p>
-                    @endforelse
-                    @if ($canDisc)
-                        <details class="mt"><summary>{{ __('psales.discounts.add') }}</summary>
-                            <form method="post" action="{{ route('companies.discounts.store', $company) }}" class="stack-sm mt">@csrf
-                                <div class="inline-form">
-                                    <label class="field"><span>{{ __('psales.items.brand') }}</span><select name="brand_id"><option value="">{{ __('psales.discounts.all_other') }}</option>@foreach (\App\Models\Product\Brand::where('active', true)->orderBy('name')->get(['id', 'name']) as $b)<option value="{{ $b->id }}">{{ $b->name }}</option>@endforeach</select></label>
-                                    <label class="field"><span>{{ __('psales.discounts.discount') }} %</span><input type="number" name="discount" step="0.1" min="0" max="90" required class="w-sm"></label>
-                                </div>
-                                <label class="field"><span>{{ __('psales.discounts.note') }}</span><input name="note" maxlength="200"></label>
-                                <div><button class="btn" type="submit">{{ __('psales.save') }}</button></div>
-                                <small class="muted">{{ __('psales.discounts.hint') }}</small>
-                            </form>
-                        </details>
-                    @endif
-                </section>
-            @endif
+            @include('companies._sales-conditions')
 
             <section class="card">
                 <div class="card-head"><h2>{{ __('web.staff.card_title') }}</h2><a href="{{ route('web-accounts.index') }}">{{ __('web.staff.all') }} →</a></div>

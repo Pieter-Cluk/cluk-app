@@ -33,7 +33,7 @@ return [
     'how_3' => 'Empty cells never wipe what is already in the app.',
     'how_4' => 'Wrong VAT numbers, unknown countries or account owners are reported per row; the rest of the row is still imported.',
     'how_5' => 'Equipment: rows with the same item number form one item; a row with a serial number becomes a piece with its own QR label, a row with a quantity is counted stock.',
-    'later' => 'Sales items can be imported once that module is live.',
+    'later' => 'Tip: export first, change the file in Excel and import it again to update many rows at once.',
     'vies_title' => 'VIES check',
     'vies_pending' => '{1} 1 imported company has an EU VAT number that was not checked in VIES yet.|[2,*] :count imported companies have an EU VAT number that was not checked in VIES yet.',
     'vies_check' => 'Check the next 15 in VIES',
@@ -65,5 +65,15 @@ return [
     ],
     'flash' => [
         'vies_checked' => ':count companies checked in VIES. Still to check: :left.',
+    ],
+    'export' => [
+        'title' => 'Export',
+        'intro' => 'Download the lists as an Excel file, with the same columns as the import. Change it in Excel and import it again: rows are matched on number, VAT number and email.',
+        'what' => 'What to export',
+        'count' => '{0} none|{1} 1 row|[2,*] :count rows',
+        'archived' => 'Also archived companies and switched-off items',
+        'no_cost' => 'Purchase discounts and costs stay empty: you can\'t see margins.',
+        'go' => 'Download (.xlsx)',
+        'hint' => 'Every export is written in the activity log. Contacts are personal data: keep the file safe and delete it when done.',
     ],
 ];

@@ -33,7 +33,7 @@ return [
     'how_3' => 'Les cellules vides n\'effacent jamais ce qui est déjà dans l\'application.',
     'how_4' => 'Les numéros de TVA erronés, pays ou responsables inconnus sont signalés par ligne ; le reste de la ligne est importé.',
     'how_5' => 'Matériel : les lignes avec le même numéro d’article forment un article ; une ligne avec un numéro de série devient une pièce avec sa propre étiquette QR, une ligne avec une quantité est du stock compté.',
-    'later' => 'Les articles de vente pourront être importés quand ce module sera en ligne.',
+    'later' => 'Astuce : exportez d’abord, modifiez le fichier dans Excel et réimportez-le pour mettre à jour beaucoup de lignes à la fois.',
     'vies_title' => 'Vérification VIES',
     'vies_pending' => '{1} 1 entreprise importée a un numéro de TVA UE pas encore vérifié dans VIES.|[2,*] :count entreprises importées ont un numéro de TVA UE pas encore vérifié dans VIES.',
     'vies_check' => 'Vérifier les 15 suivantes dans VIES',
@@ -65,5 +65,15 @@ return [
     ],
     'flash' => [
         'vies_checked' => ':count entreprises vérifiées dans VIES. Encore à vérifier : :left.',
+    ],
+    'export' => [
+        'title' => 'Exporter',
+        'intro' => 'Téléchargez les listes en fichier Excel, avec les mêmes colonnes que l’import. Modifiez-le dans Excel et réimportez-le : les lignes sont reliées par numéro, numéro de TVA et e-mail.',
+        'what' => 'Quoi exporter',
+        'count' => '{0} aucune|{1} 1 ligne|[2,*] :count lignes',
+        'archived' => 'Aussi les entreprises archivées et les articles désactivés',
+        'no_cost' => 'Les remises d’achat et coûts restent vides : vous ne voyez pas les marges.',
+        'go' => 'Télécharger (.xlsx)',
+        'hint' => 'Chaque export est noté dans le journal d’activité. Les contacts sont des données personnelles : conservez le fichier en sécurité et supprimez-le ensuite.',
     ],
 ];

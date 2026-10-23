@@ -105,7 +105,7 @@ class SalesQuoteController extends Controller
         if ($d['kind'] === 'item') {
             $item = SalesItem::with('suppliers')->findOrFail($d['item_id']);
             $quote->lines()->create(['sales_item_id' => $item->id, 'kind' => 'item', 'name' => $item->name(), 'description' => $item->description, 'qty' => $d['qty'] ?? 1,
-                'list_cents' => $item->list_price_cents, 'discount_bp' => CustomerPrices::discountBp($quote->company, $item), 'cost_cents' => $item->costCents(), 'position' => $pos]);
+                'cost_cents' => $item->costCents(), 'position' => $pos] + CustomerPrices::lineValues($quote->company, $item));
         } else {
             $quote->lines()->create(['kind' => $d['kind'], 'name' => $d['name'], 'qty' => 1, 'position' => $pos]);
         }

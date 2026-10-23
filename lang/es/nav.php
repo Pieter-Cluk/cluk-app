@@ -26,7 +26,7 @@ return [
         'vat' => 'Tipos de IVA',
         'productlists' => 'Categorías de productos',
         'locations' => 'Ubicaciones de almacén',
-        'import' => 'Importar datos',
+        'import' => 'Importar y exportar',
         'preferences' => 'Mis preferencias',
         'profile' => 'Mi perfil',
         'notifications' => 'Notificaciones',

@@ -33,7 +33,7 @@ return [
     'how_3' => 'Las celdas vacías nunca borran lo que ya está en la app.',
     'how_4' => 'Los números de IVA erróneos y los países o responsables desconocidos se indican por fila; el resto de la fila se importa igual.',
     'how_5' => 'Material: las filas con el mismo número de artículo forman un artículo; una fila con número de serie es una pieza con su propia etiqueta QR, una fila con cantidad es stock contado.',
-    'later' => 'Los artículos de venta se podrán importar cuando ese módulo esté activo.',
+    'later' => 'Consejo: exporta primero, cambia el archivo en Excel e impórtalo de nuevo para actualizar muchas filas a la vez.',
     'vies_title' => 'Comprobación VIES',
     'vies_pending' => '{1} 1 empresa importada tiene un número de IVA de la UE aún sin comprobar en VIES.|[2,*] :count empresas importadas tienen un número de IVA de la UE aún sin comprobar en VIES.',
     'vies_check' => 'Comprobar las 15 siguientes en VIES',
@@ -65,5 +65,15 @@ return [
     ],
     'flash' => [
         'vies_checked' => ':count empresas comprobadas en VIES. Quedan por comprobar: :left.',
+    ],
+    'export' => [
+        'title' => 'Exportar',
+        'intro' => 'Descarga las listas como archivo de Excel, con las mismas columnas que la importación. Cámbialo en Excel e impórtalo de nuevo: las filas se enlazan por número, NIF y correo.',
+        'what' => 'Qué exportar',
+        'count' => '{0} ninguna|{1} 1 fila|[2,*] :count filas',
+        'archived' => 'También empresas archivadas y artículos desactivados',
+        'no_cost' => 'Los descuentos de compra y costes quedan vacíos: no puedes ver márgenes.',
+        'go' => 'Descargar (.xlsx)',
+        'hint' => 'Cada exportación queda en el registro de actividad. Los contactos son datos personales: guarda el archivo de forma segura y bórralo al terminar.',
     ],
 ];
