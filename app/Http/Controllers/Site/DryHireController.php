@@ -18,7 +18,21 @@ class DryHireController extends SiteController
     {
         $locale = $this->locale($request);
 
-        return view('site.dryhire', ['data' => DryHireCatalogue::data($locale), 'locale' => $locale]);
+        $cfg = [
+            't' => array_merge(__('site.js'), [
+                'type' => __('site.dryhire.type'), 'tags' => __('site.dryhire.tags'), 'all' => __('site.dryhire.all'),
+                'show_all' => __('site.dryhire.show_all_brands'), 'show_fewer' => __('site.dryhire.show_fewer'),
+            ]),
+            'locale' => $locale,
+            'urls' => [
+                'data' => str_replace('987654321', '__ID__', route('site.dryhire.data', ['item' => 987654321])),
+                'photo' => str_replace('987654321', '__ID__', route('site.photo', ['item' => 987654321, 'w' => 480])).'?v=__V__',
+                'item' => str_replace('987654321-x', '__SL__', route('site.dryhire.item', ['item' => '987654321-x'])),
+                'request' => route('site.dryhire.request'),
+            ],
+        ];
+
+        return view('site.dryhire', ['data' => DryHireCatalogue::data($locale), 'locale' => $locale, 'cfg' => $cfg]);
     }
 
     /** Product page (/dry-hire/123-l-acoustics-k2): for search engines and shared links. */

@@ -2,8 +2,14 @@
 @section('title', $d['name'].' · '.__('site.dryhire.title'))
 @section('description', \Illuminate\Support\Str::limit(strip_tags((string) $d['description']) ?: $d['name'].' · '.$d['subcategory'], 155))
 @section('body', 'dh')
-@php($eur = fn ($c) => \App\Services\Afrit6\Pricing::eur((int) $c))
 @section('content')
+@php
+    $eur = fn ($c) => \App\Services\Afrit6\Pricing::eur((int) $c);
+    $ld = array_filter([
+    '@context' => 'https://schema.org', '@type' => 'Product', 'name' => $d['name'], 'sku' => $d['number'],
+    'brand' => $d['brand'] ? ['@type' => 'Brand', 'name' => $d['brand']] : null, 'description' => $d['description'], 'image' => $d['photos'][0] ?? null, 'category' => $d['category'].' / '.$d['subcategory'],
+]);
+@endphp
 <div class="item-page gut">
   <div class="gallery">
     @if ($d['photos'])
@@ -36,12 +42,6 @@
     <p><a href="{{ route('site.dryhire') }}" class="note">← {{ __('site.dryhire.back') }}</a></p>
   </div>
 </div>
-@php
-    $ld = array_filter([
-    '@context' => 'https://schema.org', '@type' => 'Product', 'name' => $d['name'], 'sku' => $d['number'],
-    'brand' => $d['brand'] ? ['@type' => 'Brand', 'name' => $d['brand']] : null, 'description' => $d['description'], 'image' => $d['photos'][0] ?? null, 'category' => $d['category'].' / '.$d['subcategory'],
-]);
-@endphp
 <script type="application/ld+json">@json($ld)</script>
 @endsection
 @push('scripts')

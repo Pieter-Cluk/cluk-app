@@ -2,8 +2,10 @@
 @section('title', __('site.dryhire.title'))
 @section('description', __('site.dryhire.meta', ['n' => number_format($data['stats']['products'], 0, ',', '.')]))
 @section('body', 'dh')
-@php($nf = fn ($n) => number_format($n, 0, ',', '.'))
 @section('content')
+@php
+    $nf = fn ($n) => number_format($n, 0, ',', '.');
+@endphp
 <section class="dh-hero" id="top">
   <div class="ph" aria-hidden="true" style="background-image:url('{{ asset('images/site/dryhire.jpg') }}')"></div>
   <div class="in gut">
@@ -70,21 +72,6 @@
 <div class="drawer" id="bk" role="dialog" aria-modal="true" aria-labelledby="bkTitle"></div>
 
 <script type="application/json" id="dh-data">@json($data)</script>
-@php
-    $cfg = [
-    't' => array_merge(__('site.js'), [
-        'type' => __('site.dryhire.type'), 'tags' => __('site.dryhire.tags'), 'all' => __('site.dryhire.all'),
-        'show_all' => __('site.dryhire.show_all_brands'), 'show_fewer' => __('site.dryhire.show_fewer'),
-    ]),
-    'locale' => $locale,
-    'urls' => [
-        'data' => route('site.dryhire.data', ['item' => '__ID__']),
-        'photo' => route('site.photo', ['item' => '__ID__', 'w' => 480]).'?v=__V__',
-        'item' => route('site.dryhire.item', ['item' => '__SL__']),
-        'request' => route('site.dryhire.request'),
-    ],
-];
-@endphp
 <script type="application/json" id="dh-cfg">@json($cfg)</script>
 @endsection
 @push('scripts')
