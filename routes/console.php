@@ -165,4 +165,11 @@ Artisan::command('cluk:kbo-refresh {--n=50 : How many companies at most}', funct
     $done = RegistryImport::refreshStale((int) $this->option('n'));
     $levels = Company::active()->whereHas('registry')->with('registry')->get()->countBy(fn ($c) => CreditCheck::for($c)['level']);
     $this->line(json_encode(['looked_up' => $done, 'with_register_data' => CompanyRegistry::count(), 'still_to_do' => count(RegistryImport::numbers()) - CompanyRegistry::count(), 'levels' => $levels]));
+    // Which ones are not green, and why (for a quick check after a run).
+    foreach (Company::active()->whereHas('registry')->with('registry')->get() as $c) {
+        $chk = CreditCheck::for($c);
+        if ($chk['level'] !== 'green') {
+            $this->line($chk['level'].' · '.$c->name.' · '.collect($chk['reasons'])->pluck('text')->implode(' | '));
+        }
+    }
 })->purpose('Look up the companies with the oldest register data in the KBO web service');
