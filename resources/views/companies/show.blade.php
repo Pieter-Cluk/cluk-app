@@ -149,6 +149,7 @@
 
             @php($logins = \App\Models\Web\CustomerAccount::where('company_id', $company->id)->orWhereIn('contact_id', $company->contacts->pluck('id'))->orderBy('first_name')->get())
             @include('companies._sales-conditions')
+            @include('web._activity', ['act' => \App\Services\Website\WebActivity::summary(\App\Services\Website\WebActivity::visitorsOfCompany($company))])
 
             <section class="card">
                 <div class="card-head"><h2>{{ __('web.staff.card_title') }}</h2><a href="{{ route('web-accounts.index') }}">{{ __('web.staff.all') }} →</a></div>

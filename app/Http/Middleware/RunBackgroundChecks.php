@@ -8,6 +8,7 @@ use App\Services\Me\DailySummary;
 use App\Services\Media\Messages;
 use App\Services\Vies;
 use App\Services\ViesRecheck;
+use App\Services\Website\WebActivity;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -47,6 +48,10 @@ class RunBackgroundChecks
             }
             if (Cache::add('jobs:vies:'.$now->format('Y-m-d-H'), 1, 3700)) {
                 ViesRecheck::run(app(Vies::class), 3, 1); // one try each: never keep a page waiting long
+            }
+            // Website statistics older than 13 months are deleted (GDPR), once a day.
+            if (Cache::add('jobs:webprune:'.$now->toDateString(), 1, 90000)) {
+                WebActivity::prune();
             }
             // Company register (KBO web service): the oldest data first, a few every 10 minutes.
             if (Cache::add('jobs:kbo:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 10), 1, 700)) {

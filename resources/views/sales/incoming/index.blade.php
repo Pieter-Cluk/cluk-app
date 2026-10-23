@@ -63,6 +63,9 @@
                     @if ($selected->handled_note)<p class="muted small mt">{{ __('deals.incoming.statuses.'.$selected->status) }}: {{ $selected->handled_note }}</p>@endif
                     @if ($selected->deal_id)<p class="mt"><a href="{{ route('deals.show', $selected->deal_id) }}">{{ __('deals.incoming.go_deal') }}</a></p>@endif
                 </section>
+                @if ($selected->channel === 'website')
+                    @include('web._before', ['before' => \App\Services\Website\WebActivity::beforeRequest($selected)])
+                @endif
 
                 @if ($canWork && in_array($selected->status, ['new', 'asked'], true))
                     <section class="card">

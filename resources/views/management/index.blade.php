@@ -22,6 +22,9 @@
         <a class="tile tile-waiting" href="{{ route('finance.index') }}"><span class="tile-k">{{ mb_strtoupper(__('management.kpi.check')) }}</span><b class="tile-v">{{ $kpi['check_n'] }}</b><small class="muted">{{ __('management.kpi.check_s', ['amount' => $k($kpi['check'])]) }}</small></a>
         <a class="tile" href="{{ route('finance.index', ['f' => 'sent']) }}"><span class="tile-k">{{ mb_strtoupper(__('management.kpi.unpaid')) }}</span><b class="tile-v">{{ $k($kpi['unpaid']) }}</b><small class="muted">@if ($kpi['overdue'])<span class="down">{{ __('management.kpi.overdue', ['amount' => $k($kpi['overdue'])]) }}</span> · {{ trans_choice('management.kpi.customers', $kpi['unpaid_customers'], ['n' => $kpi['unpaid_customers']]) }}@else{{ __('management.kpi.none_overdue') }}@endif</small></a>
         <a class="tile" href="{{ route('afrit6.staff.index') }}"><span class="tile-k">{{ mb_strtoupper(__('management.kpi.a6')) }}</span><b class="tile-v">{{ $k($kpi['a6']) }}</b><small class="muted">{{ __('management.kpi.a6_s', ['n' => $kpi['desks'], 'total' => $kpi['desks_total']]) }}</small></a>
+        @php($webV = \Illuminate\Support\Facades\DB::table('web_events')->where('created_at', '>=', today()->subDays(29))->distinct()->count('visitor_id'))
+        @php($webR = \Illuminate\Support\Facades\DB::table('web_events')->where('created_at', '>=', today()->subDays(29))->whereIn('type', ['request', 'order'])->count())
+        <a class="tile" href="{{ route('management.website') }}"><span class="tile-k">{{ mb_strtoupper(__('webstats.title')) }}</span><b class="tile-v">{{ $webV }}</b><small class="muted">{{ __('webstats.tile', ['n' => $webR]) }}</small></a>
     </div>
 
     <section class="card mt">

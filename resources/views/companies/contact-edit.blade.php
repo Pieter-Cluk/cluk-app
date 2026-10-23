@@ -23,4 +23,5 @@
             <button class="btn" type="submit">{{ __('pictures.upload') }}</button>
         </form>
     </section>
+    <div class="mt">@include('web._activity', ['act' => \App\Services\Website\WebActivity::summary(\App\Services\Website\WebActivity::visitorsOfContact($c))])</div>
 </x-layouts.app>

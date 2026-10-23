@@ -15,6 +15,7 @@ use App\Services\Media\Messages;
 use App\Services\Media\Translator;
 use App\Services\Vies;
 use App\Services\ViesRecheck;
+use App\Services\Website\WebActivity;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
@@ -173,3 +174,7 @@ Artisan::command('cluk:kbo-refresh {--n=50 : How many companies at most}', funct
         }
     }
 })->purpose('Look up the companies with the oldest register data in the KBO web service');
+
+Artisan::command('cluk:web-prune', function () {
+    $this->line(json_encode(WebActivity::prune()));
+})->purpose('Delete website statistics older than 13 months (also runs daily by itself)');

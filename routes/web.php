@@ -56,6 +56,7 @@ use App\Http\Controllers\Warehouse\PhoneSubhireController;
 use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Http\Controllers\Web\CustomerVerifyController;
 use App\Http\Controllers\WebAccountController;
+use App\Http\Controllers\WebStatsController;
 use App\Services\Finance\PreInvoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -192,6 +193,7 @@ Route::middleware('auth:web')->group(function () {
         });
     });
     Route::get('/management', ManagementController::class)->middleware('nav:management')->name('management');
+    Route::get('/management/website', WebStatsController::class)->middleware('nav:management')->name('management.website');
 
     // Pictures (served only to signed-in staff).
     Route::get('/media/users/{user}', [MediaController::class, 'user'])->whereNumber('user')->name('media.user');
