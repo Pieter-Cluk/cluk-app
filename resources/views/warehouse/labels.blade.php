@@ -34,13 +34,10 @@
                         @foreach ($zones as $z)
                             <tr><td><input type="checkbox" name="codes[]" value="{{ $z->code }}" aria-label="{{ $z->code }}"></td><td><b>{{ $z->code }}</b></td><td>{{ $z->label() }}</td></tr>
                         @endforeach
-                        @foreach ($carriers ?? [] as $k)
-                            <tr><td><input type="checkbox" name="codes[]" value="{{ $k->code }}" aria-label="{{ $k->code }}"></td><td><b>{{ $k->code }}</b></td><td>{{ $k->label() }}</td></tr>
-                        @endforeach
                         @foreach ($positions as $p)
                             <tr><td><input type="checkbox" name="codes[]" value="{{ $p->code }}" aria-label="{{ $p->code }}"></td><td><b>{{ $p->code }}</b></td><td>{{ \App\Http\Controllers\Warehouse\LabelController::positionName($p) }}</td></tr>
                         @endforeach
-                        @if ($zones->isEmpty() && $positions->isEmpty() && empty($carriers?->count()))<tr><td colspan="3" class="muted">{{ __('warehouse.labels.none') }}</td></tr>@endif
+                        @if ($zones->isEmpty() && $positions->isEmpty())<tr><td colspan="3" class="muted">{{ __('warehouse.labels.none') }}</td></tr>@endif
                     </tbody>
                 </table>
             </section>
@@ -62,10 +59,13 @@
                 <table class="table">
                     <thead><tr><th class="w-check"></th><th>{{ __('warehouse.labels.code') }}</th><th>{{ __('warehouse.labels.item') }}</th><th>{{ __('warehouse.labels.serial') }}</th><th>{{ __('warehouse.labels.printed') }}</th></tr></thead>
                     <tbody>
+                        @foreach ($carriers as $k)
+                            <tr><td><input type="checkbox" name="carriers[]" value="{{ $k->id }}" aria-label="{{ $k->code }}"></td><td><b>{{ $k->code }}</b></td><td>{{ __('warehouse.carriers.kinds.'.$k->kind) }}</td><td>—</td><td class="muted">—</td></tr>
+                        @endforeach
                         @forelse ($assets as $a)
                             <tr><td><input type="checkbox" name="ids[]" value="{{ $a->id }}" aria-label="{{ $a->code }}"></td><td><b>{{ $a->code }}</b></td><td>{{ $a->item?->name }}</td><td>{{ $a->serial_number ?: '—' }}</td><td class="muted">{{ $a->label_printed_at?->format('d/m/Y') ?? __('warehouse.labels.never') }}</td></tr>
                         @empty
-                            <tr><td colspan="5" class="muted">{{ __('warehouse.labels.none') }}</td></tr>
+                            @if ($carriers->isEmpty())<tr><td colspan="5" class="muted">{{ __('warehouse.labels.none') }}</td></tr>@endif
                         @endforelse
                     </tbody>
                 </table>

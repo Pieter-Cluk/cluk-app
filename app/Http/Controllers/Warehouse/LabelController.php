@@ -39,7 +39,6 @@ class LabelController extends Controller
             return view('warehouse.labels', [
                 'tab' => $tab, 'floor' => $floor, 'row' => $row,
                 'zones' => $floor || $row ? collect() : Zone::where('active', true)->where('type', '!=', 'storage')->orderBy('sort')->get(),
-                'carriers' => $floor || $row ? collect() : Carrier::where('active', true)->orderBy('kind')->orderBy('code')->get(),
                 'positions' => $positions,
                 'rows' => Position::where('active', true)->when($floor, fn ($q) => $q->where('floor', $floor))->distinct()->orderBy('row')->pluck('row'),
             ]);
@@ -54,7 +53,15 @@ class LabelController extends Controller
                 ->orWhereHas('item', fn ($i) => $i->where('name', 'like', "%{$q}%")->orWhere('number', 'like', "%{$q}%"))))
             ->orderBy('code')->limit(300)->get();
 
-        return view('warehouse.labels', ['tab' => $tab, 'q' => $q, 'new' => $new, 'assets' => $assets]);
+        // Light dollies and storage boxes get the same small square label (shown when searching for them, or with no search).
+        $lq = strtolower($q);
+        $carriers = $new ? collect() : Carrier::where('active', true)
+            ->when($q !== '', fn ($w) => $w->where(fn ($w) => $w->where('code', 'like', '%'.strtoupper($q).'%')
+                ->when(str_contains($lq, 'box') || str_contains($lq, 'doos'), fn ($w) => $w->orWhere('kind', 'box'))
+                ->when(str_contains($lq, 'dol'), fn ($w) => $w->orWhere('kind', 'dolly'))))
+            ->orderBy('kind', 'desc')->orderBy('code')->get();
+
+        return view('warehouse.labels', ['tab' => $tab, 'q' => $q, 'new' => $new, 'assets' => $assets, 'carriers' => $carriers]);
     }
 
     public function locations(Request $request): View
@@ -66,12 +73,13 @@ class LabelController extends Controller
 
     public function items(Request $request): View
     {
-        $ids = $request->validate(['ids' => ['required', 'array', 'max:500'], 'ids.*' => ['integer']])['ids'];
-        $assets = Asset::with('item')->whereIn('id', $ids)->where('status', '!=', Asset::RETIRED)->orderBy('code')->get();
-        abort_if($assets->isEmpty(), 404);
+        $d = $request->validate(['ids' => ['nullable', 'array', 'max:500'], 'ids.*' => ['integer'], 'carriers' => ['nullable', 'array', 'max:100'], 'carriers.*' => ['integer']]);
+        $assets = Asset::with('item')->whereIn('id', $d['ids'] ?? [])->where('status', '!=', Asset::RETIRED)->orderBy('code')->get();
+        $carriers = Carrier::whereIn('id', $d['carriers'] ?? [])->orderBy('code')->get();
+        abort_if($assets->isEmpty() && $carriers->isEmpty(), 404);
         Asset::whereIn('id', $assets->pluck('id'))->update(['label_printed_at' => now()]);
 
-        return view('equipment.labels', ['assets' => $assets]);
+        return view('equipment.labels', ['assets' => $assets, 'carriers' => $carriers]);
     }
 
     /** @return Collection<int, array{code: string, name: string, zone: bool}> */
@@ -80,11 +88,7 @@ class LabelController extends Controller
         $codes = array_values(array_unique(array_map(fn ($c) => strtoupper((string) $c), $codes)));
         $zones = Zone::whereIn('code', $codes)->get()->keyBy('code');
         $positions = Position::whereIn('code', $codes)->get()->keyBy('code');
-        $carriers = Carrier::whereIn('code', $codes)->get()->keyBy('code');
-        $labels = collect($codes)->map(function (string $c) use ($zones, $positions, $carriers) {
-            if ($k = $carriers->get($c)) {
-                return ['code' => $k->code, 'name' => $k->label(), 'zone' => true];
-            }
+        $labels = collect($codes)->map(function (string $c) use ($zones, $positions) {
             if ($z = $zones->get($c)) {
                 return ['code' => $z->code, 'name' => $z->label(), 'zone' => true];
             }

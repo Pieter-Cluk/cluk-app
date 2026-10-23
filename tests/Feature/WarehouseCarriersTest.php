@@ -60,9 +60,12 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame(6, Carrier::where('kind', 'dolly')->count());
         $this->assertSame(22, Carrier::where('kind', 'box')->count());
         $this->assertTrue(Carrier::where('code', 'DOLLY-06')->exists() && Carrier::where('code', 'BOX-22')->exists());
-        $this->actingAs($this->crew)->get('/warehouse/labels')->assertOk()->assertSee('DOLLY-01')->assertSee('Light dolly');
-        $r = $this->actingAs($this->crew)->post('/warehouse/labels/locations', ['codes' => ['DOLLY-01', 'BOX-12']])->assertOk();
-        $r->assertSee('Storage box BOX-12')->assertSee('Light dolly DOLLY-01')->assertSee('<path d="M', false);
+        // Small square labels, with the items (not the big location labels).
+        $this->actingAs($this->crew)->get('/warehouse/labels')->assertOk()->assertDontSee('DOLLY-01');
+        $this->actingAs($this->crew)->get('/warehouse/labels?tab=items&q=dolly')->assertOk()->assertSee('DOLLY-01')->assertDontSee('BOX-01');
+        $ids = Carrier::whereIn('code', ['DOLLY-01', 'BOX-12'])->pluck('id')->all();
+        $r = $this->actingAs($this->crew)->post('/warehouse/labels/items', ['carriers' => $ids])->assertOk();
+        $r->assertSee('BOX-12')->assertSee('Light dolly')->assertSee('size: 25mm 25mm', false)->assertSee('<path d="M', false);
     }
 
     public function test_fill_a_dolly_and_move_it_with_one_scan(): void
