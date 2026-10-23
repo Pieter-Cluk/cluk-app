@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\EmailCodeLoginController;
 use App\Http\Controllers\Auth\MicrosoftLoginController;
 use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
@@ -238,6 +239,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/companies/website-logins/{account}/reset', [WebAccountController::class, 'sendReset'])->whereNumber('account')->name('web-accounts.reset');
         });
         Route::get('/companies/{company}', [CompanyController::class, 'show'])->whereNumber('company')->name('companies.show');
+        Route::post('/companies/{company}/credit/refresh', [CreditController::class, 'refresh'])->whereNumber('company')->middleware('throttle:20,1')->name('companies.credit.refresh');
     });
 
     // Sales: pipeline of deals and the Incoming inbox. View from level 1, work from level 2.

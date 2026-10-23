@@ -38,7 +38,13 @@ return [
         'source' => 'KBO van :date',
         'open' => 'Openen in de KBO',
         'pending' => 'De registergegevens komen met de volgende KBO-update.',
+        'not_reached' => 'De KBO antwoordde nog niet; het wordt automatisch opnieuw geprobeerd.',
         'not_belgian' => 'Registergegevens enkel voor Belgische bedrijven; VIES en onze eigen betalingshistoriek tellen wel mee.',
+    ],
+    'refresh' => 'Nu controleren in de KBO',
+    'flash' => [
+        'refreshed' => 'Registergegevens gecontroleerd in de KBO.',
+        'not_reached' => 'De KBO was niet bereikbaar. Probeer later opnieuw.',
     ],
     'nbb_later' => 'Jaarrekeningen en de groeigrafiek volgen zodra de koppeling met de Nationale Bank actief is.',
     'mail' => [

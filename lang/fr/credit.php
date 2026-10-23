@@ -38,7 +38,13 @@ return [
         'source' => 'BCE du :date',
         'open' => 'Ouvrir dans la BCE',
         'pending' => 'Les données du registre arrivent avec la prochaine mise à jour BCE.',
+        'not_reached' => 'La BCE n’a pas encore répondu ; un nouvel essai se fait automatiquement.',
         'not_belgian' => 'Données du registre uniquement pour les entreprises belges ; VIES et notre historique de paiement comptent quand même.',
+    ],
+    'refresh' => 'Vérifier maintenant dans la BCE',
+    'flash' => [
+        'refreshed' => 'Données du registre vérifiées dans la BCE.',
+        'not_reached' => 'La BCE n’était pas joignable. Réessayez plus tard.',
     ],
     'nbb_later' => 'Les comptes annuels et le graphique de croissance suivront dès que la connexion avec la Banque nationale sera active.',
     'mail' => [

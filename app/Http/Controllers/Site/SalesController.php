@@ -9,6 +9,7 @@ use App\Models\ProductSales\ItemDocument;
 use App\Models\ProductSales\SalesItem;
 use App\Services\Web\CustomerAuth;
 use App\Services\Website\SalesCatalogue;
+use App\Services\Website\Tracking;
 use App\Services\Website\WebRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -186,7 +187,7 @@ class SalesController extends SiteController
             'page' => ['nullable', 'string', 'max:300'],
         ]);
         $msg = WebRequests::sales($d, $locale);
-        \App\Services\Website\Tracking::linkRequest($request, $msg);
+        Tracking::linkRequest($request, $msg);
 
         return response()->json(['ok' => true, 'ref' => 'W-'.$msg->id]);
     }

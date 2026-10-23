@@ -38,7 +38,13 @@ return [
         'source' => 'Registro (KBO) del :date',
         'open' => 'Abrir en el KBO',
         'pending' => 'Los datos del registro llegan con la próxima actualización del KBO.',
+        'not_reached' => 'El KBO aún no ha respondido; se vuelve a intentar automáticamente.',
         'not_belgian' => 'Datos del registro solo para empresas belgas; VIES y nuestro historial de pagos sí cuentan.',
+    ],
+    'refresh' => 'Comprobar ahora en el KBO',
+    'flash' => [
+        'refreshed' => 'Datos del registro comprobados en el KBO.',
+        'not_reached' => 'No se pudo contactar con el KBO. Inténtalo más tarde.',
     ],
     'nbb_later' => 'Las cuentas anuales y el gráfico de crecimiento llegarán cuando la conexión con el Banco Nacional esté activa.',
     'mail' => [

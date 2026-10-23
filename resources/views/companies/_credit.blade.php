@@ -27,10 +27,13 @@
         @if ($reg)
             {{ __('credit.reg.source', ['date' => $reg->snapshot_date?->format('d/m/Y') ?? '—']) }} · <a href="{{ $reg->publicUrl() }}" target="_blank" rel="noopener">{{ __('credit.reg.open') }}</a>
         @elseif ($belgian)
-            {{ __('credit.reg.pending') }}
+            {{ \App\Services\Credit\KboLookup::available() ? __('credit.reg.not_reached') : __('credit.reg.pending') }}
         @else
             {{ __('credit.reg.not_belgian') }}
         @endif
         <br>{{ __('credit.nbb_later') }}
     </p>
+    @if ($belgian && \App\Services\Credit\KboLookup::available())
+        <form method="post" action="{{ route('companies.credit.refresh', $company) }}">@csrf<button class="linkbtn" type="submit">{{ __('credit.refresh') }}</button></form>
+    @endif
 </section>

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Site;
 
 use App\Models\Equipment\Item;
+use App\Services\Web\CustomerAuth;
 use App\Services\Website\DryHireCatalogue;
+use App\Services\Website\Tracking;
 use App\Services\Website\WebRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,7 +20,7 @@ class DryHireController extends SiteController
     {
         $locale = $this->locale($request);
 
-        $cust = \App\Services\Web\CustomerAuth::current();
+        $cust = CustomerAuth::current();
         $cfg = [
             'customer' => $cust ? ['name' => $cust->name(), 'first' => $cust->first_name] : null,
             'acct' => [
@@ -94,7 +96,7 @@ class DryHireController extends SiteController
         abort_if(empty($d['lines']) && blank($d['message'] ?? null), 422, __('site.js.need_lines'));
 
         $msg = WebRequests::dryHire($d, $locale);
-        \App\Services\Website\Tracking::linkRequest($request, $msg);
+        Tracking::linkRequest($request, $msg);
 
         return response()->json(['ok' => true, 'ref' => 'W-'.$msg->id]);
     }

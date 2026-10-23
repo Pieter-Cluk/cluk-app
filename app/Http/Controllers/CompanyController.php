@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Contact;
 use App\Models\User;
 use App\Models\VatRate;
+use App\Services\Credit\RegistryImport;
 use App\Services\Vies;
 use App\Support\Images;
 use App\Support\VatNumber;
@@ -124,7 +125,11 @@ class CompanyController extends Controller
 
     public function show(Request $request, Company $company): View
     {
-        $company->load(['accountOwner', 'contacts' => fn ($q) => $q->with('companies')->orderByDesc('company_contact.is_main')->orderBy('first_name'), 'addresses']);
+        // Register data older than a week: look it up live first (one quick call; the page still opens if the KBO doesn't answer).
+        if (RegistryImport::stale($company)) {
+            RegistryImport::refresh($company);
+        }
+        $company->load(['accountOwner', 'registry', 'contacts' => fn ($q) => $q->with('companies')->orderByDesc('company_contact.is_main')->orderBy('first_name'), 'addresses']);
 
         return view('companies.show', [
             'company' => $company,

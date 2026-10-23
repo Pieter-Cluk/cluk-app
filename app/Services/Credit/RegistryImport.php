@@ -41,39 +41,113 @@ class RegistryImport
             if (! $num || ! $asked->contains($num)) {
                 continue;
             }
+            if ($c->registry?->source === 'kbo-ws' && $c->registry->snapshot_date && $c->registry->snapshot_date->gte(Carbon::parse($snap))) {
+                continue; // the live lookup is newer than this file
+            }
             $e = $data['enterprises'][$num] ?? null;
-            $before = CreditCheck::for($c)['level'];
-            $old = $c->registry;
-            $values = $e ? [
-                'found' => true, 'status' => $e['status'] ?? null, 'situation_code' => $e['situation'] ?? null,
-                'situation' => isset($e['situation']) ? ($codes['JuridicalSituation'][$e['situation']] ?? null) : null,
-                'form_code' => $e['form'] ?? null, 'form' => isset($e['form']) ? ($codes['JuridicalForm'][$e['form']] ?? null) : null,
+            $entry = $e ? [
+                'status' => $e['status'] ?? null, 'situation' => $e['situation'] ?? null,
+                'situation_text' => isset($e['situation']) ? ($codes['JuridicalSituation'][$e['situation']] ?? []) : [],
+                'form' => $e['form'] ?? null, 'form_text' => isset($e['form']) ? ($codes['JuridicalForm'][$e['form']] ?? []) : [],
                 'start_date' => ! empty($e['start']) ? Carbon::createFromFormat('d-m-Y', $e['start'])->toDateString() : null,
-                'official_name' => isset($e['name']) ? mb_substr($e['name'], 0, 255) : null, 'address' => isset($e['address']) ? mb_substr($e['address'], 0, 255) : null,
-            ] : ['found' => false, 'status' => null, 'situation_code' => null, 'situation' => null];
-            $reg = CompanyRegistry::updateOrCreate(['company_id' => $c->id], $values + ['source' => 'kbo', 'enterprise_number' => $num, 'snapshot_date' => $snap, 'checked_at' => now()]);
+                'name' => $e['name'] ?? null, 'address' => $e['address'] ?? null,
+            ] : null;
+            [$level, $changed] = self::apply($c, $num, $entry, $snap, 'kbo');
             $report['companies']++;
             $report[$e ? 'found' : 'not_found']++;
-
-            $changed = $old && ($old->status !== $reg->status || $old->situation_code !== $reg->situation_code || $old->found !== $reg->found);
-            if ($changed) {
-                $report['changed']++;
-                AuditLog::record('crm.registry_changed', $c, [
-                    'status' => ($old->status ?? '—').' → '.($reg->status ?? '—'),
-                    'situation' => ($old->text('situation', 'en') ?? $old->situation_code ?? '—').' → '.($reg->text('situation', 'en') ?? $reg->situation_code ?? '—'),
-                ]);
-            }
-            $c->setRelation('registry', $reg);
-            $after = CreditCheck::for($c);
-            if ($after['level'] === 'red') {
-                $report['red']++;
-            }
-            if ($old && $after['level'] === 'red' && $before !== 'red') {
-                self::alert($c, $after);
-            }
+            $report['changed'] += (int) $changed;
+            $report['red'] += (int) ($level === 'red');
         }
 
         return $report;
+    }
+
+    /**
+     * Stores what the register says about one company. A change in status or
+     * situation goes to the audit log; turning red emails the account owner.
+     * $entry: status, situation, situation_text, form, form_text, start_date, name, address; null = not in the register.
+     *
+     * @return array{0: string, 1: bool} [credit level after, changed]
+     */
+    public static function apply(Company $c, string $num, ?array $entry, ?string $snapshot, string $source): array
+    {
+        $c->loadMissing('registry');
+        $old = $c->registry;
+        $before = $old ? CreditCheck::for($c)['level'] : null;
+        $values = $entry ? [
+            'found' => true, 'status' => $entry['status'] ?? null, 'situation_code' => $entry['situation'] ?? null, 'situation' => ($entry['situation_text'] ?? []) ?: null,
+            'form_code' => $entry['form'] ?? null, 'form' => ($entry['form_text'] ?? []) ?: null, 'start_date' => $entry['start_date'] ?? null,
+            'official_name' => isset($entry['name']) ? mb_substr($entry['name'], 0, 255) : null, 'address' => isset($entry['address']) ? mb_substr($entry['address'], 0, 255) : null,
+        ] : ['found' => false, 'status' => null, 'situation_code' => null, 'situation' => null];
+        $reg = CompanyRegistry::updateOrCreate(['company_id' => $c->id], $values + [
+            'source' => $source, 'enterprise_number' => $num, 'snapshot_date' => $snapshot ?: today()->toDateString(), 'checked_at' => now(),
+        ]);
+        $changed = $old && ($old->status !== $reg->status || $old->situation_code !== $reg->situation_code || $old->found !== $reg->found);
+        if ($changed) {
+            AuditLog::record('crm.registry_changed', $c, [
+                'status' => ($old->status ?? '—').' → '.($reg->status ?? '—'),
+                'situation' => ($old->text('situation', 'en') ?? $old->situation_code ?? '—').' → '.($reg->text('situation', 'en') ?? $reg->situation_code ?? '—'),
+                'source' => $source,
+            ]);
+        }
+        $c->setRelation('registry', $reg);
+        $after = CreditCheck::for($c);
+        if ($old && $after['level'] === 'red' && $before !== 'red') {
+            self::alert($c, $after);
+        }
+
+        return [$after['level'], $changed];
+    }
+
+    /** Live lookup of one company in the KBO web service. False when it is not Belgian or the service did not answer. */
+    public static function refresh(Company $c): bool
+    {
+        $num = CompanyRegistry::numberFromVat($c->vat_number);
+        if (! $num || ! KboLookup::available()) {
+            return false;
+        }
+        $r = KboLookup::read($num);
+        if ($r === null) {
+            return false;
+        }
+        self::apply($c, $num, $r['entry'], $r['snapshot'], 'kbo-ws');
+
+        return true;
+    }
+
+    /** True when the register data of a Belgian company is missing or older than the set number of days. */
+    public static function stale(Company $c): bool
+    {
+        if (! CompanyRegistry::numberFromVat($c->vat_number)) {
+            return false;
+        }
+        $c->loadMissing('registry');
+
+        return ! $c->registry?->checked_at || $c->registry->checked_at->lt(now()->subDays((int) config('services.kbo_ws.stale_days', 7)))
+            || $c->registry->enterprise_number !== CompanyRegistry::numberFromVat($c->vat_number);
+    }
+
+    /** Background: look up the companies whose register data is oldest (a few per run). */
+    public static function refreshStale(int $max): int
+    {
+        if (! KboLookup::available()) {
+            return 0;
+        }
+        $done = 0;
+        $limit = now()->subDays((int) config('services.kbo_ws.stale_days', 7));
+        $candidates = Company::active()->whereNotNull('vat_number')->where('vat_number', 'like', 'BE%')
+            ->leftJoin('company_registry', 'company_registry.company_id', '=', 'companies.id')
+            ->where(fn ($q) => $q->whereNull('company_registry.checked_at')->orWhere('company_registry.checked_at', '<', $limit))
+            ->orderByRaw('company_registry.checked_at is not null')->orderBy('company_registry.checked_at')
+            ->limit($max)->get(['companies.*']);
+        foreach ($candidates as $c) {
+            if (! self::refresh($c)) {
+                break; // the service is down or refuses: try again next time
+            }
+            $done++;
+        }
+
+        return $done;
     }
 
     private static function alert(Company $c, array $check): void

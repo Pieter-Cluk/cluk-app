@@ -5,6 +5,7 @@ namespace App\Services\Website;
 use App\Models\Contact;
 use App\Models\Sales\IncomingMessage;
 use App\Models\Web\CustomerAccount;
+use App\Services\Web\CustomerAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -67,7 +68,7 @@ class Tracking
         if ($type === 'view') {
             $upd['views'] = DB::raw('views + 1');
         }
-        if ($a = \App\Services\Web\CustomerAuth::current()) {
+        if ($a = CustomerAuth::current()) {
             $upd += ['customer_account_id' => $a->id, 'email' => $a->email, 'contact_id' => $a->contact_id, 'company_id' => $a->company_id];
         }
         DB::table('web_visitors')->where('id', $v->id)->update($upd);

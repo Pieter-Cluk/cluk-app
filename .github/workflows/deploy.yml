@@ -7,6 +7,7 @@ name: Deploy to app.cluk.live
 #   ONECOM_SSH_PASSWORD, ONECOM_DB_PASSWORD, MICROSOFT_CLIENT_SECRET
 #   INTAKE_TOKEN (optional: lets the cluk.live website form post into Incoming)
 #   ANTHROPIC_API_KEY (optional: translates Media › Messages texts with Claude)
+#   KBO_WS_USER, KBO_WS_PASSWORD (optional: live KBO register lookups for the credit check)
 
 on:
   workflow_dispatch:
@@ -72,6 +73,8 @@ jobs:
           MICROSOFT_CLIENT_SECRET: ${{ secrets.MICROSOFT_CLIENT_SECRET }}
           INTAKE_TOKEN: ${{ secrets.INTAKE_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          KBO_WS_USER: ${{ secrets.KBO_WS_USER }}
+          KBO_WS_PASSWORD: ${{ secrets.KBO_WS_PASSWORD }}
         run: |
           trim() { printf '%s' "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'; }
           cat > /tmp/env.new <<EOF
@@ -104,6 +107,8 @@ jobs:
           MICROSOFT_REDIRECT_URI=${APP_URL}/auth/microsoft/callback
           INTAKE_TOKEN="$(trim "$INTAKE_TOKEN")"
           ANTHROPIC_API_KEY="$(trim "$ANTHROPIC_API_KEY")"
+          KBO_WS_USER="$(trim "$KBO_WS_USER")"
+          KBO_WS_PASSWORD="$(trim "$KBO_WS_PASSWORD")"
           EOF
           sed -i 's/^[[:space:]]*//' /tmp/env.new
 

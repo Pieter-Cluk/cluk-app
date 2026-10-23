@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: probe, update or ws (test the live web service)
+        description: probe, update, ws (test the live web service) or refresh (live look-ups now)
         default: update
 
 concurrency: kbo
@@ -39,9 +39,9 @@ jobs:
           sparse-checkout: .github/scripts
       - name: Check the secrets
         run: |
-          if [ "$MODE" != ws ] && { [ -z "$KBO_USER" ] || [ -z "$KBO_PASSWORD" ]; }; then echo "::error title=KBO::Add the secrets KBO_USER and KBO_PASSWORD first."; exit 1; fi
+          if [ "$MODE" != ws ] && [ "$MODE" != refresh ] && { [ -z "$KBO_USER" ] || [ -z "$KBO_PASSWORD" ]; }; then echo "::error title=KBO::Add the secrets KBO_USER and KBO_PASSWORD first."; exit 1; fi
       - name: Server access
-        if: env.MODE == 'update'
+        if: env.MODE == 'update' || env.MODE == 'refresh'
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq sshpass >/dev/null
           echo "SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')" >> "$GITHUB_ENV"
@@ -51,7 +51,12 @@ jobs:
         run: |
           sshpass -e ssh -o ConnectTimeout=30 "$SSH_USER@$SSH_HOST" 'cd $(readlink -f ~/webroots/by-route/app.cluk.live_)/app && php artisan cluk:kbo-numbers' > numbers.json
           echo "::notice title=numbers::$(python3 -c 'import json;print(len(json.load(open("numbers.json"))))') Belgian companies"
+      - name: Live look-ups on the server
+        if: env.MODE == 'refresh'
+        run: |
+          sshpass -e ssh -o ConnectTimeout=30 "$SSH_USER@$SSH_HOST" 'cd $(readlink -f ~/webroots/by-route/app.cluk.live_)/app && php artisan cluk:kbo-refresh --n=200' | tee kbo.log
       - name: KBO open data
+        if: env.MODE != 'refresh'
         run: python3 .github/scripts/kbo.py "$MODE" | tee kbo.log
       - name: Import on the server
         if: env.MODE == 'update'

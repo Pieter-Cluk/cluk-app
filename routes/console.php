@@ -1,9 +1,13 @@
 <?php
 
 use App\Models\AuditLog;
+use App\Models\Company;
+use App\Models\CompanyRegistry;
 use App\Models\Equipment\PhotoSuggestion;
 use App\Models\Role;
 use App\Services\Backup\Backups;
+use App\Services\Credit\CreditCheck;
+use App\Services\Credit\KboLookup;
 use App\Services\Credit\RegistryImport;
 use App\Services\Crm\Birthdays;
 use App\Services\Equipment\PhotoSuggestions;
@@ -151,3 +155,14 @@ Artisan::command('cluk:kbo-import {file : JSON made by the KBO update workflow}'
     AuditLog::record('crm.registry_import', null, $r + ['snapshot' => $data['snapshot'] ?? null]);
     $this->line(json_encode($r));
 })->purpose('Store the filtered KBO/BCE extract per company');
+
+Artisan::command('cluk:kbo-refresh {--n=50 : How many companies at most}', function () {
+    if (! KboLookup::available()) {
+        $this->error('KBO_WS_USER / KBO_WS_PASSWORD are not set.');
+
+        return 1;
+    }
+    $done = RegistryImport::refreshStale((int) $this->option('n'));
+    $levels = Company::active()->whereHas('registry')->with('registry')->get()->countBy(fn ($c) => CreditCheck::for($c)['level']);
+    $this->line(json_encode(['looked_up' => $done, 'with_register_data' => CompanyRegistry::count(), 'still_to_do' => count(RegistryImport::numbers()) - CompanyRegistry::count(), 'levels' => $levels]));
+})->purpose('Look up the companies with the oldest register data in the KBO web service');

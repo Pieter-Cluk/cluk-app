@@ -55,4 +55,13 @@ return [
         'token' => env('INTAKE_TOKEN'),
     ],
 
+    // KBO/BCE Public Search web service (free, 3000 lookups a day): live register data for the credit check.
+    'kbo_ws' => [
+        'url' => env('KBO_WS_URL', 'https://kbopub.economie.fgov.be/kbopubws180000/services/wsKBOPub'),
+        'user' => env('KBO_WS_USER'),
+        'password' => env('KBO_WS_PASSWORD'),
+        'stale_days' => 7,      // a company's register data older than this is looked up again
+        'per_run' => 5,         // background lookups every 10 minutes (max 720 a day, well under the 3000)
+    ],
+
 ];

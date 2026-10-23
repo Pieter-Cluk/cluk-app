@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Credit\RegistryImport;
 use App\Services\Crm\Birthdays;
 use App\Services\Me\DailySummary;
 use App\Services\Media\Messages;
@@ -18,7 +19,7 @@ use Throwable;
  * one.com may not run a cron for the app, so the small daily jobs also run after
  * a page has been sent: every minute (newsletters and promotions, a batch of
  * mails), at most every 10 minutes (birthday cards, from 9:00) and every hour
- * (VIES re-checks); daily summaries every 5 minutes. Both jobs are safe to run more than once.
+ * (VIES re-checks, company register look-ups); daily summaries every 5 minutes. Both jobs are safe to run more than once.
  */
 class RunBackgroundChecks
 {
@@ -46,6 +47,10 @@ class RunBackgroundChecks
             }
             if (Cache::add('jobs:vies:'.$now->format('Y-m-d-H'), 1, 3700)) {
                 ViesRecheck::run(app(Vies::class), 3, 1); // one try each: never keep a page waiting long
+            }
+            // Company register (KBO web service): the oldest data first, a few every 10 minutes.
+            if (Cache::add('jobs:kbo:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 10), 1, 700)) {
+                RegistryImport::refreshStale((int) config('services.kbo_ws.per_run', 5));
             }
         } catch (Throwable $e) {
             Log::warning('Background checks failed', ['error' => mb_substr($e->getMessage(), 0, 300)]);
