@@ -26,14 +26,15 @@
             @if ($inCases->isNotEmpty())<p>{{ $inCases->map(fn ($c) => $c->qty.' × '.__('warehouse.carriers.in_it', ['carrier' => $c->container->code]))->implode(' · ') }} <span class="muted">· {{ trans_choice('warehouse.labels.in_stock', $item->stock_qty, ['n' => $item->stock_qty]) }}</span></p>@endif
             <form method="post" action="{{ route('equipment.counted.place', $item) }}" class="inline-form">@csrf
                 <input type="number" name="qty" value="1" min="-10000" max="10000" style="width:6em" aria-label="{{ __('warehouse.labels.how_many') }}">
-                <input name="place" list="place-codes" placeholder="BOX-01" required aria-label="{{ __('equipment.place.title') }}" style="width:9em">
+                <input name="place" list="case-codes" placeholder="BOX-01" required aria-label="{{ __('equipment.place.title') }}" style="width:9em">
                 <button class="btn" type="submit">{{ __('equipment.place.counted_go') }}</button>
             </form>
             @error('place')<p class="txt-danger small">{{ $message }}</p>@enderror
             <p class="muted small">{{ __('equipment.place.counted_hint') }}</p>
         </section>
     @endif
-    <datalist id="place-codes">@foreach (\App\Models\Equipment\Asset::whereHas('item', fn ($q) => $q->where('kind', 'case'))->where('status', '!=', 'retired')->orderBy('code')->pluck('code') as $c)<option value="{{ $c }}">@endforeach</datalist>
+    @include('equipment._place-codes', ['cases' => $item->kind !== 'case'])
+    @if (! $item->serial)@include('equipment._place-codes', ['id' => 'case-codes', 'racks' => false])@endif
     @if ($codes = session('print'))
         <div class="flash flash-ok"><a href="{{ route('equipment.labels', ['codes' => implode(',', $codes)]) }}" target="_blank" rel="noopener">{{ trans_choice('equipment.print_new', count($codes), ['count' => count($codes)]) }} →</a></div>
     @endif

@@ -252,10 +252,13 @@ class WarehouseCarriersTest extends TestCase
         [$p] = $this->job();
         $admin = User::factory()->create(['role_id' => Role::where('slug', 'admin')->value('id'), 'locale' => 'en']);
         $item = $p[1]->item;
-        $this->actingAs($admin)->get(route('equipment.show', $item))->assertOk()->assertSee('Put it there')->assertSee('<option value="BOX-02">', false);
+        $this->actingAs($admin)->get(route('equipment.show', $item))->assertOk()->assertSee('Put it there')->assertSee('<option value="BOX-02">', false)->assertSee('<option value="GA1B1">', false);
         // Tick two pieces and put them in a box; then put the box on a rack: they follow.
         $this->actingAs($admin)->post(route('equipment.assets.place', $item), ['assets' => [$p[1]->id, $p[2]->id], 'place' => 'BOX-02'])->assertSessionHasNoErrors();
         $this->assertSame([self::case('BOX-02')->id, self::case('BOX-02')->id], [$p[1]->fresh()->case_id, $p[2]->fresh()->case_id]);
+        // The box card suggests rack places, not other boxes.
+        $card = $this->actingAs($admin)->get(route('equipment.assets.show', self::case('BOX-02')))->assertOk();
+        $card->assertSee('<option value="GA3B2">', false)->assertDontSee('<option value="BOX-03">', false);
         $this->actingAs($admin)->post(route('equipment.assets.place_one', self::case('BOX-02')), ['place' => 'GA3B2'])->assertSessionHasNoErrors();
         $this->assertSame(['GA3B2', 'GA3B2'], [$p[1]->fresh()->location, $p[2]->fresh()->location]);
         // A piece straight onto a rack place (out of its box); not to cleaning.
