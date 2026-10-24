@@ -70,7 +70,7 @@
         <div class="pad card-head"><div><h2>{{ __('management.reps_title') }}</h2><p class="muted">{{ __('management.reps_hint', ['period' => __('management.periods.'.$period)]) }}</p></div>
             <nav class="chips">@foreach (['revenue', 'growth'] as $s2)<a @class(['chip', 'chip-on' => $sort === $s2]) href="{{ $url(['sort' => $s2]) }}">{{ __('management.sort.'.$s2) }}</a>@endforeach</nav></div>
         <div class="table-wrap"><table class="table">
-            <thead><tr><th>{{ __('management.cols.person') }}</th><th>{{ __('management.cols.revenue') }}</th><th class="num">{{ __('management.cols.vs_ly') }}</th><th class="num">{{ __('management.cols.won') }}</th><th class="num">{{ __('management.cols.rate') }}</th><th class="num">{{ __('management.cols.avg') }}</th><th class="num">{{ __('management.cols.open') }}</th></tr></thead>
+            <thead><tr><th>{{ __('management.cols.person') }}</th><th>{{ __('management.cols.revenue') }}</th><th class="num">{{ __('management.cols.vs_ly') }}</th><th class="num">{{ __('management.cols.won') }}</th><th class="num">{{ __('management.cols.rate') }}</th><th class="num">{{ __('management.cols.avg') }}</th><th class="num">{{ __('management.cols.open') }}</th><th class="num">{{ __('management.cols.companies') }}</th></tr></thead>
             <tbody>
                 @foreach (array_merge($reps['rows'], [$reps['counter']]) as $r)
                     @php($rd = $delta($r['cents'], $r['ly']))
@@ -82,6 +82,7 @@
                         <td class="num">{{ $r['user'] && $r['rate'] !== null ? round($r['rate'] * 100).'%' : '–' }}</td>
                         <td class="num nowrap">{{ $r['user'] && $r['avg'] !== null ? $k($r['avg']) : '–' }}</td>
                         <td class="num nowrap">{{ $r['user'] ? $k($r['open']) : '–' }}</td>
+                        <td class="num">@if ($r['user'])<a href="{{ route('companies.index', ['owner' => $r['user']->id]) }}">{{ $r['companies'] }}</a>@else<span title="{{ __('management.companies_none') }}">{{ $r['companies'] }}</span>@endif</td>
                     </tr>
                 @endforeach
             </tbody>

@@ -44,6 +44,8 @@ class ManagementTest extends TestCase
         $ruben = $this->as('sales', ['first_name' => 'Ruben', 'last_name' => 'De Wilde', 'is_commercial' => true]);
         $agency = Company::create(['name' => 'Demo Agency BV', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'en']);
         $rental = Company::create(['name' => 'Demo Rental', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'en']);
+        $agency->update(['account_owner_id' => $elke->id]);
+        $rental->update(['account_owner_id' => $elke->id]);
 
         $this->invoice($agency, 'dryhire', 1000000, 400000, '2026-03-10', $elke, 'paid');   // € 10,000
         $this->invoice($agency, 'factory', 500000, 0, '2026-09-02', $elke);                   // € 5,000
@@ -56,6 +58,8 @@ class ManagementTest extends TestCase
 
         $boss = $this->as('admin');
         $r = $this->actingAs($boss)->get('/management')->assertOk();
+        // Companies each person owns, linked to the company list filtered on them.
+        $r->assertSee('Companies')->assertSee('owner='.$elke->id.'">2</a>', false)->assertSee('owner='.$ruben->id.'">0</a>', false);
         $r->assertSee('€ 19k')                    // 10 + 5 + 3 + 1 thousand, year to date
             ->assertSee('vs € 8k last year')
             ->assertSee('▲ 137,5%')

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Afrit6\DeskRental;
 use App\Models\Afrit6\Space;
+use App\Models\Company;
 use App\Models\Finance\PreInvoice;
 use App\Models\ProductSales\SalesQuote;
 use App\Models\Sales\Deal;
@@ -112,20 +113,23 @@ class ManagementController extends Controller
         $ids = $people->pluck('id')->all();
         $closed = Deal::whereIn('stage', ['won', 'lost'])->whereBetween('closed_at', [$from, $to])->get(['owner_id', 'stage']);
         $total = max(1, (int) $cur->sum('net_cents'));
-        $rows = $people->map(function (User $u) use ($cur, $prev, $closed, $open, $total) {
+        // Companies each person is the account owner of (active ones).
+        $owned = Company::active()->whereNotNull('account_owner_id')->selectRaw('account_owner_id, count(*) n')->groupBy('account_owner_id')->pluck('n', 'account_owner_id');
+        $rows = $people->map(function (User $u) use ($cur, $prev, $closed, $open, $total, $owned) {
             $v = (int) $cur->where('owner_id', $u->id)->sum('net_cents');
             $won = $closed->where('owner_id', $u->id)->where('stage', 'won')->count();
             $decided = $closed->where('owner_id', $u->id)->count();
 
             return ['user' => $u, 'cents' => $v, 'ly' => (int) $prev->where('owner_id', $u->id)->sum('net_cents'), 'share' => $v / $total,
                 'won' => $won, 'rate' => $decided ? $won / $decided : null, 'avg' => $won ? intdiv($v, $won) : null,
-                'open' => (int) $open->where('owner_id', $u->id)->sum('value_cents')];
+                'open' => (int) $open->where('owner_id', $u->id)->sum('value_cents'), 'companies' => (int) ($owned[$u->id] ?? 0)];
         });
         $rows = ($sort === 'growth'
             ? $rows->sortByDesc(fn ($r) => $r['ly'] ? $r['cents'] / $r['ly'] : ($r['cents'] ? PHP_INT_MAX : 0))
             : $rows->sortByDesc('cents'))->values();
         $none = fn (Collection $c) => (int) $c->filter(fn ($p) => ! in_array($p->owner_id, $ids, true))->sum('net_cents');
-        $counter = ['user' => null, 'cents' => $none($cur), 'ly' => $none($prev), 'share' => $none($cur) / $total];
+        $counter = ['user' => null, 'cents' => $none($cur), 'ly' => $none($prev), 'share' => $none($cur) / $total,
+            'companies' => Company::active()->where(fn ($q) => $q->whereNull('account_owner_id')->orWhereNotIn('account_owner_id', $ids))->count()];
 
         return ['rows' => $rows->all(), 'counter' => $counter, 'max' => max(1, (int) $rows->max('cents'), $counter['cents'])];
     }
