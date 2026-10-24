@@ -77,7 +77,8 @@ class CompanyController extends Controller
                         ->orWhere('vat_number', 'like', $vat));
                 })
                 ->when($filters['country'] !== '', fn ($query) => $query->where('country', $filters['country']))
-                ->when($filters['owner'] !== '', fn ($query) => $query->where('account_owner_id', (int) $filters['owner']))
+                ->when($filters['owner'] === 'none', fn ($query) => $query->whereNull('account_owner_id'))
+                ->when($filters['owner'] !== '' && $filters['owner'] !== 'none', fn ($query) => $query->where('account_owner_id', (int) $filters['owner']))
                 ->when($view === 'all' && in_array($filters['rel'], ['customer', 'supplier', 'both'], true), fn ($query) => $query
                     ->where('is_customer', $filters['rel'] !== 'supplier')
                     ->where('is_supplier', $filters['rel'] !== 'customer'))
@@ -96,7 +97,28 @@ class CompanyController extends Controller
             'countries' => Company::query()->active()->distinct()->orderBy('country')->pluck('country'),
             'owners' => User::whereIn('id', Company::query()->whereNotNull('account_owner_id')->distinct()->pluck('account_owner_id'))->orderBy('first_name')->get(),
             'canEdit' => $request->user()->canUseModule('companies', 2),
+            // People who can become account owner (the salespeople first).
+            'assignable' => User::where('status', User::STATUS_ACTIVE)->orderByDesc('is_commercial')->orderBy('first_name')->get(),
         ]);
+    }
+
+    /** Give the ticked companies an account owner (from the "no owner" list on Management). */
+    public function assignOwner(Request $request): RedirectResponse
+    {
+        $d = $request->validate(['ids' => ['required', 'array', 'max:500'], 'ids.*' => ['integer'], 'owner_id' => ['required', 'integer', Rule::exists('users', 'id')]]);
+        $owner = User::findOrFail($d['owner_id']);
+        $n = 0;
+        foreach (Company::active()->whereIn('id', $d['ids'])->get() as $c) {
+            if ($c->account_owner_id === $owner->id) {
+                continue;
+            }
+            $from = $c->accountOwner?->name;
+            $c->update(['account_owner_id' => $owner->id]);
+            AuditLog::record('crm.owner_assigned', $c, ['from' => $from, 'to' => $owner->name]);
+            $n++;
+        }
+
+        return back()->with('status', trans_choice('companies.owner_assigned', $n, ['n' => $n, 'name' => $owner->name]));
     }
 
     public function create(Request $request): View

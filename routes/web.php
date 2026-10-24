@@ -245,6 +245,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/companies', [CompanyController::class, 'store'])->name('companies.store');
             Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])->whereNumber('company')->name('companies.edit');
             Route::put('/companies/{company}', [CompanyController::class, 'update'])->whereNumber('company')->name('companies.update');
+            Route::post('/companies/assign-owner', [CompanyController::class, 'assignOwner'])->name('companies.assign_owner');
             Route::post('/companies/{company}/vies', [CompanyController::class, 'vies'])->whereNumber('company')->name('companies.vies');
             Route::post('/companies/{company}/contacts', [CompanyContactController::class, 'store'])->whereNumber('company')->name('companies.contacts.store');
             Route::get('/companies/{company}/contacts/{contact}/edit', [CompanyContactController::class, 'edit'])->whereNumber(['company', 'contact'])->name('companies.contacts.edit');

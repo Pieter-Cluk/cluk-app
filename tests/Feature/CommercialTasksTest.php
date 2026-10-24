@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Role;
@@ -111,5 +112,34 @@ class CommercialTasksTest extends TestCase
             $this->elke->update(['locale' => $loc]);
             $this->actingAs($this->elke->fresh())->get('/commercial-tasks')->assertOk()->assertSee($title);
         }
+    }
+
+    public function test_only_the_customers_owner_gets_tasks_and_management_shows_who_has_none(): void
+    {
+        // The quote was made by someone else: the task still goes to the customer's owner.
+        $ruben = User::factory()->create(['role_id' => Role::where('slug', 'sales')->value('id'), 'locale' => 'en', 'is_commercial' => true, 'first_name' => 'Ruben']);
+        $q = $this->quote(12, ['owner_id' => $ruben->id]);
+        CommercialTasks::refresh();
+        $this->assertSame($this->elke->id, SalesTask::where('key', 'quote:'.$q->id)->value('owner_id'));
+
+        // A customer without owner: no tasks (and existing ones close).
+        $this->customer->update(['account_owner_id' => null, 'phone' => null]);
+        CommercialTasks::refresh();
+        $this->assertSame(0, SalesTask::open()->count());
+
+        // Management shows the customers without owner; the list lets you give them one in one go.
+        $boss = User::factory()->create(['role_id' => Role::where('slug', 'admin')->value('id'), 'locale' => 'en']);
+        $this->actingAs($boss)->get('/management')->assertOk()->assertSee('CUSTOMERS WITHOUT OWNER')->assertSee('owner=none', false);
+        $list = $this->actingAs($boss)->get(route('companies.index', ['view' => 'customers', 'owner' => 'none']))->assertOk();
+        $list->assertSee('Demo Agency BV')->assertSee('Give this owner')->assertSee('name="ids[]"', false);
+        $this->actingAs($boss)->post(route('companies.assign_owner'), ['ids' => [$this->customer->id], 'owner_id' => $ruben->id])->assertSessionHasNoErrors();
+        $this->assertSame($ruben->id, $this->customer->fresh()->account_owner_id);
+        $this->assertSame(1, AuditLog::where('action', 'crm.owner_assigned')->count());
+        $this->actingAs($boss)->get(route('companies.index', ['view' => 'customers', 'owner' => 'none']))->assertDontSee('Demo Agency BV');
+        CommercialTasks::refresh();
+        $this->assertSame($ruben->id, SalesTask::open()->where('kind', 'quote')->value('owner_id'));
+        // Only people who may change companies.
+        $crew = User::factory()->create(['role_id' => Role::where('slug', 'warehouse')->value('id'), 'locale' => 'en']);
+        $this->actingAs($crew)->post(route('companies.assign_owner'), ['ids' => [$this->customer->id], 'owner_id' => $crew->id])->assertForbidden();
     }
 }

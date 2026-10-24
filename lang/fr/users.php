@@ -245,6 +245,7 @@ return [
             'social_post_shown' => 'Publication affichée sur le site',
             'social_post_hidden' => 'Publication masquée du site',
             'sales_task_done' => 'Tâche commerciale faite',
+            'crm_owner_assigned' => 'Responsable attribué à une société',
             'equipment_photo_approved' => 'Photo produit choisie sur le web',
             'user_instructions_sent' => 'Instructions de connexion envoyées',
             'messages_created' => 'Message créé',

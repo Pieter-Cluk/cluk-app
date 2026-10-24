@@ -17,6 +17,12 @@ return [
         'both' => 'Cliente y proveedor',
     ],
     'index' => [
+        'no_owner' => 'Sin responsable',
+        'select_all' => 'Seleccionar todo',
+        'choose_owner' => 'Elige el responsable…',
+        'salesperson' => 'comercial',
+        'give_owner' => 'Asignar este responsable',
+        'selected' => ':n seleccionadas',
         'new_company' => '+ Nueva empresa',
         'new_supplier' => '+ Nuevo proveedor',
         'search' => 'Buscar nombre, número de IVA o localidad',
@@ -192,4 +198,5 @@ return [
         'text' => 'Todo el equipo de CLUK te desea un día maravilloso y un gran año. ¡Gracias por trabajar con nosotros!',
         'sign' => 'Cluk it, why not! · El equipo de CLUK',
     ],
+    'owner_assigned' => '{0} Nada cambió.|{1} 1 empresa pertenece ahora a :name.|[2,*] :n empresas pertenecen ahora a :name.',
 ];

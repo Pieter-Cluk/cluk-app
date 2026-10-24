@@ -24,6 +24,9 @@
         <a class="tile" href="{{ route('afrit6.staff.index') }}"><span class="tile-k">{{ mb_strtoupper(__('management.kpi.a6')) }}</span><b class="tile-v">{{ $k($kpi['a6']) }}</b><small class="muted">{{ __('management.kpi.a6_s', ['n' => $kpi['desks'], 'total' => $kpi['desks_total']]) }}</small></a>
         @php($webV = \Illuminate\Support\Facades\DB::table('web_events')->where('created_at', '>=', today()->subDays(29))->distinct()->count('visitor_id'))
         @php($webR = \Illuminate\Support\Facades\DB::table('web_events')->where('created_at', '>=', today()->subDays(29))->whereIn('type', ['request', 'order'])->count())
+        @php($noOwner = \App\Models\Company::active()->where('is_customer', true)->whereNull('account_owner_id')->count())
+        @php($noOwnerActive = \App\Models\Company::active()->where('is_customer', true)->whereNull('account_owner_id')->whereIn('id', \Illuminate\Support\Facades\DB::table('quotes')->where('created_at', '>=', now()->subYears(2))->whereNotNull('company_id')->select('company_id'))->count())
+        <a @class(['tile', 'tile-waiting' => $noOwner > 0]) href="{{ route('companies.index', ['view' => 'customers', 'owner' => 'none']) }}"><span class="tile-k">{{ mb_strtoupper(__('management.kpi.no_owner')) }}</span><b class="tile-v">{{ $noOwner }}</b><small class="muted">{{ trans_choice('management.kpi.no_owner_s', $noOwnerActive, ['n' => $noOwnerActive]) }}</small></a>
         <a class="tile" href="{{ route('management.website') }}"><span class="tile-k">{{ mb_strtoupper(__('webstats.title')) }}</span><b class="tile-v">{{ $webV }}</b><small class="muted">{{ __('webstats.tile', ['n' => $webR]) }}</small></a>
     </div>
 

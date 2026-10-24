@@ -10,7 +10,7 @@
     </div>
     @include('partials.flash')
     <nav class="tabs">
-        @foreach (['me', 'all', 'nobody'] as $w)<a @class(['tab', 'tab-on' => $who === $w]) href="{{ $url(['who' => $w]) }}">{{ __('salestasks.who.'.$w) }} <small class="muted">{{ $counts[$w] }}</small></a>@endforeach
+        @foreach (['me', 'all'] as $w)<a @class(['tab', 'tab-on' => $who === $w]) href="{{ $url(['who' => $w]) }}">{{ __('salestasks.who.'.$w) }} <small class="muted">{{ $counts[$w] }}</small></a>@endforeach
     </nav>
     <div class="inline-form mt st-filters">
         <nav class="chips">

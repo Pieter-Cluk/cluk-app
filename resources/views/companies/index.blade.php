@@ -45,6 +45,7 @@
         @if ($view !== 'contacts')
             <select name="owner" aria-label="{{ __('companies.fields.account_owner_id') }}">
                 <option value="">{{ __('companies.index.all_owners') }}</option>
+                <option value="none" @selected($filters['owner'] === 'none')>{{ __('companies.index.no_owner') }}</option>
                 @foreach ($owners as $o)<option value="{{ $o->id }}" @selected($filters['owner'] === (string) $o->id)>{{ $o->name }}</option>@endforeach
             </select>
         @endif
@@ -93,10 +94,24 @@
         </section>
         <x-pager :items="$contacts"/>
     @else
+        @php($bulk = $canEdit && $filters['owner'] === 'none')
+        @if ($bulk)
+            <form method="post" action="{{ route('companies.assign_owner') }}" class="lbl-pick">@csrf
+            <div class="lbl-bar card pad">
+                <label class="check"><input type="checkbox" data-all><span>{{ __('companies.index.select_all') }}</span></label>
+                <span class="muted" data-count>0</span>
+                <select name="owner_id" required aria-label="{{ __('companies.fields.account_owner_id') }}">
+                    <option value="">{{ __('companies.index.choose_owner') }}</option>
+                    @foreach ($assignable as $u)<option value="{{ $u->id }}">{{ $u->name }}@if ($u->is_commercial) · {{ __('companies.index.salesperson') }}@endif</option>@endforeach
+                </select>
+                <button class="primary" type="submit" data-print disabled>{{ __('companies.index.give_owner') }}</button>
+            </div>
+        @endif
         <section class="card card-flush">
             <div class="table-wrap">
                 <table class="table">
                     <thead><tr>
+                        @if ($bulk)<th class="w-check"></th>@endif
                         <th>{{ __('companies.index.company') }}</th><th>{{ __('companies.fields.vat_number') }}</th>
                         @if ($view === 'suppliers')
                             <th>{{ __('companies.fields.supplies') }}</th><th>{{ __('companies.fields.supplier_payment_days') }}</th>
@@ -109,6 +124,7 @@
                         @forelse ($companies as $c)
                             @php($rel = $c->relationshipKey())
                             <tr class="rel-row rel-row-{{ $rel }}">
+                                @if ($bulk)<td><input type="checkbox" name="ids[]" value="{{ $c->id }}" aria-label="{{ $c->name }}"></td>@endif
                                 <td>
                                     <a class="person" href="{{ route('companies.show', $c) }}">
                                         <x-logo :company="$c" :rel="$rel"/>
@@ -129,12 +145,23 @@
                                 <td>{{ $c->contacts_count }}</td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="muted">{{ __('companies.index.empty') }}</td></tr>
+                            <tr><td colspan="7" class="muted">{{ __('companies.index.empty') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </section>
+        @if ($bulk)</form>
+            <script>
+                document.querySelectorAll('.lbl-pick').forEach(function (f) {
+                    var boxes = f.querySelectorAll('tbody input[type=checkbox]'), all = f.querySelector('[data-all]'), count = f.querySelector('[data-count]'), btn = f.querySelector('[data-print]');
+                    function update() { var n = f.querySelectorAll('tbody input:checked').length; count.textContent = @js(__('companies.index.selected')).replace(':n', n); btn.disabled = n === 0; all.checked = n > 0 && n === boxes.length; }
+                    all.addEventListener('change', function () { boxes.forEach(function (b) { b.checked = all.checked; }); update(); });
+                    boxes.forEach(function (b) { b.addEventListener('change', update); });
+                    update();
+                });
+            </script>
+        @endif
         <x-pager :items="$companies"/>
     @endif
 </x-layouts.app>

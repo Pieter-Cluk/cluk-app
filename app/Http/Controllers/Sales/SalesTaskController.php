@@ -23,12 +23,11 @@ class SalesTaskController extends Controller
     {
         abort_unless(self::allowed($request->user()), 403);
         CommercialTasks::refreshIfStale();
-        $who = in_array($request->query('who'), ['me', 'all', 'nobody'], true) ? $request->query('who') : 'me';
+        $who = in_array($request->query('who'), ['me', 'all'], true) ? $request->query('who') : 'me';
         $kind = in_array($request->query('kind'), SalesTask::KINDS, true) ? $request->query('kind') : null;
         $level = in_array($request->query('level'), SalesTask::LEVELS, true) ? $request->query('level') : null;
         $base = SalesTask::open()
-            ->when($who === 'me', fn ($q) => $q->where('owner_id', $request->user()->id))
-            ->when($who === 'nobody', fn ($q) => $q->whereNull('owner_id'));
+            ->when($who === 'me', fn ($q) => $q->where('owner_id', $request->user()->id));
         $tasks = (clone $base)->with(['company', 'contact', 'owner'])->when($kind, fn ($q) => $q->where('kind', $kind))->when($level, fn ($q) => $q->where('level', $level))
             ->ordered()->paginate(50)->withQueryString();
 
@@ -36,7 +35,7 @@ class SalesTaskController extends Controller
             'tasks' => $tasks, 'who' => $who, 'kind' => $kind, 'level' => $level,
             'levels' => (clone $base)->selectRaw('level, count(*) n')->groupBy('level')->pluck('n', 'level'),
             'kinds' => (clone $base)->selectRaw('kind, count(*) n')->groupBy('kind')->pluck('n', 'kind'),
-            'counts' => ['me' => SalesTask::open()->where('owner_id', $request->user()->id)->count(), 'all' => SalesTask::open()->count(), 'nobody' => SalesTask::open()->whereNull('owner_id')->count()],
+            'counts' => ['me' => SalesTask::open()->where('owner_id', $request->user()->id)->count(), 'all' => SalesTask::open()->count()],
         ]);
     }
 

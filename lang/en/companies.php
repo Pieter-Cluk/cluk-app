@@ -17,6 +17,12 @@ return [
         'both' => 'Customer & supplier',
     ],
     'index' => [
+        'no_owner' => 'No owner',
+        'select_all' => 'Select all',
+        'choose_owner' => 'Choose the owner…',
+        'salesperson' => 'salesperson',
+        'give_owner' => 'Give this owner',
+        'selected' => ':n selected',
         'new_company' => '+ New company',
         'new_supplier' => '+ New supplier',
         'search' => 'Search name, VAT number or city',
@@ -192,4 +198,5 @@ return [
         'text' => 'The whole CLUK team wishes you a wonderful day and a great year ahead. Thanks for working with us!',
         'sign' => 'Cluk it, why not! · Team CLUK',
     ],
+    'owner_assigned' => '{0} Nothing changed.|{1} 1 company now belongs to :name.|[2,*] :n companies now belong to :name.',
 ];

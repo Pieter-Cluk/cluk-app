@@ -10,6 +10,8 @@ return [
     ],
     'new' => 'nieuw',
     'kpi' => [
+        'no_owner' => 'Klanten zonder eigenaar',
+        'no_owner_s' => '{0} geef ze een eigenaar: ze krijgen geen commerciële taken|{1} waarvan 1 met een offerte in de laatste 2 jaar|[2,*] waarvan :n met een offerte in de laatste 2 jaar',
         'revenue' => 'Omzet',
         'vs' => 'tov :amount vorig jaar',
         'margin' => 'Brutomarge',

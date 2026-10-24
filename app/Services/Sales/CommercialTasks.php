@@ -21,6 +21,8 @@ use Throwable;
  *  - quote: a quote that is open too long (yellow 5 days, orange 10, red 20 or past its validity);
  *  - web:   a customer of ours active on the website (also when they came via social media).
  * Colours: red = act now, orange = important, yellow = needs attention, blue = opportunity.
+ * A task always goes to the account owner of the customer; customers without an owner get no tasks
+ * (Management shows how many there are, to give them one).
  * A task disappears by itself when the reason is gone; a salesperson can also mark it done or snooze it.
  */
 class CommercialTasks
@@ -37,15 +39,12 @@ class CommercialTasks
     public static function refresh(): int
     {
         $seen = [];
-        foreach (self::quoteTasks() as $t) {
+        foreach ([...self::quoteTasks(), ...self::cardTasks(), ...self::webTasks()] as $t) {
             $seen[] = self::upsert($t);
         }
-        foreach (self::cardTasks() as $t) {
-            $seen[] = self::upsert($t);
-        }
-        foreach (self::webTasks() as $t) {
-            $seen[] = self::upsert($t);
-        }
+        $seen = array_values(array_filter($seen));
+        // Tasks of customers that lost their owner close too.
+        SalesTask::whereIn('status', ['open', 'snoozed'])->whereNull('owner_id')->update(['status' => 'resolved', 'handled_at' => now()]);
         // Reasons that are gone: the task closes by itself (website tasks close after a week).
         SalesTask::whereIn('kind', ['card', 'quote'])->whereIn('status', ['open', 'snoozed'])->whereNotIn('key', $seen)
             ->update(['status' => 'resolved', 'handled_at' => now()]);
@@ -68,9 +67,12 @@ class CommercialTasks
         }
     }
 
-    /** New task, or the same one updated (a higher level re-opens a task someone dismissed). */
-    private static function upsert(array $t): string
+    /** New task, or the same one updated (a higher level re-opens a task someone dismissed). Null: no owner, no task. */
+    private static function upsert(array $t): ?string
     {
+        if (! $t['owner_id']) {
+            return null;
+        }
         $task = SalesTask::firstOrNew(['key' => $t['key']]);
         $rank = fn (?string $l) => array_search($l, SalesTask::LEVELS, true);
         $worse = $task->exists && $rank($t['level']) < $rank($task->level);
@@ -107,12 +109,13 @@ class CommercialTasks
     private static function quoteTasks(): array
     {
         $out = [];
+        $owners = Company::whereNotNull('account_owner_id')->pluck('account_owner_id', 'id');
         foreach (Quote::where('status', 'sent')->get() as $q) {
             if (! $q->isLatest() || ! ($level = self::quoteLevel($q->sent_at, $q->valid_until))) {
                 continue;
             }
             $out[] = ['key' => 'quote:'.$q->id, 'kind' => 'quote', 'company_id' => $q->company_id, 'contact_id' => $q->contact_id, 'quote_id' => $q->id,
-                'owner_id' => $q->owner_id, 'level' => $level, 'data' => ['number' => $q->number, 'title' => $q->title, 'cents' => (int) $q->net_cents,
+                'owner_id' => $owners[$q->company_id] ?? null, 'level' => $level, 'data' => ['number' => $q->number, 'title' => $q->title, 'cents' => (int) $q->net_cents,
                     'days' => (int) $q->sent_at->copy()->startOfDay()->diffInDays(today()), 'expired' => (bool) ($q->valid_until && $q->valid_until->lt(today())),
                     'url' => route('quotes.show', $q)]];
         }
@@ -122,7 +125,7 @@ class CommercialTasks
                     continue;
                 }
                 $out[] = ['key' => 'squote:'.$q->id, 'kind' => 'quote', 'company_id' => $q->company_id, 'contact_id' => $q->contact_id, 'quote_id' => null,
-                    'owner_id' => $q->owner_id, 'level' => $level, 'data' => ['number' => $q->number, 'title' => $q->title, 'cents' => (int) $q->net_cents,
+                    'owner_id' => $owners[$q->company_id] ?? null, 'level' => $level, 'data' => ['number' => $q->number, 'title' => $q->title, 'cents' => (int) $q->net_cents,
                         'days' => (int) $q->sent_at->copy()->startOfDay()->diffInDays(today()), 'expired' => (bool) ($q->valid_until && $q->valid_until->lt(today())),
                         'url' => route('psales.show', $q)]];
             }
@@ -168,9 +171,6 @@ class CommercialTasks
         } elseif ($c->vies_status === 'invalid') {
             $p[] = 'vat_invalid';
         }
-        if (! $c->account_owner_id) {
-            $p[] = 'no_owner';
-        }
         if (! $c->contacts()->exists()) {
             $p[] = 'no_contact';
         } elseif (! $c->contacts()->whereNotNull('email')->where('email', '!=', '')->exists()) {
@@ -197,7 +197,7 @@ class CommercialTasks
             ->merge(DB::table('orders')->whereIn('status', ['allocation', 'approved'])->pluck('company_id'))
             ->filter()->unique()->flip();
         $out = [];
-        foreach (Company::active()->whereIn('id', $ids)->get() as $c) {
+        foreach (Company::active()->whereNotNull('account_owner_id')->whereIn('id', $ids)->get() as $c) {
             $problems = self::cardProblems($c);
             if (! $problems) {
                 continue;

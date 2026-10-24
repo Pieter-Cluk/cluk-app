@@ -17,6 +17,12 @@ return [
         'both' => 'Klant & leverancier',
     ],
     'index' => [
+        'no_owner' => 'Geen eigenaar',
+        'select_all' => 'Alles selecteren',
+        'choose_owner' => 'Kies de eigenaar…',
+        'salesperson' => 'verkoper',
+        'give_owner' => 'Deze eigenaar geven',
+        'selected' => ':n geselecteerd',
         'new_company' => '+ Nieuw bedrijf',
         'new_supplier' => '+ Nieuwe leverancier',
         'search' => 'Zoek op naam, btw-nummer of gemeente',
@@ -192,4 +198,5 @@ return [
         'text' => 'Het hele CLUK-team wenst je een fantastische dag en een prachtig jaar. Bedankt om met ons samen te werken!',
         'sign' => 'Cluk it, why not! · Team CLUK',
     ],
+    'owner_assigned' => '{0} Niets veranderd.|{1} 1 bedrijf is nu van :name.|[2,*] :n bedrijven zijn nu van :name.',
 ];

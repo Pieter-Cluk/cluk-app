@@ -10,6 +10,8 @@ return [
     ],
     'new' => 'nouveau',
     'kpi' => [
+        'no_owner' => 'Clients sans responsable',
+        'no_owner_s' => '{0} donnez-leur un responsable : ils n’ont pas de tâches commerciales|{1} dont 1 avec une offre ces 2 dernières années|[2,*] dont :n avec une offre ces 2 dernières années',
         'revenue' => 'Chiffre d’affaires',
         'vs' => 'contre :amount l’an dernier',
         'margin' => 'Marge brute',

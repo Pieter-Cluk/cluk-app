@@ -10,6 +10,8 @@ return [
     ],
     'new' => 'new',
     'kpi' => [
+        'no_owner' => 'Customers without owner',
+        'no_owner_s' => '{0} give them an owner: they get no commercial tasks|{1} of which 1 with a quote in the last 2 years|[2,*] of which :n with a quote in the last 2 years',
         'revenue' => 'Revenue',
         'vs' => 'vs :amount last year',
         'margin' => 'Gross margin',
