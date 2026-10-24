@@ -38,6 +38,7 @@ use App\Http\Controllers\Rental\SubhireController;
 use App\Http\Controllers\Sales\DealController;
 use App\Http\Controllers\Sales\IncomingController;
 use App\Http\Controllers\Sales\QuoteController;
+use App\Http\Controllers\Sales\SalesTaskController;
 use App\Http\Controllers\Settings\AuditLogController;
 use App\Http\Controllers\Settings\BrandController;
 use App\Http\Controllers\Settings\CompanyDetailsController;
@@ -220,6 +221,12 @@ Route::middleware('auth:web')->group(function () {
     });
     // Back from the platform's sign-in (an address the platforms know; must stay the same).
     Route::get('/social/connect/{provider}/callback', [SocialController::class, 'callback'])->whereIn('provider', ['meta', 'linkedin', 'google'])->middleware('right:social.connect')->name('social.callback');
+    // Commercial tasks (made by the app): customer cards, open quotes, website activity.
+    Route::prefix('commercial-tasks')->middleware('nav:salestasks')->name('salestasks.')->group(function () {
+        Route::get('/', [SalesTaskController::class, 'index'])->name('index');
+        Route::post('/{task}/done', [SalesTaskController::class, 'done'])->whereNumber('task')->name('done');
+        Route::post('/{task}/snooze', [SalesTaskController::class, 'snooze'])->whereNumber('task')->name('snooze');
+    });
     Route::get('/management', ManagementController::class)->middleware('nav:management')->name('management');
     Route::get('/management/website', WebStatsController::class)->middleware('nav:management')->name('management.website');
 
@@ -687,7 +694,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

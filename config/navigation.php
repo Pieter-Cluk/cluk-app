@@ -20,6 +20,7 @@ return [
     'groups' => [
         'commercial' => [
             ['key' => 'companies', 'path' => '/companies', 'icon' => 'people', 'module' => ['companies', 1]],
+            ['key' => 'salestasks', 'path' => '/commercial-tasks', 'icon' => 'clipboard', 'module' => ['sales', 2]],
             ['key' => 'sales', 'path' => '/sales', 'icon' => 'doc', 'module' => ['sales', 1]],
             ['key' => 'orders', 'path' => '/order-allocation', 'icon' => 'clipboard', 'module' => ['dryhire', 2]],
             ['key' => 'subhire', 'path' => '/sub-hire', 'icon' => 'swap', 'module' => ['purchasing', 1]],

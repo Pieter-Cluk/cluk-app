@@ -244,6 +244,7 @@ return [
             'equipment_placed' => 'Stuks op hun plaats gelegd (kantoor)',
             'social_post_shown' => 'Bericht getoond op de website',
             'social_post_hidden' => 'Bericht verborgen op de website',
+            'sales_task_done' => 'Commerciële taak gedaan',
             'equipment_photo_approved' => 'Productfoto van het web gekozen',
             'user_instructions_sent' => 'Aanmeldinstructies gestuurd',
             'messages_created' => 'Bericht gemaakt',

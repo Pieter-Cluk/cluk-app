@@ -102,6 +102,7 @@ return [
     'tasks' => [
         'web_accounts' => 'Comptes du site à approuver',
         'web_accounts_s' => 'clients inscrits sur le site web',
+        'sales_tasks' => 'Tâches commerciales (rouge/orange)',
         'incoming' => 'Nouveau dans Entrant',
         'incoming_s' => 'demandes site, e-mail et téléphone',
         'deals_soon' => 'Deals avec un événement sous 14 jours',

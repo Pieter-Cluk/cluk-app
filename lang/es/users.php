@@ -244,6 +244,7 @@ return [
             'equipment_placed' => 'Piezas colocadas (oficina)',
             'social_post_shown' => 'Publicación mostrada en la web',
             'social_post_hidden' => 'Publicación ocultada de la web',
+            'sales_task_done' => 'Tarea comercial hecha',
             'equipment_photo_approved' => 'Foto de producto elegida de la web',
             'user_instructions_sent' => 'Instrucciones de acceso enviadas',
             'messages_created' => 'Mensaje creado',

@@ -244,6 +244,7 @@ return [
             'equipment_placed' => 'Put pieces in place (office)',
             'social_post_shown' => 'Post shown on the website',
             'social_post_hidden' => 'Post hidden from the website',
+            'sales_task_done' => 'Commercial task done',
             'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',

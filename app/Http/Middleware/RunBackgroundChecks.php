@@ -6,6 +6,7 @@ use App\Services\Credit\RegistryImport;
 use App\Services\Crm\Birthdays;
 use App\Services\Me\DailySummary;
 use App\Services\Media\Messages;
+use App\Services\Sales\CommercialTasks;
 use App\Services\Social\Social;
 use App\Services\Vies;
 use App\Services\ViesRecheck;
@@ -57,6 +58,10 @@ class RunBackgroundChecks
             // Company register (KBO web service): the oldest data first, a few every 10 minutes.
             if (Cache::add('jobs:kbo:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 10), 1, 700)) {
                 RegistryImport::refreshStale((int) config('services.kbo_ws.per_run', 5));
+            }
+            // Commercial tasks: made and closed every 15 minutes.
+            if (Cache::add('jobs:salestasks:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 15), 1, 1000)) {
+                CommercialTasks::refresh();
             }
             // Social media: planned posts go out on time; the figures of one account at a time every 15 minutes.
             if (Cache::add('jobs:social:'.$now->format('Y-m-d-H-i'), 1, 120)) {

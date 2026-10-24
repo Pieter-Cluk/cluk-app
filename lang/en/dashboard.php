@@ -102,6 +102,7 @@ return [
     'tasks' => [
         'web_accounts' => 'Website logins to approve',
         'web_accounts_s' => 'customers who registered on the website',
+        'sales_tasks' => 'Commercial tasks (red/orange)',
         'incoming' => 'New in Incoming',
         'incoming_s' => 'website, mail and phone requests',
         'deals_soon' => 'Deals with an event within 14 days',

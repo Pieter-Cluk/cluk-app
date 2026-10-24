@@ -2,6 +2,7 @@
 
 return [
     'items' => [
+        'salestasks' => 'Tâches commerciales',
         'messages' => 'Messages',
         'social' => 'Réseaux sociaux',
         'website' => 'Site web',

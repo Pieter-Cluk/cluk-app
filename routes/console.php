@@ -13,6 +13,7 @@ use App\Services\Crm\Birthdays;
 use App\Services\Equipment\PhotoSuggestions;
 use App\Services\Media\Messages;
 use App\Services\Media\Translator;
+use App\Services\Sales\CommercialTasks;
 use App\Services\Social\Social;
 use App\Services\Vies;
 use App\Services\ViesRecheck;
@@ -185,3 +186,9 @@ Artisan::command('cluk:social', function () {
     $this->line(json_encode(['published' => Social::publishDue(), 'refreshed' => Social::syncDue(3)]));
 })->purpose('Publish planned social posts and refresh social figures');
 Schedule::command('cluk:social')->everyMinute()->withoutOverlapping();
+
+// Commercial tasks for the salespeople (also every 15 minutes in the background).
+Artisan::command('cluk:sales-tasks', function () {
+    $this->line('open: '.CommercialTasks::refresh());
+})->purpose('Make and close the commercial tasks');
+Schedule::command('cluk:sales-tasks')->everyFifteenMinutes()->withoutOverlapping();
