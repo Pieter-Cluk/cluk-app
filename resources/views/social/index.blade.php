@@ -140,7 +140,7 @@
             <div class="sm-prov"><b>TikTok · Threads</b><small class="muted">{{ __('social.accounts.later') }}</small></div>
         </div>
         @if ($d['accounts']->isNotEmpty())
-            <table class="table mt">
+            <div class="table-wrap"><table class="table mt">
                 <thead><tr><th>{{ __('social.accounts.account') }}</th><th>{{ __('social.accounts.status') }}</th><th>{{ __('social.accounts.synced') }}</th><th></th></tr></thead>
                 <tbody>
                     @foreach ($d['accounts'] as $a)
@@ -150,7 +150,7 @@
                             <td class="num">@if ($canConnect)<form method="post" action="{{ route('social.disconnect', $a) }}">@csrf<button class="linkbtn" type="submit">{{ __('social.accounts.disconnect') }}</button></form>@endif</td></tr>
                     @endforeach
                 </tbody>
-            </table>
+            </table></div>
         @endif
     </section>
 </x-layouts.app>
