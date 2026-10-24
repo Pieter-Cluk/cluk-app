@@ -82,6 +82,8 @@ return [
         'overdue' => ':n vervallen facturen (:amount)',
         'zero' => 'Het bedrag is nul',
         'matches_quote' => 'Komt overeen met aanvaarde offerte :quote',
+        'matches_quote_transport' => 'Klopt met aanvaarde offerte :quote plus later toegevoegd transport :transport',
+        'transport_missing' => 'Levering door CLUK, maar nog geen transportprijs',
         'differs_quote' => 'Wijkt :diff af van aanvaarde offerte :quote',
         'low_no_approval' => 'Marge onder 10% zonder goedkeuring: :lines',
         'low_approved' => 'Lage marge goedgekeurd door :name',

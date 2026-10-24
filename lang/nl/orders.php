@@ -97,6 +97,15 @@ return [
     'based_on' => 'Op basis van offerte',
     'doc_intro' => 'Uw huurorder is bevestigd zoals hieronder. Bedankt voor uw vertrouwen!',
     'doc_arrangements' => 'Afspraken',
+    'doc_delivery_text' => 'Wij leveren en halen op in :location, op de afgesproken momenten. Wijzigingen vragen een nieuwe bevestiging.',
+    'logistics' => [
+        'total' => 'Ordertotaal :net excl. btw · :gross incl. btw',
+        'changed' => 'Gewijzigd na offerte :quote (was: :was).',
+        'hint' => 'Je kunt transport toevoegen of wijzigen tot het order naar pre-facturatie gaat. De ordertotalen en de pre-factuur volgen.',
+        'save' => 'Transport opslaan',
+        'saved' => 'Transport opgeslagen. Ordertotaal nu :total excl. btw.',
+        'locked' => 'Vergrendeld: pre-factuur :number is :status. Vraag de boekhouder om ze terug te sturen om transport te wijzigen.',
+    ],
     'doc_pickup_text' => 'Afhalen en terugbrengen in :address, tenzij anders afgesproken. Wijzigingen vragen een nieuwe bevestiging.',
     'log' => [
         'approved' => 'Order :number goedgekeurd, bevestiging naar de klant verstuurd.',

@@ -11,6 +11,7 @@ use App\Models\Rental\Order;
 use App\Models\Rental\OrderAsset;
 use App\Models\Rental\OrderLine;
 use App\Models\User;
+use App\Services\Afrit6\Pricing;
 use App\Services\Rental\OrderChanges;
 use App\Services\Rental\Orders;
 use Illuminate\Http\RedirectResponse;
@@ -61,6 +62,8 @@ class OrderController extends Controller
             'canSubhire' => $me->canUseModule('purchasing', 2),
             'canApprove' => $me->hasRight('orders.approve'),
             'canChange' => $this->canChange($me, $order),
+            'canTransport' => $this->canTransport($me, $order),
+            'lockingPf' => $order->lockingPreInvoice(),
             'suppliers' => Company::active()->where('is_supplier', true)->orderBy('name')->get(['id', 'name', 'supplies']),
             'assignees' => User::where('status', User::STATUS_ACTIVE)->orderBy('first_name')->get()
                 ->filter(fn (User $u) => $u->canUseModule('dryhire', 2) && $me->canHandTaskTo($u))->values(),
@@ -222,6 +225,35 @@ class OrderController extends Controller
         $adjust = $order->subhires()->where('status', 'accepted')->get()->filter(fn ($r) => $r->changes())->count();
 
         return back()->with('status', __('orders.change.times_saved').($released ? ' '.__('orders.change.released', ['list' => implode(', ', $released)]) : '').($adjust ? ' '.trans_choice('orders.change.tell_partners', $adjust, ['n' => $adjust]) : ''));
+    }
+
+    /** Who may set transport: as for changes, and also after the return, until the pre-invoice is with the accountant. */
+    private function canTransport(User $me, Order $order): bool
+    {
+        return in_array($order->status, ['allocation', 'approved'], true) && ($me->canUseModule('dryhire', 2) || $me->canUseModule('sales', 2))
+            && ! $order->lockingPreInvoice();
+    }
+
+    /** Logistics and transport price after the quote was won. */
+    public function transport(Request $request, Order $order): RedirectResponse
+    {
+        $me = $request->user();
+        abort_unless($this->canTransport($me, $order), 403);
+        $d = $request->validate([
+            'logistics' => ['required', Rule::in(Order::logisticsOptions())],
+            'transport' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'transport_note' => ['nullable', 'string', 'max:300'],
+        ]);
+        $before = ['logistics' => $order->logistics, 'transport' => Pricing::eur($order->transportCharged()), 'note' => $order->transport_note];
+        $order->fill(['logistics' => $d['logistics'], 'transport_cents' => (int) round(((float) ($d['transport'] ?? 0)) * 100), 'transport_note' => $d['transport_note'] ?? null]);
+        $order->refreshTotals();
+        $order->save();
+        $after = ['logistics' => $order->logistics, 'transport' => Pricing::eur($order->transportCharged()), 'note' => $order->transport_note];
+        if ($before !== $after) {
+            AuditLog::record('order.transport', $order, ['before' => $before, 'after' => $after, 'total' => Pricing::eur($order->net_cents)], $me);
+        }
+
+        return redirect()->to(route('orders.show', $order).'#logistics')->with('status', __('orders.logistics.saved', ['total' => Pricing::eur($order->net_cents)]));
     }
 
     /** The customer changes or cancels: back to a new quote version. */

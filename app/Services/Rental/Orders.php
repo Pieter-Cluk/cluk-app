@@ -40,6 +40,7 @@ class Orders
                 'project_discount_bp' => $quote->project_discount_bp, 'vat_code' => $quote->vat_code, 'vat_rate_bp' => $quote->vat_rate_bp,
                 'subtotal_cents' => $quote->subtotal_cents, 'discount_cents' => $quote->discount_cents, 'net_cents' => $quote->net_cents,
                 'vat_cents' => $quote->vat_cents, 'gross_cents' => $quote->gross_cents,
+                'logistics' => $quote->logistics ?? 'open', 'transport_cents' => (int) $quote->transport_cents, 'transport_note' => $quote->transport_note,
             ]);
             $factor = $quote->defaultFactor();
             foreach ($quote->lines as $l) {

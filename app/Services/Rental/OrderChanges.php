@@ -101,6 +101,8 @@ class OrderChanges
             $copy = $quote->replicate(['token', 'sent_at', 'sent_by_id', 'sent_to', 'valid_until', 'reserved_until', 'answered_at', 'answered_name', 'answered_ip', 'decline_reason', 'answer_note']);
             $copy->version = Quote::where('number', $quote->number)->max('version') + 1;
             $copy->status = 'draft';
+            // Transport may have been added on the order after the quote was won: the new version starts from that.
+            $copy->fill(['logistics' => $order->logistics ?? 'open', 'transport_cents' => (int) $order->transport_cents, 'transport_note' => $order->transport_note]);
             $copy->save();
             foreach ($quote->lines as $line) {
                 $copy->lines()->create($line->only(['position', 'kind', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
@@ -134,6 +136,7 @@ class OrderChanges
                 'customer_email' => $quote->sent_to ?: $order->customer_email, 'project_discount_bp' => $quote->project_discount_bp, 'vat_code' => $quote->vat_code,
                 'vat_rate_bp' => $quote->vat_rate_bp, 'subtotal_cents' => $quote->subtotal_cents, 'discount_cents' => $quote->discount_cents, 'net_cents' => $quote->net_cents,
                 'vat_cents' => $quote->vat_cents, 'gross_cents' => $quote->gross_cents,
+                'logistics' => $quote->logistics ?? 'open', 'transport_cents' => (int) $quote->transport_cents, 'transport_note' => $quote->transport_note,
             ]);
             // Keep lines (with their pieces and sub-hire) for the same item; new ones are added, removed ones go.
             $old = $order->lines()->get();

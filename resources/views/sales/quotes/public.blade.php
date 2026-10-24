@@ -48,6 +48,7 @@
             <div><div class="doc-label">{{ mb_strtoupper(__('quotes.doc_return')) }}</div><b>{{ $quote->out_until->locale(app()->getLocale())->translatedFormat('D j M · H:i') }}</b></div>
             <div><div class="doc-label">{{ mb_strtoupper(__('quotes.doc_use')) }}</div><b>{{ trans_choice('quotes.used_days', $quote->usedDays(), ['n' => $quote->usedDays()]) }}</b></div>
             @if ($quote->location)<div><div class="doc-label">{{ mb_strtoupper(__('quotes.location')) }}</div><b>{{ $quote->location }}</b></div>@endif
+            @if ($quote->logistics !== 'open')<div><div class="doc-label">{{ mb_strtoupper(__('quotes.transport.title')) }}</div><b>{{ $quote->logisticsText() }}</b></div>@endif
         </div>
         @if ($quote->intro)<p>{!! nl2br(e($quote->intro)) !!}</p>@endif
         <div class="table-wrap">@include('sales.quotes._doc-lines')</div>

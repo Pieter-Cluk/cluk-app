@@ -105,9 +105,13 @@ class Backups
     public static function archiveFiles(string $path): string
     {
         $tmp = $path.'.part';
-        $p = new Process(['tar', '-czf', $tmp, '--exclude=./imports', '--exclude=./private/imports', '--exclude=./backups', '--exclude=.gitignore', '-C', storage_path('app'), '.']);
+        // Files can be added or removed while packing (someone uploads a logo): tar then says
+        // "file changed as we read it" and ends with code 1. The archive is still complete for
+        // everything else, so that is fine; only code 2 (a real error) fails the backup.
+        $p = new Process(['tar', '--warning=no-file-changed', '--warning=no-file-removed', '--ignore-failed-read', '-czf', $tmp,
+            '--exclude=./imports', '--exclude=./private/imports', '--exclude=./backups', '--exclude=.gitignore', '-C', storage_path('app'), '.']);
         $p->setTimeout(900)->run();
-        if (! $p->isSuccessful()) {
+        if (! in_array($p->getExitCode(), [0, 1], true) || ! is_file($tmp) || filesize($tmp) === 0) {
             @unlink($tmp);
             throw new RuntimeException('Packing the files failed: '.mb_substr($p->getErrorOutput(), 0, 300));
         }

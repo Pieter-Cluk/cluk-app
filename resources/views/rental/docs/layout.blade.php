@@ -40,6 +40,7 @@
             <dt>{{ __('quotes.doc_pickup') }}</dt><dd>{{ $order->out_from->format('d/m/Y H:i') }}</dd>
             <dt>{{ __('quotes.doc_return') }}</dt><dd>{{ $order->out_until->format('d/m/Y H:i') }}</dd>
             @if ($order->location)<dt>{{ __('quotes.location') }}</dt><dd>{{ $order->location }}</dd>@endif
+            @if ($order->logistics !== 'open')<dt>{{ __('quotes.transport.title') }}</dt><dd>{{ $order->logisticsText() }}</dd>@endif
             @if ($order->po_number)<dt>{{ __('quotes.po') }}</dt><dd>{{ $order->po_number }}</dd>@endif
         </dl>
     </div>

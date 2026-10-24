@@ -52,7 +52,7 @@ class QuoteController extends Controller
             'canWork' => $canWork,
             'versions' => Quote::where('number', $quote->number)->orderByDesc('version')->get(['id', 'version', 'status', 'sent_at', 'gross_cents']),
             'contacts' => $quote->company ? $quote->company->contacts()->orderBy('first_name')->get() : collect(),
-            'logistics' => $quote->logistics(),
+            'logistics' => $quote->loadFigures(),
         ]);
     }
 
@@ -109,6 +109,9 @@ class QuoteController extends Controller
             'intro' => ['nullable', 'string', 'max:2000'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'project_discount' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'logistics' => ['nullable', Rule::in(Quote::logisticsOptions())],
+            'transport' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'transport_note' => ['nullable', 'string', 'max:300'],
             'lines' => ['array'],
             'lines.*.qty' => ['required', 'numeric', 'min:0', 'max:100000'],
             'lines.*.name' => ['required', 'string', 'max:200'],
@@ -128,6 +131,11 @@ class QuoteController extends Controller
         DB::transaction(function () use ($quote, $d) {
             $quote->fill(collect($d)->only(['title', 'language', 'contact_id', 'out_from', 'out_until', 'use_from', 'use_until', 'location', 'intro', 'notes'])->all());
             $quote->project_discount_bp = (int) round(((float) ($d['project_discount'] ?? 0)) * 100);
+            if (array_key_exists('logistics', $d)) {
+                $quote->logistics = $d['logistics'] ?: 'open';
+                $quote->transport_cents = (int) round(((float) ($d['transport'] ?? 0)) * 100);
+                $quote->transport_note = $d['transport_note'] ?? null;
+            }
             $quote->save();
             foreach ($d['lines'] ?? [] as $id => $l) {
                 $line = $quote->lines()->whereKey($id)->first();

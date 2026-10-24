@@ -246,6 +246,7 @@ return [
             'social_post_hidden' => 'Publicación ocultada de la web',
             'sales_task_done' => 'Tarea comercial hecha',
             'crm_owner_assigned' => 'Responsable asignado a una empresa',
+            'order_transport' => 'Transporte cambiado en un pedido',
             'equipment_photo_approved' => 'Foto de producto elegida de la web',
             'user_instructions_sent' => 'Instrucciones de acceso enviadas',
             'messages_created' => 'Mensaje creado',

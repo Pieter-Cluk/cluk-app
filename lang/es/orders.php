@@ -97,6 +97,15 @@ return [
     'based_on' => 'Según presupuesto',
     'doc_intro' => 'Su pedido de alquiler queda confirmado como sigue. ¡Gracias por su confianza!',
     'doc_arrangements' => 'Acuerdos',
+    'doc_delivery_text' => 'Entregamos y recogemos en :location, en los momentos acordados. Los cambios requieren una nueva confirmación.',
+    'logistics' => [
+        'total' => 'Total del pedido :net sin IVA · :gross con IVA',
+        'changed' => 'Cambiado tras el presupuesto :quote (antes: :was).',
+        'hint' => 'Puede añadir o cambiar el transporte hasta que el pedido pase a prefacturación. Los totales del pedido y la prefactura se actualizan.',
+        'save' => 'Guardar transporte',
+        'saved' => 'Transporte guardado. Total del pedido: :total sin IVA.',
+        'locked' => 'Bloqueado: la prefactura :number está :status. Pida al contable que la devuelva para cambiar el transporte.',
+    ],
     'doc_pickup_text' => 'Recogida y devolución en :address, salvo acuerdo distinto. Los cambios requieren una nueva confirmación.',
     'log' => [
         'approved' => 'Pedido :number aprobado, confirmación enviada al cliente.',

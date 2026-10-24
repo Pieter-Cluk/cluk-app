@@ -97,6 +97,15 @@ return [
     'based_on' => 'Selon le devis',
     'doc_intro' => 'Votre commande de location est confirmée comme ci-dessous. Merci de votre confiance !',
     'doc_arrangements' => 'Modalités',
+    'doc_delivery_text' => 'Nous livrons et reprenons à :location, aux moments convenus. Toute modification demande une nouvelle confirmation.',
+    'logistics' => [
+        'total' => 'Total commande :net HTVA · :gross TVAC',
+        'changed' => 'Modifié après le devis :quote (avant : :was).',
+        'hint' => 'Vous pouvez ajouter ou modifier le transport jusqu’à la préfacturation. Les totaux de la commande et la préfacture suivent.',
+        'save' => 'Enregistrer le transport',
+        'saved' => 'Transport enregistré. Total commande : :total HTVA.',
+        'locked' => 'Verrouillé : la préfacture :number est :status. Demandez au comptable de la renvoyer pour modifier le transport.',
+    ],
     'doc_pickup_text' => 'Enlèvement et retour à :address, sauf accord contraire. Toute modification demande une nouvelle confirmation.',
     'log' => [
         'approved' => 'Commande :number approuvée, confirmation envoyée au client.',

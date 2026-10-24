@@ -450,6 +450,7 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/{order}/approve', [OrderController::class, 'approve'])->whereNumber('order')->name('orders.approve');
         Route::post('/{order}/cancel', [OrderController::class, 'cancel'])->whereNumber('order')->name('orders.cancel');
         Route::post('/{order}/times', [OrderController::class, 'times'])->whereNumber('order')->name('orders.times');
+        Route::post('/{order}/transport', [OrderController::class, 'transport'])->whereNumber('order')->name('orders.transport');
         Route::post('/{order}/reopen', [OrderController::class, 'reopen'])->whereNumber('order')->name('orders.reopen');
         Route::get('/{order}/documents/{type}', [OrderDocumentController::class, 'show'])->whereNumber('order')->whereIn('type', array_keys(OrderDocumentController::TYPES))->name('orders.doc');
         Route::post('/{order}/proforma', [OrderDocumentController::class, 'sendProforma'])->whereNumber('order')->name('orders.proforma');

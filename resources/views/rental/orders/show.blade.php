@@ -182,6 +182,36 @@
         @endif
     </section>
 
+    <section class="card" id="logistics">
+        <div class="card-head">
+            <h2>{{ __('quotes.transport.title') }}</h2>
+            <span class="muted small">{{ __('orders.logistics.total', ['net' => $eur($order->net_cents), 'gross' => $eur($order->gross_cents)]) }}</span>
+        </div>
+        @if ($canTransport)
+            <form method="post" action="{{ route('orders.transport', $order) }}" class="stack-sm">@csrf
+                <div class="lg-choice" role="radiogroup" aria-label="{{ __('quotes.transport.title') }}">
+                    @foreach (\App\Models\Rental\Order::logisticsOptions() as $opt)
+                        <label class="lg-opt"><input type="radio" name="logistics" value="{{ $opt }}" @checked(old('logistics', $order->logistics) === $opt)><span><b>{{ __('quotes.transport.options.'.$opt) }}</b><small class="muted">{{ __('quotes.transport.hints.'.$opt) }}</small></span></label>
+                    @endforeach
+                </div>
+                <div class="form-grid lg-delivery">
+                    <label class="field"><span>{{ __('quotes.transport.price') }}</span><input type="number" step="0.01" min="0" name="transport" value="{{ old('transport', $order->transport_cents ? number_format($order->transport_cents / 100, 2, '.', '') : '') }}" placeholder="{{ __('quotes.transport.price_ph') }}"></label>
+                    <label class="field"><span>{{ __('quotes.transport.note') }}</span><input name="transport_note" maxlength="300" value="{{ old('transport_note', $order->transport_note) }}" placeholder="{{ __('quotes.transport.note_ph') }}"></label>
+                </div>
+                @if ($order->quote && $order->transportCharged() !== $order->quote->transportCharged())
+                    <p class="small"><b>{{ __('orders.logistics.changed', ['quote' => $order->quote->code(), 'was' => $order->quote->logistics === 'delivery' ? $eur($order->quote->transport_cents) : __('quotes.transport.options.'.$order->quote->logistics)]) }}</b></p>
+                @endif
+                <small class="muted">{{ __('orders.logistics.hint') }}</small>
+                <div><button class="btn" type="submit">{{ __('orders.logistics.save') }}</button></div>
+            </form>
+        @else
+            <p><b>{{ __('quotes.transport.options.'.$order->logistics) }}</b>@if ($order->logistics === 'delivery') · {{ $order->transportToPrice() ? __('quotes.transport.price_follows') : $eur($order->transport_cents) }}@endif @if ($order->transport_note)<br><span class="muted">{{ $order->transport_note }}</span>@endif</p>
+            @if ($lockingPf)
+                <p class="muted small">{{ __('orders.logistics.locked', ['number' => $lockingPf->number, 'status' => __('finance.statuses.'.$lockingPf->status)]) }}</p>
+            @endif
+        @endif
+    </section>
+
     @if ($canChange)
         <details class="card" @if ($errors->hasAny(['out_from', 'out_until', 'use_from', 'use_until'])) open @endif>
             <summary><b>{{ __('orders.change.title') }}</b> <span class="muted small">{{ __('orders.change.title_hint') }}</span></summary>

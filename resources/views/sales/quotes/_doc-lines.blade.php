@@ -20,12 +20,4 @@
         @endforeach
     </tbody>
 </table>
-<div class="doc-totals">
-    @if ($quote->discount_cents)
-        <div><span>{{ __('quotes.subtotal_plain') }}</span><span>{{ $eur($quote->subtotal_cents) }}</span></div>
-        <div><span>{{ __('quotes.project_discount') }} {{ $num($quote->project_discount_bp / 100) }}%</span><span>− {{ $eur($quote->discount_cents) }}</span></div>
-    @endif
-    <div class="strong"><span>{{ __('quotes.total_excl') }}</span><span>{{ $eur($quote->net_cents) }}</span></div>
-    <div class="muted"><span>{{ __('quotes.vat', ['pct' => $quote->vatPercent()]) }}</span><span>{{ $eur($quote->vat_cents) }}</span></div>
-    <div class="grand"><span>{{ __('quotes.total') }}</span><span>{{ $eur($quote->gross_cents) }}</span></div>
-</div>
+@include('sales.quotes._doc-totals', ['doc' => $quote])

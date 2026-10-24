@@ -97,6 +97,15 @@ return [
     'based_on' => 'Based on quote',
     'doc_intro' => 'Your rental order is confirmed as below. Thank you for your trust!',
     'doc_arrangements' => 'Arrangements',
+    'doc_delivery_text' => 'We deliver and collect at :location, at the agreed times. Changes need a new confirmation.',
+    'logistics' => [
+        'total' => 'Order total :net excl. VAT · :gross incl. VAT',
+        'changed' => 'Changed after quote :quote (was: :was).',
+        'hint' => 'You can add or change transport until the order goes to pre-invoicing. The order totals and the pre-invoice follow.',
+        'save' => 'Save transport',
+        'saved' => 'Transport saved. Order total now :total excl. VAT.',
+        'locked' => 'Locked: pre-invoice :number is :status. Ask the accountant to send it back to change transport.',
+    ],
     'doc_pickup_text' => 'Pick-up and return at :address, unless agreed otherwise. Changes need a new confirmation.',
     'log' => [
         'approved' => 'Order :number approved, confirmation sent to the customer.',

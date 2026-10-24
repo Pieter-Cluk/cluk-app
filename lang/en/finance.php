@@ -82,6 +82,8 @@ return [
         'overdue' => ':n overdue invoices (:amount)',
         'zero' => 'The amount is zero',
         'matches_quote' => 'Matches accepted quote :quote',
+        'matches_quote_transport' => 'Matches accepted quote :quote plus transport :transport added later',
+        'transport_missing' => 'Delivery by CLUK, but no transport price yet',
         'differs_quote' => 'Differs :diff from accepted quote :quote',
         'low_no_approval' => 'Margin under 10% without approval: :lines',
         'low_approved' => 'Low margin approved by :name',

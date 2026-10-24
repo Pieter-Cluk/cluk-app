@@ -4,6 +4,7 @@ namespace App\Models\Sales;
 
 use App\Models\Company;
 use App\Models\CompanyDetail;
+use App\Models\Concerns\HasLogistics;
 use App\Models\Contact;
 use App\Models\Rental\Order;
 use App\Models\User;
@@ -26,10 +27,12 @@ use Illuminate\Support\Facades\DB;
     'out_from', 'out_until', 'use_from', 'use_until', 'location', 'intro', 'notes', 'project_discount_bp',
     'vat_code', 'vat_rate_bp', 'subtotal_cents', 'discount_cents', 'net_cents', 'vat_cents', 'gross_cents',
     'token', 'sent_at', 'sent_by_id', 'sent_to', 'valid_until', 'reserved_until', 'answered_at', 'answered_name',
-    'po_number', 'answered_ip', 'decline_reason', 'answer_note',
+    'po_number', 'answered_ip', 'decline_reason', 'answer_note', 'logistics', 'transport_cents', 'transport_note',
 ])]
 class Quote extends Model
 {
+    use HasLogistics;
+
     public const STATUSES = ['draft', 'sent', 'accepted', 'declined', 'change', 'replaced'];
 
     public const DECLINE_REASONS = ['price', 'competitor', 'cancelled', 'other'];
@@ -40,7 +43,7 @@ class Quote extends Model
             'out_from' => 'datetime', 'out_until' => 'datetime', 'use_from' => 'date', 'use_until' => 'date',
             'sent_at' => 'datetime', 'valid_until' => 'date', 'reserved_until' => 'datetime', 'answered_at' => 'datetime',
             'version' => 'integer', 'project_discount_bp' => 'integer', 'vat_rate_bp' => 'integer',
-            'subtotal_cents' => 'integer', 'discount_cents' => 'integer', 'net_cents' => 'integer', 'vat_cents' => 'integer', 'gross_cents' => 'integer',
+            'subtotal_cents' => 'integer', 'discount_cents' => 'integer', 'net_cents' => 'integer', 'vat_cents' => 'integer', 'gross_cents' => 'integer', 'transport_cents' => 'integer',
         ];
     }
 
@@ -176,7 +179,7 @@ class Quote extends Model
             $sub += $line->amount_cents;
         }
         $discount = (int) round($sub * $this->project_discount_bp / 10000);
-        $net = $sub - $discount;
+        $net = $sub - $discount + $this->transportCharged(); // no project discount on transport
         $rate = $this->vatRateNow();
         $this->forceFill([
             'subtotal_cents' => $sub, 'discount_cents' => $discount, 'net_cents' => $net,
@@ -202,8 +205,8 @@ class Quote extends Model
         return rtrim(rtrim(number_format($this->vat_rate_bp / 100, 2, '.', ''), '0'), '.').'%';
     }
 
-    /** Totals for logistics and insurance. */
-    public function logistics(): array
+    /** Weight, volume and insured value (for logistics and insurance). */
+    public function loadFigures(): array
     {
         $kg = 0.0;
         $m3 = 0.0;

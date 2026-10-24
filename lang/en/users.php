@@ -246,6 +246,7 @@ return [
             'social_post_hidden' => 'Post hidden from the website',
             'sales_task_done' => 'Commercial task done',
             'crm_owner_assigned' => 'Gave a company an account owner',
+            'order_transport' => 'Transport changed on an order',
             'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',

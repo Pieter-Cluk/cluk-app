@@ -139,6 +139,27 @@
                 </div>
             </section>
 
+            <section class="card" id="transport">
+                <h2>{{ __('quotes.transport.title') }}</h2>
+                @if ($canEdit)
+                    <div class="lg-choice" role="radiogroup" aria-label="{{ __('quotes.transport.title') }}">
+                        @foreach (\App\Models\Sales\Quote::logisticsOptions() as $opt)
+                            <label class="lg-opt"><input type="radio" name="logistics" value="{{ $opt }}" @checked(old('logistics', $quote->logistics) === $opt)><span><b>{{ __('quotes.transport.options.'.$opt) }}</b><small class="muted">{{ __('quotes.transport.hints.'.$opt) }}</small></span></label>
+                        @endforeach
+                    </div>
+                    <div class="form-grid mt lg-delivery">
+                        <label class="field"><span>{{ __('quotes.transport.price') }}</span><input type="number" step="0.01" min="0" name="transport" value="{{ old('transport', $quote->transport_cents ? number_format($quote->transport_cents / 100, 2, '.', '') : '') }}" placeholder="{{ __('quotes.transport.price_ph') }}"></label>
+                        <label class="field"><span>{{ __('quotes.transport.note') }}</span><input name="transport_note" maxlength="300" value="{{ old('transport_note', $quote->transport_note) }}" placeholder="{{ __('quotes.transport.note_ph') }}"></label>
+                    </div>
+                    <p class="muted small">{{ __('quotes.transport.later_hint') }}</p>
+                @else
+                    <p><b>{{ __('quotes.transport.options.'.$quote->logistics) }}</b>@if ($quote->logistics === 'delivery') · {{ $quote->transportToPrice() ? __('quotes.transport.price_follows') : $eur($quote->transport_cents) }}@endif @if ($quote->transport_note)<br><span class="muted">{{ $quote->transport_note }}</span>@endif</p>
+                    @if ($quote->order && $quote->order->status !== 'cancelled')
+                        <p class="muted small">{!! __('quotes.transport.on_order', ['order' => '<a href="'.e(route('orders.show', $quote->order).'#logistics').'">'.e($quote->order->number).'</a>']) !!}</p>
+                    @endif
+                @endif
+            </section>
+
             <section class="card">
                 <div class="totals">
                     <div class="tot"><span>{{ __('quotes.subtotal', ['n' => $quote->lines->where('kind', '!=', 'text')->count()]) }}</span><span>{{ $eur($quote->subtotal_cents) }}</span></div>
@@ -146,6 +167,9 @@
                         <span>{{ __('quotes.project_discount') }} @if ($canEdit)<input type="number" step="0.1" min="0" max="100" name="project_discount" value="{{ $quote->project_discount_bp ? $num($quote->project_discount_bp / 100) : '' }}" placeholder="0" class="in-num in-sm" aria-label="{{ __('quotes.project_discount') }}"> %@elseif ($quote->project_discount_bp) {{ $num($quote->project_discount_bp / 100) }}%@endif</span>
                         <span>− {{ $eur($quote->discount_cents) }}</span>
                     </div>
+                    @if ($quote->logistics === 'delivery')
+                        <div class="tot"><span>{{ __('quotes.transport.transport_line') }}</span><span>{{ $quote->transportToPrice() ? __('quotes.transport.price_follows') : $eur($quote->transport_cents) }}</span></div>
+                    @endif
                     <div class="tot tot-strong"><span>{{ __('quotes.total_excl') }}</span><span>{{ $eur($quote->net_cents) }}</span></div>
                     <div class="tot muted"><span>{{ __('quotes.vat', ['pct' => $quote->vatPercent()]) }}</span><span>{{ $eur($quote->vat_cents) }}</span></div>
                     <div class="tot tot-grand"><span>{{ __('quotes.total') }}</span><span>{{ $eur($quote->gross_cents) }}</span></div>

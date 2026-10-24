@@ -69,8 +69,16 @@ class PreInvoices
                 $src->loadMissing(['lines', 'company', 'quote', 'subhires.lines']);
                 $cost = (int) $src->subhires->where('status', 'accepted')->sum(fn (SubhireRequest $r) => $r->lines->sum('amount_cents'));
 
+                $lines = $src->lines->map(fn ($l) => $line($l->name.($l->kind === 'item' && (float) $l->factor !== 1.0 ? ' · factor '.rtrim(rtrim(number_format((float) $l->factor, 2, '.', ''), '0'), '.') : ''), $l->qtyLabel(), (int) $l->unit_price_cents, (int) $l->amount_cents))->values();
+                if ($src->discount_cents) {
+                    $lines->push($line(__('quotes.project_discount', [], $src->language).' '.rtrim(rtrim(number_format($src->project_discount_bp / 100, 2, '.', ''), '0'), '.').'%', 1, -(int) $src->discount_cents, -(int) $src->discount_cents));
+                }
+                if ($t = $src->transportCharged()) {
+                    $lines->push($line(__('quotes.transport.transport_line', [], $src->language).($src->transport_note ? ' · '.$src->transport_note : ''), 1, $t, $t));
+                }
+
                 return [$src->company, null, $src->handedBy, 'dryhire', $src->title.' · '.$src->use_from->format('d/m').'–'.$src->use_until->format('d/m'),
-                    $src->lines->map(fn ($l) => $line($l->name.($l->kind === 'item' && (float) $l->factor !== 1.0 ? ' · factor '.rtrim(rtrim(number_format((float) $l->factor, 2, '.', ''), '0'), '.') : ''), $l->qtyLabel(), (int) $l->unit_price_cents, (int) $l->amount_cents))->all(),
+                    $lines->all(),
                     $cost, $src->po_number, $src->use_from, str_replace('R-OC', 'R-PF', $src->number), $src->company?->vatRate($src->use_from->toDateString())];
             })(),
             'charges' => (function () use ($src, $line) {
@@ -154,7 +162,14 @@ class PreInvoices
         }
         // Amounts against the accepted quote, and the margin.
         if ($pf->source_type === 'rental' && ($o = Order::with('quote')->find($pf->source_id)) && $o->quote) {
-            $o->quote->net_cents === $pf->net_cents ? $add('ok', 'amounts', 'matches_quote', ['quote' => $o->quote->code()]) : $add('warn', 'amounts', 'differs_quote', ['quote' => $o->quote->code(), 'diff' => Pricing::eur($pf->net_cents - $o->quote->net_cents)]);
+            // Transport added or changed after the quote was won is expected: compare without it.
+            $extra = $o->transportCharged() - $o->quote->transportCharged();
+            $o->quote->net_cents + $extra === $pf->net_cents
+                ? $add('ok', 'amounts', $extra ? 'matches_quote_transport' : 'matches_quote', ['quote' => $o->quote->code(), 'transport' => Pricing::eur($extra)])
+                : $add('warn', 'amounts', 'differs_quote', ['quote' => $o->quote->code(), 'diff' => Pricing::eur($pf->net_cents - $o->quote->net_cents - $extra)]);
+            if ($o->transportToPrice()) {
+                $add('warn', 'amounts', 'transport_missing');
+            }
         }
         if ($pf->source_type === 'sales' && ($q = SalesQuote::with('lines')->find($pf->source_id))) {
             $low = $q->lowLines();

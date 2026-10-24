@@ -3,7 +3,9 @@
 namespace App\Models\Rental;
 
 use App\Models\Company;
+use App\Models\Concerns\HasLogistics;
 use App\Models\Contact;
+use App\Models\Finance\PreInvoice;
 use App\Models\Sales\Deal;
 use App\Models\Sales\Quote;
 use App\Models\User;
@@ -24,10 +26,12 @@ use Illuminate\Support\Facades\DB;
     'number', 'status', 'quote_id', 'deal_id', 'company_id', 'contact_id', 'title', 'language', 'out_from', 'out_until',
     'use_from', 'use_until', 'location', 'po_number', 'confirmed_name', 'confirmed_at', 'confirmed_online', 'customer_email',
     'handed_by_id', 'assignee_id', 'approved_at', 'approved_by_id', 'loaded_at', 'loaded_by_id', 'returned_at', 'cancelled_at', 'cancel_reason', 'reopened_at', 'reopened_by_id', 'reopen_reason', 'project_discount_bp',
-    'vat_code', 'vat_rate_bp', 'subtotal_cents', 'discount_cents', 'net_cents', 'vat_cents', 'gross_cents',
+    'vat_code', 'vat_rate_bp', 'subtotal_cents', 'discount_cents', 'net_cents', 'vat_cents', 'gross_cents', 'logistics', 'transport_cents', 'transport_note',
 ])]
 class Order extends Model
 {
+    use HasLogistics;
+
     public const OPEN = ['allocation', 'approved'];
 
     /** Where an open order stands, in the order work is done. */
@@ -39,7 +43,7 @@ class Order extends Model
             'out_from' => 'datetime', 'out_until' => 'datetime', 'use_from' => 'date', 'use_until' => 'date',
             'confirmed_at' => 'datetime', 'approved_at' => 'datetime', 'loaded_at' => 'datetime', 'returned_at' => 'datetime', 'cancelled_at' => 'datetime', 'reopened_at' => 'datetime', 'confirmed_online' => 'boolean',
             'project_discount_bp' => 'integer', 'vat_rate_bp' => 'integer', 'subtotal_cents' => 'integer', 'discount_cents' => 'integer',
-            'net_cents' => 'integer', 'vat_cents' => 'integer', 'gross_cents' => 'integer',
+            'net_cents' => 'integer', 'vat_cents' => 'integer', 'gross_cents' => 'integer', 'transport_cents' => 'integer',
         ];
     }
 
@@ -149,6 +153,20 @@ class Order extends Model
         }
 
         return $waiting ? 'waiting' : ($allocate ? 'allocate' : 'ready');
+    }
+
+    /** Totals again after a change in transport: the lines stay as they are. */
+    public function refreshTotals(): void
+    {
+        $this->net_cents = (int) $this->subtotal_cents - (int) $this->discount_cents + $this->transportCharged();
+        $this->vat_cents = (int) round($this->net_cents * (int) $this->vat_rate_bp / 10000);
+        $this->gross_cents = $this->net_cents + $this->vat_cents;
+    }
+
+    /** The rental pre-invoice that is with the accountant or already invoiced (then transport can no longer change). */
+    public function lockingPreInvoice(): ?PreInvoice
+    {
+        return PreInvoice::where('source_type', 'rental')->where('source_id', $this->id)->whereIn('status', ['check', 'sent', 'paid'])->latest('id')->first();
     }
 
     public static function nextNumber(): string

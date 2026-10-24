@@ -16,15 +16,7 @@
             @endforeach
         </tbody>
     </table>
-    <div class="doc-totals">
-        @if ($order->discount_cents)
-            <div><span>{{ __('quotes.subtotal_plain') }}</span><span>{{ $eur($order->subtotal_cents) }}</span></div>
-            <div><span>{{ __('quotes.project_discount') }} {{ $num($order->project_discount_bp / 100) }}%</span><span>− {{ $eur($order->discount_cents) }}</span></div>
-        @endif
-        <div class="strong"><span>{{ __('quotes.total_excl') }}</span><span>{{ $eur($order->net_cents) }}</span></div>
-        <div class="muted"><span>{{ __('quotes.vat', ['pct' => $order->vatPercent()]) }}</span><span>{{ $eur($order->vat_cents) }}</span></div>
-        <div class="grand"><span>{{ __('docs.pf.to_pay') }}</span><span>{{ $eur($order->gross_cents) }}</span></div>
-    </div>
+    @include('sales.quotes._doc-totals', ['doc' => $order, 'grand' => __('docs.pf.to_pay')])
 @endsection
 @section('notes')
     <b>{{ __('docs.notes_title.pf') }}</b>

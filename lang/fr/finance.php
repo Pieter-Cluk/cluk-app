@@ -82,6 +82,8 @@ return [
         'overdue' => ':n factures en retard (:amount)',
         'zero' => 'Le montant est nul',
         'matches_quote' => 'Correspond au devis accepté :quote',
+        'matches_quote_transport' => 'Correspond au devis accepté :quote plus le transport :transport ajouté ensuite',
+        'transport_missing' => 'Livraison par CLUK, mais pas encore de prix de transport',
         'differs_quote' => 'Diffère de :diff du devis accepté :quote',
         'low_no_approval' => 'Marge sous 10 % sans approbation : :lines',
         'low_approved' => 'Marge faible approuvée par :name',

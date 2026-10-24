@@ -41,6 +41,7 @@
             <dt>{{ __('quotes.doc_pickup') }}</dt><dd>{{ $order->out_from->format('d/m/Y H:i') }}</dd>
             <dt>{{ __('quotes.doc_return') }}</dt><dd>{{ $order->out_until->format('d/m/Y H:i') }}</dd>
             @if ($order->location)<dt>{{ __('quotes.location') }}</dt><dd>{{ $order->location }}</dd>@endif
+            @if ($order->logistics !== 'open')<dt>{{ __('quotes.transport.title') }}</dt><dd>{{ $order->logisticsText() }}</dd>@endif
             @if ($order->po_number)<dt>{{ __('quotes.po') }}</dt><dd>{{ $order->po_number }}</dd>@endif
             @if ($order->quote)<dt>{{ __('orders.based_on') }}</dt><dd>{{ $order->quote->code() }}</dd>@endif
         </dl>
@@ -64,18 +65,10 @@
             @endforeach
         </tbody>
     </table>
-    <div class="doc-totals">
-        @if ($order->discount_cents)
-            <div><span>{{ __('quotes.subtotal_plain') }}</span><span>{{ $eur($order->subtotal_cents) }}</span></div>
-            <div><span>{{ __('quotes.project_discount') }} {{ $num($order->project_discount_bp / 100) }}%</span><span>− {{ $eur($order->discount_cents) }}</span></div>
-        @endif
-        <div class="strong"><span>{{ __('quotes.total_excl') }}</span><span>{{ $eur($order->net_cents) }}</span></div>
-        <div class="muted"><span>{{ __('quotes.vat', ['pct' => $order->vatPercent()]) }}</span><span>{{ $eur($order->vat_cents) }}</span></div>
-        <div class="grand"><span>{{ __('quotes.total') }}</span><span>{{ $eur($order->gross_cents) }}</span></div>
-    </div>
+    @include('sales.quotes._doc-totals', ['doc' => $order])
     <section class="doc-notes">
         <b>{{ __('orders.doc_arrangements') }}</b>
-        <p>{{ __('orders.doc_pickup_text', ['address' => $me->warehouse_address ?: $me->street.', '.$me->postcode.' '.$me->city]) }}</p>
+        <p>{{ $order->logistics === 'delivery' ? __('orders.doc_delivery_text', ['location' => $order->location ?: '—']) : __('orders.doc_pickup_text', ['address' => $me->warehouse_address ?: $me->street.', '.$me->postcode.' '.$me->city]) }}</p>
         <p>{{ $pay > 0 ? __('quotes.doc_pay_days', ['days' => $pay]) : __('quotes.doc_pay_now') }}</p>
         <p>{{ __('quotes.doc_terms_link', ['url' => preg_replace('#^https?://#', '', route('terms', $order->language))]) }}</p>
     </section>

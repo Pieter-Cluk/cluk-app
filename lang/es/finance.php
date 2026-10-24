@@ -82,6 +82,8 @@ return [
         'overdue' => ':n facturas vencidas (:amount)',
         'zero' => 'El importe es cero',
         'matches_quote' => 'Coincide con el presupuesto aceptado :quote',
+        'matches_quote_transport' => 'Coincide con el presupuesto aceptado :quote más el transporte :transport añadido después',
+        'transport_missing' => 'Entrega por CLUK, pero aún sin precio de transporte',
         'differs_quote' => 'Difiere :diff del presupuesto aceptado :quote',
         'low_no_approval' => 'Margen bajo el 10% sin aprobación: :lines',
         'low_approved' => 'Margen bajo aprobado por :name',
