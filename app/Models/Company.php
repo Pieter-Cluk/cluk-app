@@ -36,6 +36,7 @@ class Company extends Model
             'supplies' => 'array',
             'vies_checked_at' => 'datetime',
             'archived_at' => 'datetime',
+            'accounts_checked_at' => 'datetime',
             'customer_payment_days' => 'integer',
             'supplier_payment_days' => 'integer',
         ];
@@ -49,6 +50,12 @@ class Company extends Model
     public function registry(): HasOne
     {
         return $this->hasOne(CompanyRegistry::class);
+    }
+
+    /** Annual accounts at the National Bank, newest year first. */
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(CompanyAccount::class)->orderByDesc('year');
     }
 
     public function contacts(): BelongsToMany

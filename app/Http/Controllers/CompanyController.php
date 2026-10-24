@@ -151,7 +151,7 @@ class CompanyController extends Controller
         if (RegistryImport::stale($company)) {
             RegistryImport::refresh($company);
         }
-        $company->load(['accountOwner', 'registry', 'contacts' => fn ($q) => $q->with('companies')->orderByDesc('company_contact.is_main')->orderBy('first_name'), 'addresses']);
+        $company->load(['accountOwner', 'registry', 'accounts', 'contacts' => fn ($q) => $q->with('companies')->orderByDesc('company_contact.is_main')->orderBy('first_name'), 'addresses']);
 
         return view('companies.show', [
             'company' => $company,

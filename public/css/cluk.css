@@ -937,3 +937,16 @@ fieldset.checks{border:0;padding:0;min-width:0}
 .st-dots{display:inline-flex;gap:10px;margin-left:8px;font-size:13px;font-weight:600}
 .st-dots>span{display:inline-flex;align-items:center}
 .st-dots .st-dot{margin-right:4px}
+.fa{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.fa-title{font-size:15px;margin:0 0 8px}
+.fa-chart{width:100%;height:auto;display:block}
+.fa-bar{fill:var(--brand);opacity:.5}.fa-bar-last{opacity:1}
+.fa-val{font-size:10.5px;fill:var(--ink);font-weight:600}
+.fa-profit{font-size:11px;font-weight:600;fill:var(--brand-strong)}.fa-profit.fa-neg{fill:var(--danger-text)}
+.fa-legend{display:flex;gap:14px;margin:4px 0 8px;color:var(--muted)}
+.fa-legend span{display:inline-flex;align-items:center;gap:5px}
+.fa-key{display:inline-block}.fa-key-bar{width:10px;height:10px;border-radius:2px;background:var(--brand)}
+.fa-key-txt{color:var(--brand-strong);font-size:11px}
+.fa-table{font-size:12.5px;margin-bottom:6px;width:100%}.fa-table th,.fa-table td{padding:4px 5px}.fa-table th{font-size:10.5px}
+.fa-table .num{text-align:right;white-space:nowrap}
+.fa-up{color:var(--brand-strong)}.fa-down{color:var(--danger-text)}

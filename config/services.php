@@ -64,4 +64,13 @@ return [
         'per_run' => 5,         // background lookups every 10 minutes (max 720 a day, well under the 3000)
     ],
 
+    // National Bank (NBB) Central Balance Sheet Office, "Authentic Data Query" (free): annual accounts on the customer card.
+    'nbb' => [
+        'url' => env('NBB_CBSO_URL', 'https://ws.cbso.nbb.be/authentic'),
+        'key' => env('NBB_CBSO_KEY'),
+        'years' => 6,          // financial years kept per company
+        'stale_days' => 30,    // looked up again after this many days (accounts come once a year)
+        'per_run' => 3,        // background lookups every 10 minutes
+    ],
+
 ];

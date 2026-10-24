@@ -31,9 +31,12 @@
         @else
             {{ __('credit.reg.not_belgian') }}
         @endif
-        <br>{{ __('credit.nbb_later') }}
+        @if ($belgian && ! \App\Services\Credit\NbbAccounts::available())<br>{{ __('credit.nbb_later') }}@endif
     </p>
-    @if ($belgian && \App\Services\Credit\KboLookup::available())
-        <form method="post" action="{{ route('companies.credit.refresh', $company) }}">@csrf<button class="linkbtn" type="submit">{{ __('credit.refresh') }}</button></form>
+    @if ($belgian && \App\Services\Credit\NbbAccounts::available())
+        @include('companies._accounts')
+    @endif
+    @if ($belgian && (\App\Services\Credit\KboLookup::available() || \App\Services\Credit\NbbAccounts::available()))
+        <form method="post" action="{{ route('companies.credit.refresh', $company) }}">@csrf<button class="linkbtn" type="submit">{{ \App\Services\Credit\NbbAccounts::available() ? __('credit.refresh_all') : __('credit.refresh') }}</button></form>
     @endif
 </section>

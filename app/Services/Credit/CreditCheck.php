@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
  *   another unusual situation, not found, or younger than 2 years → orange;
  * - VIES: VAT number not valid → red (orange when the register shows an active company: no VAT registration, e.g. a non-profit);
  * - our proformas: more than 60 days overdue → red; overdue or often paid late → orange.
- * Annual accounts (NBB) follow when that connection is active.
+ * - annual accounts (NBB): negative equity in the last filed year → orange.
  */
 class CreditCheck
 {
@@ -57,6 +57,15 @@ class CreditCheck
                 // number (non-profits, small exempt firms): then it is only a point for the invoice.
                 $registered = $reg && $reg->found && $reg->isActive() && $reg->isNormal();
                 $add($registered ? 'orange' : 'red', $registered ? 'vies_invalid_registered' : 'vies_invalid');
+            }
+        }
+
+        // Annual accounts at the National Bank: equity below zero in the last year.
+        $last = $c->relationLoaded('accounts') ? $c->accounts->first() : $c->accounts()->first();
+        if ($last) {
+            $sources[] = 'nbb';
+            if ($last->equity !== null && $last->equity < 0) {
+                $add('orange', 'equity_negative', ['year' => $last->year]);
             }
         }
 
