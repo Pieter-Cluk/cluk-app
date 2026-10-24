@@ -61,7 +61,10 @@
                         <div><dt>{{ __('social.figs.engagements') }}</dt><dd>{{ $nf($p['engagements']) }}</dd></div>
                         <div><dt>{{ $a->platform === 'google' ? __('social.figs.clicks') : __('social.figs.posts') }}</dt><dd>{{ $a->platform === 'google' ? $nf($p['clicks']) : $p['posts'] }}</dd></div>
                     </dl>
-                    @if ($a->status === 'error')<p class="sm-err small">{{ __('social.status_error') }}: {{ \Illuminate\Support\Str::limit($a->last_error, 140) }}</p>@endif
+                    @if ($a->status === 'error')
+                        @php($missing = preg_match("/requires the '([a-z_]+)' permission/", (string) $a->last_error, $mm) ? $mm[1] : null)
+                        <p class="sm-err small">{{ $missing ? __('social.missing_permission', ['permission' => $missing]) : __('social.status_error').': '.\Illuminate\Support\Str::limit($a->last_error, 140) }}</p>
+                    @endif
                 </section>
             @endforeach
         </div>

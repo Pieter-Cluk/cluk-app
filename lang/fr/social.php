@@ -130,6 +130,7 @@ return [
     'no_posts' => 'Aucune publication sur la période.',
     'from_cluk' => 'publié depuis CLUK',
     'open' => 'Ouvrir',
+    'missing_permission' => 'Facebook donne les chiffres mais pas les publications : l’autorisation « :permission » manque. Dans Meta : ajoutez-la au cas d’usage, cochez-la dans la configuration « CLUK platform social », puis cliquez à nouveau sur Lier ici.',
     'status_error' => 'Dernière mise à jour échouée',
     'week_of' => 'Semaine du :date',
     'plans' => [

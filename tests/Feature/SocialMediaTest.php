@@ -136,6 +136,9 @@ class SocialMediaTest extends TestCase
 
         $this->actingAs($boss)->get('/media/social')->assertOk()->assertSee('CLUK')->assertSee('@cluk_group')->assertDontSee('No accounts connected yet');
         $this->actingAs($boss)->get('/media/social?d=7')->assertOk();
+        // A missing Meta permission is explained in plain words.
+        $fb->forceFill(['status' => 'error', 'last_error' => "Facebook posts: HTTP 400 (#10) This endpoint requires the 'pages_read_user_content' permission or the 'Page Public Content Access' feature."])->save();
+        $this->actingAs($boss)->get('/media/social')->assertSee('the permission “pages_read_user_content” is missing', false);
     }
 
     public function test_pages_shared_through_the_business_portfolio_are_found_too(): void

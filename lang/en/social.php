@@ -130,6 +130,7 @@ return [
     'no_posts' => 'No posts in this period.',
     'from_cluk' => 'posted from CLUK',
     'open' => 'Open',
+    'missing_permission' => 'Facebook gives the figures but not the posts: the permission “:permission” is missing. In Meta: add it to the use case, tick it in the configuration “CLUK platform social”, then click Connect again here.',
     'status_error' => 'Last refresh failed',
     'week_of' => 'Week of :date',
     'plans' => [

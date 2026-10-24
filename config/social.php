@@ -12,7 +12,7 @@ return [
         // Facebook Login for Business: the configuration that says which pages, accounts and permissions are asked.
         'config_id' => env('META_CONFIG_ID'),
         'version' => env('META_GRAPH_VERSION', 'v23.0'),
-        'scopes' => ['pages_show_list', 'pages_read_engagement', 'pages_manage_posts', 'read_insights', 'business_management',
+        'scopes' => ['pages_show_list', 'pages_read_engagement', 'pages_read_user_content', 'pages_manage_posts', 'read_insights', 'business_management',
             'instagram_basic', 'instagram_content_publish', 'instagram_manage_insights'],
         // Page and Instagram metrics asked per day; one that Meta retires is simply skipped.
         'page_metrics' => ['reach' => 'page_impressions_unique', 'views' => 'page_media_view', 'views_old' => 'page_impressions', 'engagements' => 'page_post_engagements'],

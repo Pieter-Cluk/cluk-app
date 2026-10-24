@@ -130,6 +130,7 @@ return [
     'no_posts' => 'Geen berichten in deze periode.',
     'from_cluk' => 'gepost vanuit CLUK',
     'open' => 'Openen',
+    'missing_permission' => 'Facebook geeft de cijfers maar niet de berichten: het recht “:permission” ontbreekt. In Meta: voeg het toe aan het gebruiksscenario, vink het aan in de configuratie “CLUK platform social” en klik hier opnieuw op Koppelen.',
     'status_error' => 'Laatste verversing mislukt',
     'week_of' => 'Week van :date',
     'plans' => [
