@@ -28,7 +28,7 @@
             @php($d = $t->data ?? [])
             <div class="st-row st-{{ $t->level }}">
                 <div class="st-main">
-                    <small class="st-tag">{{ __('salestasks.levels.'.$t->level) }} · {{ __('salestasks.kinds.'.$t->kind) }}</small>
+                    <small class="st-tag"><i class="st-dot st-glow st-{{ $t->level }}" role="img" aria-label="{{ __('salestasks.levels.'.$t->level) }}" title="{{ __('salestasks.levels.'.$t->level) }}"></i>{{ __('salestasks.kinds.'.$t->kind) }}</small>
                     @if ($t->kind === 'card')
                         <b><a href="{{ $d['url'] ?? '#' }}">{{ $t->company?->name }}</a></b> <span class="muted">{{ __('salestasks.card.title') }}</span>
                         <div class="st-pills">@foreach ($d['problems'] ?? [] as $pr)<span @class(['pill', 'pill-warn' => in_array($pr, ['credit_red', 'vat_invalid'], true)])>{{ __('salestasks.problems.'.$pr) }}</span>@endforeach</div>

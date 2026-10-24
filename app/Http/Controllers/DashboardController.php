@@ -84,8 +84,11 @@ class DashboardController extends Controller
         $t = [];
         $mine = fn ($q) => $who === 'me' ? $q->where(fn ($w) => $w->whereNull('assignee_id')->orWhere('assignee_id', $u->id)) : $q;
         if ($u->canUseModule('sales', 2)) {
-            $t[] = ['n' => SalesTask::open()->whereIn('level', ['red', 'orange'])->when($who === 'me', fn ($q) => $q->where('owner_id', $u->id))->count(),
-                'key' => 'sales_tasks', 'url' => route('salestasks.index', ['who' => $who === 'me' ? 'me' : 'all']), 'tone' => 'warn'];
+            // Commercial tasks: the number is all of them; the dots show how many per colour.
+            $byLevel = SalesTask::open()->when($who === 'me', fn ($q) => $q->where('owner_id', $u->id))->selectRaw('level, count(*) n')->groupBy('level')->pluck('n', 'level');
+            $t[] = ['n' => (int) $byLevel->sum(), 'key' => 'sales_tasks', 'url' => route('salestasks.index', ['who' => $who === 'me' ? 'me' : 'all']),
+                'tone' => ($byLevel['red'] ?? 0) || ($byLevel['orange'] ?? 0) ? 'warn' : 'info',
+                'dots' => collect(SalesTask::LEVELS)->mapWithKeys(fn ($l) => [$l => (int) ($byLevel[$l] ?? 0)])->filter()->all()];
             $t[] = ['n' => IncomingMessage::where('status', 'new')->count(), 'key' => 'incoming', 'url' => route('incoming.index'), 'tone' => 'warn'];
             $t[] = ['n' => Deal::open()->when($who === 'me', fn ($q) => $q->where('owner_id', $u->id))->where('check_date', true)->whereNotNull('event_start')->where('event_start', '<=', today()->addDays(14))->count(), 'key' => 'deals_soon', 'url' => route('deals.index'), 'tone' => 'info'];
             $t[] = ['n' => Quote::whereIn('status', ['change'])->when($who === 'me', fn ($q) => $q->where('owner_id', $u->id))->count(), 'key' => 'quote_changes', 'url' => route('quotes.index'), 'tone' => 'warn'];

@@ -95,7 +95,11 @@ class CommercialTasksTest extends TestCase
         CommercialTasks::refresh();
         $r = $this->actingAs($this->elke)->get('/commercial-tasks')->assertOk();
         $r->assertSee('Demo Agency BV')->assertSee('came via Instagram')->assertSee('open for 25 days')->assertSee('Act now');
-        $this->actingAs($this->elke)->get('/dashboard')->assertOk()->assertSee('Commercial tasks (red/orange)');
+        // The tile counts every open task (not only red/orange) and shows a dot per colour.
+        $open = SalesTask::open()->where('owner_id', $this->elke->id)->count();
+        $this->assertGreaterThan(1, $open);
+        $this->actingAs($this->elke)->get('/dashboard')->assertOk()->assertSee('<b>'.$open.'</b><span>Commercial tasks', false)
+            ->assertSee('st-dot st-red', false)->assertSee('st-dot st-orange', false);
         // Done: gone until it gets worse; snooze: back later.
         $qt = SalesTask::where('key', 'quote:'.$q->id)->firstOrFail();
         $this->actingAs($this->elke)->post(route('salestasks.done', $qt))->assertRedirect();
