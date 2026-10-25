@@ -238,4 +238,11 @@ return [
         'strip_title' => 'Actualités :part', 'more' => 'Plus d’actualités',
         'empty' => 'Pas encore de messages ici.', 'follow' => 'Suivez-nous', 'video' => 'Vidéo', 'filter' => 'Afficher les actualités sur',
     ],
+    'downloads' => [
+        'title' => 'Téléchargements', 'meta' => 'Conditions générales, listes de prix, fiches techniques, formulaires et brochures de CLUK à télécharger.',
+        'intro' => 'Conditions générales, listes de prix, fiches techniques et formulaires. Téléchargement gratuit.',
+        'cats' => ['terms' => 'Conditions générales', 'pricelists' => 'Listes de prix', 'technical' => 'Fiches techniques', 'forms' => 'Formulaires', 'brochures' => 'Brochures', 'other' => 'Autres documents'],
+        'terms_doc' => 'Conditions générales', 'download' => 'Télécharger', 'open' => 'Ouvrir', 'any_language' => 'Toutes les langues', 'empty' => 'Pas encore de documents ici.',
+        'langs' => ['en' => 'Anglais', 'nl' => 'Néerlandais', 'fr' => 'Français', 'es' => 'Espagnol'],
+    ],
 ];

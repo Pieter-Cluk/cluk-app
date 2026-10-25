@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Site\AccountController;
+use App\Http\Controllers\Site\DownloadController;
 use App\Http\Controllers\Site\DryHireController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\NewsController;
@@ -38,6 +39,10 @@ $site = function () {
 
     // Pictures and videos from Media › Website.
     Route::get('/media/{f}', [WebMediaController::class, 'show'])->where('f', '[A-Za-z0-9]{32}\.[a-z0-9]{3,4}')->name('webmedia');
+
+    // Downloads (footer): documents for customers.
+    Route::get('/downloads', [DownloadController::class, 'index'])->name('downloads');
+    Route::get('/downloads/{download}', [DownloadController::class, 'file'])->whereNumber('download')->middleware('throttle:60,1')->name('downloads.file');
 
     // Visitor behaviour (only with consent).
     Route::post('/t', [TrackController::class, 'store'])->middleware('throttle:240,1')->name('track');

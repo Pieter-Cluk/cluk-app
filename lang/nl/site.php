@@ -238,4 +238,11 @@ return [
         'strip_title' => 'Nieuws van :part', 'more' => 'Meer nieuws',
         'empty' => 'Hier staan nog geen berichten.', 'follow' => 'Volg ons', 'video' => 'Video', 'filter' => 'Toon nieuws over',
     ],
+    'downloads' => [
+        'title' => 'Downloads', 'meta' => 'Algemene voorwaarden, prijslijsten, technische fiches, formulieren en brochures van CLUK om te downloaden.',
+        'intro' => 'Algemene voorwaarden, prijslijsten, technische fiches en formulieren. Gratis te downloaden.',
+        'cats' => ['terms' => 'Algemene voorwaarden', 'pricelists' => 'Prijslijsten', 'technical' => 'Technische fiches', 'forms' => 'Formulieren', 'brochures' => 'Brochures', 'other' => 'Andere documenten'],
+        'terms_doc' => 'Algemene voorwaarden', 'download' => 'Downloaden', 'open' => 'Openen', 'any_language' => 'Alle talen', 'empty' => 'Hier staan nog geen documenten.',
+        'langs' => ['en' => 'Engels', 'nl' => 'Nederlands', 'fr' => 'Frans', 'es' => 'Spaans'],
+    ],
 ];
