@@ -282,7 +282,8 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/companies/{company}/archive', [CompanyController::class, 'archive'])->whereNumber('company')->name('companies.archive');
             Route::post('/companies/{company}/restore', [CompanyController::class, 'restore'])->whereNumber('company')->name('companies.restore');
         });
-        Route::middleware('right:sales.approve_low_margin')->group(function () {
+        Route::middleware('level:sales,2')->group(function () {
+            Route::put('/companies/{company}/rental-discount', [CustomerDiscountController::class, 'rental'])->whereNumber('company')->name('companies.rental_discount');
             Route::post('/companies/{company}/discounts', [CustomerDiscountController::class, 'store'])->whereNumber('company')->name('companies.discounts.store');
             Route::post('/companies/{company}/net-prices', [CustomerDiscountController::class, 'net'])->whereNumber('company')->name('companies.discounts.net');
             Route::delete('/companies/{company}/discounts/{discount}', [CustomerDiscountController::class, 'destroy'])->whereNumber(['company', 'discount'])->name('companies.discounts.destroy');
@@ -294,6 +295,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/companies/website-logins/{account}/block', [WebAccountController::class, 'block'])->whereNumber('account')->name('web-accounts.block');
             Route::post('/companies/website-logins/{account}/unblock', [WebAccountController::class, 'unblock'])->whereNumber('account')->name('web-accounts.unblock');
             Route::post('/companies/website-logins/{account}/reset', [WebAccountController::class, 'sendReset'])->whereNumber('account')->name('web-accounts.reset');
+            Route::post('/companies/website-logins/{account}/role', [WebAccountController::class, 'role'])->whereNumber('account')->name('web-accounts.role');
         });
         Route::get('/companies/{company}', [CompanyController::class, 'show'])->whereNumber('company')->name('companies.show');
         Route::post('/companies/{company}/credit/refresh', [CreditController::class, 'refresh'])->whereNumber('company')->middleware('throttle:20,1')->name('companies.credit.refresh');

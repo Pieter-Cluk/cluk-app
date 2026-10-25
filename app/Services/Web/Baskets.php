@@ -156,6 +156,9 @@ class Baskets
 
     private static function active(CustomerAccount $a): void
     {
+        if (! $a->canOrder()) {
+            throw ValidationException::withMessages(['lines' => __('web.roles.no_order')]);
+        }
         abort_unless($a->isActive(), 403);
     }
 
@@ -195,8 +198,12 @@ class Baskets
             return $msg;
         });
         AuditLog::record('web.dryhire_sent', $a, ['email' => $a->email, 'ref' => 'W-'.$msg->id, 'lines' => count($show['lines'])]);
+        // A customer of a known company: straight into Quotes & sales as a deal with a draft quote.
+        if ($a->company_id) {
+            WebDeals::fromDryHire($a, $msg, collect($show['lines'])->map(fn ($l) => ['id' => $l['id'], 'qty' => $l['qty']])->all(), $from, $until, $d['message'] ?? null);
+        }
 
-        return $msg;
+        return $msg->fresh();
     }
 
     /**
@@ -217,7 +224,7 @@ class Baskets
         }
         $a->loadMissing(['company', 'contact', 'approvedBy']);
         $loc = $a->locale ?: 'en';
-        $owner = $a->approvedBy?->isActive() ? $a->approvedBy : null;
+        $owner = WebDeals::owner($a);
 
         $q = DB::transaction(function () use ($a, $basket, $lines, $items, $loc, $owner, $d) {
             $q = SalesQuote::create([
@@ -225,9 +232,14 @@ class Baskets
                 'title' => InLocale::run($loc, fn () => __('web.order.title', ['date' => today()->format('d/m/Y')])), 'language' => $loc,
                 'notes' => ! empty($d['message']) ? Str::limit(trim($d['message']), 2000, '') : null,
                 'valid_until' => today()->addDays(CompanyDetail::current()->quote_valid_days ?: 30),
-                'token' => Str::random(40), 'sent_at' => now(), 'sent_to' => $a->email,
+                'token' => Str::random(48), 'sent_at' => now(), 'sent_to' => $a->email,
             ]);
             $q->forceFill(['customer_account_id' => $a->id])->save();
+            // The order is a won deal in Quotes & sales, for the colleague who looks after this customer.
+            if ($a->company_id) {
+                $deal = WebDeals::deal($a, 'sales', $q->title);
+                $q->forceFill(['deal_id' => $deal->id, 'owner_id' => $q->owner_id ?? $deal->owner_id])->save();
+            }
             $pos = 0;
             foreach ($lines as $l) {
                 $i = $items[$l->sales_item_id];

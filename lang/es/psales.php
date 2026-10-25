@@ -276,8 +276,16 @@ return [
         'mail_links' => 'Descargue los archivos aquí (enlaces válidos 30 días):',
     ],
     'discounts' => [
-        'title' => 'Condiciones de venta estándar',
-        'intro' => 'Lo que este cliente paga por los productos de venta. Con sesión iniciada en la web ve estos precios, los pedidos web los usan y las nuevas líneas de presupuesto también.',
+        'rental_title' => 'Dry-hire',
+        'rental_general' => 'Descuento general en dry-hire',
+        'rental_hint' => 'En cada artículo de dry-hire: en la web (cuando el cliente ha iniciado sesión) y en nuevas líneas de presupuestos de alquiler.',
+        'sales_title' => 'Productos de venta',
+        'rental_saved' => 'Descuento de dry-hire fijado en :pct.',
+        'over_limit' => 'Por encima de :limit necesita un compañero con el permiso «Ventas: aprobar margen bajo».',
+        'your_limit' => 'Puede dar a este cliente hasta :limit; por encima, pida a un compañero con el permiso de aprobación.',
+        'who_may' => 'Solo el responsable de la cuenta (hasta el límite) o alguien con el permiso de aprobación puede cambiar esto.',
+        'title' => 'Condiciones del cliente',
+        'intro' => 'Lo que paga este cliente. Con sesión iniciada en la web ve estos precios; las solicitudes web y las nuevas líneas de presupuesto también los reciben.',
         'none' => 'Sin condiciones: precios de catálogo.',
         'default' => 'Descuento estándar (todos los productos)',
         'groups' => [

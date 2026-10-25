@@ -1,12 +1,30 @@
 <?php
 
 return [
+    'roles' => [
+        'no_order' => 'Votre login peut consulter mais pas commander. Demandez au contact principal de votre société.',
+    ],
+    'colleagues' => [
+        'exists' => 'Il existe déjà un login avec cette adresse e-mail.',
+        'invited' => 'Invitation envoyée à :email.',
+        'saved' => 'Enregistré.',
+        'removed_by' => 'Accès retiré par :name',
+    ],
+    'deal' => [
+        'log' => 'Envoyé via le site par :name (:email).',
+        'title_dryhire' => 'Demande via le site pour le :date',
+        'staff_subject' => 'Demande via le site de :name',
+        'staff_intro' => ':name (:email) a envoyé une demande via le site. L’affaire :deal vous attend avec un projet de devis à ses prix : vérifiez-le et envoyez-le.',
+        'value' => 'Valeur HTVA',
+        'staff_button' => 'Ouvrir l’affaire',
+    ],
     'statuses' => [
         'pending' => 'En attente d’approbation',
         'active' => 'Actif',
         'blocked' => 'Bloqué',
     ],
     'staff' => [
+        'invited' => 'invité par un collègue',
         'title' => 'Comptes du site web',
         'intro' => 'Clients inscrits sur le site web. Un compte ne fonctionne qu’après votre approbation et son lien à un contact (et une société).',
         'card_title' => 'Comptes du site web',
@@ -39,6 +57,12 @@ return [
         'in_baskets' => ':n lignes dans les paniers',
     ],
     'mail' => [
+        'invite' => [
+            'subject' => ':name vous invite sur cluk.live',
+            'intro' => ':name vous invite sur le compte client de :company chez CLUK : vos prix, devis, commandes et factures.',
+            'next' => 'Choisissez votre mot de passe avec le bouton ci-dessous. Le lien est valable 7 jours.',
+            'button' => 'Choisir mon mot de passe',
+        ],
         'verify' => [
             'subject' => 'Confirmez votre e-mail pour cluk.live',
             'intro' => 'Merci pour votre inscription sur cluk.live. Veuillez confirmer votre adresse e-mail.',

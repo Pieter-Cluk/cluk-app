@@ -62,7 +62,7 @@ class User extends Authenticatable
     }
 
     /** Emails about what happens to your work; each can be switched off in My preferences. */
-    public const MAIL_EVENTS = ['quote_answered', 'order_handed', 'pf_back', 'credit_alert', 'task_assigned'];
+    public const MAIL_EVENTS = ['quote_answered', 'order_handed', 'pf_back', 'credit_alert', 'task_assigned', 'web_request'];
 
     /** Where "my start page" can point (menu key => route name). */
     public const START_PAGES = ['dashboard' => 'dashboard', 'management' => 'management', 'sales' => 'deals.index', 'companies' => 'companies.index', 'afrit6' => 'afrit6.staff.index', 'warehouse' => 'warehouse.index', 'dryhire' => 'equipment.index'];

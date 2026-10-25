@@ -16,7 +16,7 @@ use Illuminate\Notifications\Notifiable;
 
 /** A customer's website login (one login = a dry-hire basket and a sales basket). */
 #[Fillable(['email', 'password', 'first_name', 'last_name', 'company_name', 'vat_number', 'phone', 'locale', 'status', 'contact_id', 'company_id',
-    'approved_by_id', 'approved_at', 'blocked_reason', 'email_verified_at', 'last_login_at'])]
+    'approved_by_id', 'approved_at', 'blocked_reason', 'email_verified_at', 'last_login_at', 'role', 'invited_by_id'])]
 #[Hidden(['password', 'remember_token'])]
 class CustomerAccount extends Authenticatable
 {
@@ -27,6 +27,9 @@ class CustomerAccount extends Authenticatable
     public const ACTIVE = 'active';
 
     public const BLOCKED = 'blocked';
+
+    /** Main contact (manages the colleagues of the company), may order, or may only look. */
+    public const ROLES = ['main', 'order', 'view'];
 
     protected function casts(): array
     {
@@ -71,5 +74,22 @@ class CustomerAccount extends Authenticatable
     public function isActive(): bool
     {
         return $this->status === self::ACTIVE;
+    }
+
+    public function isMain(): bool
+    {
+        return $this->role === 'main' && $this->company_id !== null;
+    }
+
+    /** May send a dry-hire request or place an order (not a "look only" login). */
+    public function canOrder(): bool
+    {
+        return $this->role !== 'view';
+    }
+
+    /** The other logins of the same company. */
+    public function colleagues(): HasMany
+    {
+        return $this->hasMany(self::class, 'company_id', 'company_id')->whereKeyNot($this->id);
     }
 }

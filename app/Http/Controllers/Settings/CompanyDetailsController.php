@@ -46,6 +46,7 @@ class CompanyDetailsController extends Controller
             'payment_term_days' => ['required', 'integer', 'between:0,365'],
             'quote_valid_days' => ['required', 'integer', 'between:1,365'],
             'option_days' => ['required', 'integer', 'between:0,60'],
+            'discount_limit' => ['nullable', 'numeric', 'between:0,90'],
             'footer_line' => ['nullable', 'string', 'max:255'],
             'banks' => ['array'],
             'banks.*.bank' => ['nullable', 'string', 'max:80'],
@@ -54,6 +55,10 @@ class CompanyDetailsController extends Controller
             'main_bank' => ['nullable', 'string'],
         ]);
         $data['country'] = strtoupper($data['country']);
+        if (isset($data['discount_limit'])) {
+            $data['discount_limit_bp'] = (int) round($data['discount_limit'] * 100);
+        }
+        unset($data['discount_limit']);
 
         // Bank rows: existing ids, plus "new" for the empty row. An emptied IBAN removes the row.
         $banks = collect($request->input('banks', []))->map(fn ($b, $key) => [

@@ -36,6 +36,8 @@ return [
         'defaults' => 'Valores por defecto en documentos',
         'payment_term' => 'Plazo de pago (días)',
         'quote_valid' => 'Validez del presupuesto (días)',
+        'discount_limit' => 'Descuento que puede dar el responsable de la cuenta',
+        'discount_limit_hint' => 'Por encima, alguien con «Ventas: aprobar margen bajo» fija el descuento.',
         'option_days' => 'Opción sobre el material (días)',
         'footer' => 'Pie en cada página',
         'later' => 'Los logotipos por marca, las condiciones por idioma y los medios y conexiones llegan con el módulo de documentos.',

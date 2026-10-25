@@ -1,12 +1,30 @@
 <?php
 
 return [
+    'roles' => [
+        'no_order' => 'Your login may look but not order. Ask the main contact of your company.',
+    ],
+    'colleagues' => [
+        'exists' => 'There is already a login with this email address.',
+        'invited' => 'Invitation sent to :email.',
+        'saved' => 'Saved.',
+        'removed_by' => 'Access removed by :name',
+    ],
+    'deal' => [
+        'log' => 'Sent from the website by :name (:email).',
+        'title_dryhire' => 'Website request for :date',
+        'staff_subject' => 'Website request from :name',
+        'staff_intro' => ':name (:email) sent a request on the website. Deal :deal is ready for you with a draft quote at their prices: check it and send it.',
+        'value' => 'Value excl. VAT',
+        'staff_button' => 'Open the deal',
+    ],
     'statuses' => [
         'pending' => 'Waiting for approval',
         'active' => 'Active',
         'blocked' => 'Blocked',
     ],
     'staff' => [
+        'invited' => 'invited by a colleague',
         'title' => 'Website logins',
         'intro' => 'Customers who registered on the website. A login works only after you approve it and link it to a contact (and company).',
         'card_title' => 'Website logins',
@@ -39,6 +57,12 @@ return [
         'in_baskets' => ':n lines in the baskets',
     ],
     'mail' => [
+        'invite' => [
+            'subject' => ':name invites you to cluk.live',
+            'intro' => ':name invites you to the CLUK customer account of :company: see your prices, quotes, orders and invoices.',
+            'next' => 'Choose your password with the button below. The link works for 7 days.',
+            'button' => 'Choose my password',
+        ],
         'verify' => [
             'subject' => 'Confirm your email for cluk.live',
             'intro' => 'Thanks for registering on cluk.live. Please confirm your email address.',

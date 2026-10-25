@@ -43,6 +43,7 @@ return [
             'pf_back' => 'A proforma comes back to you',
             'credit_alert' => 'A customer’s credit check turns red',
             'task_assigned' => 'Someone gives you a task',
+            'web_request' => 'A customer sends a request on the website',
         ],
         'daily' => 'Daily summary',
         'daily_hint' => 'One email on working days with your open tasks. No tasks, no email.',

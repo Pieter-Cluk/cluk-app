@@ -36,6 +36,8 @@ return [
         'defaults' => 'Defaults on documents',
         'payment_term' => 'Payment term (days)',
         'quote_valid' => 'Quote valid for (days)',
+        'discount_limit' => 'Discount the account owner may give',
+        'discount_limit_hint' => 'Above this, someone with “Sales: approve low margin” sets the discount.',
         'option_days' => 'Equipment option (days)',
         'footer' => 'Footer line on every page',
         'later' => 'Logos per brand, terms and conditions per language and media & connections follow with the documents module.',

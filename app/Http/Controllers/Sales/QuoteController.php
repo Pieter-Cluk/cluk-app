@@ -212,6 +212,7 @@ class QuoteController extends Controller
                 $quote->lines()->create([
                     'kind' => 'item', 'item_id' => $item->id, 'number' => $item->number, 'name' => $item->name,
                     'qty' => $qty, 'unit_price_cents' => (int) $item->day_price_cents, 'position' => $position,
+                    'discount_bp' => (int) ($quote->company?->rental_discount_bp ?? 0), // the customer's general dry-hire discount
                 ]);
             }
         } else {

@@ -128,7 +128,10 @@ class CustomerAuth
             if ($company && ! $company->contacts()->whereKey($contact->id)->exists()) {
                 $company->contacts()->attach($contact->id);
             }
-            $a->forceFill(['status' => CustomerAccount::ACTIVE, 'contact_id' => $contact->id, 'company_id' => $company?->id, 'approved_by_id' => $by->id, 'approved_at' => now(), 'blocked_reason' => null])->save();
+            // The first login of a company becomes its main contact (manages colleagues).
+            $main = $company && ! CustomerAccount::where('company_id', $company->id)->where('role', 'main')->where('status', CustomerAccount::ACTIVE)->whereKeyNot($a->id)->exists();
+            $a->forceFill(['status' => CustomerAccount::ACTIVE, 'contact_id' => $contact->id, 'company_id' => $company?->id, 'approved_by_id' => $by->id, 'approved_at' => now(), 'blocked_reason' => null]
+                + ($main ? ['role' => 'main'] : []))->save();
         });
         AuditLog::record('web.account_approved', $a, ['email' => $a->email, 'company' => $company?->name, 'contact' => $contact?->id], $by);
         self::mail($a, 'approved', ['button' => [__('web.mail.approved.button', [], $a->locale), self::siteUrl('site.account.login', [], '/account/login')]]);
@@ -151,12 +154,16 @@ class CustomerAuth
     }
 
     /** A password link to the website's reset page (valid 60 minutes, used once). */
-    public static function sendReset(CustomerAccount $a): bool
+    public static function sendReset(CustomerAccount $a, string $kind = 'reset', array $params = []): bool
     {
         $plain = Str::random(48);
         DB::table('customer_password_resets')->where('account_id', $a->id)->delete();
-        DB::table('customer_password_resets')->insert(['account_id' => $a->id, 'token_hash' => hash('sha256', $plain), 'expires_at' => now()->addHour(), 'created_at' => now(), 'updated_at' => now()]);
+        // An invitation stays valid for 7 days, a reset for 60 minutes.
+        DB::table('customer_password_resets')->insert(['account_id' => $a->id, 'token_hash' => hash('sha256', $plain), 'expires_at' => $kind === 'invite' ? now()->addDays(7) : now()->addHour(), 'created_at' => now(), 'updated_at' => now()]);
         $link = self::siteUrl('site.account.reset', ['email' => $a->email, 'token' => $plain], '/account/reset');
+        if ($kind === 'invite') {
+            return self::mail($a, 'invite', ['button' => [__('web.mail.invite.button', [], $a->locale), $link], 'params' => $params]);
+        }
 
         return self::mail($a, 'reset', ['button' => [__('web.mail.reset.button', [], $a->locale), $link]]);
     }
@@ -205,10 +212,10 @@ class CustomerAuth
     {
         $loc = $a->locale ?: 'en';
         $mail = InLocale::run($loc, fn () => new Confirmation(
-            subject: __('web.mail.'.$kind.'.subject'),
+            subject: __('web.mail.'.$kind.'.subject', $extra['params'] ?? []),
             greeting: __('mails.hello', ['name' => $a->first_name]),
-            intro: [__('web.mail.'.$kind.'.intro')],
-            next: [__('web.mail.'.$kind.'.next')],
+            intro: [__('web.mail.'.$kind.'.intro', $extra['params'] ?? [])],
+            next: [__('web.mail.'.$kind.'.next', $extra['params'] ?? [])],
             button: $extra['button'] ?? null,
         ))->locale($loc);
 

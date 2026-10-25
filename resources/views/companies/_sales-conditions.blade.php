@@ -1,7 +1,8 @@
 {{-- Customer card › Standard sales conditions (sales products): default %, % per brand or category, net prices per product. --}}
 @if (auth()->user()->canUseModule('sales', 1) || auth()->user()->hasRight('sales.approve_low_margin'))
     @php($rows = \App\Models\ProductSales\CustomerDiscount::with(['brand', 'category', 'item.suppliers', 'setBy'])->where('company_id', $company->id)->get())
-    @php($canDisc = auth()->user()->hasRight('sales.approve_low_margin'))
+    @php($canDisc = \App\Services\Sales\DiscountRules::canEdit(auth()->user(), $company))
+    @php($approver = \App\Services\Sales\DiscountRules::approver(auth()->user()))
     @php($seeMargin = auth()->user()->hasRight('finance.see_margins'))
     @php($pct = fn ($bp) => rtrim(rtrim(number_format($bp / 100, 2, ',', ''), '0'), ',').'%')
     @php($eur = fn ($c) => \App\Services\Afrit6\Pricing::eur((int) $c))
@@ -21,6 +22,18 @@
     <section class="card" id="sales-conditions">
         <div class="card-head"><h2>{{ __('psales.discounts.title') }}</h2></div>
         <p class="muted small">{{ __('psales.discounts.intro') }}</p>
+        <h3 class="sc-h">{{ __('psales.discounts.rental_title') }}</h3>
+        <div class="contact"><div>
+            <b>{{ __('psales.discounts.rental_general') }}</b> · <b>{{ $pct((int) $company->rental_discount_bp) }}</b>
+            <br><small class="muted">{{ __('psales.discounts.rental_hint') }}</small>
+        </div></div>
+        @if ($canDisc)
+            <form method="post" action="{{ route('companies.rental_discount', $company) }}" class="inline-form mt">@csrf @method('PUT')
+                <label class="field"><span>{{ __('psales.discounts.rental_general') }} %</span><input type="number" name="rental_discount" step="0.5" min="0" max="90" value="{{ $company->rental_discount_bp / 100 }}" class="w-sm"></label>
+                <button class="btn" type="submit">{{ __('psales.save') }}</button>
+            </form>
+        @endif
+        <h3 class="sc-h">{{ __('psales.discounts.sales_title') }}</h3>
         @if ($rows->isEmpty())<p class="muted">{{ __('psales.discounts.none') }}</p>@endif
         @foreach ($groups as $g => $list)
             @if ($list->isNotEmpty())
@@ -65,6 +78,11 @@
                 </form>
             </details>
             <p class="muted small mt">{{ __('psales.discounts.hint') }}</p>
+        @endif
+        @if ($canDisc && ! $approver)
+            <p class="small mt"><b>{{ __('psales.discounts.your_limit', ['limit' => \App\Services\Sales\DiscountRules::pct(\App\Services\Sales\DiscountRules::limitBp())]) }}</b></p>
+        @elseif (! $canDisc)
+            <p class="muted small mt">{{ __('psales.discounts.who_may') }}</p>
         @endif
     </section>
 @endif

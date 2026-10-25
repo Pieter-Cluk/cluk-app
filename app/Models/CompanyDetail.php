@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
     'legal_name', 'legal_form', 'vat_number', 'rpr', 'street', 'postcode', 'city', 'country',
     'warehouse_address', 'phone', 'email', 'invoice_email', 'website',
     'payment_term_days', 'quote_valid_days', 'option_days', 'footer_line',
-    'vat_default_be', 'vat_default_eu_business', 'vat_default_eu_private', 'vat_default_outside_eu',
+    'vat_default_be', 'vat_default_eu_business', 'vat_default_eu_private', 'vat_default_outside_eu', 'discount_limit_bp',
 ])]
 class CompanyDetail extends Model
 {
@@ -24,6 +24,7 @@ class CompanyDetail extends Model
             'option_days' => 'integer',
             'okioki_send' => 'boolean',
             'invoice_next' => 'integer',
+            'discount_limit_bp' => 'integer',
         ];
     }
 

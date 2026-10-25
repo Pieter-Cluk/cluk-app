@@ -276,8 +276,16 @@ return [
         'mail_links' => 'Téléchargez les fichiers ici (liens valables 30 jours) :',
     ],
     'discounts' => [
-        'title' => 'Conditions de vente standard',
-        'intro' => 'Ce que ce client paie pour les produits de vente. Connecté au site web, il voit ces prix, les commandes web les utilisent et les nouvelles lignes d’offre aussi.',
+        'rental_title' => 'Dry-hire',
+        'rental_general' => 'Remise générale sur le dry-hire',
+        'rental_hint' => 'Sur chaque article dry-hire : sur le site (quand le client est connecté) et sur les nouvelles lignes de devis de location.',
+        'sales_title' => 'Produits de vente',
+        'rental_saved' => 'Remise dry-hire fixée à :pct.',
+        'over_limit' => 'Au-delà de :limit, il faut un collègue avec le droit « Vente : approuver une marge basse ».',
+        'your_limit' => 'Vous pouvez accorder jusqu’à :limit à ce client ; au-delà, demandez à un collègue avec le droit d’approbation.',
+        'who_may' => 'Seul le responsable du compte (jusqu’à la limite) ou une personne avec le droit d’approbation peut modifier ceci.',
+        'title' => 'Conditions du client',
+        'intro' => 'Ce que ce client paie. Connecté sur le site, il voit ces prix ; les demandes via le site et les nouvelles lignes de devis les reçoivent aussi.',
         'none' => 'Pas de conditions : prix catalogue.',
         'default' => 'Remise standard (tous les produits)',
         'groups' => [

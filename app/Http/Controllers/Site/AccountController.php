@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Models\BankAccount;
+use App\Models\CompanyDetail;
 use App\Models\Web\CustomerAccount;
+use App\Services\Web\AccountDocs;
 use App\Services\Web\Baskets;
+use App\Services\Web\Colleagues;
 use App\Services\Web\CustomerAuth;
 use App\Services\Website\Tracking;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -117,7 +122,8 @@ class AccountController extends SiteController
         $a = CustomerAuth::current();
 
         return view('site.account.show', [
-            'a' => $a->loadMissing('company'), 'history' => Baskets::history($a),
+            'a' => $a->loadMissing('company'), 'history' => Baskets::history($a), 'docs' => AccountDocs::for($a),
+            'colleagues' => $a->isMain() ? $a->colleagues()->orderBy('first_name')->get() : collect(),
             'dry' => Baskets::show($a, 'dryhire'), 'sales' => Baskets::show($a, 'sales'), 'notice' => session('notice'),
         ]);
     }
@@ -143,6 +149,57 @@ class AccountController extends SiteController
         }
 
         return back()->with('notice', __('site.account.password_saved'));
+    }
+
+    // ---------- invoices and colleagues ----------
+
+    /** An invoice of the customer's company, to read or print. */
+    public function invoice(Request $request, int $invoice): View
+    {
+        $this->locale($request);
+        $pf = AccountDocs::invoice(CustomerAuth::current(), $invoice);
+        abort_unless($pf, 404);
+
+        return view('site.account.invoice', ['pf' => $pf->load(['company']), 'me' => CompanyDetail::current(), 'bank' => BankAccount::where('on_documents', true)->orderByDesc('is_main')->first()]);
+    }
+
+    /** The e-invoice file (Peppol UBL), as sent through OkiOki. */
+    public function invoiceXml(int $invoice)
+    {
+        $pf = AccountDocs::invoice(CustomerAuth::current(), $invoice);
+        abort_unless($pf && $pf->ubl_path && Storage::disk('local')->exists($pf->ubl_path), 404);
+
+        return Storage::disk('local')->download($pf->ubl_path, basename($pf->ubl_path), ['Content-Type' => 'application/xml']);
+    }
+
+    /** The main contact invites a colleague. */
+    public function invite(Request $request): RedirectResponse
+    {
+        $this->locale($request);
+        $d = $request->validate([
+            'first_name' => ['required', 'string', 'max:80'], 'last_name' => ['nullable', 'string', 'max:80'],
+            'email' => ['required', 'email', 'max:190'], 'role' => ['required', Rule::in(['order', 'view', 'main'])],
+        ]);
+        $c = Colleagues::invite(CustomerAuth::current(), $d);
+
+        return redirect()->to(route('site.account').'#colleagues')->with('notice', __('web.colleagues.invited', ['email' => $c->email]));
+    }
+
+    /** The main contact changes what a colleague may do, or takes the login away / gives it back. */
+    public function colleague(Request $request, int $colleague): RedirectResponse
+    {
+        $this->locale($request);
+        $me = CustomerAuth::current();
+        $c = CustomerAccount::findOrFail($colleague);
+        $d = $request->validate(['role' => ['nullable', Rule::in(CustomerAccount::ROLES)], 'access' => ['nullable', Rule::in(['off', 'on'])]]);
+        if (! empty($d['role'])) {
+            Colleagues::role($me, $c, $d['role']);
+        }
+        if (! empty($d['access'])) {
+            Colleagues::access($me, $c, $d['access'] === 'on');
+        }
+
+        return redirect()->to(route('site.account').'#colleagues')->with('notice', __('web.colleagues.saved'));
     }
 
     // ---------- baskets (JSON, signed-in customers) ----------

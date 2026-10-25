@@ -38,6 +38,7 @@ class Company extends Model
             'archived_at' => 'datetime',
             'accounts_checked_at' => 'datetime',
             'customer_payment_days' => 'integer',
+            'rental_discount_bp' => 'integer',
             'supplier_payment_days' => 'integer',
         ];
     }

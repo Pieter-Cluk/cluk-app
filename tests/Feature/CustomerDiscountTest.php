@@ -81,7 +81,7 @@ class CustomerDiscountTest extends TestCase
         $this->assertSame(5, AuditLog::where('action', 'sales.customer_discount')->count());
         $this->assertStringContainsString('15% → 12.5%', json_encode(AuditLog::where('action', 'sales.customer_discount')->orderBy('id')->get()[3]->data, JSON_UNESCAPED_UNICODE));
 
-        $this->actingAs($admin)->get('/companies/'.$this->customer->id)->assertOk()->assertSee('Standard sales conditions')->assertSee('12,5%')->assertSee('Default discount (all products)')->assertSee('Net prices');
+        $this->actingAs($admin)->get('/companies/'.$this->customer->id)->assertOk()->assertSee('Customer conditions')->assertSee('12,5%')->assertSee('Default discount (all products)')->assertSee('Net prices');
 
         // New quote lines for this customer get the same prices (net price as the line price).
         $q = SalesQuote::create(['number' => SalesQuote::nextNumber(), 'status' => 'draft', 'company_id' => $this->customer->id, 'title' => 'Mics', 'language' => 'en']);

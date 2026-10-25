@@ -187,6 +187,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .card .meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: auto; padding-top: 6px; }
 .price { font-weight: 700; }
 .price small { font-weight: 500; color: var(--muted); font-size: 12px; }
+.price s.lp { font-weight: 500; color: var(--muted); font-size: 12px; margin-right: 4px; }
 .stock { font-size: 12px; color: var(--muted); }
 .stock b { color: var(--green); }
 .badge { position: absolute; left: 10px; bottom: 10px; z-index: 2; background: var(--fg); color: var(--bg); font: 700 10px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; padding: 4px 6px; }
@@ -634,3 +635,32 @@ mark { background: rgba(92,191,58,.3); color: inherit; padding: 0 1px; }
 .newsf .meta { display: flex; gap: 6px; align-items: center; font-size: 12px; color: #5d6359; }
 @media (max-width: 1000px) { .hn-body { grid-template-columns: 1fr; } .hn-list { max-height: 360px; order: 2; } .hn-head { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .hn-frames { grid-template-columns: 1fr; } }
+
+/* My CLUK: quotes, orders, invoices, colleagues */
+.btn.sm { padding: 6px 10px; font-size: 13px; min-height: 0; }
+.nowrap { white-space: nowrap; }
+.acc-note { margin: 0 0 20px; padding: 10px 14px; border-left: 3px solid var(--green); background: var(--bg-2, rgba(0,0,0,.03)); }
+.acc-pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.acc-paid { background: rgba(70,179,75,.15); color: #2e7d32; }
+.acc-open { background: rgba(0,0,0,.06); }
+.acc-late { background: rgba(229,72,77,.15); color: #c62828; }
+.acc-off td { opacity: .55; }
+.acc-invite { margin-top: 18px; display: grid; gap: 10px; max-width: 640px; }
+.acc-invite h3 { margin: 0; font-size: 16px; }
+.inv-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 16px; }
+.inv-doc { background: var(--bg, #fff); border: 1px solid var(--line); border-radius: 12px; padding: clamp(16px, 4vw, 36px); max-width: 900px; }
+.inv-head { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+.inv-head h1 { margin: 0 0 6px; font-size: 28px; }
+.inv-from { font-size: 14px; text-align: right; }
+.inv-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 16px; font-size: 14px; }
+.inv-meta small { display: block; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: 11px; margin-bottom: 2px; }
+.inv-tot { margin: 14px 0 0 auto; max-width: 340px; display: grid; gap: 6px; }
+.inv-tot div { display: flex; justify-content: space-between; }
+.inv-tot .g { font-weight: 800; font-size: 18px; border-top: 2px solid var(--fg); padding-top: 6px; }
+.inv-pay { margin-top: 18px; font-weight: 600; }
+@media print { .site-head, .site-foot, .inv-bar, header.top, footer { display: none !important; } .inv-doc { border: 0; padding: 0; } }
+@media (max-width: 600px) { .inv-from { text-align: left; } }
+.acc-page { grid-template-columns: minmax(0, 1fr); }
+.acc-page > *, .acc-two > * { min-width: 0; }
+@media (max-width: 600px) { .acc-page .lhead { grid-template-columns: minmax(0, 1fr); } .acc-page .lhead form { grid-column: 1; grid-row: auto; } }
+.inv-doc td.num { white-space: nowrap; }

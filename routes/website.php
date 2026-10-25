@@ -58,6 +58,10 @@ $site = function () {
         Route::post('/account/basket/dryhire/dates', [AccountController::class, 'basketDates'])->name('account.basket.dates');
         Route::post('/account/basket/dryhire/send', [AccountController::class, 'sendDryHire'])->middleware('throttle:6,1')->name('account.basket.send');
         Route::post('/account/basket/sales/order', [AccountController::class, 'orderSales'])->middleware('throttle:6,1')->name('account.basket.order');
+        Route::get('/account/invoices/{invoice}', [AccountController::class, 'invoice'])->whereNumber('invoice')->name('account.invoice');
+        Route::get('/account/invoices/{invoice}/e-invoice', [AccountController::class, 'invoiceXml'])->whereNumber('invoice')->name('account.invoice.xml');
+        Route::post('/account/colleagues', [AccountController::class, 'invite'])->middleware('throttle:10,1')->name('account.colleagues.invite');
+        Route::post('/account/colleagues/{colleague}', [AccountController::class, 'colleague'])->whereNumber('colleague')->name('account.colleagues.update');
     });
 
     Route::get('/sales/{cat}/{sub?}', [SalesController::class, 'category'])->where(['cat' => '[a-z0-9-]+', 'sub' => '[a-z0-9-]+'])->name('sales.category');

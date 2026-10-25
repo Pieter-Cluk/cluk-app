@@ -276,8 +276,16 @@ return [
         'mail_links' => 'Download de bestanden hier (links 30 dagen geldig):',
     ],
     'discounts' => [
-        'title' => 'Standaard verkoopvoorwaarden',
-        'intro' => 'Wat deze klant betaalt voor verkoopproducten. Aangemeld op de website ziet hij deze prijzen, webbestellingen gebruiken ze, en nieuwe offertelijnen krijgen ze ook.',
+        'rental_title' => 'Dry-hire',
+        'rental_general' => 'Algemene korting op dry-hire',
+        'rental_hint' => 'Op elk dry-hire-item: op de website (als de klant ingelogd is) en op nieuwe lijnen van verhuurofferten.',
+        'sales_title' => 'Verkoopproducten',
+        'rental_saved' => 'Korting op dry-hire ingesteld op :pct.',
+        'over_limit' => 'Boven :limit heb je een collega nodig met het recht “Verkoop: lage marge goedkeuren”.',
+        'your_limit' => 'Je kunt deze klant tot :limit geven; daarboven vraag je het aan een collega met het goedkeuringsrecht.',
+        'who_may' => 'Enkel de accountbeheerder (tot de limiet) of iemand met het goedkeuringsrecht kan dit wijzigen.',
+        'title' => 'Klantvoorwaarden',
+        'intro' => 'Wat deze klant betaalt. Ingelogd op de website ziet hij deze prijzen; aanvragen via de website en nieuwe offertelijnen krijgen ze ook.',
         'none' => 'Geen voorwaarden: lijstprijzen.',
         'default' => 'Standaardkorting (alle producten)',
         'groups' => [

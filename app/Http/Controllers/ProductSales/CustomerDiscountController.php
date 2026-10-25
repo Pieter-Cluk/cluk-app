@@ -11,16 +11,18 @@ use App\Models\ProductSales\CustomerDiscount;
 use App\Models\ProductSales\SalesItem;
 use App\Services\Afrit6\Pricing;
 use App\Services\ProductSales\CustomerPrices;
+use App\Services\Sales\DiscountRules;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Customer card › Standard sales conditions: a default %, a different % per
- * brand or sales category, and fixed net prices per product. Setting them
- * needs the right "Sales: approve low margin", because they set the prices
- * the customer sees on the website and gets on new quotes. Every change is in
- * the audit log.
+ * Customer card › Customer conditions: the general dry-hire %, and for sales
+ * products a default %, a % per brand or sales category, and fixed net prices.
+ * They set the prices the customer sees on the website and gets on new quotes.
+ * The account owner may give up to the limit in Settings › Company; above it,
+ * the right "Sales: approve low margin" is needed (DiscountRules). Every change
+ * is in the audit log.
  */
 class CustomerDiscountController extends Controller
 {
@@ -32,6 +34,7 @@ class CustomerDiscountController extends Controller
             'discount' => ['required', 'numeric', 'min:0', 'max:90'],
             'note' => ['nullable', 'string', 'max:200'],
         ]);
+        $this->allow($request, $company, (int) round($d['discount'] * 100));
         [$kind, $id] = array_pad(explode(':', $d['target']), 2, null);
         $brand = $kind === 'b' ? Brand::find($id) : null;
         $cat = $kind === 'c' ? Category::of(SalesItem::CATALOGUE)->find($id) : null;
@@ -62,6 +65,8 @@ class CustomerDiscountController extends Controller
         }
         $row = CustomerDiscount::where('company_id', $company->id)->where('sales_item_id', $item->id)->first();
         $cents = (int) round($d['net_price'] * 100);
+        // A net price counts as the discount it gives on the list price.
+        $this->allow($request, $company, $item->list_price_cents > 0 ? (int) round(max(0, 1 - $cents / $item->list_price_cents) * 10000) : 10000);
         $this->save($request, $company, $row, ['brand_id' => null, 'category_id' => null, 'sales_item_id' => $item->id, 'discount_bp' => null, 'net_cents' => $cents, 'note' => $d['note'] ?? null],
             $item->number.' '.$item->name(), Pricing::eur($cents).' net');
 
@@ -77,9 +82,32 @@ class CustomerDiscountController extends Controller
         AuditLog::record('sales.customer_discount', $company, ['for' => $what, 'value' => ($old !== null ? $old.' → ' : '').$value], $request->user());
     }
 
+    /** The general discount on dry-hire for this customer (website prices and new rental quote lines). */
+    public function rental(Request $request, Company $company): RedirectResponse
+    {
+        $bp = (int) round(((float) $request->validate(['rental_discount' => ['required', 'numeric', 'min:0', 'max:90']])['rental_discount']) * 100);
+        $this->allow($request, $company, $bp);
+        $old = (int) $company->rental_discount_bp;
+        if ($old !== $bp) {
+            $company->forceFill(['rental_discount_bp' => $bp])->save();
+            AuditLog::record('sales.rental_discount', $company, ['value' => DiscountRules::pct($old).' → '.DiscountRules::pct($bp)], $request->user());
+        }
+
+        return back()->with('status', __('psales.discounts.rental_saved', ['pct' => DiscountRules::pct($bp)]));
+    }
+
+    private function allow(Request $request, Company $company, int $bp): void
+    {
+        abort_unless(DiscountRules::canEdit($request->user(), $company), 403);
+        if (! DiscountRules::allows($request->user(), $company, $bp)) {
+            throw ValidationException::withMessages(['discount' => __('psales.discounts.over_limit', ['limit' => DiscountRules::pct(DiscountRules::limitBp())])]);
+        }
+    }
+
     public function destroy(Request $request, Company $company, CustomerDiscount $discount): RedirectResponse
     {
         abort_unless($discount->company_id === $company->id, 404);
+        abort_unless(DiscountRules::canEdit($request->user(), $company), 403);
         AuditLog::record('sales.customer_discount_removed', $company, [
             'for' => $discount->item?->number ?? $discount->brand?->name ?? $discount->category?->label('en') ?? 'default',
             'value' => $discount->net_cents !== null ? Pricing::eur($discount->net_cents).' net' : ($discount->discount_bp / 100).'%',

@@ -43,6 +43,7 @@ return [
             'pf_back' => 'Een proforma komt bij je terug',
             'credit_alert' => 'De kredietcheck van een klant wordt rood',
             'task_assigned' => 'Iemand geeft je een taak',
+            'web_request' => 'Een klant stuurt een aanvraag via de website',
         ],
         'daily' => 'Dagelijkse samenvatting',
         'daily_hint' => 'Eén e-mail op werkdagen met je open taken. Geen taken, geen e-mail.',

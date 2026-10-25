@@ -1,12 +1,30 @@
 <?php
 
 return [
+    'roles' => [
+        'no_order' => 'Je login mag kijken maar niet bestellen. Vraag het aan het hoofdcontact van je bedrijf.',
+    ],
+    'colleagues' => [
+        'exists' => 'Er is al een login met dit e-mailadres.',
+        'invited' => 'Uitnodiging gestuurd naar :email.',
+        'saved' => 'Opgeslagen.',
+        'removed_by' => 'Toegang ingetrokken door :name',
+    ],
+    'deal' => [
+        'log' => 'Via de website gestuurd door :name (:email).',
+        'title_dryhire' => 'Aanvraag via de website voor :date',
+        'staff_subject' => 'Aanvraag via de website van :name',
+        'staff_intro' => ':name (:email) stuurde een aanvraag via de website. Deal :deal staat voor je klaar met een ontwerpofferte aan hun prijzen: kijk ze na en stuur ze door.',
+        'value' => 'Waarde excl. btw',
+        'staff_button' => 'De deal openen',
+    ],
     'statuses' => [
         'pending' => 'Wacht op goedkeuring',
         'active' => 'Actief',
         'blocked' => 'Geblokkeerd',
     ],
     'staff' => [
+        'invited' => 'uitgenodigd door een collega',
         'title' => 'Website-logins',
         'intro' => 'Klanten die zich op de website registreerden. Een login werkt pas nadat je hem goedkeurt en koppelt aan een contact (en bedrijf).',
         'card_title' => 'Website-logins',
@@ -39,6 +57,12 @@ return [
         'in_baskets' => ':n lijnen in de mandjes',
     ],
     'mail' => [
+        'invite' => [
+            'subject' => ':name nodigt je uit op cluk.live',
+            'intro' => ':name nodigt je uit op het klantenaccount van :company bij CLUK: bekijk je prijzen, offertes, orders en facturen.',
+            'next' => 'Kies je wachtwoord met de knop hieronder. De link werkt 7 dagen.',
+            'button' => 'Mijn wachtwoord kiezen',
+        ],
         'verify' => [
             'subject' => 'Bevestig je e-mail voor cluk.live',
             'intro' => 'Bedankt voor je registratie op cluk.live. Bevestig je e-mailadres.',

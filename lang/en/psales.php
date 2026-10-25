@@ -276,8 +276,16 @@ return [
         'mail_links' => 'Download the files here (links valid for 30 days):',
     ],
     'discounts' => [
-        'title' => 'Standard sales conditions',
-        'intro' => 'What this customer pays for sales products. Signed in on the website they see these prices, website orders use them, and new quote lines get them too.',
+        'rental_title' => 'Dry-hire',
+        'rental_general' => 'General discount on dry-hire',
+        'rental_hint' => 'On every dry-hire item: on the website (when the customer is logged in) and on new rental quote lines.',
+        'sales_title' => 'Sales products',
+        'rental_saved' => 'Dry-hire discount set to :pct.',
+        'over_limit' => 'Above :limit you need a colleague with the right “Sales: approve low margin”.',
+        'your_limit' => 'You can give this customer up to :limit; above that, ask a colleague with the approval right.',
+        'who_may' => 'Only the account owner (up to the limit) or someone with the approval right can change these.',
+        'title' => 'Customer conditions',
+        'intro' => 'What this customer pays. Signed in on the website they see these prices; website requests and new quote lines get them too.',
         'none' => 'No conditions: list prices.',
         'default' => 'Default discount (all products)',
         'groups' => [

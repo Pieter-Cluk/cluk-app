@@ -20,7 +20,7 @@
                         <b>{{ $a->name() }}</b> · <a href="mailto:{{ $a->email }}">{{ $a->email }}</a>
                         @if ($a->email_verified_at)<span class="pill pill-ok">{{ __('web.staff.email_ok') }}</span>@else<span class="pill pill-warn">{{ __('web.staff.email_not_ok') }}</span>@endif
                         <br><small class="muted">{{ collect([$a->company_name, $a->vat_number, $a->phone, strtoupper($a->locale)])->filter()->implode(' · ') }} · {{ __('web.staff.registered', ['date' => $a->created_at->format('d/m/Y H:i')]) }}</small>
-                        @if ($a->company || $a->contact)<br><small>{{ __('web.staff.linked') }}: @if ($a->company)<a href="{{ route('companies.show', $a->company) }}">{{ $a->company->name }}</a> · @endif{{ $a->contact?->first_name }} {{ $a->contact?->last_name }}</small>@endif
+                        @if ($a->company || $a->contact)<br><small>{{ __('web.staff.linked') }}: @if ($a->company)<a href="{{ route('companies.show', $a->company) }}">{{ $a->company->name }}</a> · @endif{{ $a->contact?->first_name }} {{ $a->contact?->last_name }}@if ($a->company) · <b>{{ __('site.account.roles.'.$a->role) }}</b>@endif @if ($a->invited_by_id) · {{ __('web.staff.invited') }}@endif</small>@endif
                         @if ($a->last_login_at)<br><small class="muted">{{ __('web.staff.last_login', ['date' => $a->last_login_at->format('d/m/Y H:i')]) }}</small>@endif
                         @if ($a->blocked_reason)<br><small class="muted">{{ __('web.staff.reason') }}: {{ $a->blocked_reason }}</small>@endif
                     </div>
@@ -42,6 +42,11 @@
                         </form>
                     @endif
                     <div class="inline-form mt">
+                        @if ($a->company_id && $a->status === 'active')
+                            <form method="post" action="{{ route('web-accounts.role', $a) }}" class="inline-form">@csrf
+                                <select name="role" aria-label="{{ __('site.account.col_role') }}" onchange="this.form.submit()">@foreach (\App\Models\Web\CustomerAccount::ROLES as $r)<option value="{{ $r }}" @selected($a->role === $r)>{{ __('site.account.roles.'.$r) }}</option>@endforeach</select>
+                            </form>
+                        @endif
                         @if ($a->status !== 'blocked')
                             <form method="post" action="{{ route('web-accounts.reset', $a) }}">@csrf<button class="btn" type="submit">{{ __('web.staff.send_reset') }}</button></form>
                             <form method="post" action="{{ route('web-accounts.block', $a) }}" class="inline-form">@csrf<input name="reason" maxlength="255" placeholder="{{ __('web.staff.reason') }}" aria-label="{{ __('web.staff.reason') }}"><button class="btn" type="submit">{{ __('web.staff.block') }}</button></form>

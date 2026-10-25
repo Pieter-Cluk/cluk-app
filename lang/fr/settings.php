@@ -36,6 +36,8 @@ return [
         'defaults' => 'Valeurs par défaut des documents',
         'payment_term' => 'Délai de paiement (jours)',
         'quote_valid' => 'Validité du devis (jours)',
+        'discount_limit' => 'Remise que le responsable du compte peut accorder',
+        'discount_limit_hint' => 'Au-delà, une personne avec « Vente : approuver une marge basse » fixe la remise.',
         'option_days' => 'Option sur le matériel (jours)',
         'footer' => 'Pied de page sur chaque page',
         'later' => 'Les logos par marque, les conditions par langue et les médias & connexions arrivent avec le module documents.',

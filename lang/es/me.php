@@ -43,6 +43,7 @@ return [
             'pf_back' => 'Una proforma vuelve a ti',
             'credit_alert' => 'El control de crédito de un cliente se pone en rojo',
             'task_assigned' => 'Alguien le da una tarea',
+            'web_request' => 'Un cliente envía una solicitud por la web',
         ],
         'daily' => 'Resumen diario',
         'daily_hint' => 'Un correo los días laborables con tus tareas abiertas. Sin tareas, sin correo.',

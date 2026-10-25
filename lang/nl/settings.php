@@ -36,6 +36,8 @@ return [
         'defaults' => 'Standaarden op documenten',
         'payment_term' => 'Betalingstermijn (dagen)',
         'quote_valid' => 'Offerte geldig (dagen)',
+        'discount_limit' => 'Korting die de accountbeheerder mag geven',
+        'discount_limit_hint' => 'Daarboven stelt iemand met “Verkoop: lage marge goedkeuren” de korting in.',
         'option_days' => 'Optie op materiaal (dagen)',
         'footer' => 'Voettekst op elke pagina',
         'later' => 'Logo\'s per merk, voorwaarden per taal en media & koppelingen volgen met de documentenmodule.',

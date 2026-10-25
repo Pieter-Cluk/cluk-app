@@ -28,6 +28,11 @@
     it.allC = compact(it.nm + ' ' + it.b + ' ' + it.t + ' ' + it.n + ' ' + opts);
   });
 
+  // A logged-in customer's own day prices (their general dry-hire discount); the list price stays for reference.
+  var DISC = (C.customer && C.customer.disc) || 0;
+  var own = function (c) { return DISC && c ? Math.round(c * (1 - DISC / 10000)) : c; };
+  if (DISC) ITEMS.forEach(function (it) { if (it.p) { it.lp = it.p; it.p = own(it.p); } });
+
   // ---------- search ----------
   var reEsc = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
   function tokens(q) { return fold(q).trim().split(/\s+/).filter(Boolean); }
@@ -163,7 +168,7 @@
     var cat = catById[it.c] || {};
     return '<div class="plate"><div class="top"><span class="code">' + esc(cat.code || '') + '</span><span class="brand">' + esc(it.b || (subById[it.s] || {}).name || '') + '</span></div><div class="type">' + hl(it.t || it.nm, toks) + '</div></div>';
   }
-  function priceHtml(it) { return it.p ? '<span class="price num">' + eur(it.p) + ' <small>' + esc(T.per_day) + '</small></span>' : '<span class="price" style="font-weight:500;color:var(--muted)">' + esc(T.on_request) + '</span>'; }
+  function priceHtml(it) { return it.p ? '<span class="price num">' + (it.lp ? '<s class="lp">' + eur(it.lp) + '</s> ' : '') + eur(it.p) + ' <small>' + esc(T.per_day) + '</small></span>' : '<span class="price" style="font-weight:500;color:var(--muted)">' + esc(T.on_request) + '</span>'; }
   function addBtn(it) { var on = S.basket.has(it.id); return '<button class="add' + (on ? ' in' : '') + '" type="button" data-add="' + it.id + '" aria-label="' + esc(on ? T.in_request : T.add) + '">' + (on ? check : plus) + '</button>'; }
   function card(it, toks) {
     return '<article class="card" data-id="' + it.id + '" tabindex="0" aria-label="' + esc(it.nm) + '">' + addBtn(it) + visual(it, toks) +
@@ -263,10 +268,11 @@
     if (openD !== $('pd')) open($('pd'));
     fetch(C.urls.data.replace('__ID__', id), { headers: { Accept: 'application/json' } }).then(function (r) { return r.json(); }).then(function (d) {
       if (!$('pdBody') || openD !== $('pd')) return;
+      if (DISC) { if (d.price) { d.lprice = d.price; d.price = own(d.price); } (d.related || []).forEach(function (r) { r.p = own(r.p); }); }
       var g = d.photos.length ? '<div class="photo"><img id="pdPhoto" src="' + esc(d.photos[0]) + '" alt="' + esc(d.name) + '"></div>' +
         (d.photos.length > 1 ? '<div class="thumbs">' + d.photos.map(function (p, k) { return '<button type="button" data-ph="' + esc(p) + '" aria-current="' + (k === 0) + '"><img src="' + esc(p) + '" alt="" loading="lazy"></button>'; }).join('') + '</div>' : '') : visual(it, []).replace('class="plate"', 'class="plate big"');
       var specs = [[T.l_brand, d.brand], [T.l_pieces, d.qty ? '<b style="color:var(--green)">' + d.qty + '</b>' : null], [T.l_weight, d.weight], [T.l_size, d.size],
-        [T.l_price, d.price ? '<b>' + eur(d.price) + '</b> ' + esc(T.per_day) + ' · ' + esc(T.price_note) : esc(T.on_request)]];
+        [T.l_price, d.price ? '<b>' + eur(d.price) + '</b> ' + esc(T.per_day) + (d.lprice ? ' · ' + esc(T.your_price) + ' (' + esc(T.list_price) + ' ' + eur(d.lprice) + ')' : ' · ' + esc(T.price_note)) : esc(T.on_request)]];
       $('pdBody').innerHTML = '<div class="gallery">' + g + '</div>' +
         '<div><h2 id="pdTitle" style="font:800 30px/1.05 var(--sans);letter-spacing:-.03em;margin:0 0 6px">' + esc(d.name) + '</h2><span class="note" style="font-family:ui-monospace,Menlo,monospace">' + esc(d.number) + '</span></div>' +
         (d.description ? '<p class="desc">' + esc(d.description) + '</p>' : '') +

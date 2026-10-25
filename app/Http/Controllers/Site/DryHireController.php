@@ -22,7 +22,8 @@ class DryHireController extends SiteController
 
         $cust = CustomerAuth::current();
         $cfg = [
-            'customer' => $cust ? ['name' => $cust->name(), 'first' => $cust->first_name] : null,
+            // A logged-in customer sees their own day prices (general dry-hire discount on the customer card).
+            'customer' => $cust ? ['name' => $cust->name(), 'first' => $cust->first_name, 'disc' => (int) ($cust->company?->rental_discount_bp ?? 0)] : null,
             'acct' => [
                 'login' => route('site.account.login'), 'set' => route('site.account.basket.set', 'dryhire'), 'merge' => route('site.account.basket.merge', 'dryhire'),
                 'dates' => route('site.account.basket.dates'), 'send' => route('site.account.basket.send'),
@@ -30,6 +31,7 @@ class DryHireController extends SiteController
             't' => array_merge(__('site.js'), __('site.ajs'), [
                 'type' => __('site.dryhire.type'), 'tags' => __('site.dryhire.tags'), 'all' => __('site.dryhire.all'),
                 'show_all' => __('site.dryhire.show_all_brands'), 'show_fewer' => __('site.dryhire.show_fewer'),
+                'your_price' => __('site.dryhire.your_price'), 'list_price' => __('site.dryhire.list_price'),
             ]),
             'locale' => $locale,
             'urls' => [
@@ -52,7 +54,9 @@ class DryHireController extends SiteController
             return redirect()->route('site.dryhire.item', DryHireCatalogue::slug($model), 301);
         }
 
-        return view('site.dryhire-item', ['d' => DryHireCatalogue::detail($model, $locale), 'item' => $model, 'locale' => $locale]);
+        $disc = (int) (CustomerAuth::current()?->company?->rental_discount_bp ?? 0);
+
+        return view('site.dryhire-item', ['d' => DryHireCatalogue::detail($model, $locale), 'item' => $model, 'locale' => $locale, 'disc' => $disc]);
     }
 
     /** The same details for the product panel in the catalogue. */

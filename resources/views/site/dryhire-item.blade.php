@@ -31,7 +31,7 @@
       @if ($d['qty'] > 0)<dt>{{ __('site.js.l_pieces') }}</dt><dd><b style="color:var(--green)">{{ $d['qty'] }}</b></dd>@endif
       @if ($d['weight'])<dt>{{ __('site.js.l_weight') }}</dt><dd>{{ $d['weight'] }}</dd>@endif
       @if ($d['size'])<dt>{{ __('site.js.l_size') }}</dt><dd>{{ $d['size'] }}</dd>@endif
-      <dt>{{ __('site.js.l_price') }}</dt><dd>@if ($d['price'] > 0)<b>{{ $eur($d['price']) }}</b> {{ __('site.js.per_day') }} · {{ __('site.js.price_note') }}@else{{ __('site.js.on_request') }}@endif</dd>
+      <dt>{{ __('site.js.l_price') }}</dt><dd>@if ($d['price'] > 0 && ($disc ?? 0))<b>{{ $eur((int) round($d['price'] * (1 - $disc / 10000))) }}</b> {{ __('site.js.per_day') }} · {{ __('site.dryhire.your_price') }} ({{ __('site.dryhire.list_price') }} {{ $eur($d['price']) }})@elseif ($d['price'] > 0)<b>{{ $eur($d['price']) }}</b> {{ __('site.js.per_day') }} · {{ __('site.js.price_note') }}@else{{ __('site.js.on_request') }}@endif</dd>
     </dl>
     @if ($d['contents'])<div><h3 class="eyebrow" style="color:var(--muted);margin:0 0 8px">{{ __('site.js.contents') }}</h3><ul style="margin:0;padding-left:18px">@foreach ($d['contents'] as [$q, $n])<li>{{ $q }} × {{ $n }}</li>@endforeach</ul></div>@endif
     <div><a class="btn" href="{{ route('site.dryhire') }}?add={{ $d['id'] }}">{{ __('site.item.request') }}</a></div>

@@ -97,6 +97,8 @@
                 <div class="form-grid form-grid-3">
                     <label class="field"><span>{{ __('settings.company.payment_term') }}</span>
                         <input type="number" name="payment_term_days" value="{{ old('payment_term_days', $company->payment_term_days) }}" min="0" max="365" required></label>
+                    <label class="field"><span>{{ __('settings.company.discount_limit') }}</span>
+                        <input type="number" name="discount_limit" value="{{ old('discount_limit', $company->discount_limit_bp / 100) }}" min="0" max="90" step="0.5" required><small>{{ __('settings.company.discount_limit_hint') }}</small></label>
                     <label class="field"><span>{{ __('settings.company.quote_valid') }}</span>
                         <input type="number" name="quote_valid_days" value="{{ old('quote_valid_days', $company->quote_valid_days) }}" min="1" max="365" required></label>
                     <label class="field"><span>{{ __('settings.company.option_days') }}</span>

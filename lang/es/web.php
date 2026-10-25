@@ -1,12 +1,30 @@
 <?php
 
 return [
+    'roles' => [
+        'no_order' => 'Su acceso puede consultar pero no pedir. Pregunte al contacto principal de su empresa.',
+    ],
+    'colleagues' => [
+        'exists' => 'Ya existe un acceso con este correo.',
+        'invited' => 'Invitación enviada a :email.',
+        'saved' => 'Guardado.',
+        'removed_by' => 'Acceso quitado por :name',
+    ],
+    'deal' => [
+        'log' => 'Enviado desde la web por :name (:email).',
+        'title_dryhire' => 'Solicitud web para el :date',
+        'staff_subject' => 'Solicitud web de :name',
+        'staff_intro' => ':name (:email) envió una solicitud en la web. El trato :deal le espera con un borrador de presupuesto a sus precios: revíselo y envíelo.',
+        'value' => 'Valor sin IVA',
+        'staff_button' => 'Abrir el trato',
+    ],
     'statuses' => [
         'pending' => 'Pendiente de aprobación',
         'active' => 'Activo',
         'blocked' => 'Bloqueado',
     ],
     'staff' => [
+        'invited' => 'invitado por un compañero',
         'title' => 'Accesos de la web',
         'intro' => 'Clientes registrados en la web. Un acceso solo funciona después de aprobarlo y vincularlo a un contacto (y empresa).',
         'card_title' => 'Accesos de la web',
@@ -39,6 +57,12 @@ return [
         'in_baskets' => ':n líneas en las cestas',
     ],
     'mail' => [
+        'invite' => [
+            'subject' => ':name le invita a cluk.live',
+            'intro' => ':name le invita a la cuenta de cliente de :company en CLUK: vea sus precios, presupuestos, pedidos y facturas.',
+            'next' => 'Elija su contraseña con el botón de abajo. El enlace vale 7 días.',
+            'button' => 'Elegir mi contraseña',
+        ],
         'verify' => [
             'subject' => 'Confirma tu correo para cluk.live',
             'intro' => 'Gracias por registrarte en cluk.live. Confirma tu dirección de correo.',

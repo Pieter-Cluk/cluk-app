@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Web\CustomerAccount;
@@ -9,6 +10,7 @@ use App\Services\Web\CustomerAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /** Companies › Website logins: approve new registrations, block, send a password link. */
@@ -57,6 +59,18 @@ class WebAccountController extends Controller
         CustomerAuth::approve($account, $request->user(), $company, isset($d['contact_id']) ? Contact::find($d['contact_id']) : null, $d['company'] === 'new');
 
         return back()->with('status', __('web.staff.approved', ['email' => $account->email]));
+    }
+
+    /** What this login may do for its company: main contact, order, or look only. */
+    public function role(Request $request, CustomerAccount $account): RedirectResponse
+    {
+        $role = $request->validate(['role' => ['required', Rule::in(CustomerAccount::ROLES)]])['role'];
+        abort_unless($account->company_id, 409);
+        $old = $account->role;
+        $account->forceFill(['role' => $role])->save();
+        AuditLog::record('web.colleague_role', $account, ['email' => $account->email, 'role' => $old.' → '.$role], $request->user());
+
+        return back()->with('status', __('web.colleagues.saved'));
     }
 
     public function block(Request $request, CustomerAccount $account): RedirectResponse
