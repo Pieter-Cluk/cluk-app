@@ -19,6 +19,9 @@ return [
         'manage' => 'Gérer',
     ],
     'rights' => [
+        'meetings' => [
+            'see_all' => 'Voir toutes les réunions et tâches des collègues',
+        ],
         'afrit6' => [
             'approve_members' => 'Approuver les nouveaux membres Afrit 6',
             'door_codes' => 'Voir et modifier les codes de porte',

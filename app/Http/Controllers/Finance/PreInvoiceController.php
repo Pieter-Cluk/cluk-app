@@ -33,6 +33,7 @@ class PreInvoiceController extends Controller
 
         return view('finance.index', [
             'list' => $list, 'sel' => $sel, 'filt' => $filt, 'flagOnly' => $flagOnly,
+            'ready' => PreInvoices::readyRental(), 'canMake' => $request->user()->canUseModule('dryhire', 2) || $request->user()->canUseModule('preinvoice', 2),
             'tiles' => [
                 'check' => [$all->where('status', 'check')->count(), $sum('check'), $all->where('status', 'check')->filter(fn ($p) => $p->reds())->count()],
                 'back' => [$all->where('status', 'back')->count()],

@@ -45,6 +45,8 @@ return [
         'allocate_hint' => 'serial numbers or a count per line',
         'approve' => 'Approve and send',
         'approve_hint' => 'order confirmation to the customer',
+        'invoice' => 'Pre-invoice',
+        'invoice_hint' => 'send to finance when ready',
     ],
     'send_all' => 'Send all partner requests (:n)',
     'auto_all' => 'Auto-allocate all own stock',
@@ -97,6 +99,7 @@ return [
     'based_on' => 'Based on quote',
     'doc_intro' => 'Your rental order is confirmed as below. Thank you for your trust!',
     'doc_arrangements' => 'Arrangements',
+    'next_invoice' => 'Next step: send it to pre-invoicing below, once transport and extra costs are known.',
     'doc_delivery_text' => 'We deliver and collect at :location, at the agreed times. Changes need a new confirmation.',
     'logistics' => [
         'total' => 'Order total :net excl. VAT · :gross incl. VAT',

@@ -42,6 +42,7 @@ return [
             'order_handed' => 'An order of yours is handed over to the warehouse',
             'pf_back' => 'A proforma comes back to you',
             'credit_alert' => 'A customer’s credit check turns red',
+            'task_assigned' => 'Someone gives you a task',
         ],
         'daily' => 'Daily summary',
         'daily_hint' => 'One email on working days with your open tasks. No tasks, no email.',

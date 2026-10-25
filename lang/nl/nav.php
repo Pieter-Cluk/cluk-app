@@ -3,6 +3,8 @@
 return [
     'items' => [
         'salestasks' => 'Commerciële taken',
+        'meetings' => 'Vergaderingen',
+        'todos' => 'Mijn taken',
         'messages' => 'Berichten',
         'social' => 'Sociale media',
         'website' => 'Website',

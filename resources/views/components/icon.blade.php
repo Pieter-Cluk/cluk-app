@@ -1,6 +1,8 @@
 @props(['name'])
 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" {{ $attributes }}>
 @switch($name)
+    @case('check')<rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="M5.3 8.2l1.9 1.9 3.6-3.9"/>@break
+    @case('notes')<path d="M3.5 2.5h9v11h-9z"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3"/>@break
     @case('message')<path d="M2 3.5h12v7.5H6.5L3.5 13.5V11H2z"/><path d="M5 6.5h6M5 8.5h4"/>@break
     @case('share')<circle cx="4" cy="8" r="1.8"/><circle cx="12" cy="4" r="1.8"/><circle cx="12" cy="12" r="1.8"/><path d="M5.6 7.2 10.4 4.8M5.6 8.8l4.8 2.4"/>@break
     @case('globe')<circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c1.8 2 1.8 10 0 12M8 2c-1.8 2-1.8 10 0 12"/>@break

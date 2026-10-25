@@ -102,6 +102,11 @@ return [
     'tasks' => [
         'web_accounts' => 'Accesos de la web por aprobar',
         'web_accounts_s' => 'clientes registrados en la web',
+        'to_invoice' => 'Pedidos por prefacturar',
+        'to_invoice_s' => 'aprobados, sin prefactura',
+        'todos' => 'Mis tareas',
+        'todos_s' => 'de reuniones y compañeros',
+        'late' => '{1} 1 con retraso|[2,*] :n con retraso',
         'sales_tasks' => 'Tareas comerciales',
         'sales_tasks_s' => 'fichas, presupuestos abiertos, web',
         'incoming' => 'Nuevo en Entrante',

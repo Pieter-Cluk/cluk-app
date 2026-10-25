@@ -45,6 +45,8 @@ return [
         'allocate_hint' => 'números de serie o cantidad por línea',
         'approve' => 'Aprobar y enviar',
         'approve_hint' => 'confirmación al cliente',
+        'invoice' => 'Prefactura',
+        'invoice_hint' => 'a finanzas cuando todo se sepa',
     ],
     'send_all' => 'Enviar todas las solicitudes (:n)',
     'auto_all' => 'Asignar todo el stock automáticamente',
@@ -97,6 +99,7 @@ return [
     'based_on' => 'Según presupuesto',
     'doc_intro' => 'Su pedido de alquiler queda confirmado como sigue. ¡Gracias por su confianza!',
     'doc_arrangements' => 'Acuerdos',
+    'next_invoice' => 'Siguiente paso: envíelo abajo a prefacturación, cuando se conozcan el transporte y los costes extra.',
     'doc_delivery_text' => 'Entregamos y recogemos en :location, en los momentos acordados. Los cambios requieren una nueva confirmación.',
     'logistics' => [
         'total' => 'Total del pedido :net sin IVA · :gross con IVA',

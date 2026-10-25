@@ -3,6 +3,8 @@
 return [
     'items' => [
         'salestasks' => 'Tâches commerciales',
+        'meetings' => 'Réunions',
+        'todos' => 'Mes tâches',
         'messages' => 'Messages',
         'social' => 'Réseaux sociaux',
         'website' => 'Site web',

@@ -102,6 +102,11 @@ return [
     'tasks' => [
         'web_accounts' => 'Website logins to approve',
         'web_accounts_s' => 'customers who registered on the website',
+        'to_invoice' => 'Orders to pre-invoice',
+        'to_invoice_s' => 'approved, no pre-invoice yet',
+        'todos' => 'My tasks',
+        'todos_s' => 'from meetings and colleagues',
+        'late' => '{1} 1 late|[2,*] :n late',
         'sales_tasks' => 'Commercial tasks',
         'sales_tasks_s' => 'customer cards, open quotes, website',
         'incoming' => 'New in Incoming',

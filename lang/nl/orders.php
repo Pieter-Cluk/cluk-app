@@ -45,6 +45,8 @@ return [
         'allocate_hint' => 'serienummers of aantal per lijn',
         'approve' => 'Goedkeuren en versturen',
         'approve_hint' => 'orderbevestiging naar de klant',
+        'invoice' => 'Pre-factuur',
+        'invoice_hint' => 'naar finance als alles gekend is',
     ],
     'send_all' => 'Alle partneraanvragen versturen (:n)',
     'auto_all' => 'Alle eigen stock automatisch toewijzen',
@@ -97,6 +99,7 @@ return [
     'based_on' => 'Op basis van offerte',
     'doc_intro' => 'Uw huurorder is bevestigd zoals hieronder. Bedankt voor uw vertrouwen!',
     'doc_arrangements' => 'Afspraken',
+    'next_invoice' => 'Volgende stap: stuur het hieronder naar pre-facturatie, zodra transport en extra kosten gekend zijn.',
     'doc_delivery_text' => 'Wij leveren en halen op in :location, op de afgesproken momenten. Wijzigingen vragen een nieuwe bevestiging.',
     'logistics' => [
         'total' => 'Ordertotaal :net excl. btw · :gross incl. btw',

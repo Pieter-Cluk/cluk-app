@@ -13,6 +13,8 @@
 return [
     'top' => [
         ['key' => 'dashboard', 'path' => '/dashboard', 'icon' => 'home'],
+        ['key' => 'todos', 'path' => '/tasks', 'icon' => 'check'],
+        ['key' => 'meetings', 'path' => '/meetings', 'icon' => 'notes'],
         ['key' => 'management', 'path' => '/management', 'icon' => 'chart', 'right' => 'finance.see_margins'],
         ['key' => 'wallscreens', 'path' => '/wall-screens', 'icon' => 'screen', 'module' => ['warehouse', 1]],
     ],

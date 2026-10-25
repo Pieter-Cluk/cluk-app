@@ -119,4 +119,20 @@ class PreInvoiceTest extends TestCase
         $this->assertSame($u->id, $pf->fresh()->override_by_id);
         $this->actingAs($sales)->get('/order-allocation/'.$o->id)->assertSee($pf->number);
     }
+
+    public function test_approved_orders_wait_in_ready_for_pre_invoicing(): void
+    {
+        $sales = $this->as('sales', ['first_name' => 'Elke']);
+        $boss = $this->as('manager');
+        $o = $this->order($sales);
+
+        // Approved, no pre-invoice yet: on the order as step 4, on the dashboard and on the pre-invoicing page.
+        $this->actingAs($sales)->get(route('orders.show', $o))->assertOk()->assertSee('Next step: send it to pre-invoicing below')->assertSee('Send to pre-invoicing');
+        $this->actingAs($boss)->get('/dashboard')->assertSee('Orders to pre-invoice');
+        $this->actingAs($boss)->get('/pre-invoicing')->assertOk()->assertSee('Ready for pre-invoicing')->assertSee('R-OC-2026-0102');
+
+        $this->actingAs($boss)->post('/pre-invoicing/make/rental/'.$o->id)->assertRedirect();
+        $this->actingAs($boss)->get('/pre-invoicing')->assertDontSee('Ready for pre-invoicing');
+        $this->actingAs($sales)->get(route('orders.show', $o))->assertDontSee('Next step: send it to pre-invoicing below');
+    }
 }

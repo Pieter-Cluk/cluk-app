@@ -9,6 +9,21 @@
         </div>
     </div>
     @include('partials.flash')
+    @if ($ready->isNotEmpty())
+        <section class="card pf-ready" id="ready">
+            <div class="card-head"><h2>{{ __('finance.ready.title') }} <small class="muted">{{ $ready->count() }}</small></h2><span class="muted small">{{ __('finance.ready.hint') }}</span></div>
+            @foreach ($ready as $o)
+                <div class="pf-ready-row">
+                    <div class="pf-ready-main">
+                        <a href="{{ route('orders.show', $o) }}"><b>{{ $o->number }}</b> · {{ $o->customerName() }}</a>
+                        <small class="muted">{{ $o->title }} · {{ $o->use_from->format('d/m') }}–{{ $o->use_until->format('d/m/Y') }} · {{ $o->returned_at ? __('finance.ready.back_in') : ($o->loaded_at ? __('finance.ready.out') : __('finance.ready.not_out')) }}@if ($o->transportToPrice()) · <b class="txt-warn">{{ __('finance.ready.transport_missing') }}</b>@endif</small>
+                    </div>
+                    <b class="nowrap">{{ $eur($o->net_cents) }}</b>
+                    @if ($canMake)<form method="post" action="{{ route('finance.make', ['rental', $o->id]) }}">@csrf<button class="btn btn-sm" type="submit">{{ __('finance.send_to') }}</button></form>@endif
+                </div>
+            @endforeach
+        </section>
+    @endif
     <div class="tiles">
         <a class="tile tile-waiting" href="{{ route('finance.index', ['f' => 'check']) }}"><span class="tile-k">{{ mb_strtoupper(__('finance.tiles.check')) }}</span><b class="tile-v">{{ $tiles['check'][0] }}</b><small class="muted">{{ $eur($tiles['check'][1]) }} · {{ trans_choice('finance.tiles.red', $tiles['check'][2], ['n' => $tiles['check'][2]]) }}</small></a>
         <a class="tile tile-subhire" href="{{ route('finance.index', ['f' => 'back']) }}"><span class="tile-k">{{ mb_strtoupper(__('finance.tiles.back')) }}</span><b class="tile-v">{{ $tiles['back'][0] }}</b><small class="muted">{{ __('finance.tiles.back_s') }}</small></a>

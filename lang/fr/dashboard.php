@@ -102,6 +102,11 @@ return [
     'tasks' => [
         'web_accounts' => 'Comptes du site à approuver',
         'web_accounts_s' => 'clients inscrits sur le site web',
+        'to_invoice' => 'Commandes à préfacturer',
+        'to_invoice_s' => 'approuvées, sans préfacture',
+        'todos' => 'Mes tâches',
+        'todos_s' => 'des réunions et des collègues',
+        'late' => '{1} 1 en retard|[2,*] :n en retard',
         'sales_tasks' => 'Tâches commerciales',
         'sales_tasks_s' => 'fiches clients, offres ouvertes, site',
         'incoming' => 'Nouveau dans Entrant',

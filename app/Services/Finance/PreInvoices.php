@@ -33,6 +33,14 @@ class PreInvoices
 {
     public const TYPES = ['rental', 'charges', 'factory', 'sales', 'afrit6'];
 
+    /** Approved rental orders that have no pre-invoice yet: ready to be sent to pre-invoicing. */
+    public static function readyRental()
+    {
+        $made = PreInvoice::where('source_type', 'rental')->where('status', '!=', 'cancelled')->pluck('source_id');
+
+        return Order::with(['company', 'contact', 'handedBy'])->where('status', 'approved')->whereNotIn('id', $made)->orderBy('use_until')->get();
+    }
+
     /** Make (or refresh) the pre-invoice of a source document. */
     public static function make(string $type, Model $src, ?User $by): PreInvoice
     {

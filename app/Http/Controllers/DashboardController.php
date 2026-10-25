@@ -21,6 +21,8 @@ use App\Models\User;
 use App\Models\Warehouse\Charge;
 use App\Models\Warehouse\Delivery;
 use App\Models\Web\CustomerAccount;
+use App\Models\Work\Todo;
+use App\Services\Finance\PreInvoices;
 use App\Services\WallData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -82,6 +84,10 @@ class DashboardController extends Controller
     public static function tasks(User $u, string $who): array
     {
         $t = [];
+        // Tasks for a person (from meetings or added by hand): open, and how many are late.
+        $todos = Todo::open()->when($who === 'me' || ! $u->hasRight('meetings.see_all'), fn ($q) => $q->where('assignee_id', $u->id));
+        $late = (clone $todos)->whereDate('due_on', '<', today())->count();
+        $t[] = ['n' => $todos->count(), 'key' => 'todos', 'url' => route('todos.index', ['v' => $who === 'me' || ! $u->hasRight('meetings.see_all') ? 'mine' : 'all']), 'tone' => $late ? 'warn' : 'info', 'late' => $late];
         $mine = fn ($q) => $who === 'me' ? $q->where(fn ($w) => $w->whereNull('assignee_id')->orWhere('assignee_id', $u->id)) : $q;
         if ($u->canUseModule('sales', 2)) {
             // Commercial tasks: the number is all of them; the dots show how many per colour.
@@ -125,6 +131,10 @@ class DashboardController extends Controller
         $t[] = ['n' => PreInvoice::where('status', 'back')->when($who === 'me', fn ($q) => $q->where('made_by_id', $u->id))->count(), 'key' => 'pf_back', 'url' => route('finance.index', ['f' => 'back']), 'tone' => 'warn'];
         if ($u->canUseModule('preinvoice', 2)) {
             $t[] = ['n' => PreInvoice::where('status', 'check')->count(), 'key' => 'pf_check', 'url' => route('finance.index'), 'tone' => 'warn'];
+        }
+        if ($u->canUseModule('preinvoice', 2) || $u->canUseModule('dryhire', 2)) {
+            $ready = PreInvoices::readyRental();
+            $t[] = ['n' => ($who === 'me' && ! $u->canUseModule('preinvoice', 2) ? $ready->where('handed_by_id', $u->id) : $ready)->count(), 'key' => 'to_invoice', 'url' => route('finance.index').'#ready', 'tone' => 'info'];
         }
 
         return array_values(array_filter($t, fn ($x) => $x['n'] > 0));

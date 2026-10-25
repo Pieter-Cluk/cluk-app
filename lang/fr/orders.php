@@ -45,6 +45,8 @@ return [
         'allocate_hint' => 'numéros de série ou quantité par ligne',
         'approve' => 'Approuver et envoyer',
         'approve_hint' => 'confirmation au client',
+        'invoice' => 'Préfacture',
+        'invoice_hint' => 'vers la finance quand tout est connu',
     ],
     'send_all' => 'Envoyer toutes les demandes (:n)',
     'auto_all' => 'Allouer tout le stock automatiquement',
@@ -97,6 +99,7 @@ return [
     'based_on' => 'Selon le devis',
     'doc_intro' => 'Votre commande de location est confirmée comme ci-dessous. Merci de votre confiance !',
     'doc_arrangements' => 'Modalités',
+    'next_invoice' => 'Étape suivante : envoyez-la ci-dessous en préfacturation, dès que le transport et les frais supplémentaires sont connus.',
     'doc_delivery_text' => 'Nous livrons et reprenons à :location, aux moments convenus. Toute modification demande une nouvelle confirmation.',
     'logistics' => [
         'total' => 'Total commande :net HTVA · :gross TVAC',

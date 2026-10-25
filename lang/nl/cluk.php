@@ -19,6 +19,9 @@ return [
         'manage' => 'Beheren',
     ],
     'rights' => [
+        'meetings' => [
+            'see_all' => 'Alle vergaderingen en taken van collega’s zien',
+        ],
         'afrit6' => [
             'approve_members' => 'Nieuwe Afrit 6-leden goedkeuren',
             'door_codes' => 'Deurcodes bekijken en wijzigen',

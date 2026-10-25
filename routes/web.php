@@ -60,6 +60,8 @@ use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Http\Controllers\Web\CustomerVerifyController;
 use App\Http\Controllers\WebAccountController;
 use App\Http\Controllers\WebStatsController;
+use App\Http\Controllers\Work\MeetingController;
+use App\Http\Controllers\Work\TodoController;
 use App\Services\Finance\PreInvoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -221,6 +223,23 @@ Route::middleware('auth:web')->group(function () {
     });
     // Back from the platform's sign-in (an address the platforms know; must stay the same).
     Route::get('/social/connect/{provider}/callback', [SocialController::class, 'callback'])->whereIn('provider', ['meta', 'linkedin', 'google'])->middleware('right:social.connect')->name('social.callback');
+    // Meeting notes: paste the text, check the proposed tasks, hand them out. Tasks: one list per person.
+    Route::prefix('meetings')->middleware('nav:meetings')->name('meetings.')->group(function () {
+        Route::get('/', [MeetingController::class, 'index'])->name('index');
+        Route::get('/new', [MeetingController::class, 'create'])->name('create');
+        Route::post('/', [MeetingController::class, 'store'])->middleware('throttle:20,1')->name('store');
+        Route::get('/{meeting}', [MeetingController::class, 'show'])->whereNumber('meeting')->name('show');
+        Route::put('/{meeting}', [MeetingController::class, 'update'])->whereNumber('meeting')->middleware('throttle:20,1')->name('update');
+        Route::post('/{meeting}/tasks', [MeetingController::class, 'makeTasks'])->whereNumber('meeting')->name('tasks');
+        Route::post('/{meeting}/dismiss', [MeetingController::class, 'dismiss'])->whereNumber('meeting')->name('dismiss');
+        Route::delete('/{meeting}', [MeetingController::class, 'destroy'])->whereNumber('meeting')->name('destroy');
+    });
+    Route::prefix('tasks')->middleware('nav:todos')->name('todos.')->group(function () {
+        Route::get('/', [TodoController::class, 'index'])->name('index');
+        Route::post('/', [TodoController::class, 'store'])->name('store');
+        Route::post('/{todo}/done', [TodoController::class, 'done'])->whereNumber('todo')->name('done');
+        Route::put('/{todo}', [TodoController::class, 'update'])->whereNumber('todo')->name('update');
+    });
     // Commercial tasks (made by the app): customer cards, open quotes, website activity.
     Route::prefix('commercial-tasks')->middleware('nav:salestasks')->name('salestasks.')->group(function () {
         Route::get('/', [SalesTaskController::class, 'index'])->name('index');
@@ -696,7 +715,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks', 'meetings', 'todos'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

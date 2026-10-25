@@ -102,6 +102,11 @@ return [
     'tasks' => [
         'web_accounts' => 'Website-logins goed te keuren',
         'web_accounts_s' => 'klanten die zich registreerden op de website',
+        'to_invoice' => 'Orders te pre-factureren',
+        'to_invoice_s' => 'goedgekeurd, nog geen pre-factuur',
+        'todos' => 'Mijn taken',
+        'todos_s' => 'uit vergaderingen en van collega’s',
+        'late' => '{1} 1 te laat|[2,*] :n te laat',
         'sales_tasks' => 'Commerciële taken',
         'sales_tasks_s' => 'klantenfiches, open offertes, website',
         'incoming' => 'Nieuw in Inkomend',

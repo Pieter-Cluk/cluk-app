@@ -67,6 +67,7 @@ return [
         'finance.vat_treatment',
         'gdpr.export_erase',
         'help.manage',
+        'meetings.see_all',
         'orders.approve',
         'products.classify',
         'sales.approve_low_margin',

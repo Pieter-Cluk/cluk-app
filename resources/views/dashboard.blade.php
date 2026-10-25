@@ -112,7 +112,7 @@
                     <nav class="chips"><a @class(['chip', 'chip-on' => $who === 'me']) href="{{ $q('who', 'me') }}">{{ __('dashboard.mine') }}</a><a @class(['chip', 'chip-on' => $who === 'all']) href="{{ $q('who', 'all') }}">{{ __('dashboard.everyone') }}</a></nav>
                 </div>
                 @forelse ($tasks as $t)
-                    <a class="db-task db-{{ $t['tone'] }}" href="{{ $t['url'] }}"><b>{{ $t['n'] }}</b><span>{{ __('dashboard.tasks.'.$t['key']) }}@if (! empty($t['dots']))<span class="st-dots">@foreach ($t['dots'] as $lvl => $n)<span title="{{ __('salestasks.levels.'.$lvl) }}"><i class="st-dot st-{{ $lvl }}"></i>{{ $n }}</span>@endforeach</span>@endif<small class="muted">{{ __('dashboard.tasks.'.$t['key'].'_s') }}</small></span></a>
+                    <a class="db-task db-{{ $t['tone'] }}" href="{{ $t['url'] }}"><b>{{ $t['n'] }}</b><span>{{ __('dashboard.tasks.'.$t['key']) }}@if (! empty($t['dots']))<span class="st-dots">@foreach ($t['dots'] as $lvl => $n)<span title="{{ __('salestasks.levels.'.$lvl) }}"><i class="st-dot st-{{ $lvl }}"></i>{{ $n }}</span>@endforeach</span>@endif<small class="muted">{{ __('dashboard.tasks.'.$t['key'].'_s') }}@if (! empty($t['late'])) · <b class="txt-warn">{{ trans_choice('dashboard.tasks.late', $t['late'], ['n' => $t['late']]) }}</b>@endif</small></span></a>
                 @empty
                     <p class="muted">{{ __('nav.no_tasks') }}</p>
                 @endforelse

@@ -38,7 +38,9 @@
     </div>
 
     <ol class="steps3">
-        @foreach ([1 => 'subhire', 2 => 'allocate', 3 => 'approve'] as $n => $k)
+        @php($pfMade = \App\Models\Finance\PreInvoice::where('source_type', 'rental')->where('source_id', $order->id)->where('status', '!=', 'cancelled')->exists())
+        @php($step = $order->status === 'approved' ? ($pfMade ? 5 : 4) : $step)
+        @foreach ([1 => 'subhire', 2 => 'allocate', 3 => 'approve', 4 => 'invoice'] as $n => $k)
             <li @class(['st3', 'st3-on' => $step === $n, 'st3-done' => $step > $n])><span>{{ $step > $n ? '✓' : $n }}</span><b>{{ __('orders.steps.'.$k) }}</b><small>{{ __('orders.steps.'.$k.'_hint') }}</small></li>
         @endforeach
     </ol>
@@ -152,6 +154,7 @@
         @if ($order->status === 'approved')
             <div>
                 <h2>{{ __('orders.approved_title') }}</h2>
+                @unless ($pfMade)<p><b>{{ __('orders.next_invoice') }}</b></p>@endunless
                 <p class="muted">{{ __('orders.approved_by', ['name' => $order->approvedBy?->name ?? '—', 'date' => $order->approved_at?->format('d/m/Y H:i'), 'email' => $order->customer_email ?: '—']) }}</p>
             </div>
             <a class="btn" href="{{ route('orders.print', $order) }}" target="_blank" rel="noopener">{{ __('orders.print') }}</a>
