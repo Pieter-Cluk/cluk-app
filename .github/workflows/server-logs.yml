@@ -39,6 +39,9 @@ jobs:
           echo "== upload limits (PHP)"; php -r 'echo "upload_max_filesize=".ini_get("upload_max_filesize")." post_max_size=".ini_get("post_max_size")." gd=".(function_exists("imagecreatefromstring")?"yes":"no")." exif=".(function_exists("exif_read_data")?"yes":"no").PHP_EOL;'
           echo "== secret lengths"
           for k in MICROSOFT_CLIENT_SECRET DB_PASSWORD INTAKE_TOKEN; do v=$(grep "^$k=" .env | cut -d= -f2- | tr -d '"'); echo "$k: ${#v} chars"; done
+          echo; echo "== website downloads"
+          ls -la storage/app/private/web-downloads storage/app/web-downloads 2>&1 | tail -15
+          php artisan tinker --execute='foreach (App\Models\Website\Download::orderBy("sort")->get() as $d) { echo $d->id." | ".($d->title["en"] ?? "?")." | ".$d->category." | ".($d->active ? "on" : "off")." | ".$d->access." | ".$d->downloads.PHP_EOL; } echo "total: ".App\Models\Website\Download::count().PHP_EOL;' 2>&1 | tail -20
           echo; echo "== website catalogue check"
           F=$(mktemp /tmp/webcheck.XXXX.php)
           cat > "$F" <<'PHP'
