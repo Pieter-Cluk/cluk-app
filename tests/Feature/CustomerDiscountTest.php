@@ -85,8 +85,8 @@ class CustomerDiscountTest extends TestCase
 
         // New quote lines for this customer get the same prices (net price as the line price).
         $q = SalesQuote::create(['number' => SalesQuote::nextNumber(), 'status' => 'draft', 'company_id' => $this->customer->id, 'title' => 'Mics', 'language' => 'en']);
-        $this->actingAs($admin)->post('/product-sales/quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $this->shure->id, 'qty' => 2])->assertSessionHasNoErrors();
-        $this->actingAs($admin)->post('/product-sales/quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $this->other->id, 'qty' => 1])->assertSessionHasNoErrors();
+        $this->actingAs($admin)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $this->shure->id, 'qty' => 2])->assertSessionHasNoErrors();
+        $this->actingAs($admin)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $this->other->id, 'qty' => 1])->assertSessionHasNoErrors();
         $this->assertSame(2 * 7990 + 1840, $q->fresh()->net_cents);
 
         // Removing the net price falls back to the brand %.

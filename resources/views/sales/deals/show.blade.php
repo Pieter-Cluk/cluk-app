@@ -64,11 +64,16 @@
                     @if ($canWork && $open)<form method="post" action="{{ route('quotes.store', $deal) }}">@csrf<button class="btn" type="submit">{{ __('quotes.new') }}</button></form>@endif
                 </div>
                 @php($quotes = $deal->quotes->where('status', '!=', 'replaced'))
-                @forelse ($quotes as $q)
+                @php($sq = $deal->salesQuotes)
+                @foreach ($quotes as $q)
                     <div class="p-line"><a href="{{ route('quotes.show', $q) }}"><b>{{ $q->code() }}</b> · {{ $q->title }}</a><span>@include('sales.quotes._status', ['quote' => $q]) {{ \App\Services\Afrit6\Pricing::eur($q->net_cents) }}</span></div>
-                @empty
-                    <p class="muted">{{ __('quotes.none_for_deal') }}</p>
-                @endforelse
+                @endforeach
+                @foreach ($sq as $q)
+                    <div class="p-line"><a href="{{ route('psales.show', $q) }}"><b>{{ $q->code() }}</b> · {{ $q->title }}</a><span>@include('psales._status', ['q' => $q]) {{ \App\Services\Afrit6\Pricing::eur($q->net_cents) }}</span></div>
+                @endforeach
+                @if ($quotes->isEmpty() && $sq->isEmpty())
+                    <p class="muted">{{ $deal->module === 'sales' ? __('quotes.none_for_sales_deal') : __('quotes.none_for_deal') }}</p>
+                @endif
             </section>
 
             <section class="card">

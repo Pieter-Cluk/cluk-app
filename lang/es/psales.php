@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'log_declined' => 'Presupuesto de venta :code rechazado (:reason).',
     'intro' => 'Mercancía que vendemos: presupuesto con control de margen, compra de lo que falta y confirmación con fechas de entrega.',
     'tabs' => [
         'quotes' => 'Presupuestos y pedidos',

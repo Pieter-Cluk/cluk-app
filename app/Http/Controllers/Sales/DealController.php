@@ -87,6 +87,7 @@ class DealController extends Controller
             'owners' => $this->owners(),
             'companies' => Company::active()->orderBy('name')->get(['id', 'name']),
             'company' => $request->query('company') ? Company::find($request->query('company')) : null,
+            'module' => in_array($request->query('module'), Deal::MODULES, true) ? $request->query('module') : 'dryhire',
         ]);
     }
 

@@ -37,8 +37,8 @@ class BrandsAndCodesTest extends TestCase
     public function test_typing_a_brand_uses_or_adds_it_in_the_list(): void
     {
         $admin = $this->as('admin');
-        $this->actingAs($admin)->post('/product-sales/items', ['brand' => 'Shure', 'type' => 'SM58', 'manufacturer_code' => 'SM58-LCE', 'unit' => 'piece', 'list_price' => '119'])->assertSessionHasNoErrors();
-        $this->actingAs($admin)->post('/product-sales/items', ['brand' => 'shure', 'type' => 'SM57', 'unit' => 'piece', 'list_price' => '109'])->assertSessionHasNoErrors();
+        $this->actingAs($admin)->post('/sales-products', ['brand' => 'Shure', 'type' => 'SM58', 'manufacturer_code' => 'SM58-LCE', 'unit' => 'piece', 'list_price' => '119'])->assertSessionHasNoErrors();
+        $this->actingAs($admin)->post('/sales-products', ['brand' => 'shure', 'type' => 'SM57', 'unit' => 'piece', 'list_price' => '109'])->assertSessionHasNoErrors();
         $this->assertSame(1, Brand::count());
         $shure = Brand::firstOrFail();
         $this->assertSame(['Shure', 'Shure'], SalesItem::orderBy('id')->pluck('brand')->all()); // the list's spelling
@@ -65,7 +65,7 @@ class BrandsAndCodesTest extends TestCase
         $this->assertSame('Shure Inc.', SalesItem::first()->brand);
 
         $this->actingAs($admin)->get('/settings/product-categories/brands')->assertOk()->assertSee('Shure Inc.')->assertSee('We distribute');
-        $this->actingAs($admin)->get('/product-sales/items?brand='.$shure->id)->assertOk()->assertSee('SM58-LCE');
+        $this->actingAs($admin)->get('/sales-products?brand='.$shure->id)->assertOk()->assertSee('SM58-LCE');
     }
 
     public function test_brands_need_the_classify_right(): void
@@ -80,13 +80,13 @@ class BrandsAndCodesTest extends TestCase
         $sup = Company::create(['name' => 'Demo Audio Distribution BV', 'is_customer' => false, 'is_supplier' => true, 'vat_regime' => 'auto', 'language' => 'en', 'email' => 'orders@dad.example']);
         $mic = SalesItem::create(['number' => 'S-100001', 'brand' => 'Shure', 'type' => 'Vocal mic', 'manufacturer_code' => 'SM58-LCE', 'ean' => '0042406050250', 'unit' => 'piece', 'list_price_cents' => 11900, 'active' => true]);
         SalesItem::create(['number' => 'S-100002', 'brand' => 'Sennheiser', 'type' => 'e935', 'unit' => 'piece', 'list_price_cents' => 15900, 'active' => true]);
-        $this->actingAs($admin)->post('/product-sales/items/'.$mic->id.'/suppliers', ['company_id' => $sup->id, 'discount' => '35', 'lead_days' => 3, 'preferred' => '1', 'supplier_ref' => 'DAD-778812'])->assertSessionHasNoErrors();
+        $this->actingAs($admin)->post('/sales-products/'.$mic->id.'/suppliers', ['company_id' => $sup->id, 'discount' => '35', 'lead_days' => 3, 'preferred' => '1', 'supplier_ref' => 'DAD-778812'])->assertSessionHasNoErrors();
         // Saving the supplier again without a number keeps the one we have.
-        $this->actingAs($admin)->post('/product-sales/items/'.$mic->id.'/suppliers', ['company_id' => $sup->id, 'discount' => '36', 'lead_days' => 3])->assertSessionHasNoErrors();
+        $this->actingAs($admin)->post('/sales-products/'.$mic->id.'/suppliers', ['company_id' => $sup->id, 'discount' => '36', 'lead_days' => 3])->assertSessionHasNoErrors();
         $this->assertSame('DAD-778812', $mic->suppliers()->first()->pivot->supplier_ref);
 
         foreach (['SM58-LCE', 'sm58lce', 'sm58 lce', '0042406050250', 'DAD-778812', 'shure vocal'] as $q) {
-            $page = $this->actingAs($admin)->get('/product-sales/items?q='.urlencode($q))->assertOk();
+            $page = $this->actingAs($admin)->get('/sales-products?q='.urlencode($q))->assertOk();
             $this->assertStringContainsString('S-100001', $page->getContent(), $q);
             $this->assertStringNotContainsString('S-100002', $page->getContent(), $q);
         }

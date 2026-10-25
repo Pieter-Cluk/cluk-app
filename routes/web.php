@@ -241,7 +241,7 @@ Route::middleware('auth:web')->group(function () {
         Route::put('/{todo}', [TodoController::class, 'update'])->whereNumber('todo')->name('update');
     });
     // Commercial tasks (made by the app): customer cards, open quotes, website activity.
-    Route::prefix('commercial-tasks')->middleware('nav:salestasks')->name('salestasks.')->group(function () {
+    Route::prefix('commercial-tasks')->middleware('nav:todos')->name('salestasks.')->group(function () {
         Route::get('/', [SalesTaskController::class, 'index'])->name('index');
         Route::post('/{task}/done', [SalesTaskController::class, 'done'])->whereNumber('task')->name('done');
         Route::post('/{task}/snooze', [SalesTaskController::class, 'snooze'])->whereNumber('task')->name('snooze');
@@ -594,37 +594,51 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/labels', [LocationController::class, 'labels'])->name('locations.labels');
     });
 
-    // Product sales: items with suppliers and PDFs, sales quotes → order confirmation.
-    Route::prefix('product-sales')->middleware('nav:productsales')->group(function () {
-        Route::get('/', [SalesQuoteController::class, 'index'])->name('psales.index');
-        Route::get('/items', [SalesItemController::class, 'index'])->name('psales.items');
-        Route::get('/items/{item}/photo', [SalesItemController::class, 'photoShow'])->whereNumber('item')->name('psales.items.photo.show');
-        Route::get('/items/{item}/documents/{doc}', [SalesItemController::class, 'download'])->whereNumber(['item', 'doc'])->name('psales.items.doc');
-        Route::get('/quotes/{quote}', [SalesQuoteController::class, 'show'])->whereNumber('quote')->name('psales.show');
-        Route::get('/quotes/{quote}/print/{type}', [SalesQuoteController::class, 'print'])->whereNumber('quote')->whereIn('type', ['quo', 'oc', 'pick', 'dn', 'pf'])->name('psales.print');
+    // Sales products: the catalogue of what we sell, with suppliers and PDFs (Operations).
+    Route::prefix('sales-products')->middleware('nav:productsales')->group(function () {
+        Route::get('/', [SalesItemController::class, 'index'])->name('psales.items');
+        Route::get('/{item}/photo', [SalesItemController::class, 'photoShow'])->whereNumber('item')->name('psales.items.photo.show');
+        Route::get('/{item}/documents/{doc}', [SalesItemController::class, 'download'])->whereNumber(['item', 'doc'])->name('psales.items.doc');
         Route::middleware('right:sales.edit_items')->group(function () {
-            Route::post('/items', [SalesItemController::class, 'store'])->name('psales.items.store');
-            Route::put('/items/{item}', [SalesItemController::class, 'update'])->whereNumber('item')->name('psales.items.update');
-            Route::post('/items/{item}/photo', [SalesItemController::class, 'photo'])->whereNumber('item')->name('psales.items.photo');
-            Route::post('/items/{item}/suppliers', [SalesItemController::class, 'supplier'])->whereNumber('item')->name('psales.items.supplier');
-            Route::post('/items/{item}/documents', [SalesItemController::class, 'upload'])->whereNumber('item')->name('psales.items.upload');
-            Route::delete('/items/{item}/documents/{doc}', [SalesItemController::class, 'removeDoc'])->whereNumber(['item', 'doc'])->name('psales.items.doc.remove');
+            Route::post('/', [SalesItemController::class, 'store'])->name('psales.items.store');
+            Route::put('/{item}', [SalesItemController::class, 'update'])->whereNumber('item')->name('psales.items.update');
+            Route::post('/{item}/photo', [SalesItemController::class, 'photo'])->whereNumber('item')->name('psales.items.photo');
+            Route::post('/{item}/suppliers', [SalesItemController::class, 'supplier'])->whereNumber('item')->name('psales.items.supplier');
+            Route::post('/{item}/documents', [SalesItemController::class, 'upload'])->whereNumber('item')->name('psales.items.upload');
+            Route::delete('/{item}/documents/{doc}', [SalesItemController::class, 'removeDoc'])->whereNumber(['item', 'doc'])->name('psales.items.doc.remove');
         });
+        Route::post('/{item}/send', [SalesItemController::class, 'send'])->whereNumber('item')->middleware('level:sales,2')->name('psales.items.send');
+    });
+    // Sales quotes (S-QUO): part of Quotes & sales, made from a deal of the kind "Sales".
+    Route::prefix('sales/sales-quotes')->middleware('nav:sales')->group(function () {
+        Route::get('/', [SalesQuoteController::class, 'index'])->name('psales.index');
+        Route::get('/{quote}', [SalesQuoteController::class, 'show'])->whereNumber('quote')->name('psales.show');
+        Route::get('/{quote}/print/{type}', [SalesQuoteController::class, 'print'])->whereNumber('quote')->whereIn('type', ['quo', 'oc', 'pick', 'dn', 'pf'])->name('psales.print');
         Route::middleware('level:sales,2')->group(function () {
-            Route::post('/items/{item}/send', [SalesItemController::class, 'send'])->whereNumber('item')->name('psales.items.send');
-            Route::get('/quotes/new', [SalesQuoteController::class, 'create'])->name('psales.create');
-            Route::post('/quotes', [SalesQuoteController::class, 'store'])->name('psales.store');
-            Route::put('/quotes/{quote}', [SalesQuoteController::class, 'update'])->whereNumber('quote')->name('psales.update');
-            Route::post('/quotes/{quote}/lines', [SalesQuoteController::class, 'addLine'])->whereNumber('quote')->name('psales.lines.add');
-            Route::delete('/quotes/{quote}/lines/{line}', [SalesQuoteController::class, 'removeLine'])->whereNumber(['quote', 'line'])->name('psales.lines.remove');
-            Route::post('/quotes/{quote}/approve', [SalesQuoteController::class, 'approve'])->whereNumber('quote')->name('psales.approve');
-            Route::post('/quotes/{quote}/send', [SalesQuoteController::class, 'send'])->whereNumber('quote')->name('psales.send');
-            Route::post('/quotes/{quote}/accept', [SalesQuoteController::class, 'accept'])->whereNumber('quote')->name('psales.accept');
-            Route::post('/quotes/{quote}/confirm', [SalesQuoteController::class, 'confirm'])->whereNumber('quote')->name('psales.confirm');
-            Route::post('/quotes/{quote}/deliver', [SalesQuoteController::class, 'deliver'])->whereNumber('quote')->name('psales.deliver');
-            Route::post('/quotes/{quote}/cancel', [SalesQuoteController::class, 'cancel'])->whereNumber('quote')->name('psales.cancel');
+            Route::get('/new', [SalesQuoteController::class, 'create'])->name('psales.create');
+            Route::post('/', [SalesQuoteController::class, 'store'])->name('psales.store');
+            Route::put('/{quote}', [SalesQuoteController::class, 'update'])->whereNumber('quote')->name('psales.update');
+            Route::post('/{quote}/lines', [SalesQuoteController::class, 'addLine'])->whereNumber('quote')->name('psales.lines.add');
+            Route::delete('/{quote}/lines/{line}', [SalesQuoteController::class, 'removeLine'])->whereNumber(['quote', 'line'])->name('psales.lines.remove');
+            Route::post('/{quote}/approve', [SalesQuoteController::class, 'approve'])->whereNumber('quote')->name('psales.approve');
+            Route::post('/{quote}/send', [SalesQuoteController::class, 'send'])->whereNumber('quote')->name('psales.send');
+            Route::post('/{quote}/accept', [SalesQuoteController::class, 'accept'])->whereNumber('quote')->name('psales.accept');
+            Route::post('/{quote}/confirm', [SalesQuoteController::class, 'confirm'])->whereNumber('quote')->name('psales.confirm');
+            Route::post('/{quote}/deliver', [SalesQuoteController::class, 'deliver'])->whereNumber('quote')->name('psales.deliver');
+            Route::post('/{quote}/cancel', [SalesQuoteController::class, 'cancel'])->whereNumber('quote')->name('psales.cancel');
         });
     });
+    // Old addresses (bookmarks, emails) keep working.
+    Route::get('/product-sales/{rest?}', function (?string $rest = null) {
+        $rest = (string) $rest;
+        $to = match (true) {
+            str_starts_with($rest, 'quotes') => '/sales/sales-quotes'.substr($rest, 6),
+            str_starts_with($rest, 'items') => '/sales-products'.substr($rest, 5),
+            default => '/sales/sales-quotes',
+        };
+
+        return redirect($to.(request()->getQueryString() ? '?'.request()->getQueryString() : ''), 301);
+    })->where('rest', '.*');
 
     // Purchasing: price requests (PQ) and purchase orders (PO).
     Route::prefix('purchasing')->middleware('nav:purchasing')->group(function () {

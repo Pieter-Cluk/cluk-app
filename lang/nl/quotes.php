@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'kinds' => [
+        'rental' => 'Verhuurofferten',
+        'sales' => 'Verkoopofferten',
+        'sales_intro' => 'Offertes voor producten die we verkopen. Een verkoopofferte start vanuit een deal van het soort “Verkoop”.',
+    ],
+    'none_for_sales_deal' => 'Nog geen verkoopofferte. “Nieuwe offerte” maakt er een met producten uit de verkoopcatalogus.',
     'title' => 'Offertes',
     'intro' => 'Verhuuroffertes. Een offerte houdt het materiaal vast voor de klant zolang de optie loopt.',
     'kind' => 'Verhuurofferte',
@@ -208,6 +214,7 @@ return [
         'accepted' => 'Gemarkeerd als aanvaard. De deal is gewonnen.',
     ],
     'errors' => [
+        'sales_needs_company' => 'Deze deal heeft nog geen bedrijf: kies eerst de klant en maak dan de verkoopofferte.',
         'unknown_item' => 'Geen actief artikel met nummer “:number”.',
         'use_inside_out' => 'De gebruiksdagen moeten tussen afhaling en terugbrengen vallen.',
         'no_lines' => 'Voeg minstens één lijn toe voor je verstuurt.',

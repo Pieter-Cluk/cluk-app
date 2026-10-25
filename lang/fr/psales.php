@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'log_declined' => 'Devis de vente :code refusé (:reason).',
     'intro' => 'Marchandises vendues : devis avec contrôle de marge, achat de ce qui manque, puis confirmation avec dates de livraison.',
     'tabs' => [
         'quotes' => 'Devis & commandes',

@@ -1,16 +1,15 @@
 @php($eur = fn ($c) => \App\Services\Afrit6\Pricing::eur((int) $c))
 @php($pct = fn ($bp) => rtrim(rtrim(number_format($bp / 100, 1, '.', ''), '0'), '.').'%')
-<x-layouts.app :title="__('psales.tabs.items')">
+<x-layouts.app :title="__('nav.items.productsales')">
     <div class="pagehead">
         <div>
-            <div class="kicker">{{ mb_strtoupper(__('nav.items.productsales')) }} / {{ mb_strtoupper(__('psales.tabs.items')) }}</div>
-            <h1>{{ __('psales.items.title') }}</h1>
+            <div class="kicker">{{ mb_strtoupper(__('nav.groups.operations')) }}</div>
+            <h1>{{ __('nav.items.productsales') }}</h1>
             <p class="muted">{{ __('psales.items.intro') }}</p>
         </div>
         @if ($canEdit)<a class="primary" href="{{ route('psales.items', ['new' => 1]) }}">{{ __('psales.items.new') }}</a>@endif
     </div>
     @include('partials.flash')
-    @include('psales._tabs')
     <form method="get" class="inline-form mt">@if ($cat)<input type="hidden" name="cat" value="{{ $cat }}">@endif
         <input name="q" value="{{ $q }}" placeholder="{{ __('psales.items.search') }}" aria-label="{{ __('psales.items.search') }}" class="ps-search">
         <select name="brand" aria-label="{{ __('psales.items.brand') }}" onchange="this.form.submit()"><option value="">{{ __('psales.items.all_brands') }}</option>@foreach ($brands as $b)<option value="{{ $b->id }}" @selected($brand === $b->id)>{{ $b->name }}@if ($b->kind !== 'other') · {{ __('products.brand_kinds.'.$b->kind) }}@endif</option>@endforeach</select>

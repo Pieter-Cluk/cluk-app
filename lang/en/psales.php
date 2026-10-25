@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'log_declined' => 'Sales quote :code declined (:reason).',
     'intro' => 'Goods we sell: quote with a margin check, purchasing for what is not in stock, then the order confirmation with delivery dates.',
     'tabs' => [
         'quotes' => 'Quotes & orders',

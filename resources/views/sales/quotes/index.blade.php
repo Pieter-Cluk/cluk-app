@@ -9,6 +9,7 @@
     </div>
     @include('partials.flash')
     @include('sales._tabs', ['section' => 'quotes'])
+    @include('sales.quotes._kinds', ['kind' => 'rental'])
     <div class="filters">
         <nav class="chips">
             <a href="{{ route('quotes.index', array_filter(['owner' => $owner])) }}" @class(['chip', 'chip-on' => ! $status])>{{ __('deals.all_modules') }}</a>

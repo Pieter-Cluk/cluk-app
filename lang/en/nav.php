@@ -16,7 +16,7 @@ return [
         'sales' => 'Quotes & sales',
         'orders' => 'Order allocation',
         'subhire' => 'Sub-hire',
-        'productsales' => 'Product sales',
+        'productsales' => 'Sales products',
         'purchasing' => 'Purchasing',
         'dryhire' => 'Dry-hire',
         'warehouse' => 'Warehouse',

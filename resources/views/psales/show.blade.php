@@ -6,14 +6,14 @@
 <x-layouts.app :title="$q->code()">
     <div class="pagehead">
         <div>
-            <div class="kicker"><a href="{{ route('psales.index') }}">{{ mb_strtoupper(__('nav.items.productsales')) }}</a> · {{ $q->code() }}</div>
+            <div class="kicker"><a href="{{ route('psales.index') }}">{{ mb_strtoupper(__('quotes.kinds.sales')) }}</a>@if ($q->deal) · <a href="{{ route('deals.show', $q->deal) }}">{{ $q->deal->title }}</a>@endif · {{ $q->code() }}</div>
             <h1>{{ $q->title }} · {{ $q->customerName() }}</h1>
             <p class="muted">{{ __('psales.head', ['contact' => $q->contact?->name ?? '—', 'owner' => $q->owner?->name ?? '—', 'valid' => $q->valid_until?->format('d/m/Y') ?? '—']) }}</p>
         </div>
         @include('psales._status')
     </div>
     @include('partials.flash')
-    @include('psales._tabs')
+    @include('sales._tabs', ['section' => 'quotes'])
 
     @php($steps = ['draft', 'approval', 'sent', 'accepted', 'ready', 'confirmed', 'delivered'])
     @php($now = $q->status === 'draft' ? ($low->isNotEmpty() && $q->needsApproval() ? 'approval' : 'draft') : ($q->status === 'accepted' && $q->datesIn() ? 'ready' : $q->status))

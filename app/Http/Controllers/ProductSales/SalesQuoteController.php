@@ -36,9 +36,10 @@ class SalesQuoteController extends Controller
         return view('psales.index', ['tab' => $tab, 'quotes' => $groups[$tab]->values(), 'counts' => array_map(fn ($g) => $g->count(), $groups), 'canWork' => $request->user()->canUseModule('sales', 2)]);
     }
 
-    public function create(Request $request): View
+    /** Sales quotes start from a deal of the kind "sales" in Quotes & sales. */
+    public function create(Request $request): RedirectResponse
     {
-        return view('psales.create', ['companies' => Company::where('is_customer', true)->orderBy('name')->get(['id', 'name']), 'company' => $request->query('company')]);
+        return redirect()->route('deals.create', array_filter(['module' => 'sales', 'company' => $request->query('company')]));
     }
 
     public function store(Request $request): RedirectResponse

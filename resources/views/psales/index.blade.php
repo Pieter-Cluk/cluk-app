@@ -1,15 +1,15 @@
 @php($eur = fn ($c) => \App\Services\Afrit6\Pricing::eur((int) $c))
-<x-layouts.app :title="__('nav.items.productsales')">
+<x-layouts.app :title="__('quotes.kinds.sales')">
     <div class="pagehead">
         <div>
-            <div class="kicker">{{ mb_strtoupper(__('nav.groups.commercial')) }} / {{ mb_strtoupper(__('nav.items.productsales')) }}</div>
-            <h1>{{ __('nav.items.productsales') }}</h1>
-            <p class="muted">{{ __('psales.intro') }}</p>
+            <div class="kicker">{{ mb_strtoupper(__('nav.items.sales')) }}</div>
+            <h1>{{ __('quotes.title') }}</h1>
+            <p class="muted">{{ __('quotes.kinds.sales_intro') }}</p>
         </div>
-        @if ($canWork)<a class="primary" href="{{ route('psales.create') }}">{{ __('psales.new') }}</a>@endif
     </div>
     @include('partials.flash')
-    @include('psales._tabs')
+    @include('sales._tabs', ['section' => 'quotes'])
+    @include('sales.quotes._kinds', ['kind' => 'sales'])
     <nav class="chips mt">
         @foreach (\App\Http\Controllers\ProductSales\SalesQuoteController::TABS as $t)<a @class(['chip', 'chip-on' => $tab === $t]) href="{{ route('psales.index', ['tab' => $t]) }}">{{ __('psales.list_tabs.'.$t) }} · {{ $counts[$t] }}</a>@endforeach
     </nav>

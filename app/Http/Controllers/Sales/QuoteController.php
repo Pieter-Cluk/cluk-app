@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\CompanyDetail;
 use App\Models\Equipment\Item;
+use App\Models\ProductSales\SalesQuote;
 use App\Models\Sales\Deal;
 use App\Models\Sales\Quote;
 use App\Models\Sales\QuoteLine;
@@ -78,6 +79,9 @@ class QuoteController extends Controller
     public function store(Request $request, Deal $deal): RedirectResponse
     {
         abort_unless($deal->canBeWorkedBy($request->user()), 403);
+        if ($deal->module === 'sales') {
+            return $this->salesQuote($request, $deal);
+        }
         $start = $deal->event_start ?? today()->addWeek();
         $end = $deal->event_end ?? $start;
         $quote = Quote::create([
@@ -91,6 +95,27 @@ class QuoteController extends Controller
         $deal->log('system', __('quotes.log.created', ['number' => $quote->number]));
 
         return redirect()->route('quotes.show', $quote)->with('status', __('quotes.flash.created', ['number' => $quote->number]));
+    }
+
+    /** A deal of the kind "sales" gets a sales quote (S-QUO): products from the sales catalogue, supplier prices, margin check. */
+    private function salesQuote(Request $request, Deal $deal): RedirectResponse
+    {
+        if (! $deal->company_id) {
+            return back()->withErrors(['company_id' => __('quotes.errors.sales_needs_company')]);
+        }
+        $company = $deal->company;
+        $q = SalesQuote::create([
+            'number' => SalesQuote::nextNumber(), 'status' => 'draft', 'deal_id' => $deal->id, 'company_id' => $company->id,
+            'contact_id' => $deal->contact_id ?? $company->contacts()->orderByDesc('company_contact.is_main')->value('contacts.id'),
+            'owner_id' => $deal->owner_id ?? $request->user()->id, 'title' => $deal->title,
+            'language' => $deal->contact?->language ?: ($company->language ?: 'nl'),
+            'valid_until' => today()->addDays(CompanyDetail::current()->quote_valid_days ?: 30),
+        ]);
+        $q->recalculate();
+        AuditLog::record('psales.created', $q, ['number' => $q->number, 'deal' => $deal->number], $request->user());
+        $deal->log('system', __('quotes.log.created', ['number' => $q->number]));
+
+        return redirect()->route('psales.show', $q)->with('status', __('quotes.flash.created', ['number' => $q->number]));
     }
 
     /** Save the header and all lines in one go. */

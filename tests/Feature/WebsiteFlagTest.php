@@ -40,15 +40,15 @@ class WebsiteFlagTest extends TestCase
     public function test_sales_products_have_the_same_tick_in_four_languages(): void
     {
         $u = $this->admin();
-        $this->actingAs($u)->post('/product-sales/items', ['brand' => 'Shure', 'type' => 'SM58', 'unit' => 'piece', 'list_price' => '119', 'on_website' => 1])->assertRedirect();
+        $this->actingAs($u)->post('/sales-products', ['brand' => 'Shure', 'type' => 'SM58', 'unit' => 'piece', 'list_price' => '119', 'on_website' => 1])->assertRedirect();
         $it = SalesItem::firstOrFail();
         $this->assertTrue($it->on_website);
-        $this->actingAs($u)->put('/product-sales/items/'.$it->id, ['brand' => 'Shure', 'type' => 'SM58', 'unit' => 'piece', 'list_price' => '119', 'on_website' => 0])->assertRedirect();
+        $this->actingAs($u)->put('/sales-products/'.$it->id, ['brand' => 'Shure', 'type' => 'SM58', 'unit' => 'piece', 'list_price' => '119', 'on_website' => 0])->assertRedirect();
         $this->assertFalse($it->fresh()->on_website);
 
         foreach (['en' => 'Show on the website', 'nl' => 'Tonen op de website', 'fr' => 'Afficher sur le site web', 'es' => 'Mostrar en la web'] as $loc => $t) {
             $u->update(['locale' => $loc]);
-            $this->actingAs($u)->get('/product-sales/items?item='.$it->id)->assertOk()->assertSee($t);
+            $this->actingAs($u)->get('/sales-products?item='.$it->id)->assertOk()->assertSee($t);
         }
     }
 

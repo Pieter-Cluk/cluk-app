@@ -4,6 +4,7 @@ namespace App\Models\Sales;
 
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\ProductSales\SalesQuote;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -116,6 +117,12 @@ class Deal extends Model
     public function quotes(): HasMany
     {
         return $this->hasMany(Quote::class)->orderByDesc('id');
+    }
+
+    /** Sales quotes (S-QUO) of a deal of the kind "sales". */
+    public function salesQuotes(): HasMany
+    {
+        return $this->hasMany(SalesQuote::class)->orderByDesc('id');
     }
 
     /** Level 3 works on every deal, level 2 on own and unassigned deals. */

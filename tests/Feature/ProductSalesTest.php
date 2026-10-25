@@ -46,11 +46,11 @@ class ProductSalesTest extends TestCase
     {
         $a = $this->supplier('Demo Audio Distribution BV', 'orders@dad.example');
         $b = $this->supplier('Demo Pro Supply GmbH', 'sales@dps.example');
-        $this->actingAs($admin)->post('/product-sales/items', ['brand' => 'Shure', 'type' => 'SM58-LCE', 'description' => 'Dynamic vocal microphone', 'category' => 'Audio', 'unit' => 'piece', 'list_price' => '119', 'stock_qty' => 6])->assertRedirect();
+        $this->actingAs($admin)->post('/sales-products', ['brand' => 'Shure', 'type' => 'SM58-LCE', 'description' => 'Dynamic vocal microphone', 'category' => 'Audio', 'unit' => 'piece', 'list_price' => '119', 'stock_qty' => 6])->assertRedirect();
         $item = SalesItem::firstOrFail();
         $this->assertSame('S-100001', $item->number);
-        $this->actingAs($admin)->post('/product-sales/items/'.$item->id.'/suppliers', ['company_id' => $a->id, 'discount' => '35', 'lead_days' => 3, 'preferred' => '1']);
-        $this->actingAs($admin)->post('/product-sales/items/'.$item->id.'/suppliers', ['company_id' => $b->id, 'discount' => '32', 'lead_days' => 5]);
+        $this->actingAs($admin)->post('/sales-products/'.$item->id.'/suppliers', ['company_id' => $a->id, 'discount' => '35', 'lead_days' => 3, 'preferred' => '1']);
+        $this->actingAs($admin)->post('/sales-products/'.$item->id.'/suppliers', ['company_id' => $b->id, 'discount' => '32', 'lead_days' => 5]);
 
         return [$item->fresh('suppliers'), $a, $b];
     }
@@ -60,16 +60,16 @@ class ProductSalesTest extends TestCase
         $admin = $this->as('admin');
         [$item, $a] = $this->catalogue($admin);
         $this->assertSame(7735, $item->costCents()); // 119 − 35%
-        $this->actingAs($this->as('sales'))->post('/product-sales/items', ['type' => 'X', 'unit' => 'piece', 'list_price' => 1])->assertForbidden();
+        $this->actingAs($this->as('sales'))->post('/sales-products', ['type' => 'X', 'unit' => 'piece', 'list_price' => 1])->assertForbidden();
 
-        $this->actingAs($admin)->post('/product-sales/items/'.$item->id.'/documents', ['kind' => 'manual', 'files' => [UploadedFile::fake()->create('SM58 user guide.pdf', 200, 'application/pdf')]])->assertRedirect();
+        $this->actingAs($admin)->post('/sales-products/'.$item->id.'/documents', ['kind' => 'manual', 'files' => [UploadedFile::fake()->create('SM58 user guide.pdf', 200, 'application/pdf')]])->assertRedirect();
         $doc = $item->documents()->firstOrFail();
-        $this->actingAs($admin)->get('/product-sales/items/'.$item->id.'/documents/'.$doc->id)->assertOk();
+        $this->actingAs($admin)->get('/sales-products/'.$item->id.'/documents/'.$doc->id)->assertOk();
 
         $customer = Company::create(['name' => 'Demo Theatre vzw', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'nl']);
         $jo = Contact::create(['first_name' => 'Jo', 'last_name' => 'Peeters', 'email' => 'jo@theatre.example', 'language' => 'nl']);
         $customer->contacts()->attach($jo->id);
-        $this->actingAs($this->as('sales'))->post('/product-sales/items/'.$item->id.'/send', ['docs' => [$doc->id], 'contact_id' => $jo->id])->assertSessionHasNoErrors()->assertRedirect();
+        $this->actingAs($this->as('sales'))->post('/sales-products/'.$item->id.'/send', ['docs' => [$doc->id], 'contact_id' => $jo->id])->assertSessionHasNoErrors()->assertRedirect();
         Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'jo@theatre.example' && count($n->attachFiles) === 1);
     }
 
@@ -80,25 +80,25 @@ class ProductSalesTest extends TestCase
         $customer = Company::create(['name' => 'Demo Theatre vzw', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'en']);
         $elke = $this->as('sales');
 
-        $this->actingAs($elke)->post('/product-sales/quotes', ['company_id' => $customer->id, 'title' => 'Wireless & stage kit'])->assertRedirect();
+        $this->actingAs($elke)->post('/sales/sales-quotes', ['company_id' => $customer->id, 'title' => 'Wireless & stage kit'])->assertRedirect();
         $q = SalesQuote::firstOrFail();
-        $this->actingAs($elke)->post('/product-sales/quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $item->id, 'qty' => 10]);
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $item->id, 'qty' => 10]);
         $line = $q->lines()->firstOrFail();
         // 40% discount: 71.40 a piece against a purchase price of 77.35 → under 10% margin.
-        $this->actingAs($elke)->put('/product-sales/quotes/'.$q->id, ['title' => $q->title, 'language' => 'en', 'delivery_mode' => 'together', 'lines' => [$line->id => ['qty' => 10, 'discount' => 40]]]);
+        $this->actingAs($elke)->put('/sales/sales-quotes/'.$q->id, ['title' => $q->title, 'language' => 'en', 'delivery_mode' => 'together', 'lines' => [$line->id => ['qty' => 10, 'discount' => 40]]]);
         $q->refresh()->load('lines');
         $this->assertTrue($q->needsApproval());
-        $this->actingAs($elke)->post('/product-sales/quotes/'.$q->id.'/send', ['to' => 'jo@theatre.example'])->assertSessionHasErrors('lines');
-        $this->actingAs($elke)->post('/product-sales/quotes/'.$q->id.'/approve')->assertForbidden();
-        $this->actingAs($this->as('manager'))->post('/product-sales/quotes/'.$q->id.'/approve', ['note' => 'Big season customer']);
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/send', ['to' => 'jo@theatre.example'])->assertSessionHasErrors('lines');
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/approve')->assertForbidden();
+        $this->actingAs($this->as('manager'))->post('/sales/sales-quotes/'.$q->id.'/approve', ['note' => 'Big season customer']);
         $this->assertFalse($q->fresh('lines')->needsApproval());
         // A change after the approval needs a new approval.
-        $this->actingAs($elke)->put('/product-sales/quotes/'.$q->id, ['title' => $q->title, 'language' => 'en', 'delivery_mode' => 'together', 'lines' => [$line->id => ['qty' => 10, 'discount' => 45]]]);
+        $this->actingAs($elke)->put('/sales/sales-quotes/'.$q->id, ['title' => $q->title, 'language' => 'en', 'delivery_mode' => 'together', 'lines' => [$line->id => ['qty' => 10, 'discount' => 45]]]);
         $this->assertTrue($q->fresh('lines')->needsApproval());
-        $this->actingAs($elke)->put('/product-sales/quotes/'.$q->id, ['title' => $q->title, 'language' => 'en', 'delivery_mode' => 'together', 'lines' => [$line->id => ['qty' => 10, 'discount' => 15]]]);
+        $this->actingAs($elke)->put('/sales/sales-quotes/'.$q->id, ['title' => $q->title, 'language' => 'en', 'delivery_mode' => 'together', 'lines' => [$line->id => ['qty' => 10, 'discount' => 15]]]);
         $this->assertFalse($q->fresh('lines')->needsApproval()); // 101.15 vs 77.35: 23.5% margin
 
-        $this->actingAs($elke)->post('/product-sales/quotes/'.$q->id.'/send', ['to' => 'jo@theatre.example'])->assertSessionHasNoErrors();
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/send', ['to' => 'jo@theatre.example'])->assertSessionHasNoErrors();
         $q->refresh();
         $this->assertSame('sent', $q->status);
         $this->assertSame(101150, $q->net_cents);
@@ -133,11 +133,11 @@ class ProductSalesTest extends TestCase
         Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'orders@dad.example' && str_contains($n->subject, $po->number));
 
         // Not confirmed yet: no order confirmation possible.
-        $this->actingAs($elke)->post('/product-sales/quotes/'.$q->id.'/confirm')->assertSessionHasErrors('confirm');
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/confirm')->assertSessionHasErrors('confirm');
         $poLine = $po->lines()->firstOrFail();
         $this->actingAs($buyer)->post('/purchasing/orders/'.$po->id.'/confirm', ['their_ref' => 'SO-77120', 'dates' => [$poLine->id => today()->addDays(7)->toDateString()]])->assertRedirect();
         $this->assertNotNull($line->fresh()->delivery_date);
-        $this->actingAs($elke)->post('/product-sales/quotes/'.$q->id.'/confirm')->assertSessionHasNoErrors();
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/confirm')->assertSessionHasNoErrors();
         $this->assertSame('confirmed', $q->fresh()->status);
         Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n) => str_contains($n->subject, 'S-OC-'));
 
@@ -146,7 +146,7 @@ class ProductSalesTest extends TestCase
         $this->assertSame([10, 'received'], [$item->fresh()->stock_qty, $po->fresh()->status]);
         $this->actingAs($buyer)->post('/purchasing/orders/'.$po->id.'/invoice', ['amount' => '314.00']);
         $this->assertTrue($po->fresh()->invoiceDiffers());
-        $this->actingAs($elke)->post('/product-sales/quotes/'.$q->id.'/deliver');
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/deliver');
         $this->assertSame([0, 'delivered'], [$item->fresh()->stock_qty, $q->fresh()->status]);
     }
 
@@ -155,16 +155,16 @@ class ProductSalesTest extends TestCase
         $admin = $this->as('admin');
         [$item, $a] = $this->catalogue($admin);
         $customer = Company::create(['name' => 'Demo Theatre vzw', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'nl']);
-        $this->actingAs($admin)->post('/product-sales/quotes', ['company_id' => $customer->id, 'title' => 'Kit']);
+        $this->actingAs($admin)->post('/sales/sales-quotes', ['company_id' => $customer->id, 'title' => 'Kit']);
         $q = SalesQuote::firstOrFail();
-        $this->actingAs($admin)->post('/product-sales/quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $item->id, 'qty' => 2]);
-        $this->actingAs($admin)->post('/product-sales/quotes/'.$q->id.'/lines', ['kind' => 'charge', 'name' => 'Delivery']);
+        $this->actingAs($admin)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $item->id, 'qty' => 2]);
+        $this->actingAs($admin)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'charge', 'name' => 'Delivery']);
         $this->actingAs($admin)->post('/purchasing/requests', ['qty' => [$item->id => 5], 'purpose' => [$item->id => 'rental'], 'send' => '0'])->assertRedirect();
         $pq = PurchaseRequest::firstOrFail();
         foreach (array_keys(config('cluk.locales')) as $locale) {
             $admin->forceFill(['locale' => $locale])->save();
-            $urls = ['/product-sales', '/product-sales?tab=approval', '/product-sales/items', '/product-sales/items?new=1', '/product-sales/quotes/new', '/product-sales/quotes/'.$q->id,
-                '/product-sales/quotes/'.$q->id.'/print/quo', '/product-sales/quotes/'.$q->id.'/print/pick', '/product-sales/quotes/'.$q->id.'/print/pf',
+            $urls = ['/sales/sales-quotes', '/sales/sales-quotes?tab=approval', '/sales-products', '/sales-products?new=1', '/sales/sales-quotes/'.$q->id,
+                '/sales/sales-quotes/'.$q->id.'/print/quo', '/sales/sales-quotes/'.$q->id.'/print/pick', '/sales/sales-quotes/'.$q->id.'/print/pf',
                 '/purchasing', '/purchasing?tab=po', '/purchasing/requests/new', '/purchasing/requests/'.$pq->id, '/purchasing/requests/'.$pq->id.'/print', '/dashboard', '/settings/documents?doc=S-QUO'];
             foreach ($urls as $url) {
                 $html = $this->actingAs($admin->fresh())->get($url)->assertOk()->getContent();

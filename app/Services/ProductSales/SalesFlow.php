@@ -35,6 +35,16 @@ class SalesFlow
         $q->update(['status' => 'sent', 'sent_at' => now(), 'sent_to' => $to, 'token' => $q->token ?: Str::random(48),
             'valid_until' => $q->valid_until ?? today()->addDays(30)]);
         AuditLog::record('psales.sent', $q, ['to' => $to, 'total' => Pricing::eur($q->net_cents)], $by);
+        // The deal moves on, as with a rental quote.
+        if ($deal = $q->deal) {
+            $deal->forceFill(['value_cents' => $q->net_cents])->save();
+            if (in_array($deal->stage, ['new', 'qualified'], true)) {
+                $from = $deal->stage;
+                $deal->update(['stage' => 'proposal']);
+                $deal->log('stage', __('deals.log.moved', ['from' => __('deals.stages.'.$from), 'to' => __('deals.stages.proposal')]));
+            }
+            $deal->log('email', __('quotes.log.sent', ['code' => $q->code(), 'to' => $to, 'total' => Pricing::eur($q->net_cents)]));
+        }
         SalesMails::sent($q->fresh(['lines', 'contact', 'owner']), $message, $by);
     }
 
@@ -55,6 +65,10 @@ class SalesFlow
                 }
             }
             AuditLog::record('psales.accepted', $q, ['name' => $name, 'po' => $po, 'total' => Pricing::eur($q->net_cents)], $by);
+            if (($deal = $q->deal) && $deal->isOpen()) {
+                $deal->log('stage', __('quotes.log.accepted', ['code' => $q->code(), 'name' => $name, 'po' => $po ?: '—']), $by);
+                $deal->forceFill(['stage' => 'won', 'closed_at' => now(), 'closed_by_id' => $by?->id ?? $deal->owner_id, 'value_cents' => $q->net_cents])->save();
+            }
             if ($buy) {
                 $owner = $q->owner ?? $by ?? User::query()->orderBy('id')->first();
                 $need = collect($buy)->max(fn ($b) => $b['item']->leadDays());
@@ -71,6 +85,7 @@ class SalesFlow
     {
         $q->update(['status' => 'declined', 'answered_at' => now(), 'decline_reason' => $reason]);
         AuditLog::record('psales.declined', $q, ['reason' => $reason]);
+        $q->deal?->log('system', __('psales.log_declined', ['code' => $q->code(), 'reason' => $reason ?: '—']));
     }
 
     /** Order confirmation (S-OC) with the delivery dates, once every piece to buy has a confirmed date. */

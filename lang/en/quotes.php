@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'kinds' => [
+        'rental' => 'Rental quotes',
+        'sales' => 'Sales quotes',
+        'sales_intro' => 'Quotes for products we sell. A sales quote starts from a deal of the kind “Sales”.',
+    ],
+    'none_for_sales_deal' => 'No sales quote yet. “New quote” makes one with products from the sales catalogue.',
     'title' => 'Quotes',
     'intro' => 'Rental quotes. A quote holds the equipment for the customer while its option runs.',
     'kind' => 'Rental quote',
@@ -208,6 +214,7 @@ return [
         'accepted' => 'Marked as accepted. The deal is won.',
     ],
     'errors' => [
+        'sales_needs_company' => 'This deal has no company yet: choose the customer first, then make the sales quote.',
         'unknown_item' => 'No active item with number “:number”.',
         'use_inside_out' => 'The days of use must fall between pick-up and return.',
         'no_lines' => 'Add at least one line before sending.',

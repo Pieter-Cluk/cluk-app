@@ -18,6 +18,7 @@ return [
         'mine' => 'Van mij',
         'given' => 'Gegeven aan anderen',
         'all' => 'Iedereen',
+        'commercial' => 'Commercieel',
         'done' => 'Klaar',
     ],
     'empty' => [

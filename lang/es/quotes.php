@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'kinds' => [
+        'rental' => 'Presupuestos de alquiler',
+        'sales' => 'Presupuestos de venta',
+        'sales_intro' => 'Presupuestos de productos que vendemos. Un presupuesto de venta parte de un trato del tipo «Venta».',
+    ],
+    'none_for_sales_deal' => 'Aún no hay presupuesto de venta. «Nuevo presupuesto» crea uno con productos del catálogo de venta.',
     'title' => 'Presupuestos',
     'intro' => 'Presupuestos de alquiler. Un presupuesto reserva el material mientras dura la opción.',
     'kind' => 'Presupuesto de alquiler',
@@ -208,6 +214,7 @@ return [
         'accepted' => 'Marcado como aceptado. La oportunidad está ganada.',
     ],
     'errors' => [
+        'sales_needs_company' => 'Este trato aún no tiene empresa: elija primero el cliente y luego haga el presupuesto de venta.',
         'unknown_item' => 'No hay ningún artículo activo con el número «:number».',
         'use_inside_out' => 'Los días de uso deben estar entre la recogida y la devolución.',
         'no_lines' => 'Añade al menos una línea antes de enviar.',

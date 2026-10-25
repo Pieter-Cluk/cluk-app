@@ -4,12 +4,7 @@
         <a class="btn" href="{{ route('meetings.create') }}">+ {{ __('meetings.new') }}</a>
     </div>
     @include('partials.flash')
-    <nav class="tabs">
-        @foreach (\App\Http\Controllers\Work\TodoController::VIEWS as $v)
-            @continue($v === 'all' && ! $canAll)
-            <a @class(['tab', 'tab-on' => $view === $v]) href="{{ route('todos.index', ['v' => $v]) }}">{{ __('todos.views.'.$v) }}@isset($counts[$v]) <small class="muted">{{ $counts[$v] }}</small>@endisset</a>
-        @endforeach
-    </nav>
+    @include('work.todos._tabs', ['current' => $view])
     @if ($view === 'all')
         <form method="get" class="filters mt"><input type="hidden" name="v" value="all">
             <select name="user" onchange="this.form.submit()" aria-label="{{ __('todos.fields.assignee') }}"><option value="">{{ __('todos.everyone') }}</option>@foreach ($staff as $u)<option value="{{ $u->id }}" @selected($who === $u->id)>{{ $u->first_name }} {{ $u->last_name }}</option>@endforeach</select>

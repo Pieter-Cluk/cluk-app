@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'kinds' => [
+        'rental' => 'Devis de location',
+        'sales' => 'Devis de vente',
+        'sales_intro' => 'Devis pour les produits que nous vendons. Un devis de vente part d’une affaire de type « Vente ».',
+    ],
+    'none_for_sales_deal' => 'Pas encore de devis de vente. « Nouveau devis » en crée un avec les produits du catalogue de vente.',
     'title' => 'Devis',
     'intro' => 'Devis de location. Un devis réserve le matériel pour le client pendant l’option.',
     'kind' => 'Devis de location',
@@ -208,6 +214,7 @@ return [
         'accepted' => 'Marqué comme accepté. L’affaire est gagnée.',
     ],
     'errors' => [
+        'sales_needs_company' => 'Cette affaire n’a pas encore de société : choisissez d’abord le client, puis faites le devis de vente.',
         'unknown_item' => 'Aucun article actif avec le numéro « :number ».',
         'use_inside_out' => 'Les jours d’utilisation doivent se situer entre l’enlèvement et le retour.',
         'no_lines' => 'Ajoutez au moins une ligne avant d’envoyer.',

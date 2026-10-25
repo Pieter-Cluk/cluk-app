@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'log_declined' => 'Verkoopofferte :code geweigerd (:reason).',
     'intro' => 'Goederen die we verkopen: offerte met margecontrole, aankoop voor wat niet in stock is, dan de orderbevestiging met leverdata.',
     'tabs' => [
         'quotes' => 'Offertes & orders',

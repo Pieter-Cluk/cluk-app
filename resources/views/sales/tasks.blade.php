@@ -3,14 +3,15 @@
 <x-layouts.app :title="__('salestasks.title')">
     <div class="pagehead">
         <div>
-            <div class="kicker">{{ mb_strtoupper(__('nav.groups.commercial')) }}</div>
+            <div class="kicker"><a href="{{ route('todos.index') }}">{{ mb_strtoupper(__('nav.items.todos')) }}</a></div>
             <h1>{{ __('salestasks.title') }}</h1>
             <p class="muted">{{ __('salestasks.intro') }}</p>
         </div>
     </div>
     @include('partials.flash')
-    <nav class="tabs">
-        @foreach (['me', 'all'] as $w)<a @class(['tab', 'tab-on' => $who === $w]) href="{{ $url(['who' => $w]) }}">{{ __('salestasks.who.'.$w) }} <small class="muted">{{ $counts[$w] }}</small></a>@endforeach
+    @include('work.todos._tabs', ['current' => 'commercial'])
+    <nav class="chips mt">
+        @foreach (['me', 'all'] as $w)<a @class(['chip', 'chip-on' => $who === $w]) href="{{ $url(['who' => $w]) }}">{{ __('salestasks.who.'.$w) }} · {{ $counts[$w] }}</a>@endforeach
     </nav>
     <div class="inline-form mt st-filters">
         <nav class="chips">

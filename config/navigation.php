@@ -13,7 +13,7 @@
 return [
     'top' => [
         ['key' => 'dashboard', 'path' => '/dashboard', 'icon' => 'home'],
-        ['key' => 'todos', 'path' => '/tasks', 'icon' => 'check'],
+        ['key' => 'todos', 'path' => '/tasks', 'icon' => 'check', 'also' => ['/commercial-tasks']],
         ['key' => 'meetings', 'path' => '/meetings', 'icon' => 'notes'],
         ['key' => 'management', 'path' => '/management', 'icon' => 'chart', 'right' => 'finance.see_margins'],
         ['key' => 'wallscreens', 'path' => '/wall-screens', 'icon' => 'screen', 'module' => ['warehouse', 1]],
@@ -22,15 +22,14 @@ return [
     'groups' => [
         'commercial' => [
             ['key' => 'companies', 'path' => '/companies', 'icon' => 'people', 'module' => ['companies', 1]],
-            ['key' => 'salestasks', 'path' => '/commercial-tasks', 'icon' => 'clipboard', 'module' => ['sales', 2]],
             ['key' => 'sales', 'path' => '/sales', 'icon' => 'doc', 'module' => ['sales', 1]],
             ['key' => 'orders', 'path' => '/order-allocation', 'icon' => 'clipboard', 'module' => ['dryhire', 2]],
             ['key' => 'subhire', 'path' => '/sub-hire', 'icon' => 'swap', 'module' => ['purchasing', 1]],
-            ['key' => 'productsales', 'path' => '/product-sales', 'icon' => 'tag', 'module' => ['sales', 1]],
             ['key' => 'purchasing', 'path' => '/purchasing', 'icon' => 'cart', 'module' => ['purchasing', 1]],
         ],
         'operations' => [
             ['key' => 'dryhire', 'path' => '/dry-hire', 'icon' => 'box', 'module' => ['dryhire', 1]],
+            ['key' => 'productsales', 'path' => '/sales-products', 'icon' => 'tag', 'module' => ['sales', 1]],
             ['key' => 'warehouse', 'path' => '/warehouse', 'icon' => 'warehouse', 'module' => ['warehouse', 1]],
             ['key' => 'factory', 'path' => '/factory', 'icon' => 'stage', 'module' => ['factory', 1]],
             ['key' => 'afrit6', 'path' => '/afrit6-staff', 'icon' => 'desk', 'module' => ['afrit6', 1]],

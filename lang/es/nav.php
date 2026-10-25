@@ -16,7 +16,7 @@ return [
         'sales' => 'Presupuestos y ventas',
         'orders' => 'Asignación de pedidos',
         'subhire' => 'Subalquiler',
-        'productsales' => 'Venta de productos',
+        'productsales' => 'Productos de venta',
         'purchasing' => 'Compras',
         'dryhire' => 'Alquiler en seco',
         'warehouse' => 'Almacén',

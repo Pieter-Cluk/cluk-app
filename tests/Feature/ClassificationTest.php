@@ -238,14 +238,14 @@ class ClassificationTest extends TestCase
         $gen = $csm->subcategories()->first();
 
         // A dry-hire subcategory is not accepted for a sales product, and the reverse.
-        $this->actingAs($admin)->post('/product-sales/items', ['brand' => 'Le Mark', 'type' => 'Gaffer 50 mm', 'unit' => 'roll', 'list_price' => '12', 'subcategory_id' => self::sub('SQU')])
+        $this->actingAs($admin)->post('/sales-products', ['brand' => 'Le Mark', 'type' => 'Gaffer 50 mm', 'unit' => 'roll', 'list_price' => '12', 'subcategory_id' => self::sub('SQU')])
             ->assertSessionHasErrors('subcategory_id');
-        $this->actingAs($admin)->post('/product-sales/items', ['brand' => 'Le Mark', 'type' => 'Gaffer 50 mm', 'unit' => 'roll', 'list_price' => '12', 'category_id' => $csm->id, 'subcategory_id' => $gen->id,
+        $this->actingAs($admin)->post('/sales-products', ['brand' => 'Le Mark', 'type' => 'Gaffer 50 mm', 'unit' => 'roll', 'list_price' => '12', 'category_id' => $csm->id, 'subcategory_id' => $gen->id,
             'search_words' => 'tape, gaffa'])->assertSessionHasNoErrors();
         $tape = SalesItem::where('type', 'Gaffer 50 mm')->firstOrFail();
         $this->assertSame(['Consumables', 'tape, gaffa'], [$tape->category, $tape->search_words]);
         $this->actingAs($this->as('asset-manager'))->post('/dry-hire/items', $this->form(['subcategory_id' => $gen->id]))->assertSessionHasErrors('subcategory_id');
-        $this->actingAs($admin)->get('/product-sales/items?cat='.$csm->id)->assertOk()->assertSee('Gaffer 50 mm');
+        $this->actingAs($admin)->get('/sales-products?cat='.$csm->id)->assertOk()->assertSee('Gaffer 50 mm');
 
         // Settings: the sales tab manages its own lists.
         $this->actingAs($admin)->get('/settings/product-categories?c=sales')->assertOk()->assertSee('Consumables')->assertDontSee('Square truss');

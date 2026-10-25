@@ -18,6 +18,7 @@ return [
         'mine' => 'Mías',
         'given' => 'Dadas a otros',
         'all' => 'Todos',
+        'commercial' => 'Comercial',
         'done' => 'Hechas',
     ],
     'empty' => [

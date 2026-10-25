@@ -16,7 +16,7 @@ return [
         'sales' => 'Offertes & verkoop',
         'orders' => 'Ordertoewijzing',
         'subhire' => 'Bijhuur',
-        'productsales' => 'Productverkoop',
+        'productsales' => 'Verkoopproducten',
         'purchasing' => 'Aankoop',
         'dryhire' => 'Dry-hire',
         'warehouse' => 'Magazijn',

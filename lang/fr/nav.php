@@ -16,7 +16,7 @@ return [
         'sales' => 'Devis & ventes',
         'orders' => 'Affectation des commandes',
         'subhire' => 'Sous-location',
-        'productsales' => 'Vente de produits',
+        'productsales' => 'Produits de vente',
         'purchasing' => 'Achats',
         'dryhire' => 'Location sèche',
         'warehouse' => 'Entrepôt',
