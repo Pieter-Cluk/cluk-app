@@ -1,5 +1,5 @@
 @extends('site.layout', ['active' => 'sales'])
-@section('title', __('site.sales.title'))
+@section('title', \App\Services\Website\SiteSettings::text('sales.title'))
 @section('description', __('site.sales.meta'))
 @section('body', 'sl')
 @section('content')
@@ -23,6 +23,25 @@
       @endif
       <a class="all" href="{{ route('site.news', ['part' => 'sales']) }}">{{ __('site.sales.all_news') }} <span aria-hidden="true">→</span></a>
     </div>
+    @php($own = \App\Services\Website\SiteSettings::slides('sales_slider'))
+    @if ($own->isNotEmpty())
+    <div class="slider" id="slider" aria-roledescription="carousel" aria-label="{{ __('site.sales.news') }}" data-seconds="{{ (int) \App\Services\Website\SiteSettings::get('general.slide_seconds', 6) }}">
+      @foreach ($own as $k => $s)
+        @php($go = \App\Services\Website\SiteSettings::link($s->link_type, $s->link_value))
+        @php($src = \App\Services\Website\SiteSettings::mediaUrl($s->path))
+        <div class="slide {{ $k === 0 ? 'on' : '' }}" @if ($s->kind === 'image') style="background-image:url('{{ $src }}')" @endif aria-roledescription="slide" aria-label="{{ $s->alt ?: __('site.sales.slide', ['n' => $k + 1]) }}">
+          @if ($s->kind === 'video')<video class="bg" src="{{ $src }}" @if ($s->poster_path) poster="{{ \App\Services\Website\SiteSettings::mediaUrl($s->poster_path) }}" @endif muted loop playsinline preload="metadata" @if ($k === 0) autoplay @endif></video>@endif
+          @if ($go)<a class="slide-link" href="{{ $go }}" aria-label="{{ $s->text('title') ?: ($s->alt ?: __('site.sales.slide', ['n' => $k + 1])) }}" @if ($s->text('cta')) tabindex="-1" @endif></a>@endif
+          @if ($s->text('title') || $s->text('text') || $s->text('eyebrow'))
+          <div class="txt">@if ($s->text('eyebrow'))<span class="eyebrow">{{ $s->text('eyebrow') }}</span>@endif @if ($s->text('title'))<h3>{{ $s->text('title') }}</h3>@endif @if ($s->text('text'))<p>{{ $s->text('text') }}</p>@endif @if ($go && $s->text('cta'))<div><a class="btn" href="{{ $go }}">{{ $s->text('cta') }}</a></div>@endif</div>
+          @endif
+        </div>
+      @endforeach
+      @if ($own->count() > 1)
+      <div class="ctrl"><div class="dots" id="dots"></div><div class="arrows"><button id="prev" type="button" aria-label="{{ __('site.sales.prev') }}">‹</button><button id="pause" type="button" aria-label="{{ __('site.sales.pause') }}" data-play="{{ __('site.sales.play') }}" data-pause="{{ __('site.sales.pause') }}">❚❚</button><button id="next" type="button" aria-label="{{ __('site.sales.next') }}">›</button></div></div>
+      @endif
+    </div>
+    @else
     <div class="slider" id="slider" aria-roledescription="carousel" aria-label="{{ __('site.sales.news') }}">
       @foreach (__('site.sales.slides') as $k => $s)
         <div class="slide {{ $k === 0 ? 'on' : '' }}" style="background-image:url('{{ asset('images/site/'.['sales', 'n1', 'hero'][$k % 3].'.jpg') }}')" aria-roledescription="slide" aria-label="{{ __('site.sales.slide', ['n' => $k + 1]) }}">
@@ -31,6 +50,7 @@
       @endforeach
       <div class="ctrl"><div class="dots" id="dots"></div><div class="arrows"><button id="prev" type="button" aria-label="{{ __('site.sales.prev') }}">‹</button><button id="pause" type="button" aria-label="{{ __('site.sales.pause') }}" data-play="{{ __('site.sales.play') }}" data-pause="{{ __('site.sales.pause') }}">❚❚</button><button id="next" type="button" aria-label="{{ __('site.sales.next') }}">›</button></div></div>
     </div>
+    @endif
   </section>
 
   <section class="sblock">

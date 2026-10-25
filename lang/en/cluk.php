@@ -20,6 +20,9 @@ return [
         'manage' => 'Manage',
     ],
     'rights' => [
+        'website' => [
+            'edit' => 'Website: change pictures, slideshows and texts',
+        ],
         'meetings' => [
             'see_all' => 'See all meetings and tasks of colleagues',
         ],

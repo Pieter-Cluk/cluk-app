@@ -6,6 +6,7 @@ use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\NewsController;
 use App\Http\Controllers\Site\SalesController;
 use App\Http\Controllers\Site\TrackController;
+use App\Http\Controllers\Site\WebMediaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,9 @@ $site = function () {
     Route::get('/news', [NewsController::class, 'index'])->name('news');
     Route::get('/news/image/{post}', [NewsController::class, 'image'])->whereNumber('post')->name('social.image');
     Route::get('/news/video/{post}', [NewsController::class, 'video'])->whereNumber('post')->name('social.video');
+
+    // Pictures and videos from Media › Website.
+    Route::get('/media/{f}', [WebMediaController::class, 'show'])->where('f', '[A-Za-z0-9]{32}\.[a-z0-9]{3,4}')->name('webmedia');
 
     // Visitor behaviour (only with consent).
     Route::post('/t', [TrackController::class, 'store'])->middleware('throttle:240,1')->name('track');

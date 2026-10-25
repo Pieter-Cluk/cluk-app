@@ -20,6 +20,9 @@ return [
         'manage' => 'Beheren',
     ],
     'rights' => [
+        'website' => [
+            'edit' => 'Website: foto\'s, diavoorstellingen en teksten wijzigen',
+        ],
         'meetings' => [
             'see_all' => 'Alle vergaderingen en taken van collega’s zien',
         ],

@@ -664,3 +664,22 @@ mark { background: rgba(92,191,58,.3); color: inherit; padding: 0 1px; }
 .acc-page > *, .acc-two > * { min-width: 0; }
 @media (max-width: 600px) { .acc-page .lhead { grid-template-columns: minmax(0, 1fr); } .acc-page .lhead form { grid-column: 1; grid-row: auto; } }
 .inv-doc td.num { white-space: nowrap; }
+/* Pictures and videos from Media › Website (still or slideshow) */
+.wsl { position: relative; overflow: hidden; min-width: 0; }
+.wsl-s { position: absolute; inset: 0; display: block; opacity: 0; visibility: hidden; transition: opacity .7s ease; }
+.wsl-s.on { opacity: 1; visibility: visible; z-index: 1; }
+.wsl .wsl-s img, .wsl .wsl-s video { width: 100%; height: 100%; object-fit: cover; display: block; padding: 0; mix-blend-mode: normal; max-width: none; }
+.wsl-ctrl { position: absolute; z-index: 3; right: 14px; bottom: 12px; display: flex; gap: 10px; align-items: center; }
+.wsl-dots { display: flex; gap: 6px; }
+.wsl-dots button { width: 9px; height: 9px; border-radius: 50%; border: 0; padding: 0; background: rgba(255,255,255,.5); cursor: pointer; }
+.wsl-dots button[aria-current="true"] { background: var(--green); }
+.wsl-pause { background: rgba(0,0,0,.45); color: #fff; border: 0; border-radius: 999px; width: 28px; height: 28px; cursor: pointer; font-size: 11px; }
+.home-hero .photo.wsl { background: none; align-self: stretch; aspect-ratio: auto; display: block; }
+.dh-hero .ph .wsl { position: absolute; inset: 0; }
+.dh-hero .ph:has(.wsl) { pointer-events: auto; }
+.dh-hero:has(.ph .wsl) .in { pointer-events: none; }
+.dh-hero:has(.ph .wsl) .in > * { pointer-events: auto; }
+.dh-hero .ph .wsl-ctrl { z-index: 4; }
+.slide-link { position: absolute; inset: 0; z-index: 1; }
+.slide .txt { z-index: 2; }
+.slide video.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }

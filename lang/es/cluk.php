@@ -20,6 +20,9 @@ return [
         'manage' => 'Gestionar',
     ],
     'rights' => [
+        'website' => [
+            'edit' => 'Web: cambiar fotos, presentaciones y textos',
+        ],
         'meetings' => [
             'see_all' => 'Ver todas las reuniones y tareas de los compañeros',
         ],

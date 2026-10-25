@@ -79,6 +79,7 @@ return [
         'warehouse.setup_locations',
         'warehouse.sign_delivery',
         'warehouse.write_off',
+        'website.edit',
     ],
 
 ];

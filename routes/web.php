@@ -24,6 +24,7 @@ use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\Me\MeController;
 use App\Http\Controllers\Media\MessageController;
 use App\Http\Controllers\Media\MessagePublicController;
+use App\Http\Controllers\Media\WebsiteController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\ProductSales\CustomerDiscountController;
@@ -223,6 +224,17 @@ Route::middleware('auth:web')->group(function () {
     });
     // Back from the platform's sign-in (an address the platforms know; must stay the same).
     Route::get('/social/connect/{provider}/callback', [SocialController::class, 'callback'])->whereIn('provider', ['meta', 'linkedin', 'google'])->middleware('right:social.connect')->name('social.callback');
+    // Media › Website: pictures, videos and texts of the homepage, dry-hire and sales pages.
+    Route::prefix('media/website')->middleware('nav:website')->name('website.')->group(function () {
+        Route::get('/', [WebsiteController::class, 'index'])->name('index');
+        Route::post('/texts/{tab}', [WebsiteController::class, 'texts'])->whereIn('tab', ['home', 'dryhire', 'sales'])->name('texts');
+        Route::post('/tiles/{tile}', [WebsiteController::class, 'tile'])->whereIn('tile', ['dryhire', 'sales', 'factory', 'afrit6'])->name('tile');
+        Route::post('/settings', [WebsiteController::class, 'general'])->name('general');
+        Route::post('/slides', [WebsiteController::class, 'store'])->name('slides.store');
+        Route::post('/slides/{slide}', [WebsiteController::class, 'update'])->whereNumber('slide')->name('slides.update');
+        Route::post('/slides/{slide}/move/{dir}', [WebsiteController::class, 'move'])->whereNumber('slide')->whereIn('dir', ['up', 'down'])->name('slides.move');
+        Route::delete('/slides/{slide}', [WebsiteController::class, 'destroy'])->whereNumber('slide')->name('slides.destroy');
+    });
     // Meeting notes: paste the text, check the proposed tasks, hand them out. Tasks: one list per person.
     Route::prefix('meetings')->middleware('nav:meetings')->name('meetings.')->group(function () {
         Route::get('/', [MeetingController::class, 'index'])->name('index');
@@ -734,7 +746,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks', 'meetings', 'todos'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks', 'meetings', 'todos', 'website'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

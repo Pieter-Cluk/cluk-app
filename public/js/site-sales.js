@@ -249,15 +249,17 @@
   if (slides.length > 1 && dots) {
     var i = 0, t = null, paused = matchMedia('(prefers-reduced-motion: reduce)').matches, pz = $('pause');
     dots.innerHTML = slides.map(function (s, k) { return '<button type="button" aria-label="' + esc(s.getAttribute('aria-label')) + '" aria-current="' + (k === 0) + '"></button>'; }).join('');
-    var go = function (k) { slides[i].classList.remove('on'); i = (k + slides.length) % slides.length; slides[i].classList.add('on'); Array.prototype.forEach.call(dots.children, function (d, n) { d.setAttribute('aria-current', n === i); }); };
-    var play = function () { clearInterval(t); if (!paused) t = setInterval(function () { go(i + 1); }, 6000); };
+    var ms = Math.max(3, parseInt($('slider').dataset.seconds, 10) || 6) * 1000;
+    var vid = function (k, on) { var v = slides[k].querySelector('video'); if (!v) return; if (on && !paused) { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); } else v.pause(); };
+    var go = function (k) { vid(i, false); slides[i].classList.remove('on'); i = (k + slides.length) % slides.length; slides[i].classList.add('on'); vid(i, true); Array.prototype.forEach.call(dots.children, function (d, n) { d.setAttribute('aria-current', n === i); }); };
+    var play = function () { clearInterval(t); if (!paused) t = setInterval(function () { go(i + 1); }, ms); };
     dots.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { go(Array.prototype.indexOf.call(dots.children, b)); play(); } });
     $('prev').addEventListener('click', function () { go(i - 1); play(); });
     $('next').addEventListener('click', function () { go(i + 1); play(); });
-    pz.addEventListener('click', function () { paused = !paused; pz.textContent = paused ? '▶' : '❚❚'; pz.setAttribute('aria-label', paused ? pz.dataset.play : pz.dataset.pause); play(); });
+    pz.addEventListener('click', function () { paused = !paused; pz.textContent = paused ? '▶' : '❚❚'; pz.setAttribute('aria-label', paused ? pz.dataset.play : pz.dataset.pause); vid(i, !paused); play(); });
     $('slider').addEventListener('mouseenter', function () { clearInterval(t); });
     $('slider').addEventListener('mouseleave', play);
-    if (paused) pz.textContent = '▶';
+    if (paused) { pz.textContent = '▶'; vid(0, false); }
     play();
   }
 })();

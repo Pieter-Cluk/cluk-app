@@ -1,5 +1,5 @@
 @extends('site.layout', ['active' => 'dryhire'])
-@section('title', __('site.dryhire.title'))
+@section('title', \App\Services\Website\SiteSettings::text('dryhire.title'))
 @section('description', __('site.dryhire.meta', ['n' => number_format($data['stats']['products'], 0, ',', '.')]))
 @section('body', 'dh')
 @section('content')
@@ -7,10 +7,15 @@
     $nf = fn ($n) => number_format($n, 0, ',', '.');
 @endphp
 <section class="dh-hero" id="top">
+  @php($hero = \App\Services\Website\SiteSettings::slides('dryhire_hero'))
+  @if ($hero->isNotEmpty())
+  <div class="ph">@include('site._slides', ['slides' => $hero])</div>
+  @else
   <div class="ph" aria-hidden="true" style="background-image:url('{{ asset('images/site/dryhire.jpg') }}')"></div>
+  @endif
   <div class="in gut">
-    <div class="eyebrow">{{ __('site.dryhire.eyebrow') }}</div>
-    <h1>{{ __('site.dryhire.title') }}</h1>
+    <div class="eyebrow">{{ \App\Services\Website\SiteSettings::text('dryhire.eyebrow') }}</div>
+    <h1>{{ \App\Services\Website\SiteSettings::text('dryhire.title') }}</h1>
     <div class="stats">
       @if ($data['stats']['pieces'] > 0)<div class="stat num"><b>{{ $nf($data['stats']['pieces']) }}</b><span>{{ __('site.dryhire.stat_pieces') }}</span></div>@endif
       <div class="stat num"><b>{{ $nf($data['stats']['products']) }}</b><span>{{ __('site.dryhire.stat_products') }}</span></div>
@@ -25,7 +30,7 @@
       <button class="clear" id="clear" type="button" hidden>{{ __('site.dryhire.clear') }}</button>
     </div>
     <div class="suggest"><span style="opacity:.75">{{ __('site.dryhire.popular') }}</span>
-      @foreach (config('website.popular') as $p)<button type="button" data-q="{{ $p }}">{{ $p }}</button>@endforeach
+      @foreach (\App\Services\Website\SiteSettings::popular() as $p)<button type="button" data-q="{{ $p }}">{{ $p }}</button>@endforeach
     </div>
   </div>
 </section>
@@ -76,5 +81,6 @@
 <script type="application/json" id="dh-cfg">@json($cfg)</script>
 @endsection
 @push('scripts')
+<script src="{{ asset('js/site-slides.js') }}?v={{ @filemtime(public_path('js/site-slides.js')) }}" defer></script>
 <script src="{{ asset('js/site-dryhire.js') }}?v={{ @filemtime(public_path('js/site-dryhire.js')) }}" defer></script>
 @endpush
