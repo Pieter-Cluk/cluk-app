@@ -86,6 +86,10 @@ class MeetingsTest extends TestCase
         $other->extraRights()->create(['right' => 'meetings.see_all']);
         $this->actingAs($other->fresh())->get(route('meetings.show', $m))->assertOk();
         $this->actingAs($other->fresh())->get('/tasks?v=all')->assertOk()->assertSee('Sol blinders labelen');
+
+        // Dashboard "Everyone": without the right it says it only shows your own; with it, everyone's.
+        $this->actingAs($this->tom)->get('/dashboard?who=all')->assertOk()->assertSee('Only yours: seeing colleagues’ tasks needs the right', false);
+        $this->actingAs($other->fresh())->get('/dashboard?who=all')->assertOk()->assertSee('Tasks of everyone')->assertSee('<b>2</b><span>Tasks of everyone', false);
     }
 
     public function test_claude_reads_free_text_and_the_customer_task_goes_to_the_account_owner(): void

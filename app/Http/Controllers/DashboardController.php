@@ -85,9 +85,12 @@ class DashboardController extends Controller
     {
         $t = [];
         // Tasks for a person (from meetings or added by hand): open, and how many are late.
-        $todos = Todo::open()->when($who === 'me' || ! $u->hasRight('meetings.see_all'), fn ($q) => $q->where('assignee_id', $u->id));
+        // "Everyone" shows colleagues' tasks only with the right to see them; otherwise the tile says it shows only yours.
+        $allTodos = $who === 'all' && $u->hasRight('meetings.see_all');
+        $todos = Todo::open()->when(! $allTodos, fn ($q) => $q->where('assignee_id', $u->id));
         $late = (clone $todos)->whereDate('due_on', '<', today())->count();
-        $t[] = ['n' => $todos->count(), 'key' => 'todos', 'url' => route('todos.index', ['v' => $who === 'me' || ! $u->hasRight('meetings.see_all') ? 'mine' : 'all']), 'tone' => $late ? 'warn' : 'info', 'late' => $late];
+        $t[] = ['n' => $todos->count(), 'key' => $allTodos ? 'todos_all' : 'todos', 'url' => route('todos.index', ['v' => $allTodos ? 'all' : 'mine']), 'tone' => $late ? 'warn' : 'info', 'late' => $late,
+            'note' => $who === 'all' && ! $allTodos ? __('dashboard.tasks.todos_only_mine') : null, 'show' => $who === 'all'];
         $mine = fn ($q) => $who === 'me' ? $q->where(fn ($w) => $w->whereNull('assignee_id')->orWhere('assignee_id', $u->id)) : $q;
         if ($u->canUseModule('sales', 2)) {
             // Commercial tasks: the number is all of them; the dots show how many per colour.
@@ -137,7 +140,7 @@ class DashboardController extends Controller
             $t[] = ['n' => ($who === 'me' && ! $u->canUseModule('preinvoice', 2) ? $ready->where('handed_by_id', $u->id) : $ready)->count(), 'key' => 'to_invoice', 'url' => route('finance.index').'#ready', 'tone' => 'info'];
         }
 
-        return array_values(array_filter($t, fn ($x) => $x['n'] > 0));
+        return array_values(array_filter($t, fn ($x) => $x['n'] > 0 || ! empty($x['note'])));
     }
 
     /** Today in motion: what goes out, comes back, and today's bookings. */
