@@ -150,6 +150,13 @@
             @php($logins = \App\Models\Web\CustomerAccount::where('company_id', $company->id)->orWhereIn('contact_id', $company->contacts->pluck('id'))->orderBy('first_name')->get())
             @include('companies._sales-conditions')
             @include('web._activity', ['act' => \App\Services\Website\WebActivity::summary(\App\Services\Website\WebActivity::visitorsOfCompany($company))])
+            @php($dls = \App\Models\Website\DownloadLog::with(['download', 'contact'])->where('company_id', $company->id)->latest('id')->limit(10)->get())
+            @if ($dls->isNotEmpty())
+                <section class="card" id="downloads">
+                    <div class="card-head"><h2>{{ __('website.downloads.on_card') }}</h2></div>
+                    <ul class="plain-list">@foreach ($dls as $l)<li>{{ $l->download?->label(null, 'title') }} <small class="muted">· {{ $l->contact?->name ?? $l->name ?? $l->email }} · {{ $l->created_at->format('d/m/Y H:i') }}</small></li>@endforeach</ul>
+                </section>
+            @endif
 
             <section class="card">
                 <div class="card-head"><h2>{{ __('web.staff.card_title') }}</h2><a href="{{ route('web-accounts.index') }}">{{ __('web.staff.all') }} →</a></div>

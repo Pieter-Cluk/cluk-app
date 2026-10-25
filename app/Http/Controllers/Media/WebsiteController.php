@@ -26,7 +26,7 @@ use Illuminate\View\View;
  */
 class WebsiteController extends Controller
 {
-    public const TABS = ['home', 'dryhire', 'sales', 'general'];
+    public const TABS = ['home', 'dryhire', 'sales', 'downloads', 'general'];
 
     public const PLACE_OF = ['home' => 'home_hero', 'dryhire' => 'dryhire_hero', 'sales' => 'sales_slider'];
 

@@ -25,6 +25,7 @@ use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\Me\MeController;
 use App\Http\Controllers\Media\MessageController;
 use App\Http\Controllers\Media\MessagePublicController;
+use App\Http\Controllers\Media\WebDownloadController;
 use App\Http\Controllers\Media\WebsiteController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PictureController;
@@ -229,6 +230,11 @@ Route::middleware('auth:web')->group(function () {
     // Media › Website: pictures, videos and texts of the homepage, dry-hire and sales pages.
     Route::prefix('media/website')->middleware('nav:website')->name('website.')->group(function () {
         Route::get('/', [WebsiteController::class, 'index'])->name('index');
+        Route::get('/downloads/who', [WebDownloadController::class, 'log'])->name('downloads.log');
+        Route::post('/downloads', [WebDownloadController::class, 'store'])->name('downloads.store');
+        Route::post('/downloads/{download}', [WebDownloadController::class, 'update'])->whereNumber('download')->name('downloads.update');
+        Route::post('/downloads/{download}/move/{dir}', [WebDownloadController::class, 'move'])->whereNumber('download')->whereIn('dir', ['up', 'down'])->name('downloads.move');
+        Route::delete('/downloads/{download}', [WebDownloadController::class, 'destroy'])->whereNumber('download')->name('downloads.destroy');
         Route::get('/template/{format}', [WebsiteController::class, 'template'])->whereIn('format', ['home_hero', 'dryhire_hero', 'sales_slider', 'tile'])->name('template');
         Route::post('/texts/{tab}', [WebsiteController::class, 'texts'])->whereIn('tab', ['home', 'dryhire', 'sales'])->name('texts');
         Route::post('/tiles/{tile}', [WebsiteController::class, 'tile'])->whereIn('tile', ['dryhire', 'sales', 'factory', 'afrit6'])->name('tile');

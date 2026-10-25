@@ -232,7 +232,39 @@ class CommercialTasks
         return null;
     }
 
+    /** Website visits and downloads by people of a company we know. */
     private static function webTasks(): array
+    {
+        $out = collect(self::webEventTasks())->keyBy('company_id');
+        if (! Schema::hasTable('web_download_logs')) {
+            return $out->values()->all();
+        }
+        // Downloads count even without statistics cookies: we know who from their login or the name and email they gave.
+        $logs = DB::table('web_download_logs')->join('web_downloads', 'web_downloads.id', '=', 'web_download_logs.download_id')
+            ->where('web_download_logs.created_at', '>=', now()->subDays(self::WEB_DAYS))->whereNotNull('web_download_logs.company_id')
+            ->get(['web_download_logs.company_id', 'web_download_logs.contact_id', 'web_download_logs.created_at', 'web_downloads.title']);
+        if ($logs->isEmpty()) {
+            return $out->values()->all();
+        }
+        $companies = Company::active()->whereIn('id', $logs->pluck('company_id')->unique())->get()->keyBy('id');
+        foreach ($logs->groupBy('company_id') as $companyId => $rows) {
+            $c = $companies->get($companyId);
+            if (! $c) {
+                continue;
+            }
+            $titles = $rows->map(fn ($r) => (json_decode($r->title, true)['en'] ?? null) ?: collect(json_decode($r->title, true))->first())->filter()->unique()->take(3)->values()->all();
+            $last = Carbon::parse($rows->max('created_at'));
+            $t = $out->get($companyId) ?? ['key' => 'web:'.$companyId.':'.$last->format('o-W'), 'kind' => 'web', 'company_id' => $companyId, 'contact_id' => $rows->pluck('contact_id')->filter()->first(),
+                'quote_id' => null, 'owner_id' => $c->account_owner_id, 'level' => 'blue', 'data' => ['views' => 0, 'products' => 0, 'basket' => 0, 'searches' => [], 'social' => [], 'sections' => [], 'last' => $last->toIso8601String(), 'url' => route('companies.show', $c)]];
+            $t['data']['downloads'] = $titles;
+            $t['contact_id'] ??= $rows->pluck('contact_id')->filter()->first();
+            $out->put($companyId, $t);
+        }
+
+        return $out->values()->all();
+    }
+
+    private static function webEventTasks(): array
     {
         if (! Schema::hasTable('web_events')) {
             return [];

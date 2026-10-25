@@ -244,5 +244,6 @@ return [
         'cats' => ['terms' => 'Algemene voorwaarden', 'pricelists' => 'Prijslijsten', 'technical' => 'Technische fiches', 'forms' => 'Formulieren', 'brochures' => 'Brochures', 'other' => 'Andere documenten'],
         'terms_doc' => 'Algemene voorwaarden', 'download' => 'Downloaden', 'open' => 'Openen', 'any_language' => 'Alle talen', 'empty' => 'Hier staan nog geen documenten.',
         'langs' => ['en' => 'Engels', 'nl' => 'Nederlands', 'fr' => 'Frans', 'es' => 'Spaans'],
+        'for_customers' => 'voor klanten met een login', 'login_needed' => 'Meld je aan om dit document te downloaden.', 'ask_intro' => 'Zeg ons wie je bent en de download start. We vragen het maar één keer per bezoek.', 'name' => 'Naam', 'email' => 'E-mail', 'company' => 'Bedrijf (optioneel)', 'privacy' => 'We bewaren je naam en e-mail bij deze download, zodat ons team je verder kan helpen. We geven ze nooit door.', 'have_login' => 'Heb je een login?', 'have_login_text' => 'Meld je aan en download zonder iets in te vullen.',
     ],
 ];

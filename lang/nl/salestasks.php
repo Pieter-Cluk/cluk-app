@@ -40,6 +40,7 @@ return [
         'expired' => 'geldigheid verlopen',
     ],
     'web' => [
+        'downloaded' => 'downloadde :docs',
         'title' => '— actief op de website',
         'views' => '{1} 1 pagina|[2,*] :n pagina’s',
         'products' => '{1} 1 product bekeken|[2,*] :n producten bekeken',

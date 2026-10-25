@@ -244,5 +244,6 @@ return [
         'cats' => ['terms' => 'Conditions générales', 'pricelists' => 'Listes de prix', 'technical' => 'Fiches techniques', 'forms' => 'Formulaires', 'brochures' => 'Brochures', 'other' => 'Autres documents'],
         'terms_doc' => 'Conditions générales', 'download' => 'Télécharger', 'open' => 'Ouvrir', 'any_language' => 'Toutes les langues', 'empty' => 'Pas encore de documents ici.',
         'langs' => ['en' => 'Anglais', 'nl' => 'Néerlandais', 'fr' => 'Français', 'es' => 'Espagnol'],
+        'for_customers' => 'pour les clients avec un compte', 'login_needed' => 'Connectez-vous pour télécharger ce document.', 'ask_intro' => 'Dites-nous qui vous êtes et le téléchargement démarre. Nous ne le demandons qu’une fois par visite.', 'name' => 'Nom', 'email' => 'E-mail', 'company' => 'Société (facultatif)', 'privacy' => 'Nous gardons votre nom et votre e-mail avec ce téléchargement, pour que notre équipe puisse vous aider. Nous ne les transmettons jamais.', 'have_login' => 'Vous avez un compte ?', 'have_login_text' => 'Connectez-vous et téléchargez sans rien remplir.',
     ],
 ];

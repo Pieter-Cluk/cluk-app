@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Site;
 
 use App\Models\Website\Download;
-use App\Services\Website\Tracking;
+use App\Services\Website\Downloads;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -29,17 +30,42 @@ class DownloadController extends SiteController
         return view('site.downloads', ['groups' => $groups, 'terms' => $terms, 'locale' => $locale]);
     }
 
-    public function file(Request $request, int $download): BinaryFileResponse
+    public function file(Request $request, int $download): BinaryFileResponse|View|RedirectResponse
     {
+        $this->locale($request);
         $d = Download::where('active', true)->findOrFail($download);
+        // Some documents ask who you are first (name and email, once per visit), or are only for customers with a login.
+        if (! Downloads::mayGet($d, $request)) {
+            if ($d->access === 'login') {
+                $request->session()->put('url.intended', route('site.downloads.file', $d->id));
+
+                return redirect()->route('site.account.login')->with('notice', __('site.downloads.login_needed'));
+            }
+
+            return view('site.downloads-ask', ['d' => $d]);
+        }
         abort_unless(Storage::disk('local')->exists($d->path), 404);
-        $d->increment('downloads');
-        Tracking::record($request, 'download', ['section' => 'downloads', 'label' => $d->label('en', 'title'), 'meta' => ['download_id' => $d->id]]);
+        Downloads::log($d, $request); // counts it, links it to who it is, and records it in the visitor statistics
         $name = Str::ascii($d->original_name ?: basename($d->path));
         $inline = in_array($d->mime, ['application/pdf', 'image/jpeg', 'image/png'], true);
 
         return response()->file(Storage::disk('local')->path($d->path), array_filter([
-            'Content-Type' => $d->mime, 'Content-Disposition' => ($inline ? 'inline' : 'attachment').'; filename="'.str_replace('"', '', $name).'"', 'Cache-Control' => 'public, max-age=3600',
+            'Content-Type' => $d->mime, 'Content-Disposition' => ($inline ? 'inline' : 'attachment').'; filename="'.str_replace('"', '', $name).'"',
+            'Cache-Control' => $d->access === 'open' ? 'public, max-age=3600' : 'private, no-store',
         ]));
+    }
+
+    /** The "who are you" step: kept for the visit, then the download starts. */
+    public function ask(Request $request, int $download): RedirectResponse
+    {
+        $this->locale($request);
+        $d = Download::where('active', true)->findOrFail($download);
+        if (filled($request->input('website_url'))) { // a bot
+            return redirect()->route('site.downloads');
+        }
+        $data = $request->validate(['name' => ['required', 'string', 'max:120'], 'email' => ['required', 'email', 'max:190'], 'company' => ['nullable', 'string', 'max:190']]);
+        $request->session()->put(Downloads::SESSION, ['name' => trim($data['name']), 'email' => Str::lower(trim($data['email'])), 'company' => trim((string) ($data['company'] ?? '')) ?: null]);
+
+        return redirect()->route('site.downloads.file', $d->id);
     }
 }

@@ -247,5 +247,6 @@ return [
         'cats' => ['terms' => 'Terms and conditions', 'pricelists' => 'Price lists', 'technical' => 'Technical sheets', 'forms' => 'Forms', 'brochures' => 'Brochures', 'other' => 'Other documents'],
         'terms_doc' => 'General terms and conditions', 'download' => 'Download', 'open' => 'Open', 'any_language' => 'All languages', 'empty' => 'No documents here yet.',
         'langs' => ['en' => 'English', 'nl' => 'Dutch', 'fr' => 'French', 'es' => 'Spanish'],
+        'for_customers' => 'for customers with a login', 'login_needed' => 'Please sign in to download this document.', 'ask_intro' => 'Tell us who you are and the download starts. We only ask once per visit.', 'name' => 'Name', 'email' => 'Email', 'company' => 'Company (optional)', 'privacy' => 'We keep your name and email with this download, so our team can help you further. We never pass them on.', 'have_login' => 'Have a login?', 'have_login_text' => 'Sign in and download without filling anything in.',
     ],
 ];

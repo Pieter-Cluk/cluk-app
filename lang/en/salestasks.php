@@ -40,6 +40,7 @@ return [
         'expired' => 'validity expired',
     ],
     'web' => [
+        'downloaded' => 'downloaded :docs',
         'title' => '— active on the website',
         'views' => '{1} 1 page|[2,*] :n pages',
         'products' => '{1} 1 product looked at|[2,*] :n products looked at',

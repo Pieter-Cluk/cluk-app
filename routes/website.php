@@ -43,6 +43,7 @@ $site = function () {
     // Downloads (footer): documents for customers.
     Route::get('/downloads', [DownloadController::class, 'index'])->name('downloads');
     Route::get('/downloads/{download}', [DownloadController::class, 'file'])->whereNumber('download')->middleware('throttle:60,1')->name('downloads.file');
+    Route::post('/downloads/{download}', [DownloadController::class, 'ask'])->whereNumber('download')->middleware('throttle:10,1')->name('downloads.ask');
 
     // Visitor behaviour (only with consent).
     Route::post('/t', [TrackController::class, 'store'])->middleware('throttle:240,1')->name('track');

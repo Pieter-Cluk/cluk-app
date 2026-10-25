@@ -39,9 +39,10 @@
                     @else
                         <b><a href="{{ $d['url'] ?? '#' }}">{{ $t->company?->name }}</a></b> <span class="muted">{{ __('salestasks.web.title') }}</span>
                         <div class="small">
-                            {{ trans_choice('salestasks.web.views', $d['views'] ?? 0, ['n' => $d['views'] ?? 0]) }}@if (! empty($d['products'])) · {{ trans_choice('salestasks.web.products', $d['products'], ['n' => $d['products']]) }}@endif
+                            @if (! empty($d['views'])){{ trans_choice('salestasks.web.views', $d['views'], ['n' => $d['views']]) }}@endif @if (! empty($d['products'])) · {{ trans_choice('salestasks.web.products', $d['products'], ['n' => $d['products']]) }}@endif
                             @if (! empty($d['basket'])) · <b>{{ __('salestasks.web.basket') }}</b>@endif
                             @if (! empty($d['searches'])) · {{ __('salestasks.web.searched', ['words' => implode(', ', $d['searches'])]) }}@endif
+                            @if (! empty($d['downloads'])) · <b>{{ __('salestasks.web.downloaded', ['docs' => implode(', ', $d['downloads'])]) }}</b>@endif
                             @if (! empty($d['social'])) · <b>{{ __('salestasks.web.via', ['where' => implode(', ', $d['social'])]) }}</b>@endif
                             @if (! empty($d['last'])) · {{ \Illuminate\Support\Carbon::parse($d['last'])->timezone('Europe/Brussels')->format('d/m H:i') }}@endif
                             @if ($t->contact) · {{ __('salestasks.call', ['name' => $t->contact->name ?? trim($t->contact->first_name.' '.$t->contact->last_name)]) }}@endif

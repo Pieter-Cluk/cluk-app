@@ -40,6 +40,7 @@ return [
         'expired' => 'validez caducada',
     ],
     'web' => [
+        'downloaded' => 'descargó :docs',
         'title' => '— activo en la web',
         'views' => '{1} 1 página|[2,*] :n páginas',
         'products' => '{1} 1 producto visto|[2,*] :n productos vistos',

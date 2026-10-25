@@ -697,3 +697,4 @@ mark { background: rgba(92,191,58,.3); color: inherit; padding: 0 1px; }
 .dl-btn { border: 1.5px solid var(--black); padding: 9px 16px; font: 700 14px var(--label); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
 .dl-btn:hover { background: var(--green); border-color: var(--green); }
 @media (max-width: 560px) { .dl-list li { grid-template-columns: 44px minmax(0, 1fr); } .dl-type { height: 44px; } .dl-btn { grid-column: 2; justify-self: start; } }
+.acc-card h1.dl-ask-h { font-size: clamp(28px, 3.4vw, 44px); overflow-wrap: anywhere; }

@@ -1054,3 +1054,5 @@ ol.rotation { margin: 6px 0 4px; padding-left: 20px; }
 .wa-link:hover{text-decoration:underline}
 .contact:target{outline:2px solid var(--green, #52ae32);outline-offset:4px;border-radius:8px}
 pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface-subtle);padding:10px 12px;border-radius:8px;font-size:13px}
+.ws-dl-ext{display:grid;place-items:center;width:72px;height:72px;border-radius:10px;background:var(--surface-subtle);font-weight:800;letter-spacing:.04em;font-size:13px}
+#downloads .ws-slide{grid-template-columns:72px minmax(0,1fr)}

@@ -1,5 +1,5 @@
 @php($site = route('site.home'))
-@php($pageUrl = ['home' => route('site.home'), 'dryhire' => route('site.dryhire'), 'sales' => route('site.sales')])
+@php($pageUrl = ['home' => route('site.home'), 'dryhire' => route('site.dryhire'), 'sales' => route('site.sales'), 'downloads' => route('site.downloads')])
 @php($n = $slides->filter->isLive()->count())
 <x-layouts.app :title="__('nav.items.website')">
     <div class="pagehead">
@@ -140,7 +140,7 @@
                 </form>
             </section>
         @endif
-    @else
+    @elseif ($tab === 'general')
         <section class="card mt">
             <h2>{{ __('website.tabs.general') }}</h2>
             <form method="post" action="{{ route('website.general') }}" class="stack-sm">@csrf<input type="hidden" name="tab" value="general">
@@ -171,5 +171,8 @@
                 type.addEventListener('change', function () { val.value = ''; set(); }); set();
             });
         </script>
+    @endif
+    @if ($tab === 'downloads')
+        @include('media.website._downloads', ['docs' => \App\Models\Website\Download::orderBy('position')->orderBy('id')->get()])
     @endif
 </x-layouts.app>
