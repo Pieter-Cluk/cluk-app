@@ -241,4 +241,11 @@ return [
         'strip_title' => 'Latest from :part', 'more' => 'More news',
         'empty' => 'No posts here yet.', 'follow' => 'Follow us', 'video' => 'Video', 'filter' => 'Show news about',
     ],
+    'downloads' => [
+        'title' => 'Downloads', 'meta' => 'Terms and conditions, price lists, technical sheets, forms and brochures from CLUK to download.',
+        'intro' => 'Terms and conditions, price lists, technical sheets and forms. Free to download.',
+        'cats' => ['terms' => 'Terms and conditions', 'pricelists' => 'Price lists', 'technical' => 'Technical sheets', 'forms' => 'Forms', 'brochures' => 'Brochures', 'other' => 'Other documents'],
+        'terms_doc' => 'General terms and conditions', 'download' => 'Download', 'open' => 'Open', 'any_language' => 'All languages', 'empty' => 'No documents here yet.',
+        'langs' => ['en' => 'English', 'nl' => 'Dutch', 'fr' => 'French', 'es' => 'Spanish'],
+    ],
 ];
