@@ -123,4 +123,20 @@ class WebsiteModuleTest extends TestCase
             $this->actingAs($this->editor->fresh(), 'web')->get(route('website.index'))->assertOk()->assertSee($t);
         }
     }
+
+    public function test_ideal_formats_template_and_a_warning_for_pictures_that_will_not_fit(): void
+    {
+        $this->actingAs($this->editor->fresh(), 'web')->get(route('website.index', ['tab' => 'sales']))->assertOk()
+            ->assertSee('2400 × 880 px (30:11)')->assertSee('the middle 810 × 870 px')->assertSee(route('website.template', 'sales_slider'), false);
+        $svg = $this->actingAs($this->editor->fresh(), 'web')->get(route('website.template', 'home_hero'))->assertOk()->assertHeader('Content-Type', 'image/svg+xml');
+        $this->assertStringContainsString('width="2400" height="2000"', $svg->getContent());
+        $this->assertStringContainsString('Always visible 1480 × 1290', $svg->getContent());
+        $this->assertNotFalse(simplexml_load_string($svg->getContent()));
+
+        // A small, square picture: added, with a warning.
+        $this->add('home_hero', 'none', null, [], UploadedFile::fake()->image('small.jpg', 800, 800))->assertSessionHas('status', fn ($m) => str_contains($m, 'the ideal is 2400 × 2000 px'));
+        // The right size: no warning; the previews per screen are there.
+        $this->add('home_hero', 'none', null, [], UploadedFile::fake()->image('ok.jpg', 2400, 2000))->assertSessionHas('status', 'Added to the website.');
+        $this->actingAs($this->editor->fresh(), 'web')->get(route('website.index'))->assertSee('ws-crops', false)->assertSee('Wide screen');
+    }
 }

@@ -1027,3 +1027,24 @@ img,video{max-width:100%}
 .move-btns { display: inline-flex; gap: 4px; margin-left: 8px; position: relative; z-index: 2; vertical-align: middle; }
 .move-btns form { display: inline; margin: 0; }
 ol.rotation { margin: 6px 0 4px; padding-left: 20px; }
+/* Website: ideal picture formats and crop previews */
+.ws-format{margin:8px 0 4px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface-subtle)}
+.ws-format>summary{cursor:pointer;font-size:14px}
+.ws-format-body{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:16px;margin-top:10px;align-items:start}
+.ws-format-pic{position:relative;width:100%;background:repeating-linear-gradient(45deg,#d9ddd6 0 8px,#e6e9e3 8px 16px);border-radius:6px;overflow:hidden}
+.ws-format-pic>span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.ws-format-safe{background:rgba(82,174,50,.28);outline:2px solid #52ae32}
+.ws-format-safe small{position:absolute;left:4px;top:2px;font-size:10px;font-weight:700;color:#2e6b1a}
+.ws-format-frame{border:2px dashed currentColor}
+.ws-format-frame small{position:absolute;left:3px;bottom:1px;font-size:10px;font-weight:700}
+.ws-fr-0{color:#e53935}.ws-fr-1{color:#1e88e5}.ws-fr-2{color:#fb8c00}.ws-fr-3{color:#8e24aa}
+.ws-format-pic>.ws-format-dark{inset:0;transform:none;left:0;top:0;width:100%;height:100%;background:linear-gradient(90deg,rgba(7,8,7,.9),rgba(7,8,7,.45) 35%,rgba(7,8,7,.05))}
+.ws-format-pic>.ws-format-text{left:0;top:auto;bottom:0;transform:none;width:50%;height:62%;background:rgba(10,10,10,.28);color:#fff;font-size:10px;padding:4px 6px;display:flex;align-items:flex-end}
+.ws-format-list{margin:0;padding-left:18px;display:grid;gap:4px}
+.ws-crops{display:flex;gap:8px;align-items:flex-end;margin-top:8px;flex-wrap:wrap}
+.ws-crops figure{margin:0;display:grid;gap:2px}
+.ws-crop{height:64px;border-radius:4px;overflow:hidden;background:#222}
+.ws-crop img,.ws-crop video{width:100%;height:100%;object-fit:cover;display:block}
+.ws-crops figcaption{font-size:10px;color:var(--muted);text-align:center}
+@media (max-width:800px){.ws-format-body{grid-template-columns:minmax(0,1fr)}}
+.ws-fr-1 small{left:auto;right:3px;bottom:auto;top:1px}.ws-fr-2 small{left:auto;right:3px}.ws-fr-3 small{bottom:auto;top:14px}

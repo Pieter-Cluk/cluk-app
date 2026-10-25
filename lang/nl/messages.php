@@ -143,4 +143,5 @@ return [
         'subject' => 'Test: e-mailbanner “:title”',
         'intro' => 'Dit is een voorbeeldmail. De banner hieronder is hoe hij onder de mails van de app verschijnt.',
     ],
+    'image_hint_mail_banner' => 'Ideaal: 1140 × 380 px (3:1), JPG onder 500 KB. Volledig getoond onder de mail, nooit uitgesneden; op gsm wordt hij kleiner tot de schermbreedte, dus maak tekst in de foto groot (letters minstens 40 px hoog).',
 ];

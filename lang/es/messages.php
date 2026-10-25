@@ -143,4 +143,5 @@ return [
         'subject' => 'Prueba: banner de email «:title»',
         'intro' => 'Este es un email de ejemplo. El banner de abajo es cómo aparece bajo los emails de la app.',
     ],
+    'image_hint_mail_banner' => 'Ideal: 1140 × 380 px (3:1), JPG de menos de 500 KB. Se muestra entera bajo el email, nunca recortada; en el móvil se reduce al ancho de pantalla, así que usa texto grande en la imagen (letras de al menos 40 px).',
 ];

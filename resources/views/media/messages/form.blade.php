@@ -22,7 +22,7 @@
 
                 <div class="field"><span>{{ __('messages.fields.image') }}</span>
                     @if ($m->image_path)<img class="msg-preview" src="{{ URL::signedRoute('messages.public.image', $m) }}" alt=""><label class="check"><input type="checkbox" name="remove_image" value="1"> {{ __('messages.remove_image') }}</label>@endif
-                    <input type="file" name="image" accept="image/*"><small class="muted">{{ __('messages.image_hint') }}</small></div>
+                    <input type="file" name="image" accept="image/*"><small class="muted">{{ __($m->kind === 'mail_banner' ? 'messages.image_hint_mail_banner' : 'messages.image_hint') }}</small></div>
 
                 @if ($m->kind === 'newsletter')
                     <div class="field"><span>{{ __('messages.fields.pdf') }}</span>

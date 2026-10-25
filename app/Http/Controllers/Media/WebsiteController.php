@@ -10,6 +10,7 @@ use App\Services\Website\SiteSettings;
 use App\Support\Images;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -85,8 +86,9 @@ class WebsiteController extends Controller
         }
         SiteSettings::put('home.tile.'.$tile, ['text' => $t['text'], 'cta' => $t['cta'], 'image' => $image], $request->user()->id);
         AuditLog::record('website.tile', null, ['tile' => $tile], $request->user());
+        $warn = $request->hasFile('image') ? self::fitWarning($image, 'tile') : null;
 
-        return $this->back('home', __('website.flash.tile_saved'), 'tiles');
+        return $this->back('home', __('website.flash.tile_saved').($warn ? ' '.$warn : ''), 'tiles');
     }
 
     /** Popular searches (dry-hire) and the general settings. */
@@ -126,8 +128,9 @@ class WebsiteController extends Controller
             'updated_by_id' => $request->user()->id,
         ] + $this->fields($request, $d));
         AuditLog::record('website.slide_added', $slide, ['place' => $slide->place, 'kind' => $slide->kind, 'link' => $slide->link_type.' '.$slide->link_value], $request->user());
+        $warn = $slide->kind === 'image' ? self::fitWarning($slide->path, $slide->place) : null;
 
-        return $this->back($this->tabOf($slide), __('website.flash.added'), 'slides');
+        return $this->back($this->tabOf($slide), __('website.flash.added').($warn ? ' '.$warn : ''), 'slides');
     }
 
     public function update(Request $request, Slide $slide): RedirectResponse
@@ -173,6 +176,35 @@ class WebsiteController extends Controller
         $slide->delete();
 
         return $this->back($tab, __('website.flash.removed'), 'slides');
+    }
+
+    /** A template in the ideal size with the screen crops and the safe zone, to design on (SVG). */
+    public function template(string $format): Response
+    {
+        abort_unless(isset(Slide::FORMATS[$format]), 404);
+        $f = Slide::FORMATS[$format];
+        [$sw, $sh] = Slide::safe($format);
+        $frames = collect($f['frames'])->map(fn ($r, $name) => ['name' => __('website.format.screens.'.$name), 'crop' => Slide::crop($format, $r)]);
+        $svg = view('media.website.template-svg', ['f' => $f, 'sw' => $sw, 'sh' => $sh, 'frames' => $frames, 'format' => $format])->render();
+
+        return response($svg, 200, ['Content-Type' => 'image/svg+xml', 'Content-Disposition' => 'attachment; filename="cluk-'.$format.'-'.$f['w'].'x'.$f['h'].'.svg"']);
+    }
+
+    /** A gentle warning when a picture is much smaller or a very different shape than the ideal. */
+    public static function fitWarning(?string $path, string $format): ?string
+    {
+        $full = $path ? Storage::disk('local')->path($path) : null;
+        $size = $full && is_file($full) ? @getimagesize($full) : false;
+        if (! $size || ! $size[1]) {
+            return null;
+        }
+        $f = Slide::FORMATS[$format];
+        $off = abs(($size[0] / $size[1]) / ($f['w'] / $f['h']) - 1);
+        if ($size[0] < $f['w'] * 0.6 || $off > 0.2) {
+            return __('website.format.warning', ['got' => $size[0].' × '.$size[1], 'ideal' => $f['w'].' × '.$f['h']]);
+        }
+
+        return null;
     }
 
     private function validated(Request $request, bool $new): array

@@ -143,4 +143,5 @@ return [
         'subject' => 'Test : bannière e-mail « :title »',
         'intro' => 'Ceci est un e-mail d’exemple. La bannière ci-dessous montre comment elle apparaît sous les e-mails de l’app.',
     ],
+    'image_hint_mail_banner' => 'Idéal : 1140 × 380 px (3:1), JPG de moins de 500 Ko. Affichée en entier sous l’e-mail, jamais coupée ; sur téléphone elle se réduit à la largeur de l’écran, donc écrivez gros dans l’image (lettres d’au moins 40 px).',
 ];

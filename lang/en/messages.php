@@ -143,4 +143,5 @@ return [
         'subject' => 'Test: email banner “:title”',
         'intro' => 'This is an example mail. The banner below is how it appears under the mails of the app.',
     ],
+    'image_hint_mail_banner' => 'Ideal: 1140 × 380 px (3:1), JPG under 500 KB. Shown in full under the mail, never cut; on phones it shrinks to the screen width, so make any text in the picture large (letters at least 40 px high).',
 ];

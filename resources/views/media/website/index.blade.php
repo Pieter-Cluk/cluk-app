@@ -21,12 +21,14 @@
                 <span @class(['pill', 'pill-ok' => $n > 0, 'pill-off' => $n === 0])>{{ $n === 0 ? __('website.status.none') : ($n === 1 ? __('website.status.still') : __('website.status.show', ['n' => $n, 's' => \App\Services\Website\SiteSettings::get('general.slide_seconds', 6)])) }}</span>
             </div>
             <p class="muted small">{{ __('website.places_hint.'.$place) }}</p>
+            @include('media.website._format', ['format' => $place, 'open' => $slides->isEmpty()])
             @foreach ($slides as $i => $s)
                 @php($url = \App\Services\Website\SiteSettings::link($s->link_type, $s->link_value))
                 <article @class(['ws-slide', 'ws-off' => ! $s->isLive()]) id="slide-{{ $s->id }}">
                     <div class="ws-media">
                         @if ($s->kind === 'video')<video src="{{ route('site.webmedia', ['f' => basename($s->path)]) }}" @if ($s->poster_path) poster="{{ route('site.webmedia', ['f' => basename($s->poster_path)]) }}" @endif muted playsinline preload="metadata" controls></video>
                         @else<img src="{{ route('site.webmedia', ['f' => basename($s->path)]) }}" alt="{{ $s->alt }}" loading="lazy">@endif
+                        @include('media.website._crops', ['format' => $place, 'src' => route('site.webmedia', ['f' => basename($s->path)]), 'video' => $s->kind === 'video', 'poster' => $s->poster_path ? route('site.webmedia', ['f' => basename($s->poster_path)]) : null])
                     </div>
                     <div class="ws-info">
                         <b>{{ $i + 1 }}. {{ $s->kind === 'video' ? __('website.slide.video') : __('website.slide.image') }}</b>@if ($s->text('title')) · {{ $s->text('title') }}@endif
@@ -108,6 +110,7 @@
             <section class="card" id="tiles">
                 <h2>{{ __('website.tiles') }}</h2>
                 <p class="muted small">{{ __('website.tiles_hint') }}</p>
+                @include('media.website._format', ['format' => 'tile'])
                 <div class="ws-tiles">
                     @foreach (\App\Services\Website\SiteSettings::TILES as $key => $d)
                         @php($v = \App\Services\Website\SiteSettings::get('home.tile.'.$key, []))

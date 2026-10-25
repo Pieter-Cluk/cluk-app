@@ -18,6 +18,51 @@ class Slide extends Model
 
     public const PAGES = ['home', 'dryhire', 'sales', 'sales_new', 'brands', 'news', 'factory', 'afrit6', 'account', 'register'];
 
+    /**
+     * The ideal picture per spot. The frame on the website changes shape with the
+     * screen (measured from phone 390 px to a wide 1920 px screen); 'frames' are those
+     * shapes (width ÷ height). The picture is always cropped from the middle, so the
+     * part that every screen shows is the "safe zone".
+     */
+    public const FORMATS = [
+        'home_hero' => ['w' => 2400, 'h' => 2000, 'frames' => ['phone' => 1.30, 'tablet' => 0.74, 'laptop' => 1.19, 'wide' => 1.85], 'note' => 'bw'],
+        'dryhire_hero' => ['w' => 2400, 'h' => 1400, 'frames' => ['phone' => 0.94, 'laptop' => 1.75, 'wide' => 2.33], 'note' => 'dark_left'],
+        'sales_slider' => ['w' => 2400, 'h' => 880, 'frames' => ['phone' => 0.93, 'tablet' => 1.85, 'laptop' => 2.74], 'note' => 'text_left'],
+        'tile' => ['w' => 1200, 'h' => 1000, 'frames' => ['tablet' => 0.91, 'laptop' => 1.17, 'phone' => 1.46], 'note' => 'tile'],
+    ];
+
+    /** The part of a crop shape (width ÷ height) inside the picture, as fractions [w, h]. */
+    public static function crop(string $format, float $ratio): array
+    {
+        $f = self::FORMATS[$format];
+        $pic = $f['w'] / $f['h'];
+
+        return $ratio < $pic ? [$ratio / $pic, 1.0] : [1.0, $pic / $ratio];
+    }
+
+    /** The middle part every screen shows, in px [w, h]. */
+    public static function safe(string $format): array
+    {
+        $f = self::FORMATS[$format];
+        $w = min(array_map(fn ($r) => self::crop($format, $r)[0], $f['frames']));
+        $h = min(array_map(fn ($r) => self::crop($format, $r)[1], $f['frames']));
+
+        return [(int) (floor($f['w'] * $w / 10) * 10), (int) (floor($f['h'] * $h / 10) * 10)];
+    }
+
+    /** Ratio as a short text, e.g. 6:5. */
+    public static function ratioText(string $format): string
+    {
+        $f = self::FORMATS[$format];
+        [$a, $b] = [$f['w'], $f['h']];
+        while ($b) {
+            [$a, $b] = [$b, $a % $b];
+        }
+        $d = $a;
+
+        return ($f['w'] / $d).':'.($f['h'] / $d);
+    }
+
     protected function casts(): array
     {
         return ['texts' => 'array', 'active' => 'boolean', 'starts_on' => 'date', 'ends_on' => 'date', 'position' => 'integer'];
