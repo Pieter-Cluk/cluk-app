@@ -47,6 +47,9 @@ class WebDownloadController extends Controller
                 'original_name' => $this->fileName($file->getClientOriginalName()), 'mime' => $file->getMimeType(), 'size' => $file->getSize()];
         }
         $download->update($values);
+        if ($request->filled('place')) {
+            $this->placeAt($download, (int) $request->input('place'));
+        }
         AuditLog::record('website.download_changed', $download, ['title' => $download->label('en', 'title'), 'access' => $download->access, 'active' => $download->active, 'new_file' => (bool) $file], $request->user());
 
         return $this->back(__('website.flash.saved'));
@@ -66,6 +69,16 @@ class WebDownloadController extends Controller
         }
 
         return $this->back(null);
+    }
+
+    /** Put a document at a place in the order (1 = first), the others shift. */
+    private function placeAt(Download $download, int $place): void
+    {
+        $list = Download::where('id', '!=', $download->id)->orderBy('sort')->orderBy('id')->get()->values();
+        $list->splice(max(0, min($place - 1, $list->count())), 0, [$download]);
+        foreach ($list as $n => $x) {
+            $x->forceFill(['sort' => $n])->save();
+        }
     }
 
     public function destroy(Request $request, Download $download): RedirectResponse
@@ -103,6 +116,7 @@ class WebDownloadController extends Controller
             'category' => ['required', Rule::in(config('website.download_categories'))],
             'locale' => ['nullable', Rule::in(array_keys(config('cluk.locales')))],
             'active' => ['boolean'],
+            'place' => ['nullable', 'integer', 'min:1', 'max:999'],
         ]);
     }
 

@@ -146,6 +146,8 @@ return [
         'warning' => 'Ojo: esta foto mide :got px, lo ideal es :ideal px. Puede verse borrosa o más recortada de lo esperado: revisa las vistas previas.',
     ],
     'downloads' => [
+        'place' => 'Posición en el orden (1 = primero)',
+        'same_link' => 'El enlace sigue siendo el mismo.',
         'category' => 'Grupo en la página',
         'doc_language' => 'Idioma del documento',
         'title' => 'Descargas',

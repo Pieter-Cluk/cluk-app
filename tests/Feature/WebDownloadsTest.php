@@ -118,4 +118,22 @@ class WebDownloadsTest extends TestCase
         $log = DownloadLog::where('download_id', $only->id)->firstOrFail();
         $this->assertSame([$a->id, $this->customer->id], [$log->customer_account_id, $log->company_id]);
     }
+
+    public function test_order_by_number_and_replace_keeps_the_link(): void
+    {
+        $a = $this->upload('open', 'A');
+        $b = $this->upload('open', 'B');
+        $c = $this->upload('open', 'C');
+        $this->actingAs($this->editor, 'web')->post(route('website.downloads.update', $c), ['title' => ['en' => 'C'], 'access' => 'open', 'category' => 'forms', 'locale' => 'nl', 'active' => 1, 'place' => 1])->assertSessionHasNoErrors();
+        $this->assertSame([$c->id, $a->id, $b->id], Download::orderBy('sort')->pluck('id')->all());
+        $this->assertSame(['forms', 'nl'], [$c->fresh()->category, $c->fresh()->locale]);
+        $old = $a->path;
+        $this->actingAs($this->editor, 'web')->post(route('website.downloads.update', $a), ['title' => ['en' => 'A'], 'access' => 'open', 'category' => 'brochures', 'active' => 1,
+            'file' => UploadedFile::fake()->create('A v2.xlsx', 50, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')])->assertSessionHasNoErrors();
+        Storage::disk('local')->assertMissing($old);
+        $this->assertSame('A v2.xlsx', $a->fresh()->original_name);
+        $this->get(route('site.downloads.file', $a->id))->assertOk(); // same link, new file
+        $this->actingAs($this->editor, 'web')->post(route('website.downloads.store'), ['file' => UploadedFile::fake()->create('x.exe', 10), 'title' => ['en' => 'x'], 'access' => 'open', 'category' => 'other'])->assertSessionHasErrors('file');
+        $this->actingAs($this->editor, 'web')->post(route('website.downloads.store'), ['file' => UploadedFile::fake()->create('x.pdf', 10), 'title' => ['nl' => 'alleen NL'], 'access' => 'open', 'category' => 'other'])->assertSessionHasErrors('title.en');
+    }
 }

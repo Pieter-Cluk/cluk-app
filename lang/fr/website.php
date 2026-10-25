@@ -146,6 +146,8 @@ return [
         'warning' => 'Attention : cette photo fait :got px, l’idéal est :ideal px. Elle peut être floue ou plus coupée que prévu : vérifiez les aperçus.',
     ],
     'downloads' => [
+        'place' => 'Place dans l’ordre (1 = premier)',
+        'same_link' => 'Le lien reste le même.',
         'category' => 'Groupe sur la page',
         'doc_language' => 'Langue du document',
         'title' => 'Téléchargements',

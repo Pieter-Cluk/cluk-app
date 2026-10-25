@@ -146,6 +146,8 @@ return [
         'warning' => 'Let op: deze foto is :got px, ideaal is :ideal px. Hij kan wazig zijn of meer weggesneden worden dan je verwacht: bekijk de voorbeelden.',
     ],
     'downloads' => [
+        'place' => 'Plaats in de volgorde (1 = eerst)',
+        'same_link' => 'De link blijft dezelfde.',
         'category' => 'Groep op de pagina',
         'doc_language' => 'Taal van het document',
         'title' => 'Downloads',

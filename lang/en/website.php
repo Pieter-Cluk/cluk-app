@@ -146,6 +146,8 @@ return [
         'warning' => 'Note: this picture is :got px, the ideal is :ideal px. It may look soft or be cut more than you expect: check the previews.',
     ],
     'downloads' => [
+        'place' => 'Place in the order (1 = first)',
+        'same_link' => 'The link stays the same.',
         'category' => 'Group on the page',
         'doc_language' => 'Language of the document',
         'title' => 'Downloads',

@@ -10,7 +10,7 @@
         <article @class(['ws-slide', 'ws-off' => ! $d->active]) id="download-{{ $d->id }}">
             <div class="ws-dl-ext" aria-hidden="true">{{ $d->type() }}</div>
             <div class="ws-info">
-                <b>{{ $d->label(null, 'title') }}</b>
+                <b>{{ $i + 1 }}. {{ $d->label(null, 'title') }}</b> <span class="muted small">{{ __('site.downloads.cats.'.$d->category) }} · {{ $d->locale ? __('site.downloads.langs.'.$d->locale) : __('site.downloads.any_language') }}</span>
                 <small class="muted">{{ $d->original_name }} · {{ $d->sizeLabel() }} · {{ __('website.downloads.access.'.$d->access) }}@unless ($d->active) · {{ __('website.slide.off') }}@endunless</small>
                 <div class="small"><a href="{{ route('website.downloads.log', ['doc' => $d->id]) }}">{{ trans_choice('website.downloads.count', $d->downloads, ['n' => $d->downloads]) }}</a> · <a href="{{ route('site.downloads.file', $d->id) }}" target="_blank" rel="noopener">{{ __('website.downloads.link') }}</a></div>
                 @if ($canEdit)
@@ -23,7 +23,10 @@
                         <summary class="linkbtn">{{ __('website.change') }}</summary>
                         <form method="post" action="{{ route('website.downloads.update', $d) }}" enctype="multipart/form-data" class="stack-sm mt">@csrf
                             @include('media.website._download-fields', ['d' => $d])
-                            <label class="field"><span>{{ __('website.downloads.new_file') }}</span><input type="file" name="file"></label>
+                            <div class="form-grid">
+                                <label class="field"><span>{{ __('website.downloads.new_file') }}</span><input type="file" name="file"><small>{{ __('website.downloads.same_link') }}</small></label>
+                                <label class="field"><span>{{ __('website.downloads.place') }}</span><input type="number" name="place" min="1" max="{{ $docs->count() }}" value="{{ $i + 1 }}"></label>
+                            </div>
                             <input type="hidden" name="active" value="0"><label class="check"><input type="checkbox" name="active" value="1" @checked($d->active)> {{ __('website.downloads.active') }}</label>
                             <div><button class="btn" type="submit">{{ __('website.save') }}</button></div>
                         </form>
