@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Media;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Media\Message;
+use App\Services\Media\MailBanners;
 use App\Services\Media\Messages;
 use App\Services\Media\Translator;
 use App\Support\Images;
@@ -19,7 +20,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
-/** Media › Messages: birthday card, newsletters, promotions and the banner on quotes. */
+/** Media › Messages: birthday card, newsletters, promotions, the banner on quotes and the email banners. */
 class MessageController extends Controller
 {
     public function index(Request $request): View
@@ -28,7 +29,8 @@ class MessageController extends Controller
 
         return view('media.messages.index', [
             'kind' => $kind,
-            'messages' => Message::kind($kind)->with(['createdBy', 'sentBy'])->latest('id')->paginate(30)->withQueryString(),
+            'messages' => Message::kind($kind)->with(['createdBy', 'sentBy'])->when($kind === 'mail_banner', fn ($q) => $q->orderBy('position')->orderBy('id'), fn ($q) => $q->latest('id'))->paginate(30)->withQueryString(),
+            'live' => $kind === 'mail_banner' ? MailBanners::live() : collect(),
             'counts' => collect(Message::KINDS)->mapWithKeys(fn ($k) => [$k => Message::kind($k)->count()]),
             'inUse' => in_array($kind, ['birthday', 'banner'], true) ? Message::inUse($kind) : null,
             'canEdit' => $request->user()->canUseModule('sales', 2),
@@ -47,6 +49,10 @@ class MessageController extends Controller
     {
         $kind = $request->validate(['kind' => ['required', Rule::in(Message::KINDS)]])['kind'];
         $m = new Message(['kind' => $kind, 'created_by_id' => $request->user()->id, 'status' => 'draft']);
+        if ($kind === 'mail_banner') {
+            $m->position = (int) Message::kind('mail_banner')->max('position') + 1;
+            $m->active = false;
+        }
         $this->fill($request, $m);
         AuditLog::record('messages.created', $m, ['kind' => $kind, 'title' => $m->title], $request->user());
 
@@ -82,13 +88,15 @@ class MessageController extends Controller
             'pdf' => ['nullable', 'file', 'mimes:pdf', 'max:20480'],
             'remove_pdf' => ['boolean'],
             'active_from' => ['nullable', 'date'], 'active_until' => ['nullable', 'date', 'after_or_equal:active_from'],
+            'link_url' => ['nullable', 'url:http,https', 'max:500'],
         ]);
         DB::transaction(function () use ($request, $m, $d) {
             $oldHash = $m->exists ? $m->sourceHash() : null;
             $subject = array_intersect_key($d['subject'] ?? [], array_flip(Message::LOCALES));
             $body = array_intersect_key($d['body'] ?? [], array_flip(Message::LOCALES));
             $m->fill(['title' => $d['title'], 'subject' => array_map(fn ($v) => (string) $v, $subject), 'body' => array_map(fn ($v) => (string) $v, $body),
-                'active_from' => $d['active_from'] ?? null, 'active_until' => $d['active_until'] ?? null]);
+                'active_from' => $d['active_from'] ?? null, 'active_until' => $d['active_until'] ?? null,
+                'link_url' => $m->kind === 'mail_banner' ? ($d['link_url'] ?? null) : $m->link_url]);
             // Hand-made translations count as up to date when the English stayed the same.
             if ($oldHash !== null && $oldHash === $m->sourceHash() && $m->source_hash === null && collect(['nl', 'fr', 'es'])->contains(fn ($l) => filled($body[$l] ?? null))) {
                 $m->source_hash = $m->sourceHash();
@@ -137,7 +145,8 @@ class MessageController extends Controller
     {
         $loc = $request->validate(['locale' => ['required', Rule::in(Message::LOCALES)]])['locale'];
         $me = $request->user();
-        $ok = SafeMail::notify(Notification::route('mail', $me->email), Messages::mail($message, $loc, null, ['name' => $me->first_name]));
+        $mail = $message->kind === 'mail_banner' ? MailBanners::sample($message, $loc, $me) : Messages::mail($message, $loc, null, ['name' => $me->first_name]);
+        $ok = SafeMail::notify(Notification::route('mail', $me->email), $mail);
 
         return back()->with('status', $ok ? __('messages.test_sent', ['email' => $me->email]) : __('messages.mail_failed'));
     }
@@ -191,6 +200,24 @@ class MessageController extends Controller
         AuditLog::record($on ? 'messages.activated' : 'messages.deactivated', $message, ['kind' => $message->kind], $request->user());
 
         return back()->with('status', __($on ? 'messages.now_on' : 'messages.now_off'));
+    }
+
+    /** Email banners: change the order of the rotation. */
+    public function move(Request $request, Message $message, string $dir): RedirectResponse
+    {
+        abort_unless($message->kind === 'mail_banner', 404);
+        $list = Message::kind('mail_banner')->orderBy('position')->orderBy('id')->get()->values();
+        $i = $list->search(fn ($m) => $m->id === $message->id);
+        $j = $dir === 'up' ? $i - 1 : $i + 1;
+        if ($j >= 0 && $j < $list->count()) {
+            [$list[$i], $list[$j]] = [$list[$j], $list[$i]];
+        }
+        foreach ($list as $n => $m) {
+            $m->forceFill(['position' => $n + 1])->saveQuietly();
+        }
+        AuditLog::record('messages.reordered', $message, ['kind' => 'mail_banner', 'order' => $list->pluck('title')->implode(' → ')], $request->user());
+
+        return back();
     }
 
     public function destroy(Request $request, Message $message): RedirectResponse

@@ -2,7 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Models\Media\Message;
 use App\Models\User;
+use App\Services\Media\MailBanners;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -39,6 +41,19 @@ class Confirmation extends Notification
     /** Files to attach: [['path' => …, 'name' => …]]. */
     public array $attachFiles = [];
 
+    /** An email banner under the mail (Media › Messages) for outside people; off for codes, security and the accountant. */
+    public bool $banner = true;
+
+    /** A set banner (test mail of a banner), instead of the person's next one. */
+    public ?Message $forceBanner = null;
+
+    public function withoutBanner(): static
+    {
+        $this->banner = false;
+
+        return $this;
+    }
+
     public function via(object $notifiable): array
     {
         return ['mail'];
@@ -46,9 +61,11 @@ class Confirmation extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
+        $banner = $this->forceBanner ?? ($this->banner ? MailBanners::next(MailBanners::emailOf($notifiable)) : null);
         $mail = (new MailMessage)->subject($this->subject)->markdown('mail.confirmation', [
             'greeting' => $this->greeting, 'intro' => $this->intro, 'details' => $this->details, 'next' => $this->next,
             'button' => $this->button, 'signer' => $this->signer, 'rows' => $this->rows, 'totals' => $this->totals, 'team' => $this->team,
+            'banner' => $banner, 'bannerLoc' => $this->locale ?? app()->getLocale(),
         ]);
         foreach ($this->attachFiles as $f) {
             $mail->attach($f['path'], ['as' => $f['name'], 'mime' => $f['mime'] ?? 'application/pdf']);

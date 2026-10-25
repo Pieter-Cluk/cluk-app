@@ -270,6 +270,7 @@ return [
             'messages_scheduled' => 'Bericht gepland',
             'messages_activated' => 'Bericht aangezet',
             'messages_deactivated' => 'Bericht uitgezet',
+            'messages_reordered' => 'Volgorde e-mailbanners gewijzigd',
             'messages_deleted' => 'Bericht verwijderd',
             'messages_unsubscribed' => 'Afgemeld voor een mailing',
             'afrit6_door_code_requested' => 'Deurcode aangevraagd door het lid',

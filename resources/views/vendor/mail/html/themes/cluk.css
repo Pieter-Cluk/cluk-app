@@ -67,3 +67,8 @@ img { max-width: 100%; }
 .signature .motto { color: #52ae32; font-weight: bold; font-size: 13px; margin-top: 10px; }
 
 .break-all { word-break: break-all; }
+.mail-banner { margin-top: 26px; }
+.mail-banner td { padding: 0; }
+.mail-banner-title { font-size: 15px; font-weight: bold; margin: 12px 0 2px; }
+.mail-banner-title a { color: #1a1a1a; text-decoration: none; }
+.mail-banner-text { font-size: 14px; color: #4a524c; margin: 0; }

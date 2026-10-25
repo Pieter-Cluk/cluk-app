@@ -11,14 +11,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * One message: the birthday card, a newsletter (with its PDF), a promotion or the
- * banner on quotes. Written in English; the text is translated into each person's
+ * banner on quotes, or an email banner under the app's mails. Written in English; the text is translated into each person's
  * language. The picture is the same for everyone.
  */
-#[Fillable(['kind', 'title', 'subject', 'body', 'source_hash', 'image_path', 'pdf_path', 'pdf_name', 'status', 'send_at', 'sent_at', 'sent_count',
+#[Fillable(['kind', 'title', 'subject', 'body', 'source_hash', 'image_path', 'pdf_path', 'pdf_name', 'link_url', 'position', 'status', 'send_at', 'sent_at', 'sent_count',
     'active', 'active_from', 'active_until', 'created_by_id', 'sent_by_id'])]
 class Message extends Model
 {
-    public const KINDS = ['birthday', 'newsletter', 'promotion', 'banner'];
+    public const KINDS = ['birthday', 'newsletter', 'promotion', 'banner', 'mail_banner'];
+
+    /** Kinds with a period (from–until) instead of a send moment. */
+    public const PERIOD = ['banner', 'mail_banner'];
 
     /** Kinds that are mailed once to a list (the others are "in use" or not). */
     public const MAILED = ['newsletter', 'promotion'];
@@ -28,7 +31,7 @@ class Message extends Model
     protected function casts(): array
     {
         return ['subject' => 'array', 'body' => 'array', 'send_at' => 'datetime', 'sent_at' => 'datetime', 'active' => 'boolean',
-            'active_from' => 'date', 'active_until' => 'date', 'sent_count' => 'integer'];
+            'active_from' => 'date', 'active_until' => 'date', 'sent_count' => 'integer', 'position' => 'integer'];
     }
 
     public function sends(): HasMany

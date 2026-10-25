@@ -1,36 +1,41 @@
 <?php
 
 return [
-    'intro' => 'Verjaardagskaart, nieuwsbrieven, promoties en de banner op offertes. Schrijf in het Engels; de tekst wordt vertaald in de taal van elke persoon. De afbeelding is voor iedereen dezelfde.',
+    'intro' => 'Verjaardagskaart, nieuwsbrieven, promoties, de banner op offertes en de e-mailbanners. Schrijf in het Engels; de tekst wordt vertaald in de taal van elke persoon. De afbeelding is voor iedereen dezelfde.',
     'kinds' => [
         'birthday' => 'Verjaardagskaart',
         'newsletter' => 'Nieuwsbrieven',
         'promotion' => 'Promoties',
         'banner' => 'Banner op offertes',
+        'mail_banner' => 'E-mailbanners',
     ],
     'new' => [
         'birthday' => 'Nieuwe verjaardagskaart',
         'newsletter' => 'Nieuwe nieuwsbrief',
         'promotion' => 'Nieuwe promotie',
         'banner' => 'Nieuwe banner',
+        'mail_banner' => 'Nieuwe e-mailbanner',
     ],
     'hints' => [
         'birthday' => 'Gemaild op de verjaardag van aangevinkte contacten, om 9:00. Er is telkens één kaart in gebruik.',
         'newsletter' => 'Gaat naar contacten en Afrit 6-leden die ja zeiden tegen de nieuwsbrief. Upload de pdf; verstuur meteen of op een gekozen tijdstip. Elke nieuwsbrief gaat één keer uit, nooit opnieuw vanzelf.',
         'promotion' => 'Gaat naar iedereen: alle contacten en Afrit 6-leden met een e-mailadres, behalve wie zich afmeldde voor promoties. Elke mail heeft een afmeldlink.',
         'banner' => 'Getoond op verhuur- en verkoopoffertes (document en offertepagina van de klant) tussen de data, in de taal van de offerte.',
+        'mail_banner' => 'Getoond onder de mails die de app naar klanten en andere externen stuurt (offertes, orders, bevestigingen…), tussen de datums. Met meerdere banners krijgt iedereen ze om beurten: de eerste mail banner 1, de volgende mail (bv. het antwoord) banner 2, enzovoort. Niet in mails aan collega’s, inlogcodes of aan de boekhouder.',
     ],
     'audience' => '{0} Nog niemand op de lijst.|{1} Nu 1 persoon op de lijst.|[2,*] Nu :n personen op de lijst.',
     'in_use' => 'Nu in gebruik: :title',
     'none_in_use' => [
         'birthday' => 'Geen verjaardagskaart in gebruik: de standaardtekst gaat uit, zonder afbeelding.',
         'banner' => 'Momenteel geen banner op offertes.',
+        'mail_banner' => 'Vandaag loopt er geen e-mailbanner: mails gaan zonder banner.',
     ],
     'cols' => [
         'title' => 'Bericht',
         'status' => 'Status',
         'when' => 'Wanneer',
         'people' => 'Verstuurd naar',
+        'shown' => 'Getoond',
     ],
     'empty' => 'Nog niets hier.',
     'statuses' => [
@@ -49,12 +54,14 @@ return [
         'body' => 'Tekst',
         'from' => 'Tonen vanaf',
         'until' => 'tot',
+        'link' => 'Link bij klikken',
     ],
     'placeholders' => [
         'birthday' => 'bv. Verjaardagskaart 2027',
         'newsletter' => 'bv. Nieuwsbrief november 2026',
         'promotion' => 'bv. Black Friday LED-deals',
         'banner' => 'bv. Sluitingsdagen kerst',
+        'mail_banner' => 'bv. Herfstpromoties LED',
     ],
     'image_hint' => 'JPG of PNG, liggend werkt het best (ongeveer 1200 × 600). Tekst in de afbeelding mag in het Engels.',
     'remove_image' => 'Afbeelding verwijderen',
@@ -98,10 +105,12 @@ return [
     'is_on' => [
         'birthday' => 'Dit is de verjaardagskaart die nu uitgaat.',
         'banner' => 'Getoond op offertes tussen de data.',
+        'mail_banner' => 'Loopt tussen de datums, om beurten met de andere e-mailbanners.',
     ],
     'is_off' => [
         'birthday' => 'Niet in gebruik. Aanzetten vervangt de huidige verjaardagskaart.',
         'banner' => 'Niet getoond op offertes.',
+        'mail_banner' => 'Niet getoond onder mails.',
     ],
     'switch_on' => 'Aanzetten',
     'switch_off' => 'Uitzetten',
@@ -123,5 +132,15 @@ return [
         'ask' => 'Deze mails stoppen voor :email?',
         'go' => 'Ja, afmelden',
         'done' => 'Gedaan: :email krijgt deze mails niet meer. Bevestigingen en andere mails over je boekingen komen nog wel.',
+    ],
+    'link_hint' => 'Waar de foto en titel naartoe leiden, bv. een pagina op de website. Niet verplicht.',
+    'rotation_now' => '{1} Vandaag loopt 1 e-mailbanner:|[2,*] Vandaag lopen :n e-mailbanners, in deze volgorde:',
+    'rotation_turn' => 'Mail :n',
+    'rotation_then' => 'Mail :n begint weer met de eerste banner, per persoon.',
+    'move_up' => 'Vroeger in de beurt',
+    'move_down' => 'Later in de beurt',
+    'banner_test' => [
+        'subject' => 'Test: e-mailbanner “:title”',
+        'intro' => 'Dit is een voorbeeldmail. De banner hieronder is hoe hij onder de mails van de app verschijnt.',
     ],
 ];

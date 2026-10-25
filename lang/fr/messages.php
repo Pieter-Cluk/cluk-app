@@ -1,36 +1,41 @@
 <?php
 
 return [
-    'intro' => 'Carte d’anniversaire, newsletters, promotions et bannière sur les devis. Écrivez en anglais ; le texte est traduit dans la langue de chacun. L’image est la même pour tous.',
+    'intro' => 'Carte d’anniversaire, newsletters, promotions, bannière sur les devis et bannières e-mail. Écrivez en anglais ; le texte est traduit dans la langue de chacun. L’image est la même pour tous.',
     'kinds' => [
         'birthday' => 'Carte d’anniversaire',
         'newsletter' => 'Newsletters',
         'promotion' => 'Promotions',
         'banner' => 'Bannière sur les devis',
+        'mail_banner' => 'Bannières e-mail',
     ],
     'new' => [
         'birthday' => 'Nouvelle carte d’anniversaire',
         'newsletter' => 'Nouvelle newsletter',
         'promotion' => 'Nouvelle promotion',
         'banner' => 'Nouvelle bannière',
+        'mail_banner' => 'Nouvelle bannière e-mail',
     ],
     'hints' => [
         'birthday' => 'Envoyée par e-mail le jour de l’anniversaire des contacts cochés, à 9 h. Une seule carte à la fois.',
         'newsletter' => 'Envoyée aux contacts et membres Afrit 6 qui ont accepté la newsletter. Téléversez le PDF ; envoyez maintenant ou à une heure choisie. Chaque newsletter part une fois, jamais deux.',
         'promotion' => 'Envoyée à tous : contacts et membres Afrit 6 avec e-mail, sauf ceux qui se sont désinscrits des promotions. Chaque e-mail a un lien de désinscription.',
         'banner' => 'Affichée sur les devis de location et de vente (document et page du client) entre ses dates, dans la langue du devis.',
+        'mail_banner' => 'Affichées sous les e-mails que l’app envoie aux clients et autres externes (devis, commandes, confirmations…), entre leurs dates. Avec plusieurs bannières, chaque personne les reçoit à tour de rôle : le premier e-mail la bannière 1, le suivant (p. ex. la réponse) la bannière 2, etc. Pas dans les e-mails aux collègues, codes de connexion ni au comptable.',
     ],
     'audience' => '{0} Personne sur la liste.|{1} 1 personne sur la liste.|[2,*] :n personnes sur la liste.',
     'in_use' => 'En service : :title',
     'none_in_use' => [
         'birthday' => 'Aucune carte en service : le texte standard part, sans image.',
         'banner' => 'Aucune bannière sur les devis pour l’instant.',
+        'mail_banner' => 'Aucune bannière e-mail aujourd’hui : les e-mails partent sans bannière.',
     ],
     'cols' => [
         'title' => 'Message',
         'status' => 'Statut',
         'when' => 'Quand',
         'people' => 'Envoyé à',
+        'shown' => 'Affichée',
     ],
     'empty' => 'Rien ici pour l’instant.',
     'statuses' => [
@@ -49,12 +54,14 @@ return [
         'body' => 'Texte',
         'from' => 'Afficher du',
         'until' => 'au',
+        'link' => 'Lien au clic',
     ],
     'placeholders' => [
         'birthday' => 'ex. Carte d’anniversaire 2027',
         'newsletter' => 'ex. Newsletter novembre 2026',
         'promotion' => 'ex. Offres LED Black Friday',
         'banner' => 'ex. Fermeture de Noël',
+        'mail_banner' => 'p. ex. Promotions LED d’automne',
     ],
     'image_hint' => 'JPG ou PNG, de préférence en paysage (environ 1200 × 600). Le texte dans l’image peut être en anglais.',
     'remove_image' => 'Retirer l’image',
@@ -98,10 +105,12 @@ return [
     'is_on' => [
         'birthday' => 'C’est la carte d’anniversaire envoyée maintenant.',
         'banner' => 'Affichée sur les devis entre ses dates.',
+        'mail_banner' => 'Active entre ses dates, à tour de rôle avec les autres bannières e-mail.',
     ],
     'is_off' => [
         'birthday' => 'Hors service. L’activer remplace la carte actuelle.',
         'banner' => 'Pas affichée sur les devis.',
+        'mail_banner' => 'Pas affichée sous les e-mails.',
     ],
     'switch_on' => 'Activer',
     'switch_off' => 'Désactiver',
@@ -123,5 +132,15 @@ return [
         'ask' => 'Arrêter ces e-mails pour :email ?',
         'go' => 'Oui, me désinscrire',
         'done' => 'C’est fait : :email ne recevra plus ces e-mails. Les confirmations et e-mails liés à vos réservations continuent.',
+    ],
+    'link_hint' => 'Où mènent la photo et le titre, p. ex. une page du site. Facultatif.',
+    'rotation_now' => '{1} 1 bannière e-mail active aujourd’hui :|[2,*] :n bannières e-mail actives aujourd’hui, dans cet ordre :',
+    'rotation_turn' => 'E-mail :n',
+    'rotation_then' => 'L’e-mail :n recommence avec la première bannière, par personne.',
+    'move_up' => 'Plus tôt dans le tour',
+    'move_down' => 'Plus tard dans le tour',
+    'banner_test' => [
+        'subject' => 'Test : bannière e-mail « :title »',
+        'intro' => 'Ceci est un e-mail d’exemple. La bannière ci-dessous montre comment elle apparaît sous les e-mails de l’app.',
     ],
 ];

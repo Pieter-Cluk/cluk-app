@@ -1,36 +1,41 @@
 <?php
 
 return [
-    'intro' => 'Birthday card, newsletters, promotions and the banner on quotes. Write in English; the text is translated into each person’s language. The picture is the same for everyone.',
+    'intro' => 'Birthday card, newsletters, promotions, the banner on quotes and the email banners. Write in English; the text is translated into each person’s language. The picture is the same for everyone.',
     'kinds' => [
         'birthday' => 'Birthday card',
         'newsletter' => 'Newsletters',
         'promotion' => 'Promotions',
         'banner' => 'Banner on quotes',
+        'mail_banner' => 'Email banners',
     ],
     'new' => [
         'birthday' => 'New birthday card',
         'newsletter' => 'New newsletter',
         'promotion' => 'New promotion',
         'banner' => 'New banner',
+        'mail_banner' => 'New email banner',
     ],
     'hints' => [
         'birthday' => 'Sent by email on the birthday of ticked contacts, at 9:00. One card is in use at a time.',
         'newsletter' => 'Goes to contacts and Afrit 6 members who said yes to the newsletter. Upload the PDF; send it now or at a set time. Each newsletter goes out once, never again by itself.',
         'promotion' => 'Goes to everyone: all contacts and Afrit 6 members with an email address, except who unsubscribed from promotions. Each mail has an unsubscribe link.',
         'banner' => 'Shown on rental and sales quotes (document and the customer’s quote page) between its dates, in the quote’s language.',
+        'mail_banner' => 'Shown under the mails the app sends to customers and other outside people (quotes, orders, confirmations…), between their dates. With several banners, each person gets them in turn: the first mail banner 1, the next mail (e.g. the reply) banner 2, and so on. Not in mails to colleagues, login codes or the accountant.',
     ],
     'audience' => '{0} Nobody on the list yet.|{1} 1 person on the list now.|[2,*] :n people on the list now.',
     'in_use' => 'In use now: :title',
     'none_in_use' => [
         'birthday' => 'No birthday card in use: the standard text goes out, without a picture.',
         'banner' => 'No banner on quotes right now.',
+        'mail_banner' => 'No email banner running today: mails go out without a banner.',
     ],
     'cols' => [
         'title' => 'Message',
         'status' => 'Status',
         'when' => 'When',
         'people' => 'Sent to',
+        'shown' => 'Shown',
     ],
     'empty' => 'Nothing here yet.',
     'statuses' => [
@@ -49,12 +54,14 @@ return [
         'body' => 'Text',
         'from' => 'Show from',
         'until' => 'until',
+        'link' => 'Link when clicked',
     ],
     'placeholders' => [
         'birthday' => 'e.g. Birthday card 2027',
         'newsletter' => 'e.g. Newsletter November 2026',
         'promotion' => 'e.g. Black Friday LED deals',
         'banner' => 'e.g. Christmas closing days',
+        'mail_banner' => 'e.g. Autumn promotions LED',
     ],
     'image_hint' => 'JPG or PNG, landscape works best (about 1200 × 600). Text in the picture may be in English.',
     'remove_image' => 'Remove the picture',
@@ -98,10 +105,12 @@ return [
     'is_on' => [
         'birthday' => 'This is the birthday card that goes out now.',
         'banner' => 'Shown on quotes between its dates.',
+        'mail_banner' => 'Running between its dates, in turn with the other email banners.',
     ],
     'is_off' => [
         'birthday' => 'Not in use. Switching it on replaces the current birthday card.',
         'banner' => 'Not shown on quotes.',
+        'mail_banner' => 'Not shown under mails.',
     ],
     'switch_on' => 'Switch on',
     'switch_off' => 'Switch off',
@@ -123,5 +132,15 @@ return [
         'ask' => 'Stop these mails for :email?',
         'go' => 'Yes, unsubscribe',
         'done' => 'Done: :email will not get these mails any more. Order confirmations and other mails about your bookings still come.',
+    ],
+    'link_hint' => 'Where the picture and title lead to, e.g. a page on the website. Optional.',
+    'rotation_now' => '{1} 1 email banner running today:|[2,*] :n email banners running today, in this order:',
+    'rotation_turn' => 'Mail :n',
+    'rotation_then' => 'Mail :n starts again with the first banner, per person.',
+    'move_up' => 'Earlier in the turn',
+    'move_down' => 'Later in the turn',
+    'banner_test' => [
+        'subject' => 'Test: email banner “:title”',
+        'intro' => 'This is an example mail. The banner below is how it appears under the mails of the app.',
     ],
 ];

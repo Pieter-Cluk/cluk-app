@@ -1023,3 +1023,7 @@ img,video{max-width:100%}
 .ws-tile-img b{color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);text-transform:uppercase;letter-spacing:.06em}
 .flash-info{background:var(--info-bg);color:var(--info-text)}
 @media (max-width:800px){.ws-slide,.ws-link,.ws-tiles{grid-template-columns:minmax(0,1fr)}.ws-langs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Email banners: order of the rotation */
+.move-btns { display: inline-flex; gap: 4px; margin-left: 8px; position: relative; z-index: 2; vertical-align: middle; }
+.move-btns form { display: inline; margin: 0; }
+ol.rotation { margin: 6px 0 4px; padding-left: 20px; }

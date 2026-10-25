@@ -30,11 +30,15 @@
                         <input type="file" name="pdf" accept="application/pdf"><small class="muted">{{ __('messages.pdf_hint') }}</small></div>
                 @endif
 
-                <label class="field"><span>{{ __('messages.fields.subject') }} · English</span><input name="subject[en]" maxlength="200" value="{{ old('subject.en', $m->subject['en'] ?? '') }}" @required($m->kind !== 'banner')></label>
+                <label class="field"><span>{{ __('messages.fields.subject') }} · English</span><input name="subject[en]" maxlength="200" value="{{ old('subject.en', $m->subject['en'] ?? '') }}" @required(! in_array($m->kind, \App\Models\Media\Message::PERIOD, true))></label>
                 <label class="field"><span>{{ __('messages.fields.body') }} · English</span><textarea name="body[en]" rows="7" maxlength="10000">{{ old('body.en', $m->body['en'] ?? '') }}</textarea>
                     <small class="muted">{{ $m->kind === 'birthday' ? __('messages.name_hint') : __('messages.body_hint') }}</small></label>
 
-                @if ($m->kind === 'banner')
+                @if ($m->kind === 'mail_banner')
+                    <label class="field"><span>{{ __('messages.fields.link') }}</span><input type="url" name="link_url" maxlength="500" value="{{ old('link_url', $m->link_url) }}" placeholder="https://cluk.live/sales"><small class="muted">{{ __('messages.link_hint') }}</small></label>
+                    @error('link_url')<small class="txt-danger">{{ $message }}</small>@enderror
+                @endif
+                @if (in_array($m->kind, \App\Models\Media\Message::PERIOD, true))
                     <div class="form-grid">
                         <label class="field"><span>{{ __('messages.fields.from') }}</span><input type="date" name="active_from" value="{{ old('active_from', $m->active_from?->format('Y-m-d')) }}"></label>
                         <label class="field"><span>{{ __('messages.fields.until') }}</span><input type="date" name="active_until" value="{{ old('active_until', $m->active_until?->format('Y-m-d')) }}"></label>
@@ -107,7 +111,7 @@
                     <h2>{{ __('messages.preview') }}</h2>
                     @foreach ($names as $l => $n)
                         <details @if ($l === app()->getLocale()) open @endif><summary>{{ $n }}</summary>
-                            <div class="msg-mail">@if ($m->image_path)<img src="{{ URL::signedRoute('messages.public.image', $m) }}" alt="">@endif<b>{{ $m->text('subject', $l) }}</b><p class="prewrap">{{ $m->text('body', $l) }}</p></div>
+                            <div class="msg-mail">@if ($m->image_path)<img src="{{ URL::signedRoute('messages.public.image', $m) }}" alt="">@endif<b>{{ $m->text('subject', $l) }}</b>@if ($m->link_url)<small class="muted">→ {{ $m->link_url }}</small>@endif<p class="prewrap">{{ $m->text('body', $l) }}</p></div>
                         </details>
                     @endforeach
                 </section>

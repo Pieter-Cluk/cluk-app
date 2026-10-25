@@ -1,36 +1,41 @@
 <?php
 
 return [
-    'intro' => 'Tarjeta de cumpleaños, boletines, promociones y el banner en presupuestos. Escribe en inglés; el texto se traduce al idioma de cada persona. La imagen es la misma para todos.',
+    'intro' => 'Tarjeta de cumpleaños, boletines, promociones, el banner en presupuestos y los banners de email. Escribe en inglés; el texto se traduce al idioma de cada persona. La imagen es la misma para todos.',
     'kinds' => [
         'birthday' => 'Tarjeta de cumpleaños',
         'newsletter' => 'Boletines',
         'promotion' => 'Promociones',
         'banner' => 'Banner en presupuestos',
+        'mail_banner' => 'Banners de email',
     ],
     'new' => [
         'birthday' => 'Nueva tarjeta de cumpleaños',
         'newsletter' => 'Nuevo boletín',
         'promotion' => 'Nueva promoción',
         'banner' => 'Nuevo banner',
+        'mail_banner' => 'Nuevo banner de email',
     ],
     'hints' => [
         'birthday' => 'Se envía por correo el día del cumpleaños de los contactos marcados, a las 9:00. Una tarjeta a la vez.',
         'newsletter' => 'Va a contactos y miembros de Afrit 6 que aceptaron el boletín. Sube el PDF; envíalo ahora o a una hora fijada. Cada boletín sale una vez, nunca otra vez solo.',
         'promotion' => 'Va a todos: contactos y miembros de Afrit 6 con correo, salvo quien se dio de baja de promociones. Cada correo lleva un enlace de baja.',
         'banner' => 'Se muestra en presupuestos de alquiler y venta (documento y página del cliente) entre sus fechas, en el idioma del presupuesto.',
+        'mail_banner' => 'Se muestran bajo los emails que la app envía a clientes y otras personas externas (presupuestos, pedidos, confirmaciones…), entre sus fechas. Con varios banners, cada persona los recibe por turnos: el primer email el banner 1, el siguiente (p. ej. la respuesta) el banner 2, y así. No en emails a compañeros, códigos de acceso ni al contable.',
     ],
     'audience' => '{0} Nadie en la lista aún.|{1} 1 persona en la lista.|[2,*] :n personas en la lista.',
     'in_use' => 'En uso ahora: :title',
     'none_in_use' => [
         'birthday' => 'Ninguna tarjeta en uso: se envía el texto estándar, sin imagen.',
         'banner' => 'Ahora no hay banner en presupuestos.',
+        'mail_banner' => 'Hoy no hay ningún banner de email: los emails salen sin banner.',
     ],
     'cols' => [
         'title' => 'Mensaje',
         'status' => 'Estado',
         'when' => 'Cuándo',
         'people' => 'Enviado a',
+        'shown' => 'Mostrado',
     ],
     'empty' => 'Aún no hay nada.',
     'statuses' => [
@@ -49,12 +54,14 @@ return [
         'body' => 'Texto',
         'from' => 'Mostrar desde',
         'until' => 'hasta',
+        'link' => 'Enlace al hacer clic',
     ],
     'placeholders' => [
         'birthday' => 'p. ej. Tarjeta de cumpleaños 2027',
         'newsletter' => 'p. ej. Boletín noviembre 2026',
         'promotion' => 'p. ej. Ofertas LED Black Friday',
         'banner' => 'p. ej. Cierre de Navidad',
+        'mail_banner' => 'p. ej. Promociones LED de otoño',
     ],
     'image_hint' => 'JPG o PNG, mejor en horizontal (unos 1200 × 600). El texto en la imagen puede estar en inglés.',
     'remove_image' => 'Quitar la imagen',
@@ -98,10 +105,12 @@ return [
     'is_on' => [
         'birthday' => 'Esta es la tarjeta que se envía ahora.',
         'banner' => 'Se muestra en presupuestos entre sus fechas.',
+        'mail_banner' => 'Activo entre sus fechas, por turnos con los demás banners de email.',
     ],
     'is_off' => [
         'birthday' => 'Sin usar. Activarla sustituye la tarjeta actual.',
         'banner' => 'No se muestra en presupuestos.',
+        'mail_banner' => 'No se muestra bajo los emails.',
     ],
     'switch_on' => 'Activar',
     'switch_off' => 'Desactivar',
@@ -123,5 +132,15 @@ return [
         'ask' => '¿Dejar de enviar estos correos a :email?',
         'go' => 'Sí, darme de baja',
         'done' => 'Hecho: :email ya no recibirá estos correos. Las confirmaciones y correos de tus reservas siguen llegando.',
+    ],
+    'link_hint' => 'Adónde llevan la foto y el título, p. ej. una página de la web. Opcional.',
+    'rotation_now' => '{1} Hoy hay 1 banner de email activo:|[2,*] Hoy hay :n banners de email activos, en este orden:',
+    'rotation_turn' => 'Email :n',
+    'rotation_then' => 'El email :n vuelve a empezar con el primer banner, por persona.',
+    'move_up' => 'Antes en el turno',
+    'move_down' => 'Después en el turno',
+    'banner_test' => [
+        'subject' => 'Prueba: banner de email «:title»',
+        'intro' => 'Este es un email de ejemplo. El banner de abajo es cómo aparece bajo los emails de la app.',
     ],
 ];

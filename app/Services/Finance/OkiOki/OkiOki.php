@@ -99,7 +99,7 @@ class OkiOki
             intro: ['E-invoice (Peppol BIS Billing 3.0) '.$pf->invoice_number.' for '.$pf->customerName().', '.number_format($pf->gross_cents / 100, 2, ',', '.').' EUR incl. VAT.'],
             team: 'CLUK app',
         );
-        $mail->attachFiles = [['path' => Storage::disk('local')->path($path), 'name' => basename($path), 'mime' => 'application/xml']];
+        $mail->withoutBanner()->attachFiles = [['path' => Storage::disk('local')->path($path), 'name' => basename($path), 'mime' => 'application/xml']];
         $ok = SafeMail::notify(Notification::route('mail', $me->okioki_inbox), $mail);
         $pf->forceFill($ok ? ['okioki_sent_at' => now(), 'okioki_error' => null] : ['okioki_error' => __('finance.okioki.mail_failed')])->save();
         AuditLog::record($ok ? 'finance.okioki_sent' : 'finance.okioki_failed', $pf, ['invoice' => $pf->invoice_number, 'to' => $me->okioki_inbox], $by);

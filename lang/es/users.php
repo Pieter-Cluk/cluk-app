@@ -270,6 +270,7 @@ return [
             'messages_scheduled' => 'Mensaje programado',
             'messages_activated' => 'Mensaje activado',
             'messages_deactivated' => 'Mensaje desactivado',
+            'messages_reordered' => 'Orden de los banners de email cambiado',
             'messages_deleted' => 'Mensaje eliminado',
             'messages_unsubscribed' => 'Baja de un envío',
             'afrit6_door_code_requested' => 'Código de puerta pedido por el miembro',
