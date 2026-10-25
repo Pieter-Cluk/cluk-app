@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'pick_hint' => 'Type a name to search…',
     'modules' => [
         'companies' => 'Companies & contacts',
         'sales' => 'Quotes & sales',

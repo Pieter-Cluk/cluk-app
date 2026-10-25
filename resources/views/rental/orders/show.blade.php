@@ -127,7 +127,7 @@
                         @if ($canWork && $canSubhire)
                             <form method="post" action="{{ route('orders.subhire', [$order, $line]) }}" class="inline-form mt">
                                 @csrf
-                                <select name="supplier_id" required aria-label="{{ __('orders.partner') }}">
+                                <select data-pick name="supplier_id" required aria-label="{{ __('orders.partner') }}">
                                     <option value="">{{ __('orders.choose_partner') }}</option>
                                     @foreach ($suppliers->sortByDesc(fn ($s) => in_array('subhire', $s->supplies ?? [], true)) as $s)<option value="{{ $s->id }}">{{ $s->name }}</option>@endforeach
                                 </select>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cluk Factory · {{ __('factory.book.title') }}</title>
 <meta name="description" content="{{ __('factory.book.tagline') }}">
-<link rel="stylesheet" href="{{ asset('css/factory.css') }}">
+<link rel="stylesheet" href="{{ asset('css/factory.css') }}?v={{ @filemtime(public_path('css/factory.css')) }}">
 @include('partials.favicon')
 </head>
 <body class="fb">

@@ -1,7 +1,7 @@
 {{-- The camera and the code field; a hand scanner types into the field and presses Enter. --}}
 <form method="post" action="{{ $action }}" class="ph-scan" autocomplete="off">
     @csrf
-    <div class="ph-cam" data-scanner data-jsqr="{{ asset('js/vendor/jsQR.js') }}" @if (! empty($scanned)) data-scanned="{{ $scanned }}" @endif>
+    <div class="ph-cam" data-scanner data-jsqr="{{ asset('js/vendor/jsQR.js') }}?v={{ @filemtime(public_path('js/vendor/jsQR.js')) }}" @if (! empty($scanned)) data-scanned="{{ $scanned }}" @endif>
         <video playsinline muted></video>
         <div class="ph-cam-frame" aria-hidden="true"></div>
         <button type="button" class="primary ph-cam-start" data-scan-start>▣ {{ __('warehouse.scan.camera') }}</button>

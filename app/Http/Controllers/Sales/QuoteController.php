@@ -198,7 +198,7 @@ class QuoteController extends Controller
         }
         $quote->recalculate();
 
-        return redirect()->route('quotes.show', $quote)->with('status', __('quotes.flash.line_added'));
+        return redirect()->to(route('quotes.show', $quote).'#add-item')->with('status', __('quotes.flash.line_added'));
     }
 
     public function removeLine(Request $request, Quote $quote, QuoteLine $line): RedirectResponse

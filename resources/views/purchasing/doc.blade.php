@@ -3,7 +3,7 @@
 @php($isPo = $kind === 'po')
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ $doc->number }}</title><link rel="stylesheet" href="{{ asset('css/cluk.css') }}"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ $doc->number }}</title><link rel="stylesheet" href="{{ asset('css/cluk.css') }}?v={{ @filemtime(public_path('css/cluk.css')) }}"></head>
 <body class="doc-body">
 <div class="doc-bar no-print"><button type="button" class="primary" onclick="window.print()">{{ __('quotes.print_save') }}</button></div>
 <article class="doc">

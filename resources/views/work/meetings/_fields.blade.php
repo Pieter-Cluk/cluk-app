@@ -7,7 +7,7 @@
         <div class="chips mt-xs">@foreach (\App\Models\Work\Meeting::KINDS as $k)<label class="chip chip-radio"><input type="radio" name="kind" value="{{ $k }}" @checked(old('kind', $m->kind ?? 'internal') === $k)> {{ __('meetings.kinds.'.$k) }}</label>@endforeach</div>
     </div>
     <label class="field span-2 mt-company"><span>{{ __('meetings.fields.company') }}</span>
-        <select name="company_id"><option value="">—</option>@foreach (\App\Models\Company::active()->orderBy('name')->get(['id', 'name']) as $c)<option value="{{ $c->id }}" @selected((string) old('company_id', $m->company_id) === (string) $c->id)>{{ $c->name }}</option>@endforeach</select>
+        <select data-pick name="company_id"><option value="">—</option>@foreach (\App\Models\Company::active()->orderBy('name')->get(['id', 'name']) as $c)<option value="{{ $c->id }}" @selected((string) old('company_id', $m->company_id) === (string) $c->id)>{{ $c->name }}</option>@endforeach</select>
         <small>{{ __('meetings.fields.company_hint') }}</small>
     </label>
     <div class="field span-2"><span>{{ __('meetings.fields.attendees') }}</span>

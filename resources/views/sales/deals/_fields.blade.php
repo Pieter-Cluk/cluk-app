@@ -3,7 +3,7 @@
     <label class="field"><span>{{ __('deals.fields.module') }}</span><select name="module">@foreach (\App\Models\Sales\Deal::MODULES as $m)<option value="{{ $m }}" @selected(old('module', $deal->module) === $m)>{{ __('deals.modules.'.$m) }}</option>@endforeach</select></label>
     <label class="field"><span>{{ __('deals.fields.source') }}</span><select name="source"><option value="">—</option>@foreach (\App\Models\Sales\Deal::SOURCES as $s)<option value="{{ $s }}" @selected(old('source', $deal->source) === $s)>{{ __('deals.sources.'.$s) }}</option>@endforeach</select></label>
     <label class="field"><span>{{ __('deals.fields.company_id') }}</span>
-        <select name="company_id"><option value="">{{ __('deals.private') }}</option>@foreach ($companies ?? \App\Models\Company::active()->orderBy('name')->get(['id', 'name']) as $c)<option value="{{ $c->id }}" @selected((string) old('company_id', $deal->company_id) === (string) $c->id)>{{ $c->name }}</option>@endforeach</select>
+        <select data-pick name="company_id"><option value="">{{ __('deals.private') }}</option>@foreach ($companies ?? \App\Models\Company::active()->orderBy('name')->get(['id', 'name']) as $c)<option value="{{ $c->id }}" @selected((string) old('company_id', $deal->company_id) === (string) $c->id)>{{ $c->name }}</option>@endforeach</select>
     </label>
     @if ($contacts->isNotEmpty())
         <label class="field"><span>{{ __('deals.fields.contact_id') }}</span><select name="contact_id"><option value="">—</option>@foreach ($contacts as $c)<option value="{{ $c->id }}" @selected((string) old('contact_id', $deal->contact_id) === (string) $c->id)>{{ $c->name }}</option>@endforeach</select></label>

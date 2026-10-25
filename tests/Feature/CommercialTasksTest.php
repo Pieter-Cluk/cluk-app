@@ -65,11 +65,14 @@ class CommercialTasksTest extends TestCase
         $this->quote(1); // a customer we work with
         CommercialTasks::refresh();
         $this->assertSame(0, SalesTask::where('kind', 'card')->count()); // complete card
-        $this->customer->update(['vat_number' => null, 'phone' => null]);
+        $this->customer->update(['phone' => null]);
+        CommercialTasks::refresh();
+        $this->assertSame(0, SalesTask::where('kind', 'card')->count()); // no fixed line is fine
+        $this->customer->update(['vat_number' => null]);
         CommercialTasks::refresh();
         $t = SalesTask::where('key', 'card:'.$this->customer->id)->firstOrFail();
         $this->assertSame('orange', $t->level); // missing invoice data while a quote is running
-        $this->assertEqualsCanonicalizing(['no_phone', 'no_vat'], $t->data['problems']);
+        $this->assertSame(['no_vat'], $t->data['problems']);
         $this->customer->forceFill(['vat_number' => 'BE0123456789', 'vies_status' => 'invalid'])->save();
         CommercialTasks::refresh();
         $this->assertSame('red', $t->fresh()->level);

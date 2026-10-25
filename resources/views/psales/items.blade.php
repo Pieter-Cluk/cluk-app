@@ -81,7 +81,7 @@
                     @if ($canEdit)
                         <details class="mt"><summary>{{ __('psales.items.add_supplier') }}</summary>
                             <form method="post" action="{{ route('psales.items.supplier', $sel) }}" class="stack-sm mt">@csrf
-                                <label class="field"><span>{{ __('psales.items.supplier') }}</span><select name="company_id" required>@foreach ($suppliers as $c)<option value="{{ $c->id }}">{{ $c->name }}</option>@endforeach</select></label>
+                                <label class="field"><span>{{ __('psales.items.supplier') }}</span><select data-pick name="company_id" required>@foreach ($suppliers as $c)<option value="{{ $c->id }}">{{ $c->name }}</option>@endforeach</select></label>
                                 <div class="inline-form"><label class="field"><span>{{ __('psales.items.discount') }} %</span><input type="number" step="0.1" min="0" max="100" name="discount" value="0" class="w-sm"></label>
                                     <label class="field"><span>{{ __('psales.items.lead') }}</span><input type="number" min="0" max="365" name="lead_days" value="5" class="w-sm"></label>
                                     <label class="field"><span>{{ __('psales.items.supplier_ref') }}</span><input name="supplier_ref" maxlength="60"></label></div>

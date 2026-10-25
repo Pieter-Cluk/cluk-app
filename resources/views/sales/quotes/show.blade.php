@@ -139,6 +139,39 @@
                 </div>
             </section>
 
+            @if ($canEdit)
+                {{-- Right under the lines (also on a phone). The fields belong to their own small forms below the quote form. --}}
+                <section class="card q-add" id="add-item">
+                    <h2>{{ __('quotes.add_item') }}</h2>
+                    <p class="muted small">{{ __('quotes.add_item_hint', ['period' => $quote->out_from->format('d/m').' – '.$quote->out_until->format('d/m')]) }}</p>
+                    <div class="stack-sm q-search" data-search="{{ route('quotes.search', $quote) }}">
+                        <input name="number" form="add-item-form" required autocomplete="off" placeholder="{{ __('quotes.search_hint') }}" aria-label="{{ __('quotes.search_hint') }}" class="js-item-search">
+                        <ul class="suggest" hidden></ul>
+                        <div class="inline-form"><input type="number" name="qty" form="add-item-form" value="1" min="0.01" step="0.01" class="in-num" aria-label="{{ __('quotes.cols.qty') }}"><button class="primary" type="submit" form="add-item-form">{{ __('quotes.add') }}</button></div>
+                    </div>
+                    <div class="q-add-more">
+                        <details>
+                            <summary>{{ __('quotes.add_charge') }}</summary>
+                            <div class="stack-sm mt">
+                                <input name="name" form="add-charge-form" required maxlength="200" placeholder="{{ __('quotes.charge_hint') }}" aria-label="{{ __('quotes.charge_name') }}">
+                                <div class="inline-form">
+                                    <input type="number" name="qty" form="add-charge-form" value="1" min="0.01" step="0.01" class="in-num" aria-label="{{ __('quotes.cols.qty') }}">
+                                    <input type="number" name="price" form="add-charge-form" step="0.01" required placeholder="€" class="in-num" aria-label="{{ __('quotes.cols.price') }}">
+                                    <button class="btn" type="submit" form="add-charge-form">{{ __('quotes.add') }}</button>
+                                </div>
+                            </div>
+                        </details>
+                        <details>
+                            <summary>{{ __('quotes.add_text') }}</summary>
+                            <div class="stack-sm mt">
+                                <input name="name" form="add-text-form" required maxlength="200" placeholder="{{ __('quotes.text_hint') }}" aria-label="{{ __('quotes.add_text') }}">
+                                <button class="btn" type="submit" form="add-text-form">{{ __('quotes.add') }}</button>
+                            </div>
+                        </details>
+                    </div>
+                </section>
+            @endif
+
             <section class="card" id="transport">
                 <h2>{{ __('quotes.transport.title') }}</h2>
                 @if ($canEdit)
@@ -199,6 +232,11 @@
             @if ($canEdit)</form>@endif
 
             @if ($canEdit)
+                <form method="post" action="{{ route('quotes.lines.add', $quote) }}" id="add-item-form" hidden>@csrf<input type="hidden" name="kind" value="item"></form>
+                <form method="post" action="{{ route('quotes.lines.add', $quote) }}" id="add-charge-form" hidden>@csrf<input type="hidden" name="kind" value="charge"></form>
+                <form method="post" action="{{ route('quotes.lines.add', $quote) }}" id="add-text-form" hidden>@csrf<input type="hidden" name="kind" value="text"></form>
+            @endif
+            @if ($canEdit)
                 @foreach ($quote->lines as $line)
                     <form method="post" action="{{ route('quotes.lines.remove', [$quote, $line]) }}" id="rm-{{ $line->id }}" hidden>@csrf @method('DELETE')</form>
                 @endforeach
@@ -207,40 +245,6 @@
 
         <aside class="stack">
             @if ($canEdit)
-                <section class="card">
-                    <h2>{{ __('quotes.add_item') }}</h2>
-                    <p class="muted small">{{ __('quotes.add_item_hint', ['period' => $quote->out_from->format('d/m').' – '.$quote->out_until->format('d/m')]) }}</p>
-                    <form method="post" action="{{ route('quotes.lines.add', $quote) }}" class="stack-sm" data-search="{{ route('quotes.search', $quote) }}">
-                        @csrf
-                        <input type="hidden" name="kind" value="item">
-                        <input name="number" required autocomplete="off" placeholder="{{ __('quotes.search_hint') }}" aria-label="{{ __('quotes.search_hint') }}" class="js-item-search">
-                        <ul class="suggest" hidden></ul>
-                        <div class="inline-form"><input type="number" name="qty" value="1" min="0.01" step="0.01" class="in-num" aria-label="{{ __('quotes.cols.qty') }}"><button class="primary" type="submit">{{ __('quotes.add') }}</button></div>
-                    </form>
-                    <details class="mt">
-                        <summary>{{ __('quotes.add_charge') }}</summary>
-                        <form method="post" action="{{ route('quotes.lines.add', $quote) }}" class="stack-sm mt">
-                            @csrf
-                            <input type="hidden" name="kind" value="charge">
-                            <input name="name" required maxlength="200" placeholder="{{ __('quotes.charge_hint') }}" aria-label="{{ __('quotes.charge_name') }}">
-                            <div class="inline-form">
-                                <input type="number" name="qty" value="1" min="0.01" step="0.01" class="in-num" aria-label="{{ __('quotes.cols.qty') }}">
-                                <input type="number" name="price" step="0.01" required placeholder="€" class="in-num" aria-label="{{ __('quotes.cols.price') }}">
-                                <button class="btn" type="submit">{{ __('quotes.add') }}</button>
-                            </div>
-                        </form>
-                    </details>
-                    <details class="mt">
-                        <summary>{{ __('quotes.add_text') }}</summary>
-                        <form method="post" action="{{ route('quotes.lines.add', $quote) }}" class="stack-sm mt">
-                            @csrf
-                            <input type="hidden" name="kind" value="text">
-                            <input name="name" required maxlength="200" placeholder="{{ __('quotes.text_hint') }}" aria-label="{{ __('quotes.add_text') }}">
-                            <button class="btn" type="submit">{{ __('quotes.add') }}</button>
-                        </form>
-                    </details>
-                </section>
-
                 <section class="card">
                     <h2>{{ __('quotes.send') }}</h2>
                     <p class="muted small">{{ __('quotes.send_hint') }}</p>

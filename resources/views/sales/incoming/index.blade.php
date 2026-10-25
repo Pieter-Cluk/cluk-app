@@ -75,7 +75,7 @@
                             <label class="field"><span>{{ __('deals.fields.title') }}</span><input name="title" required maxlength="200" value="{{ old('title', $selected->subject) }}"></label>
                             <label class="field"><span>{{ __('deals.fields.module') }}</span><select name="module">@foreach (\App\Models\Sales\Deal::MODULES as $m)<option value="{{ $m }}" @selected(old('module', $selected->module ?? 'dryhire') === $m)>{{ __('deals.modules.'.$m) }}</option>@endforeach</select></label>
                             <label class="field"><span>{{ __('deals.incoming.company') }}</span>
-                                <select name="company">
+                                <select name="company" data-pick>
                                     @if ($selected->company)<option value="{{ $selected->company_id }}" selected>{{ $selected->company->name }}</option>@endif
                                     <option value="new" @selected(! $selected->company && $selected->company_name)>{{ __('deals.incoming.new_company') }}</option>
                                     <option value="private" @selected(! $selected->company && ! $selected->company_name)>{{ __('deals.private') }}</option>

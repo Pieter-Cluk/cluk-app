@@ -6,7 +6,7 @@
 <meta http-equiv="refresh" content="30">
 <meta name="robots" content="noindex">
 <title>CLUK · @yield('title')</title>
-<link rel="stylesheet" href="{{ asset('css/wall.css') }}">
+<link rel="stylesheet" href="{{ asset('css/wall.css') }}?v={{ @filemtime(public_path('css/wall.css')) }}">
 @include('partials.favicon')
 </head>
 <body class="wall">

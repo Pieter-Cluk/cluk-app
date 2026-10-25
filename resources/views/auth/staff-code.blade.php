@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ __('login.code.title') }} · CLUK</title>
-<link rel="stylesheet" href="{{ asset('css/cluk.css') }}">
+<link rel="stylesheet" href="{{ asset('css/cluk.css') }}?v={{ @filemtime(public_path('css/cluk.css')) }}">
 @include('partials.favicon')
 </head>
 <body>

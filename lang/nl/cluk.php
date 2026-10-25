@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'pick_hint' => 'Typ een naam om te zoeken…',
     'modules' => [
         'companies' => 'Bedrijven & contacten',
         'sales' => 'Offertes & verkoop',

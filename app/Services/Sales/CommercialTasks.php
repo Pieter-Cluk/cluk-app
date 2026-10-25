@@ -158,10 +158,9 @@ class CommercialTasks
     public static function cardProblems(Company $c): array
     {
         $p = [];
-        foreach (['email', 'phone'] as $f) {
-            if (blank($c->{$f})) {
-                $p[] = 'no_'.$f;
-            }
+        // No phone is fine: many companies no longer have a fixed line.
+        if (blank($c->email)) {
+            $p[] = 'no_email';
         }
         if (blank($c->street) || blank($c->postcode) || blank($c->city)) {
             $p[] = 'no_address';

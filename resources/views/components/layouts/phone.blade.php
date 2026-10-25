@@ -11,8 +11,8 @@
 <link rel="manifest" href="{{ asset('warehouse.webmanifest') }}">
 <link rel="apple-touch-icon" href="{{ asset('images/app-icon-192.png') }}">
 <title>{{ $title ?? __('warehouse.app') }} · CLUK</title>
-<link rel="stylesheet" href="{{ asset('css/cluk.css') }}">
-<link rel="stylesheet" href="{{ asset('css/phone.css') }}">
+<link rel="stylesheet" href="{{ asset('css/cluk.css') }}?v={{ @filemtime(public_path('css/cluk.css')) }}">
+<link rel="stylesheet" href="{{ asset('css/phone.css') }}?v={{ @filemtime(public_path('css/phone.css')) }}">
 <script>
     try { const t = localStorage.getItem('cluk-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
@@ -37,6 +37,6 @@
     <a href="{{ route('w.scan') }}" @class(['on' => request()->routeIs('w.scan')])>▣ {{ __('warehouse.tabs.scan') }}</a>
     <a href="{{ route('warehouse.index') }}">{{ __('warehouse.tabs.office') }}</a>
 </nav>
-<script src="{{ asset('js/scan.js') }}?v=2" defer></script>
+<script src="{{ asset('js/scan.js') }}?v={{ @filemtime(public_path('js/scan.js')) }}" defer></script>
 </body>
 </html>

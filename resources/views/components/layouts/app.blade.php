@@ -2,17 +2,18 @@
 @php($nav = \App\Support\Navigation::for(auth()->user()))
 @php($user = auth()->user())
 <!doctype html>
-<html lang="{{ app()->getLocale() }}" @if (in_array($user?->theme, ['light', 'dark'], true)) data-theme="{{ $user->theme }}" @endif>
+<html lang="{{ app()->getLocale() }}" data-pick-hint="{{ __('cluk.pick_hint') }}" @if (in_array($user?->theme, ['light', 'dark'], true)) data-theme="{{ $user->theme }}" @endif>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ $title ?? 'CLUK' }} · CLUK</title>
-<link rel="stylesheet" href="{{ asset('css/cluk.css') }}">
+<link rel="stylesheet" href="{{ asset('css/cluk.css') }}?v={{ @filemtime(public_path('css/cluk.css')) }}">
 <script>
     // Day / night mode: the choice in My preferences, else the device setting.
     try { localStorage.removeItem('cluk-theme'); } catch (e) {}
 </script>
 @include('partials.favicon')
+<script src="{{ asset('js/pick.js') }}?v={{ @filemtime(public_path('js/pick.js')) }}" defer></script>
 </head>
 <body @class(['density-compact' => $user?->density === 'compact'])>
 <div class="app">

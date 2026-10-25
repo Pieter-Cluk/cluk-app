@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CLUK</title><link rel="stylesheet" href="{{ asset('css/cluk.css') }}">@include('partials.favicon')
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CLUK</title><link rel="stylesheet" href="{{ asset('css/cluk.css') }}?v={{ @filemtime(public_path('css/cluk.css')) }}">@include('partials.favicon')
 </head>
 <body>
 <div class="login"><main class="login-main"><div class="login-box"><div class="login-panel">
