@@ -7,6 +7,7 @@ use App\Models\AuditLog;
 use App\Models\Website\Download;
 use App\Models\Website\DownloadLog;
 use App\Services\Media\Translator;
+use App\Services\Website\SiteSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -69,6 +70,32 @@ class WebDownloadController extends Controller
         }
 
         return $this->back(null);
+    }
+
+    /** Title and description of the general terms and conditions in one language (the PDF itself stays). */
+    public function terms(Request $request, string $locale): RedirectResponse
+    {
+        $this->can($request);
+        abort_unless(isset(config('rental.terms_files')[$locale]), 404);
+        $d = $request->validate(['title' => ['array'], 'title.*' => ['nullable', 'string', 'max:160'], 'description' => ['array'], 'description.*' => ['nullable', 'string', 'max:400']]);
+        $locales = array_keys(config('cluk.locales'));
+        $clean = fn ($a) => array_filter(array_map(fn ($v) => trim((string) $v), array_intersect_key($a ?? [], array_flip($locales))), fn ($v) => $v !== '');
+        $title = $clean($d['title'] ?? []);
+        $desc = $clean($d['description'] ?? []);
+        if ($request->boolean('translate') && Translator::available() && ($title['en'] ?? $desc['en'] ?? null)) {
+            foreach (app(Translator::class)->translate(array_filter(['title' => $title['en'] ?? null, 'description' => $desc['en'] ?? null])) ?? [] as $loc => $f) {
+                if (! empty($f['title'])) {
+                    $title[$loc] ??= $f['title'];
+                }
+                if (! empty($f['description'])) {
+                    $desc[$loc] ??= $f['description'];
+                }
+            }
+        }
+        SiteSettings::put('downloads.terms.'.$locale, ($title || $desc) ? ['title' => $title, 'description' => $desc] : null, $request->user()->id);
+        AuditLog::record('website.download_changed', null, ['title' => 'Terms and conditions ('.$locale.')', 'texts' => $title['en'] ?? '—'], $request->user());
+
+        return $this->back(__('website.flash.saved'));
     }
 
     /** Put a document at a place in the order (1 = first), the others shift. */

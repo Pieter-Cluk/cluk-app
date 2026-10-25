@@ -146,7 +146,8 @@ return [
         'warning' => 'Let op: deze foto is :got px, ideaal is :ideal px. Hij kan wazig zijn of meer weggesneden worden dan je verwacht: bekijk de voorbeelden.',
     ],
     'downloads' => [
-        'fixed' => 'Staat altijd op de pagina, toegevoegd door de website; dit bestand wijzigen loopt via de ontwikkelaar.',
+        'terms_hint' => 'Lege velden houden de standaardtitel. Tip: zet erbij in welke taal het document is, bv. “Algemene voorwaarden (Nederlands)”.',
+        'fixed' => 'Staat altijd op de pagina, toegevoegd door de website. Titel en tekst kan je wijzigen; de PDF zelf wijzigt de ontwikkelaar.',
         'place' => 'Plaats in de volgorde (1 = eerst)',
         'same_link' => 'De link blijft dezelfde.',
         'category' => 'Groep op de pagina',

@@ -6,14 +6,30 @@
         <a class="btn btn-sm" href="{{ route('website.downloads.log') }}">{{ __('website.downloads.who_all') }}</a>
     </div>
     <p class="muted small">{{ __('website.downloads.hint', ['url' => route('site.downloads')]) }}</p>
-    {{-- Always on the page, added by the website itself (config rental.terms_files): shown here so the list is complete. --}}
+    {{-- Always on the page, added by the website itself (config rental.terms_files). Title and text can be changed; the PDF stays. --}}
     @foreach (collect(config('rental.terms_files'))->filter(fn ($f) => is_file(public_path($f))) as $l => $f)
-        <article class="ws-slide ws-fixed">
+        @php($tv = \App\Services\Website\SiteSettings::get('downloads.terms.'.$l, []))
+        <article class="ws-slide" id="terms-{{ $l }}">
             <div class="ws-dl-ext" aria-hidden="true">PDF</div>
             <div class="ws-info">
-                <b>{{ __('site.downloads.terms_doc') }}</b> <span class="muted small">{{ __('site.downloads.cats.terms') }} · {{ __('site.downloads.langs.'.$l) }}</span>
+                <b>{{ \App\Services\Website\SiteSettings::termsText($l) }}</b> <span class="muted small">{{ __('site.downloads.cats.terms') }} · {{ __('site.downloads.langs.'.$l) }}</span>
+                @if ($tx = \App\Services\Website\SiteSettings::termsText($l, 'description'))<span class="small">{{ $tx }}</span>@endif
                 <small class="muted">{{ basename($f) }} · {{ max(1, (int) round(filesize(public_path($f)) / 1024)) }} KB · {{ __('website.downloads.fixed') }}</small>
                 <div class="small"><a href="{{ route('terms', $l) }}" target="_blank" rel="noopener">{{ __('website.downloads.link') }}</a></div>
+                @if ($canEdit)
+                    <details class="mt-xs">
+                        <summary class="linkbtn">{{ __('website.change') }}</summary>
+                        <form method="post" action="{{ route('website.downloads.terms', $l) }}" class="stack-sm mt">@csrf
+                            <div><b class="small">{{ __('website.downloads.doc_title') }}</b>
+                                <div class="ws-langs">@foreach ($locales as $x)<label class="field"><span>{{ strtoupper($x) }}</span><input name="title[{{ $x }}]" value="{{ $tv['title'][$x] ?? '' }}" maxlength="160" placeholder="{{ __('site.downloads.terms_doc', [], $x) }} ({{ __('site.downloads.langs.'.$l, [], $x) }})"></label>@endforeach</div></div>
+                            <div><b class="small">{{ __('website.downloads.doc_text') }}</b>
+                                <div class="ws-langs">@foreach ($locales as $x)<label class="field"><span>{{ strtoupper($x) }}</span><input name="description[{{ $x }}]" value="{{ $tv['description'][$x] ?? '' }}" maxlength="400"></label>@endforeach</div></div>
+                            <small class="muted">{{ __('website.downloads.terms_hint') }}</small>
+                            @if ($claude)<label class="check"><input type="checkbox" name="translate" value="1" checked> {{ __('website.translate') }}</label>@endif
+                            <div><button class="btn" type="submit">{{ __('website.save') }}</button></div>
+                        </form>
+                    </details>
+                @endif
             </div>
         </article>
     @endforeach

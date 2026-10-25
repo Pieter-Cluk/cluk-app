@@ -146,7 +146,8 @@ return [
         'warning' => 'Ojo: esta foto mide :got px, lo ideal es :ideal px. Puede verse borrosa o más recortada de lo esperado: revisa las vistas previas.',
     ],
     'downloads' => [
-        'fixed' => 'Siempre en la página, lo añade la web; cambiar este archivo pasa por el desarrollador.',
+        'terms_hint' => 'Los campos vacíos mantienen el título estándar. Consejo: indica el idioma del documento, p. ej. «Condiciones generales (neerlandés)».',
+        'fixed' => 'Siempre en la página, lo añade la web. Puedes cambiar el título y el texto; el PDF lo cambia el desarrollador.',
         'place' => 'Posición en el orden (1 = primero)',
         'same_link' => 'El enlace sigue siendo el mismo.',
         'category' => 'Grupo en la página',

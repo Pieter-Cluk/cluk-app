@@ -136,4 +136,17 @@ class WebDownloadsTest extends TestCase
         $this->actingAs($this->editor, 'web')->post(route('website.downloads.store'), ['file' => UploadedFile::fake()->create('x.exe', 10), 'title' => ['en' => 'x'], 'access' => 'open', 'category' => 'other'])->assertSessionHasErrors('file');
         $this->actingAs($this->editor, 'web')->post(route('website.downloads.store'), ['file' => UploadedFile::fake()->create('x.pdf', 10), 'title' => ['nl' => 'alleen NL'], 'access' => 'open', 'category' => 'other'])->assertSessionHasErrors('title.en');
     }
+
+    public function test_terms_and_conditions_get_their_own_titles_and_text(): void
+    {
+        $this->actingAs($this->editor, 'web')->post(route('website.downloads.terms', 'nl'), [
+            'title' => ['en' => 'General terms and conditions (Dutch)', 'nl' => 'Algemene voorwaarden (Nederlands)'], 'description' => ['en' => 'For rentals and sales in Belgium.'],
+        ])->assertSessionHasNoErrors()->assertRedirect();
+        $this->get('/site/downloads')->assertOk()->assertSee('General terms and conditions (Dutch)')->assertSee('For rentals and sales in Belgium.')->assertSee('General terms and conditions');
+        $this->get('/site/downloads?lang=nl')->assertSee('Algemene voorwaarden (Nederlands)');
+        $this->actingAs($this->editor, 'web')->get(route('website.index', ['tab' => 'downloads']))->assertSee('General terms and conditions (Dutch)')->assertSee('value="Algemene voorwaarden (Nederlands)"', false);
+        $this->assertSame(1, AuditLog::where('action', 'website.download_changed')->count());
+        $other = User::factory()->create(['role_id' => Role::where('slug', 'sales')->value('id'), 'locale' => 'en']);
+        $this->actingAs($other, 'web')->post(route('website.downloads.terms', 'fr'), ['title' => ['en' => 'x']])->assertForbidden();
+    }
 }

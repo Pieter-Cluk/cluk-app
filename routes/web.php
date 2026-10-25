@@ -232,6 +232,7 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/', [WebsiteController::class, 'index'])->name('index');
         Route::get('/downloads/who', [WebDownloadController::class, 'log'])->name('downloads.log');
         Route::post('/downloads', [WebDownloadController::class, 'store'])->name('downloads.store');
+        Route::post('/downloads/terms/{locale}', [WebDownloadController::class, 'terms'])->whereIn('locale', ['en', 'nl', 'fr', 'es'])->name('downloads.terms');
         Route::post('/downloads/{download}', [WebDownloadController::class, 'update'])->whereNumber('download')->name('downloads.update');
         Route::post('/downloads/{download}/move/{dir}', [WebDownloadController::class, 'move'])->whereNumber('download')->whereIn('dir', ['up', 'down'])->name('downloads.move');
         Route::delete('/downloads/{download}', [WebDownloadController::class, 'destroy'])->whereNumber('download')->name('downloads.destroy');

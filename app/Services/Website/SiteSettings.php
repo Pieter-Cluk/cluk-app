@@ -138,4 +138,19 @@ class SiteSettings
 
         return Storage::disk('local')->exists($path) ? Storage::disk('local')->path($path) : null;
     }
+
+    /**
+     * Title or description of the general terms and conditions in one language on the
+     * Downloads page ($doc = the document's language, en/nl/fr/es), in the visitor's language.
+     * Set in Media › Website › Downloads; otherwise the built-in text.
+     */
+    public static function termsText(string $doc, string $field = 'title', ?string $locale = null): string
+    {
+        $locale ??= app()->getLocale();
+        $v = self::get('downloads.terms.'.$doc, [])[$field] ?? [];
+        $own = ($v[$locale] ?? null) ?: ($v['en'] ?? null);
+
+        // Standard title says which language the document is in, so the four are not alike.
+        return (string) ($own ?: ($field === 'title' ? __('site.downloads.terms_doc', [], $locale).' ('.__('site.downloads.langs.'.$doc, [], $locale).')' : ''));
+    }
 }

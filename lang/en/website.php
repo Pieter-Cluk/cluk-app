@@ -146,7 +146,8 @@ return [
         'warning' => 'Note: this picture is :got px, the ideal is :ideal px. It may look soft or be cut more than you expect: check the previews.',
     ],
     'downloads' => [
-        'fixed' => 'Always on the page, added by the website; changing this file goes through the developer.',
+        'terms_hint' => 'Empty fields keep the standard title. Tip: write which language the document is in, e.g. “General terms and conditions (Dutch)”.',
+        'fixed' => 'Always on the page, added by the website. You can change the title and text; the PDF itself is changed by the developer.',
         'place' => 'Place in the order (1 = first)',
         'same_link' => 'The link stays the same.',
         'category' => 'Group on the page',

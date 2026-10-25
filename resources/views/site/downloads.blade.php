@@ -9,7 +9,7 @@
       <h2>{{ __('site.downloads.cats.terms') }}</h2>
       <ul class="dl-list">
         @foreach ($terms as $t)
-          <li><span class="dl-type">PDF</span><span class="dl-main"><b>{{ __('site.downloads.terms_doc') }}</b><small>{{ __('site.downloads.langs.'.$t['locale']) }} · {{ max(1, (int) round($t['size'] / 1024)) }} KB</small></span>
+          <li><span class="dl-type">PDF</span><span class="dl-main"><b>{{ \App\Services\Website\SiteSettings::termsText($t['locale']) }}</b>@if ($tx = \App\Services\Website\SiteSettings::termsText($t['locale'], 'description'))<span class="dl-desc">{{ $tx }}</span>@endif<small>{{ __('site.downloads.langs.'.$t['locale']) }} · {{ max(1, (int) round($t['size'] / 1024)) }} KB</small></span>
             <a class="dl-btn" href="{{ $t['url'] }}" target="_blank" rel="noopener">{{ __('site.downloads.open') }}</a></li>
         @endforeach
         @foreach ($groups['terms'] as $d)@include('site._download', ['d' => $d])@endforeach
