@@ -173,6 +173,6 @@
         </script>
     @endif
     @if ($tab === 'downloads')
-        @include('media.website._downloads', ['docs' => \App\Models\Website\Download::orderBy('position')->orderBy('id')->get()])
+        @include('media.website._downloads', ['docs' => \App\Models\Website\Download::orderBy('sort')->orderBy('id')->get()])
     @endif
 </x-layouts.app>
