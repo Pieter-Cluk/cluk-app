@@ -43,7 +43,7 @@
             </p>
         </div>
         <div class="head-actions">
-            @if ($company->phone)<a class="btn" href="tel:{{ preg_replace('/[^0-9+]/', '', $company->phone) }}">{{ __('companies.show.call') }}</a>@endif
+            @if ($company->phone)<a class="btn" href="tel:{{ \App\Support\Phone::dial($company->phone, $company->country) }}">{{ __('companies.show.call') }}</a>@if (\App\Support\Phone::maybeMobile($company->phone, $company->country))<a class="btn" href="{{ \App\Support\Phone::whatsapp($company->phone, $company->country) }}" target="_blank" rel="noopener">{{ __('companies.show.whatsapp') }}</a>@endif @endif
             @if ($company->email)<a class="btn" href="mailto:{{ $company->email }}">{{ __('companies.show.email') }}</a>@endif
             @if ($canEdit)<a class="primary" href="{{ route('companies.edit', $company) }}">{{ __('settings.edit') }}</a>@endif
         </div>
@@ -57,14 +57,14 @@
                     <h2>{{ __('companies.contacts.title') }}</h2>
                 </div>
                 @forelse ($company->contacts as $c)
-                    <div class="contact">
+                    <div class="contact" id="contact-{{ $c->id }}">
                         <x-avatar :who="$c"/>
                         <div class="contact-main">
                             <b>{{ $c->name }}</b>
                             <small class="muted">{{ $c->pivot->job_title }}</small>
                             <div class="contact-lines">
-                                @if ($c->mobile)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $c->mobile) }}">{{ $c->mobile }}</a>@endif
-                                @if ($c->phone)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $c->phone) }}">{{ $c->phone }}</a>@endif
+                                @if ($c->mobile)@include('partials.phone', ['number' => $c->mobile, 'country' => $company->country, 'whatsapp' => true])@endif
+                                @if ($c->phone)@include('partials.phone', ['number' => $c->phone, 'country' => $company->country])@endif
                                 @if ($c->email)<a href="mailto:{{ $c->email }}">{{ $c->email }}</a>@endif
                             </div>
                             <div class="badges">
@@ -223,7 +223,7 @@
                         <dt>{{ __('companies.fields.supplier_payment_days') }}</dt><dd>{{ $company->supplier_payment_days !== null ? trans_choice('companies.days', (int) ($company->supplier_payment_days), ['days' => $company->supplier_payment_days]) : '—' }}</dd>
                         <dt>{{ __('companies.fields.supplies') }}</dt><dd>{{ collect($company->supplies ?? [])->map(fn ($s) => __('companies.supplies.'.$s))->implode(', ') ?: '—' }}</dd>
                     @endif
-                    <dt>{{ __('companies.fields.phone') }}</dt><dd>{{ $company->phone ?? '—' }}</dd>
+                    <dt>{{ __('companies.fields.phone') }}</dt><dd>@if ($company->phone)@include('partials.phone', ['number' => $company->phone, 'country' => $company->country])@else—@endif</dd>
                     <dt>{{ __('companies.fields.email') }}</dt><dd>{{ $company->email ?? '—' }}</dd>
                     <dt>{{ __('companies.fields.website') }}</dt><dd>{{ $company->website ?? '—' }}</dd>
                 </dl>

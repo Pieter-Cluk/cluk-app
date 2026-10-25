@@ -99,7 +99,7 @@ class CrmExtrasTest extends TestCase
 
     public function test_media_group_in_the_menu(): void
     {
-        $this->actingAs($this->admin)->get('/media/messages')->assertOk()->assertSee('Messages')->assertSee('Social media')->assertSee('Communication');
+        $this->actingAs($this->admin)->get('/media/messages')->assertOk()->assertSee('Messages')->assertSee('Social media')->assertSee('Website')->assertDontSee('Communication');
         $this->actingAs($this->admin)->get('/dashboard')->assertSee('>Media<', false);
     }
 

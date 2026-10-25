@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Phone;
 use App\Support\VatNumber;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,6 +21,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 ])]
 class Company extends Model
 {
+    protected static function booted(): void
+    {
+        // Phone in one international format, with a key to find callers by.
+        static::saving(function (Company $c) {
+            if ($c->isDirty(['phone', 'country']) || ($c->phone && ! $c->phone_key)) {
+                $c->phone = Phone::international($c->phone, $c->country);
+                $c->phone_key = Phone::key($c->phone, $c->country);
+            }
+        });
+    }
+
     use HasFactory;
 
     /** What a supplier can supply (filters and the supplier list). */
@@ -61,7 +73,7 @@ class Company extends Model
 
     public function contacts(): BelongsToMany
     {
-        return $this->belongsToMany(Contact::class)->withPivot(['id', 'job_title', 'is_main', 'is_billing']);
+        return $this->belongsToMany(Contact::class)->using(CompanyContact::class)->withPivot(['id', 'job_title', 'is_main', 'is_billing']);
     }
 
     public function addresses(): HasMany

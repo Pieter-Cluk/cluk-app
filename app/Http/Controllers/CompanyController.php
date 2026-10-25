@@ -57,7 +57,9 @@ class CompanyController extends Controller
                         ->whereRaw('lower(first_name) like ?', [$like])
                         ->orWhereRaw('lower(coalesce(last_name, \'\')) like ?', [$like])
                         ->orWhereRaw('lower(coalesce(email, \'\')) like ?', [$like])
-                        ->orWhereHas('companies', fn ($c) => $c->whereRaw('lower(name) like ?', [$like])));
+                        ->orWhereHas('companies', fn ($c) => $c->whereRaw('lower(name) like ?', [$like]))
+                        ->when(strlen($digits = self::phoneDigits($q)) >= 6, fn ($w) => $w
+                            ->orWhere('phone_key', 'like', '%'.$digits.'%')->orWhere('mobile_key', 'like', '%'.$digits.'%')));
                 })
                 ->when($filters['country'] !== '', fn ($query) => $query->whereHas('companies', fn ($c) => $c->where('country', $filters['country'])))
                 ->orderBy('first_name')->orderBy('last_name')
@@ -74,7 +76,8 @@ class CompanyController extends Controller
                     $query->where(fn ($w) => $w
                         ->whereRaw('lower(name) like ?', [$like])
                         ->orWhereRaw('lower(coalesce(city, \'\')) like ?', [$like])
-                        ->orWhere('vat_number', 'like', $vat));
+                        ->orWhere('vat_number', 'like', $vat)
+                        ->when(strlen($digits = self::phoneDigits($q)) >= 6, fn ($w) => $w->orWhere('phone_key', 'like', '%'.$digits.'%')));
                 })
                 ->when($filters['country'] !== '', fn ($query) => $query->where('country', $filters['country']))
                 ->when($filters['owner'] === 'none', fn ($query) => $query->whereNull('account_owner_id'))
@@ -128,6 +131,9 @@ class CompanyController extends Controller
             'is_supplier' => $request->query('type') === 'supplier',
             'country' => 'BE', 'language' => 'nl', 'vat_regime' => 'auto',
             'account_owner_id' => $request->user()->is_commercial ? $request->user()->id : null,
+            // From the call pop-up: the caller's number (and name, when the phone system knows it).
+            'phone' => mb_substr((string) $request->query('phone', ''), 0, 40) ?: null,
+            'name' => mb_substr((string) $request->query('name', ''), 0, 190) ?: null,
         ]);
 
         return view('companies.form', ['company' => $company, 'owners' => $this->owners($company)]);
@@ -340,5 +346,15 @@ class CompanyController extends Controller
     private function like(string $q): string
     {
         return '%'.str_replace(['%', '_'], ['\%', '\_'], mb_strtolower($q)).'%';
+    }
+
+    /** The digits of a search that looks like a phone number (last 9, without leading zeros). */
+    private static function phoneDigits(string $q): string
+    {
+        if (preg_match('/[a-z@]/i', $q)) {
+            return '';
+        }
+
+        return substr(ltrim((string) preg_replace('/\D/', '', $q), '0'), -9);
     }
 }

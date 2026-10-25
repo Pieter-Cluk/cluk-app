@@ -82,6 +82,7 @@ return [
         'create' => 'Crear empresa',
     ],
     'show' => [
+        'whatsapp' => 'WhatsApp',
         'archived' => 'Archivada',
         'no_vat' => 'Sin número de IVA',
         'documents_in' => 'Documentos en :language',

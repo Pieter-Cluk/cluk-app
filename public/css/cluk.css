@@ -1048,3 +1048,9 @@ ol.rotation { margin: 6px 0 4px; padding-left: 20px; }
 .ws-crops figcaption{font-size:10px;color:var(--muted);text-align:center}
 @media (max-width:800px){.ws-format-body{grid-template-columns:minmax(0,1fr)}}
 .ws-fr-1 small{left:auto;right:3px;bottom:auto;top:1px}.ws-fr-2 small{left:auto;right:3px}.ws-fr-3 small{bottom:auto;top:14px}
+/* Phone numbers: call + WhatsApp; call pop-up */
+.phone-line{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wa-link{display:inline-flex;align-items:center;gap:3px;font-size:12px;color:#1a8a4a;text-decoration:none;position:relative;z-index:2}
+.wa-link:hover{text-decoration:underline}
+.contact:target{outline:2px solid var(--green, #52ae32);outline-offset:4px;border-radius:8px}
+pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface-subtle);padding:10px 12px;border-radius:8px;font-size:13px}

@@ -82,6 +82,7 @@ return [
         'create' => 'Bedrijf aanmaken',
     ],
     'show' => [
+        'whatsapp' => 'WhatsApp',
         'archived' => 'Gearchiveerd',
         'no_vat' => 'Geen btw-nummer',
         'documents_in' => 'Documenten in het :language',

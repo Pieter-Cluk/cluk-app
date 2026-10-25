@@ -159,7 +159,7 @@
                     <p class="muted">{{ __('deals.private') }}</p>
                 @endif
                 @if ($deal->contact)
-                    <p>{{ $deal->contact->name }}@if ($deal->contact->email)<br><a href="mailto:{{ $deal->contact->email }}">{{ $deal->contact->email }}</a>@endif @if ($deal->contact->phone)<br><a href="tel:{{ $deal->contact->phone }}">{{ $deal->contact->phone }}</a>@endif</p>
+                    <p>{{ $deal->contact->name }}@if ($deal->contact->email)<br><a href="mailto:{{ $deal->contact->email }}">{{ $deal->contact->email }}</a>@endif @if ($deal->contact->mobile ?: $deal->contact->phone)<br>@include('partials.phone', ['number' => $deal->contact->mobile ?: $deal->contact->phone, 'country' => $deal->company?->country, 'whatsapp' => (bool) $deal->contact->mobile])@endif</p>
                 @endif
                 @if ($canWork)
                     <details>

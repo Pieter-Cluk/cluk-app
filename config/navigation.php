@@ -38,7 +38,6 @@ return [
             ['key' => 'messages', 'path' => '/media/messages', 'icon' => 'message', 'module' => ['sales', 1]],
             ['key' => 'social', 'path' => '/media/social', 'icon' => 'share', 'module' => ['sales', 1]],
             ['key' => 'website', 'path' => '/media/website', 'icon' => 'globe', 'module' => ['sales', 1]],
-            ['key' => 'communication', 'path' => '/media/communication', 'icon' => 'megaphone', 'module' => ['sales', 1]],
         ],
         'finance' => [
             ['key' => 'preinvoice', 'path' => '/pre-invoicing', 'icon' => 'invoice', 'module' => ['preinvoice', 1]],

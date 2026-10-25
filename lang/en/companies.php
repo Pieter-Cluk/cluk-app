@@ -82,6 +82,7 @@ return [
         'create' => 'Create company',
     ],
     'show' => [
+        'whatsapp' => 'WhatsApp',
         'archived' => 'Archived',
         'no_vat' => 'No VAT number',
         'documents_in' => 'Documents in :language',

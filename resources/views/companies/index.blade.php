@@ -80,7 +80,7 @@
                                         <a class="rel-link" href="{{ route('companies.show', $c) }}"><span class="rel-dot rel-{{ $c->relationshipKey() }}" aria-hidden="true"></span>{{ $c->name }}</a>@if (! $loop->last)<br>@endif
                                     @endforeach
                                 </td>
-                                <td class="nowrap">{{ $p->mobile ?? $p->phone ?? '—' }}</td>
+                                <td class="nowrap">@if ($p->mobile ?? $p->phone)@include('partials.phone', ['number' => $p->mobile ?? $p->phone, 'country' => $p->companies->first()?->country, 'whatsapp' => (bool) $p->mobile])@else—@endif</td>
                                 <td>@if ($p->email)<a href="mailto:{{ $p->email }}">{{ $p->email }}</a>@else — @endif</td>
                                 <td><span @class(['pill', 'pill-ok' => $p->newsletter, 'pill-off' => ! $p->newsletter])>{{ __($p->newsletter ? 'companies.yes' : 'companies.no') }}</span></td>
                                 @if ($canEditContacts)<td class="num">@if ($first)<a class="btn btn-sm" href="{{ route('companies.contacts.edit', [$first, $p, 'back' => request()->fullUrl()]) }}">{{ __('settings.edit') }}</a>@endif</td>@endif

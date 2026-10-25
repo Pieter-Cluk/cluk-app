@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\MicrosoftLoginController;
 use App\Http\Controllers\CompanyContactController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CreditController;
+use App\Http\Controllers\Crm\CallController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Equipment\AssetController;
 use App\Http\Controllers\Equipment\ItemController;
@@ -272,6 +273,8 @@ Route::middleware('auth:web')->group(function () {
 
     // Companies & contacts: view from level 1, change from level 2, archive at level 3.
     Route::middleware('nav:companies')->group(function () {
+        // Call pop-up from Linkus: /call?number=…&name=… opens the caller's card.
+        Route::get('/call', [CallController::class, 'show'])->name('calls.show');
         Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
         Route::middleware('level:companies,2')->group(function () {
             Route::get('/companies/new', [CompanyController::class, 'create'])->name('companies.create');
