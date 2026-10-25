@@ -991,3 +991,5 @@ img,video{max-width:100%}
 .pf-ready-row{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
 .pf-ready-main{flex:1;min-width:0;display:grid;gap:2px}
 @media (max-width:600px){.pf-ready-row{flex-wrap:wrap}}
+.pf-oki{margin:0;padding:10px 12px;border-radius:8px;background:var(--brand-tint)}
+.pf-oki-card h3{margin:0 0 6px;font-size:15px}

@@ -17,6 +17,7 @@ use App\Models\VatRate;
 use App\Models\Warehouse\Charge;
 use App\Notifications\Confirmation;
 use App\Services\Afrit6\Pricing;
+use App\Services\Finance\OkiOki\OkiOki;
 use App\Support\StaffMail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -197,16 +198,28 @@ class PreInvoices
         return $c;
     }
 
-    public static function accept(PreInvoice $pf, User $by, ?string $invoiceNumber, bool $override): void
+    /**
+     * The accountant approves: the invoice is made. With the OkiOki link on, the app gives the number
+     * and mails the e-invoice to OkiOki (true = sent, false = to send again); otherwise the number made
+     * in OkiOki is typed in (null).
+     */
+    public static function accept(PreInvoice $pf, User $by, ?string $invoiceNumber, bool $override): ?bool
     {
         abort_unless($pf->status === 'check', 409);
         $pf->update(['checks' => self::checks($pf->load(['company', 'member']))]);
         if ($pf->reds() > 0 && ! $override) {
             throw ValidationException::withMessages(['override' => __('finance.errors.red_flags')]);
         }
+        $okioki = OkiOki::on();
+        if ($okioki && ($problems = OkiOki::problems($pf))) {
+            throw ValidationException::withMessages(['override' => implode(' ', $problems)]);
+        }
+        $number = $okioki ? OkiOki::nextNumber() : ($invoiceNumber ?: null);
         $pf->update(['status' => 'sent', 'sent_at' => now(), 'sent_by_id' => $by->id, 'override_by_id' => $pf->reds() ? $by->id : null,
-            'invoice_number' => $invoiceNumber ?: null, 'invoice_date' => today(), 'due_date' => today()->addDays($pf->payment_days)]);
-        AuditLog::record('finance.pf_sent', $pf, ['invoice' => $invoiceNumber, 'override' => $pf->reds() ? $pf->reds() : null, 'total' => Pricing::eur($pf->gross_cents)], $by);
+            'invoice_number' => $number, 'invoice_date' => today(), 'due_date' => today()->addDays($pf->payment_days)]);
+        AuditLog::record('finance.pf_sent', $pf, ['invoice' => $number, 'override' => $pf->reds() ? $pf->reds() : null, 'total' => Pricing::eur($pf->gross_cents)], $by);
+
+        return $okioki ? OkiOki::send($pf->fresh(['company', 'member']), $by) : null;
     }
 
     public static function back(PreInvoice $pf, User $by, string $reason, string $note): void

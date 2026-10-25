@@ -26,7 +26,7 @@ class PreInvoice extends Model
     protected function casts(): array
     {
         return [
-            'lines' => 'array', 'checks' => 'array', 'service_date' => 'date', 'invoice_date' => 'date', 'due_date' => 'date', 'sent_at' => 'datetime', 'paid_at' => 'datetime',
+            'lines' => 'array', 'checks' => 'array', 'service_date' => 'date', 'invoice_date' => 'date', 'due_date' => 'date', 'sent_at' => 'datetime', 'paid_at' => 'datetime', 'okioki_sent_at' => 'datetime',
             'net_cents' => 'integer', 'cost_cents' => 'integer', 'vat_cents' => 'integer', 'gross_cents' => 'integer', 'vat_rate_bp' => 'integer', 'payment_days' => 'integer',
         ];
     }

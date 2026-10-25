@@ -92,10 +92,16 @@
                 @if ($canDecide && $sel->status === 'check')
                     <section class="card">
                         <form method="post" action="{{ route('finance.accept', $sel) }}" class="stack-sm">@csrf
-                            <label class="field"><span>{{ __('finance.invoice_number') }}</span><input name="invoice_number" maxlength="40" placeholder="INV {{ now()->year }}/…"></label>
+                            @if ($okioki)
+                                <p class="pf-oki"><b>{{ __('finance.okioki.will_get', ['number' => $okiokiNext]) }}</b><br><small class="muted">{{ __('finance.okioki.will_send') }}</small></p>
+                                @unless (\App\Services\Finance\OkiOki\UblInvoice::onPeppol($sel))<p class="small txt-warn">⚑ {{ __('finance.okioki.not_peppol') }}</p>@endunless
+                                @foreach (\App\Services\Finance\OkiOki\OkiOki::problems($sel) as $prob)<p class="small txt-danger">⚑ {{ $prob }}</p>@endforeach
+                            @else
+                                <label class="field"><span>{{ __('finance.invoice_number') }}</span><input name="invoice_number" maxlength="40" placeholder="INV {{ now()->year }}/…"></label>
+                            @endif
                             @if ($sel->reds())<input type="hidden" name="override" value="0"><label class="check"><input type="checkbox" name="override" value="1"> {{ __('finance.override') }}</label>@endif
                             <div class="actionbar pf-actions"><button class="primary" type="submit">{{ __('finance.accept') }}</button><a class="btn" href="{{ route('finance.print', $sel) }}" target="_blank" rel="noopener">{{ __('finance.print') }}</a></div>
-                            <small class="muted">{{ __('finance.okioki_hint') }}</small>
+                            @unless ($okioki)<small class="muted">{{ __('finance.okioki_hint') }}</small>@endunless
                         </form>
                         <details class="mt"><summary>{{ __('finance.send_back', ['name' => $sel->madeBy?->first_name ?? '—']) }}</summary>
                             <form method="post" action="{{ route('finance.back', $sel) }}" class="stack-sm mt">@csrf
@@ -111,7 +117,21 @@
                         <p><b>{{ __('finance.statuses.back') }}:</b> {{ $sel->back_note }}</p>
                         <form method="post" action="{{ route('finance.resend', $sel) }}" class="stack-sm">@csrf<input name="reply" maxlength="800" placeholder="{{ __('finance.reply_hint') }}" aria-label="{{ __('finance.reply_hint') }}"><div><button class="btn" type="submit">{{ __('finance.resend') }}</button></div></form>
                     </section>
-                @elseif ($canDecide && $sel->status === 'sent')
+                @endif
+                @if ($sel->invoice_number && in_array($sel->status, ['sent', 'paid'], true) && ($sel->ubl_path || $sel->okioki_error))
+                    <section class="card pf-oki-card">
+                        <h3>{{ __('finance.okioki.title') }} · {{ $sel->invoice_number }}</h3>
+                        @if ($sel->okioki_sent_at)
+                            <p class="small">✓ {{ __('finance.okioki.sent_at', ['date' => $sel->okioki_sent_at->timezone('Europe/Brussels')->format('d/m/Y H:i')]) }}</p>
+                        @endif
+                        @if ($sel->okioki_error)<p class="small txt-danger">⚑ {{ $sel->okioki_error }}</p>@endif
+                        <div class="inline-form">
+                            @if ($sel->ubl_path)<a class="btn btn-sm" href="{{ route('finance.ubl', $sel) }}">{{ __('finance.okioki.download') }}</a>@endif
+                            @if ($canDecide && $okioki)<form method="post" action="{{ route('finance.okioki.resend', $sel) }}">@csrf<button class="btn btn-sm" type="submit">{{ $sel->okioki_sent_at ? __('finance.okioki.send_again') : __('finance.okioki.send_now') }}</button></form>@endif
+                        </div>
+                    </section>
+                @endif
+                @if ($canDecide && $sel->status === 'sent')
                     <section class="card">
                         <form method="post" action="{{ route('finance.paid', $sel) }}">@csrf<button class="btn" type="submit">{{ __('finance.mark_paid') }}</button></form>
                         <small class="muted">{{ __('finance.paid_hint') }}</small>
@@ -143,4 +163,19 @@
             </aside>
         @endif
     </div>
+    @if ($canOkioki)
+        <details class="card mt" id="okioki" @if ($errors->hasAny(['okioki_inbox', 'invoice_prefix', 'invoice_next'])) open @endif>
+            <summary><b>{{ __('finance.okioki.settings') }}</b> <span class="muted small">{{ $okioki ? __('finance.okioki.is_on', ['next' => $okiokiNext]) : __('finance.okioki.is_off') }}</span></summary>
+            <p class="muted small mt">{{ __('finance.okioki.settings_intro') }}</p>
+            <form method="post" action="{{ route('finance.okioki.settings') }}" class="stack-sm">@csrf
+                <div class="form-grid">
+                    <label class="field span-2"><span>{{ __('finance.okioki.inbox') }}</span><input type="email" name="okioki_inbox" maxlength="190" value="{{ old('okioki_inbox', $me->okioki_inbox) }}" placeholder="…@okioki.be"><small>{{ __('finance.okioki.inbox_hint') }}</small></label>
+                    <label class="field"><span>{{ __('finance.okioki.prefix') }}</span><input name="invoice_prefix" maxlength="20" value="{{ old('invoice_prefix', $me->invoice_prefix ?? '{year}-') }}"><small>{{ __('finance.okioki.prefix_hint') }}</small></label>
+                    <label class="field"><span>{{ __('finance.okioki.next') }}</span><input type="number" name="invoice_next" min="1" value="{{ old('invoice_next', $me->invoice_next) }}" required><small>{{ __('finance.okioki.next_hint') }}</small></label>
+                </div>
+                <input type="hidden" name="okioki_send" value="0"><label class="check"><input type="checkbox" name="okioki_send" value="1" @checked(old('okioki_send', $me->okioki_send))> {{ __('finance.okioki.switch') }}</label>
+                <div><button class="primary" type="submit">{{ __('finance.okioki.save') }}</button></div>
+            </form>
+        </details>
+    @endif
 </x-layouts.app>

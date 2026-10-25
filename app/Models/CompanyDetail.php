@@ -22,6 +22,8 @@ class CompanyDetail extends Model
             'payment_term_days' => 'integer',
             'quote_valid_days' => 'integer',
             'option_days' => 'integer',
+            'okioki_send' => 'boolean',
+            'invoice_next' => 'integer',
         ];
     }
 

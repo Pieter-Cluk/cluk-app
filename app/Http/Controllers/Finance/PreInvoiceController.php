@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\CompanyDetail;
 use App\Models\Finance\PreInvoice;
+use App\Services\Finance\OkiOki\OkiOki;
 use App\Services\Finance\PreInvoices;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -33,6 +35,7 @@ class PreInvoiceController extends Controller
 
         return view('finance.index', [
             'list' => $list, 'sel' => $sel, 'filt' => $filt, 'flagOnly' => $flagOnly,
+            'okioki' => OkiOki::on(), 'okiokiNext' => OkiOki::preview(), 'me' => CompanyDetail::current(), 'canOkioki' => $request->user()->hasRight('finance.send_to_okioki'),
             'ready' => PreInvoices::readyRental(), 'canMake' => $request->user()->canUseModule('dryhire', 2) || $request->user()->canUseModule('preinvoice', 2),
             'tiles' => [
                 'check' => [$all->where('status', 'check')->count(), $sum('check'), $all->where('status', 'check')->filter(fn ($p) => $p->reds())->count()],
@@ -68,9 +71,15 @@ class PreInvoiceController extends Controller
     public function accept(Request $request, PreInvoice $pf): RedirectResponse
     {
         $d = $request->validate(['invoice_number' => ['nullable', 'string', 'max:40'], 'override' => ['boolean']]);
-        PreInvoices::accept($pf, $request->user(), $d['invoice_number'] ?? null, $request->boolean('override'));
+        $sent = PreInvoices::accept($pf, $request->user(), $d['invoice_number'] ?? null, $request->boolean('override'));
+        $pf->refresh();
+        $msg = match ($sent) {
+            true => __('finance.okioki.sent', ['number' => $pf->invoice_number, 'customer' => $pf->customerName()]),
+            false => __('finance.okioki.not_sent', ['number' => $pf->invoice_number]),
+            null => __('finance.accepted', ['number' => $pf->number, 'customer' => $pf->customerName()]),
+        };
 
-        return redirect()->route('finance.index', ['pf' => $pf->id])->with('status', __('finance.accepted', ['number' => $pf->number, 'customer' => $pf->customerName()]));
+        return redirect()->route('finance.index', ['pf' => $pf->id])->with($sent === false ? 'error' : 'status', $msg);
     }
 
     public function back(Request $request, PreInvoice $pf): RedirectResponse
@@ -114,7 +123,43 @@ class PreInvoiceController extends Controller
         return back()->with('status', __('finance.late_saved'));
     }
 
-    /** The invoice data to type into OkiOki (until the OkiOki connection is live). */
+    /** Send the e-invoice to OkiOki again (after a mail failure). */
+    public function okiokiResend(Request $request, PreInvoice $pf): RedirectResponse
+    {
+        abort_unless($request->user()->canUseModule('preinvoice', 2) && $pf->status !== 'cancelled' && $pf->invoice_number && OkiOki::on(), 403);
+        $ok = OkiOki::send($pf, $request->user());
+
+        return back()->with($ok ? 'status' : 'error', $ok ? __('finance.okioki.sent', ['number' => $pf->invoice_number, 'customer' => $pf->customerName()]) : __('finance.okioki.not_sent', ['number' => $pf->invoice_number]));
+    }
+
+    /** The e-invoice file, as sent to OkiOki. */
+    public function ubl(PreInvoice $pf)
+    {
+        abort_unless($pf->ubl_path && Storage::disk('local')->exists($pf->ubl_path), 404);
+
+        return Storage::disk('local')->download($pf->ubl_path, basename($pf->ubl_path), ['Content-Type' => 'application/xml']);
+    }
+
+    /** The OkiOki link: on/off, CLUK's OkiOki address and the invoice series. */
+    public function okiokiSettings(Request $request): RedirectResponse
+    {
+        abort_unless($request->user()->hasRight('finance.send_to_okioki'), 403);
+        $d = $request->validate([
+            'okioki_send' => ['boolean'],
+            'okioki_inbox' => ['nullable', 'required_if:okioki_send,1', 'email', 'max:190'],
+            'invoice_prefix' => ['nullable', 'string', 'max:20', 'regex:/^[A-Za-z0-9\/\-_.{}]*$/'],
+            'invoice_next' => ['required', 'integer', 'min:1', 'max:9999999'],
+        ]);
+        $me = CompanyDetail::current();
+        $before = $me->only(['okioki_send', 'okioki_inbox', 'invoice_prefix', 'invoice_next']);
+        $me->forceFill(['okioki_send' => $request->boolean('okioki_send'), 'okioki_inbox' => $d['okioki_inbox'] ?? null, 'invoice_prefix' => $d['invoice_prefix'] ?? null,
+            'invoice_next' => (int) $d['invoice_next'], 'invoice_year' => (int) now()->year])->save();
+        AuditLog::record('finance.okioki_settings', $me, ['before' => $before, 'after' => $me->only(['okioki_send', 'okioki_inbox', 'invoice_prefix', 'invoice_next'])], $request->user());
+
+        return back()->with('status', __('finance.okioki.saved', ['next' => OkiOki::preview()]));
+    }
+
+    /** The invoice data to type into OkiOki (when the OkiOki link is off). */
     public function print(PreInvoice $pf): View
     {
         return view('finance.print', ['pf' => $pf->load(['company', 'member']), 'me' => CompanyDetail::current()]);

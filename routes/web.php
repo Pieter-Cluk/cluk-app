@@ -653,6 +653,9 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/{pf}/print', [PreInvoiceController::class, 'print'])->whereNumber('pf')->name('finance.print');
         Route::middleware('level:preinvoice,2')->group(function () {
             Route::post('/{pf}/accept', [PreInvoiceController::class, 'accept'])->whereNumber('pf')->name('finance.accept');
+            Route::post('/{pf}/okioki', [PreInvoiceController::class, 'okiokiResend'])->whereNumber('pf')->name('finance.okioki.resend');
+            Route::get('/{pf}/e-invoice', [PreInvoiceController::class, 'ubl'])->whereNumber('pf')->name('finance.ubl');
+            Route::post('/okioki-settings', [PreInvoiceController::class, 'okiokiSettings'])->name('finance.okioki.settings');
             Route::post('/{pf}/back', [PreInvoiceController::class, 'back'])->whereNumber('pf')->name('finance.back');
             Route::post('/{pf}/paid', [PreInvoiceController::class, 'paid'])->whereNumber('pf')->name('finance.paid');
             Route::post('/{pf}/cancel', [PreInvoiceController::class, 'cancel'])->whereNumber('pf')->name('finance.cancel');
