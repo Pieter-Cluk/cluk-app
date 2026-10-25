@@ -146,6 +146,7 @@ return [
         'warning' => 'Ojo: esta foto mide :got px, lo ideal es :ideal px. Puede verse borrosa o más recortada de lo esperado: revisa las vistas previas.',
     ],
     'downloads' => [
+        'fixed' => 'Siempre en la página, lo añade la web; cambiar este archivo pasa por el desarrollador.',
         'place' => 'Posición en el orden (1 = primero)',
         'same_link' => 'El enlace sigue siendo el mismo.',
         'category' => 'Grupo en la página',
@@ -153,7 +154,7 @@ return [
         'title' => 'Descargas',
         'hint' => 'Documentos en la página de descargas de la web (:url), enlazada en el pie. Cada descarga queda registrada: con cuenta sabemos quién es; con «Primero nombre y email» el visitante lo rellena una vez por visita.',
         'who_all' => 'Quién descargó',
-        'empty' => 'Aún no hay documentos.',
+        'empty' => 'Aún no hay otros documentos subidos. Añade uno abajo.',
         'add' => 'Añadir documento',
         'file' => 'Archivo',
         'file_hint' => 'PDF, Word, Excel, PowerPoint, ZIP, imágenes, DWG/DXF, hasta 50 MB.',

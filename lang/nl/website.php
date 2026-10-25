@@ -146,6 +146,7 @@ return [
         'warning' => 'Let op: deze foto is :got px, ideaal is :ideal px. Hij kan wazig zijn of meer weggesneden worden dan je verwacht: bekijk de voorbeelden.',
     ],
     'downloads' => [
+        'fixed' => 'Staat altijd op de pagina, toegevoegd door de website; dit bestand wijzigen loopt via de ontwikkelaar.',
         'place' => 'Plaats in de volgorde (1 = eerst)',
         'same_link' => 'De link blijft dezelfde.',
         'category' => 'Groep op de pagina',
@@ -153,7 +154,7 @@ return [
         'title' => 'Downloads',
         'hint' => 'Documenten op de downloadpagina van de website (:url), gelinkt in de footer. Elke download wordt bijgehouden: met een login weten we wie het is; met “Eerst naam en e-mail” vult de bezoeker dat één keer per bezoek in.',
         'who_all' => 'Wie downloadde',
-        'empty' => 'Nog geen documenten.',
+        'empty' => 'Nog geen andere documenten opgeladen. Voeg er hieronder een toe.',
         'add' => 'Document toevoegen',
         'file' => 'Bestand',
         'file_hint' => 'PDF, Word, Excel, PowerPoint, ZIP, afbeeldingen, DWG/DXF, tot 50 MB.',

@@ -6,6 +6,17 @@
         <a class="btn btn-sm" href="{{ route('website.downloads.log') }}">{{ __('website.downloads.who_all') }}</a>
     </div>
     <p class="muted small">{{ __('website.downloads.hint', ['url' => route('site.downloads')]) }}</p>
+    {{-- Always on the page, added by the website itself (config rental.terms_files): shown here so the list is complete. --}}
+    @foreach (collect(config('rental.terms_files'))->filter(fn ($f) => is_file(public_path($f))) as $l => $f)
+        <article class="ws-slide ws-fixed">
+            <div class="ws-dl-ext" aria-hidden="true">PDF</div>
+            <div class="ws-info">
+                <b>{{ __('site.downloads.terms_doc') }}</b> <span class="muted small">{{ __('site.downloads.cats.terms') }} · {{ __('site.downloads.langs.'.$l) }}</span>
+                <small class="muted">{{ basename($f) }} · {{ max(1, (int) round(filesize(public_path($f)) / 1024)) }} KB · {{ __('website.downloads.fixed') }}</small>
+                <div class="small"><a href="{{ route('terms', $l) }}" target="_blank" rel="noopener">{{ __('website.downloads.link') }}</a></div>
+            </div>
+        </article>
+    @endforeach
     @forelse ($docs as $i => $d)
         <article @class(['ws-slide', 'ws-off' => ! $d->active]) id="download-{{ $d->id }}">
             <div class="ws-dl-ext" aria-hidden="true">{{ $d->type() }}</div>
@@ -35,7 +46,7 @@
             </div>
         </article>
     @empty
-        <p class="muted">{{ __('website.downloads.empty') }}</p>
+        <p class="muted mt">{{ __('website.downloads.empty') }}</p>
     @endforelse
     @if ($canEdit)
         <details class="ws-add" @if ($errors->hasAny(['file', 'title.en', 'access'])) open @endif>

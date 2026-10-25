@@ -146,6 +146,7 @@ return [
         'warning' => 'Note: this picture is :got px, the ideal is :ideal px. It may look soft or be cut more than you expect: check the previews.',
     ],
     'downloads' => [
+        'fixed' => 'Always on the page, added by the website; changing this file goes through the developer.',
         'place' => 'Place in the order (1 = first)',
         'same_link' => 'The link stays the same.',
         'category' => 'Group on the page',
@@ -153,7 +154,7 @@ return [
         'title' => 'Downloads',
         'hint' => 'Documents on the website’s downloads page (:url), linked from the footer. Every download is logged: with a login we know who it is; with “Name and email first” the visitor fills that in once per visit.',
         'who_all' => 'Who downloaded',
-        'empty' => 'No documents yet.',
+        'empty' => 'No other documents uploaded yet. Add one below.',
         'add' => 'Add a document',
         'file' => 'File',
         'file_hint' => 'PDF, Word, Excel, PowerPoint, ZIP, images, DWG/DXF, up to 50 MB.',

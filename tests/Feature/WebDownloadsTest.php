@@ -58,7 +58,7 @@ class WebDownloadsTest extends TestCase
         $this->get('/site')->assertSee(route('site.downloads'), false);
         $this->get('/site/downloads')->assertOk()->assertSee('Brochures')->assertSee('Truss brochure')->assertSee('All truss series')->assertSee(route('site.downloads.file', $d->id), false);
         $this->get('/site/downloads?lang=nl')->assertSee('Trussbrochure');
-        $this->actingAs($this->editor, 'web')->get(route('website.index', ['tab' => 'downloads']))->assertOk()->assertSee('Truss brochure')->assertSee('Not downloaded yet')->assertDontSee('Seconds per slide');
+        $this->actingAs($this->editor, 'web')->get(route('website.index', ['tab' => 'downloads']))->assertOk()->assertSee('Truss brochure')->assertSee('Not downloaded yet')->assertDontSee('Seconds per slide')->assertSee('General terms and conditions')->assertSee(route('terms', 'nl'), false);
         // Switched off: gone from the website.
         $this->actingAs($this->editor, 'web')->post(route('website.downloads.update', $d), ['title' => ['en' => 'Truss brochure'], 'access' => 'email', 'category' => 'brochures', 'active' => 0])->assertSessionHasNoErrors();
         $this->get('/site/downloads')->assertDontSee('Truss brochure');
