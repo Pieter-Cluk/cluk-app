@@ -7,6 +7,7 @@ use App\Models\AuditLog;
 use App\Models\Social\Account;
 use App\Models\Social\Plan;
 use App\Services\Social\Dashboard;
+use App\Services\Social\Media;
 use App\Services\Social\Social;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -66,6 +67,7 @@ class SocialController extends Controller
             return redirect()->route('social.index')->withErrors(['social' => __('social.connect.failed', ['why' => mb_substr($e->getMessage(), 0, 200)])]);
         }
         foreach ($accounts as $a) {
+            config(['social.interactive' => true]); // someone is waiting: no history run here, the background does it
             Social::sync($a, true, 90);
         }
 
@@ -96,6 +98,6 @@ class SocialController extends Controller
         $m = ($plan->media ?? [])[$i] ?? null;
         abort_unless($m && Storage::disk('local')->exists($m['path']), 404);
 
-        return response()->file(Storage::disk('local')->path($m['path']), ['Content-Type' => \App\Services\Social\Media::mime($m)]);
+        return response()->file(Storage::disk('local')->path($m['path']), ['Content-Type' => Media::mime($m)]);
     }
 }

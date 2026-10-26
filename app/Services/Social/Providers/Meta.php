@@ -221,8 +221,9 @@ class Meta extends Provider
     /** The first time (or after "fetch older posts"): go back through the history, so older tagged posts reach the website too. */
     private function deep(Account $a): bool
     {
-        // Only in the background job: going through years of posts takes too long for a page click.
-        return empty($a->meta['history_at']) && app()->runningInConsole();
+        // Only in background work (the scheduler, or after a page has been sent): going through
+        // years of posts takes too long while someone waits for the page (e.g. right after connecting).
+        return empty($a->meta['history_at']) && ! config('social.interactive');
     }
 
     private function historyDone(Account $a): void
