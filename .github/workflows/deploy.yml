@@ -159,7 +159,7 @@ jobs:
           # Straight to the one.com web server, so the app can be checked before DNS points there.
           ONECOM_IP=$(getent ahostsv4 3e3535bb.website.cys6r88bx.service.one | awk '{print $1}' | head -1)
           echo "one.com web server: $ONECOM_IP"
-          direct=$(curl -s -k -o /tmp/direct.html -w '%{http_code}' --resolve "app.cluk.live:443:$ONECOM_IP" "$APP_URL/login" || true)
+          direct=$(curl -s -k -m 30 -o /tmp/direct.html -w '%{http_code}' --resolve "app.cluk.live:443:$ONECOM_IP" "$APP_URL/login" || true)
           [ "$direct" = "000" ] && direct=$(curl -s -o /tmp/direct.html -w '%{http_code}' --resolve "app.cluk.live:80:$ONECOM_IP" "http://app.cluk.live/login" || true)
           echo "Direct to one.com: HTTP $direct"
           if grep -q 'Microsoft' /tmp/direct.html; then echo "Direct: login page OK"; echo "DIRECT_PAGE=login page OK" >> "$GITHUB_ENV"; fi
