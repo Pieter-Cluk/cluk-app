@@ -121,7 +121,8 @@ class CreditCheckTest extends TestCase
             'form' => ['nl' => 'Besloten vennootschap'], 'start_date' => '2015-02-01', 'official_name' => 'Demo Events', 'address' => 'Karreweg 17, 9870 Zulte', 'snapshot_date' => '2026-10-22']);
         $this->actingAs($this->owner)->get('/companies/'.$c->id)->assertOk()
             ->assertSee('Credit check')->assertSee('Prepayment advised')->assertSee('Faillissement')->assertSee('Karreweg 17, 9870 Zulte')
-            ->assertSee('kbopub.economie.fgov.be/kbopub/zoeknummerform.html?nummer=0999999999', false)->assertSee('22/10/2026');
+            ->assertSee('kbopub.economie.fgov.be/kbopub/zoeknummerform.html?nummer=0999999999', false)->assertSee('22/10/2026')
+            ->assertSee('https://www.google.com/search?q=site%3Acompanyweb.be%200999999999', false);
         $other = $this->company('Unknown BV', 'BE0123456789');
         $this->actingAs($this->owner)->get('/companies/'.$other->id)->assertOk()->assertSee('Register data arrives with the next KBO update.');
     }

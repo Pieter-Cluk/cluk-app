@@ -76,4 +76,5 @@ return [
         'next' => 'Demandez un paiement anticipé ou un acompte sur les nouvelles commandes jusqu’à clarification.',
         'button' => 'Ouvrir la fiche client',
     ],
+    'lookup' => 'Chercher vous-même :',
 ];

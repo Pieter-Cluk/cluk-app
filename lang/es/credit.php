@@ -76,4 +76,5 @@ return [
         'next' => 'Pide pago por adelantado o un anticipo en los pedidos nuevos hasta que esté claro.',
         'button' => 'Abrir la ficha del cliente',
     ],
+    'lookup' => 'Buscar usted mismo:',
 ];

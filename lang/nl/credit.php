@@ -76,4 +76,5 @@ return [
         'next' => 'Vraag vooruitbetaling of een voorschot op nieuwe bestellingen tot dit duidelijk is.',
         'button' => 'Open de klantenkaart',
     ],
+    'lookup' => 'Zelf opzoeken:',
 ];

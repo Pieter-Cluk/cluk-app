@@ -39,4 +39,11 @@
     @if ($belgian && (\App\Services\Credit\KboLookup::available() || \App\Services\Credit\NbbAccounts::available()))
         <form method="post" action="{{ route('companies.credit.refresh', $company) }}">@csrf<button class="linkbtn" type="submit">{{ \App\Services\Credit\NbbAccounts::available() ? __('credit.refresh_all') : __('credit.refresh') }}</button></form>
     @endif
+    @if ($belgian)
+        {{-- Look it up yourself on Companyweb (their free summary, or everything with a login). Opened by you, never fetched by the app: their terms forbid automatic collection. --}}
+        @php($cbe = preg_replace('/\D/', '', (string) \App\Models\CompanyRegistry::numberFromVat($company->vat_number)))
+        <p class="small mt-xs">{{ __('credit.lookup') }}
+            <a href="https://www.google.com/search?q={{ rawurlencode('site:companyweb.be '.$cbe) }}" target="_blank" rel="noopener">Companyweb ↗</a>
+        </p>
+    @endif
 </section>

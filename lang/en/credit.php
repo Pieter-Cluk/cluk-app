@@ -76,4 +76,5 @@ return [
         'next' => 'Ask for prepayment or a deposit on new orders until this is clear.',
         'button' => 'Open the customer card',
     ],
+    'lookup' => 'Look up yourself:',
 ];
