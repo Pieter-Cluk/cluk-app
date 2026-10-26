@@ -10,6 +10,7 @@ use App\Models\Rental\Order;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\Confirmation;
+use App\Services\Finance\OkiOki\OkiOki;
 use Database\Seeders\RoleSeeder;
 use DOMDocument;
 use DOMXPath;
@@ -124,5 +125,27 @@ class OkiOkiTest extends TestCase
         $this->actingAs($this->boss)->post(route('finance.accept', $pf), ['invoice_number' => 'INV 2026/0007', 'override' => 1])->assertRedirect();
         $this->assertSame(['INV 2026/0007', null], [$pf->fresh()->invoice_number, $pf->fresh()->ubl_path]);
         Notification::assertNothingSentTo(new AnonymousNotifiable);
+    }
+
+    public function test_a_planned_change_of_the_numbering_starts_on_its_day(): void
+    {
+        $this->travelTo('2026-10-26 10:00');
+        $this->switchOn(['invoice_prefix' => 'INV-', 'invoice_next' => 1129, 'invoice_change_on' => '2027-01-01', 'invoice_change_prefix' => '{year}/', 'invoice_change_next' => 1]);
+        $this->actingAs($this->boss->fresh())->get('/pre-invoicing')->assertOk()->assertSee('Next invoice now: INV-1129 · from 01/01/2027: 2027/0001.');
+        $this->assertSame('INV-1129', OkiOki::nextNumber());
+        $this->assertSame('INV-1130', OkiOki::nextNumber());
+        $this->travelTo('2026-12-31 23:00');
+        $this->assertSame('INV-1131', OkiOki::nextNumber());
+        $this->travelTo('2027-01-01 08:00');
+        $this->assertSame('2027/0001', OkiOki::preview());
+        $this->assertSame('2027/0001', OkiOki::nextNumber());
+        $this->assertSame('2027/0002', OkiOki::nextNumber());
+        $me = CompanyDetail::current()->fresh();
+        $this->assertSame(['{year}/', 3, null], [$me->invoice_prefix, $me->invoice_next, $me->invoice_change_on]);
+        // And the next year the {year} series restarts by itself.
+        $this->travelTo('2028-01-02 08:00');
+        $this->assertSame('2028/0001', OkiOki::nextNumber());
+        // A change date must be in the future.
+        $this->actingAs($this->boss->fresh())->post('/pre-invoicing/okioki-settings', ['okioki_send' => 1, 'okioki_inbox' => 'cluk@okioki.test', 'invoice_next' => 5, 'invoice_change_on' => '2020-01-01', 'invoice_change_prefix' => 'X'])->assertSessionHasErrors('invoice_change_on');
     }
 }

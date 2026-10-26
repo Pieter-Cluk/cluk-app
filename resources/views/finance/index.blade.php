@@ -164,7 +164,7 @@
         @endif
     </div>
     @if ($canOkioki)
-        <details class="card mt" id="okioki" @if ($errors->hasAny(['okioki_inbox', 'invoice_prefix', 'invoice_next'])) open @endif>
+        <details class="card mt" id="okioki" @if ($errors->hasAny(['okioki_inbox', 'invoice_prefix', 'invoice_next', 'invoice_change_on', 'invoice_change_prefix', 'invoice_change_next'])) open @endif>
             <summary><b>{{ __('finance.okioki.settings') }}</b> <span class="muted small">{{ $okioki ? __('finance.okioki.is_on', ['next' => $okiokiNext]) : __('finance.okioki.is_off') }}</span></summary>
             <p class="muted small mt">{{ __('finance.okioki.settings_intro') }}</p>
             <form method="post" action="{{ route('finance.okioki.settings') }}" class="stack-sm">@csrf
@@ -173,6 +173,15 @@
                     <label class="field"><span>{{ __('finance.okioki.prefix') }}</span><input name="invoice_prefix" maxlength="20" value="{{ old('invoice_prefix', $me->invoice_prefix ?? '{year}-') }}"><small>{{ __('finance.okioki.prefix_hint') }}</small></label>
                     <label class="field"><span>{{ __('finance.okioki.next') }}</span><input type="number" name="invoice_next" min="1" value="{{ old('invoice_next', $me->invoice_next) }}" required><small>{{ __('finance.okioki.next_hint') }}</small></label>
                 </div>
+                <fieldset class="plain-fieldset stack-sm">
+                    <b class="small">{{ __('finance.okioki.change_title') }}</b>
+                    <div class="form-grid form-grid-3">
+                        <label class="field"><span>{{ __('finance.okioki.change_on') }}</span><input type="date" name="invoice_change_on" value="{{ old('invoice_change_on', $me->invoice_change_on?->toDateString()) }}"></label>
+                        <label class="field"><span>{{ __('finance.okioki.change_prefix') }}</span><input name="invoice_change_prefix" maxlength="20" value="{{ old('invoice_change_prefix', $me->invoice_change_prefix) }}" placeholder="{year}/"></label>
+                        <label class="field"><span>{{ __('finance.okioki.change_next') }}</span><input type="number" name="invoice_change_next" min="1" value="{{ old('invoice_change_next', $me->invoice_change_next ?: 1) }}"></label>
+                    </div>
+                    <small class="muted">{{ __('finance.okioki.change_hint') }}@if ($nx = \App\Services\Finance\OkiOki\OkiOki::previewChange($me)) <b>{{ __('finance.okioki.change_preview', ['date' => $me->invoice_change_on->format('d/m/Y'), 'number' => $nx, 'now' => \App\Services\Finance\OkiOki\OkiOki::preview($me)]) }}</b>@endif</small>
+                </fieldset>
                 <input type="hidden" name="okioki_send" value="0"><label class="check"><input type="checkbox" name="okioki_send" value="1" @checked(old('okioki_send', $me->okioki_send))> {{ __('finance.okioki.switch') }}</label>
                 <div><button class="primary" type="submit">{{ __('finance.okioki.save') }}</button></div>
             </form>

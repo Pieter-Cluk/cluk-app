@@ -149,12 +149,18 @@ class PreInvoiceController extends Controller
             'okioki_inbox' => ['nullable', 'required_if:okioki_send,1', 'email', 'max:190'],
             'invoice_prefix' => ['nullable', 'string', 'max:20', 'regex:/^[A-Za-z0-9\/\-_.{}]*$/'],
             'invoice_next' => ['required', 'integer', 'min:1', 'max:9999999'],
+            'invoice_change_on' => ['nullable', 'date', 'after:today'],
+            'invoice_change_prefix' => ['nullable', 'required_with:invoice_change_on', 'string', 'max:20', 'regex:/^[A-Za-z0-9\/\-_.{}]*$/'],
+            'invoice_change_next' => ['nullable', 'integer', 'min:1', 'max:9999999'],
         ]);
         $me = CompanyDetail::current();
-        $before = $me->only(['okioki_send', 'okioki_inbox', 'invoice_prefix', 'invoice_next']);
+        $keys = ['okioki_send', 'okioki_inbox', 'invoice_prefix', 'invoice_next', 'invoice_change_on', 'invoice_change_prefix', 'invoice_change_next'];
+        $before = $me->only($keys);
         $me->forceFill(['okioki_send' => $request->boolean('okioki_send'), 'okioki_inbox' => $d['okioki_inbox'] ?? null, 'invoice_prefix' => $d['invoice_prefix'] ?? null,
-            'invoice_next' => (int) $d['invoice_next'], 'invoice_year' => (int) now()->year])->save();
-        AuditLog::record('finance.okioki_settings', $me, ['before' => $before, 'after' => $me->only(['okioki_send', 'okioki_inbox', 'invoice_prefix', 'invoice_next'])], $request->user());
+            'invoice_next' => (int) $d['invoice_next'], 'invoice_year' => (int) now()->year,
+            'invoice_change_on' => $d['invoice_change_on'] ?? null, 'invoice_change_prefix' => filled($d['invoice_change_on'] ?? null) ? ($d['invoice_change_prefix'] ?? null) : null,
+            'invoice_change_next' => (int) ($d['invoice_change_next'] ?? 1)])->save();
+        AuditLog::record('finance.okioki_settings', $me, ['before' => $before, 'after' => $me->only($keys)], $request->user());
 
         return back()->with('status', __('finance.okioki.saved', ['next' => OkiOki::preview()]));
     }

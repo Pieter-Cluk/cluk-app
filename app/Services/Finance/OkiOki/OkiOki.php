@@ -33,27 +33,55 @@ class OkiOki
     {
         return DB::transaction(function () {
             $me = CompanyDetail::query()->orderBy('id')->lockForUpdate()->first();
+            [$prefix, $next] = self::series($me);
             $year = (int) now()->year;
-            $prefix = (string) ($me->invoice_prefix ?? '{year}-');
-            $next = (int) $me->invoice_next;
-            if (str_contains($prefix, '{year}') && $me->invoice_year && (int) $me->invoice_year !== $year) {
-                $next = 1; // a new year starts a new series
-            }
             $number = str_replace('{year}', (string) $year, $prefix).str_pad((string) $next, 4, '0', STR_PAD_LEFT);
-            $me->forceFill(['invoice_next' => $next + 1, 'invoice_year' => $year])->save();
+            $me->forceFill(['invoice_prefix' => $prefix, 'invoice_next' => $next + 1, 'invoice_year' => $year] + (self::changeDue($me)
+                ? ['invoice_change_on' => null, 'invoice_change_prefix' => null, 'invoice_change_next' => 1] : []))->save();
 
             return $number;
         });
     }
 
     /** What the next number will look like, for the screen. */
-    public static function preview(): string
+    public static function preview(?CompanyDetail $me = null): string
     {
-        $me = CompanyDetail::current();
-        $prefix = (string) ($me->invoice_prefix ?? '{year}-');
-        $next = str_contains($prefix, '{year}') && $me->invoice_year && (int) $me->invoice_year !== (int) now()->year ? 1 : (int) $me->invoice_next;
+        $me ??= CompanyDetail::current();
+        [$prefix, $next] = self::series($me);
 
         return str_replace('{year}', (string) now()->year, $prefix).str_pad((string) $next, 4, '0', STR_PAD_LEFT);
+    }
+
+    /** The first number of the planned new series, for the screen (null when none is planned). */
+    public static function previewChange(?CompanyDetail $me = null): ?string
+    {
+        $me ??= CompanyDetail::current();
+        if (! $me->invoice_change_on) {
+            return null;
+        }
+        $year = (int) $me->invoice_change_on->year;
+
+        return str_replace('{year}', (string) $year, (string) $me->invoice_change_prefix).str_pad((string) max(1, (int) $me->invoice_change_next), 4, '0', STR_PAD_LEFT);
+    }
+
+    private static function changeDue(CompanyDetail $me): bool
+    {
+        return $me->invoice_change_on && ! today()->lt($me->invoice_change_on);
+    }
+
+    /** The prefix and number to use now: the planned new series once its day has come; {year} restarts every year. */
+    private static function series(CompanyDetail $me): array
+    {
+        if (self::changeDue($me)) {
+            return [(string) $me->invoice_change_prefix, max(1, (int) $me->invoice_change_next)];
+        }
+        $prefix = (string) ($me->invoice_prefix ?? '{year}-');
+        $next = (int) $me->invoice_next;
+        if (str_contains($prefix, '{year}') && $me->invoice_year && (int) $me->invoice_year !== (int) now()->year) {
+            $next = 1; // a new year starts a new series
+        }
+
+        return [$prefix, max(1, $next)];
     }
 
     /** What would stop the e-invoice; empty when it can go. */

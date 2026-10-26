@@ -24,6 +24,7 @@ class CompanyDetail extends Model
             'option_days' => 'integer',
             'okioki_send' => 'boolean',
             'invoice_next' => 'integer',
+            'invoice_change_on' => 'date', 'invoice_change_next' => 'integer',
             'discount_limit_bp' => 'integer',
         ];
     }
