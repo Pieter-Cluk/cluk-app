@@ -38,6 +38,9 @@ class SocialHistoryTest extends TestCase
                     'message' => "Opening day of our co-working space\n".str_repeat('A long story about the building. ', 60)."\n#Afrit6 #Zulte", 'full_picture' => 'https://scontent.example/old.jpg',
                 ]]]);
             }
+            if (str_contains($u, '/published_posts') && str_contains(urldecode($u), 'comments.summary')) {
+                return Http::response(['error' => ['message' => "(#10) This endpoint requires the 'pages_read_user_content' permission or the 'Page Public Content Access' feature."]], 400);
+            }
             if (str_contains($u, '/published_posts')) {
                 return Http::response(['data' => [['id' => '1_new', 'created_time' => now()->subDay()->toIso8601String(), 'message' => 'New LED walls in stock #CLUKsales']],
                     'paging' => ['next' => 'https://graph.facebook.com/v23.0/804/published_posts?after=page2']]);
