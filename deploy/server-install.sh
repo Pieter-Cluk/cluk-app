@@ -56,6 +56,8 @@ php artisan optimize:clear >/dev/null
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+# A job cut off by the switch-over must not keep its "still running" lock (it would block that job for 24 hours).
+php artisan schedule:clear-cache >/dev/null 2>&1 || true
 rm -rf "$OLD"
 
 echo "Deployed $(cat "$APP/REVISION" 2>/dev/null || echo unknown) to $WEBROOT"

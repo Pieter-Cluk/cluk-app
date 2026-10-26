@@ -185,7 +185,7 @@ Artisan::command('cluk:web-prune', function () {
 Artisan::command('cluk:social', function () {
     $this->line(json_encode(['published' => Social::publishDue(), 'refreshed' => Social::syncDue(3)]));
 })->purpose('Publish planned social posts and refresh social figures');
-Schedule::command('cluk:social')->everyMinute()->withoutOverlapping();
+Schedule::command('cluk:social')->everyMinute()->withoutOverlapping(20);
 
 // Commercial tasks for the salespeople (also every 15 minutes in the background).
 Artisan::command('cluk:sales-tasks', function () {
