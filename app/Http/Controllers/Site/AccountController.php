@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Models\BankAccount;
 use App\Models\CompanyDetail;
 use App\Models\Web\CustomerAccount;
+use App\Services\Finance\InvoicePdf;
 use App\Services\Web\AccountDocs;
 use App\Services\Web\Baskets;
 use App\Services\Web\Colleagues;
@@ -161,6 +162,15 @@ class AccountController extends SiteController
         abort_unless($pf, 404);
 
         return view('site.account.invoice', ['pf' => $pf->load(['company']), 'me' => CompanyDetail::current(), 'bank' => BankAccount::where('on_documents', true)->orderByDesc('is_main')->first()]);
+    }
+
+    /** The printable invoice (PDF). */
+    public function invoicePdf(int $invoice)
+    {
+        $pf = AccountDocs::invoice(CustomerAuth::current(), $invoice);
+        abort_unless($pf && $pf->invoice_number, 404);
+
+        return Storage::disk('local')->download(InvoicePdf::stored($pf), InvoicePdf::fileName($pf), ['Content-Type' => 'application/pdf']);
     }
 
     /** The e-invoice file (Peppol UBL), as sent through OkiOki. */

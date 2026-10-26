@@ -10,7 +10,7 @@
 @endphp
 <main class="acc-page gut inv">
   <p class="inv-bar"><a href="{{ route('site.account') }}#invoices">{{ __('site.account.inv_back') }}</a>
-    <span><button class="btn ghost sm" type="button" onclick="window.print()">{{ __('site.account.inv_print') }}</button>@if ($pf->ubl_path) <a class="btn ghost sm" href="{{ route('site.account.invoice.xml', $pf->id) }}">{{ __('site.account.inv_xml') }}</a>@endif</span></p>
+    <span><button class="btn ghost sm" type="button" onclick="window.print()">{{ __('site.account.inv_print') }}</button> <a class="btn ghost sm" href="{{ route('site.account.invoice.pdf', $pf->id) }}">PDF</a>@if ($pf->ubl_path) <a class="btn ghost sm" href="{{ route('site.account.invoice.xml', $pf->id) }}">{{ __('site.account.inv_xml') }}</a>@endif</span></p>
   <article class="inv-doc">
     <header class="inv-head">
       <div><h1>{{ __('site.account.inv_title', ['number' => $pf->invoice_number]) }}</h1><span class="acc-pill acc-{{ $status }}">{{ __('site.account.inv_status.'.$status) }}</span></div>

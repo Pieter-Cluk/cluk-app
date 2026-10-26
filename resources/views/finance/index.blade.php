@@ -125,6 +125,9 @@
                         <form method="post" action="{{ route('finance.okioki.resend', $sel) }}">@csrf<button class="primary" type="submit">{{ __('finance.okioki.number_and_send', ['number' => $okiokiNext]) }}</button></form>
                     </section>
                 @endif
+                @if ($sel->invoice_number && in_array($sel->status, ['sent', 'paid'], true) && ! $sel->ubl_path && ! $sel->okioki_error)
+                    <p><a class="btn btn-sm" href="{{ route('finance.pdf', $sel) }}">{{ __('invoice.pdf') }}</a></p>
+                @endif
                 @if ($sel->invoice_number && in_array($sel->status, ['sent', 'paid'], true) && ($sel->ubl_path || $sel->okioki_error))
                     <section class="card pf-oki-card">
                         <h3>{{ __('finance.okioki.title') }} · {{ $sel->invoice_number }}</h3>
@@ -133,6 +136,7 @@
                         @endif
                         @if ($sel->okioki_error)<p class="small txt-danger">⚑ {{ $sel->okioki_error }}</p>@endif
                         <div class="inline-form">
+                            <a class="btn btn-sm" href="{{ route('finance.pdf', $sel) }}">{{ __('invoice.pdf') }}</a>
                             @if ($sel->ubl_path)<a class="btn btn-sm" href="{{ route('finance.ubl', $sel) }}">{{ __('finance.okioki.download') }}</a>@endif
                             @if ($canDecide && $okioki)<form method="post" action="{{ route('finance.okioki.resend', $sel) }}">@csrf<button class="btn btn-sm" type="submit">{{ $sel->okioki_sent_at ? __('finance.okioki.send_again') : __('finance.okioki.send_now') }}</button></form>@endif
                         </div>

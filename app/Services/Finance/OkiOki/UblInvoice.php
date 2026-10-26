@@ -38,9 +38,23 @@ class UblInvoice
         return $pf->company !== null && (new self)->buyer($pf)['endpoint'][0] !== 'EM';
     }
 
-    public static function make(PreInvoice $pf): string
+    /** The e-invoice; with $pdf the printable invoice goes inside it (Peppol: AdditionalDocumentReference). */
+    public static function make(PreInvoice $pf, ?string $pdf = null): string
     {
-        return (new self)->build($pf);
+        $u = new self;
+        $u->pdf = $pdf;
+
+        return $u->build($pf);
+    }
+
+    private ?string $pdf = null;
+
+    /** Who the invoice is for (name, address, VAT, e-mail, Peppol address). */
+    public static function buyerOf(PreInvoice $pf): array
+    {
+        $pf->loadMissing(['company', 'member.company']);
+
+        return (new self)->buyer($pf);
     }
 
     /** UBL VAT category for our VAT code: S standard, AE reverse charge (EU business), E outside the EU (not subject to Belgian VAT). */
@@ -91,6 +105,13 @@ class UblInvoice
 
         // Seller: CLUK.
         $myNumber = CompanyRegistry::numberFromVat($me->vat_number);
+        if ($this->pdf !== null) {
+            $this->cac($inv, 'AdditionalDocumentReference', function ($r) use ($pf) {
+                $this->cbc($r, 'ID', $pf->invoice_number);
+                $this->cac($r, 'Attachment', fn ($a) => $this->cbc($a, 'EmbeddedDocumentBinaryObject', base64_encode($this->pdf),
+                    ['mimeCode' => 'application/pdf', 'filename' => preg_replace('/[^A-Za-z0-9._-]/', '_', $pf->invoice_number).'.pdf']));
+            });
+        }
         $this->cac($inv, 'AccountingSupplierParty', fn ($s) => $this->cac($s, 'Party', function ($p) use ($me, $myNumber) {
             $this->cbc($p, 'EndpointID', preg_replace('/\D/', '', (string) $myNumber), ['schemeID' => '0208']);
             $this->cac($p, 'PartyName', fn ($n) => $this->cbc($n, 'Name', trim($me->legal_name.' '.$me->legal_form)));

@@ -692,6 +692,7 @@ Route::middleware('auth:web')->group(function () {
     Route::prefix('pre-invoicing')->middleware('nav:preinvoice')->group(function () {
         Route::get('/', [PreInvoiceController::class, 'index'])->name('finance.index');
         Route::get('/{pf}/print', [PreInvoiceController::class, 'print'])->whereNumber('pf')->name('finance.print');
+        Route::get('/{pf}/invoice.pdf', [PreInvoiceController::class, 'pdf'])->whereNumber('pf')->name('finance.pdf');
         Route::middleware('level:preinvoice,2')->group(function () {
             Route::post('/{pf}/accept', [PreInvoiceController::class, 'accept'])->whereNumber('pf')->name('finance.accept');
             Route::post('/{pf}/okioki', [PreInvoiceController::class, 'okiokiResend'])->whereNumber('pf')->name('finance.okioki.resend');

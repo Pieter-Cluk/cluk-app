@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Facture',
+    'to' => 'Facturé à',
+    'vat' => 'TVA',
+    'number' => 'Numéro de facture',
+    'date' => 'Date de facture',
+    'due' => 'Échéance',
+    'service_date' => 'Date de prestation',
+    'your_ref' => 'Votre référence',
+    'our_ref' => 'Notre référence',
+    'desc' => 'Description',
+    'qty' => 'Qté',
+    'unit' => 'Prix unitaire',
+    'amount' => 'Montant',
+    'subtotal' => 'Sous-total HTVA',
+    'vat_line' => 'TVA :rate%',
+    'total' => 'Total',
+    'pay_by' => 'Merci de payer :amount avant le :date sur :',
+    'reference' => 'Communication',
+    'pay_contact' => 'Coordonnées de paiement : contactez-nous.',
+    'paid' => 'Payée le :date. Merci.',
+    'pdf' => 'Facture (PDF)',
+];

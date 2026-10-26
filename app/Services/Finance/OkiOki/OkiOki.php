@@ -7,6 +7,7 @@ use App\Models\CompanyDetail;
 use App\Models\Finance\PreInvoice;
 use App\Models\User;
 use App\Notifications\Confirmation;
+use App\Services\Finance\InvoicePdf;
 use App\Support\SafeMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -111,7 +112,9 @@ class OkiOki
     public static function send(PreInvoice $pf, ?User $by): bool
     {
         try {
-            $xml = UblInvoice::make($pf);
+            // The printable invoice goes inside the e-invoice and along with the mail, so a customer without Peppol gets it too.
+            $pdfPath = InvoicePdf::stored($pf);
+            $xml = UblInvoice::make($pf, Storage::disk('local')->get($pdfPath));
             $path = 'private/invoices/'.$pf->invoice_date->format('Y').'/'.preg_replace('/[^A-Za-z0-9._-]/', '_', $pf->invoice_number).'.xml';
             Storage::disk('local')->put($path, $xml);
             $pf->forceFill(['ubl_path' => $path])->save();
@@ -127,7 +130,8 @@ class OkiOki
             intro: ['E-invoice (Peppol BIS Billing 3.0) '.$pf->invoice_number.' for '.$pf->customerName().', '.number_format($pf->gross_cents / 100, 2, ',', '.').' EUR incl. VAT.'],
             team: 'CLUK app',
         );
-        $mail->withoutBanner()->attachFiles = [['path' => Storage::disk('local')->path($path), 'name' => basename($path), 'mime' => 'application/xml']];
+        $mail->withoutBanner()->attachFiles = [['path' => Storage::disk('local')->path($path), 'name' => basename($path), 'mime' => 'application/xml'],
+            ['path' => Storage::disk('local')->path($pdfPath), 'name' => InvoicePdf::fileName($pf), 'mime' => 'application/pdf']];
         $ok = SafeMail::notify(Notification::route('mail', $me->okioki_inbox), $mail);
         $pf->forceFill($ok ? ['okioki_sent_at' => now(), 'okioki_error' => null] : ['okioki_error' => __('finance.okioki.mail_failed')])->save();
         AuditLog::record($ok ? 'finance.okioki_sent' : 'finance.okioki_failed', $pf, ['invoice' => $pf->invoice_number, 'to' => $me->okioki_inbox], $by);

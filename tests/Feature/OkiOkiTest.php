@@ -82,7 +82,12 @@ class OkiOkiTest extends TestCase
         $this->assertSame([now()->year.'-0041', 'sent'], [$pf->invoice_number, $pf->status]);
         $this->assertNotNull($pf->okioki_sent_at);
         $this->assertSame(42, CompanyDetail::current()->invoice_next);
-        Notification::assertSentOnDemand(Confirmation::class, fn ($n, $ch, $to) => $to->routes['mail'] === 'cluk@okioki.test' && $n->attachFiles[0]['mime'] === 'application/xml');
+        Notification::assertSentOnDemand(Confirmation::class, fn ($n, $ch, $to) => $to->routes['mail'] === 'cluk@okioki.test' && $n->attachFiles[0]['mime'] === 'application/xml'
+            && ($n->attachFiles[1]['mime'] ?? null) === 'application/pdf' && str_ends_with($n->attachFiles[1]['name'], '.pdf'));
+        // The printable invoice: inside the e-invoice, and to download.
+        $this->assertStringContainsString('<cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf"', Storage::disk('local')->get($pf->ubl_path));
+        $res = $this->actingAs($this->boss->fresh())->get(route('finance.pdf', $pf))->assertOk()->assertHeader('Content-Type', 'application/pdf');
+        $this->assertStringStartsWith('%PDF', $res->streamedContent());
 
         $x = $this->xpath(Storage::disk('local')->get($pf->ubl_path));
         $v = fn ($q) => $x->evaluate('string('.$q.')');

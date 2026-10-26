@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Factuur',
+    'to' => 'Factuur aan',
+    'vat' => 'Btw',
+    'number' => 'Factuurnummer',
+    'date' => 'Factuurdatum',
+    'due' => 'Vervaldatum',
+    'service_date' => 'Datum levering',
+    'your_ref' => 'Uw referentie',
+    'our_ref' => 'Onze referentie',
+    'desc' => 'Omschrijving',
+    'qty' => 'Aantal',
+    'unit' => 'Eenheidsprijs',
+    'amount' => 'Bedrag',
+    'subtotal' => 'Subtotaal excl. btw',
+    'vat_line' => 'Btw :rate%',
+    'total' => 'Totaal',
+    'pay_by' => 'Gelieve :amount te betalen voor :date op:',
+    'reference' => 'Mededeling',
+    'pay_contact' => 'Betaalgegevens: neem contact met ons op.',
+    'paid' => 'Betaald op :date. Bedankt.',
+    'pdf' => 'Factuur (PDF)',
+];

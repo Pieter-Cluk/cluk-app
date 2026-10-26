@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Factura',
+    'to' => 'Facturar a',
+    'vat' => 'IVA',
+    'number' => 'Número de factura',
+    'date' => 'Fecha de factura',
+    'due' => 'Vencimiento',
+    'service_date' => 'Fecha del servicio',
+    'your_ref' => 'Su referencia',
+    'our_ref' => 'Nuestra referencia',
+    'desc' => 'Descripción',
+    'qty' => 'Cant.',
+    'unit' => 'Precio unitario',
+    'amount' => 'Importe',
+    'subtotal' => 'Subtotal sin IVA',
+    'vat_line' => 'IVA :rate%',
+    'total' => 'Total',
+    'pay_by' => 'Por favor, pague :amount antes del :date en:',
+    'reference' => 'Referencia',
+    'pay_contact' => 'Datos de pago: contáctenos.',
+    'paid' => 'Pagada el :date. Gracias.',
+    'pdf' => 'Factura (PDF)',
+];

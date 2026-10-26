@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\CompanyDetail;
 use App\Models\Finance\PreInvoice;
+use App\Services\Finance\InvoicePdf;
 use App\Services\Finance\OkiOki\OkiOki;
 use App\Services\Finance\PreInvoices;
 use Illuminate\Http\RedirectResponse;
@@ -139,6 +140,14 @@ class PreInvoiceController extends Controller
         $ok = OkiOki::send($pf->fresh(['company', 'member']), $request->user());
 
         return back()->with($ok ? 'status' : 'error', $ok ? __('finance.okioki.sent', ['number' => $pf->invoice_number, 'customer' => $pf->customerName()]) : __('finance.okioki.not_sent', ['number' => $pf->invoice_number]));
+    }
+
+    /** The printable invoice (PDF). */
+    public function pdf(PreInvoice $pf)
+    {
+        abort_unless($pf->invoice_number && in_array($pf->status, ['sent', 'paid'], true), 404);
+
+        return Storage::disk('local')->download(InvoicePdf::stored($pf), InvoicePdf::fileName($pf), ['Content-Type' => 'application/pdf']);
     }
 
     /** The e-invoice file, as sent to OkiOki. */

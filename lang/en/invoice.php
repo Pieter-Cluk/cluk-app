@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Invoice',
+    'to' => 'Invoice to',
+    'vat' => 'VAT',
+    'number' => 'Invoice number',
+    'date' => 'Invoice date',
+    'due' => 'Due date',
+    'service_date' => 'Service date',
+    'your_ref' => 'Your reference',
+    'our_ref' => 'Our reference',
+    'desc' => 'Description',
+    'qty' => 'Qty',
+    'unit' => 'Unit price',
+    'amount' => 'Amount',
+    'subtotal' => 'Subtotal excl. VAT',
+    'vat_line' => 'VAT :rate%',
+    'total' => 'Total',
+    'pay_by' => 'Please pay :amount by :date to:',
+    'reference' => 'Reference',
+    'pay_contact' => 'Payment details: please contact us.',
+    'paid' => 'Paid on :date. Thank you.',
+    'pdf' => 'Invoice (PDF)',
+];

@@ -70,6 +70,7 @@ $site = function () {
         Route::post('/account/basket/sales/order', [AccountController::class, 'orderSales'])->middleware('throttle:6,1')->name('account.basket.order');
         Route::get('/account/invoices/{invoice}', [AccountController::class, 'invoice'])->whereNumber('invoice')->name('account.invoice');
         Route::get('/account/invoices/{invoice}/e-invoice', [AccountController::class, 'invoiceXml'])->whereNumber('invoice')->name('account.invoice.xml');
+        Route::get('/account/invoices/{invoice}/pdf', [AccountController::class, 'invoicePdf'])->whereNumber('invoice')->name('account.invoice.pdf');
         Route::post('/account/colleagues', [AccountController::class, 'invite'])->middleware('throttle:10,1')->name('account.colleagues.invite');
         Route::post('/account/colleagues/{colleague}', [AccountController::class, 'colleague'])->whereNumber('colleague')->name('account.colleagues.update');
     });
