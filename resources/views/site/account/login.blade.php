@@ -3,7 +3,7 @@
 @section('description', __('site.account.login_intro'))
 @section('body', 'sl')
 @section('content')
-<main class="acc gut">
+<div class="acc-stage"><main class="acc gut">
   <section class="acc-card">
     <h1>{{ __('site.account.login_title') }}</h1>
     <p class="muted">{{ __('site.account.login_intro') }}</p>
@@ -22,5 +22,5 @@
     <p>{{ __('site.account.register_intro') }}</p>
     <a class="btn ghost" href="{{ route('site.account.register') }}">{{ __('site.account.register_link') }}</a>
   </section>
-</main>
+</main></div>
 @endsection

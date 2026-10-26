@@ -698,3 +698,19 @@ mark { background: rgba(92,191,58,.3); color: inherit; padding: 0 1px; }
 .dl-btn:hover { background: var(--green); border-color: var(--green); }
 @media (max-width: 560px) { .dl-list li { grid-template-columns: 44px minmax(0, 1fr); } .dl-type { height: 44px; } .dl-btn { grid-column: 2; justify-self: start; } }
 .acc-card h1.dl-ask-h { font-size: clamp(28px, 3.4vw, 44px); overflow-wrap: anywhere; }
+
+/* ---------- sign-in pages: stage photo behind the forms ---------- */
+.acc-stage { position: relative; isolation: isolate; background: #0a0a0a url('../images/site/account-bg.jpg') 72% center / cover no-repeat; min-height: calc(100vh - 64px); display: grid; align-items: center; }
+.acc-stage::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(5,6,5,.82) 0%, rgba(5,6,5,.55) 55%, rgba(5,6,5,.15) 100%), linear-gradient(0deg, rgba(5,6,5,.6) 0%, transparent 35%); }
+.acc-stage .acc { width: 100%; padding-block: 64px 96px; }
+.acc-stage .acc-card { border: 0; border-top: 4px solid var(--green); border-radius: 3px; box-shadow: 0 24px 60px rgba(0,0,0,.55); }
+.acc-stage .acc-side { background: rgba(12,13,11,.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.14); border-top: 4px solid var(--green); border-radius: 3px; color: #f2f4ef; }
+.acc-stage .acc-side h2 { color: var(--green); }
+.acc-stage .acc-side p { color: #d5d9d0; }
+.acc-stage .acc-side .btn.ghost { background: transparent; border: 1px solid #f2f4ef; color: #f2f4ef; }
+.acc-stage .acc-side .btn.ghost:hover { background: var(--green); border-color: var(--green); color: #0a0a0a; }
+@media (max-width: 800px) {
+  .acc-stage { background-image: url('../images/site/account-bg-sm.jpg'); background-position: 80% top; align-items: start; }
+  .acc-stage::before { background: linear-gradient(180deg, rgba(5,6,5,.35) 0%, rgba(5,6,5,.8) 45%, rgba(5,6,5,.9) 100%); }
+  .acc-stage .acc { padding-block: 40px 64px; }
+}
