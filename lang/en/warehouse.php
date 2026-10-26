@@ -3,6 +3,7 @@
 return [
     'app' => 'Warehouse',
     'back' => 'Back',
+    'to_platform' => 'Dashboard',
     'to_office' => 'To the office screens',
     'hello' => 'Good day :name · :date',
     'nowhere' => 'no place yet',

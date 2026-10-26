@@ -3,6 +3,7 @@
 return [
     'app' => 'Almacén',
     'back' => 'Atrás',
+    'to_platform' => 'Panel',
     'to_office' => 'A las pantallas de oficina',
     'hello' => 'Buenos días :name · :date',
     'nowhere' => 'sin lugar aún',

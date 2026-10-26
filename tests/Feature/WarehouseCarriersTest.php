@@ -99,7 +99,7 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame(2, Move::where('case_id', $dolly->id)->where('kind', 'move')->count());
         // Scanning the place shows the dolly.
         $this->scan('GA2B1');
-        $this->actingAs($this->crew)->get('/w/scan')->assertSee('DOLLY-01');
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('DOLLY-01')->assertSee('class="ph-home" href="'.route('dashboard').'"', false)->assertSee('Dashboard');
         // Moving one piece on its own takes it out of the dolly.
         $this->scan('LT-0002');
         $this->scan('GA3B1')->assertSessionHasNoErrors();

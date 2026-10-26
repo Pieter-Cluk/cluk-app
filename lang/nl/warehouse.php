@@ -3,6 +3,7 @@
 return [
     'app' => 'Magazijn',
     'back' => 'Terug',
+    'to_platform' => 'Dashboard',
     'to_office' => 'Naar de kantoorschermen',
     'hello' => 'Goeiedag :name · :date',
     'nowhere' => 'nog geen plaats',

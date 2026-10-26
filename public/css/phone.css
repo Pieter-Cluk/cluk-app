@@ -101,3 +101,8 @@
 .scan-on .ph-cam-tools{display:flex}
 .ph-cam-tool{min-width:44px;min-height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.5);color:#fff;font-weight:700;font-size:15px}
 .ph-cam-tool.on{background:#52ae32;border-color:#52ae32}
+/* Back to the platform: always visible (also on a PC at the test street) */
+.ph-home{margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink);font-weight:600;font-size:13px;white-space:nowrap}
+.ph-home:hover{border-color:var(--brand);color:var(--brand-strong)}
+.ph-home+.ph-me{margin-left:0}
+@media (max-width:380px){.ph-home span{display:none}}

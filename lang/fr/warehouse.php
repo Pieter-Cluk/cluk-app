@@ -3,6 +3,7 @@
 return [
     'app' => 'Entrepôt',
     'back' => 'Retour',
+    'to_platform' => 'Tableau de bord',
     'to_office' => 'Vers les écrans du bureau',
     'hello' => 'Bonjour :name · :date',
     'nowhere' => 'pas encore de place',

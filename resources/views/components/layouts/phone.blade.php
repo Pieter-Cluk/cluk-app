@@ -26,6 +26,7 @@
         <a class="ph-logo" href="{{ route('w.home') }}"><img src="{{ asset('images/cluk-logo.png') }}" alt="CLUK" height="24"></a>
     @endif
     <b class="ph-title">{{ $title ?? __('warehouse.app') }}</b>
+    <a class="ph-home" href="{{ route('dashboard') }}">⌂ <span>{{ __('warehouse.to_platform') }}</span></a>
     <a class="ph-me" href="{{ route('dashboard') }}" title="{{ __('warehouse.to_office') }}"><x-avatar :who="$user" size="sm" /></a>
 </header>
 <main class="ph-main">
