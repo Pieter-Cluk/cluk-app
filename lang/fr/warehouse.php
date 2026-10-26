@@ -49,6 +49,11 @@ return [
         'registered_in' => ':code · :name trouvé, en stock et dans :carrier.',
     ],
     'pick' => [
+        'own' => 'stock propre',
+        'partner_only' => 'du partenaire',
+        'at_zero' => 'Déjà à 0.',
+        'at_max' => 'Les :n sont déjà comptés.',
+        'rest_partner' => 'Les :n de notre stock sont comptés. Le reste vient de :partner : comptez-les à l’arrivée de la livraison du partenaire (lien sous la ligne).',
         'title' => 'Préparation',
         'scan_piece' => 'Scannez une pièce de ce job',
         'picked' => ':code préparé · sur Dispatch.',

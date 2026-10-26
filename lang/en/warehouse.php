@@ -49,6 +49,11 @@ return [
         'registered_in' => ':code · :name found, in stock and in :carrier.',
     ],
     'pick' => [
+        'own' => 'own stock',
+        'partner_only' => 'from partner',
+        'at_zero' => 'Already at 0.',
+        'at_max' => 'All :n are counted already.',
+        'rest_partner' => 'All :n from our own stock are counted. The rest comes from :partner: count those when the partner delivery comes in (link under the line).',
         'title' => 'Picking',
         'scan_piece' => 'Scan a piece of this job',
         'picked' => ':code picked · on Dispatch.',

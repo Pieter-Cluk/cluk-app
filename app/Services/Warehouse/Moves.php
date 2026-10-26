@@ -249,17 +249,20 @@ class Moves
         return $order->lines()->with('item')->where('item_id', $item->id)->get()->first(fn (OrderLine $l) => $l->needsStock() && ! $l->bySerial());
     }
 
-    public static function count(OrderLine $line, string $field, int $delta, User $by): void
+    /** Count pieces picked or returned (own stock only: partner pieces are counted on their delivery). False when nothing changed. */
+    public static function count(OrderLine $line, string $field, int $delta, User $by): bool
     {
         $max = $field === 'picked_qty' ? $line->ownAllocated() : $line->picked_qty;
         $new = max(0, min($max, $line->{$field} + $delta));
         if ($new === $line->{$field}) {
-            return;
+            return false;
         }
         $old = $line->{$field};
         $line->update([$field => $new]);
         Move::create(['item_id' => $line->item_id, 'qty' => $new - $old, 'kind' => $field === 'picked_qty' ? 'pick' : 'return',
             'to_code' => $field === 'picked_qty' ? 'DISPATCH' : 'INBOUND', 'order_id' => $line->order_id, 'user_id' => $by->id]);
+
+        return true;
     }
 
     /** Everything picked goes onto the truck: the pieces are out with this order. */

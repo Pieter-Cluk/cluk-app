@@ -49,6 +49,11 @@ return [
         'registered_in' => ':code · :name gevonden, in voorraad en in :carrier.',
     ],
     'pick' => [
+        'own' => 'eigen stock',
+        'partner_only' => 'van partner',
+        'at_zero' => 'Staat al op 0.',
+        'at_max' => 'Alle :n zijn al geteld.',
+        'rest_partner' => 'Alle :n uit eigen stock zijn geteld. De rest komt van :partner: tel die wanneer de levering van de partner binnenkomt (link onder de lijn).',
         'title' => 'Picken',
         'scan_piece' => 'Scan een stuk van deze job',
         'picked' => ':code gepickt · op Dispatch.',

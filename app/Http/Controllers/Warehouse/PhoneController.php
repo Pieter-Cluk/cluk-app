@@ -267,9 +267,19 @@ class PhoneController extends Controller
         $d = $request->validate(['delta' => ['required', 'integer', 'between:-1000,1000'], 'field' => ['required', Rule::in(['picked_qty', 'returned_qty'])]]);
         abort_if($d['field'] === 'picked_qty' && $order->loaded_at, 409);
         abort_if($d['field'] === 'returned_qty' && ! $order->loaded_at, 409);
-        Moves::count($line, $d['field'], $d['delta'], $request->user());
+        $changed = Moves::count($line, $d['field'], $d['delta'], $request->user());
         if ($d['field'] === 'returned_qty') {
             Moves::maybeReturned($order->fresh());
+        }
+        if (! $changed && $d['delta'] !== 0) {
+            // Say why nothing moved instead of doing nothing: e.g. the rest comes from a partner.
+            $line->loadMissing('subhireLines.request.supplier');
+            $partner = $line->subhireLines->first(fn ($s) => $s->request->status === 'accepted')?->request->supplier->name;
+            $max = $d['field'] === 'picked_qty' ? $line->ownAllocated() : $line->picked_qty;
+            $msg = $d['delta'] < 0 ? __('warehouse.pick.at_zero') : ($partner && $d['field'] === 'picked_qty'
+                ? __('warehouse.pick.rest_partner', ['n' => $max, 'partner' => $partner]) : __('warehouse.pick.at_max', ['n' => $max]));
+
+            return back()->with('warning', $msg);
         }
 
         return back();

@@ -78,4 +78,27 @@ class WarehouseSubhireTest extends TestCase
         $this->assertSame(2, AuditLog::whereIn('action', ['warehouse.subhire_in', 'warehouse.subhire_back'])->count());
         $this->actingAs($crew)->get('/w/subhire/'.$r->id.'/in/photos/0')->assertOk();
     }
+
+    public function test_counted_lines_with_partner_pieces_say_why_the_count_stops(): void
+    {
+        [$o] = $this->job();
+        $cable = Item::create(['number' => 'CB-DMX5', 'kind' => 'item', 'name' => 'DMX cable 5 m', 'serial' => false, 'stock_qty' => 4]);
+        // 10 needed: 4 from our stock, 6 from the partner.
+        $line = $o->lines()->create(['kind' => 'item', 'item_id' => $cable->id, 'name' => 'DMX cable 5 m', 'qty' => 10, 'own_qty' => 4, 'amount_cents' => 1, 'position' => 1]);
+        $r = SubhireRequest::first();
+        $r->lines()->create(['order_line_id' => $line->id, 'item_id' => $cable->id, 'name' => 'DMX cable 5 m', 'qty' => 6]);
+        // A counted line that comes from the partner only: no buttons, it says so.
+        $only = $o->lines()->create(['kind' => 'item', 'item_id' => $cable->id, 'name' => 'DMX cable 10 m', 'qty' => 3, 'own_qty' => 0, 'amount_cents' => 1, 'position' => 2]);
+        $r->lines()->create(['order_line_id' => $only->id, 'item_id' => $cable->id, 'name' => 'DMX cable 10 m', 'qty' => 3]);
+        $crew = $this->as('warehouse');
+        $page = $this->actingAs($crew)->get('/w/pick/'.$o->id)->assertOk()->assertSee('0 / 4')->assertSee('own stock')->assertSee('from partner');
+        $this->assertSame(1, substr_count($page->getContent(), 'value="picked_qty"') / 3, 'only the line with own stock has buttons');
+
+        $this->actingAs($crew)->post(route('w.count', [$o, $line]), ['field' => 'picked_qty', 'delta' => 4])->assertSessionMissing('warning');
+        $this->assertSame(4, $line->fresh()->picked_qty);
+        // "All" again or "+": nothing more from our stock, and the app says where the rest comes from.
+        $this->actingAs($crew)->post(route('w.count', [$o, $line]), ['field' => 'picked_qty', 'delta' => 1])
+            ->assertSessionHas('warning', fn ($m) => str_contains($m, 'Demo Partner Rental') && str_contains($m, 'All 4'));
+        $this->actingAs($crew)->get('/w/pick/'.$o->id)->assertSee('flash-warn', false);
+    }
 }

@@ -32,16 +32,16 @@
                 </li>
             @else
                 <li @class(['ph-line', 'ph-line-ok' => $l->picked_qty >= $l->ownAllocated() && ! $subWait])>
-                    <div class="ph-line-head"><b>{{ $l->name }}</b><span class="ph-cnt">{{ $l->picked_qty }} / {{ $l->ownAllocated() }}</span></div>
-                    <small class="muted">{{ $l->item->position_code ? __('warehouse.pick.kept_at', ['place' => $l->item->position_code]) : __('warehouse.pick.counted') }}</small>
+                    <div class="ph-line-head"><b>{{ $l->name }}</b><span class="ph-cnt">@if ($l->ownAllocated() > 0){{ $l->picked_qty }} / {{ $l->ownAllocated() }}@if ($l->rentQty() > 0) <small>{{ __('warehouse.pick.own') }}</small>@endif @else{{ __('warehouse.pick.partner_only') }}@endif</span></div>
+                    @if ($l->ownAllocated() > 0)<small class="muted">{{ $l->item->position_code ? __('warehouse.pick.kept_at', ['place' => $l->item->position_code]) : __('warehouse.pick.counted') }}</small>@endif
                     @include('warehouse.phone._subhire-line')
-                    @unless ($order->loaded_at)
+                    @if (! $order->loaded_at && $l->ownAllocated() > 0)
                         <div class="ph-step-btns">
                             <form method="post" action="{{ route('w.count', [$order, $l]) }}">@csrf<input type="hidden" name="field" value="picked_qty"><input type="hidden" name="delta" value="-1"><button class="btn" type="submit" aria-label="−1">−</button></form>
                             <form method="post" action="{{ route('w.count', [$order, $l]) }}">@csrf<input type="hidden" name="field" value="picked_qty"><input type="hidden" name="delta" value="1"><button class="btn" type="submit" aria-label="+1">+</button></form>
                             <form method="post" action="{{ route('w.count', [$order, $l]) }}">@csrf<input type="hidden" name="field" value="picked_qty"><input type="hidden" name="delta" value="{{ $l->ownAllocated() - $l->picked_qty }}"><button class="btn" type="submit">{{ __('warehouse.pick.all') }}</button></form>
                         </div>
-                    @endunless
+                    @endif
                 </li>
             @endif
         @endforeach
