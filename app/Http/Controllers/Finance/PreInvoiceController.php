@@ -126,8 +126,17 @@ class PreInvoiceController extends Controller
     /** Send the e-invoice to OkiOki again (after a mail failure). */
     public function okiokiResend(Request $request, PreInvoice $pf): RedirectResponse
     {
-        abort_unless($request->user()->canUseModule('preinvoice', 2) && $pf->status !== 'cancelled' && $pf->invoice_number && OkiOki::on(), 403);
-        $ok = OkiOki::send($pf, $request->user());
+        abort_unless($request->user()->canUseModule('preinvoice', 2) && in_array($pf->status, ['sent', 'paid'], true) && OkiOki::on(), 403);
+        if (! $pf->invoice_number) {
+            // Approved before the OkiOki link was on: it gets the next number now, dated today.
+            abort_unless($request->user()->hasRight('finance.send_to_okioki'), 403);
+            if ($problems = OkiOki::problems($pf->load(['company', 'member']))) {
+                return back()->with('error', implode(' ', $problems));
+            }
+            $pf->update(['invoice_number' => OkiOki::nextNumber(), 'invoice_date' => today(), 'due_date' => today()->addDays($pf->payment_days)]);
+            AuditLog::record('finance.pf_numbered', $pf, ['invoice' => $pf->invoice_number], $request->user());
+        }
+        $ok = OkiOki::send($pf->fresh(['company', 'member']), $request->user());
 
         return back()->with($ok ? 'status' : 'error', $ok ? __('finance.okioki.sent', ['number' => $pf->invoice_number, 'customer' => $pf->customerName()]) : __('finance.okioki.not_sent', ['number' => $pf->invoice_number]));
     }

@@ -142,6 +142,8 @@ return [
         'prefix_hint' => '{year} wordt het jaar en start elk jaar opnieuw bij 1. Bv. {year}- geeft 2026-0001.',
         'next' => 'Volgend nummer',
         'next_hint' => 'Het eerste nummer dat de app gebruikt. Ga verder na de laatste factuur gemaakt in OkiOki.',
+        'not_numbered' => 'Deze factuur werd goedgekeurd voor de OkiOki-koppeling aan stond: ze heeft nog geen factuurnummer en ging niet naar OkiOki.',
+        'number_and_send' => 'Nummer :number geven en naar OkiOki sturen',
         'change_title' => 'Geplande wijziging van de nummering',
         'change_on' => 'Vanaf',
         'change_prefix' => 'Nieuw voorvoegsel',

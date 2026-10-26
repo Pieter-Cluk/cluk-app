@@ -83,7 +83,7 @@ class MailBanners
         return is_string($to) ? $to : null;
     }
 
-    private static function isStaff(string $email): bool
+    public static function isStaff(string $email): bool
     {
         return User::whereRaw('lower(email) = ?', [$email])->exists()
             || str_ends_with($email, '@'.ltrim((string) config('cluk.staff_email_domain', 'cluk.live'), '@'));

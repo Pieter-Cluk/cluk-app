@@ -95,7 +95,7 @@ class UserController extends Controller
             next: [__('users.instructions.next', [], $lang)],
             button: [__('users.instructions.button', [], $lang), route('login.code')],
             signer: $request->user(),
-        ))->locale($lang)->withoutBanner());
+        ))->locale($lang)->private());
         AuditLog::record('user.instructions_sent', $user, ['to' => $user->code_email], $request->user());
 
         return back()->with('status', $ok ? __('users.instructions.sent', ['email' => $user->code_email]) : __('messages.mail_failed'));

@@ -266,6 +266,7 @@ return [
             'website_slide_changed' => 'Foto de la web cambiada',
             'website_slide_removed' => 'Foto de la web quitada',
             'equipment_kept_at' => 'Ubicación de un artículo contado cambiada',
+            'finance_pf_numbered' => 'Número de factura asignado (aprobada antes del enlace con OkiOki)',
             'equipment_photo_approved' => 'Foto de producto elegida de la web',
             'user_instructions_sent' => 'Instrucciones de acceso enviadas',
             'messages_created' => 'Mensaje creado',

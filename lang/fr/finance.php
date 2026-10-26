@@ -142,6 +142,8 @@ return [
         'prefix_hint' => '{year} devient l’année et repart à 1 chaque année. P. ex. {year}- donne 2026-0001.',
         'next' => 'Numéro suivant',
         'next_hint' => 'Le premier numéro utilisé par l’app. Continuez après la dernière facture faite dans OkiOki.',
+        'not_numbered' => 'Cette facture a été approuvée avant l’activation de la liaison OkiOki : elle n’a pas de numéro et n’a pas été envoyée à OkiOki.',
+        'number_and_send' => 'Lui donner le numéro :number et l’envoyer à OkiOki',
         'change_title' => 'Changement prévu de la numérotation',
         'change_on' => 'À partir du',
         'change_prefix' => 'Nouveau préfixe',

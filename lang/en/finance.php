@@ -142,6 +142,8 @@ return [
         'prefix_hint' => '{year} becomes the year and restarts the count every year. E.g. {year}- gives 2026-0001.',
         'next' => 'Next number',
         'next_hint' => 'The first number the app uses. Continue after the last invoice made in OkiOki.',
+        'not_numbered' => 'This invoice was approved before the OkiOki link was on, so it has no invoice number and was not sent to OkiOki.',
+        'number_and_send' => 'Give it number :number and send to OkiOki',
         'change_title' => 'Planned change of the numbering',
         'change_on' => 'From',
         'change_prefix' => 'New prefix',

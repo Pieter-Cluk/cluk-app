@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AuditLog;
 use App\Models\BankAccount;
 use App\Models\Company;
 use App\Models\CompanyDetail;
@@ -147,5 +148,19 @@ class OkiOkiTest extends TestCase
         $this->assertSame('2028/0001', OkiOki::nextNumber());
         // A change date must be in the future.
         $this->actingAs($this->boss->fresh())->post('/pre-invoicing/okioki-settings', ['okioki_send' => 1, 'okioki_inbox' => 'cluk@okioki.test', 'invoice_next' => 5, 'invoice_change_on' => '2020-01-01', 'invoice_change_prefix' => 'X'])->assertSessionHasErrors('invoice_change_on');
+    }
+
+    public function test_an_invoice_approved_before_the_link_was_on_can_be_numbered_and_sent_later(): void
+    {
+        $pf = $this->pf([], 10000);
+        $this->actingAs($this->boss)->post(route('finance.accept', $pf))->assertSessionHasNoErrors(); // link still off
+        $this->assertSame(['sent', null], [$pf->fresh()->status, $pf->fresh()->invoice_number]);
+        $this->switchOn(['invoice_prefix' => 'INV-', 'invoice_next' => 1129]);
+        $this->actingAs($this->boss->fresh())->get('/pre-invoicing?pf='.$pf->id)->assertSee('Give it number INV-1129 and send to OkiOki');
+        $this->actingAs($this->boss->fresh())->post(route('finance.okioki.resend', $pf))->assertSessionHasNoErrors();
+        $pf->refresh();
+        $this->assertSame('INV-1129', $pf->invoice_number);
+        $this->assertNotNull($pf->okioki_sent_at);
+        $this->assertSame(1, AuditLog::where('action', 'finance.pf_numbered')->count());
     }
 }

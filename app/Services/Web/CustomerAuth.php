@@ -217,7 +217,7 @@ class CustomerAuth
             intro: [__('web.mail.'.$kind.'.intro', $extra['params'] ?? [])],
             next: [__('web.mail.'.$kind.'.next', $extra['params'] ?? [])],
             button: $extra['button'] ?? null,
-        ))->locale($loc)->withoutBanner();
+        ))->locale($loc)->private();
 
         return SafeMail::notify(Notification::route('mail', $a->email), $mail);
     }

@@ -52,7 +52,7 @@ class EmailCodeLoginController extends Controller
                 intro: [__('login.code.mail_intro', ['minutes' => StaffLoginCode::MINUTES], $lang)],
                 details: [__('login.code.code', [], $lang) => $code],
                 next: [__('login.code.mail_next', [], $lang)],
-            ))->locale($lang)->withoutBanner());
+            ))->locale($lang)->private());
             AuditLog::record('auth.code_sent', $user, ['ip' => $request->ip()], $user);
         } else {
             AuditLog::record('auth.code_refused', $user, ['email' => $email]);

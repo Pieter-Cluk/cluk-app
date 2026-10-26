@@ -118,6 +118,13 @@
                         <form method="post" action="{{ route('finance.resend', $sel) }}" class="stack-sm">@csrf<input name="reply" maxlength="800" placeholder="{{ __('finance.reply_hint') }}" aria-label="{{ __('finance.reply_hint') }}"><div><button class="btn" type="submit">{{ __('finance.resend') }}</button></div></form>
                     </section>
                 @endif
+                @if (! $sel->invoice_number && $sel->status === 'sent' && $okioki && $canOkioki)
+                    <section class="card pf-oki-card">
+                        <h3>{{ __('finance.okioki.title') }}</h3>
+                        <p class="small">{{ __('finance.okioki.not_numbered') }}</p>
+                        <form method="post" action="{{ route('finance.okioki.resend', $sel) }}">@csrf<button class="primary" type="submit">{{ __('finance.okioki.number_and_send', ['number' => $okiokiNext]) }}</button></form>
+                    </section>
+                @endif
                 @if ($sel->invoice_number && in_array($sel->status, ['sent', 'paid'], true) && ($sel->ubl_path || $sel->okioki_error))
                     <section class="card pf-oki-card">
                         <h3>{{ __('finance.okioki.title') }} · {{ $sel->invoice_number }}</h3>

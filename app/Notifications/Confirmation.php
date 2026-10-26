@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Models\Media\Message;
 use App\Models\User;
 use App\Services\Media\MailBanners;
+use App\Support\MailCopy;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -54,6 +55,17 @@ class Confirmation extends Notification
         return $this;
     }
 
+    /** Private (login codes, password links): no banner and no copy to CLUK's mailbox. */
+    public bool $private = false;
+
+    public function private(): static
+    {
+        $this->private = true;
+        $this->banner = false;
+
+        return $this;
+    }
+
     public function via(object $notifiable): array
     {
         return ['mail'];
@@ -69,6 +81,9 @@ class Confirmation extends Notification
         ]);
         foreach ($this->attachFiles as $f) {
             $mail->attach($f['path'], ['as' => $f['name'], 'mime' => $f['mime'] ?? 'application/pdf']);
+        }
+        if ($this->private) {
+            $mail->withSymfonyMessage(fn ($m) => $m->getHeaders()->addTextHeader(MailCopy::NO_COPY, '1'));
         }
         if ($reply = $this->replyTo ?? $this->signer?->email) {
             $mail->replyTo($reply, $this->signer?->name);
