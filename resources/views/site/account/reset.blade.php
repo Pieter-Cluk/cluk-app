@@ -3,7 +3,7 @@
 @section('description', __('site.account.reset_title'))
 @section('body', 'sl')
 @section('content')
-<main class="acc gut">
+<div class="acc-stage"><main class="acc gut">
   <section class="acc-card">
     <h1>{{ __('site.account.reset_title') }}</h1>
     @include('site.account._form')
@@ -16,5 +16,5 @@
       <button class="btn" type="submit">{{ __('site.account.reset_btn') }}</button>
     </form>
   </section>
-</main>
+</main></div>
 @endsection
