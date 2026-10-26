@@ -71,7 +71,7 @@ abstract class Provider
     protected function post(Account $a, string $id, array $values): Post
     {
         $p = Post::firstOrNew(['account_id' => $a->id, 'external_id' => $id]);
-        $values['text'] = isset($values['text']) ? mb_substr((string) $values['text'], 0, 1000) : $p->text;
+        $values['text'] = isset($values['text']) ? mb_substr((string) $values['text'], 0, 8000) : $p->text;
         $p->fill($values)->save();
 
         return $p;

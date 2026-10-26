@@ -87,6 +87,13 @@ class Social
             ->where(fn ($q) => $q->whereNull('last_synced_at')->orWhere('last_synced_at', '<', now()->subHours((int) config('social.sync_hours', 3)))
                 ->orWhere(fn ($q) => $q->where('status', 'error')->where('last_synced_at', '<', now()->subMinutes(30))))
             ->orderByRaw('last_synced_at is not null')->orderBy('last_synced_at')->limit($max)->get();
+        // Facebook and Instagram accounts whose older posts were not fetched yet (just connected): first.
+        $history = Account::where('status', 'connected')->whereNotNull('token')->whereIn('platform', ['facebook', 'instagram'])->get()
+            ->filter(fn ($a) => empty($a->meta['history_at']))->take(1);
+        foreach ($history as $a) {
+            $n += (int) self::sync($a, true, 4);
+        }
+        $due = $due->reject(fn ($a) => $history->contains('id', $a->id));
         foreach ($due as $a) {
             $posts = $a->status === 'error' || ! $a->posts_synced_at || $a->posts_synced_at->lt(now()->subHours((int) config('social.posts_hours', 6)));
             $n += (int) self::sync($a, $posts, $a->last_synced_at ? 4 : 90);

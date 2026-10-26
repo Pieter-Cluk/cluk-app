@@ -130,6 +130,7 @@ return [
     'no_posts' => 'No posts in this period.',
     'from_cluk' => 'posted from CLUK',
     'open' => 'Open',
+    'connection_lost' => 'The connection with Meta no longer works (the sign-in expired or its permissions were taken away). Click “Connect again”, sign in with the Facebook account that manages the CLUK page, and tick the CLUK page and Instagram account. Older posts are fetched again afterwards.',
     'missing_permission' => 'Facebook gives the figures but not the posts: the permission “:permission” is missing. In Meta: add it to the use case, tick it in the configuration “CLUK platform social”, then click Connect again here.',
     'status_error' => 'Last refresh failed',
     'week_of' => 'Week of :date',

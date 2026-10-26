@@ -63,7 +63,8 @@
                     </dl>
                     @if ($a->status === 'error')
                         @php($missing = preg_match("/requires the '([a-z_]+)' permission/", (string) $a->last_error, $mm) ? $mm[1] : null)
-                        <p class="sm-err small">{{ $missing ? __('social.missing_permission', ['permission' => $missing]) : __('social.status_error').': '.\Illuminate\Support\Str::limit($a->last_error, 140) }}</p>
+                        @php($expired = (bool) preg_match('/impersonating|validating access token|session has (expired|been invalidated)|code.?190/i', (string) $a->last_error))
+                        <p class="sm-err small">{{ $missing ? __('social.missing_permission', ['permission' => $missing]) : ($expired ? __('social.connection_lost') : __('social.status_error').': '.\Illuminate\Support\Str::limit($a->last_error, 140)) }}</p>
                     @endif
                 </section>
             @endforeach

@@ -130,6 +130,7 @@ return [
     'no_posts' => 'Aucune publication sur la période.',
     'from_cluk' => 'publié depuis CLUK',
     'open' => 'Ouvrir',
+    'connection_lost' => 'La liaison avec Meta ne fonctionne plus (la connexion a expiré ou ses autorisations ont été retirées). Cliquez sur « Lier à nouveau », connectez-vous avec le compte Facebook qui gère la page CLUK et cochez la page CLUK et le compte Instagram. Les anciennes publications sont ensuite récupérées.',
     'missing_permission' => 'Facebook donne les chiffres mais pas les publications : l’autorisation « :permission » manque. Dans Meta : ajoutez-la au cas d’usage, cochez-la dans la configuration « CLUK platform social », puis cliquez à nouveau sur Lier ici.',
     'status_error' => 'Dernière mise à jour échouée',
     'week_of' => 'Semaine du :date',

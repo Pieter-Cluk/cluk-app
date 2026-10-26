@@ -130,6 +130,7 @@ return [
     'no_posts' => 'Geen berichten in deze periode.',
     'from_cluk' => 'gepost vanuit CLUK',
     'open' => 'Openen',
+    'connection_lost' => 'De koppeling met Meta werkt niet meer (de aanmelding is verlopen of de rechten werden ingetrokken). Klik op “Opnieuw koppelen”, meld je aan met het Facebook-account dat de CLUK-pagina beheert en vink de CLUK-pagina en het Instagram-account aan. Daarna worden ook de oudere berichten opnieuw opgehaald.',
     'missing_permission' => 'Facebook geeft de cijfers maar niet de berichten: het recht “:permission” ontbreekt. In Meta: voeg het toe aan het gebruiksscenario, vink het aan in de configuratie “CLUK platform social” en klik hier opnieuw op Koppelen.',
     'status_error' => 'Laatste verversing mislukt',
     'week_of' => 'Week van :date',

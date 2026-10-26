@@ -15,7 +15,7 @@ use Throwable;
 /**
  * Facebook and Instagram posts (synced by the platform into social_posts) for the website.
  * A post goes to a part of the site through a hashtag in its text:
- *   #CLUKdryhire, #CLUKsales, #CLUKfactory, #CLUKafrit6 (also with hyphens, any case).
+ *   #CLUKdryhire, #CLUKsales, #CLUKfactory, #CLUKafrit6 or #Afrit6 (also with hyphens, any case).
  * Posts without such a tag show on the homepage and the news page only.
  * Pictures and videos are served from the CLUK server, never straight from Meta.
  */
@@ -25,7 +25,8 @@ class SocialFeed
 
     public const PLATFORMS = ['facebook', 'instagram'];
 
-    private const TAG = '/#\s?cluk[\s_-]*(dry[\s_-]*hire|sales|factory|afrit[\s_-]*6)\b/i';
+    // #CLUKdryhire, #CLUKsales, #CLUKfactory, #CLUKafrit6, and #Afrit6 on its own (used on older posts).
+    private const TAG = '/#\s?(?:cluk[\s_-]*(dry[\s_-]*hire|sales|factory|afrit[\s_-]*6)|(afrit[\s_-]*6))\b/i';
 
     /** All website posts, newest first (cached a few minutes). */
     public static function all(): Collection
@@ -95,7 +96,7 @@ class SocialFeed
             str_starts_with(strtolower(preg_replace('/[\s_-]/', '', $t)), 'dry') => 'dryhire',
             str_starts_with(strtolower($t), 'afrit') => 'afrit6',
             default => strtolower($t),
-        }, $m[1] ?? [])));
+        }, array_filter(array_merge($m[1] ?? [], $m[2] ?? [])))));
     }
 
     private static function card(Post $p): array

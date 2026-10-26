@@ -4,6 +4,7 @@ namespace App\Services\Social;
 
 use App\Models\Social\Account;
 use App\Models\Social\Post;
+use App\Services\Website\SocialFeed;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +27,11 @@ class PostMedia
             return;
         }
         $posts = Post::where('account_id', $a->id)->latest('published_at')->limit(60)->get();
-        foreach ($posts->filter(fn ($p) => $p->thumb_url && ! $p->thumb_path)->take($images) as $p) {
+        // Posts tagged for a part of the website (#CLUKsales, #Afrit6…) keep their picture first, also older ones:
+        // Meta's picture links stop working after a while, so these are saved while the link is fresh.
+        $tagged = Post::where('account_id', $a->id)->whereNull('thumb_path')->whereNotNull('thumb_url')->latest('published_at')->limit(1000)->get()
+            ->filter(fn ($p) => SocialFeed::sections($p->text) !== [])->take(40);
+        foreach ($tagged->concat($posts->filter(fn ($p) => $p->thumb_url && ! $p->thumb_path))->unique('id')->take($images + $tagged->count()) as $p) {
             self::image($p);
         }
         foreach ($posts->filter(fn ($p) => $p->video_url && ! $p->video_path)->take($videos) as $p) {

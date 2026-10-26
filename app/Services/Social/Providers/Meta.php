@@ -161,9 +161,9 @@ class Meta extends Provider
     public function syncPosts(Account $a): void
     {
         if ($a->platform === 'instagram') {
-            $media = $this->ok(Http::timeout(20)->get($this->g($a->external_id.'/media'), [
+            $media = $this->pages($this->g($a->external_id.'/media'), [
                 'fields' => 'id,caption,media_type,media_product_type,permalink,thumbnail_url,media_url,timestamp,like_count,comments_count', 'limit' => 25, 'access_token' => $a->token,
-            ]), 'Instagram media')['data'] ?? [];
+            ], 'Instagram media', $this->deep($a));
             foreach ($media as $i => $m) {
                 $isVideo = in_array($m['media_type'] ?? '', ['VIDEO', 'REELS'], true) || ($m['media_product_type'] ?? '') === 'REELS';
                 $values = ['published_at' => self::ts($m['timestamp'] ?? null), 'kind' => strtolower(($m['media_product_type'] ?? '') === 'REELS' ? 'reel' : ($m['media_type'] ?? 'post')),
@@ -185,13 +185,14 @@ class Meta extends Provider
                 }
                 $this->post($a, (string) $m['id'], $values);
             }
+            $this->historyDone($a);
 
             return;
         }
-        $posts = $this->ok(Http::timeout(20)->get($this->g($a->external_id.'/published_posts'), [
+        $posts = $this->pages($this->g($a->external_id.'/published_posts'), [
             'fields' => 'id,message,created_time,permalink_url,full_picture,shares,attachments{media_type,media,target,subattachments{media_type,media,target}},reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0)',
             'limit' => 25, 'access_token' => $a->token,
-        ]), 'Facebook posts')['data'] ?? [];
+        ], 'Facebook posts', $this->deep($a));
         foreach ($posts as $p) {
             $att = $p['attachments']['data'][0] ?? [];
             $first = $att['subattachments']['data'][0] ?? $att;
@@ -208,6 +209,40 @@ class Meta extends Provider
                 'permalink' => $p['permalink_url'] ?? null, 'thumb_url' => $p['full_picture'] ?? $first['media']['image']['src'] ?? null, 'video_url' => $video,
                 'likes' => $p['reactions']['summary']['total_count'] ?? null, 'comments' => $p['comments']['summary']['total_count'] ?? null, 'shares' => $p['shares']['count'] ?? 0]);
         }
+        $this->historyDone($a);
+    }
+
+    /** The first time (or after "fetch older posts"): go back through the history, so older tagged posts reach the website too. */
+    private function deep(Account $a): bool
+    {
+        // Only in the background job: going through years of posts takes too long for a page click.
+        return empty($a->meta['history_at']) && app()->runningInConsole();
+    }
+
+    private function historyDone(Account $a): void
+    {
+        if ($this->deep($a)) {
+            $a->forceFill(['meta' => ($a->meta ?? []) + ['history_at' => now()->toIso8601String()]])->save();
+        }
+    }
+
+    /** One page of results, or (deep) page after page back to about three years, at most 1,000 posts. */
+    private function pages(string $url, array $query, string $what, bool $deep): array
+    {
+        $res = $this->ok(Http::timeout(30)->get($url, $query), $what);
+        $all = $res['data'] ?? [];
+        $since = now()->subYears(3);
+        for ($i = 0; $deep && $i < 40 && ($next = $res['paging']['next'] ?? null) && count($all) < 1000; $i++) {
+            $last = end($all);
+            $when = $last['created_time'] ?? $last['timestamp'] ?? null;
+            if ($when && Carbon::parse($when)->lt($since)) {
+                break;
+            }
+            $res = $this->ok(Http::timeout(30)->get($next), $what);
+            $all = array_merge($all, $res['data'] ?? []);
+        }
+
+        return $all;
     }
 
     // ── Publishing ──────────────────────────────────────────────────────────
