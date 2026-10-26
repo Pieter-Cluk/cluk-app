@@ -118,7 +118,7 @@ class WarehouseTest extends TestCase
         $this->scan('LT-0142');
         $this->scan('PRE-LIGHT')->assertSessionHasNoErrors();
         $this->scan('LT-0142');
-        $this->scan('BENCH-1')->assertRedirect('/w/check/'.$a->id);
+        $this->scan('LIGHT-ST')->assertRedirect('/w/check/'.$a->id);
         $this->scan('LT-0142')->assertRedirect('/w/check/'.$a->id);
 
         // The check: hook missing, zoom fails, with a photo → Repair.
@@ -151,7 +151,9 @@ class WarehouseTest extends TestCase
 
         // Second round: clean OK this time → post-check → rack: rentable again.
         $this->scan('LT-0142');
-        $this->scan('BENCH-2');
+        $this->scan('AUDIO-ST')->assertSessionHasErrors('code'); // a light goes to Light street, not Audio street
+        $this->scan('LT-0142');
+        $this->scan('LIGHT-ST');
         $this->actingAs($this->crew)->post('/w/check/'.$a->id, ['tests' => array_map(fn () => 'ok', $tests), 'reset' => '1'])->assertSessionHasNoErrors();
         $this->scan('POST-CHECK')->assertSessionHasNoErrors();
         $this->scan('LT-0142');
