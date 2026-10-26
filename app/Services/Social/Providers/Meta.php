@@ -189,11 +189,11 @@ class Meta extends Provider
 
             return;
         }
-        $fields = 'id,message,created_time,permalink_url,full_picture,shares,attachments{media_type,media,target,subattachments{media_type,media,target}},reactions.summary(total_count).limit(0)';
+        $fields = 'id,message,created_time,permalink_url,full_picture,shares,attachments{media_type,media,target,subattachments{media_type,media,target}}';
         try {
-            $posts = $this->pages($this->g($a->external_id.'/published_posts'), ['fields' => $fields.',comments.summary(total_count).limit(0)', 'limit' => 25, 'access_token' => $a->token], 'Facebook posts', $this->deep($a));
+            $posts = $this->pages($this->g($a->external_id.'/published_posts'), ['fields' => $fields.',reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0)', 'limit' => 25, 'access_token' => $a->token], 'Facebook posts', $this->deep($a));
         } catch (RuntimeException $e) {
-            // Comment counts need the permission pages_read_user_content; without it, the posts come without them.
+            // Reaction and comment counts need the permission pages_read_user_content; without it, the posts come without them.
             if (! str_contains($e->getMessage(), 'pages_read_user_content')) {
                 throw $e;
             }
