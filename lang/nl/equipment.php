@@ -209,4 +209,12 @@ return [
         'counted_hint' => 'Typ hoeveel en de box/casecode (een min haalt ze eruit). Nooit meer in boxen dan in voorraad.',
         'counted_done' => 'Nu :n in :case.',
     ],
+    'kept' => [
+        'title' => 'Ligt op (rekplaats)',
+        'go' => 'Opslaan',
+        'hint' => 'Waar deze normaal liggen, bv. GA1B1. De ploeg ziet het op de picklijst. Laat leeg als er geen vaste plaats is. Om een aantal in een box of case te steken, gebruik het blok hieronder.',
+        'done' => 'Ligt nu op :place.',
+        'cleared' => 'Geen vaste rekplaats meer.',
+        'unknown' => '“:code” is geen rekplaats of opslagzone. Kies er een uit de lijst.',
+    ],
 ];

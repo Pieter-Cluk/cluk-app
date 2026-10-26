@@ -265,6 +265,7 @@ return [
             'website_slide_added' => 'Photo du site ajoutée',
             'website_slide_changed' => 'Photo du site modifiée',
             'website_slide_removed' => 'Photo du site retirée',
+            'equipment_kept_at' => 'Emplacement d’un article compté modifié',
             'equipment_photo_approved' => 'Photo produit choisie sur le web',
             'user_instructions_sent' => 'Instructions de connexion envoyées',
             'messages_created' => 'Message créé',

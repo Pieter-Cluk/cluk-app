@@ -209,4 +209,12 @@ return [
         'counted_hint' => 'Type how many and the box/case code (a minus takes them out). Never more in boxes than in stock.',
         'counted_done' => 'Now :n in :case.',
     ],
+    'kept' => [
+        'title' => 'Kept at (rack place)',
+        'go' => 'Save',
+        'hint' => 'Where these are normally kept, e.g. GA1B1. The crew sees it on the pick list. Leave empty for no fixed place. To put a number of them in a box or case, use the block below.',
+        'done' => 'Now kept at :place.',
+        'cleared' => 'No fixed rack place any more.',
+        'unknown' => '“:code” is not a rack place or storage zone. Pick one from the list.',
+    ],
 ];

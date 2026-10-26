@@ -10,6 +10,8 @@ use App\Models\Product\AttributeOption;
 use App\Models\Product\Category;
 use App\Models\Product\Subcategory;
 use App\Models\Product\Tag;
+use App\Models\Warehouse\Position;
+use App\Models\Warehouse\Zone;
 use App\Services\Products\Classification;
 use App\Services\Warehouse\Carriers;
 use App\Services\Warehouse\Moves;
@@ -373,6 +375,21 @@ class ItemController extends Controller
         AuditLog::record('equipment.placed', $item, ['codes' => $d['qty'].' × '.$item->number, 'place' => $case->code]);
 
         return redirect()->route('equipment.show', $item)->with('status', __('equipment.place.counted_done', ['n' => $n, 'case' => $case->code]));
+    }
+
+    /** Counted items: the rack place where they are kept (shown to the crew on the pick list). Empty = no fixed place. */
+    public function keptAt(Request $request, Item $item): RedirectResponse
+    {
+        abort_if($item->serial || $item->kind !== 'item', 404);
+        $code = strtoupper(trim((string) $request->validate(['position' => ['nullable', 'string', 'max:30']])['position']));
+        if ($code !== '' && ! Position::where('code', $code)->where('active', true)->exists() && ! Zone::where('code', $code)->where('active', true)->where('type', 'storage')->exists()) {
+            throw ValidationException::withMessages(['position' => __('equipment.kept.unknown', ['code' => mb_strimwidth($code, 0, 30, '…')])]);
+        }
+        $old = $item->position_code;
+        $item->forceFill(['position_code' => $code !== '' ? $code : null])->save();
+        AuditLog::record('equipment.kept_at', $item, ['from' => $old ?? '—', 'to' => $item->position_code ?? '—'], $request->user());
+
+        return redirect()->route('equipment.show', $item)->with('status', $item->position_code ? __('equipment.kept.done', ['place' => $item->position_code]) : __('equipment.kept.cleared'));
     }
 
     public function photo(Item $item): Response

@@ -265,6 +265,7 @@ return [
             'website_slide_added' => 'Website picture added',
             'website_slide_changed' => 'Website picture changed',
             'website_slide_removed' => 'Website picture removed',
+            'equipment_kept_at' => 'Rack place of a counted item changed',
             'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',

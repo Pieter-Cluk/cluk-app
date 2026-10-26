@@ -209,4 +209,12 @@ return [
         'counted_hint' => 'Escribe cuántas y el código de la caja/case (un menos las saca). Nunca más en cajas que en stock.',
         'counted_done' => 'Ahora :n en :case.',
     ],
+    'kept' => [
+        'title' => 'Guardado en (ubicación)',
+        'go' => 'Guardar',
+        'hint' => 'Dónde se guardan normalmente, p. ej. GA1B1. El equipo lo ve en la lista de preparación. Déjalo vacío si no hay sitio fijo. Para meter una cantidad en una caja o flight case, usa el bloque de abajo.',
+        'done' => 'Ahora guardado en :place.',
+        'cleared' => 'Ya sin ubicación fija.',
+        'unknown' => '«:code» no es una ubicación ni una zona de almacén. Elige una de la lista.',
+    ],
 ];

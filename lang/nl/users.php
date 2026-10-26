@@ -265,6 +265,7 @@ return [
             'website_slide_added' => 'Websitefoto toegevoegd',
             'website_slide_changed' => 'Websitefoto gewijzigd',
             'website_slide_removed' => 'Websitefoto verwijderd',
+            'equipment_kept_at' => 'Rekplaats van een telartikel gewijzigd',
             'equipment_photo_approved' => 'Productfoto van het web gekozen',
             'user_instructions_sent' => 'Aanmeldinstructies gestuurd',
             'messages_created' => 'Bericht gemaakt',

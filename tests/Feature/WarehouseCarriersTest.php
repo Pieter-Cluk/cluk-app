@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
@@ -274,6 +275,16 @@ class WarehouseCarriersTest extends TestCase
         $this->actingAs($admin)->post(route('equipment.counted.place', $barndoor), ['qty' => 12, 'place' => 'BOX-04'])->assertSessionHasNoErrors();
         $this->actingAs($admin)->post(route('equipment.counted.place', $barndoor), ['qty' => 9, 'place' => 'BOX-05'])->assertSessionHasErrors('place');
         $this->actingAs($admin)->post(route('equipment.counted.place', $barndoor), ['qty' => -2, 'place' => 'BOX-04'])->assertSessionHasNoErrors();
+        // Counted: the rack place where they are kept (any case of typing), shown on the card; nonsense is refused; empty clears it.
+        $this->actingAs($admin)->get(route('equipment.show', $barndoor))->assertSee('Kept at (rack place)')->assertSee('id="rack-codes"', false);
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => 'ga3b2'])->assertSessionHasNoErrors();
+        $this->assertSame('GA3B2', $barndoor->fresh()->position_code);
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => 'NOPE-9'])->assertSessionHasErrors('position');
+        $this->assertSame('GA3B2', $barndoor->fresh()->position_code);
+        $this->assertSame(1, AuditLog::where('action', 'equipment.kept_at')->count());
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => ''])->assertSessionHasNoErrors();
+        $this->assertNull($barndoor->fresh()->position_code);
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $item), ['position' => 'GA3B2'])->assertNotFound(); // serial items: per piece
         $this->assertSame(10, self::case('BOX-04')->counted()->value('qty'));
         $this->actingAs($admin)->get(route('equipment.show', $barndoor))->assertSee('10 × in BOX-04');
     }

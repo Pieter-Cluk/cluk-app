@@ -22,6 +22,16 @@
     @if ($canEdit && ! $item->serial && $item->kind === 'item')
         @php($inCases = \App\Models\Equipment\CaseItem::with('container')->where('item_id', $item->id)->where('qty', '>', 0)->get())
         <section class="card">
+            <h2>{{ __('equipment.kept.title') }}</h2>
+            <form method="post" action="{{ route('equipment.counted.kept', $item) }}" class="inline-form">@csrf
+                <input name="position" list="rack-codes" value="{{ old('position', $item->position_code) }}" placeholder="GA1B1" maxlength="30" aria-label="{{ __('equipment.kept.title') }}" style="width:9em">
+                <button class="btn" type="submit">{{ __('equipment.kept.go') }}</button>
+            </form>
+            @error('position')<p class="txt-danger small">{{ $message }}</p>@enderror
+            <p class="muted small">{{ __('equipment.kept.hint') }}</p>
+            @include('equipment._place-codes', ['id' => 'rack-codes', 'cases' => false])
+        </section>
+        <section class="card">
             <h2>{{ __('equipment.place.counted_title') }}</h2>
             @if ($inCases->isNotEmpty())<p>{{ $inCases->map(fn ($c) => $c->qty.' × '.__('warehouse.carriers.in_it', ['carrier' => $c->container->code]))->implode(' · ') }} <span class="muted">· {{ trans_choice('warehouse.labels.in_stock', $item->stock_qty, ['n' => $item->stock_qty]) }}</span></p>@endif
             <form method="post" action="{{ route('equipment.counted.place', $item) }}" class="inline-form">@csrf

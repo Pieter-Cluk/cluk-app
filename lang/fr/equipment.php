@@ -209,4 +209,12 @@ return [
         'counted_hint' => 'Indiquez combien et le code de la caisse/du case (un moins les sort). Jamais plus dans les caisses qu’en stock.',
         'counted_done' => 'Maintenant :n dans :case.',
     ],
+    'kept' => [
+        'title' => 'Rangé à (emplacement)',
+        'go' => 'Enregistrer',
+        'hint' => 'Où ils sont rangés d’habitude, p. ex. GA1B1. L’équipe le voit sur la liste de préparation. Laissez vide s’il n’y a pas de place fixe. Pour mettre un nombre dans une boîte ou un flight-case, utilisez le bloc ci-dessous.',
+        'done' => 'Rangé maintenant à :place.',
+        'cleared' => 'Plus d’emplacement fixe.',
+        'unknown' => '« :code » n’est pas un emplacement ni une zone de stockage. Choisissez-en un dans la liste.',
+    ],
 ];
