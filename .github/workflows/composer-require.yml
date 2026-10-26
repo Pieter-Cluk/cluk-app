@@ -1,0 +1,39 @@
+name: Add a PHP package
+
+# Started by hand: adds a package with Composer (Packagist is not reachable from the
+# workspace) and pushes composer.json and composer.lock to the branch "deps-update".
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package and version, e.g. dompdf/dompdf:^3.1'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  require:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, intl, bcmath, pdo_sqlite, zip, gd, fileinfo, dom
+          coverage: none
+      - name: Require the package
+        env:
+          PKG: ${{ inputs.package }}
+        run: |
+          composer require "$PKG" --no-interaction --no-progress --update-with-dependencies
+          git diff --stat composer.json composer.lock
+      - name: Push to deps-update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B deps-update
+          git add composer.json composer.lock
+          git commit -qm "Add ${{ inputs.package }}"
+          git push -f origin deps-update
