@@ -12,13 +12,35 @@
             @if ($canEdit && $item->serial && $item->assets->where('status', '!=', 'retired')->isNotEmpty())<a class="btn" href="{{ route('equipment.labels', ['item' => $item->id]) }}" target="_blank" rel="noopener">{{ __('equipment.print_all') }}</a>@endif
             @if ($canEdit && ! $item->serial && $item->kind === 'item')
                 <form method="get" action="{{ route('equipment.labels') }}" target="_blank" class="inline-form"><input type="hidden" name="bulk" value="{{ $item->id }}">
-                    <input type="number" name="qty" min="1" max="500" value="{{ max(1, min(500, (int) $item->stock_qty)) }}" style="width:6em" aria-label="{{ __('warehouse.labels.how_many') }}">
-                    <button class="btn" type="submit">{{ __('warehouse.labels.print_n') }}</button></form>
+                    <input type="number" name="qty" min="1" max="500" value="1" style="width:4.5em" aria-label="{{ __('warehouse.labels.how_many') }}">
+                    <button class="btn" type="submit">{{ __('equipment.stock_in.print') }}</button></form>
             @endif
             @if ($canEdit)<a class="primary" href="{{ route('equipment.edit', $item) }}">{{ __('equipment.edit') }}</a>@endif
         </div>
     </div>
     @include('partials.flash')
+    @if ($canEdit && ! $item->serial && $item->kind === 'item')
+        <section class="card">
+            <h2>{{ __('equipment.stock_in.delivery_title') }}</h2>
+            <p>{{ trans_choice('warehouse.labels.in_stock', $item->stock_qty, ['n' => $item->stock_qty]) }}</p>
+            <form method="post" action="{{ route('equipment.counted.stock', $item) }}" class="inline-form">@csrf
+                <input type="number" name="qty" value="" min="1" max="10000" required placeholder="20" style="width:6em" aria-label="{{ __('equipment.stock_in.delivery_qty') }}">
+                <input name="note" maxlength="120" placeholder="{{ __('equipment.stock_in.delivery_note') }}" aria-label="{{ __('equipment.stock_in.delivery_note') }}" style="width:16em">
+                <button class="btn" type="submit">{{ __('equipment.stock_in.delivery_go') }}</button>
+            </form>
+            @error('qty')<p class="txt-danger small">{{ $message }}</p>@enderror
+            <p class="muted small">{{ __('equipment.stock_in.delivery_hint') }}</p>
+        </section>
+    @endif
+    @if ($canEdit && $item->serial && $item->kind === 'item' && $item->assets->where('status', '!=', 'retired')->isNotEmpty())
+        <details class="card">
+            <summary><b>{{ __('equipment.stock_in.convert_title') }}</b></summary>
+            <p class="muted small">{{ __('equipment.stock_in.convert_hint', ['n' => $item->assets->where('status', 'available')->count()]) }}</p>
+            <form method="post" action="{{ route('equipment.counted.convert', $item) }}" onsubmit="return confirm(@js(__('equipment.stock_in.convert_confirm')))">@csrf
+                <button class="btn" type="submit">{{ __('equipment.stock_in.convert_go') }}</button>
+            </form>
+        </details>
+    @endif
     @if ($canEdit && ! $item->serial && $item->kind === 'item')
         @php($inCases = \App\Models\Equipment\CaseItem::with('container')->where('item_id', $item->id)->where('qty', '>', 0)->get())
         <section class="card">

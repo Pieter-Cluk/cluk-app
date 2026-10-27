@@ -21,8 +21,13 @@
                 <label class="field"><span>{{ __('equipment.fields.brand') }}</span><input name="brand" maxlength="80" value="{{ $v('brand', $item->brand) }}"></label>
                 <label class="field"><span>{{ __('equipment.fields.type') }}</span><input name="type" maxlength="255" value="{{ $v('type', $item->type) }}"></label>
                 <label class="field"><span>{{ __('equipment.fields.unit') }}</span><input name="unit" required maxlength="12" value="{{ $v('unit', $item->unit ?? 'pcs') }}"></label>
-                <label class="check"><input type="checkbox" name="serial" value="1" @checked($v('serial', $item->serial))><span>{{ __('equipment.fields.serial') }}<br><small>{{ __('equipment.serial_hint') }}</small></span></label>
-                <label class="field"><span>{{ __('equipment.fields.stock_qty') }}</span><input type="number" name="stock_qty" min="0" value="{{ $v('stock_qty', $item->stock_qty) }}"><small>{{ __('equipment.stock_hint') }}</small></label>
+                @php($sv = $item->exists ? (string) (int) $v('serial', $item->serial) : (string) old('serial', ''))
+                <fieldset class="field span-2"><legend>{{ __('equipment.tracking.question') }}</legend>
+                    <label class="check"><input type="radio" name="serial" value="0" @checked($sv === '0') @unless ($item->exists) required @endunless><span>{{ __('equipment.tracking.counted') }}<br><small>{{ __('equipment.tracking.counted_hint') }}</small></span></label>
+                    <label class="check"><input type="radio" name="serial" value="1" @checked($sv === '1')><span>{{ __('equipment.tracking.serial') }}<br><small>{{ __('equipment.tracking.serial_hint') }}</small></span></label>
+                    <small class="muted">{{ __('equipment.tracking.cases') }}</small>
+                </fieldset>
+                <label class="field"><span>{{ __('equipment.fields.stock_qty') }}</span><input type="number" name="stock_qty" min="0" value="{{ $v('stock_qty', $item->stock_qty) }}"><small>{{ __('equipment.tracking.stock_hint') }}</small></label>
             </div>
             @include('products._tags', ['p' => $item])
         </section>

@@ -267,6 +267,8 @@ return [
             'website_slide_removed' => 'Websitefoto verwijderd',
             'equipment_kept_at' => 'Rekplaats van een telartikel gewijzigd',
             'finance_pf_numbered' => 'Factuurnummer gegeven (goedgekeurd voor de OkiOki-koppeling)',
+            'equipment_stock_added' => 'Voorraad bijgeteld (levering)',
+            'equipment_converted_counted' => 'Omgezet naar geteld (één QR voor het type)',
             'equipment_photo_approved' => 'Productfoto van het web gekozen',
             'user_instructions_sent' => 'Aanmeldinstructies gestuurd',
             'messages_created' => 'Bericht gemaakt',

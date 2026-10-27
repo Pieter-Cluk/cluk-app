@@ -267,6 +267,8 @@ return [
             'website_slide_removed' => 'Website picture removed',
             'equipment_kept_at' => 'Rack place of a counted item changed',
             'finance_pf_numbered' => 'Invoice number given (approved before the OkiOki link)',
+            'equipment_stock_added' => 'Stock added (delivery)',
+            'equipment_converted_counted' => 'Switched to counted (one QR for the type)',
             'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',

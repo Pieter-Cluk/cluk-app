@@ -267,6 +267,8 @@ return [
             'website_slide_removed' => 'Photo du site retirée',
             'equipment_kept_at' => 'Emplacement d’un article compté modifié',
             'finance_pf_numbered' => 'Numéro de facture attribué (approuvée avant la liaison OkiOki)',
+            'equipment_stock_added' => 'Stock ajouté (livraison)',
+            'equipment_converted_counted' => 'Passé en compté (un QR pour le type)',
             'equipment_photo_approved' => 'Photo produit choisie sur le web',
             'user_instructions_sent' => 'Instructions de connexion envoyées',
             'messages_created' => 'Message créé',

@@ -129,7 +129,7 @@ class ItemController extends Controller
     {
         [$data, $class] = $this->validated($request, $item);
         $item->fill($data);
-        if ($item->isDirty('serial') && ! $item->serial && $item->assets()->exists()) {
+        if ($item->isDirty('serial') && ! $item->serial && $item->assets()->where('status', '!=', Asset::RETIRED)->exists()) {
             throw ValidationException::withMessages(['serial' => __('equipment.errors.has_assets')]);
         }
         $changes = array_keys($item->getDirty());
@@ -390,6 +390,53 @@ class ItemController extends Controller
         AuditLog::record('equipment.kept_at', $item, ['from' => $old ?? '—', 'to' => $item->position_code ?? '—'], $request->user());
 
         return redirect()->route('equipment.show', $item)->with('status', $item->position_code ? __('equipment.kept.done', ['place' => $item->position_code]) : __('equipment.kept.cleared'));
+    }
+
+    /**
+     * Counted items: a delivery came in, add the pieces to the stock. The item keeps its one QR label for the type.
+     */
+    public function addStock(Request $request, Item $item): RedirectResponse
+    {
+        abort_if($item->serial || $item->kind !== 'item', 404);
+        $d = $request->validate(['qty' => ['required', 'integer', 'min:1', 'max:10000'], 'note' => ['nullable', 'string', 'max:120']]);
+        $before = (int) $item->stock_qty;
+        $item->forceFill(['stock_qty' => $before + (int) $d['qty']])->save();
+        AuditLog::record('equipment.stock_added', $item, ['added' => (int) $d['qty'], 'from' => $before, 'to' => $item->stock_qty, 'note' => $d['note'] ?? '—'], $request->user());
+
+        return redirect()->route('equipment.show', $item)->with('status', __('equipment.stock_in.added', ['n' => (int) $d['qty'], 'total' => $item->stock_qty]));
+    }
+
+    /**
+     * A serial item that should have been counted (one QR for the type): the pieces that never left the warehouse
+     * are removed with their QR codes and added to the stock count. Refused when a piece is out, on an order, in a case,
+     * in the check or in repair, or has a check or charge on record: those keep their history.
+     */
+    public function convertToCounted(Request $request, Item $item): RedirectResponse
+    {
+        abort_unless($item->serial && $item->kind === 'item', 404);
+        $pieces = $item->assets()->where('status', '!=', Asset::RETIRED)->get();
+        $ids = $pieces->pluck('id');
+        $busy = $pieces->first(fn (Asset $a) => ! in_array($a->status, [Asset::AVAILABLE, Asset::LABEL], true) || $a->out_order_id || $a->case_id);
+        $used = $busy ?? ($ids->isNotEmpty() ? $pieces->firstWhere('id', DB::table('order_assets')->whereIn('asset_id', $ids)->value('asset_id')
+            ?? DB::table('warehouse_checks')->whereIn('asset_id', $ids)->value('asset_id')
+            ?? DB::table('warehouse_charges')->whereIn('asset_id', $ids)->value('asset_id')) : null);
+        if ($used) {
+            return redirect()->route('equipment.show', $item)->with('error', __('equipment.stock_in.convert_busy', ['code' => $used->code]));
+        }
+        $found = $pieces->where('status', Asset::AVAILABLE);
+        $places = $found->pluck('location')->filter()->unique();
+        $place = $places->count() === 1 && (Position::where('code', $places->first())->where('active', true)->exists()
+            || Zone::where('code', $places->first())->where('active', true)->where('type', 'storage')->exists()) ? $places->first() : $item->position_code;
+
+        DB::transaction(function () use ($item, $ids, $found, $place) {
+            Asset::whereIn('id', $ids)->delete();
+            $item->forceFill(['serial' => false, 'stock_qty' => (int) $item->stock_qty + $found->count(), 'position_code' => $place])->save();
+        });
+        AuditLog::record('equipment.converted_counted', $item, [
+            'pieces' => $found->count(), 'labels_removed' => $ids->count(), 'codes' => mb_strimwidth($pieces->pluck('code')->implode(', '), 0, 500, '…'),
+        ], $request->user());
+
+        return redirect()->route('equipment.show', $item)->with('status', __('equipment.stock_in.converted', ['n' => $found->count()]));
     }
 
     public function photo(Item $item): Response

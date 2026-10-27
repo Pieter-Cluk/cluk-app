@@ -380,6 +380,8 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/items/{item}/place', [ItemController::class, 'placePieces'])->whereNumber('item')->name('equipment.assets.place');
             Route::post('/items/{item}/place-counted', [ItemController::class, 'placeCounted'])->whereNumber('item')->name('equipment.counted.place');
             Route::post('/items/{item}/kept-at', [ItemController::class, 'keptAt'])->whereNumber('item')->name('equipment.counted.kept');
+            Route::post('/items/{item}/add-stock', [ItemController::class, 'addStock'])->whereNumber('item')->name('equipment.counted.stock');
+            Route::post('/items/{item}/to-counted', [ItemController::class, 'convertToCounted'])->whereNumber('item')->name('equipment.counted.convert');
             Route::post('/items/{item}/photos', [PictureController::class, 'storeItemPhotos'])->whereNumber('item')->name('equipment.photos.store');
             Route::post('/items/{item}/photos/{photo}/main', [PictureController::class, 'mainItemPhoto'])->whereNumber(['item', 'photo'])->name('equipment.photos.main');
             Route::delete('/items/{item}/photos/{photo}', [PictureController::class, 'destroyItemPhoto'])->whereNumber(['item', 'photo'])->name('equipment.photos.destroy');
