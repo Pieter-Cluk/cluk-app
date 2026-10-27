@@ -68,6 +68,7 @@ jobs:
               echo '  case_items='.json_encode(DB::table('equipment_case_items')->where('item_id', $i->id)->get(['case_id', 'qty'])).' order_lines='.DB::table('order_lines')->where('item_id', $i->id)->count().' parents='.DB::table('equipment_components')->where('child_id', $i->id)->count().PHP_EOL;
               foreach ($as->take(3) as $a) { echo '   '.$a->code.' '.$a->status.' '.$a->location.' case='.($a->case_id ?? '-').' out='.($a->out_order_id ?? '-').PHP_EOL; }
           }
+          foreach (DB::table('order_lines')->whereIn('item_id', $items->pluck('id'))->get() as $l) { $o = App\Models\Rental\Order::find($l->order_id); echo 'LINE '.json_encode($l).PHP_EOL.'  ORDER '.json_encode($o?->only(['id', 'number', 'status', 'out_from', 'out_until', 'loaded_at', 'returned_at', 'cancelled_at'])).' lines='.DB::table('order_lines')->where('order_id', $l->order_id)->count().PHP_EOL; }
           echo 'columns moves: '.implode(',', Illuminate\Support\Facades\Schema::getColumnListing('warehouse_moves')).PHP_EOL;
           PHP
           php "$F2" 2>&1 | tail -60; rm -f "$F2"
