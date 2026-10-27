@@ -95,7 +95,7 @@ return [
         'sort' => 'Ordenar por', 'sort_rel' => 'Recomendado', 'sort_new' => 'Más reciente', 'sort_pa' => 'Precio menor → mayor', 'sort_pd' => 'Precio mayor → menor', 'sort_az' => 'Nombre A–Z',
         'grid' => 'Cuadrícula', 'list' => 'Lista',
         'results' => ':n productos', 'results_q' => ':n resultados para «:q»',
-        'order_code' => 'Código de pedido', 'mfr_code' => 'Código del fabricante', 'ean' => 'EAN',
+        'order_code' => 'Código de pedido', 'mfr_code' => 'Código del fabricante', 'ean' => 'EAN', 'size' => 'Dimensiones (an × la × al)', 'weight' => 'Peso',
         'excl_vat' => 'sin IVA', 'your_price' => 'Tu precio', 'list_price' => 'Precio de lista', 'on_request' => 'Precio a consultar',
         'in_stock' => ':n en stock', 'lead' => 'Lo pedimos para ti', 'add' => 'Añadir a la cesta', 'ask_price' => 'Pedir precio', 'qty' => 'Cantidad',
         'documents' => 'Descargas', 'docs' => ['manual' => 'Manual', 'certificate' => 'Certificado', 'ce' => 'Declaración CE', 'datasheet' => 'Ficha técnica'],
