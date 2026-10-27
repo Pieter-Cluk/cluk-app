@@ -52,6 +52,25 @@ jobs:
           php artisan tinker --execute='$pf = App\Models\Finance\PreInvoice::whereNotNull("invoice_number")->latest("id")->first(); if ($pf) { $t = microtime(true); $b = App\Services\Finance\InvoicePdf::make($pf); echo $pf->invoice_number." pdf=".strlen($b)." bytes, starts ".substr($b, 0, 5).", ".round(microtime(true) - $t, 1)."s".PHP_EOL; } else { echo "no numbered invoice".PHP_EOL; }' 2>&1 | tail -4
           echo "== warehouse zones (read only)"
           php artisan tinker --execute='foreach (App\Models\Warehouse\Zone::orderBy("sort")->get() as $z) { echo $z->sort." ".$z->code." ".$z->type." ".($z->name ?? "-")." cat=".json_encode($z->categories)." next=".json_encode($z->next)." ".($z->active ? "on" : "off").PHP_EOL; }' 2>&1 | tail -25
+          echo; echo "== softsteel items (read only)"
+          F2=$(mktemp /tmp/ss.XXXX.php)
+          cat > "$F2" <<'PHP'
+          <?php
+          require getcwd().'/vendor/autoload.php'; $app = require getcwd().'/bootstrap/app.php'; $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+          use Illuminate\Support\Facades\DB;
+          $items = App\Models\Equipment\Item::where(fn ($q) => $q->where('name', 'like', '%soft%steel%')->orWhere('number', 'like', '%SOFT%')->orWhere('name', 'like', '%softsteel%'))->get();
+          foreach ($items as $i) {
+              echo "ITEM {$i->id} {$i->number} | {$i->name} | kind={$i->kind} serial=".(int) $i->serial." stock={$i->stock_qty} kept=".($i->position_code ?? '-')." active=".(int) $i->active.PHP_EOL;
+              $as = $i->assets()->get();
+              echo '  pieces='.$as->count().' by status '.json_encode($as->countBy('status')).' by place '.json_encode($as->countBy(fn ($a) => ($a->location ?? '-').($a->case_id ? '/case'.$a->case_id : ''))).PHP_EOL;
+              $ids = $as->pluck('id');
+              echo '  order_assets='.DB::table('order_assets')->whereIn('asset_id', $ids)->count().' checks='.DB::table('warehouse_checks')->whereIn('asset_id', $ids)->count().' charges='.DB::table('warehouse_charges')->whereIn('asset_id', $ids)->count().' moves='.DB::table('warehouse_moves')->whereIn('asset_id', $ids)->count().' moves_item='.(Illuminate\Support\Facades\Schema::hasColumn('warehouse_moves', 'item_id') ? DB::table('warehouse_moves')->where('item_id', $i->id)->count() : 'n/a').PHP_EOL;
+              echo '  case_items='.json_encode(DB::table('equipment_case_items')->where('item_id', $i->id)->get(['case_id', 'qty'])).' order_lines='.DB::table('order_lines')->where('item_id', $i->id)->count().' parents='.DB::table('equipment_components')->where('child_id', $i->id)->count().PHP_EOL;
+              foreach ($as->take(3) as $a) { echo '   '.$a->code.' '.$a->status.' '.$a->location.' case='.($a->case_id ?? '-').' out='.($a->out_order_id ?? '-').PHP_EOL; }
+          }
+          echo 'columns moves: '.implode(',', Illuminate\Support\Facades\Schema::getColumnListing('warehouse_moves')).PHP_EOL;
+          PHP
+          php "$F2" 2>&1 | tail -60; rm -f "$F2"
           echo; echo "== website downloads"
           ls -la storage/app/private/web-downloads storage/app/web-downloads 2>&1 | tail -15
           php artisan tinker --execute='foreach (App\Models\Website\Download::orderBy("sort")->get() as $d) { echo $d->id." | ".($d->title["en"] ?? "?")." | ".$d->category." | ".($d->active ? "on" : "off")." | ".$d->access." | ".$d->downloads.PHP_EOL; } echo "total: ".App\Models\Website\Download::count().PHP_EOL;' 2>&1 | tail -20
