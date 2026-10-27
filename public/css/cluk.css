@@ -237,6 +237,7 @@ input[type=file]{padding:10px;border:1px dashed var(--line);border-radius:6px;ba
 .member-top{justify-content:space-between;align-items:center}
 .member-right{display:flex;align-items:center;gap:8px}
 .member-brand{color:#fff;text-decoration:none;font-weight:700;letter-spacing:3px;font-size:13px;display:flex;align-items:center;gap:10px}
+.login.member{background:linear-gradient(90deg,rgba(8,12,9,.82) 0%,rgba(8,12,9,.62) 45%,rgba(8,12,9,.35) 100%),#0b0e0c url("/images/afrit6-login.jpg") center/cover no-repeat}
 .member-brand .six{display:inline-flex;width:34px;height:34px;border-radius:8px;background:#5cbf3a;color:#0f1a0b;align-items:center;justify-content:center;font-size:18px;letter-spacing:0}
 .member-main{justify-content:center;padding-right:0}
 .member-box-wide{max-width:640px}
