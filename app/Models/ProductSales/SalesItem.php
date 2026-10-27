@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /** A product we sell. No assets: stock is a number. */
-#[Fillable(['number', 'brand', 'type', 'description', 'category', 'unit', 'list_price_cents', 'stock_qty', 'min_stock', 'photo_path', 'active', 'ean', 'on_website', 'category_id', 'subcategory_id', 'search_words', 'brand_id', 'manufacturer_code'])]
+#[Fillable(['number', 'brand', 'type', 'description', 'category', 'unit', 'list_price_cents', 'stock_qty', 'min_stock', 'photo_path', 'active', 'ean', 'on_website', 'category_id', 'subcategory_id', 'search_words', 'brand_id', 'manufacturer_code', 'weight_kg', 'width_m', 'length_m', 'height_m'])]
 class SalesItem extends Model
 {
     use Classified;
@@ -27,7 +27,7 @@ class SalesItem extends Model
 
     protected function casts(): array
     {
-        return ['list_price_cents' => 'integer', 'stock_qty' => 'integer', 'min_stock' => 'integer', 'active' => 'boolean', 'on_website' => 'boolean'];
+        return ['list_price_cents' => 'integer', 'stock_qty' => 'integer', 'min_stock' => 'integer', 'active' => 'boolean', 'on_website' => 'boolean', 'weight_kg' => 'float', 'width_m' => 'float', 'length_m' => 'float', 'height_m' => 'float'];
     }
 
     public function options(): BelongsToMany

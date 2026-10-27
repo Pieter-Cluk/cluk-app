@@ -79,6 +79,8 @@ class ItemController extends Controller
             'unit' => ['required', Rule::in(SalesItem::UNITS)],
             'list_price' => ['required', 'numeric', 'min:0', 'max:1000000'], 'stock_qty' => ['nullable', 'integer', 'min:0', 'max:1000000'], 'min_stock' => ['nullable', 'integer', 'min:0', 'max:100000'],
             'ean' => ['nullable', 'string', 'max:32'], 'on_website' => ['nullable', 'boolean'], 'manufacturer_code' => ['nullable', 'string', 'max:60'],
+            'weight_kg' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'width_cm' => ['nullable', 'numeric', 'min:0', 'max:10000'], 'length_cm' => ['nullable', 'numeric', 'min:0', 'max:10000'], 'height_cm' => ['nullable', 'numeric', 'min:0', 'max:10000'],
         ];
     }
 
@@ -86,7 +88,11 @@ class ItemController extends Controller
     {
         return ['brand' => $d['brand'] ?? null, 'type' => $d['type'], 'description' => $d['description'] ?? null, 'unit' => $d['unit'],
             'list_price_cents' => (int) round($d['list_price'] * 100), 'stock_qty' => (int) ($d['stock_qty'] ?? 0), 'min_stock' => (int) ($d['min_stock'] ?? 0), 'ean' => $d['ean'] ?? null,
-            'manufacturer_code' => ($m = trim((string) ($d['manufacturer_code'] ?? ''))) !== '' ? $m : null]
+            'manufacturer_code' => ($m = trim((string) ($d['manufacturer_code'] ?? ''))) !== '' ? $m : null,
+            'weight_kg' => isset($d['weight_kg']) ? round((float) $d['weight_kg'], 3) : null,
+            'width_m' => isset($d['width_cm']) ? round($d['width_cm'] / 100, 4) : null,
+            'length_m' => isset($d['length_cm']) ? round($d['length_cm'] / 100, 4) : null,
+            'height_m' => isset($d['height_cm']) ? round($d['height_cm'] / 100, 4) : null]
             + (auth()->user()?->hasRight('equipment.website') ? ['on_website' => (bool) ($d['on_website'] ?? false)] : []);
     }
 

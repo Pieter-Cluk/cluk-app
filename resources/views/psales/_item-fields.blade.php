@@ -15,5 +15,12 @@
     <label class="field"><span>{{ __('psales.items.min_stock') }}</span><input type="number" min="0" name="min_stock" value="{{ old('min_stock', $it->min_stock ?? 0) }}" class="w-sm"></label>
     <label class="field"><span>{{ __('psales.items.ean') }}</span><input name="ean" maxlength="32" value="{{ old('ean', $it->ean ?? '') }}" inputmode="numeric"></label>
 </div>
+@php($cm = fn ($m) => $m === null ? '' : rtrim(rtrim(number_format((float) $m * 100, 2, '.', ''), '0'), '.'))
+<div class="inline-form">
+    <label class="field"><span>{{ __('psales.items.width_cm') }}</span><input type="number" step="0.01" min="0" name="width_cm" value="{{ old('width_cm', $cm($it->width_m)) }}" class="w-sm"></label>
+    <label class="field"><span>{{ __('psales.items.length_cm') }}</span><input type="number" step="0.01" min="0" name="length_cm" value="{{ old('length_cm', $cm($it->length_m)) }}" class="w-sm"></label>
+    <label class="field"><span>{{ __('psales.items.height_cm') }}</span><input type="number" step="0.01" min="0" name="height_cm" value="{{ old('height_cm', $cm($it->height_m)) }}" class="w-sm"></label>
+    <label class="field"><span>{{ __('psales.items.weight_kg') }}</span><input type="number" step="0.001" min="0" name="weight_kg" value="{{ old('weight_kg', $it->weight_kg === null ? '' : rtrim(rtrim(number_format((float) $it->weight_kg, 3, '.', ''), '0'), '.')) }}" class="w-sm"><small>{{ __('psales.items.weight_hint') }}</small></label>
+</div>
 <label class="check"><input type="hidden" name="on_website" value="0"><input type="checkbox" name="on_website" value="1" @checked(old('on_website', $it->on_website ?? false)) @disabled(! auth()->user()->hasRight('equipment.website'))><span>{{ __('psales.items.on_website') }}<br><small>{{ __('equipment.on_website_hint') }}</small></span></label>
 @include('products._tags', ['p' => $it])
