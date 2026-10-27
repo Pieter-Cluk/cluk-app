@@ -276,6 +276,8 @@ return [
             'messages_created' => 'Message made',
             'messages_send_started' => 'Sending started',
             'messages_sent' => 'Message sent to everyone on the list',
+            'messages_paused' => 'Invitations paused',
+            'messages_resumed' => 'Invitations carried on',
             'messages_scheduled' => 'Message scheduled',
             'messages_activated' => 'Message switched on',
             'messages_deactivated' => 'Message switched off',

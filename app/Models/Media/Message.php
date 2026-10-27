@@ -15,23 +15,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * language. The picture is the same for everyone.
  */
 #[Fillable(['kind', 'title', 'subject', 'body', 'source_hash', 'image_path', 'pdf_path', 'pdf_name', 'link_url', 'position', 'status', 'send_at', 'sent_at', 'sent_count',
-    'active', 'active_from', 'active_until', 'created_by_id', 'sent_by_id'])]
+    'active', 'active_from', 'active_until', 'created_by_id', 'sent_by_id', 'plan'])]
 class Message extends Model
 {
-    public const KINDS = ['birthday', 'newsletter', 'promotion', 'banner', 'mail_banner'];
+    public const KINDS = ['birthday', 'newsletter', 'promotion', 'invitation', 'banner', 'mail_banner'];
 
     /** Kinds with a period (from–until) instead of a send moment. */
     public const PERIOD = ['banner', 'mail_banner'];
 
     /** Kinds that are mailed once to a list (the others are "in use" or not). */
-    public const MAILED = ['newsletter', 'promotion'];
+    public const MAILED = ['newsletter', 'promotion', 'invitation'];
 
     public const LOCALES = ['en', 'nl', 'fr', 'es'];
 
     protected function casts(): array
     {
         return ['subject' => 'array', 'body' => 'array', 'send_at' => 'datetime', 'sent_at' => 'datetime', 'active' => 'boolean',
-            'active_from' => 'date', 'active_until' => 'date', 'sent_count' => 'integer', 'position' => 'integer'];
+            'active_from' => 'date', 'active_until' => 'date', 'sent_count' => 'integer', 'position' => 'integer', 'plan' => 'array'];
     }
 
     public function sends(): HasMany

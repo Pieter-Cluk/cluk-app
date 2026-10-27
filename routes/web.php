@@ -199,6 +199,8 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/{message}/send', [MessageController::class, 'send'])->whereNumber('message')->name('messages.send');
             Route::post('/{message}/schedule', [MessageController::class, 'schedule'])->whereNumber('message')->name('messages.schedule');
             Route::post('/{message}/unschedule', [MessageController::class, 'unschedule'])->whereNumber('message')->name('messages.unschedule');
+            Route::post('/{message}/plan', [MessageController::class, 'plan'])->whereNumber('message')->name('messages.plan');
+            Route::post('/{message}/pause', [MessageController::class, 'pause'])->whereNumber('message')->name('messages.pause');
             Route::post('/{message}/toggle', [MessageController::class, 'toggle'])->whereNumber('message')->name('messages.toggle');
             Route::post('/{message}/move/{dir}', [MessageController::class, 'move'])->whereNumber('message')->whereIn('dir', ['up', 'down'])->name('messages.move');
             Route::delete('/{message}', [MessageController::class, 'destroy'])->whereNumber('message')->name('messages.destroy');

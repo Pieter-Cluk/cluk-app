@@ -5,6 +5,12 @@
 
 {!! nl2br(e($body)) !!}
 
+@if ($button ?? null)
+<x-mail::button :url="$button[1]">
+{{ $button[0] }}
+</x-mail::button>
+@endif
+
 @if ($pdfLink)
 <x-mail::button :url="$pdfLink[1]">
 {{ $pdfLink[0] }}

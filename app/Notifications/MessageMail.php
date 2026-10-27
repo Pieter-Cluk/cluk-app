@@ -16,6 +16,7 @@ class MessageMail extends Notification
         public ?array $pdfLink = null,
         public ?string $unsubscribeUrl = null,
         public array $files = [],
+        public ?array $button = null,
     ) {}
 
     public function via(object $notifiable): array
@@ -26,7 +27,7 @@ class MessageMail extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $mail = (new MailMessage)->subject($this->subject)->markdown('mail.message', [
-            'body' => $this->body, 'imageUrl' => $this->imageUrl, 'pdfLink' => $this->pdfLink, 'unsubscribeUrl' => $this->unsubscribeUrl,
+            'body' => $this->body, 'imageUrl' => $this->imageUrl, 'pdfLink' => $this->pdfLink, 'unsubscribeUrl' => $this->unsubscribeUrl, 'button' => $this->button,
         ]);
         foreach ($this->files as $f) {
             $mail->attach($f['path'], ['as' => $f['name'], 'mime' => 'application/pdf']);

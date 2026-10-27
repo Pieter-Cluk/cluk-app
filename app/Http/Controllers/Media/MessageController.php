@@ -151,8 +151,43 @@ class MessageController extends Controller
         return back()->with('status', $ok ? __('messages.test_sent', ['email' => $me->email]) : __('messages.mail_failed'));
     }
 
+    /**
+     * Invitation: plan it. From the start day, country by country (the countries in the order given first), at most
+     * N people a day, weekdays 9:00–16:00. The list is made on the start day, so customers added until then are in it.
+     */
+    public function plan(Request $request, Message $message): RedirectResponse
+    {
+        abort_unless($message->kind === 'invitation', 404);
+        $this->readyToSend($message);
+        $d = $request->validate([
+            'start' => ['required', 'date', 'after_or_equal:today'],
+            'per_day' => ['required', 'integer', 'min:10', 'max:500'],
+            'countries' => ['nullable', 'string', 'max:200'],
+        ]);
+        $countries = collect(preg_split('/[\s,;]+/', strtoupper((string) ($d['countries'] ?? ''))))->map(fn ($c) => $c === 'UK' ? 'GB' : $c)
+            ->filter(fn ($c) => preg_match('/^[A-Z]{2}$/', $c))->unique()->values()->all() ?: Messages::FIRST_COUNTRIES;
+        $start = Carbon::parse($d['start'], 'Europe/Brussels')->setTime(Messages::HOURS[0], 0);
+        $message->update(['plan' => ['start' => $start->toDateString(), 'per_day' => (int) $d['per_day'], 'countries' => $countries],
+            'status' => 'scheduled', 'send_at' => $start, 'sent_by_id' => $request->user()->id]);
+        AuditLog::record('messages.scheduled', $message, ['at' => $start->format('d/m/Y'), 'per_day' => (int) $d['per_day'], 'countries' => implode(', ', $countries)], $request->user());
+
+        return back()->with('status', __('messages.invite.planned', ['date' => $start->format('d/m/Y')]));
+    }
+
+    /** Invitation: stop sending for now, or carry on (the days not reached yet keep their date). */
+    public function pause(Request $request, Message $message): RedirectResponse
+    {
+        abort_unless($message->kind === 'invitation' && in_array($message->status, ['sending', 'paused'], true), 409);
+        $on = $message->status === 'sending';
+        $message->update(['status' => $on ? 'paused' : 'sending']);
+        AuditLog::record($on ? 'messages.paused' : 'messages.resumed', $message, ['sent' => $message->sends()->where('status', 'sent')->count()], $request->user());
+
+        return back()->with('status', __($on ? 'messages.invite.paused' : 'messages.invite.resumed'));
+    }
+
     public function send(Request $request, Message $message): RedirectResponse
     {
+        abort_if($message->kind === 'invitation', 409); // invitations are always planned
         $this->readyToSend($message);
         $n = Messages::start($message, $request->user());
 
@@ -161,6 +196,7 @@ class MessageController extends Controller
 
     public function schedule(Request $request, Message $message): RedirectResponse
     {
+        abort_if($message->kind === 'invitation', 409);
         $this->readyToSend($message);
         $at = Carbon::parse($request->validate(['send_at' => ['required', 'date', 'after:now']])['send_at']);
         $message->update(['status' => 'scheduled', 'send_at' => $at, 'sent_by_id' => $request->user()->id]);

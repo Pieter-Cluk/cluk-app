@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** One person on the list of a newsletter or promotion: sent once, never twice. */
-#[Fillable(['message_id', 'email', 'contact_id', 'member_id', 'locale', 'status', 'sent_at'])]
+#[Fillable(['message_id', 'email', 'contact_id', 'member_id', 'locale', 'status', 'sent_at', 'country', 'planned_on'])]
 class MessageSend extends Model
 {
     protected function casts(): array
     {
-        return ['sent_at' => 'datetime'];
+        return ['sent_at' => 'datetime', 'planned_on' => 'date'];
     }
 
     public function message(): BelongsTo

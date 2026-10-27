@@ -276,6 +276,8 @@ return [
             'messages_created' => 'Bericht gemaakt',
             'messages_send_started' => 'Versturen gestart',
             'messages_sent' => 'Bericht verstuurd naar iedereen op de lijst',
+            'messages_paused' => 'Uitnodigingen gepauzeerd',
+            'messages_resumed' => 'Uitnodigingen hervat',
             'messages_scheduled' => 'Bericht gepland',
             'messages_activated' => 'Bericht aangezet',
             'messages_deactivated' => 'Bericht uitgezet',

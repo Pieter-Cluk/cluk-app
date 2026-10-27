@@ -76,7 +76,46 @@
                     <small class="muted">{{ __('messages.test_hint', ['email' => auth()->user()->email]) }}</small>
                 </section>
 
-                @if ($mailed)
+                @if ($m->kind === 'invitation')
+                    @php($cname = fn ($c) => $c === '' || $c === null ? __('messages.invite.no_country') : (class_exists('Locale') ? (\Locale::getDisplayRegion('-'.$c, app()->getLocale()) ?: $c) : $c))
+                    <section class="card stack-sm">
+                        <h2>{{ __('messages.invite.plan_title') }}</h2>
+                        @if (in_array($m->status, ['draft', 'scheduled'], true))
+                            @php($plan = $m->plan ?? [])
+                            @php($people = \App\Services\Media\Messages::recipients($m))
+                            @php($startDay = \Illuminate\Support\Carbon::parse($plan['start'] ?? now()->addDay()->toDateString()))
+                            @php($preview = \App\Services\Media\Messages::plan($people, $startDay, (int) ($plan['per_day'] ?? 100), $plan['countries'] ?? \App\Services\Media\Messages::FIRST_COUNTRIES))
+                            <p>{{ trans_choice('messages.will_go', count($people), ['n' => count($people)]) }} {{ __('messages.invite.who') }}</p>
+                            @if ($m->status === 'scheduled')<p class="flash flash-ok">{{ __('messages.invite.planned', ['date' => $m->send_at->format('d/m/Y')]) }}</p>@endif
+                            @if ($preview['countries'])
+                                <div class="table-wrap"><table class="table">
+                                    <thead><tr><th>{{ __('messages.invite.country') }}</th><th class="num">{{ __('messages.invite.people') }}</th><th>{{ __('messages.invite.days') }}</th></tr></thead>
+                                    <tbody>@foreach ($preview['countries'] as $c => $row)<tr><td>{{ $cname($c) }}</td><td class="num">{{ $row['n'] }}</td><td>{{ \Illuminate\Support\Carbon::parse($row['from'])->format('d/m') }}@if ($row['until'] !== $row['from']) – {{ \Illuminate\Support\Carbon::parse($row['until'])->format('d/m') }}@endif</td></tr>@endforeach</tbody>
+                                </table></div>
+                                <small class="muted">{{ trans_choice('messages.invite.last_day', count($preview['days']), ['n' => count($preview['days']), 'date' => \Illuminate\Support\Carbon::parse(end($preview['days'])['date'])->format('d/m/Y')]) }}</small>
+                            @endif
+                            <form method="post" action="{{ route('messages.plan', $m) }}" class="stack-sm">@csrf
+                                <label class="field"><span>{{ __('messages.invite.start') }}</span><input type="date" name="start" required min="{{ now()->toDateString() }}" value="{{ old('start', $plan['start'] ?? '') }}"></label>
+                                <label class="field"><span>{{ __('messages.invite.per_day') }}</span><input type="number" name="per_day" min="10" max="500" required value="{{ old('per_day', $plan['per_day'] ?? 100) }}"></label>
+                                <label class="field"><span>{{ __('messages.invite.order') }}</span><input name="countries" maxlength="200" value="{{ old('countries', implode(', ', $plan['countries'] ?? \App\Services\Media\Messages::FIRST_COUNTRIES)) }}"><small class="muted">{{ __('messages.invite.order_hint') }}</small></label>
+                                @foreach (['start', 'per_day', 'send'] as $f)@error($f)<small class="txt-danger">{{ $message }}</small>@enderror @endforeach
+                                <div><button class="primary" type="submit">{{ __($m->status === 'scheduled' ? 'messages.invite.replan' : 'messages.invite.plan_go') }}</button></div>
+                            </form>
+                            @if ($m->status === 'scheduled')<form method="post" action="{{ route('messages.unschedule', $m) }}">@csrf<button class="btn" type="submit">{{ __('messages.unschedule') }}</button></form>@endif
+                            <small class="muted">{{ __('messages.invite.rules') }}</small>
+                        @else
+                            @php($prog = $m->sends()->selectRaw("coalesce(country, '') as c, count(*) as n, sum(case when status = 'sent' then 1 else 0 end) as sent, sum(case when status = 'skipped' then 1 else 0 end) as skipped, sum(case when status = 'failed' then 1 else 0 end) as failed, min(planned_on) as d1, max(planned_on) as d2")->groupBy('c')->orderBy('d1')->get())
+                            <p>{{ $m->status === 'sent' ? trans_choice('messages.was_sent', $m->sent_count, ['n' => $m->sent_count, 'date' => $m->sent_at?->format('d/m/Y H:i'), 'name' => $m->sentBy?->name ?? '—']) : __('messages.is_sending', ['done' => $prog->sum('sent'), 'total' => $prog->sum('n')]) }}@if ($m->status === 'paused') <span class="pill pill-warn">{{ __('messages.statuses.paused') }}</span>@endif</p>
+                            <div class="table-wrap"><table class="table">
+                                <thead><tr><th>{{ __('messages.invite.country') }}</th><th class="num">{{ __('messages.invite.sent') }}</th><th>{{ __('messages.invite.days') }}</th></tr></thead>
+                                <tbody>@foreach ($prog as $row)<tr><td>{{ $cname($row->c) }}</td><td class="num">{{ $row->sent }} / {{ $row->n }}@if ($row->skipped) <small class="muted">· {{ trans_choice('messages.invite.skipped', $row->skipped, ['n' => $row->skipped]) }}</small>@endif @if ($row->failed) <small class="txt-danger">· {{ trans_choice('messages.failed_n', $row->failed, ['n' => $row->failed]) }}</small>@endif</td><td>{{ $row->d1 ? \Illuminate\Support\Carbon::parse($row->d1)->format('d/m') : '—' }}@if ($row->d2 && $row->d2 !== $row->d1) – {{ \Illuminate\Support\Carbon::parse($row->d2)->format('d/m') }}@endif</td></tr>@endforeach</tbody>
+                            </table></div>
+                            @if (in_array($m->status, ['sending', 'paused'], true))
+                                <form method="post" action="{{ route('messages.pause', $m) }}">@csrf<button class="btn" type="submit">{{ __($m->status === 'sending' ? 'messages.invite.pause' : 'messages.invite.resume') }}</button></form>
+                            @endif
+                        @endif
+                    </section>
+                @elseif ($mailed)
                     <section class="card stack-sm">
                         <h2>{{ __('messages.send_title') }}</h2>
                         @if (in_array($m->status, ['draft', 'scheduled'], true))

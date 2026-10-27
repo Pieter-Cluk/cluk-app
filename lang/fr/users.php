@@ -276,6 +276,8 @@ return [
             'messages_created' => 'Message créé',
             'messages_send_started' => 'Envoi lancé',
             'messages_sent' => 'Message envoyé à toute la liste',
+            'messages_paused' => 'Invitations mises en pause',
+            'messages_resumed' => 'Invitations reprises',
             'messages_scheduled' => 'Message planifié',
             'messages_activated' => 'Message activé',
             'messages_deactivated' => 'Message désactivé',
