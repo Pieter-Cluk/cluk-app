@@ -620,6 +620,7 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/positions', [LocationController::class, 'positions'])->name('locations.positions');
         Route::put('/positions/{position}', [LocationController::class, 'updatePosition'])->whereNumber('position')->name('locations.position.update');
         Route::post('/positions/{position}/switch', [LocationController::class, 'switchLayer'])->whereNumber('position')->name('locations.position.switch');
+        Route::post('/positions/{position}/active', [LocationController::class, 'activate'])->whereNumber('position')->name('locations.position.active');
         Route::get('/labels', [LocationController::class, 'labels'])->name('locations.labels');
     });
 

@@ -35,14 +35,14 @@
                         @foreach ($layers as $layer => $spots)
                             <div class="wp-layer"><span class="wp-layer-name">{{ $layer }}</span>
                                 @foreach ($spots as $p)
-                                    <a href="{{ route('locations.positions', ['floor' => $floor, 'row' => $row, 'p' => $p->code]) }}" title="{{ $p->code }}" @class(['wp-spot', 'wp-'.$p->kind, 'wp-occ' => ($occupied[$p->code] ?? 0) > 0, 'wp-a6' => $p->use === 'afrit6', 'wp-sales' => $p->use === 'sales', 'wp-on' => $sel?->is($p)])>{{ $p->layer }}{{ $p->spot }}</a>
+                                    <a href="{{ route('locations.positions', ['floor' => $floor, 'row' => $row, 'p' => $p->code]) }}" title="{{ $p->code }}" @class(['wp-spot', 'wp-'.$p->kind, 'wp-occ' => ($occupied[$p->code] ?? 0) > 0, 'wp-a6' => $p->use === 'afrit6', 'wp-sales' => $p->use === 'sales', 'wp-on' => $sel?->is($p), 'wp-inactive' => ! $p->active])>{{ $p->layer }}{{ $p->spot }}</a>
                                 @endforeach
                             </div>
                         @endforeach
                     </div>
                 @endforeach
             </div>
-            <div class="legend-row"><span><i class="wp-pallet"></i>{{ __('warehouse.settings.pallet') }}</span><span><i class="wp-shelf"></i>{{ __('warehouse.settings.shelf') }}</span><span><i class="wp-occ"></i>{{ __('warehouse.settings.occupied') }}</span><span><i class="wp-a6"></i>{{ __('warehouse.settings.uses.afrit6') }}</span></div>
+            <div class="legend-row"><span><i class="wp-pallet"></i>{{ __('warehouse.settings.pallet') }}</span><span><i class="wp-shelf"></i>{{ __('warehouse.settings.shelf') }}</span><span><i class="wp-occ"></i>{{ __('warehouse.settings.occupied') }}</span><span><i class="wp-a6"></i>{{ __('warehouse.settings.uses.afrit6') }}</span><span><i class="wp-inactive"></i>{{ __('warehouse.settings.inactive') }}</span></div>
             @if ($floor === 'M')<p class="muted small">{{ __('warehouse.settings.mezzanine_note') }}</p>@endif
         </section>
 
@@ -62,6 +62,19 @@
                         <select name="use" aria-label="{{ __('warehouse.settings.used_for') }}">@foreach (\App\Models\Warehouse\Position::USES as $u)<option value="{{ $u }}" @selected($sel->use === $u)>{{ __('warehouse.settings.uses.'.$u) }}</option>@endforeach</select>
                         <button class="btn" type="submit">{{ __('warehouse.settings.save') }}</button>
                     </form>
+                    <div class="mt">
+                        <b>{{ $sel->active ? __('warehouse.settings.is_on') : __('warehouse.settings.is_off') }}</b>
+                        <div class="inline-form mt">
+                            @foreach (['spot' => $sel->code, 'layer' => $sel->layerCode(), 'rack' => $sel->floor.$sel->row.$sel->rack] as $scope => $what)
+                                <form method="post" action="{{ route('locations.position.active', $sel) }}">@csrf
+                                    <input type="hidden" name="scope" value="{{ $scope }}"><input type="hidden" name="active" value="{{ $sel->active ? 0 : 1 }}">
+                                    <button class="btn" type="submit">{{ __($sel->active ? 'warehouse.settings.off_'.$scope : 'warehouse.settings.on_'.$scope, ['what' => $what]) }}</button>
+                                </form>
+                            @endforeach
+                        </div>
+                        @error('active')<p class="txt-danger small">{{ $message }}</p>@enderror
+                        <small class="muted">{{ __('warehouse.settings.active_hint') }}</small>
+                    </div>
                     @if ($sel->floor === 'G' && ! $sel->isGroundLayer())
                         <form method="post" action="{{ route('locations.position.switch', $sel) }}" class="mt">@csrf<button class="btn" type="submit">{{ $sel->kind === 'shelf' ? __('warehouse.settings.to_pallet') : __('warehouse.settings.to_shelf') }}</button></form>
                         <small class="muted">{{ __('warehouse.settings.switch_hint') }}</small>

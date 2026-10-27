@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Equipment\Asset;
+use App\Models\Equipment\Item;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
 use Illuminate\Http\RedirectResponse;
@@ -95,6 +96,37 @@ class LocationController extends Controller
         $position->update($d);
 
         return redirect()->route('locations.positions', ['floor' => $position->floor, 'row' => $position->row, 'p' => $position->code])->with('status', __('warehouse.settings.saved'));
+    }
+
+    /**
+     * Switch a place on or off: just this place, its whole layer or its whole rack. A place that is off can't be scanned
+     * into, chosen as "kept at" or printed; it stays in the list (greyed) so it can be switched on again.
+     * Switching off is refused while pieces lie there or counted items are kept there.
+     */
+    public function activate(Request $request, Position $position): RedirectResponse
+    {
+        $d = $request->validate(['scope' => ['required', Rule::in(['spot', 'layer', 'rack'])], 'active' => ['required', 'boolean']]);
+        $on = (bool) $d['active'];
+        $places = Position::where('floor', $position->floor)->where('row', $position->row)->where('rack', $position->rack)
+            ->when($d['scope'] !== 'rack', fn ($q) => $q->where('layer', $position->layer))
+            ->when($d['scope'] === 'spot', fn ($q) => $q->whereKey($position->id))
+            ->get();
+        $codes = $places->pluck('code');
+        if (! $on) {
+            $busy = Asset::whereIn('location', $codes)->where('status', '!=', Asset::RETIRED)->orderBy('location')->first(['location']);
+            $kept = Item::whereIn('position_code', $codes)->orderBy('number')->first(['number', 'position_code']);
+            if ($busy || $kept) {
+                return back()->withErrors(['active' => $busy
+                    ? __('warehouse.settings.off_not_empty', ['code' => $busy->location])
+                    : __('warehouse.settings.off_kept', ['code' => $kept->position_code, 'item' => $kept->number])]);
+            }
+        }
+        Position::whereIn('id', $places->pluck('id'))->update(['active' => $on]);
+        $what = match ($d['scope']) { 'spot' => $position->code, 'layer' => $position->layerCode(), default => $position->floor.$position->row.$position->rack };
+        AuditLog::record($on ? 'warehouse.places_on' : 'warehouse.places_off', $position, ['places' => $what, 'count' => $places->count()], $request->user());
+
+        return redirect()->route('locations.positions', ['floor' => $position->floor, 'row' => $position->row, 'p' => $position->code])
+            ->with('status', trans_choice($on ? 'warehouse.settings.places_on' : 'warehouse.settings.places_off', $places->count(), ['n' => $places->count(), 'what' => $what]));
     }
 
     /** Switch a layer between 3 shelf places and 2 pallet places, only when it is empty. */

@@ -269,6 +269,8 @@ return [
             'finance_pf_numbered' => 'Factuurnummer gegeven (goedgekeurd voor de OkiOki-koppeling)',
             'equipment_stock_added' => 'Voorraad bijgeteld (levering)',
             'equipment_converted_counted' => 'Omgezet naar geteld (één QR voor het type)',
+            'warehouse_places_on' => 'Magazijnplaatsen aangezet',
+            'warehouse_places_off' => 'Magazijnplaatsen uitgezet',
             'equipment_photo_approved' => 'Productfoto van het web gekozen',
             'user_instructions_sent' => 'Aanmeldinstructies gestuurd',
             'messages_created' => 'Bericht gemaakt',

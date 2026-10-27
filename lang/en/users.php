@@ -269,6 +269,8 @@ return [
             'finance_pf_numbered' => 'Invoice number given (approved before the OkiOki link)',
             'equipment_stock_added' => 'Stock added (delivery)',
             'equipment_converted_counted' => 'Switched to counted (one QR for the type)',
+            'warehouse_places_on' => 'Warehouse places switched on',
+            'warehouse_places_off' => 'Warehouse places switched off',
             'equipment_photo_approved' => 'Product photo chosen from the web',
             'user_instructions_sent' => 'Sign-in instructions sent',
             'messages_created' => 'Message made',
