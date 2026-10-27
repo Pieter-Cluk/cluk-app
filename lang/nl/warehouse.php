@@ -359,7 +359,7 @@ return [
         'row_labels' => 'Rij :row',
         'dymo' => '57 × 32 mm gecoate labels. De browser drukt één label per pagina op de LabelWriter.',
         'labels_title' => '{1} 1 plaatslabel|[2,*] :n plaatslabels',
-        'labels_hint' => ':n labels · Dymo 2112290 (59 × 102 mm) · kies de LabelWriter, papierformaat 2112290 en liggend in het printvenster.',
+        'labels_hint' => ':n labels · Dymo 2112290 (59 × 102 mm) · kies in het printvenster de LabelWriter, papierformaat “30256 Shipping” en liggend.',
         'scan_to_move' => 'scan om te verplaatsen',
     ],
     'colli_n' => '{1} 1 colli|[2,*] :n colli',
@@ -451,7 +451,7 @@ return [
     ],
     'labels' => [
         'title' => 'Labels',
-        'intro' => 'Kies wat je wilt afdrukken. Locatielabels: Dymo 2112290 (59 × 102 mm). Artikellabels: Dymo 1933083 (25 × 25 mm). Elke QR-code heeft de CLUK-c in het midden.',
+        'intro' => 'Kies wat je wilt afdrukken. Locatielabels: Dymo 2112290 (59 × 102 mm), papierformaat “30256 Shipping” in het printvenster. Artikellabels: Dymo 1933083 (25 × 25 mm). Elke QR-code heeft de CLUK-c in het midden.',
         'locations' => 'Locatielabels',
         'items' => 'Artikellabels',
         'floor' => 'Verdieping',

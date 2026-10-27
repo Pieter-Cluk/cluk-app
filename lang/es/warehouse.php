@@ -359,7 +359,7 @@ return [
         'row_labels' => 'Fila :row',
         'dymo' => 'Etiquetas estucadas de 57 × 32 mm. El navegador imprime una etiqueta por página en la LabelWriter.',
         'labels_title' => '{1} 1 etiqueta de ubicación|[2,*] :n etiquetas de ubicación',
-        'labels_hint' => ':n etiquetas · Dymo 2112290 (59 × 102 mm) · elige la LabelWriter, el formato 2112290 y horizontal.',
+        'labels_hint' => ':n etiquetas · Dymo 2112290 (59 × 102 mm) · en la ventana de impresión elige la LabelWriter, el formato «30256 Shipping» y horizontal.',
         'scan_to_move' => 'escanear para mover',
     ],
     'colli_n' => '{1} 1 bulto|[2,*] :n bultos',
@@ -451,7 +451,7 @@ return [
     ],
     'labels' => [
         'title' => 'Etiquetas',
-        'intro' => 'Elige qué imprimir. Etiquetas de ubicación: Dymo 2112290 (59 × 102 mm). Etiquetas de artículo: Dymo 1933083 (25 × 25 mm). Cada código QR lleva la c de CLUK en el centro.',
+        'intro' => 'Elige qué imprimir. Etiquetas de ubicación: Dymo 2112290 (59 × 102 mm), formato «30256 Shipping» en la ventana de impresión. Etiquetas de artículo: Dymo 1933083 (25 × 25 mm). Cada código QR lleva la c de CLUK en el centro.',
         'locations' => 'Etiquetas de ubicación',
         'items' => 'Etiquetas de artículo',
         'floor' => 'Planta',

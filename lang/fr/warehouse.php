@@ -359,7 +359,7 @@ return [
         'row_labels' => 'Rangée :row',
         'dymo' => 'Étiquettes couchées 57 × 32 mm. Le navigateur imprime une étiquette par page sur la LabelWriter.',
         'labels_title' => '{1} 1 étiquette de place|[2,*] :n étiquettes de place',
-        'labels_hint' => ':n étiquettes · Dymo 2112290 (59 × 102 mm) · choisissez la LabelWriter, le format 2112290 et paysage.',
+        'labels_hint' => ':n étiquettes · Dymo 2112290 (59 × 102 mm) · dans la fenêtre d’impression, choisissez la LabelWriter, le format « 30256 Shipping » et paysage.',
         'scan_to_move' => 'scanner pour déplacer',
     ],
     'colli_n' => '{1} 1 colis|[2,*] :n colis',
@@ -451,7 +451,7 @@ return [
     ],
     'labels' => [
         'title' => 'Étiquettes',
-        'intro' => 'Choisissez ce qu’il faut imprimer. Étiquettes d’emplacement : Dymo 2112290 (59 × 102 mm). Étiquettes d’article : Dymo 1933083 (25 × 25 mm). Chaque code QR porte le c de CLUK au centre.',
+        'intro' => 'Choisissez ce qu’il faut imprimer. Étiquettes d’emplacement : Dymo 2112290 (59 × 102 mm), format « 30256 Shipping » dans la fenêtre d’impression. Étiquettes d’article : Dymo 1933083 (25 × 25 mm). Chaque code QR porte le c de CLUK au centre.',
         'locations' => 'Étiquettes d’emplacement',
         'items' => 'Étiquettes d’article',
         'floor' => 'Étage',

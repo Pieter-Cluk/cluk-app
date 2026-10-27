@@ -359,7 +359,7 @@ return [
         'row_labels' => 'Row :row',
         'dymo' => '57 × 32 mm coated labels. The browser prints one label per page on the LabelWriter.',
         'labels_title' => '{1} 1 location label|[2,*] :n location labels',
-        'labels_hint' => ':n labels · Dymo 2112290 (59 × 102 mm) · choose the LabelWriter, paper size 2112290 and landscape in the print window.',
+        'labels_hint' => ':n labels · Dymo 2112290 (59 × 102 mm) · in the print window choose the LabelWriter, paper size “30256 Shipping” and landscape.',
         'scan_to_move' => 'scan to move',
     ],
     'colli_n' => '{1} 1 coli|[2,*] :n colli',
@@ -451,7 +451,7 @@ return [
     ],
     'labels' => [
         'title' => 'Labels',
-        'intro' => 'Choose what to print. Location labels: Dymo 2112290 (59 × 102 mm). Item labels: Dymo 1933083 (25 × 25 mm). Every QR code has the CLUK c in the middle.',
+        'intro' => 'Choose what to print. Location labels: Dymo 2112290 (59 × 102 mm), paper size “30256 Shipping” in the print window. Item labels: Dymo 1933083 (25 × 25 mm). Every QR code has the CLUK c in the middle.',
         'locations' => 'Location labels',
         'items' => 'Item labels',
         'floor' => 'Floor',
