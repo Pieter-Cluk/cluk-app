@@ -95,7 +95,7 @@ return [
         'sort' => 'Sorteer op', 'sort_rel' => 'Aanbevolen', 'sort_new' => 'Nieuwste', 'sort_pa' => 'Prijs laag → hoog', 'sort_pd' => 'Prijs hoog → laag', 'sort_az' => 'Naam A–Z',
         'grid' => 'Raster', 'list' => 'Lijst',
         'results' => ':n producten', 'results_q' => ':n resultaten voor “:q”',
-        'order_code' => 'Bestelcode', 'mfr_code' => 'Fabrikantcode', 'ean' => 'EAN',
+        'order_code' => 'Bestelcode', 'mfr_code' => 'Fabrikantcode', 'ean' => 'EAN', 'size' => 'Afmetingen (B × L × H)', 'weight' => 'Gewicht',
         'excl_vat' => 'excl. btw', 'your_price' => 'Jouw prijs', 'list_price' => 'Lijstprijs', 'on_request' => 'Prijs op aanvraag',
         'in_stock' => ':n op voorraad', 'lead' => 'Wordt voor je besteld', 'add' => 'In winkelmand', 'ask_price' => 'Vraag een prijs', 'qty' => 'Aantal',
         'documents' => 'Downloads', 'docs' => ['manual' => 'Handleiding', 'certificate' => 'Certificaat', 'ce' => 'CE-verklaring', 'datasheet' => 'Datasheet'],

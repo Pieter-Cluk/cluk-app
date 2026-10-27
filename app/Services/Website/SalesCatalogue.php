@@ -244,9 +244,41 @@ class SalesCatalogue
             'discount' => $p['discount_pct'],
             'options' => $i->options->map(fn ($o) => [$o->attribute?->label($locale), $o->display($locale)])->values()->all(),
             'tags' => $i->tags->filter->active->map(fn ($t) => ['slug' => $t->slug, 'name' => $t->label($locale)])->values()->all(),
+            'size' => self::size($i, $locale),
+            'weight' => self::weight($i, $locale),
             'documents' => $i->documents->map(fn ($d) => ['id' => $d->id, 'kind' => $d->kind, 'name' => $d->name])->values()->all(),
             'related' => self::withPrices($related, $who),
         ];
+    }
+
+    /** Width × length × height from the product card (stored in metres): in cm for small products, otherwise in m. */
+    public static function size(SalesItem $i, string $locale): ?string
+    {
+        $d = array_map(fn ($k) => $i->getAttribute($k) === null ? null : (float) $i->getAttribute($k), ['width_m', 'length_m', 'height_m']);
+        if (in_array(null, $d, true) || min($d) <= 0) {
+            return null;
+        }
+        $cm = max($d) < 1;
+
+        return implode(' × ', array_map(fn ($v) => self::num($cm ? $v * 100 : $v, $cm ? 1 : 2, $locale), $d)).($cm ? ' cm' : ' m');
+    }
+
+    /** Weight from the product card (stored in kg): in g below 1 kg. */
+    public static function weight(SalesItem $i, string $locale): ?string
+    {
+        $kg = (float) $i->getAttribute('weight_kg');
+        if ($kg <= 0) {
+            return null;
+        }
+
+        return $kg < 1 ? self::num($kg * 1000, 0, $locale).' g' : self::num($kg, 2, $locale).' kg';
+    }
+
+    private static function num(float $v, int $dec, string $locale): string
+    {
+        $s = number_format($v, $dec, $locale === 'en' ? '.' : ',', $locale === 'en' ? ',' : '.');
+
+        return $dec ? rtrim(rtrim($s, '0'), '.,') : $s;
     }
 
     /** Sets price_cents (the customer's own price, or the list price) on each product. */

@@ -33,7 +33,9 @@
       <h1>{{ $i->name() }}</h1>
       <dl class="pcodes"><dt>{{ __('site.sales.order_code') }}</dt><dd>{{ $i->number }}</dd>
         @if ($i->manufacturer_code)<dt>{{ __('site.sales.mfr_code') }}</dt><dd>{{ $i->manufacturer_code }}</dd>@endif
-        @if ($i->ean)<dt>{{ __('site.sales.ean') }}</dt><dd>{{ $i->ean }}</dd>@endif</dl>
+        @if ($i->ean)<dt>{{ __('site.sales.ean') }}</dt><dd>{{ $i->ean }}</dd>@endif
+        @if ($d['size'])<dt>{{ __('site.sales.size') }}</dt><dd class="num">{{ $d['size'] }}</dd>@endif
+        @if ($d['weight'])<dt>{{ __('site.sales.weight') }}</dt><dd class="num">{{ $d['weight'] }}</dd>@endif</dl>
       @if ($i->description)<p class="pdesc">{{ $i->description }}</p>@endif
       @if ($d['options'])<div class="chips-s">@foreach ($d['options'] as [$k, $v])<span>{{ $k }}: {{ $v }}</span>@endforeach</div>@endif
       <div class="pbuy">

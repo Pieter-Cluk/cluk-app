@@ -96,7 +96,7 @@ return [
         'sort' => 'Sort by', 'sort_rel' => 'Recommended', 'sort_new' => 'Newest', 'sort_pa' => 'Price low → high', 'sort_pd' => 'Price high → low', 'sort_az' => 'Name A–Z',
         'grid' => 'Grid', 'list' => 'List',
         'results' => ':n products', 'results_q' => ':n results for “:q”',
-        'order_code' => 'Order code', 'mfr_code' => 'Manufacturer code', 'ean' => 'EAN',
+        'order_code' => 'Order code', 'mfr_code' => 'Manufacturer code', 'ean' => 'EAN', 'size' => 'Dimensions (W × L × H)', 'weight' => 'Weight',
         'excl_vat' => 'excl. VAT', 'your_price' => 'Your price', 'list_price' => 'List price', 'on_request' => 'Price on request',
         'in_stock' => ':n in stock', 'lead' => 'Ordered for you', 'add' => 'Add to basket', 'ask_price' => 'Ask for a price', 'qty' => 'Quantity',
         'documents' => 'Downloads', 'docs' => ['manual' => 'Manual', 'certificate' => 'Certificate', 'ce' => 'CE declaration', 'datasheet' => 'Datasheet'],
