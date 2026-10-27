@@ -109,6 +109,7 @@ return [
             ['eyebrow' => 'Consumables', 'title' => 'Stock up for the season', 'text' => 'Gaffa, batteries, fluids and connectors, ready the next working day.', 'cta' => 'Shop consumables'],
         ],
         'news_items' => ['Autumn promotions are live', 'New brands in our range', 'Demo day at Factory', 'Order before 15:00, pick up next day'],
+        'no_news' => 'No news yet. Follow us on Facebook and Instagram.',
         'tag_promo' => 'Promo', 'tag_new' => 'New', 'tag_event' => 'Event', 'tag_tip' => 'Tip',
         'prev' => 'Previous', 'next' => 'Next', 'pause' => 'Pause slideshow', 'play' => 'Play slideshow', 'slide' => 'Slide :n',
     ],

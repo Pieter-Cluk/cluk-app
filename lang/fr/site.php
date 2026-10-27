@@ -108,6 +108,7 @@ return [
             ['eyebrow' => 'Consommables', 'title' => 'Faites le plein pour la saison', 'text' => 'Gaffer, piles, liquides et connecteurs, prêts le jour ouvrable suivant.', 'cta' => 'Voir les consommables'],
         ],
         'news_items' => ['Les promotions d’automne ont commencé', 'De nouvelles marques dans notre gamme', 'Journée démo à la Factory', 'Commandez avant 15h, retrait le lendemain'],
+        'no_news' => 'Pas encore de nouvelles. Suivez-nous sur Facebook et Instagram.',
         'tag_promo' => 'Promo', 'tag_new' => 'Nouveau', 'tag_event' => 'Événement', 'tag_tip' => 'Astuce',
         'prev' => 'Précédent', 'next' => 'Suivant', 'pause' => 'Mettre le diaporama en pause', 'play' => 'Lancer le diaporama', 'slide' => 'Diapositive :n',
     ],

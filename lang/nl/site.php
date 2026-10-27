@@ -108,6 +108,7 @@ return [
             ['eyebrow' => 'Verbruiksgoederen', 'title' => 'Sla in voor het seizoen', 'text' => 'Gaffa, batterijen, vloeistoffen en connectoren, klaar de volgende werkdag.', 'cta' => 'Shop verbruiksgoederen'],
         ],
         'news_items' => ['De herfstpromoties zijn gestart', 'Nieuwe merken in ons gamma', 'Demodag in Factory', 'Bestel voor 15:00, ophalen de volgende dag'],
+        'no_news' => 'Nog geen nieuws. Volg ons op Facebook en Instagram.',
         'tag_promo' => 'Promo', 'tag_new' => 'Nieuw', 'tag_event' => 'Event', 'tag_tip' => 'Tip',
         'prev' => 'Vorige', 'next' => 'Volgende', 'pause' => 'Diavoorstelling pauzeren', 'play' => 'Diavoorstelling afspelen', 'slide' => 'Dia :n',
     ],

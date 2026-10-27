@@ -34,7 +34,7 @@ class SocialFeed
         $stamp = (string) Post::max('updated_at').'|'.Post::count();
 
         // The cache keeps plain arrays only (no objects), so the dates are added back afterwards.
-        $rows = Cache::remember('site.social.v2.'.md5($stamp), 300, function () {
+        $rows = Cache::remember('site.social.v3.'.md5($stamp), 300, function () {
             $hasHide = Schema::hasColumn('social_posts', 'on_website');
 
             return Post::with('account:id,platform,name,handle,url')
@@ -88,6 +88,22 @@ class SocialFeed
     }
 
     /** The parts of the site a text belongs to, from its hashtags. */
+    /** Topic label from a hashtag in the post: #promo (#actie), #new (#nieuw), #event, #tip. Null: no label. */
+    public const TOPICS = ['promo' => ['promo', 'actie', 'promotie'], 'new' => ['new', 'nieuw', 'nouveau', 'nuevo'], 'event' => ['event', 'evenement', 'evento'], 'tip' => ['tip', 'astuce', 'consejo']];
+
+    public static function topic(?string $text): ?string
+    {
+        preg_match_all('/#([\p{L}\p{N}_-]+)/u', (string) $text, $m);
+        $tags = array_map(fn ($t) => mb_strtolower($t), $m[1]);
+        foreach (self::TOPICS as $topic => $words) {
+            if (array_intersect($tags, $words)) {
+                return $topic;
+            }
+        }
+
+        return null;
+    }
+
     public static function sections(?string $text): array
     {
         preg_match_all(self::TAG, (string) $text, $m);
@@ -116,6 +132,7 @@ class SocialFeed
             'title' => $title,
             'text' => Str::limit($clean, 400),
             'sections' => self::sections($text),
+            'topic' => self::topic($text),
             'kind' => $p->kind,
             'has_media' => (bool) ($p->thumb_url || self::column($p, 'thumb_path')),
             'image' => $p->thumb_url || self::column($p, 'thumb_path') ? route('site.social.image', $p->id).'?v='.substr(md5((string) ($p->thumb_url ?: self::column($p, 'thumb_path'))), 0, 8) : null,

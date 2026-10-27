@@ -108,6 +108,7 @@ return [
             ['eyebrow' => 'Consumibles', 'title' => 'Prepárate para la temporada', 'text' => 'Cinta gaffer, pilas, líquidos y conectores, listos el siguiente día laborable.', 'cta' => 'Ver consumibles'],
         ],
         'news_items' => ['Empiezan las promociones de otoño', 'Nuevas marcas en nuestra gama', 'Día de demostración en Factory', 'Pide antes de las 15:00 y recoge al día siguiente'],
+        'no_news' => 'Todavía no hay noticias. Síguenos en Facebook e Instagram.',
         'tag_promo' => 'Promo', 'tag_new' => 'Nuevo', 'tag_event' => 'Evento', 'tag_tip' => 'Consejo',
         'prev' => 'Anterior', 'next' => 'Siguiente', 'pause' => 'Pausar presentación', 'play' => 'Reproducir presentación', 'slide' => 'Diapositiva :n',
     ],
