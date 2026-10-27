@@ -14,5 +14,4 @@
         <button class="ms-btn member-btn" type="submit">{{ __('afrit6.login.button') }}</button>
     </form>
     <p class="login-note">{{ __('afrit6.login.new') }} <a href="{{ route('afrit6.register') }}">{{ __('afrit6.login.register') }}</a></p>
-    @include('site._news-strip', ['part' => 'afrit6'])
 </x-layouts.member>
