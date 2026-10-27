@@ -1,5 +1,5 @@
 {{-- Pictures and videos from Media › Website: one = a still picture, more = a slideshow. Each one goes to its own link. --}}
-@php($secs = (int) \App\Services\Website\SiteSettings::get('general.slide_seconds', 6))
+@php($secs = (int) \App\Services\Website\SiteSettings::get('general.slide_seconds', 3))
 <div class="wsl {{ $class ?? '' }}" @if ($slides->count() > 1) data-wslides data-seconds="{{ $secs }}" @endif aria-roledescription="{{ $slides->count() > 1 ? 'carousel' : '' }}">
   @foreach ($slides as $k => $s)
     @php($url = \App\Services\Website\SiteSettings::link($s->link_type, $s->link_value))

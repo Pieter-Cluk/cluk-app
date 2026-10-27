@@ -18,7 +18,7 @@
         <section class="card mt" id="slides">
             <div class="card-head">
                 <h2>{{ __('website.places.'.$place) }}</h2>
-                <span @class(['pill', 'pill-ok' => $n > 0, 'pill-off' => $n === 0])>{{ $n === 0 ? __('website.status.none') : ($n === 1 ? __('website.status.still') : __('website.status.show', ['n' => $n, 's' => \App\Services\Website\SiteSettings::get('general.slide_seconds', 6)])) }}</span>
+                <span @class(['pill', 'pill-ok' => $n > 0, 'pill-off' => $n === 0])>{{ $n === 0 ? __('website.status.none') : ($n === 1 ? __('website.status.still') : __('website.status.show', ['n' => $n, 's' => \App\Services\Website\SiteSettings::get('general.slide_seconds', 3)])) }}</span>
             </div>
             <p class="muted small">{{ __('website.places_hint.'.$place) }}</p>
             @include('media.website._format', ['format' => $place, 'open' => $slides->isEmpty()])
@@ -145,7 +145,7 @@
             <h2>{{ __('website.tabs.general') }}</h2>
             <form method="post" action="{{ route('website.general') }}" class="stack-sm">@csrf<input type="hidden" name="tab" value="general">
                 <div class="form-grid">
-                    <label class="field"><span>{{ __('website.slide_seconds') }}</span><input type="number" name="slide_seconds" min="3" max="30" value="{{ \App\Services\Website\SiteSettings::get('general.slide_seconds', 6) }}"><small>{{ __('website.slide_seconds_hint') }}</small></label>
+                    <label class="field"><span>{{ __('website.slide_seconds') }}</span><input type="number" name="slide_seconds" min="3" max="30" value="{{ \App\Services\Website\SiteSettings::get('general.slide_seconds', 3) }}"><small>{{ __('website.slide_seconds_hint') }}</small></label>
                     @foreach (['instagram', 'facebook', 'linkedin'] as $nw)
                         <label class="field"><span>{{ ucfirst($nw) }}</span><input type="url" name="{{ $nw }}" maxlength="200" value="{{ \App\Services\Website\SiteSettings::social($nw) }}"></label>
                     @endforeach

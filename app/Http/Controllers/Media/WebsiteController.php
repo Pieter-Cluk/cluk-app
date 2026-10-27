@@ -106,7 +106,7 @@ class WebsiteController extends Controller
             SiteSettings::put('dryhire.popular', array_slice($words, 0, 12) ?: null, $request->user()->id);
         }
         if ($request->has('slide_seconds')) {
-            SiteSettings::put('general.slide_seconds', (int) ($d['slide_seconds'] ?? 6), $request->user()->id);
+            SiteSettings::put('general.slide_seconds', (int) ($d['slide_seconds'] ?? 3), $request->user()->id);
             SiteSettings::put('general.social', array_filter(['instagram' => $d['instagram'] ?? null, 'facebook' => $d['facebook'] ?? null, 'linkedin' => $d['linkedin'] ?? null]) ?: null, $request->user()->id);
         }
         AuditLog::record('website.settings', null, ['page' => $d['tab']], $request->user());

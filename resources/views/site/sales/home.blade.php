@@ -25,7 +25,7 @@
     </div>
     @php($own = \App\Services\Website\SiteSettings::slides('sales_slider'))
     @if ($own->isNotEmpty())
-    <div class="slider" id="slider" aria-roledescription="carousel" aria-label="{{ __('site.sales.news') }}" data-seconds="{{ (int) \App\Services\Website\SiteSettings::get('general.slide_seconds', 6) }}">
+    <div class="slider" id="slider" aria-roledescription="carousel" aria-label="{{ __('site.sales.news') }}" data-seconds="{{ (int) \App\Services\Website\SiteSettings::get('general.slide_seconds', 3) }}">
       @foreach ($own as $k => $s)
         @php($go = \App\Services\Website\SiteSettings::link($s->link_type, $s->link_value))
         @php($src = \App\Services\Website\SiteSettings::mediaUrl($s->path))
