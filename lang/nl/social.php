@@ -65,6 +65,7 @@ return [
         'status' => 'Status',
         'synced' => 'Laatst ververst',
         'disconnect' => 'Ontkoppelen',
+        'linkedin_wait' => 'Werkt zodra LinkedIn de Community Management API voor de CLUK-app goedgekeurd heeft (per mail). Daarvoor toont LinkedIn “Bummer, something went wrong”.',
     ],
     'providers' => [
         'meta' => [

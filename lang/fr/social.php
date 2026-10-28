@@ -65,6 +65,7 @@ return [
         'status' => 'Statut',
         'synced' => 'Dernière mise à jour',
         'disconnect' => 'Délier',
+        'linkedin_wait' => 'Fonctionne dès que LinkedIn a approuvé la Community Management API pour l’app CLUK (par e-mail). Avant cela, LinkedIn affiche « Bummer, something went wrong ».',
     ],
     'providers' => [
         'meta' => [

@@ -135,6 +135,7 @@
                         <span class="pill pill-off">{{ __('social.accounts.keys_missing') }}</span>
                     @elseif ($canConnect)
                         <a class="btn" href="{{ route('social.connect', $pv['key']) }}">{{ $d['accounts']->contains(fn ($a) => config('social.platforms.'.$a->platform.'.provider') === $pv['key']) ? __('social.accounts.reconnect') : __('social.accounts.connect') }}</a>
+                        @if ($pv['key'] === 'linkedin' && ! $d['accounts']->contains('platform', 'linkedin'))<small class="muted">{{ __('social.accounts.linkedin_wait') }}</small>@endif
                     @endif
                 </div>
             @endforeach
