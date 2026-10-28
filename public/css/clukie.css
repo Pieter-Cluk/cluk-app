@@ -90,7 +90,7 @@
 .ck-chips button { border: 1px solid var(--ck-ink); background: #fff; border-radius: 18px; padding: 7px 12px; font: 600 13px var(--ck-font); cursor: pointer; }
 .ck-chips button:hover { background: var(--ck-green); border-color: var(--ck-green); }
 .ck-in { display: flex; align-items: flex-end; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--ck-line); background: #fff; }
-.ck-in textarea { flex: 1; resize: none; border: 1px solid var(--ck-line); border-radius: 12px; padding: 10px 12px; font: 15px/1.4 var(--ck-font); max-height: 120px; outline: none; }
+.ck-in textarea { flex: 1; resize: none; overflow-y: hidden; min-height: 44px; border: 1px solid var(--ck-line); border-radius: 12px; padding: 10px 12px; font: 15px/1.4 var(--ck-font); max-height: 120px; outline: none; }
 .ck-in textarea:focus { border-color: var(--ck-ink); }
 .ck-in button { flex: none; width: 42px; height: 42px; border: 0; border-radius: 50%; background: var(--ck-green); color: var(--ck-ink); cursor: pointer; display: grid; place-items: center; }
 .ck-in button svg { width: 20px; height: 20px; }
