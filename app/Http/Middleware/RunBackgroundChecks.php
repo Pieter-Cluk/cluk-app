@@ -68,6 +68,10 @@ class RunBackgroundChecks
             if (Cache::add('jobs:salestasks:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 15), 1, 1000)) {
                 CommercialTasks::refresh();
             }
+            // Afrit 6: the statements of contract months that ended, to pre-invoicing (once a day, from 6:00).
+            if ($now->hour >= 6 && Cache::add('jobs:a6statements:'.$now->toDateString(), 1, 90000)) {
+                \App\Services\Afrit6\Statements::monthly();
+            }
             // Bounced mails (undeliverable): read from the sending mailbox every 15 minutes.
             if (Cache::add('jobs:bounces:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 15), 1, 1000)) {
                 \App\Services\Mail\Bounces::scan();

@@ -360,6 +360,20 @@ class Afrit6WorkspaceTest extends TestCase
         $this->actingAs($m, 'member')->get('/afrit6/portal/bill')->assertSee('350,00');
     }
 
+    public function test_the_statement_is_made_by_itself_the_day_after_the_contract_month(): void
+    {
+        $m = $this->member(); // desk from 14 October: the contract month runs 14 Oct – 13 Nov
+        $this->assertSame(0, \App\Services\Afrit6\Statements::monthly(Carbon::parse('2026-11-13')));
+        $this->assertSame(1, \App\Services\Afrit6\Statements::monthly(Carbon::parse('2026-11-14')));
+        $this->assertSame(0, \App\Services\Afrit6\Statements::monthly(Carbon::parse('2026-11-15'))); // once
+        $s = Statement::firstOrFail();
+        $this->assertSame(['2026-10-14', '2026-11-13', 35000], [$s->period_start->toDateString(), $s->period_end->toDateString(), $s->total_cents]);
+        $this->assertNull($s->created_by_id);
+        $this->assertSame('check', \App\Models\Finance\PreInvoice::where('source_type', 'afrit6')->value('status'));
+        // A missed day is caught up within a week.
+        $this->assertSame(1, \App\Services\Afrit6\Statements::monthly(Carbon::parse('2026-12-18')));
+    }
+
     public function test_staff_add_and_end_desks_without_double_booking(): void
     {
         $host = $this->staff('workspace-host');

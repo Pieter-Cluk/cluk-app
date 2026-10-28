@@ -99,23 +99,14 @@ class StaffWorkspaceController extends Controller
     public function storeStatement(Request $request, Member $member): RedirectResponse
     {
         $data = $request->validate(['day' => ['required', 'date']]);
-        $builder = new StatementBuilder($member);
-        $bill = $builder->build(Carbon::parse($data['day']));
+        $bill = (new StatementBuilder($member))->build(Carbon::parse($data['day']));
         if (! $bill['lines']) {
             throw ValidationException::withMessages(['day' => __('workspace.staff.nothing_to_bill')]);
         }
-        if (Statement::where('member_id', $member->id)->whereDate('period_start', $bill['start']->toDateString())->exists()) {
+        $statement = \App\Services\Afrit6\Statements::make($member, Carbon::parse($data['day']), $request->user());
+        if (! $statement) {
             throw ValidationException::withMessages(['day' => __('workspace.staff.statement_exists')]);
         }
-        $statement = Statement::create([
-            'member_id' => $member->id, 'company_id' => $member->company_id,
-            'period_start' => $bill['start'], 'period_end' => $bill['end'],
-            'lines' => $bill['lines'], 'total_cents' => $bill['total_cents'], 'created_by_id' => $request->user()->id,
-        ]);
-        PreInvoices::make('afrit6', $statement, $request->user());
-        AuditLog::record('afrit6.statement_created', $member, [
-            'period' => $bill['start']->format('d/m/Y').' – '.$bill['end']->format('d/m/Y'), 'total' => Pricing::eur($statement->total_cents),
-        ]);
 
         return back()->with('status', __('workspace.staff.statement_saved', ['total' => Pricing::eur($statement->total_cents)]));
     }
