@@ -166,6 +166,17 @@ class WebsiteClukieTest extends TestCase
         $m = Http::recorded()[0][0]->data()['messages'];
         $this->assertStringContainsString('could not answer this', $m[1]['content']);
         $this->assertStringContainsString('Product cards shown: Equinox Fusion 400 Hybrid (S-104561)', $m[3]['content']);
+        $this->assertSame(['Speakers?', 'Price of that one?'], [$m[0]['content'], $m[4]['content']]); // oldest first, latest last
+
+        // a long chat: only the most recent lines go along, still in order
+        for ($i = 1; $i <= 30; $i++) {
+            $chat->say($i % 2 ? 'clukie' : 'visitor', 'line '.$i);
+        }
+        $chat->say('visitor', 'Newest question');
+        (new Clukie($chat, null))->answer();
+        $m = Http::recorded()[1][0]->data()['messages'];
+        $this->assertSame('Newest question', end($m)['content']);
+        $this->assertStringNotContainsString('Speakers?', json_encode($m));
     }
 
     public function test_clukie_hands_over_when_asked(): void

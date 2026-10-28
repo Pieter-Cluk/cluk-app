@@ -128,7 +128,7 @@ class Clukie
     /** Earlier lines as Claude messages (alternating user / assistant). */
     private function history(): array
     {
-        $rows = $this->chat->messages()->whereIn('role', ['visitor', 'clukie', 'staff'])->latest('id')->limit(config('clukie.history'))->get()->reverse();
+        $rows = $this->chat->messages()->whereIn('role', ['visitor', 'clukie', 'staff'])->reorder('id', 'desc')->limit(config('clukie.history'))->get()->reverse();
         $out = [];
         foreach ($rows as $m) {
             $role = $m->role === 'visitor' ? 'user' : 'assistant';
