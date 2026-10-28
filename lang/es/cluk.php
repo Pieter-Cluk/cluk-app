@@ -26,6 +26,9 @@ return [
         'meetings' => [
             'see_all' => 'Ver todas las reuniones y tareas de los compañeros',
         ],
+        'wall' => [
+            'screens' => 'Ver las pantallas murales (menú Pantallas)',
+        ],
         'afrit6' => [
             'approve_members' => 'Aprobar nuevos miembros de Afrit 6',
             'door_codes' => 'Ver y cambiar códigos de puerta',

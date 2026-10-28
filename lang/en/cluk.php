@@ -26,6 +26,9 @@ return [
         'meetings' => [
             'see_all' => 'See all meetings and tasks of colleagues',
         ],
+        'wall' => [
+            'screens' => 'See the wall screens (menu Wall screens)',
+        ],
         'afrit6' => [
             'approve_members' => 'Approve new Afrit 6 members',
             'door_codes' => 'See and change door codes',

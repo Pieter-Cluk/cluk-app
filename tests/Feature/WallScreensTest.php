@@ -78,7 +78,10 @@ class WallScreensTest extends TestCase
         $screen = WallScreen::where('view', 'today')->firstOrFail();
         $old = $screen->token;
         $this->actingAs($this->as('read-only'))->post('/wall-screens/'.$screen->id.'/renew')->assertForbidden();
-        $this->actingAs($this->as('warehouse'))->post('/wall-screens/'.$screen->id.'/renew')->assertRedirect();
+        $crew = $this->as('warehouse');
+        $this->actingAs($crew)->post('/wall-screens/'.$screen->id.'/renew')->assertForbidden(); // no "Wall screens" right
+        $crew->extraRights()->create(['right' => 'wall.screens']);
+        $this->actingAs($crew->fresh())->post('/wall-screens/'.$screen->id.'/renew')->assertRedirect();
         auth('web')->logout();
         $this->get('/wall/today?key='.$old)->assertNotFound();
         $this->get('/wall/today?key='.$screen->fresh()->token)->assertOk();

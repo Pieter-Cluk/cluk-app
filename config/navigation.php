@@ -16,7 +16,7 @@ return [
         ['key' => 'todos', 'path' => '/tasks', 'icon' => 'check', 'also' => ['/commercial-tasks']],
         ['key' => 'meetings', 'path' => '/meetings', 'icon' => 'notes'],
         ['key' => 'management', 'path' => '/management', 'icon' => 'chart', 'right' => 'finance.see_margins'],
-        ['key' => 'wallscreens', 'path' => '/wall-screens', 'icon' => 'screen', 'module' => ['warehouse', 1]],
+        ['key' => 'wallscreens', 'path' => '/wall-screens', 'icon' => 'screen', 'right' => 'wall.screens'],
     ],
 
     'groups' => [

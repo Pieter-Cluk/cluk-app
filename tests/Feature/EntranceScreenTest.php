@@ -97,6 +97,16 @@ class EntranceScreenTest extends TestCase
         $this->actingAs($admin)->get(route('website.index', ['tab' => 'screen']))->assertOk()->assertSee('Slideshow on the Afrit 6 entrance TV');
     }
 
+    public function test_wall_screens_is_its_own_right(): void
+    {
+        $warehouse = User::factory()->create(['role_id' => Role::where('slug', 'warehouse')->value('id'), 'locale' => 'en']);
+        $this->actingAs($warehouse)->get('/wall-screens')->assertForbidden();
+        $this->actingAs($warehouse)->get('/dashboard')->assertOk()->assertDontSee('href="'.route('wall.index').'"', false);
+        $warehouse->extraRights()->create(['right' => 'wall.screens']);
+        $this->actingAs($warehouse->fresh())->get('/wall-screens')->assertOk();
+        $this->assertNotSame('cluk.rights.wall.screens', __('cluk.rights.wall.screens'));
+    }
+
     public function test_every_language_has_the_texts(): void
     {
         foreach (['nl', 'fr', 'es'] as $l) {

@@ -81,6 +81,7 @@ return [
         'social.connect',
         'social.publish',
         'users.manage',
+        'wall.screens',
         'warehouse.release_repair',
         'warehouse.setup_locations',
         'warehouse.sign_delivery',
