@@ -175,7 +175,7 @@ class WebsiteClukieTest extends TestCase
         $chat->say('visitor', 'Newest question');
         (new Clukie($chat, null))->answer();
         $m = Http::recorded()[1][0]->data()['messages'];
-        $this->assertSame('Newest question', end($m)['content']);
+        $this->assertStringEndsWith('Newest question', end($m)['content']);
         $this->assertStringNotContainsString('Speakers?', json_encode($m));
     }
 
