@@ -55,6 +55,7 @@ class RunBackgroundChecks
             // Website statistics older than 13 months are deleted (GDPR), once a day.
             if (Cache::add('jobs:webprune:'.$now->toDateString(), 1, 90000)) {
                 WebActivity::prune();
+                \App\Services\Website\Clukie::prune();
             }
             // Company register (KBO web service): the oldest data first, a few every 10 minutes.
             if (Cache::add('jobs:kbo:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 10), 1, 700)) {

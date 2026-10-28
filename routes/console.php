@@ -198,8 +198,8 @@ Artisan::command('cluk:kbo-refresh {--n=50 : How many companies at most}', funct
 })->purpose('Look up the companies with the oldest register data in the KBO web service');
 
 Artisan::command('cluk:web-prune', function () {
-    $this->line(json_encode(WebActivity::prune()));
-})->purpose('Delete website statistics older than 13 months (also runs daily by itself)');
+    $this->line(json_encode(WebActivity::prune() + ['chats' => \App\Services\Website\Clukie::prune()]));
+})->purpose('Delete website statistics older than 13 months and Clukie chats older than 12 months (also runs daily by itself)');
 
 // Social media: publish planned posts and refresh the figures of the accounts.
 Artisan::command('cluk:social', function () {

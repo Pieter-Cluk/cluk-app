@@ -18,6 +18,7 @@ return [
                 'Cuenta My CLUK: tu nombre, correo, teléfono, empresa y número de IVA, y los presupuestos, pedidos, facturas y cestas de tu empresa, para gestionar tu cuenta y nuestros acuerdos (contrato). Tu contraseña se guarda cifrada; nuestro personal no puede verla.',
                 'Descargas: para algunos documentos pedimos antes tu nombre y correo, para saber quién los recibió y dar seguimiento a tu consulta (interés legítimo).',
                 'Estadísticas de la web, solo con tu consentimiento: qué páginas y productos miras, qué buscas y añades a una cesta, vinculado a un número de visitante aleatorio en una cookie. No guardamos tu dirección IP. En cuanto envías una solicitud, inicias sesión o descargas con tu correo, estas visitas se vinculan contigo, para que nuestro equipo pueda ayudarte mejor. Puedes retirar tu consentimiento en cualquier momento en «Configuración de cookies».',
+                'Chat con Clukie: en las páginas de venta puedes chatear con Clukie, nuestro asistente de IA. Guardamos lo que escribes, las respuestas, la página en la que estabas y, si nos los das, tu nombre, correo y teléfono, para responder a tu pregunta y, si lo pides, pasarla a nuestro equipo (medidas precontractuales e interés legítimo). No compartas datos personales sensibles en el chat.',
                 'Correos: boletines (solo si dijiste que sí), promociones e invitaciones a clientes existentes, cada uno con un enlace para darte de baja (interés legítimo; puedes oponerte en cualquier momento). Si un correo no se te puede entregar, dejamos de escribir a esa dirección y la comprobamos contigo.',
                 'Miembros de Afrit 6 y reservas de Cluk Factory: los datos que das al registrarte o reservar, y tus reservas, puestos y solicitudes (contrato).',
                 'Datos de empresa: comprobamos los números de IVA en el servicio europeo VIES y los datos de empresa en el registro mercantil belga (KBO/BCE) y el Banco Nacional, para facturar correctamente (obligación legal e interés legítimo).',
@@ -29,12 +30,13 @@ return [
         ],
         [
             'h' => 'Con quién compartimos',
-            'p' => ['Nunca vendemos tus datos. Solo compartimos lo necesario con las empresas que nos ayudan: one.com (alojamiento, en la UE), Microsoft 365 (correo, centros de datos en la UE), OkiOki (nuestra contabilidad y facturación electrónica, Bélgica) y la red Peppol para facturas electrónicas. Nuestras noticias vienen de nuestras propias páginas de Facebook, Instagram y LinkedIn; las imágenes se muestran desde nuestro propio servidor, y si haces clic, se aplica la política de esa plataforma.'],
+            'p' => ['Nunca vendemos tus datos. Solo compartimos lo necesario con las empresas que nos ayudan: one.com (alojamiento, en la UE), Microsoft 365 (correo, centros de datos en la UE), OkiOki (nuestra contabilidad y facturación electrónica, Bélgica) y la red Peppol para facturas electrónicas. Nuestras noticias vienen de nuestras propias páginas de Facebook, Instagram y LinkedIn; las imágenes se muestran desde nuestro propio servidor, y si haces clic, se aplica la política de esa plataforma. Lo que escribes a Clukie se envía a Anthropic (la empresa detrás del modelo de IA Claude, con sede en Estados Unidos), solo para redactar la respuesta. Anthropic lo trata por cuenta nuestra, con un acuerdo de encargo de tratamiento con las cláusulas contractuales tipo de la UE, y no lo usa para entrenar sus modelos.'],
         ],
         [
             'h' => 'Cuánto tiempo guardamos',
             'li' => [
                 'Estadísticas de la web: 13 meses, después se borran automáticamente.',
+                'Chats con Clukie: 12 meses después del último mensaje, después se borran automáticamente. Cuando un chat se pasa a nuestro equipo, también se guarda como solicitud (ver arriba).',
                 'Solicitudes sin pedido: hasta 3 años después del último contacto.',
                 'Cuentas, presupuestos, pedidos y facturas: mientras dure tu cuenta o nuestra relación, y después el tiempo que exija la legislación contable y fiscal.',
                 'Listas de correo: hasta que te des de baja.',

@@ -143,6 +143,8 @@
     var s = e.target.closest('.pbuy [data-step]'); if (s) { var i = $('pQty'); i.value = Math.max(1, (+i.value || 1) + (+s.dataset.step)); }
   });
   if ($('basketBtn')) $('basketBtn').addEventListener('click', function () { openBasket(); });
+  // Clukie (chat helper) puts products in the basket through this.
+  window.clukSales = { add: function (a) { add({ dataset: { add: String(a.id), name: a.name, price: String(a.price || 0), code: a.code } }, a.qty || 1); } };
   function openBasket() { if (CU) { api(A.show).then(function (r) { if (r.ok) SV = r.j; badge(); showBasket(); }); } showBasket(); open(bk); }
 
   var FIELDS = ['name', 'company', 'vat', 'email', 'phone', 'message', 'po'];

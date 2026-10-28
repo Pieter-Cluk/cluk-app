@@ -6,3 +6,4 @@
 @push('scripts')
 <script src="{{ asset('js/site-sales.js') }}?v={{ @filemtime(public_path('js/site-sales.js')) }}" defer></script>
 @endpush
+@include('site.sales._clukie')

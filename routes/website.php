@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Site\AccountController;
+use App\Http\Controllers\Site\ClukieController;
 use App\Http\Controllers\Site\DownloadController;
 use App\Http\Controllers\Site\DryHireController;
 use App\Http\Controllers\Site\HomeController;
@@ -34,6 +35,10 @@ $site = function () {
     Route::get('/sales/photo/{item}/{w}', [SalesController::class, 'photo'])->whereNumber(['item', 'w'])->name('sales.photo');
     Route::get('/sales/document/{doc}', [SalesController::class, 'document'])->whereNumber('doc')->name('sales.document');
     Route::post('/sales/request', [SalesController::class, 'request'])->middleware('throttle:6,1')->name('sales.request');
+    // Clukie, the chat helper on the sales pages.
+    Route::post('/sales/clukie', [ClukieController::class, 'message'])->middleware('throttle:20,1')->name('clukie.message');
+    Route::get('/sales/clukie/poll', [ClukieController::class, 'poll'])->middleware('throttle:40,1')->name('clukie.poll');
+    Route::post('/sales/clukie/team', [ClukieController::class, 'team'])->middleware('throttle:5,1')->name('clukie.team');
     // News: Facebook and Instagram posts (pictures and videos served from our server).
     Route::get('/news', [NewsController::class, 'index'])->name('news');
     Route::get('/news/image/{post}', [NewsController::class, 'image'])->whereNumber('post')->name('social.image');
