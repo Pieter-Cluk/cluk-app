@@ -131,6 +131,11 @@ class DashboardController extends Controller
         if ($u->canUseModule('companies', 2)) {
             $t[] = ['n' => CustomerAccount::where('status', 'pending')->whereNotNull('email_verified_at')->count(), 'key' => 'web_accounts', 'url' => route('web-accounts.index'), 'tone' => 'warn'];
         }
+        if ($u->canUseModule('dryhire') || $u->canUseModule('warehouse')) {
+            // Dry-hire that is out and due back today or late.
+            $t[] = ['n' => \App\Models\Rental\Order::where('status', 'approved')->whereNotNull('loaded_at')->whereNull('returned_at')->where('out_until', '<', today()->addDay())->count(),
+                'key' => 'due_back', 'url' => route('orders.index', ['tab' => 'out']), 'tone' => 'warn'];
+        }
         $t[] = ['n' => PreInvoice::where('status', 'back')->when($who === 'me', fn ($q) => $q->where('made_by_id', $u->id))->count(), 'key' => 'pf_back', 'url' => route('finance.index', ['f' => 'back']), 'tone' => 'warn'];
         if ($u->canUseModule('preinvoice', 2)) {
             $t[] = ['n' => PreInvoice::where('status', 'check')->count(), 'key' => 'pf_check', 'url' => route('finance.index'), 'tone' => 'warn'];

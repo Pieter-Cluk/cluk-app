@@ -140,6 +140,8 @@ return [
         'pf_back_s' => 'finanzas pide un cambio',
         'late_pay' => 'Pagos atrasados por decidir',
         'late_pay_s' => 'facturas vencidas: cobrar los intereses o no',
+        'due_back' => 'Dry-hire por volver',
+        'due_back_s' => 'hoy o con retraso',
         'pf_check' => 'Prefacturas por revisar',
         'pf_check_s' => 'aprobar o devolver',
     ],

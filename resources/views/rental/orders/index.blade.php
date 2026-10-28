@@ -24,11 +24,12 @@
     <div class="filters">
         <nav class="tabs" aria-label="{{ __('orders.title') }}">
             <a href="{{ route('orders.index', ['who' => $who]) }}" @class(['tab', 'tab-on' => $tab === 'open'])>{{ __('orders.tab_open') }}</a>
+            <a href="{{ route('orders.index', ['tab' => 'out', 'who' => $who]) }}" @class(['tab', 'tab-on' => $tab === 'out'])>{{ __('orders.tab_out') }}</a>
             <a href="{{ route('orders.index', ['tab' => 'done', 'who' => $who]) }}" @class(['tab', 'tab-on' => $tab === 'done'])>{{ __('orders.tab_done') }}</a>
         </nav>
         <nav class="chips">
-            <a href="{{ route('orders.index', array_filter(['tab' => $tab === 'done' ? 'done' : null, 'who' => 'me'])) }}" @class(['chip', 'chip-on' => $who === 'me'])>{{ __('orders.mine') }}</a>
-            <a href="{{ route('orders.index', array_filter(['tab' => $tab === 'done' ? 'done' : null, 'who' => 'all'])) }}" @class(['chip', 'chip-on' => $who === 'all'])>{{ __('orders.everyone') }}</a>
+            <a href="{{ route('orders.index', array_filter(['tab' => $tab === 'open' ? null : $tab, 'who' => 'me'])) }}" @class(['chip', 'chip-on' => $who === 'me'])>{{ __('orders.mine') }}</a>
+            <a href="{{ route('orders.index', array_filter(['tab' => $tab === 'open' ? null : $tab, 'who' => 'all'])) }}" @class(['chip', 'chip-on' => $who === 'all'])>{{ __('orders.everyone') }}</a>
         </nav>
     </div>
 
@@ -39,7 +40,7 @@
                     <a class="inbox-item" href="{{ route('orders.show', $o) }}">
                         <span class="inbox-main">
                             <b>{{ $o->title }}</b>
-                            <small class="muted">{{ $o->number }} · {{ $o->customerName() }} · {{ __('orders.out', ['from' => $o->out_from->format('d/m'), 'until' => $o->out_until->format('d/m')]) }}</small>
+                            <small class="muted">{{ $o->number }} · {{ $o->customerName() }} · {{ __('orders.out', ['from' => $o->out_from->format('d/m'), 'until' => $o->out_until->format('d/m')]) }}@if ($tab === 'out') · @if ($o->out_until->isPast())<b class="txt-danger">{{ __('orders.due_late', ['n' => (int) $o->out_until->startOfDay()->diffInDays(today())]) }}</b>@elseif ($o->out_until->isToday())<b class="txt-warn">{{ __('orders.due_today') }}</b>@endif @endif</small>
                             <small class="muted">{{ __('orders.from_seller', ['name' => $o->handedBy?->name ?? '—', 'date' => $o->confirmed_at?->format('d/m H:i')]) }} · {{ __('orders.assignee', ['name' => $o->assignee?->name ?? __('orders.nobody')]) }}</small>
                         </span>
                         <span class="inbox-side">@include('rental.orders._state', ['state' => $states[$o->id]])</span>

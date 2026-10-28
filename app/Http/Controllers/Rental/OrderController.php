@@ -30,14 +30,16 @@ class OrderController extends Controller
     public function index(Request $request): View
     {
         $me = $request->user();
-        $tab = $request->query('tab') === 'done' ? 'done' : 'open';
+        $tab = in_array($request->query('tab'), ['done', 'out'], true) ? $request->query('tab') : 'open';
         $who = in_array($request->query('who'), ['me', 'all'], true) ? $request->query('who') : 'all';
         $state = in_array($request->query('state'), Order::STATES, true) ? $request->query('state') : null;
 
         $orders = Order::with(['company', 'contact', 'assignee', 'handedBy'])
-            ->when($tab === 'open', fn ($q) => $q->where('status', 'allocation'), fn ($q) => $q->whereIn('status', ['approved', 'cancelled']))
+            ->when($tab === 'open', fn ($q) => $q->where('status', 'allocation'))
+            ->when($tab === 'out', fn ($q) => $q->where('status', 'approved')->whereNotNull('loaded_at')->whereNull('returned_at'))
+            ->when($tab === 'done', fn ($q) => $q->whereIn('status', ['approved', 'cancelled'])->where(fn ($w) => $w->whereNull('loaded_at')->orWhereNotNull('returned_at')->orWhere('status', 'cancelled')))
             ->when($who === 'me', fn ($q) => $q->where('assignee_id', $me->id))
-            ->orderBy($tab === 'open' ? 'out_from' : 'updated_at', $tab === 'open' ? 'asc' : 'desc')
+            ->orderBy(match ($tab) { 'open' => 'out_from', 'out' => 'out_until', default => 'updated_at' }, $tab === 'done' ? 'desc' : 'asc')
             ->limit(200)->get();
         $states = $orders->mapWithKeys(fn (Order $o) => [$o->id => $o->state()]);
         $counts = collect(Order::STATES)->mapWithKeys(fn ($s) => [$s => $tab === 'open' ? $states->filter(fn ($x) => $x === $s)->count() : 0]);

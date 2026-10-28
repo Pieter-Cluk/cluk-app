@@ -513,7 +513,7 @@ blockquote{margin:8px 0;padding:8px 12px;border-left:3px solid var(--line);color
 .handover{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .handover .card{padding:16px 18px}
 .handover p{margin:6px 0}
-.steps3{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0;padding:0}
+.steps3{list-style:none;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;margin:0;padding:0}
 .st3{display:grid;grid-template-columns:30px minmax(0,1fr);grid-template-rows:auto auto;column-gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .st3 span{grid-row:span 2;width:28px;height:28px;border-radius:50%;background:var(--surface-subtle);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
 .st3 small{color:var(--muted);font-size:12px}
@@ -536,7 +536,7 @@ blockquote{margin:8px 0;padding:8px 12px;border-left:3px solid var(--line);color
 .approve-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .approve-bar h2{margin:0 0 4px}
 .approve-bar.is-ready{border-color:var(--brand);background:var(--brand-tint)}
-@media (max-width:900px){.handover,.steps3,.ocl-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){.handover,.steps3,.ocl-grid{grid-template-columns:minmax(0,1fr)}.steps3{grid-auto-flow:row}}
 .primary:disabled,.btn:disabled,button[disabled]{opacity:.45;cursor:not-allowed}
 .handover{align-items:start}
 /* Pictures */

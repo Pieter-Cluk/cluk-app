@@ -140,6 +140,8 @@ return [
         'pf_back_s' => 'la finance demande une modification',
         'late_pay' => 'Retards de paiement à décider',
         'late_pay_s' => 'factures échues : facturer les intérêts ou non',
+        'due_back' => 'Dry-hire à revenir',
+        'due_back_s' => 'aujourd’hui ou en retard',
         'pf_check' => 'Préfactures à vérifier',
         'pf_check_s' => 'approuver ou renvoyer',
     ],

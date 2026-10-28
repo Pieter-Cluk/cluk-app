@@ -39,11 +39,21 @@
 
     <ol class="steps3">
         @php($pfMade = \App\Models\Finance\PreInvoice::where('source_type', 'rental')->where('source_id', $order->id)->where('status', '!=', 'cancelled')->exists())
-        @php($step = $order->status === 'approved' ? ($pfMade ? 5 : 4) : $step)
-        @foreach ([1 => 'subhire', 2 => 'allocate', 3 => 'approve', 4 => 'invoice'] as $n => $k)
+        @php($step = $order->status === 'approved' ? ($order->returned_at ? 7 : ($order->loaded_at ? 6 : ($pfMade ? 5 : 4))) : $step)
+        @foreach ([1 => 'subhire', 2 => 'allocate', 3 => 'approve', 4 => 'invoice', 5 => 'out', 6 => 'back'] as $n => $k)
             <li @class(['st3', 'st3-on' => $step === $n, 'st3-done' => $step > $n])><span>{{ $step > $n ? '✓' : $n }}</span><b>{{ __('orders.steps.'.$k) }}</b><small>{{ __('orders.steps.'.$k.'_hint') }}</small></li>
         @endforeach
     </ol>
+    @if ($order->status === 'approved' && ! $order->returned_at && auth()->user()->canUseModule('warehouse'))
+        <div class="actionbar">
+            @if (! $order->loaded_at)
+                <a class="btn" href="{{ route('w.pick', $order) }}">{{ __('orders.go_pick') }}</a>
+            @else
+                <span class="muted">{{ __('orders.is_out', ['date' => $order->loaded_at->timezone('Europe/Brussels')->format('d/m H:i'), 'until' => $order->out_until->format('d/m')]) }}</span>
+                <a class="btn" href="{{ route('w.return', $order) }}">{{ __('orders.go_return') }}</a>
+            @endif
+        </div>
+    @endif
 
     @if ($canWork)
         <div class="actionbar">

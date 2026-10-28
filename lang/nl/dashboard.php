@@ -140,6 +140,8 @@ return [
         'pf_back_s' => 'finance vraagt een aanpassing',
         'late_pay' => 'Laattijdige betalingen te beslissen',
         'late_pay_s' => 'vervallen facturen: interest aanrekenen of niet',
+        'due_back' => 'Dry-hire terug te komen',
+        'due_back_s' => 'vandaag of te laat',
         'pf_check' => 'Voorfacturen te controleren',
         'pf_check_s' => 'goedkeuren of terugsturen',
     ],
