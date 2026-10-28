@@ -61,7 +61,12 @@ class LabourTest extends TestCase
         $tech->update(['price_cents' => 5500]);
         $quote = $this->quote($sales, 'nl');
 
-        $this->actingAs($sales)->get(route('quotes.show', $quote))->assertOk()->assertSee('Add labour')->assertSee('Technician / operator · € 55,00/h', false);
+        $html = $this->actingAs($sales)->get(route('quotes.show', $quote))->assertOk()->assertSee('Add labour')->assertSee('Technician / operator · € 55,00/h', false)
+            ->assertSee('id="add-labour-form"', false)->assertSee('name="labour_type_id" form="add-labour-form"', false)->getContent();
+        // No form inside the quote form: the browser would send it as "save quote".
+        $start = strpos($html, 'id="quote-form"');
+        $inner = substr($html, $start, strpos($html, '</form>', $start) - $start);
+        $this->assertStringNotContainsString('<form', $inner);
         $this->actingAs($sales)->post(route('quotes.labour.add', $quote), ['labour_type_id' => $tech->id, 'people' => 2, 'amount' => 8, 'when' => 'opbouw 13/11'])->assertSessionHasNoErrors();
         $line = $quote->lines()->where('labour_type_id', $tech->id)->firstOrFail();
         $this->assertSame('Technieker / operator · 2 personen × 8 u · opbouw 13/11', $line->name);
