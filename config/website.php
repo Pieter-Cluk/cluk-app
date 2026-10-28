@@ -26,9 +26,9 @@ return [
     'popular' => ['L-Acoustics', 'KS28', 'Yamaha CL5', 'moving head', 'wireless', 'truss'],
 
     'social' => [
-        'instagram' => env('SOCIAL_INSTAGRAM', 'https://www.instagram.com/'),
-        'facebook' => env('SOCIAL_FACEBOOK', 'https://www.facebook.com/'),
-        'linkedin' => env('SOCIAL_LINKEDIN', 'https://www.linkedin.com/'),
+        'instagram' => env('SOCIAL_INSTAGRAM', 'https://www.instagram.com/cluk_group/'),
+        'facebook' => env('SOCIAL_FACEBOOK', 'https://www.facebook.com/profile.php?id=61578610427811'),
+        'linkedin' => env('SOCIAL_LINKEDIN'), // no CLUK page known yet: the icon stays hidden until a link is set
     ],
 
     // Downloads page (footer): the groups, in this order. Terms and conditions are always shown (rental.terms_files).

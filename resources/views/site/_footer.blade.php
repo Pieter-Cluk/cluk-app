@@ -18,7 +18,7 @@
       <div class="social">
         <a href="{{ \App\Services\Website\SiteSettings::social('instagram') }}" aria-label="Instagram" rel="noopener" target="_blank">@include('site._icon', ['i' => 'ig'])</a>
         <a href="{{ \App\Services\Website\SiteSettings::social('facebook') }}" aria-label="Facebook" rel="noopener" target="_blank">@include('site._icon', ['i' => 'fb'])</a>
-        <a href="{{ \App\Services\Website\SiteSettings::social('linkedin') }}" aria-label="LinkedIn" rel="noopener" target="_blank">@include('site._icon', ['i' => 'li'])</a>
+        @if ($li = \App\Services\Website\SiteSettings::social('linkedin'))<a href="{{ $li }}" aria-label="LinkedIn" rel="noopener" target="_blank">@include('site._icon', ['i' => 'li'])</a>@endif
       </div>
     </div>
   </div>

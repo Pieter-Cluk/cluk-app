@@ -58,7 +58,7 @@
   <a class="post big" href="{{ \App\Services\Website\SiteSettings::social('instagram') }}" target="_blank" rel="noopener"><div class="img" style="background-image:url('{{ asset('images/site/n1.jpg') }}')"></div><div class="src">@include('site._icon', ['i' => 'ig'])Instagram</div><h3><span>{{ __('site.home.posts.0') }}</span>@include('site._icon', ['i' => 'arrow'])</h3></a>
   <div class="side">
     <a class="post" href="{{ \App\Services\Website\SiteSettings::social('facebook') }}" target="_blank" rel="noopener"><div class="img" style="background-image:url('{{ asset('images/site/n2.jpg') }}')"></div><div class="src">@include('site._icon', ['i' => 'fb'])Facebook</div><h3><span>{{ __('site.home.posts.1') }}</span>@include('site._icon', ['i' => 'arrow'])</h3></a>
-    <a class="post" href="{{ \App\Services\Website\SiteSettings::social('linkedin') }}" target="_blank" rel="noopener"><div class="img" style="background-image:url('{{ asset('images/site/n3.jpg') }}')"></div><div class="src">@include('site._icon', ['i' => 'li'])LinkedIn</div><h3><span>{{ __('site.home.posts.2') }}</span>@include('site._icon', ['i' => 'arrow'])</h3></a>
+    <a class="post" href="{{ \App\Services\Website\SiteSettings::social('linkedin') ?: \App\Services\Website\SiteSettings::social('facebook') }}" target="_blank" rel="noopener"><div class="img" style="background-image:url('{{ asset('images/site/n3.jpg') }}')"></div><div class="src">@include('site._icon', ['i' => 'li'])LinkedIn</div><h3><span>{{ __('site.home.posts.2') }}</span>@include('site._icon', ['i' => 'arrow'])</h3></a>
   </div>
 </section>
 @endif

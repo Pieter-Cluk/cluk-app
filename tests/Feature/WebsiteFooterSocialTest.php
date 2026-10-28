@@ -17,6 +17,11 @@ class WebsiteFooterSocialTest extends TestCase
         $this->get('/site')->assertOk()
             ->assertSee('href="https://www.instagram.com/cluk_group/"', false)
             ->assertSee('href="https://www.facebook.com/clukbv"', false)
-            ->assertSee('href="'.config('website.social.linkedin').'"', false); // not set: the default stays
+            ->assertDontSee('aria-label="LinkedIn"', false); // no LinkedIn page set: no icon
+
+        SiteSettings::put('general.social', ['linkedin' => 'https://www.linkedin.com/company/example/'], null);
+        $this->get('/site')->assertOk()
+            ->assertSee('href="https://www.linkedin.com/company/example/"', false)
+            ->assertSee('href="https://www.instagram.com/cluk_group/"', false); // the default when nothing is saved
     }
 }
