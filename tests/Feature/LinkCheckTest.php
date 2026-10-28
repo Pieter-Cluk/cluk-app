@@ -50,4 +50,16 @@ class LinkCheckTest extends TestCase
         $mine = (new LinkCheck(1500, 2))->run($customer, [route('site.account')], 'customer');
         $this->assertSame([], $mine->lines(), implode("\n", $mine->lines()));
     }
+
+    /** The server has PHP short tags on: "<?xml" in a view would break the page there (not in tests). */
+    public function test_no_view_starts_php_by_accident(): void
+    {
+        $bad = [];
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(resource_path('views'))) as $f) {
+            if (str_ends_with($f, '.blade.php') && preg_match('/<\?(?!php|=)/', file_get_contents($f))) {
+                $bad[] = (string) $f;
+            }
+        }
+        $this->assertSame([], $bad);
+    }
 }

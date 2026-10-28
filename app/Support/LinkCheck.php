@@ -60,8 +60,16 @@ class LinkCheck
                 continue;
             }
             $seen[$url] = true;
-            $kind = preg_replace('#/\d+#', '/{id}', parse_url($url, PHP_URL_PATH) ?: '/').(parse_url($url, PHP_URL_QUERY) ? '?' : '');
-            if (($this->perKind[$kind] = ($this->perKind[$kind] ?? 0) + 1) > ($kind === rtrim($kind, '?') ? $this->perPattern : 6) && (str_contains($kind, '{id}') || str_ends_with($kind, '?'))) {
+            // Pages of the same kind (same route, e.g. every product or company) are opened only a few times.
+            try {
+                $route = app('router')->getRoutes()->match(Request::create($url, 'GET'));
+                $kind = ($route->getDomain() ?? '').'/'.$route->uri().(parse_url($url, PHP_URL_QUERY) ? '?' : '');
+                $limited = $route->parameterNames() !== [] || str_ends_with($kind, '?');
+            } catch (Throwable) {
+                $kind = 'unknown:'.$url;
+                $limited = false;
+            }
+            if ($limited && ($this->perKind[$kind] = ($this->perKind[$kind] ?? 0) + 1) > (str_ends_with($kind, '?') ? 6 : $this->perPattern)) {
                 continue;
             }
             [$status, $html, $error] = $this->open($url, $as, $guard);
@@ -78,7 +86,7 @@ class LinkCheck
             // Raw translation keys in the visible text (e.g. "equipment.fields.weight").
             $text = strip_tags(preg_replace('#<(script|style|textarea)[^>]*>.*?</\1>#si', '', $html));
             if (preg_match_all('/(?<![\w@\/.-])('.$prefixes.')\.[a-z_]+(?:\.[a-z_]+)*(?![\w@\/-])/', $text, $m)) {
-                $keys = array_values(array_filter(array_unique($m[0]), fn ($k) => ! preg_match('/\.(live|be|com|nl|fr|es|eu|org|net|app|io|de|uk|lu)$/', $k)));
+                $keys = array_values(array_filter(array_unique($m[0]), fn ($k) => ! preg_match('/\.(live|be|com|nl|fr|es|eu|org|net|app|io|de|uk|lu|one|csv|xlsx|pdf|png|jpg)$/', $k)));
                 if ($keys) {
                     $this->problems[$url] = ['status' => $status, 'from' => $from, 'keys' => $keys];
                 }

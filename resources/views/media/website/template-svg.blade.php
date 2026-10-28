@@ -2,7 +2,7 @@
 @php($H = $f['h'])
 @php($fs = max(18, round($W / 70)))
 @php($colors = ['#e53935', '#1e88e5', '#fb8c00', '#8e24aa'])
-<?xml version="1.0" encoding="UTF-8"?>
+{!! "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">" !!}
 <svg xmlns="http://www.w3.org/2000/svg" width="{{ $W }}" height="{{ $H }}" viewBox="0 0 {{ $W }} {{ $H }}">
   <title>CLUK · {{ __('website.places.'.$format) }} · {{ $W }} × {{ $H }} px</title>
   <rect width="{{ $W }}" height="{{ $H }}" fill="#d9ddd6"/>
