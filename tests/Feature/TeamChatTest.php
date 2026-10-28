@@ -51,7 +51,7 @@ class TeamChatTest extends TestCase
 
         // The team hears about it, the dashboard and Incoming lead to the chat.
         Notification::assertSentTo($sales, Confirmation::class, fn ($n) => str_contains($n->subject, 'Jo Peeters'));
-        $this->actingAs($sales, 'web')->get('/dashboard')->assertOk()->assertSee('Chats waiting');
+        $this->actingAs($sales, 'web')->get('/dashboard')->assertOk()->assertSee('Chats waiting')->assertSee('db-urgent', false);
         $this->actingAs($sales, 'web')->get(route('incoming.index', ['open' => $msg->id]))->assertOk()->assertSee(route('chats.show', $chat));
         $this->actingAs($sales, 'web')->get(route('chats.index'))->assertOk()->assertSee('Jo Peeters')->assertSee('Waiting for an answer');
         $this->actingAs($sales, 'web')->get(route('chats.show', $chat))->assertOk()
