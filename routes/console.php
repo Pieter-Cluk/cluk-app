@@ -192,3 +192,26 @@ Artisan::command('cluk:sales-tasks', function () {
     $this->line('open: '.CommercialTasks::refresh());
 })->purpose('Make and close the commercial tasks');
 Schedule::command('cluk:sales-tasks')->everyFifteenMinutes()->withoutOverlapping();
+
+// Click through every page and link (read only: each page runs in a transaction that is rolled back).
+Artisan::command('cluk:link-check {--as= : email of the staff user to click as} {--max=600} {--site : also the public website, as a visitor}', function () {
+    $user = \App\Models\User::where('email', $this->option('as'))->first();
+    if (! $user) {
+        $this->error('No user with that email.');
+
+        return 1;
+    }
+    $check = new \App\Support\LinkCheck((int) $this->option('max'));
+    $check->run($user, [url('/dashboard')]);
+    $lines = $check->lines();
+    if ($this->option('site')) {
+        $site = new \App\Support\LinkCheck((int) $this->option('max'));
+        $site->run(null, [route('site.home')]);
+        $lines = array_merge($lines, array_map(fn ($l) => 'site: '.$l, $site->lines()));
+        $this->info('Website pages opened: '.$site->opened);
+    }
+    $this->info('Platform pages opened: '.$check->opened.' · problems: '.count($lines));
+    foreach ($lines as $l) {
+        $this->line($l);
+    }
+})->purpose('Click through all pages and links, read only');
