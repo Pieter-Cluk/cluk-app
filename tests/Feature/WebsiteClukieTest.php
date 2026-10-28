@@ -179,6 +179,21 @@ class WebsiteClukieTest extends TestCase
         $this->assertStringNotContainsString('Speakers?', json_encode($m));
     }
 
+    public function test_a_failed_answer_keeps_its_reason_for_the_team_only(): void
+    {
+        config(['services.anthropic.key' => 'test-key']);
+        Http::fake(['api.anthropic.com/*' => Http::response(['error' => ['message' => 'Overloaded']], 529)]);
+        $r = $this->postJson('/site/sales/clukie', ['text' => 'Speakers?'])->assertOk();
+        $bot = collect($r->json('messages'))->firstWhere('role', 'clukie');
+        $this->assertTrue($bot['offer']);
+        $this->assertArrayNotHasKey('why', $bot);
+        $this->assertSame('api 529 Overloaded', Chat::where('token', $r->json('token'))->first()->messages()->where('role', 'clukie')->first()->meta['failed']);
+
+        $this->actingAs(\App\Models\User::factory()->create(), 'web');
+        $p = $this->getJson('/site/sales/clukie/poll?token='.$r->json('token').'&after=0')->assertOk();
+        $this->assertSame('api 529 Overloaded', collect($p->json('messages'))->firstWhere('role', 'clukie')['why']);
+    }
+
     public function test_clukie_hands_over_when_asked(): void
     {
         config(['services.anthropic.key' => 'test-key']);
