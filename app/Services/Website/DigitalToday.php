@@ -21,7 +21,7 @@ class DigitalToday
     public static function get(?Carbon $day = null): array
     {
         $day = ($day ?? today())->copy()->startOfDay();
-        $events = DB::table('web_events')->whereBetween('created_at', [$day, $day->copy()->endOfDay()])->get(['visitor_id', 'type', 'created_at']);
+        $events = DB::table('web_events')->whereBetween('created_at', [$day, $day->copy()->endOfDay()])->whereNotIn('visitor_id', DB::table('web_visitors')->where('internal', true)->select('id'))->get(['visitor_id', 'type', 'created_at']);
 
         $hours = array_fill(0, 24, 0);
         foreach ($events as $e) {

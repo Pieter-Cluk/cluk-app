@@ -21,6 +21,25 @@ class Tracking
 
     public const VISITOR = 'cluk_vid';
 
+    /** Set in browsers where someone signed in to the platform: the team's own visits are not counted. */
+    public const STAFF = 'cluk_staff';
+
+    /** The cookie domain shared by the platform and the website (e.g. .cluk.live), or null for one host. */
+    public static function cookieDomain(): ?string
+    {
+        $host = (string) config('website.host');
+        if ($host === '' || ! str_contains($host, '.')) {
+            return null;
+        }
+
+        return '.'.preg_replace('/^www\./', '', $host);
+    }
+
+    public static function isStaff(Request $r): bool
+    {
+        return $r->cookie(self::STAFF) === '1';
+    }
+
     public const TYPES = ['view', 'search', 'product', 'add', 'request', 'order', 'login', 'register', 'download', 'chat'];
 
     public static function consented(Request $r): bool
@@ -55,6 +74,14 @@ class Tracking
 
     public static function record(Request $r, string $type, array $d = []): void
     {
+        if (self::isStaff($r)) {
+            // A team browser: not counted, and earlier visits of this browser are left out too.
+            if ($v = self::visitor($r)) {
+                DB::table('web_visitors')->where('id', $v->id)->where('internal', false)->update(['internal' => true]);
+            }
+
+            return;
+        }
         if (! in_array($type, self::TYPES, true) || ! ($v = self::visitor($r, true))) {
             return;
         }

@@ -116,7 +116,7 @@ class WebActivity
     public static function overview(int $days = 30): array
     {
         $from = today()->subDays($days - 1);
-        $events = DB::table('web_events')->where('created_at', '>=', $from)->get(['visitor_id', 'type', 'section', 'label', 'item_id', 'meta', 'created_at']);
+        $events = DB::table('web_events')->where('created_at', '>=', $from)->whereNotIn('visitor_id', DB::table('web_visitors')->where('internal', true)->select('id'))->get(['visitor_id', 'type', 'section', 'label', 'item_id', 'meta', 'created_at']);
         $perDay = collect(range(0, $days - 1))->mapWithKeys(fn ($i) => [$from->copy()->addDays($i)->toDateString() => 0])->all();
         foreach ($events->where('type', 'view')->groupBy(fn ($e) => substr($e->created_at, 0, 10)) as $day => $list) {
             if (isset($perDay[$day])) {

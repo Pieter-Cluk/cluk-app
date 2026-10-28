@@ -168,7 +168,7 @@ return [
         'events' => '{0} nothing|{1} :n event|[2,*] :n events',
         'where' => 'Where it happened',
         'no_social' => 'No social media account connected yet.',
-        'note' => 'Website: only visitors who accepted statistics cookies. Social media: figures per day (the platforms give no hourly figures), refreshed every 15 minutes.',
+        'note' => 'Website: only visitors who accepted statistics cookies, not the team (browsers signed in to the platform). Social media: figures per day (the platforms give no hourly figures), refreshed every 15 minutes.',
         'synced' => 'Last refresh :time.',
         'src' => [
             'website' => 'Website',

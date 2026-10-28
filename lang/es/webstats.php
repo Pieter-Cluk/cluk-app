@@ -3,7 +3,7 @@
 // Website statistics in the platform (read-only): cards, Incoming and Management › Website.
 return [
     'title' => 'Web',
-    'intro' => 'Lo que hacen los visitantes en cluk.live. Solo se cuentan los visitantes que aceptaron las cookies de estadística; no se guardan direcciones IP y todo lo que tiene más de :months meses se borra automáticamente.',
+    'intro' => 'Lo que hacen los visitantes en cluk.live. Solo se cuentan los visitantes que aceptaron las cookies de estadística, no el equipo (navegadores con sesión en la plataforma); no se guardan direcciones IP y todo lo que tiene más de :months meses se borra automáticamente.',
     'last_days' => 'Últimos :n días',
     'kpi' => [
         'visitors' => 'Visitantes',

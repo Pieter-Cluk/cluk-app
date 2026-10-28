@@ -168,7 +168,7 @@ return [
         'events' => '{0} nada|{1} :n evento|[2,*] :n eventos',
         'where' => 'Dónde ocurrió',
         'no_social' => 'Aún no hay ninguna cuenta social conectada.',
-        'note' => 'Web: solo visitantes que aceptaron las cookies de estadística. Redes sociales: cifras por día (las plataformas no dan cifras por hora), actualizadas cada 15 minutos.',
+        'note' => 'Web: solo visitantes que aceptaron las cookies de estadística, no el equipo (navegadores con sesión en la plataforma). Redes sociales: cifras por día (las plataformas no dan cifras por hora), actualizadas cada 15 minutos.',
         'synced' => 'Última actualización :time.',
         'src' => [
             'website' => 'Web',

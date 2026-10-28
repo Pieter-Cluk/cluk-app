@@ -312,7 +312,7 @@ class CommercialTasks
         if (! Schema::hasTable('web_events')) {
             return [];
         }
-        $events = DB::table('web_events')->where('created_at', '>=', now()->subDays(self::WEB_DAYS))->get(['visitor_id', 'type', 'section', 'item_id', 'label', 'created_at']);
+        $events = DB::table('web_events')->where('created_at', '>=', now()->subDays(self::WEB_DAYS))->whereNotIn('visitor_id', DB::table('web_visitors')->where('internal', true)->select('id'))->get(['visitor_id', 'type', 'section', 'item_id', 'label', 'created_at']);
         if ($events->isEmpty()) {
             return [];
         }

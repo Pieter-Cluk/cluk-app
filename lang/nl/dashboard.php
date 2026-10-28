@@ -168,7 +168,7 @@ return [
         'events' => '{0} niets|{1} :n actie|[2,*] :n acties',
         'where' => 'Waar het gebeurde',
         'no_social' => 'Nog geen sociale-media-account gekoppeld.',
-        'note' => 'Website: enkel bezoekers die statistiekcookies aanvaardden. Sociale media: cijfers per dag (de platformen geven geen cijfers per uur), elke 15 minuten vernieuwd.',
+        'note' => 'Website: enkel bezoekers die statistiekcookies aanvaardden, niet het team (browsers aangemeld op het platform). Sociale media: cijfers per dag (de platformen geven geen cijfers per uur), elke 15 minuten vernieuwd.',
         'synced' => 'Laatst vernieuwd :time.',
         'src' => [
             'website' => 'Website',

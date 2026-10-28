@@ -29,13 +29,15 @@ return Application::configure(basePath: dirname(__DIR__))
             LogoutBlockedMembers::class,
             LogoutBlockedCustomers::class,
             RunBackgroundChecks::class,
+            \App\Http\Middleware\MarkStaffBrowser::class,
         ]);
         // Afrit 6 members and staff each have their own login page and home.
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('afrit6', 'afrit6/*') ? route('afrit6.login') : route('login'));
         $middleware->redirectUsersTo(fn (Request $request) => $request->is('afrit6', 'afrit6/*') ? route('afrit6.portal') : route('dashboard'));
         $middleware->validateCsrfTokens(except: ['intake']);
         // Website consent and visitor cookies are set by the page script, so they are not encrypted.
-        $middleware->encryptCookies(except: ['cluk_consent', 'cluk_vid']);
+        // cluk_staff marks a team browser (set by the platform for the whole domain; read by the website statistics).
+        $middleware->encryptCookies(except: ['cluk_consent', 'cluk_vid', 'cluk_staff']);
         $middleware->alias([
             'nav' => EnsureNavAccess::class,
             'level' => EnsureModuleLevel::class,

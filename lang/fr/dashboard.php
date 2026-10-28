@@ -168,7 +168,7 @@ return [
         'events' => '{0} rien|{1} :n événement|[2,*] :n événements',
         'where' => 'Où c\'est arrivé',
         'no_social' => 'Aucun compte de réseau social connecté.',
-        'note' => 'Site : uniquement les visiteurs qui ont accepté les cookies statistiques. Réseaux sociaux : chiffres par jour (les plateformes ne donnent pas de chiffres par heure), actualisés toutes les 15 minutes.',
+        'note' => 'Site : uniquement les visiteurs qui ont accepté les cookies statistiques, pas l’équipe (navigateurs connectés à la plateforme). Réseaux sociaux : chiffres par jour (les plateformes ne donnent pas de chiffres par heure), actualisés toutes les 15 minutes.',
         'synced' => 'Dernière actualisation :time.',
         'src' => [
             'website' => 'Site web',
