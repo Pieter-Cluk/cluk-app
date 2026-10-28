@@ -20,8 +20,10 @@ return [
     'history' => 20,
 
     // Animation clips per mood (paths under public/, MP4/WebM on a black background).
-    // Empty: the picture is animated by CSS. Fill in when the 3D clips are ready.
+    // A mood without a clip is animated by CSS on the picture.
     'clips' => [
-        // 'idle' => 'images/clukie/idle.mp4', 'wave' => …, 'think' => …, 'thumbs' => …, 'sleep' => …, 'hop' => …
+        'idle' => 'images/clukie/idle.mp4',
+        'wave' => 'images/clukie/wave.mp4',
+        // still to come: 'think', 'thumbs', 'hop' (same format: 512 × 512 MP4 on black, no sound)
     ],
 ];

@@ -12,6 +12,7 @@
 .ck-stage img, .ck-stage .ck-clip { position: absolute; inset: -4% -4% -10%; width: 108%; height: 114%; object-fit: cover; object-position: 50% 30%; }
 .ck-stage .ck-clip { z-index: 1; }
 .clukie.has-clip .ck-stage img { visibility: hidden; }
+.clukie:not(.has-clip) .ck-clip { display: none; }
 .ck-launch:hover .ck-stage, .ck-launch:focus-visible .ck-stage { transform: scale(1.06); }
 .ck-launch:focus-visible { outline: none; }
 .ck-launch:focus-visible .ck-stage { box-shadow: 0 0 0 3px var(--ck-green), 0 0 0 6px #fff, 0 0 0 8px var(--ck-ink); }
