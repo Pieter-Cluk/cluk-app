@@ -16,9 +16,9 @@
         <a href="#cookies" data-cookie-settings>{{ __('site.consent.settings') }}</a>
       </nav>
       <div class="social">
-        <a href="{{ config('website.social.instagram') }}" aria-label="Instagram" rel="noopener" target="_blank">@include('site._icon', ['i' => 'ig'])</a>
-        <a href="{{ config('website.social.facebook') }}" aria-label="Facebook" rel="noopener" target="_blank">@include('site._icon', ['i' => 'fb'])</a>
-        <a href="{{ config('website.social.linkedin') }}" aria-label="LinkedIn" rel="noopener" target="_blank">@include('site._icon', ['i' => 'li'])</a>
+        <a href="{{ \App\Services\Website\SiteSettings::social('instagram') }}" aria-label="Instagram" rel="noopener" target="_blank">@include('site._icon', ['i' => 'ig'])</a>
+        <a href="{{ \App\Services\Website\SiteSettings::social('facebook') }}" aria-label="Facebook" rel="noopener" target="_blank">@include('site._icon', ['i' => 'fb'])</a>
+        <a href="{{ \App\Services\Website\SiteSettings::social('linkedin') }}" aria-label="LinkedIn" rel="noopener" target="_blank">@include('site._icon', ['i' => 'li'])</a>
       </div>
     </div>
   </div>
