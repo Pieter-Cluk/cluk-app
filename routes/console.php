@@ -100,6 +100,26 @@ Artisan::command('cluk:backup {--no-files : Only the database}', function () {
     }
     $this->line('Kept: '.implode(', ', array_map('basename', array_merge(Backups::list('db'), Backups::list('files')))));
     AuditLog::record('backup.made', null, ['db' => basename($r['db']), 'rows' => $r['rows']]);
+    // The copy outside one.com (Microsoft 365). A failure there does not fail the backup itself, but is shown.
+    if (\App\Services\Backup\Offsite::on()) {
+        foreach (array_filter([$r['db'], $r['files']]) as $f) {
+            try {
+                \App\Services\Backup\Offsite::upload($f);
+                $this->info('Copied to Microsoft 365: '.basename($f));
+            } catch (\Throwable $e) {
+                $this->warn('Copy to Microsoft 365 failed for '.basename($f).': '.$e->getMessage());
+            }
+        }
+        try {
+            if ($gone = \App\Services\Backup\Offsite::prune()) {
+                $this->line('Removed older copies in Microsoft 365: '.implode(', ', $gone));
+            }
+        } catch (\Throwable $e) {
+            $this->warn('Cleaning the Microsoft 365 copies failed: '.$e->getMessage());
+        }
+    } else {
+        $this->line('No copy outside one.com: BACKUP_OFFSITE_USER is not set.');
+    }
 })->purpose('Back up the database and the uploaded files');
 
 Artisan::command('cluk:backups', function () {

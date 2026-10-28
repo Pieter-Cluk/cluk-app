@@ -18,6 +18,9 @@ return [
 
     // Backups (database + uploaded files): a folder outside the website.
     'backup_path' => env('BACKUP_PATH', storage_path('backups')),
+    // A copy of every backup in Microsoft 365 (OneDrive of this person, folder below). Empty = no copy.
+    'backup_offsite_user' => env('BACKUP_OFFSITE_USER'),
+    'backup_offsite_folder' => env('BACKUP_OFFSITE_FOLDER', 'CLUK app backups'),
 
     'locales' => [
         'en' => 'English',
