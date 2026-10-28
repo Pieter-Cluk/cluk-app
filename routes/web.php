@@ -99,7 +99,7 @@ Route::get('/book', [FactoryPublicController::class, 'show'])->name('factory.boo
 Route::post('/book', [FactoryPublicController::class, 'store'])->middleware('throttle:10,1')->name('factory.book.store');
 
 // Office wall screens: a secret link per screen, no login on the screen PC.
-Route::get('/wall/{view}', [WallController::class, 'show'])->whereIn('view', ['planning', 'today'])->middleware('throttle:120,1')->name('wall.show');
+Route::get('/wall/{view}', [WallController::class, 'show'])->whereIn('view', ['planning', 'today', 'entrance'])->middleware('throttle:120,1')->name('wall.show');
 
 // The customer's quote page (link in the quote email).
 // Product sales: the customer's link to a sales quote.
@@ -178,6 +178,9 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
             Route::post('/services/{serviceRequest}/stop', [WorkspaceController::class, 'stopStorage'])->whereNumber('serviceRequest')->name('services.stop');
             Route::post('/services/{serviceRequest}/reply', [WorkspaceController::class, 'reply'])->whereNumber('serviceRequest')->middleware('throttle:30,1')->name('services.reply');
             Route::get('/bill', [WorkspaceController::class, 'bill'])->name('bill');
+            Route::get('/guests', [\App\Http\Controllers\Afrit6\GuestController::class, 'index'])->name('guests');
+            Route::post('/guests', [\App\Http\Controllers\Afrit6\GuestController::class, 'store'])->middleware('throttle:30,1')->name('guests.store');
+            Route::post('/guests/{guest}/cancel', [\App\Http\Controllers\Afrit6\GuestController::class, 'cancel'])->whereNumber('guest')->name('guests.cancel');
         });
         Route::post('/logout', [MemberAuthController::class, 'logout'])->name('logout');
     });
@@ -241,7 +244,7 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/downloads/{download}', [WebDownloadController::class, 'update'])->whereNumber('download')->name('downloads.update');
         Route::post('/downloads/{download}/move/{dir}', [WebDownloadController::class, 'move'])->whereNumber('download')->whereIn('dir', ['up', 'down'])->name('downloads.move');
         Route::delete('/downloads/{download}', [WebDownloadController::class, 'destroy'])->whereNumber('download')->name('downloads.destroy');
-        Route::get('/template/{format}', [WebsiteController::class, 'template'])->whereIn('format', ['home_hero', 'dryhire_hero', 'sales_slider', 'tile'])->name('template');
+        Route::get('/template/{format}', [WebsiteController::class, 'template'])->whereIn('format', ['home_hero', 'dryhire_hero', 'sales_slider', 'afrit6_screen', 'tile'])->name('template');
         Route::post('/texts/{tab}', [WebsiteController::class, 'texts'])->whereIn('tab', ['home', 'dryhire', 'sales'])->name('texts');
         Route::post('/tiles/{tile}', [WebsiteController::class, 'tile'])->whereIn('tile', ['dryhire', 'sales', 'factory', 'afrit6'])->name('tile');
         Route::post('/settings', [WebsiteController::class, 'general'])->name('general');

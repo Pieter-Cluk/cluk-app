@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Guests',
+    'intro' => 'Expecting visitors? Add them here: on that day the TV at the entrance welcomes them by name, and the team knows who is coming.',
+    'add' => 'Add guests',
+    'date' => 'Day',
+    'time' => 'Arrival (optional)',
+    'names' => 'Name(s)',
+    'names_hint' => 'One person per line',
+    'company' => 'Their company (optional)',
+    'on_screen' => 'Show the name on the welcome screen at the entrance',
+    'on_screen_hint' => 'Off: the screen only says “A guest for” your company, without the name.',
+    'note' => 'Note for yourself (optional)',
+    'note_hint' => 'Never shown on the screen.',
+    'save' => 'Add',
+    'upcoming' => 'Expected guests',
+    'none' => 'No guests expected.',
+    'shown' => 'name on the screen',
+    'hidden' => 'name not on the screen',
+    'cancel' => 'Remove',
+    'cancel_confirm' => 'Remove this guest?',
+    'cancelled' => 'Guest removed.',
+    'added' => '{1} Guest added.|[2,*] :n guests added.',
+    'name_needed' => 'Give at least one name.',
+];

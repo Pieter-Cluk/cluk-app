@@ -5,6 +5,7 @@ return [
     'open_page' => 'Pagina openen',
     'read_only' => 'Je kan kijken, maar niet wijzigen. Vraag het recht “Website wijzigen”.',
     'tabs' => [
+        'screen' => 'Afrit 6-scherm',
         'downloads' => 'Downloads',
         'home' => 'Homepage',
         'dryhire' => 'Dry-hire',
@@ -12,11 +13,13 @@ return [
         'general' => 'Algemeen',
     ],
     'places' => [
+        'afrit6_screen' => 'Diavoorstelling op de tv aan de ingang van Afrit 6',
         'home_hero' => 'Grote foto op de homepage',
         'dryhire_hero' => 'Foto bovenaan dry-hire',
         'sales_slider' => 'Diavoorstelling op de verkooppagina',
     ],
     'places_hint' => [
+        'afrit6_screen' => 'De grote tv aan de ingang van de co-working (Wandschermen › Scherm 3). Foto\'s blijven 10 seconden staan, video\'s spelen tot het einde. Niet op de website.',
         'home_hero' => 'Naast de titel bovenaan de homepage.',
         'dryhire_hero' => 'Achter de zoekbalk bovenaan de dry-hirepagina.',
         'sales_slider' => 'Het grote blok naast het nieuws op de verkooppagina. De teksten staan op de foto.',
@@ -134,18 +137,21 @@ return [
         'template_hint' => 'op het juiste formaat, met de uitsneden per scherm en de veilige zone als hulplijnen: open het in Photoshop, Illustrator, Figma of Canva.',
         'preview' => 'Zo wordt hij uitgesneden per scherm',
         'screens' => [
+            'tv' => 'Tv',
             'phone' => 'Gsm',
             'tablet' => 'Tablet',
             'laptop' => 'Laptop',
             'wide' => 'Breed scherm',
         ],
         'notes' => [
+            'panel_right' => 'Het rechterderde wordt bedekt door de agenda van de dag: houd het onderwerp in de linkse twee derde.',
             'bw' => 'Getoond in zwart-wit met wat extra contrast, naast het grote groene titelblok.',
             'dark_left' => 'De linkerkant wordt donkerder gemaakt (titel en zoekbalk erover); op gsm staat de foto vaag achter de tekst. Zet het onderwerp op de rechterhelft.',
             'text_left' => 'Titel, tekst en knop staan in de linkeronderhelft, over de foto: hou dat stuk rustig en donkerder, zet het onderwerp midden-rechts.',
             'tile' => 'Getoond onder de titel en tekst van het blok; zoomt licht in als de muis erover gaat.',
         ],
         'text_zone' => 'Tekst en knop',
+        'panel_zone' => 'Agenda',
         'warning' => 'Let op: deze foto is :got px, ideaal is :ideal px. Hij kan wazig zijn of meer weggesneden worden dan je verwacht: bekijk de voorbeelden.',
     ],
     'downloads' => [

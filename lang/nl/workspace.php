@@ -15,6 +15,7 @@ return [
     'colis' => '1 collo|:n colli',
     'pallets' => ':n pallet|:n pallets',
     'nav' => [
+        'guests' => 'Gasten',
         'overview' => 'Overzicht',
         'desks' => 'Bureaus',
         'room' => 'Vergaderzaal',

@@ -5,6 +5,7 @@ return [
     'open_page' => 'Abrir página',
     'read_only' => 'Puedes mirar, pero no cambiar. Pide el permiso «Cambiar la web».',
     'tabs' => [
+        'screen' => 'Pantalla Afrit 6',
         'downloads' => 'Descargas',
         'home' => 'Inicio',
         'dryhire' => 'Dry-hire',
@@ -12,11 +13,13 @@ return [
         'general' => 'General',
     ],
     'places' => [
+        'afrit6_screen' => 'Presentación en la tele de la entrada de Afrit 6',
         'home_hero' => 'Foto grande del inicio',
         'dryhire_hero' => 'Foto arriba en dry-hire',
         'sales_slider' => 'Presentación de la página de venta',
     ],
     'places_hint' => [
+        'afrit6_screen' => 'La tele grande en la entrada del co-working (Pantallas › Pantalla 3). Las fotos se quedan 10 segundos, los vídeos se reproducen hasta el final. No sale en la web.',
         'home_hero' => 'Junto al título arriba en el inicio.',
         'dryhire_hero' => 'Detrás de la barra de búsqueda arriba en dry-hire.',
         'sales_slider' => 'El bloque grande junto a las noticias en la página de venta. Los textos aparecen sobre la foto.',
@@ -134,18 +137,21 @@ return [
         'template_hint' => 'en el tamaño correcto, con los recortes por pantalla y la zona segura como guías: ábrela en Photoshop, Illustrator, Figma o Canva.',
         'preview' => 'Cómo se recorta en cada pantalla',
         'screens' => [
+            'tv' => 'TV',
             'phone' => 'Móvil',
             'tablet' => 'Tableta',
             'laptop' => 'Portátil',
             'wide' => 'Pantalla ancha',
         ],
         'notes' => [
+            'panel_right' => 'El tercio derecho lo cubre la agenda del día: deja el tema en los dos tercios izquierdos.',
             'bw' => 'Se muestra en blanco y negro con algo más de contraste, junto al gran bloque verde del título.',
             'dark_left' => 'El lado izquierdo se oscurece (título y buscador encima); en el móvil la foto queda tenue detrás del texto. Pon el motivo en la mitad derecha.',
             'text_left' => 'Título, texto y botón van abajo a la izquierda, sobre la foto: mantén esa parte tranquila y más oscura, pon el motivo en el centro-derecha.',
             'tile' => 'Se muestra bajo el título y el texto del bloque; hace un ligero zoom al pasar el ratón.',
         ],
         'text_zone' => 'Texto y botón',
+        'panel_zone' => 'Agenda',
         'warning' => 'Ojo: esta foto mide :got px, lo ideal es :ideal px. Puede verse borrosa o más recortada de lo esperado: revisa las vistas previas.',
     ],
     'downloads' => [

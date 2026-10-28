@@ -3,6 +3,7 @@
     @include('partials.flash')
     <div class="split-2">
         @foreach ($screens as $s)
+            @php($canManage = $s->view === 'entrance' ? $manageEntrance : $manageAll)
             <section class="card wall-card">
                 <div class="card-head"><h2>{{ __('wall.admin.screen_'.$s->view) }}</h2><span @class(['pill', 'pill-ok' => $s->isOnline(), 'pill-off' => ! $s->isOnline()])>{{ $s->isOnline() ? __('wall.admin.online') : __('wall.admin.offline') }}</span></div>
                 <p class="muted">{{ __('wall.admin.desc_'.$s->view) }}</p>
@@ -18,6 +19,13 @@
                     <dt>{{ __('wall.admin.where') }}</dt><dd>{{ $s->location ?: '—' }}</dd>
                     <dt>{{ __('wall.admin.seen') }}</dt><dd>{{ $s->last_seen_at ? $s->last_seen_at->locale(app()->getLocale())->diffForHumans() : __('wall.admin.never') }}</dd>
                 </dl>
+                @if ($s->view === 'entrance')
+                    <p class="small">{{ trans_choice('wall.admin.slides_n', $entrance['slides'], ['n' => $entrance['slides']]) }} · {{ trans_choice('wall.admin.guests_today', $entrance['guests'], ['n' => $entrance['guests']]) }}<br>
+                        @if (Route::has('website.index'))<a href="{{ route('website.index', ['tab' => 'screen']) }}">{{ __('wall.admin.slides') }} →</a>@else{{ __('wall.admin.slides') }}@endif</p>
+                    <details class="mt-xs"><summary class="linkbtn">{{ __('wall.admin.full_title') }}</summary>
+                        <ol class="plain-list small">@foreach ([1, 2, 3, 4] as $n)<li>{{ __('wall.admin.full_'.$n) }}</li>@endforeach</ol>
+                    </details>
+                @endif
                 @if ($canManage)
                     <form method="post" action="{{ route('wall.update', $s) }}" class="inline-form">
                         @csrf @method('PUT')

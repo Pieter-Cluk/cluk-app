@@ -5,6 +5,7 @@ return [
     'open_page' => 'Ouvrir la page',
     'read_only' => 'Vous pouvez consulter, mais pas modifier. Demandez le droit « Modifier le site ».',
     'tabs' => [
+        'screen' => 'Écran Afrit 6',
         'downloads' => 'Téléchargements',
         'home' => 'Accueil',
         'dryhire' => 'Dry-hire',
@@ -12,11 +13,13 @@ return [
         'general' => 'Général',
     ],
     'places' => [
+        'afrit6_screen' => 'Diaporama sur la télé à l\'entrée d\'Afrit 6',
         'home_hero' => 'Grande photo de l\'accueil',
         'dryhire_hero' => 'Photo en haut du dry-hire',
         'sales_slider' => 'Diaporama de la page vente',
     ],
     'places_hint' => [
+        'afrit6_screen' => 'La grande télé à l\'entrée du co-working (Écrans muraux › Écran 3). Les photos restent 10 secondes, les vidéos jouent jusqu\'au bout. Pas sur le site.',
         'home_hero' => 'À côté du titre en haut de l\'accueil.',
         'dryhire_hero' => 'Derrière la barre de recherche en haut de la page dry-hire.',
         'sales_slider' => 'Le grand bloc à côté des actualités de la page vente. Les textes s\'affichent sur la photo.',
@@ -134,18 +137,21 @@ return [
         'template_hint' => 'au bon format, avec les recadrages par écran et la zone sûre comme repères : ouvrez-le dans Photoshop, Illustrator, Figma ou Canva.',
         'preview' => 'Recadrage par écran',
         'screens' => [
+            'tv' => 'TV',
             'phone' => 'Téléphone',
             'tablet' => 'Tablette',
             'laptop' => 'Portable',
             'wide' => 'Grand écran',
         ],
         'notes' => [
+            'panel_right' => 'Le tiers droit est couvert par l\'agenda du jour : gardez le sujet dans les deux tiers gauches.',
             'bw' => 'Affichée en noir et blanc avec un peu plus de contraste, à côté du grand bloc titre vert.',
             'dark_left' => 'Le côté gauche est assombri (titre et barre de recherche par-dessus) ; sur téléphone la photo est pâle derrière le texte. Placez le sujet dans la moitié droite.',
             'text_left' => 'Titre, texte et bouton sont en bas à gauche, sur la photo : gardez cette partie calme et plus sombre, placez le sujet au centre-droit.',
             'tile' => 'Affichée sous le titre et le texte du bloc ; zoome légèrement au survol de la souris.',
         ],
         'text_zone' => 'Texte et bouton',
+        'panel_zone' => 'Agenda',
         'warning' => 'Attention : cette photo fait :got px, l’idéal est :ideal px. Elle peut être floue ou plus coupée que prévu : vérifiez les aperçus.',
     ],
     'downloads' => [

@@ -7,6 +7,7 @@
   <title>CLUK · {{ __('website.places.'.$format) }} · {{ $W }} × {{ $H }} px</title>
   <rect width="{{ $W }}" height="{{ $H }}" fill="#d9ddd6"/>
   @if ($f['note'] === 'dark_left')<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#070807" stop-opacity=".95"/><stop offset=".35" stop-color="#070807" stop-opacity=".6"/><stop offset="1" stop-color="#070807" stop-opacity=".1"/></linearGradient></defs><rect width="{{ $W }}" height="{{ $H }}" fill="url(#g)"/>@endif
+  @if ($f['note'] === 'panel_right')<rect x="{{ round($W * .69) }}" y="0" width="{{ round($W * .31) }}" height="{{ $H }}" fill="#0a0a0a" fill-opacity=".35"/><text x="{{ round($W * .71) }}" y="{{ round($H * .93) }}" font-family="Arial" font-size="{{ $fs }}" fill="#fff">{{ __('website.format.panel_zone') }}</text>@endif
   @if ($f['note'] === 'text_left')<rect x="0" y="{{ round($H * .35) }}" width="{{ round($W * .5) }}" height="{{ round($H * .65) }}" fill="#0a0a0a" fill-opacity=".25"/><text x="{{ round($W * .03) }}" y="{{ round($H * .93) }}" font-family="Arial" font-size="{{ $fs }}" fill="#222">{{ __('website.format.text_zone') }}</text>@endif
   <rect x="{{ round(($W - $sw) / 2) }}" y="{{ round(($H - $sh) / 2) }}" width="{{ $sw }}" height="{{ $sh }}" fill="#52ae32" fill-opacity=".22" stroke="#52ae32" stroke-width="{{ max(3, round($W / 600)) }}"/>
   <text x="{{ round(($W - $sw) / 2) + 14 }}" y="{{ round(($H - $sh) / 2) + $fs + 10 }}" font-family="Arial" font-weight="bold" font-size="{{ $fs }}" fill="#2e6b1a">{{ __('website.format.safe_label') }} {{ $sw }} × {{ $sh }}</text>

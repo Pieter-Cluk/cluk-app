@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-/** An office wall screen (planning or today) with its secret display link. */
+/** A wall screen (office planning, office today, Afrit 6 entrance) with its secret display link. */
 #[Fillable(['view', 'token', 'locale', 'location', 'last_seen_at'])]
 class WallScreen extends Model
 {
-    public const VIEWS = ['planning', 'today'];
+    public const VIEWS = ['planning', 'today', 'entrance'];
 
     protected function casts(): array
     {

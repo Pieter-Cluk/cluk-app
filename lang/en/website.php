@@ -5,6 +5,7 @@ return [
     'open_page' => 'Open page',
     'read_only' => 'You can look, but not change. Ask for the right “Change the website”.',
     'tabs' => [
+        'screen' => 'Afrit 6 screen',
         'downloads' => 'Downloads',
         'home' => 'Homepage',
         'dryhire' => 'Dry-hire',
@@ -12,11 +13,13 @@ return [
         'general' => 'General',
     ],
     'places' => [
+        'afrit6_screen' => 'Slideshow on the Afrit 6 entrance TV',
         'home_hero' => 'Big picture on the homepage',
         'dryhire_hero' => 'Picture at the top of dry-hire',
         'sales_slider' => 'Slideshow on the sales page',
     ],
     'places_hint' => [
+        'afrit6_screen' => 'The big TV at the entrance of the co-working space (Wall screens › Screen 3). Pictures stay 10 seconds, videos play to the end. Not shown on the website.',
         'home_hero' => 'Next to the title at the top of the homepage.',
         'dryhire_hero' => 'Behind the search bar at the top of the dry-hire page.',
         'sales_slider' => 'The big block next to the news on the sales page. Texts are shown on the picture.',
@@ -134,18 +137,21 @@ return [
         'template_hint' => 'in the right size, with the screen crops and the safe zone as guides: open it in Photoshop, Illustrator, Figma or Canva.',
         'preview' => 'How it is cut on each screen',
         'screens' => [
+            'tv' => 'TV',
             'phone' => 'Phone',
             'tablet' => 'Tablet',
             'laptop' => 'Laptop',
             'wide' => 'Wide screen',
         ],
         'notes' => [
+            'panel_right' => 'The right third is covered by the day’s agenda: keep the subject in the left two thirds.',
             'bw' => 'Shown in black and white with a little extra contrast, next to the big green title block.',
             'dark_left' => 'The left side is darkened (title and search bar on top); on phones the picture is faint behind the text. Put the subject on the right half.',
             'text_left' => 'The title, text and button sit in the bottom-left half, over the picture: keep that part calm and darker, put the subject in the middle-right.',
             'tile' => 'Shown under the title and text of the block; it zooms in a little when the mouse goes over it.',
         ],
         'text_zone' => 'Text and button',
+        'panel_zone' => 'Agenda',
         'warning' => 'Note: this picture is :got px, the ideal is :ideal px. It may look soft or be cut more than you expect: check the previews.',
     ],
     'downloads' => [

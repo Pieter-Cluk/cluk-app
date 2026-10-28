@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Invitados',
+    'intro' => '¿Esperas visitas? Añádelas aquí: ese día la pantalla de la entrada les da la bienvenida por su nombre y el equipo sabe quién viene.',
+    'add' => 'Añadir invitados',
+    'date' => 'Día',
+    'time' => 'Llegada (opcional)',
+    'names' => 'Nombre(s)',
+    'names_hint' => 'Una persona por línea',
+    'company' => 'Su empresa (opcional)',
+    'on_screen' => 'Mostrar el nombre en la pantalla de bienvenida de la entrada',
+    'on_screen_hint' => 'Desactivado: la pantalla solo dice «Un invitado para» tu empresa, sin el nombre.',
+    'note' => 'Nota para ti (opcional)',
+    'note_hint' => 'Nunca se muestra en la pantalla.',
+    'save' => 'Añadir',
+    'upcoming' => 'Invitados previstos',
+    'none' => 'No se esperan invitados.',
+    'shown' => 'nombre en la pantalla',
+    'hidden' => 'nombre no en la pantalla',
+    'cancel' => 'Quitar',
+    'cancel_confirm' => '¿Quitar este invitado?',
+    'cancelled' => 'Invitado quitado.',
+    'added' => '{1} Invitado añadido.|[2,*] :n invitados añadidos.',
+    'name_needed' => 'Indica al menos un nombre.',
+];

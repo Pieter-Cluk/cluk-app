@@ -18,7 +18,7 @@
         <section class="card mt" id="slides">
             <div class="card-head">
                 <h2>{{ __('website.places.'.$place) }}</h2>
-                <span @class(['pill', 'pill-ok' => $n > 0, 'pill-off' => $n === 0])>{{ $n === 0 ? __('website.status.none') : ($n === 1 ? __('website.status.still') : __('website.status.show', ['n' => $n, 's' => \App\Services\Website\SiteSettings::get('general.slide_seconds', 3)])) }}</span>
+                <span @class(['pill', 'pill-ok' => $n > 0, 'pill-off' => $n === 0])>{{ $n === 0 ? __('website.status.none') : ($n === 1 ? __('website.status.still') : __('website.status.show', ['n' => $n, 's' => ($place === 'afrit6_screen' ? \App\Services\Afrit6\Entrance::SECONDS : \App\Services\Website\SiteSettings::get('general.slide_seconds', 3))])) }}</span>
             </div>
             <p class="muted small">{{ __('website.places_hint.'.$place) }}</p>
             @include('media.website._format', ['format' => $place, 'open' => $slides->isEmpty()])
@@ -32,11 +32,11 @@
                     </div>
                     <div class="ws-info">
                         <b>{{ $i + 1 }}. {{ $s->kind === 'video' ? __('website.slide.video') : __('website.slide.image') }}</b>@if ($s->text('title')) · {{ $s->text('title') }}@endif
-                        <div class="small">{{ __('website.link.goes') }}
+                        @if ($place !== 'afrit6_screen')<div class="small">{{ __('website.link.goes') }}
                             @if ($s->link_type === 'none'){{ __('website.link.types.none') }}
                             @elseif ($url)<a href="{{ $url }}" target="_blank" rel="noopener">{{ __('website.link.types.'.$s->link_type) }}: {{ $s->link_type === 'page' ? __('website.link.pages.'.$s->link_value) : $s->link_value }}</a>
                             @else<b class="txt-danger">{{ __('website.link.broken', ['value' => $s->link_value]) }}</b>@endif
-                        </div>
+                        </div>@endif
                         <small class="muted">@if (! $s->active){{ __('website.slide.off') }} · @endif @if ($s->starts_on || $s->ends_on){{ __('website.slide.dates', ['from' => $s->starts_on?->format('d/m/Y') ?? '…', 'until' => $s->ends_on?->format('d/m/Y') ?? '…']) }} · @endif{{ $s->updated_at->format('d/m/Y') }}</small>
                         @if ($canEdit)
                             <div class="ws-actions">
@@ -47,7 +47,7 @@
                             <details class="mt-xs">
                                 <summary class="linkbtn">{{ __('website.change') }}</summary>
                                 <form method="post" action="{{ route('website.slides.update', $s) }}" enctype="multipart/form-data" class="stack-sm mt">@csrf
-                                    @include('media.website._link', ['s' => $s])
+                                    @if ($place === 'afrit6_screen')<input type="hidden" name="link_type" value="none">@else @include('media.website._link', ['s' => $s]) @endif
                                     @include('media.website._slide-texts', ['s' => $s])
                                     <div class="form-grid">
                                         <label class="field"><span>{{ __('website.slide.from') }}</span><input type="date" name="starts_on" value="{{ $s->starts_on?->toDateString() }}"></label>
@@ -74,7 +74,7 @@
                     <form method="post" action="{{ route('website.slides.store') }}" enctype="multipart/form-data" class="stack-sm mt">@csrf
                         <input type="hidden" name="place" value="{{ $place }}">
                         <label class="field"><span>{{ __('website.slide.file') }}</span><input type="file" name="file" required accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"><small>{{ __('website.slide.file_hint') }}</small></label>
-                        @include('media.website._link', ['s' => null])
+                        @if ($place === 'afrit6_screen')<input type="hidden" name="link_type" value="none">@else @include('media.website._link', ['s' => null]) @endif
                         @include('media.website._slide-texts', ['s' => null])
                         <div class="form-grid">
                             <label class="field"><span>{{ __('website.slide.from') }}</span><input type="date" name="starts_on"></label>

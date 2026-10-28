@@ -12,7 +12,8 @@ class Slide extends Model
 {
     protected $table = 'web_slides';
 
-    public const PLACES = ['home_hero', 'dryhire_hero', 'sales_slider'];
+    /** afrit6_screen = the big TV at the entrance of Afrit 6 (not on the website). */
+    public const PLACES = ['home_hero', 'dryhire_hero', 'sales_slider', 'afrit6_screen'];
 
     public const LINKS = ['none', 'page', 'dryhire_item', 'dryhire_cat', 'sales_item', 'sales_cat', 'brand', 'url'];
 
@@ -28,6 +29,7 @@ class Slide extends Model
         'home_hero' => ['w' => 2400, 'h' => 2000, 'frames' => ['phone' => 1.30, 'tablet' => 0.74, 'laptop' => 1.19, 'wide' => 1.85], 'note' => 'bw'],
         'dryhire_hero' => ['w' => 2400, 'h' => 1400, 'frames' => ['phone' => 0.94, 'laptop' => 1.75, 'wide' => 2.33], 'note' => 'dark_left'],
         'sales_slider' => ['w' => 2400, 'h' => 880, 'frames' => ['phone' => 0.93, 'tablet' => 1.85, 'laptop' => 2.74], 'note' => 'text_left'],
+        'afrit6_screen' => ['w' => 1920, 'h' => 1080, 'frames' => ['tv' => 1.78], 'note' => 'panel_right'],
         'tile' => ['w' => 1200, 'h' => 1000, 'frames' => ['tablet' => 0.91, 'laptop' => 1.17, 'phone' => 1.46], 'note' => 'tile'],
     ];
 

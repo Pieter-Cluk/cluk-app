@@ -15,6 +15,7 @@ return [
     'colis' => ':n colis|:n colis',
     'pallets' => ':n palette|:n palettes',
     'nav' => [
+        'guests' => 'Invités',
         'overview' => 'Aperçu',
         'desks' => 'Bureaux',
         'room' => 'Salle de réunion',

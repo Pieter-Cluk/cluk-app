@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Gasten',
+    'intro' => 'Verwacht je bezoek? Zet ze hier: die dag verwelkomt het scherm aan de ingang hen bij naam, en het team weet wie er komt.',
+    'add' => 'Gasten toevoegen',
+    'date' => 'Dag',
+    'time' => 'Aankomst (optioneel)',
+    'names' => 'Naam/namen',
+    'names_hint' => 'Eén persoon per lijn',
+    'company' => 'Hun bedrijf (optioneel)',
+    'on_screen' => 'Toon de naam op het welkomstscherm aan de ingang',
+    'on_screen_hint' => 'Uit: het scherm toont enkel “Een gast voor” jouw bedrijf, zonder naam.',
+    'note' => 'Notitie voor jezelf (optioneel)',
+    'note_hint' => 'Nooit op het scherm.',
+    'save' => 'Toevoegen',
+    'upcoming' => 'Verwachte gasten',
+    'none' => 'Geen gasten verwacht.',
+    'shown' => 'naam op het scherm',
+    'hidden' => 'naam niet op het scherm',
+    'cancel' => 'Verwijderen',
+    'cancel_confirm' => 'Deze gast verwijderen?',
+    'cancelled' => 'Gast verwijderd.',
+    'added' => '{1} Gast toegevoegd.|[2,*] :n gasten toegevoegd.',
+    'name_needed' => 'Geef minstens één naam.',
+];
