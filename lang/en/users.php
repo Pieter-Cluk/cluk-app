@@ -210,6 +210,8 @@ return [
             'products_tag_saved' => 'Tag changed',
             'products_tag_deleted' => 'Tag deleted',
             'web_account_registered' => 'Website login registered',
+            'mail_bounced' => 'Mail bounced: address blocked',
+            'mail_unblocked' => 'Mail address unblocked',
             'web_account_approved' => 'Website login approved',
             'web_account_blocked' => 'Website login blocked',
             'web_account_unblocked' => 'Website login unblocked',

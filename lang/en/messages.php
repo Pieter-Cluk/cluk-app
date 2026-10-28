@@ -156,7 +156,7 @@ return [
         'resumed' => 'Carrying on: the next batch goes out within office hours.',
         'no_country' => 'No country',
         'plan_title' => 'Plan the sending',
-        'who' => 'Contacts of customers, without a website account yet.',
+        'who' => 'Contacts of customers with a VAT number, without a website account yet.',
         'country' => 'Country',
         'people' => 'People',
         'days' => 'Days',

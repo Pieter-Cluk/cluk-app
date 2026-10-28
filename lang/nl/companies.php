@@ -200,4 +200,14 @@ return [
         'sign' => 'Cluk it, why not! · Team CLUK',
     ],
     'owner_assigned' => '{0} Niets veranderd.|{1} 1 bedrijf is nu van :name.|[2,*] :n bedrijven zijn nu van :name.',
+    'bounce' => [
+        'title' => 'Mail kon niet bezorgd worden',
+        'company_email' => 'algemeen e-mailadres',
+        'when' => 'Teruggekomen op :date',
+        'confirm' => ':email deblokkeren? Er gaan dan weer mails naartoe.',
+        'unblock' => 'Deblokkeren',
+        'hint' => 'Naar deze adressen gaan geen mails meer (nieuwsbrieven, promoties, uitnodigingen, offertes…). Pas het adres aan bij het contact, of deblokkeer het als het weer werkt.',
+        'pill' => 'mail teruggekomen',
+        'cleared' => ':email is gedeblokkeerd.',
+    ],
 ];

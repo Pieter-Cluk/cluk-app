@@ -3,6 +3,9 @@
 namespace App\Services\Sales;
 
 use App\Models\Company;
+use App\Models\Contact;
+use App\Models\EmailBlock;
+use App\Models\User;
 use App\Models\ProductSales\SalesQuote;
 use App\Models\Sales\Quote;
 use App\Models\Sales\SalesTask;
@@ -39,14 +42,14 @@ class CommercialTasks
     public static function refresh(): int
     {
         $seen = [];
-        foreach ([...self::quoteTasks(), ...self::cardTasks(), ...self::webTasks()] as $t) {
+        foreach ([...self::quoteTasks(), ...self::cardTasks(), ...self::webTasks(), ...self::mailTasks()] as $t) {
             $seen[] = self::upsert($t);
         }
         $seen = array_values(array_filter($seen));
         // Tasks of customers that lost their owner close too.
         SalesTask::whereIn('status', ['open', 'snoozed'])->whereNull('owner_id')->update(['status' => 'resolved', 'handled_at' => now()]);
         // Reasons that are gone: the task closes by itself (website tasks close after a week).
-        SalesTask::whereIn('kind', ['card', 'quote'])->whereIn('status', ['open', 'snoozed'])->whereNotIn('key', $seen)
+        SalesTask::whereIn('kind', ['card', 'quote', 'mail'])->whereIn('status', ['open', 'snoozed'])->whereNotIn('key', $seen)
             ->update(['status' => 'resolved', 'handled_at' => now()]);
         SalesTask::where('kind', 'web')->whereIn('status', ['open', 'snoozed'])->where('updated_at', '<', now()->subDays(7))
             ->update(['status' => 'resolved', 'handled_at' => now()]);
@@ -233,6 +236,46 @@ class CommercialTasks
     }
 
     /** Website visits and downloads by people of a company we know. */
+    // ── Mails that bounced ──────────────────────────────────────────────────
+
+    /**
+     * A blocked address (bounced) on a contact or a company: red, for the account owner, else who sent the mail,
+     * else the first admin. Closes by itself when the address is changed on the card or unblocked.
+     */
+    private static function mailTasks(): array
+    {
+        if (! Schema::hasTable('email_blocks')) {
+            return [];
+        }
+        $blocks = EmailBlock::active()->get()->keyBy(fn ($b) => mb_strtolower($b->email));
+        if ($blocks->isEmpty()) {
+            return [];
+        }
+        $emails = $blocks->keys()->all();
+        $admin = User::where('status', User::STATUS_ACTIVE)->whereHas('role', fn ($q) => $q->where('slug', 'admin'))->orderBy('id')->value('id');
+        $out = [];
+        $add = function (EmailBlock $b, ?Company $co, ?Contact $c) use (&$out, $admin) {
+            $out[] = ['key' => 'mail:'.$b->id.':'.($co ? 'co'.$co->id : 'c'.$c?->id), 'kind' => 'mail', 'company_id' => $co?->id, 'contact_id' => $c?->id, 'quote_id' => null,
+                'owner_id' => $co?->account_owner_id ?? $b->notify_user_id ?? $admin, 'level' => 'red',
+                'data' => ['email' => $b->email, 'detail' => $b->detail, 'subject' => $b->subject, 'at' => $b->bounced_at?->toIso8601String(),
+                    'url' => $co ? route('companies.show', $co).($c ? '#contact-'.$c->id : '') : null]];
+        };
+        foreach (Contact::with('companies')->whereIn(DB::raw('lower(email)'), $emails)->get() as $c) {
+            $b = $blocks[mb_strtolower(trim($c->email))] ?? null;
+            if (! $b) {
+                continue;
+            }
+            $c->companies->isEmpty() ? $add($b, null, $c) : $c->companies->each(fn ($co) => $add($b, $co, $c));
+        }
+        foreach (Company::whereIn(DB::raw('lower(email)'), $emails)->get() as $co) {
+            if ($b = $blocks[mb_strtolower(trim($co->email))] ?? null) {
+                $add($b, $co, null);
+            }
+        }
+
+        return $out;
+    }
+
     private static function webTasks(): array
     {
         $out = collect(self::webEventTasks())->keyBy('company_id');

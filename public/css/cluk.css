@@ -1060,3 +1060,13 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .ws-dl-ext{display:grid;place-items:center;width:72px;height:72px;border-radius:10px;background:var(--surface-subtle);font-weight:800;letter-spacing:.04em;font-size:13px}
 #downloads .ws-slide{grid-template-columns:72px minmax(0,1fr)}
 .ws-fixed{opacity:.85}
+
+.bounce-card{border-left:4px solid var(--danger-text)}
+.bounce-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+.bounce-row:first-of-type{border-top:0}
+.wa-ready{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-left:4px solid var(--brand)}
+.wa-checks{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:13px}
+.wa-checks li span{display:inline-flex;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-right:4px}
+.wa-ok span{background:var(--brand-tint);color:var(--brand-strong)}
+.wa-warn span{background:var(--warning-bg);color:var(--warning-text)}
+.wa-info span{background:var(--info-bg);color:var(--info-text)}

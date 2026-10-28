@@ -20,6 +20,7 @@ return [
         'card' => 'Klantenfiche',
         'quote' => 'Open offerte',
         'web' => 'Website & sociale media',
+        'mail' => 'Mail teruggekomen',
     ],
     'card' => [
         'title' => '— de fiche heeft aandacht nodig',
@@ -59,5 +60,9 @@ return [
     'flash' => [
         'done' => 'Als gedaan gemarkeerd.',
         'snoozed' => '{1} Morgen terug.|[2,*] Over :n dagen terug.',
+    ],
+    'mail' => [
+        'title' => '— een mail kon niet bezorgd worden',
+        'todo' => 'Controleer het adres met de klant en pas het aan op de kaart (of deblokkeer het).',
     ],
 ];

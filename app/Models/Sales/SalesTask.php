@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['kind', 'key', 'company_id', 'contact_id', 'quote_id', 'owner_id', 'level', 'data', 'status', 'snoozed_until', 'handled_by_id', 'handled_at'])]
 class SalesTask extends Model
 {
-    public const KINDS = ['card', 'quote', 'web'];
+    public const KINDS = ['card', 'quote', 'web', 'mail'];
 
     /** Most urgent first. */
     public const LEVELS = ['red', 'orange', 'yellow', 'blue'];

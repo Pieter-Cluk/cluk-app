@@ -200,4 +200,14 @@ return [
         'sign' => 'Cluk it, why not! · L’équipe CLUK',
     ],
     'owner_assigned' => '{0} Rien n’a changé.|{1} 1 société appartient maintenant à :name.|[2,*] :n sociétés appartiennent maintenant à :name.',
+    'bounce' => [
+        'title' => 'Le mail n’a pas pu être remis',
+        'company_email' => 'e-mail de la société',
+        'when' => 'Revenu le :date',
+        'confirm' => 'Débloquer :email ? Les mails y seront de nouveau envoyés.',
+        'unblock' => 'Débloquer',
+        'hint' => 'Plus aucun mail ne part vers ces adresses (newsletters, promotions, invitations, offres…). Modifiez l’adresse du contact, ou débloquez-la quand elle fonctionne à nouveau.',
+        'pill' => 'mail revenu',
+        'cleared' => ':email est débloqué.',
+    ],
 ];

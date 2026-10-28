@@ -20,6 +20,7 @@ return [
         'card' => 'Customer card',
         'quote' => 'Open quote',
         'web' => 'Website & social',
+        'mail' => 'Mail bounced',
     ],
     'card' => [
         'title' => '— the card needs attention',
@@ -59,5 +60,9 @@ return [
     'flash' => [
         'done' => 'Marked as done.',
         'snoozed' => '{1} Back tomorrow.|[2,*] Back in :n days.',
+    ],
+    'mail' => [
+        'title' => '— a mail could not be delivered',
+        'todo' => 'Check the address with the customer and change it on the card (or unblock it).',
     ],
 ];

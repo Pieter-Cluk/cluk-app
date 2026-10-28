@@ -200,4 +200,14 @@ return [
         'sign' => 'Cluk it, why not! · Team CLUK',
     ],
     'owner_assigned' => '{0} Nothing changed.|{1} 1 company now belongs to :name.|[2,*] :n companies now belong to :name.',
+    'bounce' => [
+        'title' => 'Mail could not be delivered',
+        'company_email' => 'company email',
+        'when' => 'Bounced on :date',
+        'confirm' => 'Unblock :email? Mails will go to it again.',
+        'unblock' => 'Unblock',
+        'hint' => 'No more mails go to these addresses (newsletters, promotions, invitations, quotes…). Change the address on the contact, or unblock it when it works again.',
+        'pill' => 'mail bounced',
+        'cleared' => ':email is unblocked.',
+    ],
 ];

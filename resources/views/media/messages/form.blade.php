@@ -84,7 +84,7 @@
                             @php($plan = $m->plan ?? [])
                             @php($people = \App\Services\Media\Messages::recipients($m))
                             @php($startDay = \Illuminate\Support\Carbon::parse($plan['start'] ?? now()->addDay()->toDateString()))
-                            @php($preview = \App\Services\Media\Messages::plan($people, $startDay, (int) ($plan['per_day'] ?? 100), $plan['countries'] ?? \App\Services\Media\Messages::FIRST_COUNTRIES))
+                            @php($preview = \App\Services\Media\Messages::plan($people, $startDay, (int) ($plan['per_day'] ?? 200), $plan['countries'] ?? \App\Services\Media\Messages::FIRST_COUNTRIES))
                             <p>{{ trans_choice('messages.will_go', count($people), ['n' => count($people)]) }} {{ __('messages.invite.who') }}</p>
                             @if ($m->status === 'scheduled')<p class="flash flash-ok">{{ __('messages.invite.planned', ['date' => $m->send_at->format('d/m/Y')]) }}</p>@endif
                             @if ($preview['countries'])
@@ -96,7 +96,7 @@
                             @endif
                             <form method="post" action="{{ route('messages.plan', $m) }}" class="stack-sm">@csrf
                                 <label class="field"><span>{{ __('messages.invite.start') }}</span><input type="date" name="start" required min="{{ now()->toDateString() }}" value="{{ old('start', $plan['start'] ?? '') }}"></label>
-                                <label class="field"><span>{{ __('messages.invite.per_day') }}</span><input type="number" name="per_day" min="10" max="500" required value="{{ old('per_day', $plan['per_day'] ?? 100) }}"></label>
+                                <label class="field"><span>{{ __('messages.invite.per_day') }}</span><input type="number" name="per_day" min="10" max="500" required value="{{ old('per_day', $plan['per_day'] ?? 200) }}"></label>
                                 <label class="field"><span>{{ __('messages.invite.order') }}</span><input name="countries" maxlength="200" value="{{ old('countries', implode(', ', $plan['countries'] ?? \App\Services\Media\Messages::FIRST_COUNTRIES)) }}"><small class="muted">{{ __('messages.invite.order_hint') }}</small></label>
                                 @foreach (['start', 'per_day', 'send'] as $f)@error($f)<small class="txt-danger">{{ $message }}</small>@enderror @endforeach
                                 <div><button class="primary" type="submit">{{ __($m->status === 'scheduled' ? 'messages.invite.replan' : 'messages.invite.plan_go') }}</button></div>

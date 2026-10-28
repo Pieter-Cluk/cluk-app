@@ -210,6 +210,8 @@ return [
             'products_tag_saved' => 'Tag gewijzigd',
             'products_tag_deleted' => 'Tag verwijderd',
             'web_account_registered' => 'Website-login geregistreerd',
+            'mail_bounced' => 'Mail teruggekomen: adres geblokkeerd',
+            'mail_unblocked' => 'Mailadres gedeblokkeerd',
             'web_account_approved' => 'Website-login goedgekeurd',
             'web_account_blocked' => 'Website-login geblokkeerd',
             'web_account_unblocked' => 'Website-login gedeblokkeerd',

@@ -9,6 +9,7 @@ use App\Models\Media\MessageSend;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\MessageMail;
+use App\Services\Mail\Bounces;
 use App\Support\SafeMail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -75,7 +76,7 @@ class Messages
             $list[$email] ??= ['email' => $email, 'contact_id' => null, 'member_id' => $mb->id, 'locale' => self::locale($mb->locale)];
         }
 
-        return $list;
+        return array_diff_key($list, Bounces::blocked());
     }
 
     /** Countries first in the plan (in this order); the others follow by size, people without a country last. */
@@ -85,21 +86,24 @@ class Messages
     public const HOURS = [9, 16];
 
     /**
-     * Invitation to register on the website: contacts of customer companies with an email address, except who
-     * unsubscribed from promotions and who already has a website account. Country = the customer company's country.
+     * Invitation to register on the website: contacts of customer companies with a VAT number (checked with VIES or
+     * not), with an email address, except who unsubscribed from promotions, who already has a website account and
+     * addresses blocked after a bounce. Country = the customer company's country.
      *
      * @return array<string, array{email: string, contact_id: int, member_id: null, locale: string, country: ?string}>
      */
     public static function invitees(): array
     {
         $registered = array_flip(DB::table('customer_accounts')->pluck('email')->map(fn ($e) => mb_strtolower(trim((string) $e)))->all());
+        $blocked = Bounces::blocked();
         $list = [];
-        $contacts = Contact::with(['companies' => fn ($q) => $q->where('is_customer', true)->select('companies.id', 'country', 'language')])
+        $customer = fn ($q) => $q->where('is_customer', true)->whereNotNull('vat_number')->where('vat_number', '!=', '');
+        $contacts = Contact::with(['companies' => fn ($q) => $customer($q)->select('companies.id', 'country', 'language')])
             ->whereNotNull('email')->where('email', '!=', '')->where('promo_opt_out', false)
-            ->whereHas('companies', fn ($q) => $q->where('is_customer', true))->orderBy('id')->get();
+            ->whereHas('companies', $customer)->orderBy('id')->get();
         foreach ($contacts as $c) {
             $email = mb_strtolower(trim($c->email));
-            if (isset($registered[$email]) || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if (isset($registered[$email]) || isset($blocked[$email]) || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 continue;
             }
             $co = $c->companies->first();
@@ -175,7 +179,7 @@ class Messages
         $people = self::recipients($m);
         if ($m->kind === 'invitation') {
             $plan = $m->plan ?? [];
-            $dates = self::plan($people, Carbon::parse($plan['start'] ?? now()->toDateString(), 'Europe/Brussels'), (int) ($plan['per_day'] ?? 100), $plan['countries'] ?? self::FIRST_COUNTRIES)['rows'];
+            $dates = self::plan($people, Carbon::parse($plan['start'] ?? now()->toDateString(), 'Europe/Brussels'), (int) ($plan['per_day'] ?? 200), $plan['countries'] ?? self::FIRST_COUNTRIES)['rows'];
             foreach ($people as $email => $r) {
                 $people[$email]['planned_on'] = $dates[$email] ?? null;
             }
@@ -211,6 +215,11 @@ class Messages
             foreach ($due as $s) {
                 if ($invite && $registered->has($s->email)) {
                     $s->update(['status' => 'skipped']); // registered on the website in the meantime
+
+                    continue;
+                }
+                if (Bounces::isBlocked($s->email)) {
+                    $s->update(['status' => 'blocked']); // bounced before: no more mails
 
                     continue;
                 }
@@ -305,7 +314,7 @@ class Messages
             'kind' => 'invitation', 'title' => 'Invitation to register on the new website', 'status' => 'draft',
             'subject' => $subject, 'body' => $body,
             'source_hash' => hash('sha256', $subject['en']."\n".$body['en']),
-            'plan' => ['countries' => self::FIRST_COUNTRIES, 'per_day' => 100],
+            'plan' => ['countries' => self::FIRST_COUNTRIES, 'per_day' => 200],
             'sent_count' => 0,
         ]);
     }

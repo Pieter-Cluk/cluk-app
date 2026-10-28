@@ -20,6 +20,7 @@ return [
         'card' => 'Ficha de cliente',
         'quote' => 'Presupuesto abierto',
         'web' => 'Web y redes',
+        'mail' => 'Correo devuelto',
     ],
     'card' => [
         'title' => '— la ficha necesita atención',
@@ -59,5 +60,9 @@ return [
     'flash' => [
         'done' => 'Marcada como hecha.',
         'snoozed' => '{1} Vuelve mañana.|[2,*] Vuelve en :n días.',
+    ],
+    'mail' => [
+        'title' => '— no se pudo entregar un correo',
+        'todo' => 'Comprueba la dirección con el cliente y cámbiala en la ficha (o desbloquéala).',
     ],
 ];

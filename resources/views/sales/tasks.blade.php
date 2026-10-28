@@ -33,6 +33,11 @@
                     @if ($t->kind === 'card')
                         <b><a href="{{ $d['url'] ?? '#' }}">{{ $t->company?->name }}</a></b> <span class="muted">{{ __('salestasks.card.title') }}</span>
                         <div class="st-pills">@foreach ($d['problems'] ?? [] as $pr)<span @class(['pill', 'pill-warn' => in_array($pr, ['credit_red', 'vat_invalid'], true)])>{{ __('salestasks.problems.'.$pr) }}</span>@endforeach</div>
+                    @elseif ($t->kind === 'mail')
+                        <b>@if ($d['url'] ?? null)<a href="{{ $d['url'] }}">{{ $t->company?->name ?? $d['email'] }}</a>@else{{ $t->company?->name ?? $d['email'] }}@endif</b> <span class="muted">{{ __('salestasks.mail.title') }}</span>
+                        <div class="small"><b>{{ $d['email'] ?? '' }}</b>@if ($t->contact) · {{ $t->contact->name ?? trim($t->contact->first_name.' '.$t->contact->last_name) }}@endif @if (! empty($d['subject'])) · “{{ \Illuminate\Support\Str::limit($d['subject'], 60) }}”@endif</div>
+                        @if (! empty($d['detail']))<div class="small muted">{{ \Illuminate\Support\Str::limit($d['detail'], 160) }}</div>@endif
+                        <div class="small">{{ __('salestasks.mail.todo') }}</div>
                     @elseif ($t->kind === 'quote')
                         <b><a href="{{ $d['url'] ?? '#' }}">{{ $d['number'] ?? '' }}</a></b> {{ $d['title'] ?? '' }} <span class="muted">· {{ $t->company?->name }} · {{ $eur($d['cents'] ?? 0) }}</span>
                         <div class="small">{{ trans_choice('salestasks.quote.open', $d['days'] ?? 0, ['n' => $d['days'] ?? 0]) }}@if (! empty($d['expired'])) · <b>{{ __('salestasks.quote.expired') }}</b>@endif @if ($t->contact) · {{ __('salestasks.call', ['name' => $t->contact->name ?? trim($t->contact->first_name.' '.$t->contact->last_name)]) }}@endif</div>

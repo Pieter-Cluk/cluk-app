@@ -20,6 +20,7 @@ return [
         'card' => 'Fiche client',
         'quote' => 'Offre ouverte',
         'web' => 'Site & réseaux',
+        'mail' => 'Mail revenu',
     ],
     'card' => [
         'title' => '— la fiche demande de l’attention',
@@ -59,5 +60,9 @@ return [
     'flash' => [
         'done' => 'Marquée comme faite.',
         'snoozed' => '{1} De retour demain.|[2,*] De retour dans :n jours.',
+    ],
+    'mail' => [
+        'title' => '— un mail n’a pas pu être remis',
+        'todo' => 'Vérifiez l’adresse avec le client et modifiez-la sur la fiche (ou débloquez-la).',
     ],
 ];

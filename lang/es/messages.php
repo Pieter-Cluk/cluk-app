@@ -156,7 +156,7 @@ return [
         'resumed' => 'Continuamos: el próximo lote sale en horario de oficina.',
         'no_country' => 'Sin país',
         'plan_title' => 'Planificar el envío',
-        'who' => 'Contactos de clientes, todavía sin cuenta en la web.',
+        'who' => 'Contactos de clientes con número de IVA, todavía sin cuenta en la web.',
         'country' => 'País',
         'people' => 'Personas',
         'days' => 'Días',

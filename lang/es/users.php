@@ -210,6 +210,8 @@ return [
             'products_tag_saved' => 'Etiqueta cambiada',
             'products_tag_deleted' => 'Etiqueta eliminada',
             'web_account_registered' => 'Acceso de la web registrado',
+            'mail_bounced' => 'Correo devuelto: dirección bloqueada',
+            'mail_unblocked' => 'Dirección de correo desbloqueada',
             'web_account_approved' => 'Acceso de la web aprobado',
             'web_account_blocked' => 'Acceso de la web bloqueado',
             'web_account_unblocked' => 'Acceso de la web desbloqueado',

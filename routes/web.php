@@ -318,6 +318,8 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/companies/website-logins', [WebAccountController::class, 'index'])->name('web-accounts.index');
         Route::middleware('level:companies,2')->group(function () {
             Route::post('/companies/website-logins/{account}/approve', [WebAccountController::class, 'approve'])->whereNumber('account')->name('web-accounts.approve');
+            Route::post('/companies/website-logins/approve-ready', [WebAccountController::class, 'approveReady'])->name('web-accounts.approve-ready');
+            Route::post('/companies/mail-blocks/{block}/clear', [\App\Http\Controllers\EmailBlockController::class, 'clear'])->whereNumber('block')->name('mail-blocks.clear');
             Route::post('/companies/website-logins/{account}/block', [WebAccountController::class, 'block'])->whereNumber('account')->name('web-accounts.block');
             Route::post('/companies/website-logins/{account}/unblock', [WebAccountController::class, 'unblock'])->whereNumber('account')->name('web-accounts.unblock');
             Route::post('/companies/website-logins/{account}/reset', [WebAccountController::class, 'sendReset'])->whereNumber('account')->name('web-accounts.reset');

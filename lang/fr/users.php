@@ -210,6 +210,8 @@ return [
             'products_tag_saved' => 'Tag modifié',
             'products_tag_deleted' => 'Tag supprimé',
             'web_account_registered' => 'Compte du site inscrit',
+            'mail_bounced' => 'Mail revenu : adresse bloquée',
+            'mail_unblocked' => 'Adresse e-mail débloquée',
             'web_account_approved' => 'Compte du site approuvé',
             'web_account_blocked' => 'Compte du site bloqué',
             'web_account_unblocked' => 'Compte du site débloqué',

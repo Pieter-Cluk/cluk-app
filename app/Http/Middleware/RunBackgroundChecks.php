@@ -68,6 +68,10 @@ class RunBackgroundChecks
             if (Cache::add('jobs:salestasks:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 15), 1, 1000)) {
                 CommercialTasks::refresh();
             }
+            // Bounced mails (undeliverable): read from the sending mailbox every 15 minutes.
+            if (Cache::add('jobs:bounces:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 15), 1, 1000)) {
+                \App\Services\Mail\Bounces::scan();
+            }
             // Social media: planned posts go out on time; the figures of one account at a time every 15 minutes.
             if (Cache::add('jobs:social:'.$now->format('Y-m-d-H-i'), 1, 120)) {
                 Social::publishDue();

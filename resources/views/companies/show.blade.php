@@ -49,6 +49,23 @@
         </div>
     </div>
     @include('partials.flash')
+    @php($mailBlocks = \App\Models\EmailBlock::active()->whereIn(\Illuminate\Support\Facades\DB::raw('lower(email)'), $company->contacts->pluck('email')->push($company->email)->filter()->map(fn ($e) => mb_strtolower(trim($e)))->values()->all())->get())
+    @if ($mailBlocks->isNotEmpty())
+        <section class="card bounce-card">
+            <h2>⚠ {{ __('companies.bounce.title') }}</h2>
+            @foreach ($mailBlocks as $mb)
+                @php($who = $company->contacts->first(fn ($c) => mb_strtolower(trim((string) $c->email)) === $mb->email))
+                <div class="bounce-row">
+                    <div><b>{{ $mb->email }}</b>@if ($who) · <a href="#contact-{{ $who->id }}">{{ $who->name }}</a>@else · {{ __('companies.bounce.company_email') }}@endif
+                        <br><small class="muted">{{ __('companies.bounce.when', ['date' => $mb->bounced_at?->timezone('Europe/Brussels')->format('d/m/Y H:i') ?? '—']) }}@if ($mb->subject) · “{{ \Illuminate\Support\Str::limit($mb->subject, 80) }}”@endif</small>
+                        @if ($mb->detail)<br><small class="muted">{{ \Illuminate\Support\Str::limit($mb->detail, 220) }}</small>@endif
+                    </div>
+                    @if ($canEdit)<form method="post" action="{{ route('mail-blocks.clear', $mb) }}" onsubmit="return confirm(@js(__('companies.bounce.confirm', ['email' => $mb->email])))">@csrf<button class="btn" type="submit">{{ __('companies.bounce.unblock') }}</button></form>@endif
+                </div>
+            @endforeach
+            <small class="muted">{{ __('companies.bounce.hint') }}</small>
+        </section>
+    @endif
 
     <div class="split">
         <div class="stack">
@@ -68,6 +85,7 @@
                                 @if ($c->email)<a href="mailto:{{ $c->email }}">{{ $c->email }}</a>@endif
                             </div>
                             <div class="badges">
+                                @if ($c->email && $mailBlocks->contains('email', mb_strtolower(trim($c->email))))<span class="pill pill-warn">✉ {{ __('companies.bounce.pill') }}</span>@endif
                                 @if ($c->pivot->is_main)<span class="pill pill-ok">★ {{ __('companies.contacts.main') }}</span>@endif
                                 @if ($c->pivot->is_billing)<span class="pill pill-ok">€ {{ __('companies.contacts.billing') }}</span>@endif
                                 <span @class(['pill', 'pill-ok' => $c->newsletter, 'pill-off' => ! $c->newsletter])>{{ __('companies.contacts.newsletter') }}: {{ __($c->newsletter ? 'companies.yes' : 'companies.no') }}</span>

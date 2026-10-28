@@ -6,10 +6,10 @@ use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Web\CustomerAccount;
+use App\Services\Web\ApprovalCheck;
 use App\Services\Web\CustomerAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -27,28 +27,9 @@ class WebAccountController extends Controller
         return view('companies.web-accounts', [
             'tab' => $tab, 'accounts' => $accounts,
             'counts' => collect(self::TABS)->mapWithKeys(fn ($t) => [$t => CustomerAccount::where('status', $t)->count()]),
-            'suggest' => $tab === 'pending' ? $accounts->getCollection()->mapWithKeys(fn ($a) => [$a->id => $this->suggestions($a)]) : collect(),
+            'suggest' => $tab === 'pending' ? $accounts->getCollection()->mapWithKeys(fn ($a) => [$a->id => ApprovalCheck::for($a)]) : collect(),
             'canEdit' => $request->user()->canUseModule('companies', 2),
         ]);
-    }
-
-    /** Likely companies for a registration: same VAT number, else a similar name; and a contact with the same email. */
-    private function suggestions(CustomerAccount $a): array
-    {
-        $companies = collect();
-        if ($a->vat_number) {
-            $vat = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $a->vat_number));
-            $companies = Company::where('vat_number', $vat)->limit(3)->get();
-        }
-        if ($companies->isEmpty() && $a->company_name) {
-            $companies = Company::where('name', 'like', '%'.Str::limit($a->company_name, 40, '').'%')->limit(5)->get();
-        }
-        $contact = Contact::with('companies')->where('email', $a->email)->first();
-        if ($contact) {
-            $companies = $companies->merge($contact->companies)->unique('id');
-        }
-
-        return ['companies' => $companies->values(), 'contact' => $contact];
     }
 
     public function approve(Request $request, CustomerAccount $account): RedirectResponse
@@ -59,6 +40,22 @@ class WebAccountController extends Controller
         CustomerAuth::approve($account, $request->user(), $company, isset($d['contact_id']) ? Contact::find($d['contact_id']) : null, $d['company'] === 'new');
 
         return back()->with('status', __('web.staff.approved', ['email' => $account->email]));
+    }
+
+    /** Confirm every registration whose checks are all fine (checked again now), with the proposed company and contact. */
+    public function approveReady(Request $request): RedirectResponse
+    {
+        $ids = $request->validate(['ids' => ['required', 'array', 'max:200'], 'ids.*' => ['integer']])['ids'];
+        $n = 0;
+        foreach (CustomerAccount::whereIn('id', $ids)->where('status', CustomerAccount::PENDING)->get() as $a) {
+            $c = ApprovalCheck::for($a);
+            if ($c['ready']) {
+                CustomerAuth::approve($a, $request->user(), $c['company'], $c['contact']);
+                $n++;
+            }
+        }
+
+        return back()->with('status', trans_choice('web.staff.approved_n', $n, ['n' => $n]));
     }
 
     /** What this login may do for its company: main contact, order, or look only. */

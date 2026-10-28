@@ -30,9 +30,9 @@ class InvitationTest extends TestCase
         return User::factory()->create(['role_id' => Role::where('slug', 'admin')->value('id'), 'locale' => 'en']);
     }
 
-    private function customer(string $name, string $country, array $emails, bool $customer = true): void
+    private function customer(string $name, string $country, array $emails, bool $customer = true, bool $vat = true): void
     {
-        $co = Company::create(['name' => $name, 'is_customer' => $customer, 'is_supplier' => ! $customer, 'vat_regime' => 'auto', 'country' => $country, 'language' => $country === 'FR' ? 'fr' : 'nl']);
+        $co = Company::create(['name' => $name, 'is_customer' => $customer, 'is_supplier' => ! $customer, 'vat_regime' => 'auto', 'country' => $country, 'language' => $country === 'FR' ? 'fr' : 'nl', 'vat_number' => $vat ? $country.'0'.random_int(100000000, 999999999) : null]);
         foreach ($emails as $i => $e) {
             $co->contacts()->attach(Contact::create(['first_name' => 'P'.$i, 'email' => $e])->id);
         }
@@ -46,6 +46,7 @@ class InvitationTest extends TestCase
         $this->customer('It Co', 'IT', ['a@it.example']);
         $this->customer('Supplier', 'BE', ['s@sup.example'], false);
         $this->customer('Uk Co', 'UK', ['a@uk.example']);
+        $this->customer('No Vat Co', 'BE', ['a@novat.example'], true, false); // no VAT number: not invited
         Contact::find(DB::table('contacts')->where('email', 'c@be.example')->value('id'))->update(['promo_opt_out' => true]);
         DB::table('customer_accounts')->insert(['email' => 'b@be.example', 'password' => 'x', 'first_name' => 'B', 'created_at' => now(), 'updated_at' => now()]);
     }

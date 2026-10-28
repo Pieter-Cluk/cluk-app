@@ -12,6 +12,17 @@
         @foreach (\App\Http\Controllers\WebAccountController::TABS as $t)<a @class(['tab', 'tab-on' => $tab === $t]) href="{{ route('web-accounts.index', ['s' => $t]) }}">{{ __('web.statuses.'.$t) }} <small class="muted">{{ $counts[$t] }}</small></a>@endforeach
     </nav>
 
+    @php($readyIds = $suggest->filter(fn ($s) => $s['ready'])->keys())
+    @if ($canEdit && $tab === 'pending' && $readyIds->isNotEmpty())
+        <section class="card wa-ready mt">
+            <div><b>{{ trans_choice('web.staff.ready_n', $readyIds->count(), ['n' => $readyIds->count()]) }}</b><br><small class="muted">{{ __('web.staff.ready_hint') }}</small></div>
+            <form method="post" action="{{ route('web-accounts.approve-ready') }}" onsubmit="return confirm(@js(trans_choice('web.staff.ready_confirm', $readyIds->count(), ['n' => $readyIds->count()])))">@csrf
+                @foreach ($readyIds as $id)<input type="hidden" name="ids[]" value="{{ $id }}">@endforeach
+                <button class="primary" type="submit">{{ trans_choice('web.staff.ready_go', $readyIds->count(), ['n' => $readyIds->count()]) }}</button>
+            </form>
+        </section>
+    @endif
+
     <div class="stack mt">
         @forelse ($accounts as $a)
             <section class="card">
@@ -27,18 +38,22 @@
                 </div>
                 @if ($canEdit)
                     @if ($a->status === 'pending')
-                        @php($s = $suggest[$a->id] ?? ['companies' => collect(), 'contact' => null])
+                        @php($s = $suggest[$a->id])
+                        <ul class="wa-checks mt">
+                            @foreach ($s['checks'] as [$state, $key, $params])<li class="wa-{{ $state }}"><span aria-hidden="true">{{ ['ok' => '✓', 'warn' => '!', 'info' => 'i'][$state] }}</span> {{ __('web.checks.'.$key, $params) }}</li>@endforeach
+                        </ul>
+                        @if ($s['ready'])<p class="pill pill-ok">{{ __('web.staff.is_ready') }}</p>@endif
                         <form method="post" action="{{ route('web-accounts.approve', $a) }}" class="inline-form mt">@csrf
                             <label class="field"><span>{{ __('web.staff.company') }}</span>
                                 <select name="company" required>
-                                    @foreach ($s['companies'] as $c)<option value="{{ $c->id }}">{{ $c->name }}@if ($c->vat_number) · {{ $c->vat_number }}@endif</option>@endforeach
-                                    @if ($a->company_name)<option value="new" @selected($s['companies']->isEmpty())>{{ __('web.staff.new_company', ['name' => $a->company_name]) }}</option>@endif
-                                    <option value="none" @selected($s['companies']->isEmpty() && ! $a->company_name)>{{ __('web.staff.private') }}</option>
+                                    @foreach ($s['companies'] as $c)<option value="{{ $c->id }}" @selected($s['choice'] === (string) $c->id)>{{ $c->name }}@if ($c->vat_number) · {{ $c->vat_number }}@endif @if ($c->city) · {{ $c->city }}@endif</option>@endforeach
+                                    @if ($a->company_name)<option value="new" @selected($s['choice'] === 'new')>{{ __('web.staff.new_company', ['name' => $a->company_name]) }}</option>@endif
+                                    <option value="none" @selected($s['choice'] === 'none')>{{ __('web.staff.private') }}</option>
                                 </select>
                                 <small>{{ __('web.staff.company_hint') }}</small>
                             </label>
-                            @if ($s['contact'])<input type="hidden" name="contact_id" value="{{ $s['contact']->id }}"><small class="muted">{{ __('web.staff.contact_found', ['name' => $s['contact']->first_name.' '.$s['contact']->last_name]) }}</small>@endif
-                            <button class="primary" type="submit" @disabled(! $a->email_verified_at)>{{ __('web.staff.approve') }}</button>
+                            @if ($s['contact'])<input type="hidden" name="contact_id" value="{{ $s['contact']->id }}">@endif
+                            <button @class(['primary' => $s['ready'], 'btn' => ! $s['ready']]) type="submit" @disabled(! $a->email_verified_at)>{{ __($s['ready'] ? 'web.staff.confirm' : 'web.staff.approve') }}</button>
                         </form>
                     @endif
                     <div class="inline-form mt">

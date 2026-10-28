@@ -30,7 +30,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Microsoft 365 login for staff.
         // Every mail to outside people: a blind copy to CLUK's own mailbox.
+        // Addresses that bounced get no more mail (App\Services\Mail\Bounces); then the copy rule.
         Event::listen(function (MessageSending $event) {
+            if (\App\Services\Mail\Bounces::filter($event->message) === false) {
+                return false;
+            }
             MailCopy::apply($event->message);
         });
         Event::listen(function (SocialiteWasCalled $event) {

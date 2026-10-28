@@ -156,7 +156,7 @@ return [
         'resumed' => 'Reprise : le prochain lot part pendant les heures de bureau.',
         'no_country' => 'Sans pays',
         'plan_title' => 'Planifier l’envoi',
-        'who' => 'Contacts de clients, sans compte sur le site.',
+        'who' => 'Contacts de clients avec un numéro de TVA, sans compte sur le site.',
         'country' => 'Pays',
         'people' => 'Personnes',
         'days' => 'Jours',

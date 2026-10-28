@@ -156,7 +156,7 @@ return [
         'resumed' => 'We gaan verder: de volgende groep gaat weg tijdens de kantooruren.',
         'no_country' => 'Geen land',
         'plan_title' => 'Verzending plannen',
-        'who' => 'Contactpersonen van klanten, nog zonder website-account.',
+        'who' => 'Contactpersonen van klanten met een btw-nummer, nog zonder website-account.',
         'country' => 'Land',
         'people' => 'Personen',
         'days' => 'Dagen',
