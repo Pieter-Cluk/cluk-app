@@ -21,7 +21,7 @@ use Throwable;
  */
 class Clukie
 {
-    private const MAX_TURNS = 5;
+    private const MAX_TURNS = 6;
 
     /** @var array<int, array> actions for the browser (e.g. add to basket) */
     private array $actions = [];
@@ -88,7 +88,7 @@ class Clukie
     public function answer(string $page = ''): array
     {
         if (! self::available()) {
-            $this->chat->say('clukie', __('site.clukie.offline', [], $this->chat->locale), ['offer_handover' => true]);
+            $this->chat->say('clukie', __('site.clukie.offline', [], $this->chat->locale), ['offer_handover' => true, 'failed' => true]);
 
             return ['actions' => [], 'handed' => false];
         }
@@ -96,7 +96,8 @@ class Clukie
         $text = null;
         try {
             for ($turn = 0; $turn < self::MAX_TURNS; $turn++) {
-                $res = $this->call($messages, $page);
+                // last round: no more tools, Clukie answers with what it found so far
+                $res = $this->call($messages, $page, $turn === self::MAX_TURNS - 1);
                 if ($res === null) {
                     break;
                 }
@@ -116,7 +117,7 @@ class Clukie
             Log::warning('Clukie failed', ['error' => mb_substr($e->getMessage(), 0, 200)]);
         }
         if ($text === null || $text === '') {
-            $this->chat->say('clukie', __('site.clukie.offline', [], $this->chat->locale), ['offer_handover' => ! $this->handed]);
+            $this->chat->say('clukie', __('site.clukie.offline', [], $this->chat->locale), ['offer_handover' => ! $this->handed, 'failed' => true]);
         } else {
             $this->chat->say('clukie', Str::limit($text, 4000), array_filter(['cards' => array_values($this->cards), 'mood' => $this->actions || $this->handed ? 'thumbs' : null]));
         }
@@ -131,7 +132,14 @@ class Clukie
         $out = [];
         foreach ($rows as $m) {
             $role = $m->role === 'visitor' ? 'user' : 'assistant';
-            $text = ($m->role === 'staff' ? '[CLUK team member] ' : '').$m->body;
+            $text = match (true) {
+                $m->role === 'staff' => '[CLUK team member] '.$m->body,
+                ! empty($m->meta['failed']) => '[Clukie could not answer this because of a technical problem.]',
+                default => $m->body,
+            };
+            if ($m->role === 'clukie' && ! empty($m->meta['cards'])) {
+                $text .= "\n[Product cards shown: ".collect($m->meta['cards'])->map(fn ($c) => ($c['name'] ?? '').' ('.($c['code'] ?? '').')')->implode(', ').']';
+            }
             if ($out && end($out)['role'] === $role) {
                 $out[count($out) - 1]['content'] .= "\n\n".$text;
             } else {
@@ -145,7 +153,7 @@ class Clukie
         return $out;
     }
 
-    private function call(array $messages, string $page): ?array
+    private function call(array $messages, string $page, bool $final = false): ?array
     {
         $res = Http::timeout(45)->withHeaders([
             'x-api-key' => (string) config('services.anthropic.key'),
@@ -156,7 +164,7 @@ class Clukie
             'system' => $this->system($page),
             'tools' => self::tools(),
             'messages' => $messages,
-        ]);
+        ] + ($final ? ['tool_choice' => ['type' => 'none']] : []));
         if (! $res->successful()) {
             Log::warning('Clukie: API error', ['http' => $res->status(), 'error' => mb_substr((string) $res->json('error.message'), 0, 200)]);
 
@@ -180,6 +188,11 @@ class Clukie
             'You chat on the SALES pages of the website (cluk.live) and help visitors find and buy products from the sales catalogue.',
             "Always answer in {$lang}, whatever language the tools return.",
             'Style: warm, playful and short (2–4 sentences, plain text, no markdown headings or tables, at most a few bullet points). A light joke or emoji is fine; never be pushy.',
+            '',
+            'Conversation:',
+            '- Answer the visitor\'s LATEST message. Earlier messages are only context. When the latest message is about another product or topic, switch to it completely: search again for it, show only products for it and do not repeat earlier products.',
+            '- Only return to an earlier question when the visitor refers back to it ("and the price of that speaker?"). Earlier questions that got no answer are not your task now unless the visitor asks them again.',
+            '- Search efficiently: one or two searches per question are usually enough. For a broad question (e.g. "speakers") show a few typical products and ask what they need instead of searching further.',
             '',
             'Facts and rules:',
             '- Only state facts about products (names, prices, stock, specs) that the tools returned. Never guess prices, stock, delivery times or specifications. If you do not know, say so and offer the team.',

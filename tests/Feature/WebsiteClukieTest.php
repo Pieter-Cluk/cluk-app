@@ -120,6 +120,54 @@ class WebsiteClukieTest extends TestCase
         $this->assertSame(5, count(Clukie::tools()));
     }
 
+    public function test_clukie_switches_to_a_new_topic_and_always_answers(): void
+    {
+        config(['services.anthropic.key' => 'test-key']);
+        $this->product('S-200001', 'Clever Acoustics', 'ACT 35 Powered Speakers', 39900);
+        $this->product('S-200002', 'TCMFX', 'Confettigun', 96000);
+
+        // 1. speakers: Clukie keeps searching; the last round may not use tools, so it still answers
+        $search = ['stop_reason' => 'tool_use', 'content' => [['type' => 'tool_use', 'id' => 's', 'name' => 'search_products', 'input' => ['query' => 'speaker']]]];
+        $seq = Http::sequence();
+        for ($i = 0; $i < 5; $i++) {
+            $seq->push($search);
+        }
+        $seq->push(['stop_reason' => 'end_turn', 'content' => [['type' => 'text', 'text' => 'We have powered speakers, what is it for?']]]);
+        // 2. confetti: a new topic
+        $seq->push(['stop_reason' => 'tool_use', 'content' => [['type' => 'tool_use', 'id' => 'c1', 'name' => 'show_products', 'input' => ['codes' => ['S-200002']]]]]);
+        $seq->push(['stop_reason' => 'end_turn', 'content' => [['type' => 'text', 'text' => 'Confetti time! 🎉']]]);
+        Http::fake(['api.anthropic.com/*' => $seq]);
+
+        $a = $this->postJson('/site/sales/clukie', ['text' => 'Do you sell speakers?'])->assertOk();
+        $this->assertSame('We have powered speakers, what is it for?', collect($a->json('messages'))->where('role', 'clukie')->last()['body']);
+        $calls = Http::recorded();
+        $this->assertArrayNotHasKey('tool_choice', $calls[0][0]->data());
+        $this->assertSame(['type' => 'none'], $calls[5][0]->data()['tool_choice']);
+
+        $b = $this->postJson('/site/sales/clukie', ['token' => $a->json('token'), 'text' => 'And confetti?'])->assertOk();
+        $bot = collect($b->json('messages'))->where('role', 'clukie')->last();
+        $this->assertSame(['S-200002'], collect($bot['cards'])->pluck('code')->all());
+        $req = Http::recorded()[6][0]->data();
+        $this->assertStringContainsString("LATEST message", $req['system']);
+        $this->assertSame('And confetti?', end($req['messages'])['content']);
+    }
+
+    public function test_history_marks_failed_answers_and_shown_products(): void
+    {
+        config(['services.anthropic.key' => 'test-key']);
+        $chat = Chat::create(['token' => 'hist', 'status' => 'bot', 'locale' => 'en']);
+        $chat->say('visitor', 'Speakers?');
+        $chat->say('clukie', 'Oops', ['failed' => true]);
+        $chat->say('visitor', 'Fusion 400?');
+        $chat->say('clukie', 'Here it is', ['cards' => [['name' => 'Equinox Fusion 400 Hybrid', 'code' => 'S-104561']]]);
+        $chat->say('visitor', 'Price of that one?');
+        Http::fake(['api.anthropic.com/*' => Http::response(['stop_reason' => 'end_turn', 'content' => [['type' => 'text', 'text' => 'ok']]])]);
+        (new Clukie($chat, null))->answer();
+        $m = Http::recorded()[0][0]->data()['messages'];
+        $this->assertStringContainsString('could not answer this', $m[1]['content']);
+        $this->assertStringContainsString('Product cards shown: Equinox Fusion 400 Hybrid (S-104561)', $m[3]['content']);
+    }
+
     public function test_clukie_hands_over_when_asked(): void
     {
         config(['services.anthropic.key' => 'test-key']);
