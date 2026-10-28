@@ -24,6 +24,8 @@ jobs:
           sshpass -e ssh -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
           W=$(readlink -f ~/webroots/by-route/app.cluk.live_)
           cd "$W/app" || exit 1
+          echo "== website activity today (per visitor, no personal data)"
+          php artisan tinker --execute='$d = App\Services\Website\DigitalToday::get(); echo "total=".$d["total"]." web_events=".$d["web"]["events"]." visitors=".$d["web"]["visitors"]." views=".$d["web"]["views"]." actions=".$d["web"]["actions"]." social=".$d["social"]["interactions"]." reach=".$d["social"]["reach"].PHP_EOL; foreach ($d["sources"] as $s) { echo "  source ".$s["key"]."=".$s["n"].PHP_EOL; } $ev = DB::table("web_events")->where("created_at", ">=", today())->get(); foreach ($ev->groupBy("visitor_id") as $vid => $list) { $v = DB::table("web_visitors")->find($vid); echo "  visitor ".$vid." device=".($v->device ?? "?")." first_seen=".substr((string) ($v->first_seen_at ?? ""), 0, 16)." ref=".(parse_url((string) ($v->referrer ?? ""), PHP_URL_HOST) ?: "-")." utm=".($v->utm_source ?? "-")." linked=".(($v->email ?? null) || ($v->customer_account_id ?? null) ? "yes" : "no")." staff_domain=".(str_ends_with(strtolower((string) ($v->email ?? "")), "@cluk.live") ? "yes" : "no")." events=".$list->count()." ".json_encode($list->countBy("type")->all())." ".substr($list->min("created_at"), 11, 5)."-".substr($list->max("created_at"), 11, 5).PHP_EOL; }' 2>&1 | tail -30
           echo "== log files"; ls -la storage/logs/ 2>&1 | tail -5
           echo "== latest errors (message lines only)"
           cat storage/logs/laravel*.log 2>/dev/null | grep -E '^\[[0-9-]+ [0-9:]+\] [a-z]+\.(ERROR|WARNING|CRITICAL)' | tail -25 | cut -c1-600
