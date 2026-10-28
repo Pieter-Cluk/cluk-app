@@ -1070,3 +1070,8 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .wa-ok span{background:var(--brand-tint);color:var(--brand-strong)}
 .wa-warn span{background:var(--warning-bg);color:var(--warning-text)}
 .wa-info span{background:var(--info-bg);color:var(--info-text)}
+.web-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:middle;flex:none}
+.web-online{background:var(--brand)}
+.web-partial{background:#e8a33c}
+.web-off{background:var(--danger-text)}
+.web-status{margin:8px 0 0;font-size:13px}

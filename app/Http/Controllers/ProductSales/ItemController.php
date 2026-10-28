@@ -31,7 +31,14 @@ class ItemController extends Controller
         $cat = (int) $request->query('cat', 0) ?: null;
         $brand = (int) $request->query('brand', 0) ?: null;
         $q = trim((string) $request->query('q'));
-        $items = SalesItem::with('suppliers')->where('active', true)
+        $web = in_array($request->query('web'), ['online', 'partial', 'off'], true) ? $request->query('web') : null;
+        $items = SalesItem::with(['suppliers', 'productCategory', 'productSubcategory'])->where('active', true)
+            ->when($web === 'off', fn ($w) => config('website.only_ticked') ? $w->where('on_website', false) : $w->whereRaw('1 = 0'))
+            ->when($web && $web !== 'off', fn ($w) => $w->when(config('website.only_ticked'), fn ($x) => $x->where('on_website', true))
+                ->where(fn ($x) => $web === 'partial'
+                    ? $x->whereNull('photo_path')->orWhere('list_price_cents', '<=', 0)->orWhereNull('subcategory_id')
+                        ->orWhereHas('productSubcategory', fn ($y) => $y->where('active', false))->orWhereHas('productCategory', fn ($y) => $y->where('active', false))
+                    : $x->whereNotNull('photo_path')->where('list_price_cents', '>', 0)->whereHas('productSubcategory', fn ($y) => $y->where('active', true))->whereHas('productCategory', fn ($y) => $y->where('active', true))))
             ->when($cat, fn ($w) => $w->where('category_id', $cat))
             ->when($brand, fn ($w) => $w->where('brand_id', $brand))
             ->when($q !== '', fn ($w) => self::search($w, $q))
@@ -41,7 +48,7 @@ class ItemController extends Controller
         $sel ??= $items->first()?->load($with);
 
         return view('psales.items', [
-            'items' => $items, 'sel' => $sel, 'cat' => $cat, 'q' => $q, 'brand' => $brand,
+            'items' => $items, 'sel' => $sel, 'cat' => $cat, 'q' => $q, 'brand' => $brand, 'web' => $web,
             'brands' => Brand::orderBy('name')->get(['id', 'name', 'kind', 'active']),
             'canEdit' => $request->user()->hasRight('sales.edit_items'), 'seeCost' => $request->user()->hasRight('finance.see_margins'),
             'suppliers' => $request->user()->hasRight('sales.edit_items') ? Company::where('is_supplier', true)->orderBy('name')->get(['id', 'name']) : collect(),

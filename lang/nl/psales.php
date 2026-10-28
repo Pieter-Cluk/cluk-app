@@ -315,4 +315,19 @@ return [
         'unknown_target' => 'Kies een merk of categorie uit de lijst.',
         'unknown_item' => 'Product “:value” niet gevonden: gebruik het S-nummer.',
     ],
+    'web' => [
+        'online' => 'Online',
+        'partial' => 'Online, aandacht nodig',
+        'off' => 'Niet online',
+        'all' => 'Alle producten',
+        'filter' => 'Website',
+        'open' => 'Openen op de website',
+        'why' => [
+            'inactive' => 'niet actief',
+            'not_ticked' => '“Tonen op de website” staat niet aan',
+            'no_menu' => 'geen plaats in het winkelmenu (categorie)',
+            'no_photo' => 'geen foto',
+            'no_price' => 'geen prijs',
+        ],
+    ],
 ];

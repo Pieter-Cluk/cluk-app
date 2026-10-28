@@ -315,4 +315,19 @@ return [
         'unknown_target' => 'Elige una marca o categoría de la lista.',
         'unknown_item' => 'Producto «:value» no encontrado: usa su número S.',
     ],
+    'web' => [
+        'online' => 'En línea',
+        'partial' => 'En línea, revisar',
+        'off' => 'No está en línea',
+        'all' => 'Todos los productos',
+        'filter' => 'Web',
+        'open' => 'Abrir en la web',
+        'why' => [
+            'inactive' => 'inactivo',
+            'not_ticked' => '«Mostrar en la web» no está marcado',
+            'no_menu' => 'sin lugar en el menú de la tienda (categoría)',
+            'no_photo' => 'sin foto',
+            'no_price' => 'sin precio',
+        ],
+    ],
 ];

@@ -315,4 +315,19 @@ return [
         'unknown_target' => 'Choose a brand or category from the list.',
         'unknown_item' => 'Product “:value” not found: use its S-number.',
     ],
+    'web' => [
+        'online' => 'Online',
+        'partial' => 'Online, needs attention',
+        'off' => 'Not online',
+        'all' => 'All products',
+        'filter' => 'Website',
+        'open' => 'Open on the website',
+        'why' => [
+            'inactive' => 'inactive',
+            'not_ticked' => '“Show on the website” is not ticked',
+            'no_menu' => 'no place in the shop menu (category)',
+            'no_photo' => 'no photo',
+            'no_price' => 'no price',
+        ],
+    ],
 ];

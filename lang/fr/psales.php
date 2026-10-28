@@ -315,4 +315,19 @@ return [
         'unknown_target' => 'Choisissez une marque ou une catégorie dans la liste.',
         'unknown_item' => 'Produit « :value » introuvable : utilisez son numéro S.',
     ],
+    'web' => [
+        'online' => 'En ligne',
+        'partial' => 'En ligne, à compléter',
+        'off' => 'Pas en ligne',
+        'all' => 'Tous les produits',
+        'filter' => 'Site web',
+        'open' => 'Ouvrir sur le site',
+        'why' => [
+            'inactive' => 'inactif',
+            'not_ticked' => '« Afficher sur le site » n’est pas coché',
+            'no_menu' => 'pas de place dans le menu de la boutique (catégorie)',
+            'no_photo' => 'pas de photo',
+            'no_price' => 'pas de prix',
+        ],
+    ],
 ];

@@ -37,6 +37,41 @@ class SalesCatalogue
         return $i->id.'-'.(Str::slug($i->name()) ?: 'product');
     }
 
+    /**
+     * Is the product on the website, and can people find it? For the colour on the staff product list:
+     * online (green) = visible and in the shop's menu; partial (orange) = visible but something is missing
+     * (no place in the menu, no photo, no price); off (red) = not on the website.
+     *
+     * @return array{level: string, reasons: array<int, string>}
+     */
+    public static function status(SalesItem $i): array
+    {
+        $off = [];
+        if (! $i->active) {
+            $off[] = 'inactive';
+        }
+        if (config('website.only_ticked') && ! $i->on_website) {
+            $off[] = 'not_ticked';
+        }
+        if ($off) {
+            return ['level' => 'off', 'reasons' => $off];
+        }
+        $warn = [];
+        $sub = $i->relationLoaded('productSubcategory') ? $i->productSubcategory : $i->productSubcategory()->first();
+        $cat = $i->relationLoaded('productCategory') ? $i->productCategory : $i->productCategory()->first();
+        if (! $sub || ! $sub->active || ! $cat || ! $cat->active) {
+            $warn[] = 'no_menu';
+        }
+        if (! $i->photo_path) {
+            $warn[] = 'no_photo';
+        }
+        if ((int) $i->list_price_cents <= 0) {
+            $warn[] = 'no_price';
+        }
+
+        return ['level' => $warn ? 'partial' : 'online', 'reasons' => $warn];
+    }
+
     public static function visible(SalesItem $i): bool
     {
         return self::query()->whereKey($i->id)->exists();

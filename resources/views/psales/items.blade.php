@@ -19,12 +19,18 @@
         @foreach ($categories as $c)@if ($c->active)<a @class(['chip', 'chip-on' => $cat === $c->id]) href="{{ route('psales.items', array_filter(['cat' => $c->id, 'q' => $q, 'brand' => $brand])) }}">{{ $c->label() }}</a>@endif @endforeach
     </nav>
 
+    <nav class="chips mt" aria-label="{{ __('psales.web.filter') }}">
+        <a @class(['chip', 'chip-on' => ! $web]) href="{{ route('psales.items', array_filter(['cat' => $cat, 'q' => $q, 'brand' => $brand])) }}">{{ __('psales.web.all') }}</a>
+        @foreach (['online', 'partial', 'off'] as $w)<a @class(['chip', 'chip-on' => $web === $w]) href="{{ route('psales.items', array_filter(['cat' => $cat, 'q' => $q, 'brand' => $brand, 'web' => $w])) }}"><i class="web-dot web-{{ $w }}"></i>{{ __('psales.web.'.$w) }}</a>@endforeach
+    </nav>
+
     <div class="split mt">
         <section class="card card-flush">
             <ul class="inbox">
                 @forelse ($items as $it)
                     <li><a @class(['inbox-item', 'is-on' => $sel?->is($it) && ! $new]) href="{{ route('psales.items', array_filter(['item' => $it->id, 'cat' => $cat, 'q' => $q, 'brand' => $brand])) }}">
-                        <span class="inbox-main"><b>{{ $it->name() }}@if ($it->on_website) <span class="pill">{{ __('equipment.web_pill') }}</span>@endif</b><small class="muted">{{ $it->number }}@if ($it->manufacturer_code) · {{ $it->manufacturer_code }}@endif · {{ $it->documents_count ? trans_choice('psales.items.pdfs', $it->documents_count, ['n' => $it->documents_count]) : __('psales.items.no_pdfs') }}</small></span>
+                        @php($ws = \App\Services\Website\SalesCatalogue::status($it))
+                        <span class="inbox-main"><b><i class="web-dot web-{{ $ws['level'] }}" role="img" aria-label="{{ __('psales.web.'.$ws['level']) }}" title="{{ __('psales.web.'.$ws['level']) }}@foreach ($ws['reasons'] as $r) · {{ __('psales.web.why.'.$r) }}@endforeach"></i>{{ $it->name() }}</b><small class="muted">{{ $it->number }}@if ($it->manufacturer_code) · {{ $it->manufacturer_code }}@endif · {{ $it->documents_count ? trans_choice('psales.items.pdfs', $it->documents_count, ['n' => $it->documents_count]) : __('psales.items.no_pdfs') }}</small></span>
                         <span class="inbox-side"><b>{{ $eur($it->list_price_cents) }}</b><small class="muted">{{ $it->stock_qty > 0 ? __('psales.items.in_stock', ['n' => $it->stock_qty]) : __('psales.items.order_it') }}</small></span>
                     </a></li>
                 @empty
@@ -49,6 +55,9 @@
                         @if ($sel->photo_path)<img class="ps-photo" src="{{ route('psales.items.photo.show', [$sel, 'v' => substr(md5($sel->photo_path), 0, 8)]) }}" alt="">@else<div class="ps-photo ps-nophoto">{{ mb_substr($sel->brand ?: $sel->type, 0, 2) }}</div>@endif
                         <div><div class="kicker">{{ $sel->number }}</div><h2>{{ $sel->name() }}</h2><p class="muted">{{ $sel->description }}</p></div>
                     </div>
+                    @php($ss = \App\Services\Website\SalesCatalogue::status($sel))
+                    <p class="web-status web-status-{{ $ss['level'] }}"><i class="web-dot web-{{ $ss['level'] }}"></i><b>{{ __('psales.web.'.$ss['level']) }}</b>@foreach ($ss['reasons'] as $r) · {{ __('psales.web.why.'.$r) }}@endforeach
+                        @if ($ss['level'] !== 'off') · <a href="{{ route('site.sales.product', \App\Services\Website\SalesCatalogue::slug($sel)) }}" target="_blank" rel="noopener">{{ __('psales.web.open') }} ↗</a>@endif</p>
                     <dl class="facts">
                         @if ($sel->brandRef)<dt>{{ __('psales.items.brand') }}</dt><dd>{{ $sel->brandRef->name }}@if ($sel->brandRef->kind !== 'other') <span class="pill">{{ __('products.brand_kinds.'.$sel->brandRef->kind) }}</span>@endif</dd>@endif
                         <dt>{{ __('psales.items.codes') }}</dt><dd>{{ $sel->number }}@if ($sel->manufacturer_code) · {{ __('psales.items.code_mfr', ['code' => $sel->manufacturer_code]) }}@endif @if ($sel->ean) · EAN {{ $sel->ean }}@endif</dd>
