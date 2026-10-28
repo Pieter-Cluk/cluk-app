@@ -53,11 +53,21 @@
     root.dataset.mood = m;
     if (clips[m]) {
       if (!video) { video = document.createElement('video'); video.muted = true; video.playsInline = true; video.setAttribute('playsinline', ''); video.className = 'ck-clip'; stage.appendChild(video); }
-      if (video.dataset.m !== m) { video.dataset.m = m; video.loop = m === 'idle' || m === 'think' || m === 'sleep'; video.src = clips[m]; var p = video.play(); if (p && p.catch) p.catch(function () {}); }
+      if (video.dataset.m !== m) {
+        video.dataset.m = m; video.loop = m === 'idle' || m === 'think' || m === 'sleep'; video.poster = C.img;
+        // MP4 (H.264) for most browsers, the WebM next to it where MP4 does not play
+        video.src = video.canPlayType('video/mp4; codecs="avc1.4D401E"') ? clips[m] : clips[m].replace('.mp4', '.webm');
+        // a clip that cannot play: forget it and use the CSS animation for this mood
+        video.onerror = function () { delete clips[m]; mood(m, video.loop ? 0 : 1800); };
+        // a one-off clip (wave, thumbs, hop) plays to its end, then Clukie goes back to resting
+        video.onended = video.loop ? null : function () { if (root.dataset.mood === m) mood(rest()); };
+        var p = video.play(); if (p && p.catch) p.catch(function () { if (video.dataset.m === m && video.paused && video.readyState === 0) { delete clips[m]; mood(m, video.loop ? 0 : 1800); } });
+      }
       root.classList.add('has-clip');
     } else { root.classList.remove('has-clip'); }
     clearTimeout(moodT);
-    if (ms) moodT = setTimeout(function () { mood(rest()); }, ms);
+    if (clips[m] && video && !video.loop) ms = 6000; // safety net: never stay in a one-off mood
+    if (ms) moodT = setTimeout(function () { if (root.dataset.mood === m) mood(rest()); }, ms);
   }
   function rest() { return !C.available && !C.team_open ? 'sleep' : 'idle'; }
 

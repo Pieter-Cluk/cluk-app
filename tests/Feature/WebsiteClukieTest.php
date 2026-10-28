@@ -37,6 +37,7 @@ class WebsiteClukieTest extends TestCase
     public function test_clukie_is_only_on_the_sales_pages(): void
     {
         $this->get('/site/sales')->assertOk()->assertSee('id="clukie-cfg"', false)->assertSee('clukie.js');
+        $this->get('/site/sales')->assertSee('images\\/clukie\\/idle.mp4', false)->assertSee('images\\/clukie\\/wave.mp4', false);
         $this->get('/site')->assertOk()->assertDontSee('clukie-cfg');
         $this->get('/site/dry-hire')->assertOk()->assertDontSee('clukie-cfg');
         config(['clukie.enabled' => false]);
