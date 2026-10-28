@@ -17,7 +17,7 @@
                 @php($needs = \App\Services\Website\TeamChats::needsAnswer($c))
                 <li><a class="inbox-item" href="{{ route('chats.show', $c) }}">
                     <span @class(['pill', 'pill-warn' => $needs, 'pill-info' => ! $needs && $c->status === 'staff', 'pill-off' => in_array($c->status, ['closed', 'bot'], true)])>{{ $needs ? __('chats.needs_answer') : __('chats.statuses.'.$c->status) }}</span>
-                    <span class="inbox-main"><b>{{ $c->name ?: ($c->email ?: __('chats.visitor')) }}</b><small class="muted">{{ strtoupper($c->locale) }}@if ($c->email) · {{ $c->email }}@endif @if ($c->page) · {{ \Illuminate\Support\Str::limit($c->page, 60) }}@endif · {{ trans_choice('chats.lines', $c->messages_count, ['n' => $c->messages_count]) }}</small></span>
+                    <span class="inbox-main"><b>{{ $c->name ?: ($c->email ?: __('chats.visitor')) }}@if ($c->company) · {{ $c->company->name }}@endif</b><small class="muted">{{ strtoupper($c->locale) }}@if ($c->email) · {{ $c->email }}@endif @if ($c->page) · {{ \Illuminate\Support\Str::limit($c->page, 60) }}@endif · {{ trans_choice('chats.lines', $c->messages_count, ['n' => $c->messages_count]) }}</small></span>
                     <span class="inbox-side"><small class="muted nowrap">{{ $c->last_message_at?->locale(app()->getLocale())->diffForHumans(short: true) }}</small></span>
                 </a></li>
             @empty

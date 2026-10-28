@@ -213,6 +213,8 @@ return [
             'mail_bounced' => 'Mail bounced: address blocked',
             'mail_unblocked' => 'Mail address unblocked',
             'chat_replied' => 'Chat answered by the team',
+            'chat_linked' => 'Chat linked to a company',
+            'chat_unlinked' => 'Chat unlinked from a company',
             'chat_closed' => 'Chat closed',
             'web_account_approved' => 'Website login approved',
             'web_account_blocked' => 'Website login blocked',

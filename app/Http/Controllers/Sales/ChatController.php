@@ -20,7 +20,7 @@ class ChatController extends Controller
     public function index(Request $request): View
     {
         $tab = in_array($request->query('tab'), self::TABS, true) ? $request->query('tab') : 'open';
-        $chats = Chat::withCount('messages')
+        $chats = Chat::with('company:id,name')->withCount('messages')
             ->when($tab === 'open', fn ($q) => $q->whereIn('status', ['waiting', 'staff']))
             ->when($tab !== 'open', fn ($q) => $q->where('status', $tab))
             ->orderByDesc('last_message_at')->paginate(40)->withQueryString();
@@ -33,7 +33,7 @@ class ChatController extends Controller
 
     public function show(Request $request, Chat $chat): View
     {
-        $chat->load(['messages', 'incoming']);
+        $chat->load(['messages', 'incoming', 'company', 'contact']);
 
         return view('sales.chats.show', [
             'chat' => $chat,
@@ -41,6 +41,8 @@ class ChatController extends Controller
             'act' => WebActivity::summary(TeamChats::visitorIds($chat)),
             'canWork' => $request->user()->canUseModule('sales', 2),
             'teamOpen' => Clukie::open(),
+            'candidates' => TeamChats::candidates($chat),
+            'companies' => $request->user()->canUseModule('sales', 2) ? \App\Models\Company::active()->orderBy('name')->get(['id', 'name']) : collect(),
         ]);
     }
 
@@ -63,6 +65,16 @@ class ChatController extends Controller
         TeamChats::reply($chat, $request->user(), trim($d['text']));
 
         return $request->expectsJson() ? response()->json(['ok' => true]) : redirect()->route('chats.show', $chat);
+    }
+
+    /** Link the chat to the company it is about (chosen by hand: an email can belong to several companies). */
+    public function link(Request $request, Chat $chat): RedirectResponse
+    {
+        $d = $request->validate(['company_id' => ['nullable', 'integer', 'exists:companies,id']]);
+        $company = ! empty($d['company_id']) ? \App\Models\Company::find($d['company_id']) : null;
+        TeamChats::link($chat, $company, $request->user());
+
+        return redirect()->route('chats.show', $chat)->with('status', $company ? __('chats.linked', ['name' => $company->name]) : __('chats.unlinked'));
     }
 
     public function close(Request $request, Chat $chat): RedirectResponse

@@ -213,6 +213,8 @@ return [
             'mail_bounced' => 'Correo devuelto: dirección bloqueada',
             'mail_unblocked' => 'Dirección de correo desbloqueada',
             'chat_replied' => 'Chat respondido por el equipo',
+            'chat_linked' => 'Chat vinculado a una empresa',
+            'chat_unlinked' => 'Chat desvinculado de una empresa',
             'chat_closed' => 'Chat cerrado',
             'web_account_approved' => 'Acceso de la web aprobado',
             'web_account_blocked' => 'Acceso de la web bloqueado',

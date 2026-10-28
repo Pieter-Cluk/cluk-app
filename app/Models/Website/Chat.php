@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** A conversation with Clukie on the sales pages; the team takes over after a handover. */
-#[Fillable(['token', 'visitor_uuid', 'customer_account_id', 'locale', 'status', 'name', 'email', 'phone', 'page', 'incoming_message_id', 'staff_user_id', 'handed_over_at', 'last_message_at'])]
+#[Fillable(['token', 'visitor_uuid', 'customer_account_id', 'locale', 'status', 'name', 'email', 'phone', 'page', 'incoming_message_id', 'staff_user_id', 'handed_over_at', 'last_message_at', 'company_id', 'contact_id'])]
 #[Hidden(['token'])]
 class Chat extends Model
 {
@@ -31,6 +31,16 @@ class Chat extends Model
     public function incoming(): BelongsTo
     {
         return $this->belongsTo(IncomingMessage::class, 'incoming_message_id');
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Company::class);
+    }
+
+    public function contact(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Contact::class);
     }
 
     /** Add a line to the conversation. */

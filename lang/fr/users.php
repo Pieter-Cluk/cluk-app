@@ -213,6 +213,8 @@ return [
             'mail_bounced' => 'Mail revenu : adresse bloquée',
             'mail_unblocked' => 'Adresse e-mail débloquée',
             'chat_replied' => 'Chat répondu par l’équipe',
+            'chat_linked' => 'Chat lié à une société',
+            'chat_unlinked' => 'Chat détaché d’une société',
             'chat_closed' => 'Chat fermé',
             'web_account_approved' => 'Compte du site approuvé',
             'web_account_blocked' => 'Compte du site bloqué',

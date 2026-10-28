@@ -168,6 +168,13 @@
             @php($logins = \App\Models\Web\CustomerAccount::where('company_id', $company->id)->orWhereIn('contact_id', $company->contacts->pluck('id'))->orderBy('first_name')->get())
             @include('companies._sales-conditions')
             @include('web._activity', ['act' => \App\Services\Website\WebActivity::summary(\App\Services\Website\WebActivity::visitorsOfCompany($company))])
+            @php($coChats = \App\Models\Website\Chat::where('company_id', $company->id)->latest('last_message_at')->limit(10)->get())
+            @if ($coChats->isNotEmpty() && auth()->user()->canUseModule('sales'))
+                <section class="card">
+                    <h2>{{ __('chats.on_company') }}</h2>
+                    <ul class="plain-list">@foreach ($coChats as $cc)<li><a href="{{ route('chats.show', $cc) }}">{{ $cc->last_message_at?->timezone('Europe/Brussels')->format('d/m/Y H:i') }} · {{ $cc->name ?: $cc->email }}</a> <small class="muted">· {{ __('chats.statuses.'.$cc->status) }}</small></li>@endforeach</ul>
+                </section>
+            @endif
             @php($dls = \App\Models\Website\DownloadLog::with(['download', 'contact'])->where('company_id', $company->id)->latest('id')->limit(10)->get())
             @if ($dls->isNotEmpty())
                 <section class="card" id="downloads">

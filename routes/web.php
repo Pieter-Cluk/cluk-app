@@ -365,6 +365,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/quotes/{quote}/accepted', [QuoteController::class, 'markAccepted'])->whereNumber('quote')->name('quotes.accepted');
             Route::post('/chats/{chat}/reply', [\App\Http\Controllers\Sales\ChatController::class, 'reply'])->whereNumber('chat')->name('chats.reply');
             Route::post('/chats/{chat}/close', [\App\Http\Controllers\Sales\ChatController::class, 'close'])->whereNumber('chat')->name('chats.close');
+            Route::post('/chats/{chat}/link', [\App\Http\Controllers\Sales\ChatController::class, 'link'])->whereNumber('chat')->name('chats.link');
             Route::post('/incoming', [IncomingController::class, 'store'])->name('incoming.store');
             Route::post('/incoming/{item}/convert', [IncomingController::class, 'convert'])->whereNumber('item')->name('incoming.convert');
             Route::post('/incoming/{item}/link', [IncomingController::class, 'link'])->whereNumber('item')->name('incoming.link');

@@ -50,6 +50,38 @@ class TeamChats
         AuditLog::record('chat.closed', $chat, ['chat' => $chat->id], $by);
     }
 
+    /**
+     * Companies this chat could be about: the companies of contacts with the visitor's email, a company with that
+     * email, and the company of their website login. Never linked by itself: someone chooses.
+     */
+    public static function candidates(Chat $chat): Collection
+    {
+        $email = Str::lower(trim((string) $chat->email));
+        $ids = collect();
+        if ($email !== '') {
+            $ids = $ids->merge(DB::table('company_contact')->join('contacts', 'contacts.id', '=', 'company_contact.contact_id')->whereRaw('lower(contacts.email) = ?', [$email])->pluck('company_contact.company_id'))
+                ->merge(DB::table('companies')->whereRaw('lower(email) = ?', [$email])->pluck('id'));
+        }
+        if ($chat->customer_account_id) {
+            $ids = $ids->merge(DB::table('customer_accounts')->where('id', $chat->customer_account_id)->whereNotNull('company_id')->pluck('company_id'));
+        }
+
+        return \App\Models\Company::whereIn('id', $ids->unique())->orderBy('name')->get(['id', 'name', 'city', 'vat_number']);
+    }
+
+    /** Link the chat (and its Incoming item) to a company, and to the contact with the visitor's email there. */
+    public static function link(Chat $chat, ?\App\Models\Company $company, User $by): void
+    {
+        $contact = $company && $chat->email
+            ? $company->contacts()->whereRaw('lower(contacts.email) = ?', [Str::lower(trim($chat->email))])->first()
+            : null;
+        $chat->forceFill(['company_id' => $company?->id, 'contact_id' => $contact?->id])->save();
+        if ($chat->incoming && $company) {
+            $chat->incoming->forceFill(['company_id' => $company->id, 'contact_id' => $contact?->id ?? $chat->incoming->contact_id])->save();
+        }
+        AuditLog::record($company ? 'chat.linked' : 'chat.unlinked', $chat, ['chat' => $chat->id, 'company' => $company?->name ?? '—'], $by);
+    }
+
     /** The visitor left: the answer by email, in the chat's language. */
     public static function mailVisitor(Chat $chat, User $by, string $text): bool
     {

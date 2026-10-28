@@ -38,6 +38,27 @@
                     @if ($chat->incoming)<dt>{{ __('chats.f.incoming') }}</dt><dd><a href="{{ route('incoming.index', ['open' => $chat->incoming->id]) }}">{{ \Illuminate\Support\Str::limit($chat->incoming->subject, 60) }}</a></dd>@endif
                 </dl>
             </section>
+            <section class="card">
+                <h2>{{ __('chats.company_title') }}</h2>
+                @if ($chat->company)
+                    <p><a href="{{ route('companies.show', $chat->company) }}"><b>{{ $chat->company->name }}</b></a>@if ($chat->contact) · {{ $chat->contact->name ?? trim($chat->contact->first_name.' '.$chat->contact->last_name) }}@endif</p>
+                @else
+                    <p class="muted">{{ $candidates->isEmpty() ? __('chats.no_match') : trans_choice('chats.matches', $candidates->count(), ['n' => $candidates->count()]) }}</p>
+                @endif
+                @if ($canWork)
+                    <form method="post" action="{{ route('chats.link', $chat) }}" class="stack-sm">@csrf
+                        <label class="field"><span>{{ __('chats.link_to') }}</span>
+                            <select name="company_id" data-pick>
+                                <option value="">{{ __('chats.no_company') }}</option>
+                                @if ($candidates->isNotEmpty())<optgroup label="{{ __('chats.same_email') }}">@foreach ($candidates as $c)<option value="{{ $c->id }}" @selected($chat->company_id === $c->id)>{{ $c->name }}@if ($c->city) · {{ $c->city }}@endif @if ($c->vat_number) · {{ $c->vat_number }}@endif</option>@endforeach</optgroup>@endif
+                                <optgroup label="{{ __('chats.all_companies') }}">@foreach ($companies as $c)@unless ($candidates->contains('id', $c->id))<option value="{{ $c->id }}" @selected($chat->company_id === $c->id)>{{ $c->name }}</option>@endunless @endforeach</optgroup>
+                            </select>
+                        </label>
+                        <div><button class="btn" type="submit">{{ __('chats.link_go') }}</button></div>
+                        <small class="muted">{{ __('chats.link_hint') }}</small>
+                    </form>
+                @endif
+            </section>
             @include('web._activity', ['act' => $act])
         </aside>
     </div>

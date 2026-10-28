@@ -78,6 +78,34 @@ class TeamChatTest extends TestCase
         $this->assertSame('closed', $chat->fresh()->status);
     }
 
+    public function test_the_team_chooses_the_company_when_the_email_belongs_to_several(): void
+    {
+        Notification::fake();
+        $sales = $this->user('sales');
+        $chat = $this->chat();
+        $msg = Clukie::toTeam($chat, 'Question');
+        $a = \App\Models\Company::create(['name' => 'Agency A BV', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'country' => 'BE']);
+        $b = \App\Models\Company::create(['name' => 'Festival B VZW', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'country' => 'BE']);
+        $jo = \App\Models\Contact::create(['first_name' => 'Jo', 'last_name' => 'Peeters', 'email' => 'JO@demo.example']);
+        $a->contacts()->attach($jo->id);
+        $b->contacts()->attach($jo->id);
+
+        $this->assertSame(['Agency A BV', 'Festival B VZW'], \App\Services\Website\TeamChats::candidates($chat)->pluck('name')->all());
+        $this->actingAs($sales, 'web')->get(route('chats.show', $chat))->assertOk()->assertSee('2 companies use this email address');
+        $this->assertNull($chat->fresh()->company_id); // never by itself
+
+        $this->actingAs($sales, 'web')->post(route('chats.link', $chat), ['company_id' => $b->id])->assertRedirect();
+        $chat->refresh();
+        $this->assertSame([$b->id, $jo->id], [$chat->company_id, $chat->contact_id]);
+        $this->assertSame($b->id, $msg->fresh()->company_id);
+        $this->assertTrue(AuditLog::where('action', 'chat.linked')->exists());
+        $this->actingAs($sales, 'web')->get(route('companies.show', $b))->assertOk()->assertSee('Website chats')->assertSee(route('chats.show', $chat));
+        $this->actingAs($sales, 'web')->get(route('chats.index'))->assertOk()->assertSee('Festival B VZW');
+
+        $this->actingAs($sales, 'web')->post(route('chats.link', $chat), ['company_id' => ''])->assertRedirect();
+        $this->assertNull($chat->fresh()->company_id);
+    }
+
     public function test_only_sales_can_see_chats_and_level_one_cannot_answer(): void
     {
         $chat = $this->chat();

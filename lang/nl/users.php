@@ -213,6 +213,8 @@ return [
             'mail_bounced' => 'Mail teruggekomen: adres geblokkeerd',
             'mail_unblocked' => 'Mailadres gedeblokkeerd',
             'chat_replied' => 'Chat beantwoord door het team',
+            'chat_linked' => 'Chat aan een bedrijf gekoppeld',
+            'chat_unlinked' => 'Chat van een bedrijf losgekoppeld',
             'chat_closed' => 'Chat gesloten',
             'web_account_approved' => 'Website-login goedgekeurd',
             'web_account_blocked' => 'Website-login geblokkeerd',
