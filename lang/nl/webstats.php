@@ -46,6 +46,8 @@ return [
         'order' => 'Bestelde',
         'login' => 'Meldde aan',
         'register' => 'Registreerde',
+        'download' => 'Gedownload',
+        'chat' => 'Chatte met Clukie',
     ],
     'activity' => [
         'title' => 'Websiteactiviteit',

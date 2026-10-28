@@ -142,6 +142,8 @@ return [
         'late_pay_s' => 'vervallen facturen: interest aanrekenen of niet',
         'due_back' => 'Dry-hire terug te komen',
         'due_back_s' => 'vandaag of te laat',
+        'chats' => 'Chats die wachten',
+        'chats_s' => 'een bezoeker wacht op een persoon',
         'pf_check' => 'Voorfacturen te controleren',
         'pf_check_s' => 'goedkeuren of terugsturen',
     ],

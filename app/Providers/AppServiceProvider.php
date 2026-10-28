@@ -37,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
             }
             MailCopy::apply($event->message);
         });
+        // Clukie chats: tell the team when a chat is handed over or the visitor writes while waiting for a person.
+        \App\Models\Website\ChatMessage::created(fn ($m) => \App\Services\Website\TeamChats::noticed($m));
         Event::listen(function (SocialiteWasCalled $event) {
             $event->extendSocialite('microsoft', MicrosoftProvider::class);
         });

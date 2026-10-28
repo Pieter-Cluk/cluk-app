@@ -46,6 +46,8 @@ return [
         'order' => 'Pidió',
         'login' => 'Inició sesión',
         'register' => 'Se registró',
+        'download' => 'Descargó',
+        'chat' => 'Chateó con Clukie',
     ],
     'activity' => [
         'title' => 'Actividad en la web',

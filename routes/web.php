@@ -186,6 +186,9 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
 Route::middleware('auth:web')->group(function () {
     Route::post('/logout', [MicrosoftLoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    // Clukie for the team (answers from the user's own rights; changes nothing).
+    Route::post('/assistant', [\App\Http\Controllers\AssistantController::class, 'message'])->middleware('throttle:20,1')->name('assistant.message');
+    Route::get('/assistant/poll', [\App\Http\Controllers\AssistantController::class, 'poll'])->middleware('throttle:60,1')->name('assistant.poll');
     // Media › Messages: birthday card, newsletters, promotions, banner on quotes.
     Route::prefix('media/messages')->middleware('nav:messages')->group(function () {
         Route::get('/', [MessageController::class, 'index'])->name('messages.index');
@@ -333,6 +336,9 @@ Route::middleware('auth:web')->group(function () {
     Route::middleware('nav:sales')->prefix('sales')->group(function () {
         Route::get('/', [DealController::class, 'index'])->name('deals.index');
         Route::get('/incoming', [IncomingController::class, 'index'])->name('incoming.index');
+        Route::get('/chats', [\App\Http\Controllers\Sales\ChatController::class, 'index'])->name('chats.index');
+        Route::get('/chats/{chat}', [\App\Http\Controllers\Sales\ChatController::class, 'show'])->whereNumber('chat')->name('chats.show');
+        Route::get('/chats/{chat}/poll', [\App\Http\Controllers\Sales\ChatController::class, 'poll'])->whereNumber('chat')->name('chats.poll');
         Route::get('/deals/{deal}', [DealController::class, 'show'])->whereNumber('deal')->name('deals.show');
         Route::get('/quotes', [QuoteController::class, 'index'])->name('quotes.index');
         Route::get('/quotes/{quote}', [QuoteController::class, 'show'])->whereNumber('quote')->name('quotes.show');
@@ -357,6 +363,8 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/quotes/{quote}/send', [QuoteController::class, 'send'])->whereNumber('quote')->name('quotes.send');
             Route::post('/quotes/{quote}/revise', [QuoteController::class, 'revise'])->whereNumber('quote')->name('quotes.revise');
             Route::post('/quotes/{quote}/accepted', [QuoteController::class, 'markAccepted'])->whereNumber('quote')->name('quotes.accepted');
+            Route::post('/chats/{chat}/reply', [\App\Http\Controllers\Sales\ChatController::class, 'reply'])->whereNumber('chat')->name('chats.reply');
+            Route::post('/chats/{chat}/close', [\App\Http\Controllers\Sales\ChatController::class, 'close'])->whereNumber('chat')->name('chats.close');
             Route::post('/incoming', [IncomingController::class, 'store'])->name('incoming.store');
             Route::post('/incoming/{item}/convert', [IncomingController::class, 'convert'])->whereNumber('item')->name('incoming.convert');
             Route::post('/incoming/{item}/link', [IncomingController::class, 'link'])->whereNumber('item')->name('incoming.link');

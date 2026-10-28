@@ -46,6 +46,8 @@ return [
         'order' => 'Ordered',
         'login' => 'Signed in',
         'register' => 'Registered',
+        'download' => 'Downloaded',
+        'chat' => 'Chatted with Clukie',
     ],
     'activity' => [
         'title' => 'Website activity',

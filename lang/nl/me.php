@@ -44,6 +44,7 @@ return [
             'credit_alert' => 'De kredietcheck van een klant wordt rood',
             'task_assigned' => 'Iemand geeft je een taak',
             'web_request' => 'Een klant stuurt een aanvraag via de website',
+            'web_chat' => 'Een websitebezoeker wil een persoon in een Clukie-chat',
         ],
         'daily' => 'Dagelijkse samenvatting',
         'daily_hint' => 'Eén e-mail op werkdagen met je open taken. Geen taken, geen e-mail.',

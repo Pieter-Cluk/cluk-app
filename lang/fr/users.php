@@ -212,6 +212,8 @@ return [
             'web_account_registered' => 'Compte du site inscrit',
             'mail_bounced' => 'Mail revenu : adresse bloquée',
             'mail_unblocked' => 'Adresse e-mail débloquée',
+            'chat_replied' => 'Chat répondu par l’équipe',
+            'chat_closed' => 'Chat fermé',
             'web_account_approved' => 'Compte du site approuvé',
             'web_account_blocked' => 'Compte du site bloqué',
             'web_account_unblocked' => 'Compte du site débloqué',

@@ -99,6 +99,7 @@ class DashboardController extends Controller
                 'tone' => ($byLevel['red'] ?? 0) || ($byLevel['orange'] ?? 0) ? 'warn' : 'info',
                 'dots' => collect(SalesTask::LEVELS)->mapWithKeys(fn ($l) => [$l => (int) ($byLevel[$l] ?? 0)])->filter()->all()];
             $t[] = ['n' => IncomingMessage::where('status', 'new')->count(), 'key' => 'incoming', 'url' => route('incoming.index'), 'tone' => 'warn'];
+            $t[] = ['n' => \App\Services\Website\TeamChats::waitingCount(), 'key' => 'chats', 'url' => route('chats.index'), 'tone' => 'warn'];
             $t[] = ['n' => Deal::open()->when($who === 'me', fn ($q) => $q->where('owner_id', $u->id))->where('check_date', true)->whereNotNull('event_start')->where('event_start', '<=', today()->addDays(14))->count(), 'key' => 'deals_soon', 'url' => route('deals.index'), 'tone' => 'info'];
             $t[] = ['n' => Quote::whereIn('status', ['change'])->when($who === 'me', fn ($q) => $q->where('owner_id', $u->id))->count(), 'key' => 'quote_changes', 'url' => route('quotes.index'), 'tone' => 'warn'];
         }

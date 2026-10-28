@@ -52,9 +52,10 @@ class RunBackgroundChecks
             if (Cache::add('jobs:vies:'.$now->format('Y-m-d-H'), 1, 3700)) {
                 ViesRecheck::run(app(Vies::class), 3, 1); // one try each: never keep a page waiting long
             }
-            // Website statistics older than 13 months are deleted (GDPR), once a day.
+            // Website statistics older than 13 months are deleted (GDPR), once a day; staff Clukie chats after 3 months.
             if (Cache::add('jobs:webprune:'.$now->toDateString(), 1, 90000)) {
                 WebActivity::prune();
+                \App\Http\Controllers\AssistantController::prune();
                 \App\Services\Website\Clukie::prune();
             }
             // Company register (KBO web service): the oldest data first, a few every 10 minutes.

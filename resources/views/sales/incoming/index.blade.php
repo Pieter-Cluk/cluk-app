@@ -62,6 +62,7 @@
                     @if ($selected->body)<div class="message-body">{!! nl2br(e($selected->body)) !!}</div>@endif
                     @if ($selected->handled_note)<p class="muted small mt">{{ __('deals.incoming.statuses.'.$selected->status) }}: {{ $selected->handled_note }}</p>@endif
                     @if ($selected->deal_id)<p class="mt"><a href="{{ route('deals.show', $selected->deal_id) }}">{{ __('deals.incoming.go_deal') }}</a></p>@endif
+                    @if (($selected->payload['type'] ?? null) === 'chat' && ($selected->payload['chat_id'] ?? null))<p class="mt"><a class="primary" href="{{ route('chats.show', $selected->payload['chat_id']) }}">{{ __('chats.open_chat') }}</a></p>@endif
                 </section>
                 @if ($selected->channel === 'website')
                     @include('web._before', ['before' => \App\Services\Website\WebActivity::beforeRequest($selected)])

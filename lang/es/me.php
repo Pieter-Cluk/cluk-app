@@ -44,6 +44,7 @@ return [
             'credit_alert' => 'El control de crédito de un cliente se pone en rojo',
             'task_assigned' => 'Alguien le da una tarea',
             'web_request' => 'Un cliente envía una solicitud por la web',
+            'web_chat' => 'Un visitante de la web pide una persona en un chat de Clukie',
         ],
         'daily' => 'Resumen diario',
         'daily_hint' => 'Un correo los días laborables con tus tareas abiertas. Sin tareas, sin correo.',

@@ -142,6 +142,8 @@ return [
         'late_pay_s' => 'factures échues : facturer les intérêts ou non',
         'due_back' => 'Dry-hire à revenir',
         'due_back_s' => 'aujourd’hui ou en retard',
+        'chats' => 'Chats en attente',
+        'chats_s' => 'un visiteur attend une personne',
         'pf_check' => 'Préfactures à vérifier',
         'pf_check_s' => 'approuver ou renvoyer',
     ],

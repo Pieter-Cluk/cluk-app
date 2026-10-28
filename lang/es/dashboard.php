@@ -142,6 +142,8 @@ return [
         'late_pay_s' => 'facturas vencidas: cobrar los intereses o no',
         'due_back' => 'Dry-hire por volver',
         'due_back_s' => 'hoy o con retraso',
+        'chats' => 'Chats en espera',
+        'chats_s' => 'un visitante espera a una persona',
         'pf_check' => 'Prefacturas por revisar',
         'pf_check_s' => 'aprobar o devolver',
     ],

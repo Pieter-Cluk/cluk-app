@@ -212,6 +212,8 @@ return [
             'web_account_registered' => 'Acceso de la web registrado',
             'mail_bounced' => 'Correo devuelto: dirección bloqueada',
             'mail_unblocked' => 'Dirección de correo desbloqueada',
+            'chat_replied' => 'Chat respondido por el equipo',
+            'chat_closed' => 'Chat cerrado',
             'web_account_approved' => 'Acceso de la web aprobado',
             'web_account_blocked' => 'Acceso de la web bloqueado',
             'web_account_unblocked' => 'Acceso de la web desbloqueado',

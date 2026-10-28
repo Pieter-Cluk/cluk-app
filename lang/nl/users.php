@@ -212,6 +212,8 @@ return [
             'web_account_registered' => 'Website-login geregistreerd',
             'mail_bounced' => 'Mail teruggekomen: adres geblokkeerd',
             'mail_unblocked' => 'Mailadres gedeblokkeerd',
+            'chat_replied' => 'Chat beantwoord door het team',
+            'chat_closed' => 'Chat gesloten',
             'web_account_approved' => 'Website-login goedgekeurd',
             'web_account_blocked' => 'Website-login geblokkeerd',
             'web_account_unblocked' => 'Website-login gedeblokkeerd',

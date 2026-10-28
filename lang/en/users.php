@@ -212,6 +212,8 @@ return [
             'web_account_registered' => 'Website login registered',
             'mail_bounced' => 'Mail bounced: address blocked',
             'mail_unblocked' => 'Mail address unblocked',
+            'chat_replied' => 'Chat answered by the team',
+            'chat_closed' => 'Chat closed',
             'web_account_approved' => 'Website login approved',
             'web_account_blocked' => 'Website login blocked',
             'web_account_unblocked' => 'Website login unblocked',

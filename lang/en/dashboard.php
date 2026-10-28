@@ -142,6 +142,8 @@ return [
         'late_pay_s' => 'overdue invoices: invoice the interest or not',
         'due_back' => 'Dry-hire due back',
         'due_back_s' => 'today or late',
+        'chats' => 'Chats waiting',
+        'chats_s' => 'a visitor waits for a person',
         'pf_check' => 'Pre-invoices to check',
         'pf_check_s' => 'approve or send back',
     ],
