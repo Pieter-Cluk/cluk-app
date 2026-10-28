@@ -158,7 +158,8 @@ class UblInvoice
         }
         $this->cac($inv, 'PaymentMeans', function ($m) use ($bank, $pf) {
             $this->cbc($m, 'PaymentMeansCode', $bank ? '30' : '1', $bank ? ['name' => 'Credit transfer'] : []);
-            $this->cbc($m, 'PaymentID', $pf->invoice_number);
+            // The Belgian structured communication, so the bank payment is matched to this invoice.
+            $this->cbc($m, 'PaymentID', \App\Support\PaymentQr::ogm($pf->invoice_number));
             if ($bank) {
                 $this->cac($m, 'PayeeFinancialAccount', function ($a) use ($bank) {
                     $this->cbc($a, 'ID', strtoupper(preg_replace('/\s+/', '', $bank->iban)));

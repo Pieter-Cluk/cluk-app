@@ -18,6 +18,7 @@ return [
     'vat_line' => 'TVA :rate%',
     'total' => 'Total',
     'pay_by' => 'Merci de payer :amount avant le :date sur :',
+    'scan' => 'Scannez avec votre app bancaire pour payer',
     'reference' => 'Communication',
     'pay_contact' => 'Coordonnées de paiement : contactez-nous.',
     'paid' => 'Payée le :date. Merci.',

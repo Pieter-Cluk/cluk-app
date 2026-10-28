@@ -27,5 +27,8 @@
         @if ($bank?->bic)<dt>BIC</dt><dd>{{ $bank->bic }}</dd>@endif
         <dt>{{ __('docs.pf.reference') }}</dt><dd>{{ $code }}</dd>
     </dl>
+    @if ($bank && ($qrText = \App\Support\PaymentQr::payload(trim($me->legal_name.' '.$me->legal_form), (string) $bank->iban, $bank->bic, (int) $order->gross_cents, $code)))
+        <p class="pay-qr"><img src="{{ \App\Support\PaymentQr::png($qrText) }}" alt="" width="110" height="110"><br><small>{{ __('invoice.scan') }}</small></p>
+    @endif
     <p>{{ __('quotes.doc_terms_link', ['url' => preg_replace('#^https?://#', '', route('terms', $order->language))]) }}</p>
 @endsection

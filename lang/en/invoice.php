@@ -18,6 +18,7 @@ return [
     'vat_line' => 'VAT :rate%',
     'total' => 'Total',
     'pay_by' => 'Please pay :amount by :date to:',
+    'scan' => 'Scan with your banking app to pay',
     'reference' => 'Reference',
     'pay_contact' => 'Payment details: please contact us.',
     'paid' => 'Paid on :date. Thank you.',

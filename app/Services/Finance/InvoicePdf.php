@@ -26,9 +26,13 @@ class InvoicePdf
         }
         $pf->loadMissing(['company', 'member.company']);
         $loc = self::locale($pf);
+        $me = CompanyDetail::current();
+        $bank = BankAccount::where('on_documents', true)->orderByDesc('is_main')->first();
+        $ogm = \App\Support\PaymentQr::ogm($pf->invoice_number);
+        $payload = $bank && $pf->status !== 'paid' ? \App\Support\PaymentQr::payload(trim(($me->legal_name ?: 'CLUK').' '.($me->legal_form ?? '')), (string) $bank->iban, $bank->bic, (int) $pf->gross_cents, $ogm) : null;
         $html = InLocale::run($loc, fn () => view('finance.invoice-pdf', [
-            'pf' => $pf, 'me' => CompanyDetail::current(), 'buyer' => UblInvoice::buyerOf($pf), 'loc' => $loc,
-            'bank' => BankAccount::where('on_documents', true)->orderByDesc('is_main')->first(),
+            'pf' => $pf, 'me' => $me, 'buyer' => UblInvoice::buyerOf($pf), 'loc' => $loc,
+            'bank' => $bank, 'ogm' => $ogm, 'qr' => $payload ? \App\Support\PaymentQr::png($payload) : null,
             'exempt' => UblInvoice::category($pf)[1][1] ?? null,
             'logo' => is_file($f = public_path('images/cluk-logo.png')) ? 'data:image/png;base64,'.base64_encode((string) file_get_contents($f)) : null,
             'vatFmt' => fn (?string $v) => $v ? VatNumber::format($v) : null,

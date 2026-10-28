@@ -18,6 +18,7 @@ return [
     'vat_line' => 'Btw :rate%',
     'total' => 'Totaal',
     'pay_by' => 'Gelieve :amount te betalen voor :date op:',
+    'scan' => 'Scan met je bankapp om te betalen',
     'reference' => 'Mededeling',
     'pay_contact' => 'Betaalgegevens: neem contact met ons op.',
     'paid' => 'Betaald op :date. Bedankt.',

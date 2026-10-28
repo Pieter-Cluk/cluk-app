@@ -30,6 +30,9 @@
     .totals td { padding: 4px 4px; }
     .totals .grand td { border-top: 1.5px solid #1f2420; font-weight: bold; font-size: 11pt; padding-top: 7px; }
     .pay { margin-top: 22px; background: #f2f7ef; border-left: 3px solid #52ae32; padding: 10px 12px; font-size: 9pt; line-height: 1.5; }
+    .pay .qr { float: right; width: 110px; text-align: center; margin: -2px 0 0 12px; }
+    .pay .qr img { display: block; margin: 0 auto 2px; background: #fff; }
+    .pay .qr small { font-size: 7pt; color: #555; line-height: 1.2; }
     .note { margin-top: 10px; font-size: 8.5pt; color: #4a524c; }
     .foot { position: fixed; bottom: -14mm; left: 0; right: 0; text-align: center; font-size: 7.5pt; color: #676e69; }
 </style>
@@ -92,9 +95,11 @@
 
 <div class="pay">
     @if ($bank)
+        @if ($qr ?? null)<div class="qr"><img src="{{ $qr }}" alt="" width="104" height="104"><small>{{ __('invoice.scan') }}</small></div>@endif
         {{ __('invoice.pay_by', ['date' => $d($pf->due_date) ?? '—', 'amount' => $eur($pf->gross_cents)]) }}<br>
         <b>IBAN {{ trim(chunk_split(preg_replace('/\s+/', '', (string) $bank->iban), 4, ' ')) }}</b>@if ($bank->bic) · BIC {{ $bank->bic }}@endif<br>
-        {{ __('invoice.reference') }}: <b>{{ $pf->invoice_number }}</b>
+        {{ __('invoice.reference') }}: <b>{{ $ogm ?? $pf->invoice_number }}</b>
+        <div style="clear: both"></div>
     @else
         {{ __('invoice.pay_contact') }}
     @endif

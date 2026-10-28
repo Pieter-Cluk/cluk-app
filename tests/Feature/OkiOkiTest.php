@@ -100,6 +100,7 @@ class OkiOkiTest extends TestCase
         $this->assertSame(['1000.00', '100.00', '900.00', '189.00', '1089.00'], [$v('//cac:LegalMonetaryTotal/cbc:LineExtensionAmount'), $v('//cac:LegalMonetaryTotal/cbc:AllowanceTotalAmount'), $v('//cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount'), $v('/*/cac:TaxTotal/cbc:TaxAmount'), $v('//cac:LegalMonetaryTotal/cbc:PayableAmount')]);
         $this->assertSame(['S', '21'], [$v('//cac:TaxSubtotal/cac:TaxCategory/cbc:ID'), $v('//cac:TaxSubtotal/cac:TaxCategory/cbc:Percent')]);
         $this->assertSame('BE68539007547034', $v('//cac:PayeeFinancialAccount/cbc:ID'));
+        $this->assertSame(\App\Support\PaymentQr::ogm($pf->invoice_number), $v('//cac:PaymentMeans/cbc:PaymentID'));
         $this->assertSame(['3', '333.3333'], [$v('//cac:InvoiceLine/cbc:InvoicedQuantity'), $v('//cac:InvoiceLine/cac:Price/cbc:PriceAmount')]);
 
         // The next one follows on; the file can be downloaded.
