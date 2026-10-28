@@ -20,6 +20,7 @@
         <div class="field"><label for="password_confirmation">{{ __('site.account.password_again') }}</label><input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" minlength="10" required></div></div>
       <input class="hp" name="website_url" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
       <label class="opt"><input type="checkbox" name="terms" value="1" required @checked(old('terms'))>{{ __('site.account.terms') }}</label>
+      <p class="hint">{!! __('privacy.agree', ['link' => '<a href="'.e(route('site.privacy')).'" target="_blank" rel="noopener">'.e(__('privacy.link')).'</a>']) !!}</p>
       <button class="btn" type="submit">{{ __('site.account.register_btn') }}</button>
     </form>
     <p class="acc-links">{{ __('site.account.have_account') }} <a href="{{ route('site.account.login') }}">{{ __('site.account.login_btn') }}</a></p>

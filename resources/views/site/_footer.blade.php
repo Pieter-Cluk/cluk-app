@@ -13,6 +13,7 @@
         <a href="{{ route('site.news') }}">{{ __('site.news.title') }}</a>
         <a href="{{ route('site.downloads') }}">{{ __('site.downloads.title') }}</a>
         <a href="mailto:{{ $co?->email ?: 'info@cluk.live' }}">{{ __('site.footer.contact') }}</a>
+        <a href="{{ route('site.privacy') }}">{{ __('privacy.link') }}</a>
         <a href="#cookies" data-cookie-settings>{{ __('site.consent.settings') }}</a>
       </nav>
       <div class="social">

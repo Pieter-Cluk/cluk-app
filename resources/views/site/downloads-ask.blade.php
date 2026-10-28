@@ -15,6 +15,7 @@
       <div class="hp" aria-hidden="true"><label>Website <input name="website_url" tabindex="-1" autocomplete="off"></label></div>
       <p class="muted small">{{ __('site.downloads.privacy') }}</p>
       <button class="btn" type="submit">{{ __('site.downloads.download') }} · {{ $d->type() }} {{ $d->sizeLabel() }}</button>
+      <p class="hint">{!! __('privacy.agree', ['link' => '<a href="'.e(route('site.privacy')).'" target="_blank" rel="noopener">'.e(__('privacy.link')).'</a>']) !!}</p>
     </form>
   </section>
   <section class="acc-side">

@@ -5,6 +5,7 @@ use App\Http\Controllers\Site\DownloadController;
 use App\Http\Controllers\Site\DryHireController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\NewsController;
+use App\Http\Controllers\Site\PrivacyController;
 use App\Http\Controllers\Site\SalesController;
 use App\Http\Controllers\Site\TrackController;
 use App\Http\Controllers\Site\WebMediaController;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 $site = function () {
     Route::get('/', [HomeController::class, 'show'])->name('home');
+    Route::get('/privacy', [PrivacyController::class, 'show'])->name('privacy');
     Route::get('/dry-hire', [DryHireController::class, 'index'])->name('dryhire');
     Route::post('/dry-hire/request', [DryHireController::class, 'request'])->middleware('throttle:6,1')->name('dryhire.request');
     Route::get('/dry-hire/data/{item}', [DryHireController::class, 'data'])->whereNumber('item')->name('dryhire.data');
