@@ -11,6 +11,7 @@ return [
     'intro' => 'Devis de location. Un devis réserve le matériel pour le client pendant l’option.',
     'kind' => 'Devis de location',
     'new' => 'Nouveau devis de location',
+    'new_sales' => 'Nouvelle offre de vente',
     'mine' => 'Mes devis',
     'none' => 'Pas encore de devis.',
     'none_for_deal' => 'Pas encore de devis pour cette affaire.',

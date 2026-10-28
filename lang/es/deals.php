@@ -205,4 +205,11 @@ return [
         'incoming' => 'Entrantes por atender',
         'my_deals' => 'Mis oportunidades abiertas',
     ],
+    'sales' => [
+        'deadline' => 'Fecha límite',
+        'deadline_hint' => '¿Cuándo necesita el cliente la mercancía?',
+        'delivery' => 'Dirección de entrega',
+        'title_hint' => 'p. ej. 4 cabezas móviles para el teatro',
+        'check_date' => 'Fecha límite y dirección de entrega conocidas',
+    ],
 ];

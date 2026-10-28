@@ -205,4 +205,11 @@ return [
         'incoming' => 'Binnengekomen te behandelen',
         'my_deals' => 'Mijn open deals',
     ],
+    'sales' => [
+        'deadline' => 'Deadline',
+        'deadline_hint' => 'Wanneer heeft de klant de goederen nodig?',
+        'delivery' => 'Leveradres',
+        'title_hint' => 'bv. 4 moving heads voor het theater',
+        'check_date' => 'Deadline en leveradres gekend',
+    ],
 ];

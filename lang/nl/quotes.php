@@ -11,6 +11,7 @@ return [
     'intro' => 'Verhuuroffertes. Een offerte houdt het materiaal vast voor de klant zolang de optie loopt.',
     'kind' => 'Verhuurofferte',
     'new' => 'Nieuwe verhuurofferte',
+    'new_sales' => 'Nieuwe verkoopofferte',
     'mine' => 'Mijn offertes',
     'none' => 'Nog geen offertes.',
     'none_for_deal' => 'Nog geen offerte voor deze deal.',

@@ -205,4 +205,11 @@ return [
         'incoming' => 'Incoming to handle',
         'my_deals' => 'My open deals',
     ],
+    'sales' => [
+        'deadline' => 'Deadline',
+        'deadline_hint' => 'When does the customer need the goods?',
+        'delivery' => 'Delivery address',
+        'title_hint' => 'e.g. 4 moving heads for the theatre',
+        'check_date' => 'Deadline and delivery address known',
+    ],
 ];

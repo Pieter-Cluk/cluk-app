@@ -11,6 +11,7 @@ return [
     'intro' => 'Rental quotes. A quote holds the equipment for the customer while its option runs.',
     'kind' => 'Rental quote',
     'new' => 'New rental quote',
+    'new_sales' => 'New sales quote',
     'mine' => 'My quotes',
     'none' => 'No quotes yet.',
     'none_for_deal' => 'No quote yet for this deal.',

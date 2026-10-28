@@ -53,15 +53,15 @@
                     <dl class="facts">
                         <dt>{{ __('deals.fields.source') }}</dt><dd>{{ $deal->source ? __('deals.sources.'.$deal->source) : '—' }}</dd>
                         <dt>{{ __('deals.fields.owner_id') }}</dt><dd>{{ $deal->owner?->name ?? '—' }}</dd>
-                        <dt>{{ __('deals.fields.event_start') }}</dt><dd>{{ $deal->event_start?->format('d/m/Y') ?? '—' }}@if ($deal->event_end && ! $deal->event_end->equalTo($deal->event_start)) – {{ $deal->event_end->format('d/m/Y') }}@endif</dd>
-                        <dt>{{ __('deals.fields.location') }}</dt><dd>{{ $deal->location ?: '—' }}</dd>
+                        <dt>{{ $deal->module === 'sales' ? __('deals.sales.deadline') : __('deals.fields.event_start') }}</dt><dd>{{ $deal->event_start?->format('d/m/Y') ?? '—' }}@if ($deal->module !== 'sales' && $deal->event_end && ! $deal->event_end->equalTo($deal->event_start)) – {{ $deal->event_end->format('d/m/Y') }}@endif</dd>
+                        <dt>{{ $deal->module === 'sales' ? __('deals.sales.delivery') : __('deals.fields.location') }}</dt><dd>{{ $deal->location ?: '—' }}</dd>
                     </dl>
                 @endif
             </section>
 
             <section class="card">
                 <div class="card-head"><h2>{{ __('quotes.title') }}</h2>
-                    @if ($canWork && $open)<form method="post" action="{{ route('quotes.store', $deal) }}">@csrf<button class="btn" type="submit">{{ __('quotes.new') }}</button></form>@endif
+                    @if ($canWork && $open)<form method="post" action="{{ route('quotes.store', $deal) }}">@csrf<button class="btn" type="submit">{{ $deal->module === 'sales' ? __('quotes.new_sales') : __('quotes.new') }}</button></form>@endif
                 </div>
                 @php($quotes = $deal->quotes->where('status', '!=', 'replaced'))
                 @php($sq = $deal->salesQuotes)
@@ -110,7 +110,7 @@
                     <form method="post" action="{{ route('deals.checks', $deal) }}" class="checks">
                         @csrf
                         @foreach (['check_date', 'check_budget', 'check_decider'] as $c)
-                            <label class="check"><input type="checkbox" name="{{ $c }}" value="1" @checked($deal->$c) @disabled(! $canWork) @if ($canWork) onchange="this.form.submit()" @endif> {{ __('deals.checks.'.$c) }}</label>
+                            <label class="check"><input type="checkbox" name="{{ $c }}" value="1" @checked($deal->$c) @disabled(! $canWork) @if ($canWork) onchange="this.form.submit()" @endif> {{ $deal->module === 'sales' && $c === 'check_date' ? __('deals.sales.check_date') : __('deals.checks.'.$c) }}</label>
                         @endforeach
                         <noscript>@if ($canWork)<button class="btn" type="submit">{{ __('deals.save') }}</button>@endif</noscript>
                     </form>

@@ -205,4 +205,11 @@ return [
         'incoming' => 'Entrants à traiter',
         'my_deals' => 'Mes affaires ouvertes',
     ],
+    'sales' => [
+        'deadline' => 'Échéance',
+        'deadline_hint' => 'Quand le client a-t-il besoin de la marchandise ?',
+        'delivery' => 'Adresse de livraison',
+        'title_hint' => 'p. ex. 4 lyres pour le théâtre',
+        'check_date' => 'Échéance et adresse de livraison connues',
+    ],
 ];

@@ -11,6 +11,7 @@ return [
     'intro' => 'Presupuestos de alquiler. Un presupuesto reserva el material mientras dura la opción.',
     'kind' => 'Presupuesto de alquiler',
     'new' => 'Nuevo presupuesto de alquiler',
+    'new_sales' => 'Nuevo presupuesto de venta',
     'mine' => 'Mis presupuestos',
     'none' => 'Aún no hay presupuestos.',
     'none_for_deal' => 'Aún no hay presupuesto para esta oportunidad.',

@@ -134,6 +134,10 @@ class DealController extends Controller
         ]);
         $out = collect($d)->except('value')->all();
         $out['value_cents'] = (int) round(((float) ($d['value'] ?? 0)) * 100);
+        if ($d['module'] === 'sales') {
+            // Product sales: one deadline (stored as the start date), no event period.
+            $out['event_end'] = $d['event_start'] ?? null;
+        }
 
         return $out;
     }
