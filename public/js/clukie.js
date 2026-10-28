@@ -144,7 +144,7 @@
     }).catch(function () { typing(false); S.busy = false; log.insertAdjacentHTML('beforeend', '<div class="ck-sys err">' + esc(T.error) + '</div>'); mood(rest()); });
   }
   inForm.addEventListener('submit', function (e) { e.preventDefault(); send(input.value); });
-  function grow() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 120) + 'px'; }
+  function grow() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 120) + 'px'; input.style.overflowY = input.scrollHeight > 120 ? 'auto' : 'hidden'; }
   input.addEventListener('input', grow);
   input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input.value); } });
   chips.addEventListener('click', function (e) {
@@ -190,7 +190,7 @@
     panel.hidden = false; root.classList.add('is-open'); launch.setAttribute('aria-expanded', 'true');
     mood('wave', 1800);
     if (!log.childElementCount) hello();
-    setTimeout(function () { input.focus(); }, 60);
+    setTimeout(function () { grow(); input.focus(); }, 60);
     if (window.cluk && fromNudge) window.cluk.track('view', { section: 'sales', label: 'clukie' });
     poller();
   }
