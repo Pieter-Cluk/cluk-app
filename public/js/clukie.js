@@ -2,6 +2,7 @@
 // Self-contained: reads its settings from <script type="application/json" id="clukie-cfg">.
 // Moods: idle, wave, think, thumbs, sleep, hop. When a clip exists for a mood (cfg.clips)
 // it plays that video; otherwise the picture is animated with CSS.
+// cfg.team === false hides "talk to the team" (used in the platform, where the user is the team).
 (function () {
   'use strict';
   var el = document.getElementById('clukie-cfg');
@@ -96,7 +97,7 @@
   function hello() {
     if (log.childElementCount) return;
     log.insertAdjacentHTML('beforeend', '<div class="ck-msg bot"><div class="ck-b">' + rich(C.available ? T.hello : T.hello_team) + '</div></div>');
-    chips.innerHTML = (C.available ? [['find', T.chip_find], ['price', T.chip_price]] : []).concat([['team', T.chip_team]])
+    chips.innerHTML = (C.available ? [['find', T.chip_find], ['price', T.chip_price]] : []).concat(C.team === false ? [] : [['team', T.chip_team]])
       .map(function (c) { return '<button type="button" data-chip="' + c[0] + '">' + esc(c[1]) + '</button>'; }).join('');
   }
   function typing(on) {
@@ -145,7 +146,7 @@
 
   // ---------- talk to the team ----------
   function showTeam() {
-    if (S.status !== 'bot') return;
+    if (S.status !== 'bot' || C.team === false) return;
     $('.ck-team-text').textContent = C.team_open ? T.team_open : T.team_closed.replace(':next', C.next);
     team.hidden = false; inForm.hidden = true; chips.innerHTML = '';
     var f = team.querySelector('input,textarea'); if (f) f.focus();
