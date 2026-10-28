@@ -297,6 +297,8 @@ return [
         'approve_rule' => 'Een verkoper (Offertes & verkoop, bewerken) of iemand met “Orders: goedkeuren” beslist. De proforma staat los van de verhuurproforma; OkiOki maakt de factuur.',
     ],
     'settings' => [
+        'a6_member' => 'Afrit 6-lid',
+        'a6_free' => 'Vrij: nog geen lid',
         'intro' => 'Zones, rekken en de route die het materiaal moet volgen. De magazijnapp laat enkel scans toe die in deze route passen.',
         'positions_n' => 'Opslagplaatsen · :n',
         'add_zone' => 'Zone toevoegen',

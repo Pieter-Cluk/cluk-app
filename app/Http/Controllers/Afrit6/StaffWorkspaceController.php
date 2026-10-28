@@ -73,6 +73,22 @@ class StaffWorkspaceController extends Controller
         return back()->with('status', __('workspace.staff.desk_added', ['desk' => $space->code]));
     }
 
+    /** Put a member's storage on an exact shelf or pallet place (Warehouse › Places marked Afrit 6). */
+    public function addPlace(Request $request, \App\Models\Afrit6\ServiceRequest $task): RedirectResponse
+    {
+        $d = $request->validate(['position_id' => ['required', 'integer', 'exists:warehouse_positions,id']]);
+        \App\Services\Afrit6\StoragePlaces::add($task, \App\Models\Warehouse\Position::findOrFail($d['position_id']), $request->user());
+
+        return redirect()->to(route('afrit6.staff.show', $task->member_id).'#storage')->with('status', __('workspace.places.saved'));
+    }
+
+    public function removePlace(Request $request, \App\Models\Afrit6\ServiceRequest $task, \App\Models\Warehouse\Position $position): RedirectResponse
+    {
+        \App\Services\Afrit6\StoragePlaces::remove($task, $position, $request->user());
+
+        return redirect()->to(route('afrit6.staff.show', $task->member_id).'#storage')->with('status', __('workspace.places.freed'));
+    }
+
     public function endDesk(Request $request, Member $member, DeskRental $rental): RedirectResponse
     {
         abort_unless($rental->member_id === $member->id, 404);

@@ -23,6 +23,7 @@
                                 @switch($r->kind)
                                     @case('shelf') @case('pallet')
                                         {{ $r->qty }} × · {{ __('workspace.services.since', ['date' => $r->date->format('d/m/Y')]) }}@if ($r->ends_on) · {{ __('workspace.services.last_day', ['date' => $r->ends_on->format('d/m/Y')]) }}@endif · {{ __('workspace.services.days_price', ['amount' => $eur(\App\Services\Afrit6\Pricing::dayPrice($r->kind))]) }}
+                                        @if ($r->places->isNotEmpty())<br><b>{{ __('workspace.places.portal', ['places' => $r->places->pluck('code')->implode(', ')]) }}</b>@endif
                                         @break
                                     @case('desk_add')
                                         {{ $r->space?->code }} · {{ __('workspace.desks.from', ['date' => $r->date->format('d/m/Y')]) }}

@@ -158,6 +158,8 @@ return [
             'crm_company_archived' => 'Bedrijf gearchiveerd',
             'crm_company_restored' => 'Bedrijf teruggehaald',
             'import_done' => 'Rekenblad geïmporteerd',
+            'afrit6_place_set' => 'Afrit 6-opslagplaats ingesteld',
+            'afrit6_place_freed' => 'Afrit 6-opslagplaats vrijgegeven',
             'afrit6_member_approved' => 'Afrit 6-lid goedgekeurd',
             'afrit6_member_declined' => 'Afrit 6-registratie geweigerd',
             'afrit6_member_blocked' => 'Afrit 6-lid geblokkeerd',

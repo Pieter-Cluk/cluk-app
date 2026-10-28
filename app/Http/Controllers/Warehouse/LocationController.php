@@ -86,6 +86,7 @@ class LocationController extends Controller
             'floor' => $floor, 'rows' => $rows, 'row' => $row, 'racks' => $list->groupBy('rack')->map(fn ($r) => $r->groupBy('layer')),
             'occupied' => Asset::whereIn('location', $codes)->selectRaw('location, count(*) as n')->groupBy('location')->pluck('n', 'location'),
             'sel' => $sel, 'here' => $sel ? Asset::with('item')->where('location', $sel->code)->orderBy('code')->get() : collect(),
+            'holder' => $sel && $sel->use === 'afrit6' ? \App\Services\Afrit6\StoragePlaces::holder($sel) : null,
             'totals' => Position::where('active', true)->selectRaw('floor, kind, count(*) as n')->groupBy('floor', 'kind')->get(),
         ]);
     }

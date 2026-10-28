@@ -30,6 +30,42 @@
     @endif
 </section>
 
+<section class="card" id="storage">
+    <h2>{{ __('workspace.places.title') }}</h2>
+    @forelse ($storage as $r)
+        <div class="p-line">
+            <span><b>{{ __('workspace.kinds.'.$r->kind) }} · {{ $r->qty }} ×</b>
+                <small class="muted">{{ __('workspace.services.since', ['date' => $r->date->format('d/m/Y')]) }}@if ($r->ends_on) · {{ __('workspace.services.last_day', ['date' => $r->ends_on->format('d/m/Y')]) }}@endif</small></span>
+            <a class="linkbtn" href="{{ route('afrit6.staff.tasks.show', $r) }}">{{ __('workspace.places.request') }} →</a>
+        </div>
+        <div class="inline-form" style="flex-wrap:wrap;margin:4px 0 12px">
+            @forelse ($r->places as $p)
+                <span class="pill">{{ $p->code }} <small class="muted">{{ __('warehouse.settings.'.$p->kind) }}</small>
+                    @if ($canDesks)<form method="post" action="{{ route('afrit6.staff.places.remove', [$r, $p]) }}" style="display:inline" onsubmit="return confirm(@js(__('workspace.places.free_confirm', ['place' => $p->code])))">@csrf @method('DELETE')<button class="linkbtn" type="submit" aria-label="{{ __('workspace.places.free') }} {{ $p->code }}">×</button></form>@endif
+                </span>
+            @empty
+                <span class="txt-warn small">{{ __('workspace.places.none_yet') }}</span>
+            @endforelse
+            @if ($r->places->count() > $r->qty)<span class="txt-warn small">{{ __('workspace.places.more_than', ['n' => $r->places->count(), 'qty' => $r->qty]) }}</span>@endif
+        </div>
+        @if ($canDesks)
+            @if ($placeChoices[$r->id]->isNotEmpty())
+                <form method="post" action="{{ route('afrit6.staff.places.add', $r) }}" class="inline-form">
+                    @csrf
+                    <select name="position_id" aria-label="{{ __('workspace.places.pick') }}">@foreach ($placeChoices[$r->id] as $p)<option value="{{ $p->id }}">{{ $p->code }} · {{ __('warehouse.settings.'.$p->kind) }}</option>@endforeach</select>
+                    <button class="btn" type="submit">{{ __('workspace.places.set') }}</button>
+                </form>
+            @else
+                <p class="muted small">{{ __('workspace.places.no_free') }}@if (Route::has('locations.positions')) <a href="{{ route('locations.positions') }}">{{ __('workspace.places.to_places') }} →</a>@endif</p>
+            @endif
+        @endif
+    @empty
+        <p class="muted">{{ __('workspace.places.no_storage') }}</p>
+    @endforelse
+    @error('place')<p class="txt-danger small">{{ $message }}</p>@enderror
+    <p class="muted small">{{ __('workspace.places.hint') }}</p>
+</section>
+
 <section class="card">
     <h2>{{ __('workspace.staff.door') }}</h2>
     @if ($member->door_requested_at)<p class="flash flash-err">{{ __('workspace.staff.door_requested', ['date' => $member->door_requested_at->format('d/m/Y H:i')]) }}@if ($member->door_request_note) · “{{ $member->door_request_note }}”@endif</p>@endif

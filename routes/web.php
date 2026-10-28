@@ -437,6 +437,8 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/tasks/{task}/message', [TaskController::class, 'message'])->whereNumber('task')->name('tasks.message');
             Route::post('/tasks/{task}/amount', [TaskController::class, 'amount'])->whereNumber('task')->name('tasks.amount');
             Route::post('/members/{member}/desks', [StaffWorkspaceController::class, 'storeDesk'])->whereNumber('member')->name('desks.store');
+            Route::post('/storage/{task}/places', [StaffWorkspaceController::class, 'addPlace'])->whereNumber('task')->name('places.add');
+            Route::delete('/storage/{task}/places/{position}', [StaffWorkspaceController::class, 'removePlace'])->whereNumber(['task', 'position'])->name('places.remove');
             Route::post('/members/{member}/desks/{rental}/end', [StaffWorkspaceController::class, 'endDesk'])->whereNumber(['member', 'rental'])->name('desks.end');
         });
         Route::put('/members/{member}/door-code', [StaffWorkspaceController::class, 'doorCode'])->whereNumber('member')->middleware('right:afrit6.door_codes')->name('door');

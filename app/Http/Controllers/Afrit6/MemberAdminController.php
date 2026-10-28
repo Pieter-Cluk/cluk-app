@@ -65,6 +65,8 @@ class MemberAdminController extends Controller
             'bill' => $member->isActive() ? (new StatementBuilder($member))->build(today(), app()->getLocale()) : null,
             'lastBill' => $member->isActive() ? (new StatementBuilder($member))->build((new StatementBuilder($member))->period()[0]->copy()->subDay(), app()->getLocale()) : null,
             'statements' => $member->statements()->with('createdBy')->get(),
+            'storage' => ($st = ServiceRequest::where('member_id', $member->id)->runningStorage()->with('places')->orderBy('date')->get()),
+            'placeChoices' => $st->mapWithKeys(fn ($r) => [$r->id => \App\Services\Afrit6\StoragePlaces::choices($r)]),
             'openTasks' => ServiceRequest::where('member_id', $member->id)->open()->with('assignee')->orderBy('date')->get(),
         ]);
     }

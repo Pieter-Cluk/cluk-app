@@ -73,6 +73,20 @@ class ServiceRequest extends Model
         return $this->belongsTo(RoomBooking::class, 'room_booking_id');
     }
 
+    /** The exact shelf or pallet places of a storage request. */
+    public function places(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(\App\Models\Warehouse\Position::class, 'afrit6_storage_places', 'request_id', 'position_id')->withPivot('assigned_by_id')->withTimestamps()->orderBy('code');
+    }
+
+    /** Storage that runs today (confirmed or done, not ended): its places belong to the member. */
+    public function scopeRunningStorage(Builder $q): Builder
+    {
+        return $q->whereIn('kind', self::STORAGE)
+            ->where(fn ($w) => $w->whereIn('status', [self::CONFIRMED, self::DONE])->orWhere(fn ($x) => $x->where('status', self::WAITING)->where('status_before_wait', self::CONFIRMED)))
+            ->where(fn ($w) => $w->whereNull('ends_on')->orWhereDate('ends_on', '>=', today()));
+    }
+
     public function messages(): HasMany
     {
         return $this->hasMany(RequestMessage::class, 'request_id')->orderBy('id');

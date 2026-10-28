@@ -86,9 +86,18 @@ class PhoneAfrit6Controller extends Controller
         if (! $code) {
             throw ValidationException::withMessages(['code' => __('warehouse.a6.wrong_place')]);
         }
+        // Storage: the scanned shelf or pallet place becomes the member's place (refused when it is another member's).
+        $pos = $task->isStorage() ? Position::byCode($code) : null;
+        if ($pos && ($why = \App\Services\Afrit6\StoragePlaces::problem($task, $pos))) {
+            throw ValidationException::withMessages(['code' => $why]);
+        }
         $scans = $task->scans ?? [];
         $scans[] = ['code' => $code, 'at' => now()->toIso8601String(), 'by' => $request->user()->id];
         $task->update(['scans' => $scans]);
+        if ($pos && ! $task->places()->where('warehouse_positions.id', $pos->id)->exists()) {
+            $task->places()->attach($pos->id, ['assigned_by_id' => $request->user()->id]);
+            AuditLog::record('afrit6.place_set', $task->member, ['place' => $pos->code, 'request' => $task->id, 'kind' => $task->kind], $request->user());
+        }
 
         return back()->with('status', __('warehouse.a6.scanned', ['place' => Moves::label($code)]));
     }

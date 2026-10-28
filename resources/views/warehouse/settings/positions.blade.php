@@ -57,6 +57,7 @@
                         <dt>{{ __('warehouse.settings.type') }}</dt><dd>{{ __('warehouse.settings.'.$sel->kind) }}</dd>
                         <dt>{{ __('warehouse.settings.size') }}</dt><dd>{{ $sel->kind === 'shelf' ? __('warehouse.settings.shelf_size_v') : __('warehouse.settings.pallet_size_v') }}</dd>
                         <dt>{{ __('warehouse.settings.now') }}</dt><dd>@if ($here->isEmpty()){{ __('warehouse.settings.free') }}@else{{ $here->map(fn ($a) => $a->code)->implode(', ') }}@endif</dd>
+                        @if ($sel->use === 'afrit6')<dt>{{ __('warehouse.settings.a6_member') }}</dt><dd>@if ($holder)@if (Route::has('afrit6.staff.show') && auth()->user()->canUseModule('afrit6'))<a href="{{ route('afrit6.staff.show', $holder->member_id) }}#storage">{{ $holder->member?->companyName() }}</a>@else{{ $holder->member?->companyName() }}@endif <small class="muted">{{ __('workspace.services.since', ['date' => $holder->date->format('d/m/Y')]) }}</small>@else{{ __('warehouse.settings.a6_free') }}@endif</dd>@endif
                     </dl>
                     <form method="post" action="{{ route('locations.position.update', $sel) }}" class="inline-form">@csrf @method('PUT')
                         <select name="use" aria-label="{{ __('warehouse.settings.used_for') }}">@foreach (\App\Models\Warehouse\Position::USES as $u)<option value="{{ $u }}" @selected($sel->use === $u)>{{ __('warehouse.settings.uses.'.$u) }}</option>@endforeach</select>

@@ -297,6 +297,8 @@ return [
         'approve_rule' => 'Un commercial (Devis & ventes, modifier) ou une personne avec « Commandes : approuver » décide. Proforma séparée de celle de la location ; OkiOki fait la facture.',
     ],
     'settings' => [
+        'a6_member' => 'Membre Afrit 6',
+        'a6_free' => 'Libre : pas encore de membre',
         'intro' => 'Zones, racks et le parcours que suit le matériel. L’app entrepôt n’accepte que les scans conformes.',
         'positions_n' => 'Emplacements · :n',
         'add_zone' => 'Ajouter une zone',

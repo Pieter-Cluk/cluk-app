@@ -297,6 +297,8 @@ return [
         'approve_rule' => 'A salesperson (Quotes & sales, edit) or someone with “Orders: approve” decides. The proforma is separate from the rental proforma; OkiOki makes the invoice.',
     ],
     'settings' => [
+        'a6_member' => 'Afrit 6 member',
+        'a6_free' => 'Free: no member yet',
         'intro' => 'Zones, racks and the route equipment must follow. The warehouse app only allows scans that fit this route.',
         'positions_n' => 'Storage positions · :n',
         'add_zone' => 'Add zone',

@@ -158,6 +158,8 @@ return [
             'crm_company_archived' => 'Archivó una empresa',
             'crm_company_restored' => 'Recuperó una empresa',
             'import_done' => 'Importó una hoja de cálculo',
+            'afrit6_place_set' => 'Ubicación Afrit 6 asignada',
+            'afrit6_place_freed' => 'Ubicación Afrit 6 liberada',
             'afrit6_member_approved' => 'Aprobó un miembro de Afrit 6',
             'afrit6_member_declined' => 'Rechazó un registro de Afrit 6',
             'afrit6_member_blocked' => 'Bloqueó a un miembro de Afrit 6',

@@ -297,6 +297,8 @@ return [
         'approve_rule' => 'Decide un comercial (Presupuestos y ventas, editar) o alguien con “Pedidos: aprobar”. La proforma es aparte de la del alquiler; OkiOki hace la factura.',
     ],
     'settings' => [
+        'a6_member' => 'Miembro Afrit 6',
+        'a6_free' => 'Libre: aún sin miembro',
         'intro' => 'Zonas, estanterías y la ruta que sigue el material. La app solo permite escaneos que siguen esta ruta.',
         'positions_n' => 'Ubicaciones · :n',
         'add_zone' => 'Añadir zona',
