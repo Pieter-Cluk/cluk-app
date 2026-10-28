@@ -94,30 +94,35 @@ class Clukie
         }
         $messages = $this->history();
         $text = null;
+        $said = '';     // text Clukie wrote next to a tool call, used when the last round fails
+        $why = 'no answer after '.self::MAX_TURNS.' rounds';
         try {
             for ($turn = 0; $turn < self::MAX_TURNS; $turn++) {
-                // last round: no more tools, Clukie answers with what it found so far
                 $res = $this->call($messages, $page, $turn === self::MAX_TURNS - 1);
-                if ($res === null) {
+                if (! isset($res['content'])) {
+                    $why = 'api '.($res['error'] ?? 'no content');
                     break;
                 }
-                $content = $res['content'] ?? [];
+                $content = $res['content'];
                 $uses = array_values(array_filter($content, fn ($c) => ($c['type'] ?? '') === 'tool_use'));
                 $text = trim(collect($content)->where('type', 'text')->pluck('text')->implode("\n"));
                 if (! $uses || ($res['stop_reason'] ?? '') !== 'tool_use') {
                     break;
                 }
+                $said = $text !== '' ? $text : $said;
                 $messages[] = ['role' => 'assistant', 'content' => $content];
                 $messages[] = ['role' => 'user', 'content' => array_map(fn ($u) => [
-                    'type' => 'tool_result', 'tool_use_id' => $u['id'], 'content' => json_encode($this->tool($u['name'], (array) ($u['input'] ?? [])), JSON_UNESCAPED_UNICODE),
+                    'type' => 'tool_result', 'tool_use_id' => $u['id'], 'content' => json_encode($this->safeTool($u['name'], (array) ($u['input'] ?? [])), JSON_UNESCAPED_UNICODE),
                 ], $uses)];
                 $text = null;
             }
         } catch (Throwable $e) {
-            Log::warning('Clukie failed', ['error' => mb_substr($e->getMessage(), 0, 200)]);
+            $why = 'exception '.class_basename($e).': '.mb_substr($e->getMessage(), 0, 200);
         }
+        $text = ($text === null || $text === '') && $this->cards ? $said : $text;
         if ($text === null || $text === '') {
-            $this->chat->say('clukie', __('site.clukie.offline', [], $this->chat->locale), ['offer_handover' => ! $this->handed, 'failed' => true]);
+            Log::warning('Clukie: no answer', ['chat' => $this->chat->id, 'why' => $why]);
+            $this->chat->say('clukie', __('site.clukie.offline', [], $this->chat->locale), ['offer_handover' => ! $this->handed, 'failed' => $why]);
         } else {
             $this->chat->say('clukie', Str::limit($text, 4000), array_filter(['cards' => array_values($this->cards), 'mood' => $this->actions || $this->handed ? 'thumbs' : null]));
         }
@@ -153,7 +158,7 @@ class Clukie
         return $out;
     }
 
-    private function call(array $messages, string $page, bool $final = false): ?array
+    private function call(array $messages, string $page, bool $final = false): array
     {
         $res = Http::timeout(45)->withHeaders([
             'x-api-key' => (string) config('services.anthropic.key'),
@@ -166,9 +171,10 @@ class Clukie
             'messages' => $messages,
         ] + ($final ? ['tool_choice' => ['type' => 'none']] : []));
         if (! $res->successful()) {
-            Log::warning('Clukie: API error', ['http' => $res->status(), 'error' => mb_substr((string) $res->json('error.message'), 0, 200)]);
+            $error = $res->status().' '.mb_substr((string) $res->json('error.message'), 0, 200);
+            Log::warning('Clukie: API error', ['error' => $error]);
 
-            return null;
+            return ['error' => $error];
         }
 
         return $res->json();
@@ -232,6 +238,18 @@ class Clukie
     }
 
     // ---------- tools ----------
+
+    /** A tool that breaks tells Claude so (and the log), instead of ending the whole answer. */
+    private function safeTool(string $name, array $in): array
+    {
+        try {
+            return $this->tool($name, $in);
+        } catch (Throwable $e) {
+            Log::warning('Clukie: tool failed', ['tool' => $name, 'error' => class_basename($e).': '.mb_substr($e->getMessage(), 0, 300)]);
+
+            return ['error' => 'This did not work because of a technical problem. Try another search or offer the team.'];
+        }
+    }
 
     public function tool(string $name, array $in): array
     {

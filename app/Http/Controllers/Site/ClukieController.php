@@ -98,7 +98,7 @@ class ClukieController extends SiteController
     {
         return response()->json([
             'token' => $chat->token, 'status' => $chat->status, 'open' => Clukie::open(), 'next' => Clukie::nextOpenText($chat->locale),
-            'messages' => $chat->messages()->where('id', '>', $after)->get()->map->forWeb()->values(),
+            'messages' => $chat->messages()->where('id', '>', $after)->get()->map(fn ($m) => $m->forWeb() + (auth('web')->check() && ! empty($m->meta['failed']) ? ['why' => (string) $m->meta['failed']] : []))->values(),
             'actions' => $actions,
         ], $status);
     }
