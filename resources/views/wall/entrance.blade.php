@@ -10,7 +10,7 @@
 <title>Afrit 6 · {{ __('wall.admin.screen_entrance') }}</title>
 @include('partials.favicon')
 <style>
-:root{--green:#52ae32;--ink:#f3f6f2;--muted:#b9c2ba;--panel:rgba(16,20,17,.86)}
+:root{--green:#52ae32;--ink:#f3f6f2;--muted:#b9c2ba;--panel:rgba(16,20,17,.55)}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:#0f1310;color:var(--ink);font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;overflow:hidden}
 body.idle{cursor:none}
@@ -19,7 +19,7 @@ body.idle{cursor:none}
 .en-slide.on{opacity:1}
 .en-empty{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 30% 40%,#2c5b1d,#0f1310 70%)}
 .en-empty img{width:22vw;opacity:.9}
-.en-panel{position:fixed;top:0;right:0;bottom:0;width:31vw;min-width:360px;background:var(--panel);backdrop-filter:blur(8px);padding:3.2vw 2.6vw;display:flex;flex-direction:column;gap:2.4vw}
+.en-panel{position:fixed;top:0;right:0;bottom:0;width:31vw;min-width:360px;background:var(--panel);backdrop-filter:blur(3px);padding:3.2vw 2.6vw;display:flex;flex-direction:column;gap:2.4vw;text-shadow:0 1px 3px rgba(0,0,0,.7)}
 .en-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1vw}
 .en-head img{height:2.6vw;min-height:28px}
 .en-clock{text-align:right}
