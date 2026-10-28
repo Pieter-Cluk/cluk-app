@@ -133,4 +133,15 @@ class WebsiteClukieTest extends TestCase
         $this->assertSame('tom@example.be', $chat->incoming->from_email);
         $this->assertStringContainsString('500-person venue', $chat->incoming->subject);
     }
+
+    public function test_privacy_policy_mentions_clukie_and_old_chats_are_deleted(): void
+    {
+        $this->get('/site/privacy?lang=en')->assertOk()->assertSee('Anthropic')->assertSee('Chats with Clukie: 12 months');
+        $this->get('/site/privacy?lang=nl')->assertOk()->assertSee('Chat met Clukie');
+        $old = Chat::create(['token' => 'old', 'status' => 'bot', 'last_message_at' => now()->subMonths(13)]);
+        $new = Chat::create(['token' => 'new', 'status' => 'bot', 'last_message_at' => now()->subMonths(2)]);
+        $this->assertSame(1, Clukie::prune());
+        $this->assertNull(Chat::find($old->id));
+        $this->assertNotNull(Chat::find($new->id));
+    }
 }

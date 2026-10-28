@@ -356,4 +356,14 @@ class Clukie
 
         return $msg;
     }
+
+    /** Chats are kept 12 months after the last message (privacy policy); a handed-over chat lives on as a request in Incoming. */
+    public const KEEP_MONTHS = 12;
+
+    public static function prune(): int
+    {
+        $limit = now()->subMonths(self::KEEP_MONTHS);
+
+        return Chat::where(fn ($q) => $q->where('last_message_at', '<', $limit)->orWhere(fn ($w) => $w->whereNull('last_message_at')->where('created_at', '<', $limit)))->delete();
+    }
 }

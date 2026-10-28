@@ -18,6 +18,7 @@ return [
                 'My CLUK-account: je naam, e-mailadres, telefoonnummer, bedrijf en btw-nummer, en de offertes, orders, facturen en mandjes van je bedrijf, om je account en onze afspraken te beheren (overeenkomst). Je wachtwoord wordt versleuteld bewaard; onze medewerkers kunnen het niet zien.',
                 'Downloads: voor sommige documenten vragen we eerst je naam en e-mailadres, zodat we weten wie ze kreeg en je vraag kunnen opvolgen (gerechtvaardigd belang).',
                 'Websitestatistieken, alleen met je toestemming: welke pagina’s en producten je bekijkt, wat je zoekt en in een mandje legt, gekoppeld aan een willekeurig bezoekersnummer in een cookie. We bewaren je IP-adres niet. Zodra je een aanvraag stuurt, inlogt of downloadt met je e-mailadres, worden deze bezoeken aan jou gekoppeld, zodat ons team je beter kan helpen. Je kan je toestemming altijd intrekken via “Cookie-instellingen”.',
+                'Chat met Clukie: op de verkooppagina’s kan je chatten met Clukie, onze AI-helper. We bewaren wat je schrijft, de antwoorden, de pagina waarop je was en, als je ze geeft, je naam, e-mailadres en telefoonnummer, om je vraag te beantwoorden en, als je dat vraagt, door te geven aan ons team (stappen vóór een overeenkomst en gerechtvaardigd belang). Deel geen gevoelige persoonsgegevens in de chat.',
                 'Mails: nieuwsbrieven (alleen als je ja zei), promoties en uitnodigingen aan bestaande klanten, telkens met een afmeldlink (gerechtvaardigd belang; je kan altijd bezwaar maken). Als een mail aan jou niet bezorgd kan worden, stoppen we met mailen naar dat adres en controleren we het met jou.',
                 'Afrit 6-leden en Cluk Factory-boekingen: de gegevens die je opgeeft bij registratie of boeking, en je boekingen, bureaus en aanvragen (overeenkomst).',
                 'Bedrijfsgegevens: voor bedrijven controleren we btw-nummers bij de Europese VIES-dienst en bedrijfsgegevens bij de Kruispuntbank van Ondernemingen (KBO) en de Nationale Bank, om correct te factureren (wettelijke verplichting en gerechtvaardigd belang).',
@@ -29,12 +30,13 @@ return [
         ],
         [
             'h' => 'Met wie we delen',
-            'p' => ['We verkopen je gegevens nooit. We delen alleen wat nodig is met de bedrijven die ons helpen: one.com (hosting, in de EU), Microsoft 365 (e-mail, datacenters in de EU), OkiOki (onze boekhouding en e-facturatie, België) en het Peppol-netwerk voor e-facturen. Ons nieuws komt van onze eigen Facebook-, Instagram- en LinkedIn-pagina’s; foto’s worden getoond vanaf onze eigen server, en als je doorklikt, geldt het beleid van dat platform.'],
+            'p' => ['We verkopen je gegevens nooit. We delen alleen wat nodig is met de bedrijven die ons helpen: one.com (hosting, in de EU), Microsoft 365 (e-mail, datacenters in de EU), OkiOki (onze boekhouding en e-facturatie, België) en het Peppol-netwerk voor e-facturen. Ons nieuws komt van onze eigen Facebook-, Instagram- en LinkedIn-pagina’s; foto’s worden getoond vanaf onze eigen server, en als je doorklikt, geldt het beleid van dat platform. Wat je aan Clukie schrijft, wordt naar Anthropic gestuurd (het bedrijf achter het AI-model Claude, gevestigd in de Verenigde Staten), alleen om het antwoord te schrijven. Anthropic verwerkt het in onze opdracht, onder een verwerkersovereenkomst met de standaardcontractbepalingen van de EU, en gebruikt het niet om zijn modellen te trainen.'],
         ],
         [
             'h' => 'Hoe lang we bewaren',
             'li' => [
                 'Websitestatistieken: 13 maanden, daarna automatisch gewist.',
+                'Chats met Clukie: 12 maanden na het laatste bericht, daarna automatisch gewist. Als een chat aan ons team wordt doorgegeven, wordt hij ook als aanvraag bewaard (zie hierboven).',
                 'Aanvragen zonder order: tot 3 jaar na het laatste contact.',
                 'Accounts, offertes, orders en facturen: zolang je account of onze relatie loopt, en daarna zolang de boekhoud- en fiscale wetgeving het vraagt.',
                 'Mailinglijsten: tot je je afmeldt.',
