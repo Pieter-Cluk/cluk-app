@@ -21,7 +21,7 @@ class Tracking
 
     public const VISITOR = 'cluk_vid';
 
-    public const TYPES = ['view', 'search', 'product', 'add', 'request', 'order', 'login', 'register', 'download'];
+    public const TYPES = ['view', 'search', 'product', 'add', 'request', 'order', 'login', 'register', 'download', 'chat'];
 
     public static function consented(Request $r): bool
     {

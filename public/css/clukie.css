@@ -1,0 +1,115 @@
+/* Clukie: animated mascot + chat window. Self-contained (also used by the platform). */
+.clukie { --ck-green: #5cbf3a; --ck-ink: #0a0a0a; --ck-tint: #f3f5f1; --ck-line: #e1e4dd; --ck-muted: #5d6359;
+  position: fixed; right: max(18px, env(safe-area-inset-right)); bottom: max(18px, env(safe-area-inset-bottom)); z-index: 60;
+  --ck-font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; font-family: var(--ck-font); color: var(--ck-ink); }
+.clukie *, .clukie *::before, .clukie *::after { box-sizing: border-box; }
+
+/* ---------- launcher: Clukie on his round stage ---------- */
+.ck-launch { position: relative; display: block; width: 92px; height: 92px; padding: 0; border: 0; background: none; cursor: pointer; margin-left: auto; }
+.ck-stage { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; background: #050605;
+  box-shadow: 0 0 0 3px var(--ck-green), 0 12px 30px rgba(0,0,0,.35), 0 0 26px rgba(92,191,58,.45); transition: transform .2s ease; }
+.ck-stage img, .ck-stage .ck-clip { position: absolute; inset: -4% -4% -10%; width: 108%; height: 114%; object-fit: cover; object-position: 50% 30%; }
+.ck-stage .ck-clip { z-index: 1; }
+.clukie.has-clip .ck-stage img { visibility: hidden; }
+.ck-launch:hover .ck-stage, .ck-launch:focus-visible .ck-stage { transform: scale(1.06); }
+.ck-launch:focus-visible { outline: none; }
+.ck-launch:focus-visible .ck-stage { box-shadow: 0 0 0 3px var(--ck-green), 0 0 0 6px #fff, 0 0 0 8px var(--ck-ink); }
+.ck-spark { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.ck-spark::before, .ck-spark::after { content: ""; position: absolute; width: 14px; height: 4px; border-radius: 2px; background: var(--ck-green); opacity: 0; }
+.ck-spark::before { top: 18%; left: 8%; transform: rotate(-35deg); }
+.ck-spark::after { top: 16%; right: 8%; transform: rotate(35deg); }
+.ck-unread { position: absolute; top: -4px; right: -4px; z-index: 3; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 12px; background: var(--ck-green); color: var(--ck-ink); font: 800 13px/24px var(--ck-font); box-shadow: 0 0 0 2px #fff; }
+.ck-zz { position: absolute; top: -14px; left: -4px; z-index: 3; font: 800 16px/1 var(--ck-font); color: var(--ck-green); opacity: 0; pointer-events: none; }
+.ck-zz i { font-style: normal; font-size: 12px; margin-left: 2px; }
+
+/* moods (CSS animation of the picture; replaced by clips when they exist) */
+.clukie:not(.has-clip)[data-mood="idle"] .ck-stage img { animation: ck-bob 3.2s ease-in-out infinite; }
+.clukie:not(.has-clip)[data-mood="hop"] .ck-launch { animation: ck-hop 1.2s cubic-bezier(.2,.9,.3,1.3) both; }
+.clukie:not(.has-clip)[data-mood="wave"] .ck-stage img { animation: ck-wave .9s ease-in-out 2; transform-origin: 50% 80%; }
+.clukie:not(.has-clip)[data-mood="think"] .ck-stage img { animation: ck-think .6s ease-in-out infinite alternate; transform-origin: 50% 85%; }
+.clukie:not(.has-clip)[data-mood="thumbs"] .ck-stage img { animation: ck-jump .7s cubic-bezier(.3,1.6,.5,1) 2; }
+.clukie:not(.has-clip)[data-mood="sleep"] .ck-stage img { animation: ck-bob 5s ease-in-out infinite; filter: saturate(.55) brightness(.75); }
+.clukie[data-mood="sleep"] .ck-zz { animation: ck-zz 2.6s ease-in-out infinite; }
+.clukie[data-mood="idle"] .ck-spark::before, .clukie[data-mood="idle"] .ck-spark::after { animation: ck-spark 3.2s ease-in-out infinite; }
+.clukie[data-mood="wave"] .ck-spark::before, .clukie[data-mood="wave"] .ck-spark::after,
+.clukie[data-mood="thumbs"] .ck-spark::before, .clukie[data-mood="thumbs"] .ck-spark::after { animation: ck-spark .7s ease-in-out infinite; }
+@keyframes ck-bob { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-4px) scale(1.015); } }
+@keyframes ck-hop { 0% { transform: translateY(140%) scale(.4); opacity: 0; } 55% { transform: translateY(-14%) scale(1.08); opacity: 1; } 75% { transform: translateY(3%) scale(.97); } 100% { transform: none; } }
+@keyframes ck-wave { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-9deg) translateY(-2px); } 75% { transform: rotate(9deg) translateY(-2px); } }
+@keyframes ck-think { from { transform: rotate(-4deg) translateX(-1px); } to { transform: rotate(4deg) translateX(1px); } }
+@keyframes ck-jump { 0%, 100% { transform: translateY(0) scale(1); } 40% { transform: translateY(-10px) scale(1.06, .96); } 70% { transform: translateY(0) scale(.96, 1.04); } }
+@keyframes ck-spark { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+@keyframes ck-zz { 0% { opacity: 0; transform: translate(0, 6px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translate(-8px, -12px); } }
+@media (prefers-reduced-motion: reduce) { .clukie .ck-stage img, .clukie .ck-launch, .clukie .ck-spark::before, .clukie .ck-spark::after, .clukie .ck-zz { animation: none !important; } }
+
+/* ---------- nudge bubble ---------- */
+.ck-nudge { position: absolute; right: 104px; bottom: 26px; width: max-content; max-width: 230px; padding: 12px 34px 12px 14px; background: #fff; border: 2px solid var(--ck-ink);
+  border-radius: 14px 14px 4px 14px; box-shadow: 0 10px 26px rgba(0,0,0,.18); font: 600 14px/1.35 var(--ck-font); cursor: pointer; animation: ck-pop .35s cubic-bezier(.2,.9,.3,1.3) both; }
+.ck-nudge-x { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border: 0; background: none; cursor: pointer; color: var(--ck-muted); font-size: 12px; }
+@keyframes ck-pop { from { opacity: 0; transform: translateX(10px) scale(.9); } to { opacity: 1; transform: none; } }
+
+/* ---------- chat window ---------- */
+.ck-panel { position: absolute; right: 0; bottom: 108px; width: min(380px, calc(100vw - 32px)); height: min(600px, calc(100vh - 150px)); display: flex; flex-direction: column;
+  background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.28), 0 0 0 1px rgba(0,0,0,.06); animation: ck-open .25s ease-out both; transform-origin: 100% 100%; }
+@keyframes ck-open { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
+.ck-panel header { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; background: var(--ck-ink); color: #fff; }
+.ck-panel header b { display: block; font-size: 17px; letter-spacing: -.01em; }
+.ck-panel header small { display: block; color: #b9c2b4; font-size: 12px; line-height: 1.3; }
+.ck-ava { flex: none; width: 42px; height: 42px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px var(--ck-green); }
+.ck-ava img { width: 100%; height: 100%; object-fit: cover; }
+.ck-x { margin-left: auto; width: 36px; height: 36px; border: 1px solid #3a3e38; border-radius: 8px; background: none; color: #fff; cursor: pointer; }
+.ck-log { flex: 1; overflow-y: auto; padding: 16px 14px 8px; display: flex; flex-direction: column; gap: 10px; background: var(--ck-tint); overscroll-behavior: contain; }
+.ck-msg { display: flex; flex-direction: column; max-width: 88%; }
+.ck-msg.me { align-self: flex-end; align-items: flex-end; }
+.ck-msg .ck-b { padding: 10px 13px; border-radius: 14px 14px 14px 4px; background: #fff; border: 1px solid var(--ck-line); font-size: 14.5px; line-height: 1.45; overflow-wrap: anywhere; }
+.ck-msg.me .ck-b { background: var(--ck-ink); color: #fff; border-color: var(--ck-ink); border-radius: 14px 14px 4px 14px; }
+.ck-msg.staff .ck-b { border-color: var(--ck-green); }
+.ck-msg.pending { opacity: .6; }
+.ck-msg a { color: #2f7a17; font-weight: 700; }
+.ck-msg.me a { color: var(--ck-green); }
+.ck-tag { font: 700 11px/1 var(--ck-font); letter-spacing: .08em; text-transform: uppercase; color: #2f7a17; margin: 0 0 4px 4px; }
+.ck-sys { align-self: center; font-size: 12px; color: var(--ck-muted); background: #fff; border: 1px dashed var(--ck-line); border-radius: 20px; padding: 5px 12px; text-align: center; }
+.ck-sys.err { color: #b3261e; border-color: #e8b4b0; }
+.ck-typing .ck-b { display: flex; gap: 4px; padding: 13px 14px; }
+.ck-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--ck-muted); animation: ck-dot 1s ease-in-out infinite; }
+.ck-typing i:nth-child(2) { animation-delay: .15s; } .ck-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes ck-dot { 0%, 100% { opacity: .3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+.ck-cards { display: flex; gap: 8px; overflow-x: auto; padding: 8px 0 2px; max-width: 100%; scrollbar-width: thin; }
+.ck-card { flex: none; width: 150px; display: grid; gap: 4px; padding: 8px; background: #fff; border: 1px solid var(--ck-line); border-radius: 10px; text-decoration: none; color: inherit !important; font-weight: 400 !important; }
+.ck-card:hover { border-color: var(--ck-ink); }
+.ck-card img, .ck-noimg { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; border-radius: 6px; }
+.ck-noimg { display: grid; place-items: center; background: var(--ck-tint); font-weight: 800; font-size: 13px; }
+.ck-cn { font-size: 13px; font-weight: 700; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ck-p { font-weight: 800; font-size: 14px; } .ck-p small { font-weight: 500; color: var(--ck-muted); font-size: 11px; }
+.ck-card s { color: var(--ck-muted); font-size: 12px; }
+.ck-st { font-size: 11.5px; color: var(--ck-muted); } .ck-st.ok { color: #2f7a17; font-weight: 700; }
+.ck-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 10px; background: var(--ck-tint); }
+.ck-chips:empty { display: none; }
+.ck-chips button { border: 1px solid var(--ck-ink); background: #fff; border-radius: 18px; padding: 7px 12px; font: 600 13px var(--ck-font); cursor: pointer; }
+.ck-chips button:hover { background: var(--ck-green); border-color: var(--ck-green); }
+.ck-in { display: flex; align-items: flex-end; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--ck-line); background: #fff; }
+.ck-in textarea { flex: 1; resize: none; border: 1px solid var(--ck-line); border-radius: 12px; padding: 10px 12px; font: 15px/1.4 var(--ck-font); max-height: 120px; outline: none; }
+.ck-in textarea:focus { border-color: var(--ck-ink); }
+.ck-in button { flex: none; width: 42px; height: 42px; border: 0; border-radius: 50%; background: var(--ck-green); color: var(--ck-ink); cursor: pointer; display: grid; place-items: center; }
+.ck-in button svg { width: 20px; height: 20px; }
+.ck-in[hidden] { display: none; }
+.ck-note { margin: 0; padding: 0 14px 10px; background: #fff; font-size: 11px; line-height: 1.35; color: var(--ck-muted); }
+.ck-team { display: grid; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--ck-line); background: #fff; }
+.ck-team[hidden] { display: none; }
+.ck-team h3 { margin: 0; font-size: 16px; }
+.ck-team p { margin: 0; font-size: 13px; color: var(--ck-muted); }
+.ck-team input, .ck-team textarea { width: 100%; border: 1px solid var(--ck-line); border-radius: 8px; padding: 9px 11px; font: 14px var(--ck-font); }
+.ck-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ck-acts { display: flex; gap: 8px; justify-content: flex-end; }
+.ck-acts button { border: 0; border-radius: 8px; padding: 10px 14px; font: 700 14px var(--ck-font); cursor: pointer; background: var(--ck-green); color: var(--ck-ink); }
+.ck-acts .ck-ghost { background: #fff; border: 1px solid var(--ck-line); }
+.ck-err { color: #b3261e !important; }
+
+/* phones: full-screen chat */
+@media (max-width: 560px) {
+  .ck-launch { width: 76px; height: 76px; }
+  .ck-nudge { right: 88px; bottom: 18px; }
+  .clukie.is-open .ck-launch { display: none; }
+  .ck-panel { position: fixed; inset: 0; width: auto; height: auto; bottom: 0; border-radius: 0; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+  .ck-two { grid-template-columns: 1fr; }
+}
