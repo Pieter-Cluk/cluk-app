@@ -19,13 +19,13 @@
     <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">{{ __('site.nav.menu') }}</button>
     <details class="login" id="login"><summary>{{ $cust ? __('site.account.my') : __('site.nav.login') }}<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5"/></svg></summary>
       <div class="login-menu">
+        <a href="{{ $app }}/afrit6"><b>{{ __('site.nav.afrit6') }}</b><span>{{ __('site.nav.afrit6_sub') }}</span></a>
         @if ($cust)
           <a href="{{ route('site.account') }}"><b>{{ __('site.account.my') }}</b><span>{{ __('site.account.hello', ['name' => $cust->first_name]) }}</span></a>
         @else
           <a href="{{ route('site.account.login') }}"><b>{{ __('site.account.menu') }}</b><span>{{ __('site.account.menu_sub') }}</span></a>
         @endif
         <a href="{{ $app }}/login"><b>{{ __('site.nav.portal') }}</b><span>{{ __('site.nav.portal_sub') }}</span></a>
-        <a href="{{ $app }}/afrit6"><b>{{ __('site.nav.afrit6') }}</b><span>{{ __('site.nav.afrit6_sub') }}</span></a>
         @if ($cust)<form method="post" action="{{ route('site.account.logout') }}">@csrf<button type="submit" class="login-out">{{ __('site.account.logout') }}</button></form>@endif
       </div></details>
   </div>
