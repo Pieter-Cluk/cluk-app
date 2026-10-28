@@ -138,6 +138,8 @@ return [
         'door_codes_s' => 'Afrit 6-leden wachten op een code',
         'pf_back' => 'Teruggestuurde proformas',
         'pf_back_s' => 'finance vraagt een aanpassing',
+        'late_pay' => 'Laattijdige betalingen te beslissen',
+        'late_pay_s' => 'vervallen facturen: interest aanrekenen of niet',
         'pf_check' => 'Voorfacturen te controleren',
         'pf_check_s' => 'goedkeuren of terugsturen',
     ],

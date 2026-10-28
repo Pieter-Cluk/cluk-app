@@ -153,6 +153,7 @@
                                 <p>{{ __('finance.late_text', ['interest' => $eur($fee['interest']), 'rate' => config('afrit6.payment.statutory_rate'), 'fixed' => $eur($fee['fixed'])]) }}</p>
                                 @if (\App\Services\Finance\PreInvoices::isPrivate($sel))<p class="muted small">{{ __('finance.late_private') }}</p>@endif
                                 @if ($sel->reminder?->decision)<p><span class="pill">{{ __('finance.late_decisions.'.$sel->reminder->decision) }}</span> {{ $sel->reminder->decidedBy?->name }}@if ($sel->reminder->reason) · {{ $sel->reminder->reason }}@endif</p>@endif
+                                @if ($made = $sel->reminder?->interestInvoice)<p><a href="{{ route('finance.index', ['pf' => $made->id]) }}">{{ __('finance.interest.made', ['number' => $made->number, 'amount' => $eur($made->gross_cents)]) }} →</a></p>@endif
                                 <form method="post" action="{{ route('finance.late', $sel) }}" class="stack-sm">@csrf
                                     <select name="decision" aria-label="{{ __('finance.late_decide') }}">@php($def = $sel->reminder?->decision ?? (\App\Services\Finance\PreInvoices::isPrivate($sel) ? 'skip' : 'now'))@foreach (\App\Models\Finance\Reminder::DECISIONS as $d)<option value="{{ $d }}" @selected($d === $def)>{{ __('finance.late_decisions.'.$d) }}</option>@endforeach</select>
                                     <input name="reason" maxlength="500" placeholder="{{ __('finance.late_reason') }}" aria-label="{{ __('finance.late_reason') }}">

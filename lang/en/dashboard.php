@@ -138,6 +138,8 @@ return [
         'door_codes_s' => 'Afrit 6 members waiting for a code',
         'pf_back' => 'Proformas sent back',
         'pf_back_s' => 'finance asks for a change',
+        'late_pay' => 'Late payments to decide',
+        'late_pay_s' => 'overdue invoices: invoice the interest or not',
         'pf_check' => 'Pre-invoices to check',
         'pf_check_s' => 'approve or send back',
     ],

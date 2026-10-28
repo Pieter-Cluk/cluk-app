@@ -61,6 +61,7 @@ class UblInvoice
     public static function category(PreInvoice $pf): array
     {
         return match (true) {
+            $pf->source_type === 'interest' => ['E', [null, 'Late payment interest and compensation, not subject to VAT - Verwijlinterest en schadevergoeding, niet onderworpen aan btw']],
             $pf->vat_rate_bp > 0 => ['S', null],
             $pf->vat_code === (string) CompanyDetail::current()->vat_default_eu_business || $pf->vat_code === '46' => ['AE', ['VATEX-EU-AE', 'Reverse charge - Autoliquidation - Verlegging van heffing (art. 196 Directive 2006/112/EC)']],
             default => ['E', [null, 'Not subject to Belgian VAT - Niet onderworpen aan Belgische btw (art. 21 §2 WBTW)']],

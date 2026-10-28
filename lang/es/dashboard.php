@@ -138,6 +138,8 @@ return [
         'door_codes_s' => 'miembros de Afrit 6 esperando un código',
         'pf_back' => 'Proformas devueltas',
         'pf_back_s' => 'finanzas pide un cambio',
+        'late_pay' => 'Pagos atrasados por decidir',
+        'late_pay_s' => 'facturas vencidas: cobrar los intereses o no',
         'pf_check' => 'Prefacturas por revisar',
         'pf_check_s' => 'aprobar o devolver',
     ],

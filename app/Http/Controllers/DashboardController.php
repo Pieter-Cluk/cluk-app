@@ -134,6 +134,9 @@ class DashboardController extends Controller
         $t[] = ['n' => PreInvoice::where('status', 'back')->when($who === 'me', fn ($q) => $q->where('made_by_id', $u->id))->count(), 'key' => 'pf_back', 'url' => route('finance.index', ['f' => 'back']), 'tone' => 'warn'];
         if ($u->canUseModule('preinvoice', 2)) {
             $t[] = ['n' => PreInvoice::where('status', 'check')->count(), 'key' => 'pf_check', 'url' => route('finance.index'), 'tone' => 'warn'];
+            // Late payments: one reminder per overdue invoice until the accountant decided what to do with the interest.
+            $t[] = ['n' => PreInvoice::where('status', 'sent')->whereDate('due_date', '<', today())->whereDoesntHave('reminder', fn ($q) => $q->whereNotNull('decision'))->count(),
+                'key' => 'late_pay', 'url' => route('finance.index', ['f' => 'late']), 'tone' => 'warn'];
         }
         if ($u->canUseModule('preinvoice', 2) || $u->canUseModule('dryhire', 2)) {
             $ready = PreInvoices::readyRental();

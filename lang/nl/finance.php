@@ -199,4 +199,10 @@ return [
     'marked_paid' => 'Gemarkeerd als betaald.',
     'cancelled' => 'Proforma geannuleerd.',
     'late_saved' => 'Beslissing opgeslagen.',
+    'interest' => [
+        'line' => 'Verwijlinterest op factuur :number (:days dagen aan :rate% per jaar)',
+        'fixed' => 'Forfaitaire schadevergoeding voor laattijdige betaling van factuur :number',
+        'desc' => 'Laattijdige betaling van factuur :number',
+        'made' => 'Interestproforma :number gemaakt (:amount)',
+    ],
 ];

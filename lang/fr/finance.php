@@ -199,4 +199,10 @@ return [
     'marked_paid' => 'Marqué comme payé.',
     'cancelled' => 'Proforma annulé.',
     'late_saved' => 'Décision enregistrée.',
+    'interest' => [
+        'line' => 'Intérêts de retard sur la facture :number (:days jours à :rate% par an)',
+        'fixed' => 'Indemnité forfaitaire pour paiement tardif de la facture :number',
+        'desc' => 'Paiement tardif de la facture :number',
+        'made' => 'Pro forma d’intérêts :number créé (:amount)',
+    ],
 ];

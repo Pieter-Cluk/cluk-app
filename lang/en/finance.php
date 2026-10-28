@@ -199,4 +199,10 @@ return [
     'marked_paid' => 'Marked as paid.',
     'cancelled' => 'Proforma cancelled.',
     'late_saved' => 'Decision saved.',
+    'interest' => [
+        'line' => 'Late payment interest on invoice :number (:days days at :rate% per year)',
+        'fixed' => 'Fixed compensation for late payment of invoice :number',
+        'desc' => 'Late payment of invoice :number',
+        'made' => 'Interest proforma :number made (:amount)',
+    ],
 ];

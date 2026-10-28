@@ -32,6 +32,9 @@ use Illuminate\Validation\ValidationException;
  */
 class PreInvoices
 {
+    /** VAT code on late-payment interest proformas: damages, not subject to VAT. */
+    public const NOT_SUBJECT = 'NS';
+
     public const TYPES = ['rental', 'charges', 'factory', 'sales', 'afrit6'];
 
     /** Approved rental orders that have no pre-invoice yet: ready to be sent to pre-invoicing. */
@@ -123,14 +126,31 @@ class PreInvoices
                     collect($src->lines)->map(fn ($l) => $line($l['text'], rtrim(rtrim(number_format((float) $l['qty'], 2, '.', ''), '0'), '.'), (int) $l['unit_cents'], (int) $l['amount_cents']))->all(),
                     0, null, $src->period_start, 'A6S-'.$src->period_start->format('Y-m').'-'.$src->member_id, $belgian()];
             })(),
+            'interest' => (function () use ($src, $line) {
+                /** @var Reminder $src */
+                $orig = $src->preInvoice()->with(['company', 'member', 'owner'])->first();
+                $lang = $orig->company?->language ?: $orig->member?->locale ?: 'en';
+                $rows = [];
+                if ($src->interest_cents > 0) {
+                    $rows[] = $line(__('finance.interest.line', ['number' => $orig->invoice_number ?? $orig->number, 'days' => $src->days, 'rate' => config('afrit6.payment.statutory_rate')], $lang), 1, (int) $src->interest_cents, (int) $src->interest_cents);
+                }
+                if ($src->fixed_cents > 0) {
+                    $rows[] = $line(__('finance.interest.fixed', ['number' => $orig->invoice_number ?? $orig->number], $lang), 1, (int) $src->fixed_cents, (int) $src->fixed_cents);
+                }
+
+                return [$orig->company, $orig->member, $orig->owner, $orig->module, __('finance.interest.desc', ['number' => $orig->invoice_number ?? $orig->number], $lang),
+                    $rows, 0, $orig->po_number, today(), 'LP-'.($orig->invoice_number ?? $orig->number), null];
+            })(),
         };
-        $rate ??= $belgian();
+        // Late-payment interest and the fixed compensation are damages: not subject to VAT.
+        $noVat = $type === 'interest';
+        $rate = $noVat ? null : ($rate ?? $belgian());
         $net = (int) collect($lines)->sum('amount_cents');
         $vat = (int) round($net * ($rate?->rate_bp ?? 0) / 10000);
 
         return [
             'module' => $module, 'company_id' => $company?->id, 'member_id' => $member?->id, 'owner_id' => $owner?->id, 'description' => mb_substr($desc, 0, 200),
-            'lines' => $lines, 'vat_code' => $rate?->code, 'vat_rate_bp' => $rate?->rate_bp ?? 0, 'net_cents' => $net, 'cost_cents' => $cost, 'vat_cents' => $vat, 'gross_cents' => $net + $vat,
+            'lines' => $lines, 'vat_code' => $noVat ? self::NOT_SUBJECT : $rate?->code, 'vat_rate_bp' => $rate?->rate_bp ?? 0, 'net_cents' => $net, 'cost_cents' => $cost, 'vat_cents' => $vat, 'gross_cents' => $net + $vat,
             'po_number' => $po, 'payment_days' => (int) ($company?->customer_payment_days ?? $me->payment_term_days ?? 0), 'service_date' => $date, 'source_code' => $code,
         ];
     }
@@ -160,7 +180,7 @@ class PreInvoices
                 $pf->po_number ? $add('ok', 'company', 'po_ok', ['po' => $pf->po_number]) : $add('bad', 'company', 'po_missing');
             }
             // VAT: the rate must fit the customer (the venue and Afrit 6 are always Belgian VAT).
-            $expected = in_array($pf->module, ['factory', 'afrit6'], true) ? (string) CompanyDetail::current()->vat_default_be : $co->vatCode();
+            $expected = $pf->source_type === 'interest' ? self::NOT_SUBJECT : (in_array($pf->module, ['factory', 'afrit6'], true) ? (string) CompanyDetail::current()->vat_default_be : $co->vatCode());
             $pf->vat_code === $expected ? $add('ok', 'vat', 'vat_fits', ['code' => $pf->vat_code, 'pct' => $pf->vat_rate_bp / 100]) : $add('bad', 'vat', 'vat_wrong', ['code' => (string) $pf->vat_code, 'expected' => $expected]);
             // Customer: unpaid invoices past their due date.
             $late = PreInvoice::where('company_id', $co->id)->where('id', '!=', $pf->id)->where('status', 'sent')->whereDate('due_date', '<', today())->get();
@@ -255,6 +275,10 @@ class PreInvoices
         abort_unless($pf->status === 'sent', 409);
         $pf->update(['status' => 'paid', 'paid_at' => now()]);
         AuditLog::record('finance.pf_paid', $pf, [], $by);
+        // "Invoice it when they pay": the interest up to today goes to pre-invoicing now.
+        if (($r = $pf->reminder) && $r->decision === 'on_payment' && ! $r->pre_invoice_made_id) {
+            self::interestProforma($pf, $r, $by);
+        }
     }
 
     public static function source(PreInvoice $pf): ?Model
@@ -264,6 +288,7 @@ class PreInvoices
             'factory' => Booking::find($pf->source_id),
             'sales' => SalesQuote::find($pf->source_id),
             'afrit6' => Statement::find($pf->source_id),
+            'interest' => Reminder::find($pf->source_id),
             default => null,
         };
     }
@@ -279,12 +304,30 @@ class PreInvoices
 
     public static function decide(PreInvoice $pf, string $decision, ?string $reason, User $by): Reminder
     {
-        $fee = self::lateFee($pf);
+        $fee = self::lateFee($pf, $pf->paid_at);
         $r = Reminder::updateOrCreate(['pre_invoice_id' => $pf->id], ['decision' => $decision, 'reason' => $reason, 'interest_cents' => $fee['interest'], 'fixed_cents' => $fee['fixed'],
-            'decided_by_id' => $by->id, 'decided_at' => now()]);
+            'days' => $fee['days'], 'decided_by_id' => $by->id, 'decided_at' => now()]);
         AuditLog::record('finance.late_'.$decision, $pf, ['days' => $fee['days'], 'interest' => Pricing::eur($fee['interest']), 'fixed' => Pricing::eur($fee['fixed']), 'reason' => $reason], $by);
+        // "Invoice it now", or "when they pay" for an invoice that is paid already: the interest proforma is made.
+        if (! $r->pre_invoice_made_id && ($decision === 'now' || ($decision === 'on_payment' && $pf->status === 'paid'))) {
+            self::interestProforma($pf, $r, $by);
+        }
 
         return $r;
+    }
+
+    /** The proforma for the late-payment interest and the fixed compensation (to pre-invoicing, checked by the accountant). */
+    public static function interestProforma(PreInvoice $pf, Reminder $r, User $by): ?PreInvoice
+    {
+        $fee = self::lateFee($pf, $pf->paid_at);
+        $r->update(['interest_cents' => $fee['interest'], 'fixed_cents' => $fee['fixed'], 'days' => $fee['days']]);
+        if ($fee['interest'] + $fee['fixed'] <= 0) {
+            return null;
+        }
+        $new = self::make('interest', $r->fresh(), $by);
+        $r->update(['pre_invoice_made_id' => $new->id]);
+
+        return $new;
     }
 
     /** Is this customer a private person (consumer rules for late payment)? */

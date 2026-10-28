@@ -199,4 +199,10 @@ return [
     'marked_paid' => 'Marcada como pagada.',
     'cancelled' => 'Proforma cancelada.',
     'late_saved' => 'Decisión guardada.',
+    'interest' => [
+        'line' => 'Intereses de demora de la factura :number (:days días al :rate% anual)',
+        'fixed' => 'Indemnización fija por pago tardío de la factura :number',
+        'desc' => 'Pago tardío de la factura :number',
+        'made' => 'Proforma de intereses :number creada (:amount)',
+    ],
 ];
