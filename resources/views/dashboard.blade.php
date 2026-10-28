@@ -82,6 +82,10 @@
                 @endif
             </section>
 
+            @if ($digital)
+                @include('partials.digital-today', ['d' => $digital])
+            @endif
+
             @if ($pipeline)
                 <section class="card">
                     <div class="card-head"><div><h2>{{ __('dashboard.pipeline') }}</h2><p class="muted small">{{ __('dashboard.pipeline_s') }}</p></div><a class="btn" href="{{ route('deals.index') }}">{{ __('dashboard.view_deals') }}</a></div>

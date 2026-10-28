@@ -1,7 +1,7 @@
 /* CLUK app base styles (from the design mockups). Plain CSS: no build step needed on the server. */
-:root{--bg:#f4f6f3;--surface:#fff;--surface-subtle:#f7f8f5;--line:#e5e9e4;--ink:#222624;--muted:#676e69;--brand:#52ae32;--brand-strong:#327b1d;--brand-tint:#edf6e8;--on-brand:#fff;--warning-bg:#fff4df;--warning-text:#8a6216;--danger-bg:#fbe9e6;--danger-text:#b03a2e;--info-bg:#e6f0fb;--info-text:#1f5fa8}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#141815;--surface:#1c211d;--surface-subtle:#222823;--line:#2e352f;--ink:#e9ede8;--muted:#9aa39b;--brand:#5cbf3a;--brand-strong:#8fd673;--brand-tint:#1f3318;--on-brand:#0f1a0b;--warning-bg:#3a2e14;--warning-text:#e8b860;--danger-bg:#3a1f1c;--danger-text:#ef6f62;--info-bg:#17283d;--info-text:#8ab8ef}}
-:root[data-theme="dark"]{--bg:#141815;--surface:#1c211d;--surface-subtle:#222823;--line:#2e352f;--ink:#e9ede8;--muted:#9aa39b;--brand:#5cbf3a;--brand-strong:#8fd673;--brand-tint:#1f3318;--on-brand:#0f1a0b;--warning-bg:#3a2e14;--warning-text:#e8b860;--danger-bg:#3a1f1c;--danger-text:#ef6f62;--info-bg:#17283d;--info-text:#8ab8ef}
+:root{--bg:#f4f6f3;--surface:#fff;--surface-subtle:#f7f8f5;--line:#e5e9e4;--ink:#222624;--muted:#676e69;--brand:#52ae32;--brand-strong:#327b1d;--brand-tint:#edf6e8;--on-brand:#fff;--warning-bg:#fff4df;--warning-text:#8a6216;--danger-bg:#fbe9e6;--danger-text:#b03a2e;--info-bg:#e6f0fb;--info-text:#1f5fa8;--chart-1:#45a02a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#141815;--surface:#1c211d;--surface-subtle:#222823;--line:#2e352f;--ink:#e9ede8;--muted:#9aa39b;--brand:#5cbf3a;--brand-strong:#8fd673;--brand-tint:#1f3318;--on-brand:#0f1a0b;--warning-bg:#3a2e14;--warning-text:#e8b860;--danger-bg:#3a1f1c;--danger-text:#ef6f62;--info-bg:#17283d;--info-text:#8ab8ef;--chart-1:#4ea82d}}
+:root[data-theme="dark"]{--bg:#141815;--surface:#1c211d;--surface-subtle:#222823;--line:#2e352f;--ink:#e9ede8;--muted:#9aa39b;--brand:#5cbf3a;--brand-strong:#8fd673;--brand-tint:#1f3318;--on-brand:#0f1a0b;--warning-bg:#3a2e14;--warning-text:#e8b860;--danger-bg:#3a1f1c;--danger-text:#ef6f62;--info-bg:#17283d;--info-text:#8ab8ef;--chart-1:#4ea82d}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-size:14px}
 a{color:var(--brand-strong)}
@@ -1080,3 +1080,33 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .web-partial{background:#e8a33c}
 .web-off{background:var(--danger-text)}
 .web-status{margin:8px 0 0;font-size:13px}
+
+/* Dashboard: digital activity today */
+.dg-top{display:grid;grid-template-columns:minmax(150px,200px) 1fr;gap:16px;margin:16px 0 8px;align-items:stretch}
+.dg-hero{background:var(--brand-tint);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.dg-hero small,.dg-tile small{font-size:10px;letter-spacing:1.2px;color:var(--muted);font-weight:700}
+.dg-hero b{font-size:40px;line-height:1.1;color:var(--ink)}
+.dg-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.dg-tile{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.dg-tile b{font-size:20px;color:var(--ink)}
+.dg-charts{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px;margin-top:12px}
+.dg-fig{margin:0}
+.dg-fig figcaption{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.dg-plot{position:relative}
+.dg-plot svg{width:100%;height:auto;display:block;overflow:visible}
+.dg-grid{stroke:var(--line);stroke-width:1;shape-rendering:crispEdges}
+.dg-grid[data-base]{stroke:var(--muted);stroke-opacity:.5}
+.dg-ax{fill:var(--muted);font-size:11px;font-family:inherit}
+.dg-bar{fill:var(--chart-1)}
+.dg-hit{fill:transparent}
+.dg-col:hover .dg-hit{fill:var(--surface-subtle)}
+.dg-col:hover .dg-bar{fill:var(--brand-strong)}
+.dg-now{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.dg-tip{position:absolute;top:-6px;transform:translate(-50%,-100%);background:var(--ink);color:var(--surface);font-size:12px;padding:5px 8px;border-radius:6px;white-space:nowrap;pointer-events:none}
+.dg-src{display:flex;flex-direction:column;gap:8px}
+.dg-src-row{display:grid;grid-template-columns:90px 1fr 48px;gap:8px;align-items:center;font-size:13px}
+.dg-src-row i{display:block;height:14px}
+.dg-src-row em{display:block;height:100%;background:var(--chart-1);border-radius:0 4px 4px 0}
+.dg-src-row b{text-align:right;color:var(--ink)}
+.dg-note{margin-top:14px}
+@media (max-width:900px){.dg-top,.dg-charts{grid-template-columns:minmax(0,1fr)}}
