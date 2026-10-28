@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /** A picture or video on the website, with where a click goes. One active per place = static; more = slideshow. */
-#[Fillable(['place', 'position', 'kind', 'path', 'poster_path', 'link_type', 'link_value', 'texts', 'alt', 'active', 'starts_on', 'ends_on', 'updated_by_id'])]
+#[Fillable(['place', 'position', 'kind', 'path', 'poster_path', 'mobile_path', 'link_type', 'link_value', 'texts', 'alt', 'active', 'starts_on', 'ends_on', 'updated_by_id'])]
 class Slide extends Model
 {
     protected $table = 'web_slides';
@@ -48,6 +48,14 @@ class Slide extends Model
         $h = min(array_map(fn ($r) => self::crop($format, $r)[1], $f['frames']));
 
         return [(int) (floor($f['w'] * $w / 10) * 10), (int) (floor($f['h'] * $h / 10) * 10)];
+    }
+
+    /** The ideal size of the separate phone picture: the phone frame of the spot, 1200 px wide. */
+    public static function phoneSize(string $format): ?array
+    {
+        $r = self::FORMATS[$format]['frames']['phone'] ?? null;
+
+        return $r ? [1200, (int) (round(1200 / $r / 10) * 10)] : null;
     }
 
     /** Ratio as a short text, e.g. 6:5. */

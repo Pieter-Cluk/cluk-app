@@ -74,6 +74,26 @@ class WebsiteModuleTest extends TestCase
             AuditLog::where('action', 'like', 'website.%')->orderBy('id')->pluck('action')->all());
     }
 
+    public function test_a_slide_can_have_its_own_phone_picture(): void
+    {
+        $this->add('sales_slider', 'page', 'sales')->assertSessionHasNoErrors();
+        $slide = Slide::firstOrFail();
+        $this->actingAs($this->editor->fresh(), 'web')->get(route('website.index', ['tab' => 'sales']))->assertOk()->assertSee('Picture for phones')->assertSee('1200 × 1290 px');
+        $this->actingAs($this->editor->fresh(), 'web')->post(route('website.slides.update', $slide), ['link_type' => 'page', 'link_value' => 'sales', 'active' => 1,
+            'mobile' => UploadedFile::fake()->image('phone.jpg', 1200, 1290)])->assertSessionHasNoErrors();
+        $this->assertNotNull($slide->fresh()->mobile_path);
+        $this->get(route('site.sales'))->assertOk()->assertSee('--bg-phone', false);
+
+        $this->add('home_hero', 'page', 'sales', [], UploadedFile::fake()->image('h.jpg', 2400, 2000))->assertSessionHasNoErrors();
+        $hero = Slide::where('place', 'home_hero')->firstOrFail();
+        $this->actingAs($this->editor->fresh(), 'web')->post(route('website.slides.update', $hero), ['link_type' => 'page', 'link_value' => 'sales', 'active' => 1,
+            'mobile' => UploadedFile::fake()->image('p.jpg', 1200, 920)])->assertSessionHasNoErrors();
+        $this->get(route('site.home'))->assertOk()->assertSee('<source media="(max-width: 600px)"', false);
+
+        $this->actingAs($this->editor->fresh(), 'web')->post(route('website.slides.update', $slide), ['link_type' => 'page', 'link_value' => 'sales', 'active' => 1, 'remove_mobile' => 1])->assertSessionHasNoErrors();
+        $this->assertNull($slide->fresh()->mobile_path);
+    }
+
     public function test_links_must_lead_somewhere(): void
     {
         $this->add('sales_slider', 'sales_item', 'NOPE-123')->assertSessionHasErrors('link_value');

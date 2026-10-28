@@ -8,7 +8,7 @@
       @if ($s->kind === 'video')
         <video src="{{ $src }}" @if ($s->poster_path) poster="{{ \App\Services\Website\SiteSettings::mediaUrl($s->poster_path) }}" @endif muted loop playsinline preload="metadata" @if ($k === 0) autoplay @endif></video>
       @else
-        <img src="{{ $src }}" alt="{{ $s->alt }}" @if ($k > 0) loading="lazy" @endif>
+        @if ($s->mobile_path)<picture><source media="(max-width: 600px)" srcset="{{ \App\Services\Website\SiteSettings::mediaUrl($s->mobile_path) }}">@endif<img src="{{ $src }}" alt="{{ $s->alt }}" @if ($k > 0) loading="lazy" @endif>@if ($s->mobile_path)</picture>@endif
       @endif
     </{{ $url ? 'a' : 'div' }}>
   @endforeach

@@ -54,6 +54,10 @@
                                         <label class="field"><span>{{ __('website.slide.until') }}</span><input type="date" name="ends_on" value="{{ $s->ends_on?->toDateString() }}"></label>
                                     </div>
                                     @if ($s->kind === 'video')<label class="field"><span>{{ __('website.slide.poster') }}</span><input type="file" name="poster" accept="image/*"><small>{{ __('website.slide.poster_hint') }}</small></label>@endif
+                                    @if ($s->kind === 'image' && ($ps = \App\Models\Website\Slide::phoneSize($place)))
+                                        <label class="field"><span>{{ __('website.slide.mobile') }}</span>@if ($s->mobile_path)<img src="{{ route('site.webmedia', ['f' => basename($s->mobile_path)]) }}" alt="" style="max-width:120px;border-radius:6px">@endif<input type="file" name="mobile" accept="image/*"><small>{{ __('website.slide.mobile_hint', ['w' => $ps[0], 'h' => $ps[1]]) }}</small></label>
+                                        @if ($s->mobile_path)<label class="check"><input type="checkbox" name="remove_mobile" value="1"> {{ __('website.slide.mobile_remove') }}</label>@endif
+                                    @endif
                                     <input type="hidden" name="active" value="0"><label class="check"><input type="checkbox" name="active" value="1" @checked($s->active)> {{ __('website.slide.active') }}</label>
                                     @if ($claude && $place === 'sales_slider')<label class="check"><input type="checkbox" name="translate" value="1" checked> {{ __('website.translate') }}</label>@endif
                                     <div><button class="btn" type="submit">{{ __('website.save') }}</button></div>
@@ -77,6 +81,7 @@
                             <label class="field"><span>{{ __('website.slide.until') }}</span><input type="date" name="ends_on"></label>
                         </div>
                         <label class="field"><span>{{ __('website.slide.poster') }}</span><input type="file" name="poster" accept="image/*"><small>{{ __('website.slide.poster_hint') }}</small></label>
+                        @if ($ps = \App\Models\Website\Slide::phoneSize($place))<label class="field"><span>{{ __('website.slide.mobile') }}</span><input type="file" name="mobile" accept="image/*"><small>{{ __('website.slide.mobile_hint', ['w' => $ps[0], 'h' => $ps[1]]) }}</small></label>@endif
                         <input type="hidden" name="active" value="1">
                         @if ($claude && $place === 'sales_slider')<label class="check"><input type="checkbox" name="translate" value="1" checked> {{ __('website.translate') }}</label>@endif
                         <div><button class="primary" type="submit">{{ __('website.add_go') }}</button></div>

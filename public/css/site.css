@@ -714,3 +714,6 @@ mark { background: rgba(92,191,58,.3); color: inherit; padding: 0 1px; }
   .acc-stage::before { background: linear-gradient(180deg, rgba(5,6,5,.35) 0%, rgba(5,6,5,.8) 45%, rgba(5,6,5,.9) 100%); }
   .acc-stage .acc { padding-block: 40px 64px; }
 }
+
+/* A separate phone picture per slide (Media › Website) */
+@media (max-width:600px){.slider .slide[style*="--bg-phone"]{background-image:var(--bg-phone)!important}}

@@ -25,7 +25,7 @@
       @foreach ($own as $k => $s)
         @php($go = \App\Services\Website\SiteSettings::link($s->link_type, $s->link_value))
         @php($src = \App\Services\Website\SiteSettings::mediaUrl($s->path))
-        <div class="slide {{ $k === 0 ? 'on' : '' }}" @if ($s->kind === 'image') style="background-image:url('{{ $src }}')" @endif aria-roledescription="slide" aria-label="{{ $s->alt ?: __('site.sales.slide', ['n' => $k + 1]) }}">
+        <div class="slide {{ $k === 0 ? 'on' : '' }}" @if ($s->kind === 'image') style="background-image:url('{{ $src }}')@if ($s->mobile_path);--bg-phone:url('{{ \App\Services\Website\SiteSettings::mediaUrl($s->mobile_path) }}')@endif" @endif aria-roledescription="slide" aria-label="{{ $s->alt ?: __('site.sales.slide', ['n' => $k + 1]) }}">
           @if ($s->kind === 'video')<video class="bg" src="{{ $src }}" @if ($s->poster_path) poster="{{ \App\Services\Website\SiteSettings::mediaUrl($s->poster_path) }}" @endif muted loop playsinline preload="metadata" @if ($k === 0) autoplay @endif></video>@endif
           @if ($go)<a class="slide-link" href="{{ $go }}" aria-label="{{ $s->text('title') ?: ($s->alt ?: __('site.sales.slide', ['n' => $k + 1])) }}" @if ($s->text('cta')) tabindex="-1" @endif></a>@endif
           @if ($s->text('title') || $s->text('text') || $s->text('eyebrow'))

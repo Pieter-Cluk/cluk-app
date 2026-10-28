@@ -125,6 +125,7 @@ class WebsiteController extends Controller
             'place' => $d['place'], 'position' => (int) Slide::where('place', $d['place'])->max('position') + 1, 'kind' => $video ? 'video' : 'image',
             'path' => $video ? $this->storeVideo($file) : Images::store($file, 'website', 2400),
             'poster_path' => $request->hasFile('poster') ? Images::store($request->file('poster'), 'website', 2400) : null,
+            'mobile_path' => ! $video && $request->hasFile('mobile') ? Images::store($request->file('mobile'), 'website', 1600) : null,
             'updated_by_id' => $request->user()->id,
         ] + $this->fields($request, $d));
         AuditLog::record('website.slide_added', $slide, ['place' => $slide->place, 'kind' => $slide->kind, 'link' => $slide->link_type.' '.$slide->link_value], $request->user());
@@ -141,6 +142,13 @@ class WebsiteController extends Controller
         if ($request->hasFile('poster')) {
             $this->drop($slide->poster_path);
             $values['poster_path'] = Images::store($request->file('poster'), 'website', 2400);
+        }
+        if ($slide->kind === 'image' && $request->hasFile('mobile')) {
+            $this->drop($slide->mobile_path);
+            $values['mobile_path'] = Images::store($request->file('mobile'), 'website', 1600);
+        } elseif ($request->boolean('remove_mobile') && $slide->mobile_path) {
+            $this->drop($slide->mobile_path);
+            $values['mobile_path'] = null;
         }
         $slide->update($values);
         AuditLog::record('website.slide_changed', $slide, ['place' => $slide->place, 'link' => $slide->link_type.' '.$slide->link_value, 'active' => $slide->active], $request->user());
@@ -172,6 +180,7 @@ class WebsiteController extends Controller
         AuditLog::record('website.slide_removed', null, ['place' => $slide->place, 'kind' => $slide->kind], $request->user());
         $this->drop($slide->path);
         $this->drop($slide->poster_path);
+        $this->drop($slide->mobile_path);
         $tab = $this->tabOf($slide);
         $slide->delete();
 
@@ -213,6 +222,8 @@ class WebsiteController extends Controller
             'place' => [$new ? 'required' : 'nullable', Rule::in(Slide::PLACES)],
             'file' => [$new ? 'required' : 'nullable', 'file', 'mimes:jpg,jpeg,png,webp,gif,mp4,webm', 'max:'.self::VIDEO_MAX_KB],
             'poster' => ['nullable', ...Images::rule()],
+            'mobile' => ['nullable', ...Images::rule()],
+            'remove_mobile' => ['boolean'],
             'link_type' => ['required', Rule::in(Slide::LINKS)],
             'link_value' => ['nullable', 'string', 'max:255'],
             'active' => ['boolean'],
