@@ -27,6 +27,7 @@ return [
         'company' => 'Coordonnées de l’entreprise',
         'documents' => 'Documents',
         'vat' => 'Taux de TVA',
+        'labour' => 'Tarifs main-d’œuvre',
         'productlists' => 'Catégories de produits',
         'locations' => 'Emplacements d’entrepôt',
         'import' => 'Import et export',

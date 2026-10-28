@@ -136,4 +136,21 @@ return [
         'vat_scheduled' => 'Change planned from :date.',
         'vat_deleted' => 'Planned rate deleted.',
     ],
+    'labour' => [
+        'intro' => 'The kinds of labour you can put on rental and Cluk Factory quotes, with their rate excl. VAT. A type without a rate is not offered on quotes yet.',
+        'name' => 'Name (per language, as on the quote)',
+        'unit' => 'Per',
+        'price' => 'Rate excl. VAT',
+        'active' => 'Offered',
+        'on' => 'On',
+        'no_rate' => 'No rate yet: not on quotes',
+        'add' => 'Add a type',
+        'save' => 'Save rates',
+        'saved' => 'Labour rates saved.',
+        'hint' => 'Changing a rate only affects new labour lines; lines already on a quote keep their price. Every rate change is in the activity log.',
+        'units' => [
+            'hour' => 'hour',
+            'day' => 'day',
+        ],
+    ],
 ];

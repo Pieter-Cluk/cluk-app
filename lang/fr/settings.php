@@ -136,4 +136,21 @@ return [
         'vat_scheduled' => 'Changement prévu à partir du :date.',
         'vat_deleted' => 'Taux prévu supprimé.',
     ],
+    'labour' => [
+        'intro' => 'Les types de main-d’œuvre à ajouter aux offres de location et Cluk Factory, avec leur tarif HTVA. Un type sans tarif n’est pas encore proposé dans les offres.',
+        'name' => 'Nom (par langue, comme sur l’offre)',
+        'unit' => 'Par',
+        'price' => 'Tarif HTVA',
+        'active' => 'Proposé',
+        'on' => 'Oui',
+        'no_rate' => 'Pas encore de tarif : pas dans les offres',
+        'add' => 'Ajouter un type',
+        'save' => 'Enregistrer les tarifs',
+        'saved' => 'Tarifs de main-d’œuvre enregistrés.',
+        'hint' => 'Un changement de tarif ne vaut que pour les nouvelles lignes ; les lignes déjà sur une offre gardent leur prix. Chaque changement de tarif est dans le journal d’activité.',
+        'units' => [
+            'hour' => 'heure',
+            'day' => 'jour',
+        ],
+    ],
 ];

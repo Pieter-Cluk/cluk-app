@@ -220,4 +220,21 @@ return [
         'use_inside_out' => 'Les jours d’utilisation doivent se situer entre l’enlèvement et le retour.',
         'no_lines' => 'Ajoutez au moins une ligne avant d’envoyer.',
     ],
+    'labour' => [
+        'add' => 'Ajouter de la main-d’œuvre (technicien, installation…)',
+        'type' => 'Type de main-d’œuvre',
+        'people' => '{1} :n personne|[2,*] :n personnes',
+        'people_label' => 'Personnes',
+        'amount_label' => 'Heures ou jours chacun',
+        'when_hint' => 'Quand (facultatif), p. ex. montage 12/11',
+        'none' => 'Pas encore de tarifs de main-d’œuvre.',
+        'units' => [
+            'hour' => 'h',
+            'day' => 'jour(s)',
+        ],
+        'per' => [
+            'hour' => 'h',
+            'day' => 'jour',
+        ],
+    ],
 ];

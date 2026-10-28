@@ -158,6 +158,7 @@ return [
             'crm_company_archived' => 'Bedrijf gearchiveerd',
             'crm_company_restored' => 'Bedrijf teruggehaald',
             'import_done' => 'Rekenblad geïmporteerd',
+            'labour_rates_changed' => 'Arbeidstarieven gewijzigd',
             'afrit6_place_set' => 'Afrit 6-opslagplaats ingesteld',
             'afrit6_place_freed' => 'Afrit 6-opslagplaats vrijgegeven',
             'afrit6_member_approved' => 'Afrit 6-lid goedgekeurd',

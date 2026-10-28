@@ -158,6 +158,7 @@ return [
             'crm_company_archived' => 'Archived a company',
             'crm_company_restored' => 'Brought a company back',
             'import_done' => 'Imported a spreadsheet',
+            'labour_rates_changed' => 'Changed labour rates',
             'afrit6_place_set' => 'Set an Afrit 6 storage place',
             'afrit6_place_freed' => 'Freed an Afrit 6 storage place',
             'afrit6_member_approved' => 'Approved an Afrit 6 member',

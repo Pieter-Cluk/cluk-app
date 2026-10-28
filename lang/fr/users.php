@@ -158,6 +158,7 @@ return [
             'crm_company_archived' => 'Entreprise archivée',
             'crm_company_restored' => 'Entreprise restaurée',
             'import_done' => 'Tableur importé',
+            'labour_rates_changed' => 'Tarifs de main-d’œuvre modifiés',
             'afrit6_place_set' => 'Emplacement Afrit 6 attribué',
             'afrit6_place_freed' => 'Emplacement Afrit 6 libéré',
             'afrit6_member_approved' => 'Membre Afrit 6 approuvé',

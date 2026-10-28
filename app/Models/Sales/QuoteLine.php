@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** A line on a quote: an item from the catalogue, a free charge (transport…), or a text line. */
-#[Fillable(['quote_id', 'position', 'kind', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp', 'amount_cents'])]
+#[Fillable(['quote_id', 'position', 'kind', 'item_id', 'labour_type_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp', 'amount_cents'])]
 class QuoteLine extends Model
 {
     public const KINDS = ['item', 'charge', 'text'];
@@ -21,6 +21,11 @@ class QuoteLine extends Model
     public function quote(): BelongsTo
     {
         return $this->belongsTo(Quote::class);
+    }
+
+    public function labourType(): BelongsTo
+    {
+        return $this->belongsTo(LabourType::class);
     }
 
     public function item(): BelongsTo

@@ -27,6 +27,7 @@ return [
         'company' => 'Datos de la empresa',
         'documents' => 'Documentos',
         'vat' => 'Tipos de IVA',
+        'labour' => 'Tarifas de mano de obra',
         'productlists' => 'Categorías de productos',
         'locations' => 'Ubicaciones de almacén',
         'import' => 'Importar y exportar',

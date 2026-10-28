@@ -227,6 +227,31 @@ class QuoteController extends Controller
         return redirect()->to(route('quotes.show', $quote).'#add-item')->with('status', __('quotes.flash.line_added'));
     }
 
+    /** Labour from Settings › Labour rates: people × hours (or days) at the type's rate, in the quote's language. */
+    public function addLabour(Request $request, Quote $quote): RedirectResponse
+    {
+        $this->guard($request, $quote);
+        $d = $request->validate([
+            'labour_type_id' => ['required', 'integer', Rule::exists('labour_types', 'id')->where('active', true)->whereNotNull('price_cents')],
+            'people' => ['required', 'integer', 'min:1', 'max:200'],
+            'amount' => ['required', 'numeric', 'min:0.25', 'max:1000'],
+            'when' => ['nullable', 'string', 'max:60'],
+        ]);
+        $type = \App\Models\Sales\LabourType::findOrFail($d['labour_type_id']);
+        $amount = (float) $d['amount'];
+        $fmt = fn (float $n) => rtrim(rtrim(number_format($n, 2, ',', ''), '0'), ',');
+        $name = \App\Support\InLocale::run($quote->language ?: 'nl', fn () => $type->name($quote->language ?: 'nl').' · '
+            .trans_choice('quotes.labour.people', (int) $d['people'], ['n' => (int) $d['people']]).' × '.$fmt($amount).' '.__('quotes.labour.units.'.$type->unit)
+            .(! empty($d['when']) ? ' · '.trim($d['when']) : ''));
+        $quote->lines()->create([
+            'kind' => 'charge', 'labour_type_id' => $type->id, 'name' => mb_substr($name, 0, 200), 'qty' => (int) $d['people'] * $amount,
+            'unit_price_cents' => (int) $type->price_cents, 'factor' => 1, 'position' => (int) $quote->lines()->max('position') + 1,
+        ]);
+        $quote->recalculate();
+
+        return redirect()->to(route('quotes.show', $quote).'#add-item')->with('status', __('quotes.flash.line_added'));
+    }
+
     public function removeLine(Request $request, Quote $quote, QuoteLine $line): RedirectResponse
     {
         $this->guard($request, $quote);

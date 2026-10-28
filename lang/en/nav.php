@@ -27,6 +27,7 @@ return [
         'company' => 'Company details',
         'documents' => 'Documents',
         'vat' => 'VAT rates',
+        'labour' => 'Labour rates',
         'productlists' => 'Product categories',
         'locations' => 'Warehouse locations',
         'import' => 'Import & export',

@@ -361,6 +361,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/deals/{deal}/quotes', [QuoteController::class, 'store'])->whereNumber('deal')->name('quotes.store');
             Route::put('/quotes/{quote}', [QuoteController::class, 'update'])->whereNumber('quote')->name('quotes.update');
             Route::post('/quotes/{quote}/lines', [QuoteController::class, 'addLine'])->whereNumber('quote')->name('quotes.lines.add');
+            Route::post('/quotes/{quote}/labour', [QuoteController::class, 'addLabour'])->whereNumber('quote')->name('quotes.labour.add');
             Route::delete('/quotes/{quote}/lines/{line}', [QuoteController::class, 'removeLine'])->whereNumber('quote')->whereNumber('line')->name('quotes.lines.remove');
             Route::get('/quotes/{quote}/search', [QuoteController::class, 'search'])->whereNumber('quote')->name('quotes.search');
             Route::post('/quotes/{quote}/send', [QuoteController::class, 'send'])->whereNumber('quote')->name('quotes.send');
@@ -489,6 +490,10 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview');
             Route::post('/import/run', [ImportController::class, 'run'])->name('import.run');
             Route::post('/import/vies', [ImportController::class, 'vies'])->name('import.vies');
+        });
+        Route::middleware('nav:labour')->group(function () {
+            Route::get('/labour-rates', [\App\Http\Controllers\Settings\LabourController::class, 'index'])->name('labour.index');
+            Route::put('/labour-rates', [\App\Http\Controllers\Settings\LabourController::class, 'save'])->name('labour.save');
         });
         Route::middleware('nav:vat')->group(function () {
             Route::get('/vat-rates', [VatRateController::class, 'index'])->name('vat.index');
@@ -781,7 +786,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks', 'meetings', 'todos', 'website'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'labour', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks', 'meetings', 'todos', 'website'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

@@ -161,6 +161,23 @@
                                 </div>
                             </div>
                         </details>
+                        @php($labour = \App\Models\Sales\LabourType::offered()->get())
+                        <details @if ($errors->hasAny(['labour_type_id', 'people', 'amount'])) open @endif>
+                            <summary>{{ __('quotes.labour.add') }}</summary>
+                            @if ($labour->isNotEmpty())
+                                <form method="post" action="{{ route('quotes.labour.add', $quote) }}" class="stack-sm mt">@csrf
+                                    <select name="labour_type_id" aria-label="{{ __('quotes.labour.type') }}" required>@foreach ($labour as $lt)<option value="{{ $lt->id }}">{{ $lt->name() }} · {{ \App\Services\Afrit6\Pricing::eur($lt->price_cents) }}/{{ __('quotes.labour.per.'.$lt->unit) }}</option>@endforeach</select>
+                                    <div class="inline-form">
+                                        <label class="field"><span>{{ __('quotes.labour.people_label') }}</span><input type="number" name="people" value="1" min="1" max="200" step="1" class="in-num"></label>
+                                        <label class="field"><span>{{ __('quotes.labour.amount_label') }}</span><input type="number" name="amount" value="8" min="0.25" step="0.25" class="in-num"></label>
+                                    </div>
+                                    <input name="when" maxlength="60" placeholder="{{ __('quotes.labour.when_hint') }}" aria-label="{{ __('quotes.labour.when_hint') }}">
+                                    <button class="btn" type="submit">{{ __('quotes.add') }}</button>
+                                </form>
+                            @else
+                                <p class="muted small mt">{{ __('quotes.labour.none') }}@if (auth()->user()->canUseModule('settings', 2)) <a href="{{ route('settings.labour.index') }}">{{ __('nav.items.labour') }} →</a>@endif</p>
+                            @endif
+                        </details>
                         <details>
                             <summary>{{ __('quotes.add_text') }}</summary>
                             <div class="stack-sm mt">

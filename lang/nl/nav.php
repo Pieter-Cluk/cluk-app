@@ -27,6 +27,7 @@ return [
         'company' => 'Bedrijfsgegevens',
         'documents' => 'Documenten',
         'vat' => 'Btw-tarieven',
+        'labour' => 'Arbeidstarieven',
         'productlists' => 'Productcategorieën',
         'locations' => 'Magazijnlocaties',
         'import' => 'Importeren & exporteren',

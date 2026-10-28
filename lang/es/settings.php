@@ -136,4 +136,21 @@ return [
         'vat_scheduled' => 'Cambio previsto desde el :date.',
         'vat_deleted' => 'Tipo previsto eliminado.',
     ],
+    'labour' => [
+        'intro' => 'Los tipos de mano de obra que puedes añadir a presupuestos de alquiler y de Cluk Factory, con su tarifa sin IVA. Un tipo sin tarifa aún no se ofrece en los presupuestos.',
+        'name' => 'Nombre (por idioma, como en el presupuesto)',
+        'unit' => 'Por',
+        'price' => 'Tarifa sin IVA',
+        'active' => 'Ofrecido',
+        'on' => 'Sí',
+        'no_rate' => 'Sin tarifa: no aparece en presupuestos',
+        'add' => 'Añadir un tipo',
+        'save' => 'Guardar tarifas',
+        'saved' => 'Tarifas de mano de obra guardadas.',
+        'hint' => 'Cambiar una tarifa solo afecta a las líneas nuevas; las líneas ya en un presupuesto mantienen su precio. Cada cambio de tarifa queda en el registro de actividad.',
+        'units' => [
+            'hour' => 'hora',
+            'day' => 'día',
+        ],
+    ],
 ];

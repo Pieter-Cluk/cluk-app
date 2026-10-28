@@ -220,4 +220,21 @@ return [
         'use_inside_out' => 'The days of use must fall between pick-up and return.',
         'no_lines' => 'Add at least one line before sending.',
     ],
+    'labour' => [
+        'add' => 'Add labour (technician, installation…)',
+        'type' => 'Kind of labour',
+        'people' => '{1} :n person|[2,*] :n people',
+        'people_label' => 'People',
+        'amount_label' => 'Hours or days each',
+        'when_hint' => 'When (optional), e.g. build-up 12/11',
+        'none' => 'No labour rates set yet.',
+        'units' => [
+            'hour' => 'h',
+            'day' => 'day(s)',
+        ],
+        'per' => [
+            'hour' => 'h',
+            'day' => 'day',
+        ],
+    ],
 ];

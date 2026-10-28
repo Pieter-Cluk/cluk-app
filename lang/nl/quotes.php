@@ -220,4 +220,21 @@ return [
         'use_inside_out' => 'De gebruiksdagen moeten tussen afhaling en terugbrengen vallen.',
         'no_lines' => 'Voeg minstens één lijn toe voor je verstuurt.',
     ],
+    'labour' => [
+        'add' => 'Arbeid toevoegen (technieker, installatie…)',
+        'type' => 'Soort arbeid',
+        'people' => '{1} :n persoon|[2,*] :n personen',
+        'people_label' => 'Personen',
+        'amount_label' => 'Uren of dagen per persoon',
+        'when_hint' => 'Wanneer (optioneel), bv. opbouw 12/11',
+        'none' => 'Nog geen arbeidstarieven ingesteld.',
+        'units' => [
+            'hour' => 'u',
+            'day' => 'dag(en)',
+        ],
+        'per' => [
+            'hour' => 'u',
+            'day' => 'dag',
+        ],
+    ],
 ];

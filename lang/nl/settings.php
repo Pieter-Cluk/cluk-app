@@ -136,4 +136,21 @@ return [
         'vat_scheduled' => 'Wijziging gepland vanaf :date.',
         'vat_deleted' => 'Gepland tarief verwijderd.',
     ],
+    'labour' => [
+        'intro' => 'De soorten arbeid die je op verhuur- en Cluk Factory-offertes kan zetten, met hun tarief excl. btw. Een soort zonder tarief wordt nog niet aangeboden op offertes.',
+        'name' => 'Naam (per taal, zoals op de offerte)',
+        'unit' => 'Per',
+        'price' => 'Tarief excl. btw',
+        'active' => 'Aangeboden',
+        'on' => 'Aan',
+        'no_rate' => 'Nog geen tarief: niet op offertes',
+        'add' => 'Soort toevoegen',
+        'save' => 'Tarieven opslaan',
+        'saved' => 'Arbeidstarieven opgeslagen.',
+        'hint' => 'Een tarief wijzigen geldt enkel voor nieuwe arbeidslijnen; lijnen die al op een offerte staan houden hun prijs. Elke tariefwijziging staat in het activiteitenlog.',
+        'units' => [
+            'hour' => 'uur',
+            'day' => 'dag',
+        ],
+    ],
 ];

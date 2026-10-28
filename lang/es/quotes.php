@@ -220,4 +220,21 @@ return [
         'use_inside_out' => 'Los días de uso deben estar entre la recogida y la devolución.',
         'no_lines' => 'Añade al menos una línea antes de enviar.',
     ],
+    'labour' => [
+        'add' => 'Añadir mano de obra (técnico, instalación…)',
+        'type' => 'Tipo de mano de obra',
+        'people' => '{1} :n persona|[2,*] :n personas',
+        'people_label' => 'Personas',
+        'amount_label' => 'Horas o días cada una',
+        'when_hint' => 'Cuándo (opcional), p. ej. montaje 12/11',
+        'none' => 'Aún no hay tarifas de mano de obra.',
+        'units' => [
+            'hour' => 'h',
+            'day' => 'día(s)',
+        ],
+        'per' => [
+            'hour' => 'h',
+            'day' => 'día',
+        ],
+    ],
 ];
