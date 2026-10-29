@@ -24,8 +24,8 @@ jobs:
           sshpass -e ssh -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
           W=$(readlink -f ~/webroots/by-route/app.cluk.live_)
           cd "$W/app" || exit 1
-          echo "== social accounts and posts"
-          php artisan tinker --execute='foreach (App\Models\Social\Account::all() as $a) { $p = App\Models\Social\Post::where("account_id", $a->id); echo $a->id." ".$a->platform." ".$a->name." status=".$a->status." synced=".$a->last_synced_at." posts=".(clone $p)->count()." with_image=".(clone $p)->where(fn ($q) => $q->whereNotNull("thumb_url")->orWhereNotNull("thumb_path"))->count()." newest=".(clone $p)->max("published_at")." error=".substr((string) $a->last_error, 0, 160).PHP_EOL; }' 2>&1 | tail -10
+          echo "== LinkedIn sync now, then website news"
+          php artisan tinker --execute='$a = App\Models\Social\Account::where("platform", "linkedin")->where("status", "!=", "off")->first(); if ($a) { echo "sync: ".(App\Services\Social\Social::sync($a, true) ? "ok" : "failed ".substr((string) $a->fresh()->last_error, 0, 200)).PHP_EOL; $p = App\Models\Social\Post::where("account_id", $a->id); echo "linkedin posts=".(clone $p)->count()." with_picture_link=".(clone $p)->whereNotNull("thumb_url")->count()." kept_picture=".(clone $p)->whereNotNull("thumb_path")->count().PHP_EOL; } $all = App\Services\Website\SocialFeed::all(); echo "website news: ".$all->count()." posts, by platform ".json_encode($all->countBy("platform")).PHP_EOL; echo "homepage: ".json_encode(App\Services\Website\SocialFeed::mix()->pluck("platform")).PHP_EOL;' 2>&1 | tail -6
           echo "== migrations and labour rates"
           php artisan migrate:status 2>&1 | tail -4
           php artisan tinker --execute='foreach (App\Models\Sales\LabourType::orderBy("position")->get() as $t) { echo $t->name("en")." ".($t->price_cents === null ? "-" : $t->price_cents / 100)."/".$t->unit." ".($t->active ? "on" : "off").PHP_EOL; }' 2>&1 | tail -8
