@@ -115,4 +115,20 @@ class WebsiteCatalogueTest extends TestCase
 
         return substr($s, $start, strpos($s, $b, $start) - $start);
     }
+    public function test_the_frequency_band_is_not_a_dry_hire_filter_but_stays_on_the_item(): void
+    {
+        $band = \App\Models\Product\Attribute::where('key', 'frequency_band')->firstOrFail();
+        $wmi = Subcategory::findOrFail(self::sub('WMI'));
+        $this->assertTrue($wmi->attrs->contains('id', $band->id)); // still on the item card
+        $i = new Item(['number' => 'AUDWIRSHUULXD', 'kind' => 'item', 'name' => 'Shure ULXD', 'brand' => 'Shure', 'type' => 'ULXD', 'unit' => 'pcs', 'serial' => false, 'stock_qty' => 4, 'day_price_cents' => 2500, 'active' => true]);
+        $i->placeIn($wmi);
+        $i->save();
+        $g51 = $band->options()->where('value', 'G51')->firstOrFail();
+        $i->options()->attach($g51->id);
+
+        $d = DryHireCatalogue::data('en');
+        $sub = collect($d['subs'])->firstWhere('id', $wmi->id);
+        $this->assertNotContains($band->id, $sub['a']);                                             // no filter
+        $this->assertContains($g51->id, collect($d['items'])->firstWhere('n', 'AUDWIRSHUULXD')['o']); // the item keeps its band
+    }
 }
