@@ -23,6 +23,8 @@ class RequestsMailboxTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        config(['app.timezone' => 'Europe/Brussels']);
+        date_default_timezone_set('Europe/Brussels');
         config(['mail.default' => 'microsoft-graph', 'services.microsoft.tenant' => 't', 'services.microsoft.client_id' => 'c', 'services.microsoft.client_secret' => 's']);
         Storage::fake('local');
         Cache::flush();
@@ -74,6 +76,7 @@ class RequestsMailboxTest extends TestCase
         $a = IncomingMessage::where('subject', 'Offerte 20 blinders')->firstOrFail();
         $this->assertSame(['email', 'jan@other.be', 'Jan Other'], [$a->channel, $a->from_email, $a->from_name]);
         $this->assertSame(['plan.pdf'], array_column($a->payload['attachments'], 'name'));
+        $this->assertSame(now()->subMinutes(5)->format('Y-m-d H:i'), $a->received_at->format('Y-m-d H:i')); // local time, not UTC
         $b = IncomingMessage::where('subject', 'Aanvraag truss')->firstOrFail();
         $this->assertSame(['lies@demo-events.be', 'Lies Peeters', $co->id, $p->id, 'pieter@cluk.live'], [$b->from_email, $b->from_name, $b->company_id, $b->contact_id, $b->payload['forwarded_by']]);
 

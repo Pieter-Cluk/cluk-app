@@ -130,7 +130,8 @@ class RequestsMailbox
         $item = new IncomingMessage([
             'channel' => 'email', 'subject' => Str::limit(trim(preg_replace(self::FWD, '', $subject)) ?: '(no subject)', 195, '…'),
             'body' => Str::limit(trim(preg_replace("/\n{3,}/", "\n\n", str_replace("\r", '', $body))), 20000, '…'),
-            'from_name' => Str::limit($fromName ?: Str::before($from, '@'), 155, ''), 'from_email' => $from ?: null, 'received_at' => $at,
+            'from_name' => Str::limit($fromName ?: Str::before($from, '@'), 155, ''), 'from_email' => $from ?: null,
+            'received_at' => $at->copy()->setTimezone(config('app.timezone')), // Graph gives UTC; we store local time
             'payload' => array_filter(['type' => 'mail', 'mail_id' => $mailId, 'forwarded_by' => $forwardedBy]),
         ]);
         $item->matchKnown();
