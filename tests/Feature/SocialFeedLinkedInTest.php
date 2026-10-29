@@ -32,6 +32,10 @@ class SocialFeedLinkedInTest extends TestCase
         Post::create(['account_id' => $fb->id, 'external_id' => 'c', 'published_at' => now()->subHours(2), 'text' => $text]); // no picture
         Post::create(['account_id' => $li->id, 'external_id' => 'd', 'published_at' => now()->subDay(), 'text' => 'We are hiring a warehouse technician', 'thumb_url' => 'https://li/job.jpg']);
 
+        $via = $this->account('linkedin', '9');
+        $via->update(['status' => 'off']);
+        Post::create(['account_id' => $via->id, 'external_id' => 'e', 'published_at' => now()->subDays(2), 'text' => 'Old post of a disconnected page', 'thumb_url' => 'https://li/x.jpg']);
+
         $all = SocialFeed::all();
         $this->assertCount(2, $all);
         $this->assertSame('instagram', $all[0]['platform']); // the copy with a picture, before LinkedIn

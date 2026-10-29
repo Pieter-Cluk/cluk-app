@@ -35,11 +35,11 @@ class SocialFeed
         $stamp = (string) Post::max('updated_at').'|'.Post::count();
 
         // The cache keeps plain arrays only (no objects), so the dates are added back afterwards.
-        $rows = Cache::remember('site.social.v4.'.md5($stamp), 300, function () {
+        $rows = Cache::remember('site.social.v5.'.md5($stamp), 300, function () {
             $hasHide = Schema::hasColumn('social_posts', 'on_website');
 
             return Post::with('account:id,platform,name,handle,url')
-                ->whereHas('account', fn ($q) => $q->whereIn('platform', self::PLATFORMS))
+                ->whereHas('account', fn ($q) => $q->whereIn('platform', self::PLATFORMS)->where('status', '!=', 'off')) // disconnected accounts stay off
                 ->whereNotNull('published_at')->where('published_at', '<=', now())
                 ->when($hasHide, fn ($q) => $q->where('on_website', true))
                 ->orderByDesc('published_at')->limit(300)->get()
