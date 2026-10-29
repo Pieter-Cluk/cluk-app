@@ -131,4 +131,12 @@ class WebsiteCatalogueTest extends TestCase
         $this->assertNotContains($band->id, $sub['a']);                                             // no filter
         $this->assertContains($g51->id, collect($d['items'])->firstWhere('n', 'AUDWIRSHUULXD')['o']); // the item keeps its band
     }
+
+    public function test_brand_is_the_first_filter_in_the_dry_hire_sidebar(): void
+    {
+        $html = $this->get('/site/dry-hire')->assertOk()->getContent();
+        $aside = substr($html, strpos($html, 'id="aside"'));
+        $this->assertLessThan(strpos($aside, 'id="fSubs"'), strpos($aside, 'id="fBrands"'));
+        $this->assertLessThan(strpos($aside, 'id="fAttrs"'), strpos($aside, 'id="fBrands"'));
+    }
 }

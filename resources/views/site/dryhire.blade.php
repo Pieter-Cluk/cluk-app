@@ -44,10 +44,10 @@
 <div class="dh-main gut">
   <aside id="aside" aria-label="{{ __('site.dryhire.filters') }}">
     <div class="row2" id="asideHead" hidden><h3 class="eyebrow" style="margin:0">{{ __('site.dryhire.filters') }}</h3><button class="x" id="asideClose" type="button" aria-label="{{ __('site.dryhire.close_filters') }}">✕</button></div>
+    <div><h3 class="eyebrow">{{ __('site.dryhire.brand') }}</h3><div id="fBrands"></div></div>
     <div id="fSubs"></div>
     <div id="fAttrs"></div>
     <div id="fTags"></div>
-    <div><h3 class="eyebrow">{{ __('site.dryhire.brand') }}</h3><div id="fBrands"></div></div>
   </aside>
 
   <main>
