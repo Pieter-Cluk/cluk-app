@@ -207,7 +207,7 @@ return [
         'carrier_not_in' => ':code is not in :carrier.',
         'carrier_more_than_stock' => 'There are :n of :code in stock: that would put more in boxes and cases than we have.',
         'office_not_a_case' => ':code is not a box, dolly or case.',
-        'office_rack_only' => ':code goes to a rack place or storage from the office, not to :place.',
+        'office_rack_only' => ':code goes to a rack place, storage or the Factory from the office, not to :place (scan it on the phone for the other steps).',
     ],
     'zone_names' => [
         'FACTORY' => 'Cluk Factory (hung in the venue)',

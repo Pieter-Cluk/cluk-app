@@ -242,7 +242,7 @@ class Carriers
         if ($piece->status !== Asset::AVAILABLE || $piece->out_order_id) {
             self::fail('carrier_store_first', ['code' => $piece->code]);
         }
-        if ($target instanceof Zone && $target->type !== 'storage') {
+        if ($target instanceof Zone && ! in_array($target->type, ['storage', 'venue'], true)) {
             self::fail('office_rack_only', ['code' => $piece->code, 'place' => Moves::label($target->code)]);
         }
         if ($target instanceof Position && ! in_array($target->use, ['rental', 'spare'], true)) {

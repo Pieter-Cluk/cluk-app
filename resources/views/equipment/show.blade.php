@@ -65,7 +65,7 @@
             <p class="muted small">{{ __('equipment.place.counted_hint') }}</p>
         </section>
     @endif
-    @include('equipment._place-codes', ['cases' => $item->kind !== 'case'])
+    @include('equipment._place-codes', ['cases' => $item->kind !== 'case', 'zones' => $item->kind === 'case'])
     @if (! $item->serial)@include('equipment._place-codes', ['id' => 'case-codes', 'racks' => false])@endif
     @if ($codes = session('print'))
         <div class="flash flash-ok"><a href="{{ route('equipment.labels', ['codes' => implode(',', $codes)]) }}" target="_blank" rel="noopener">{{ trans_choice('equipment.print_new', count($codes), ['count' => count($codes)]) }} →</a></div>

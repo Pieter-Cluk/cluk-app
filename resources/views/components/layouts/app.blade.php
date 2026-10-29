@@ -15,6 +15,7 @@
 </script>
 @include('partials.favicon')
 <script src="{{ asset('js/pick.js') }}?v={{ @filemtime(public_path('js/pick.js')) }}" defer></script>
+<script src="{{ asset('js/suggest.js') }}?v={{ @filemtime(public_path('js/suggest.js')) }}" defer></script>
 </head>
 <body @class(['density-compact' => $user?->density === 'compact'])>
 <div class="app">

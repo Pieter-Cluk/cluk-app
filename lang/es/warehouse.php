@@ -207,7 +207,7 @@ return [
         'carrier_not_in' => ':code no está en :carrier.',
         'carrier_more_than_stock' => 'Hay :n de :code en stock: habría más en cajas y cases de los que tenemos.',
         'office_not_a_case' => ':code no es una caja, dolly o case.',
-        'office_rack_only' => ':code va desde la oficina a un hueco o al almacén, no a :place.',
+        'office_rack_only' => ':code va desde la oficina a un hueco, al almacén o a la Factory, no a :place (escanéalo con el móvil para los demás pasos).',
     ],
     'zone_names' => [
         'FACTORY' => 'Cluk Factory (colgado en la sala)',

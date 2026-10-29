@@ -202,7 +202,7 @@ return [
         'placeholder' => 'GA1B1 of BOX-01',
         'go' => 'Daar leggen',
         'hint' => 'Een rekplaats (bv. GA1B1) legt de aangevinkte stuks daar. Een box-, dolly- of casecode (bv. BOX-01) legt ze erin: ze volgen hem als hij verplaatst wordt. Scannen hoeft niet.',
-        'case_hint' => 'Een rekplaats verplaatst deze case daarheen, met alles erin.',
+        'case_hint' => 'Elke plaats: een rekplaats, een zone (reiniging, pre-check, straat…) of de Factory. De case gaat erheen met alles erin.',
         'done' => '{1} 1 stuk ligt nu in :place.|[2,*] :n stuks liggen nu in :place.',
         'counted_title' => 'In boxen en cases',
         'counted_go' => 'Erin leggen',

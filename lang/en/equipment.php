@@ -202,7 +202,7 @@ return [
         'placeholder' => 'GA1B1 or BOX-01',
         'go' => 'Put it there',
         'hint' => 'A rack place (e.g. GA1B1) puts the ticked pieces there. A box, dolly or case code (e.g. BOX-01) puts them in it: they then follow it when it moves. No scanning needed.',
-        'case_hint' => 'A rack place moves this case there, with everything in it.',
+        'case_hint' => 'Any place: a rack place, a zone (cleaning, pre-check, street…) or the Factory. The case goes there with everything in it.',
         'done' => '{1} 1 piece is now in :place.|[2,*] :n pieces are now in :place.',
         'counted_title' => 'In boxes and cases',
         'counted_go' => 'Put in',

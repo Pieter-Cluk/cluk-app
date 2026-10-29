@@ -1110,3 +1110,8 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .dg-src-row b{text-align:right;color:var(--ink)}
 .dg-note{margin-top:14px}
 @media (max-width:900px){.dg-top,.dg-charts{grid-template-columns:minmax(0,1fr)}}
+
+/* Typing suggestions on free-text fields (suggest.js) */
+.sugg{position:relative;display:inline-block;width:auto;flex:1 1 200px;min-width:0}
+.sugg>input{width:100%}
+.form-grid .sugg,.field .sugg,.stack-sm .sugg{display:block}

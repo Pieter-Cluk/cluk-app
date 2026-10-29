@@ -202,7 +202,7 @@ return [
         'placeholder' => 'GA1B1 ou BOX-01',
         'go' => 'Le mettre là',
         'hint' => 'Un emplacement (p. ex. GA1B1) y met les pièces cochées. Un code de caisse, dolly ou case (p. ex. BOX-01) les met dedans : elles le suivent quand il bouge. Pas besoin de scanner.',
-        'case_hint' => 'Un emplacement y déplace ce case, avec tout son contenu.',
+        'case_hint' => 'N’importe quel endroit : un emplacement, une zone (nettoyage, pré-contrôle, rue…) ou la Factory. Le case y va avec tout son contenu.',
         'done' => '{1} 1 pièce est maintenant à :place.|[2,*] :n pièces sont maintenant à :place.',
         'counted_title' => 'Dans des caisses et cases',
         'counted_go' => 'Mettre dedans',

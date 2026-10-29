@@ -39,7 +39,7 @@
                         <button class="btn" type="submit">{{ __('equipment.place.go') }}</button>
                     </form>
                     @error('place')<p class="txt-danger small">{{ $message }}</p>@enderror
-                    @include('equipment._place-codes', ['cases' => ! $asset->isContainer(), 'except' => $asset->id])
+                    @include('equipment._place-codes', ['cases' => ! $asset->isContainer(), 'zones' => $asset->isContainer(), 'except' => $asset->id])
                     <p class="muted small">{{ $asset->isContainer() ? __('equipment.place.case_hint') : __('equipment.place.hint') }}</p>
                     <h2 class="mt">{{ __('equipment.edit_asset') }}</h2>
                     <form method="post" action="{{ route('equipment.assets.update', $asset) }}" class="form-grid">

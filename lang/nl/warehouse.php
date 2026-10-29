@@ -207,7 +207,7 @@ return [
         'carrier_not_in' => ':code zit niet in :carrier.',
         'carrier_more_than_stock' => 'Er zijn :n van :code in voorraad: zo zouden er meer in boxen en cases zitten dan we hebben.',
         'office_not_a_case' => ':code is geen box, dolly of case.',
-        'office_rack_only' => ':code gaat vanuit het kantoor naar een rekplaats of opslag, niet naar :place.',
+        'office_rack_only' => ':code gaat vanuit het kantoor naar een rekplaats, opslag of de Factory, niet naar :place (scan het met de gsm voor de andere stappen).',
     ],
     'zone_names' => [
         'FACTORY' => 'Cluk Factory (opgehangen in de zaal)',

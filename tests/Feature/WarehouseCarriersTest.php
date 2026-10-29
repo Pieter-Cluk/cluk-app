@@ -32,7 +32,7 @@ class WarehouseCarriersTest extends TestCase
         (require database_path('migrations/2026_10_23_001600_dollies_and_boxes_as_case_items.php'))->seed();
     }
 
-    private static function case(string $code): Asset
+    protected static function case(string $code): Asset
     {
         return Asset::where('code', $code)->firstOrFail();
     }
@@ -134,6 +134,19 @@ class WarehouseCarriersTest extends TestCase
             $r = $this->scan($code);
             $this->assertSame($code, $dolly->fresh()->location, $code.': '.json_encode(session('errors')?->all()));
         }
+    }
+
+    public function test_the_office_places_a_dolly_in_any_zone_and_suggests_them(): void
+    {
+        [$p] = $this->job();
+        $dolly = self::case('DOLLY-01');
+        $this->actingAs($this->crew)->get(route('equipment.assets.show', $dolly))->assertOk()->assertSee('<option value="PRE-LIGHT">', false)->assertSee('<option value="FACTORY">', false);
+        $this->actingAs($this->crew)->post(route('equipment.assets.place_one', $dolly), ['place' => 'LIGHT-ST'])->assertSessionHasNoErrors();
+        $this->assertSame('LIGHT-ST', $dolly->fresh()->location);
+        // A loose piece from the office: racks, storage or the Factory only.
+        $this->actingAs($this->crew)->post(route('equipment.assets.place_one', $p[3]), ['place' => 'FACTORY'])->assertSessionHasNoErrors();
+        $this->actingAs($this->crew)->post(route('equipment.assets.place_one', $p[3]), ['place' => 'CLEAN'])->assertSessionHasErrors('place');
+        $this->actingAs($this->crew)->get(route('equipment.assets.show', $p[3]))->assertDontSee('<option value="PRE-LIGHT">', false)->assertSee('<option value="FACTORY">', false);
     }
 
     public function test_a_piece_in_stock_can_hang_in_the_factory_and_come_back(): void
