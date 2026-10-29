@@ -9,7 +9,7 @@
             <p class="muted">{{ __('social.intro', ['from' => $d['from']->format('d/m/Y')]) }}</p>
         </div>
         <div class="inline-form">
-            <nav class="chips">@foreach (\App\Http\Controllers\Social\SocialController::PERIODS as $p)<a @class(['chip', 'chip-on' => $d['days'] === $p]) href="{{ route('social.index', ['d' => $p]) }}">{{ __('social.last_days', ['n' => $p]) }}</a>@endforeach</nav>
+            <nav class="chips">@foreach (\App\Http\Controllers\Social\SocialController::PERIODS as $p)<a @class(['chip', 'chip-on' => $d['days'] === $p]) href="{{ route('social.index', ['d' => $p, 'f' => $fRange]) }}">{{ __('social.last_days', ['n' => $p]) }}</a>@endforeach</nav>
             <a class="btn" href="{{ route('social.plans') }}">{{ __('social.posts') }}@if ($d['drafts']) <span class="pill">{{ $d['drafts'] }}</span>@endif</a>
             @if ($canPost)<a class="primary" href="{{ route('social.plans.create') }}">{{ __('social.new_post') }}</a>@endif
         </div>
@@ -37,8 +37,9 @@
         <div class="sm-two mt">
             <section class="card">
                 <div class="card-head"><h2>{{ __('social.charts.followers') }}</h2>
-                    <span class="sm-legend">@foreach (array_keys($d['followers_series']) as $p)<span><i style="background:{{ \App\Services\Social\Dashboard::COLORS[$p] }}"></i>{{ __('social.platforms.'.$p) }}</span>@endforeach</span></div>
-                @if ($d['followers_series'])@include('social._line', ['series' => $d['followers_series'], 'label' => __('social.charts.followers')])@else<p class="muted">{{ __('social.no_data') }}</p>@endif
+                    <nav class="chips" aria-label="{{ __('social.charts.followers') }}">@foreach (array_keys(\App\Services\Social\Dashboard::FOLLOWER_RANGES) as $r)<a @class(['chip', 'chip-on' => $fRange === $r]) href="{{ route('social.index', ['d' => $d['days'], 'f' => $r]) }}#followers">{{ __('social.ranges.'.$r) }}</a>@endforeach</nav></div>
+                <span class="sm-legend" id="followers">@foreach (array_keys($followers) as $p)<span><i style="background:{{ \App\Services\Social\Dashboard::COLORS[$p] }}"></i>{{ __('social.platforms.'.$p) }}</span>@endforeach</span>
+                @if ($followers)@include('social._line', ['series' => $followers, 'label' => __('social.charts.followers')])@else<p class="muted">{{ __('social.no_data') }}</p>@endif
             </section>
             <section class="card">
                 <div class="card-head"><h2>{{ __('social.charts.views') }}</h2></div>

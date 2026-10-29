@@ -218,4 +218,11 @@ return [
         'made_by' => 'Creado por :name el :date',
         'planned_for' => 'programado para el :when',
     ],
+    'ranges' => [
+        '1m' => '1 mes',
+        '3m' => '3 meses',
+        '6m' => '6 meses',
+        '1y' => '1 año',
+        'all' => 'Todo',
+    ],
 ];

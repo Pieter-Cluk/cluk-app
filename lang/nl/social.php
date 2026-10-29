@@ -218,4 +218,11 @@ return [
         'made_by' => 'Gemaakt door :name op :date',
         'planned_for' => 'gepland voor :when',
     ],
+    'ranges' => [
+        '1m' => '1 maand',
+        '3m' => '3 maanden',
+        '6m' => '6 maanden',
+        '1y' => '1 jaar',
+        'all' => 'Alles',
+    ],
 ];

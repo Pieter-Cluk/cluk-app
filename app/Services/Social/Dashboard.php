@@ -69,6 +69,61 @@ class Dashboard
     }
 
     /** Followers per platform per day (the last known number is carried forward). */
+    /** Periods for the followers chart (own choice, apart from the period of the figures). */
+    public const FOLLOWER_RANGES = ['1m' => 30, '3m' => 91, '6m' => 182, '1y' => 365, 'all' => null];
+
+    /**
+     * Followers per platform over a chosen period. Long periods are shown per week (the last value of each week),
+     * so the line stays readable. "all" starts at the first day we have followers for.
+     *
+     * @return array<string, array<string, int|null>>
+     */
+    public static function followers(string $range): array
+    {
+        $accounts = Account::where('status', '!=', 'off')->get();
+        $ids = $accounts->pluck('id');
+        $first = Daily::whereIn('account_id', $ids)->whereNotNull('followers')->min('date');
+        $days = self::FOLLOWER_RANGES[$range] ?? 365;
+        $from = $days ? today()->subDays($days - 1) : ($first ? Carbon::parse($first)->startOfDay() : today()->subDays(29));
+        $total = (int) $from->diffInDays(today()) + 1;
+        $step = $total > 120 ? 7 : 1;
+        // Last known followers per account and day (also the last value before the period starts).
+        $rows = Daily::whereIn('account_id', $ids)->whereNotNull('followers')->orderBy('date')->get(['account_id', 'date', 'followers'])->groupBy('account_id');
+        $out = [];
+        foreach ($accounts->groupBy('platform') as $platform => $list) {
+            $byDay = [];
+            foreach ($list as $a) {
+                foreach ($rows[$a->id] ?? [] as $r) {
+                    $byDay[$a->id][$r->date->toDateString()] = (int) $r->followers;
+                }
+            }
+            $last = [];
+            foreach ($list as $a) {
+                $before = array_filter($byDay[$a->id] ?? [], fn ($k) => $k < $from->toDateString(), ARRAY_FILTER_USE_KEY);
+                if ($before) {
+                    $last[$a->id] = end($before);
+                }
+            }
+            $points = [];
+            for ($i = 0; $i < $total; $i++) {
+                $d = $from->copy()->addDays($i)->toDateString();
+                foreach ($list as $a) {
+                    if (isset($byDay[$a->id][$d])) {
+                        $last[$a->id] = $byDay[$a->id][$d];
+                    }
+                }
+                if ($i % $step === $step - 1 || $i === $total - 1) {
+                    $points[$d] = $last ? array_sum($last) : null;
+                }
+            }
+            if (array_filter($points, fn ($v) => $v !== null)) {
+                $out[$platform] = $points;
+            }
+        }
+
+        return $out;
+    }
+
     private static function followerSeries(Collection $accounts, Collection $daily, Carbon $from, int $days): array
     {
         $out = [];

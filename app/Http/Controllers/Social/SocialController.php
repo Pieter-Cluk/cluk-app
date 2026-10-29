@@ -27,6 +27,8 @@ class SocialController extends Controller
 
         return view('social.index', [
             'd' => Dashboard::build($days),
+            'fRange' => $fRange = (array_key_exists((string) $request->query('f'), Dashboard::FOLLOWER_RANGES) ? (string) $request->query('f') : '1y'),
+            'followers' => Dashboard::followers($fRange),
             'providers' => collect(Social::PROVIDERS)->map(fn ($c, $k) => ['key' => $k, 'configured' => Social::provider($k)->configured()]),
             'canConnect' => $request->user()->hasRight('social.connect'),
             'canPost' => self::canPlan($request),

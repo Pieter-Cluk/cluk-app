@@ -10,6 +10,8 @@
     $y = fn ($v) => $pt + ($H - $pt - $pb) * (1 - ($v - $min) / ($max - $min));
     $fmt = fn ($v) => $v >= 10000 ? number_format($v / 1000, 1, ',', '.').'k' : number_format($v, 0, ',', '.');
     $dates = array_keys(reset($series) ?: []);
+    $long = $dates && \Illuminate\Support\Carbon::parse($dates[0])->diffInDays(\Illuminate\Support\Carbon::parse(end($dates))) > 300;
+    $df = $long ? 'd/m/y' : 'd/m';
 @endphp
 <svg viewBox="0 0 {{ $W }} {{ $H }}" class="sm-chart" role="img" aria-label="{{ $label }}">
     @foreach ([0, 0.5, 1] as $f)
@@ -18,8 +20,8 @@
         <text x="{{ $pl - 6 }}" y="{{ round($y($v), 1) + 4 }}" text-anchor="end" class="sm-axis">{{ $fmt($v) }}</text>
     @endforeach
     @if ($dates)
-        <text x="{{ $pl }}" y="{{ $H - 6 }}" class="sm-axis">{{ \Illuminate\Support\Carbon::parse($dates[0])->format('d/m') }}</text>
-        <text x="{{ $W - $pr }}" y="{{ $H - 6 }}" text-anchor="end" class="sm-axis">{{ \Illuminate\Support\Carbon::parse(end($dates))->format('d/m') }}</text>
+        <text x="{{ $pl }}" y="{{ $H - 6 }}" class="sm-axis">{{ \Illuminate\Support\Carbon::parse($dates[0])->format($df) }}</text>
+        <text x="{{ $W - $pr }}" y="{{ $H - 6 }}" text-anchor="end" class="sm-axis">{{ \Illuminate\Support\Carbon::parse(end($dates))->format($df) }}</text>
     @endif
     @foreach ($series as $platform => $points)
         @php
