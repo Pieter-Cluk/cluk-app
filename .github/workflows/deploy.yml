@@ -11,8 +11,7 @@ name: Deploy to app.cluk.live
 #   NBB_CBSO_KEY (optional: annual accounts from the National Bank on the customer card)
 #   META_APP_ID, META_APP_SECRET, META_CONFIG_ID (optional: Media › Social media, Facebook and Instagram)
 #   LINKEDIN_CLIENT_ID, LINKEDIN_CLIENT_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (optional: Social media)
-# Repository variable (not secret): WEBSITE_HOST = the website's own address (www.cluk.live); empty = preview on
-#   app.cluk.live/site. The domain must point to the same web root as app.cluk.live first.
+# WEBSITE_HOST (env below, or a repository variable) = the website's own address (www.cluk.live).
 # Repository variable (not secret): BACKUP_OFFSITE_USER = the Microsoft 365 account whose OneDrive keeps a copy of
 #   every backup (needs the application permission Files.ReadWrite.All on the CLUK app). Empty = no copy.
 
@@ -28,6 +27,8 @@ env:
   SSH_HOST: ssh.cys6r88bx.service.one
   SSH_USER: cys6r88bx_ssh
   APP_URL: https://app.cluk.live
+  # The website's own address (empty = preview on app.cluk.live/site). A repository variable WEBSITE_HOST overrides it.
+  WEBSITE_HOST: ${{ vars.WEBSITE_HOST || 'www.cluk.live' }}
   DB_HOST: cys6r88bx.mysql.service.one.com
   DB_DATABASE: cys6r88bx_clukapp
   DB_USERNAME: cys6r88bx_clukapp
@@ -117,7 +118,7 @@ jobs:
           MAIL_FROM_ADDRESS=${{ vars.MAIL_FROM_ADDRESS || 'noreply@cluk.live' }}
           MAIL_FROM_NAME=CLUK
           BACKUP_OFFSITE_USER=${{ vars.BACKUP_OFFSITE_USER || '' }}
-          WEBSITE_HOST=${{ vars.WEBSITE_HOST || '' }}
+          WEBSITE_HOST=${WEBSITE_HOST}
           MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
           MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}
           MICROSOFT_CLIENT_SECRET="$(trim "$MICROSOFT_CLIENT_SECRET")"
@@ -140,7 +141,6 @@ jobs:
       - name: Upload and switch over on one.com
         env:
           SSHPASS: ${{ secrets.ONECOM_SSH_PASSWORD }}
-          WEBSITE_HOST: ${{ vars.WEBSITE_HOST || '' }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
           export SSHPASS=$(printf '%s' "$SSHPASS" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
@@ -192,13 +192,13 @@ jobs:
           exit 1
 
       - name: Check the website address
-        if: ${{ vars.WEBSITE_HOST != '' }}
+        if: ${{ env.WEBSITE_HOST != '' }}
         run: |
-          for u in "https://${{ vars.WEBSITE_HOST }}/" "https://${{ vars.WEBSITE_HOST }}/sales" "https://cluk.live/" "$APP_URL/site"; do
+          for u in "https://${WEBSITE_HOST}/" "https://${WEBSITE_HOST}/sales" "https://cluk.live/" "$APP_URL/site"; do
             echo "$u → $(curl -4 -s -o /dev/null -m 20 -w '%{http_code} %{redirect_url}' "$u" || echo none)"
           done
-          c=$(curl -4 -s -o /dev/null -m 20 -w '%{http_code}' "https://${{ vars.WEBSITE_HOST }}/" || true)
-          [ "$c" = "200" ] || echo "::warning title=Website address::https://${{ vars.WEBSITE_HOST }}/ answered HTTP $c"
+          c=$(curl -4 -s -o /dev/null -m 20 -w '%{http_code}' "https://${WEBSITE_HOST}/" || true)
+          [ "$c" = "200" ] || echo "::warning title=Website address::https://${WEBSITE_HOST}/ answered HTTP $c"
 
       - name: Report
         if: always()
