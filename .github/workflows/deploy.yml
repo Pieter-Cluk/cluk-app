@@ -53,7 +53,7 @@ jobs:
     env:
       # The website's own address (empty = preview on app.cluk.live/site). A repository variable WEBSITE_HOST overrides it.
       # Only for the server: the tests run with the preview addresses.
-      WEBSITE_HOST: ${{ vars.WEBSITE_HOST || 'www.cluk.live' }}
+      WEBSITE_HOST: ${{ vars.WEBSITE_HOST || '' }}
     steps:
       - uses: actions/checkout@v4
 
