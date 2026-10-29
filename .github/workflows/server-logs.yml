@@ -24,8 +24,8 @@ jobs:
           sshpass -e ssh -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
           W=$(readlink -f ~/webroots/by-route/app.cluk.live_)
           cd "$W/app" || exit 1
-          echo "== new dry-hire clamp and Factory zone"
-          php artisan tinker --execute='$i = App\Models\Equipment\Item::where("number", "RIGCLATAF8016B")->first(); echo $i ? $i->number." | ".$i->name." | stock ".$i->stock_qty." | kept ".$i->position_code." | day ".$i->day_price_cents." | photo ".($i->photo_path ? "yes" : "no")." | cat ".$i->category_id."/".$i->subcategory_id.PHP_EOL : "clamp missing".PHP_EOL; $z = App\Models\Warehouse\Zone::where("code", "FACTORY")->first(); echo $z ? "zone ".$z->code." ".$z->type." ".$z->label().PHP_EOL : "zone missing".PHP_EOL;' 2>&1 | tail -4
+          echo "== SOL items (read only)"
+          php artisan tinker --execute='foreach (App\Models\Equipment\Item::where(fn ($q) => $q->where("name", "like", "%SOL%")->orWhere("name", "like", "%nterconnect%")->orWhere("number", "like", "%SOL%")->orWhere("brand", "like", "%lation%"))->orderBy("number")->limit(25)->get() as $s) { echo $s->id." | ".$s->number." | ".$s->name." | ".$s->brand." | ".$s->type." | ".$s->category."/".$s->subcategory." ".$s->category_id."/".$s->subcategory_id." | serial=".($s->serial ? 1 : 0)." stock=".$s->stock_qty." day=".$s->day_price_cents." kind=".$s->kind." photo=".($s->photo_path ? 1 : 0)." kept=".($s->position_code ?? "-")." | ".json_encode($s->descriptions, JSON_UNESCAPED_UNICODE).PHP_EOL; }' 2>&1 | tail -30
           echo "== migrations and labour rates"
           php artisan migrate:status 2>&1 | tail -4
           php artisan tinker --execute='foreach (App\Models\Sales\LabourType::orderBy("position")->get() as $t) { echo $t->name("en")." ".($t->price_cents === null ? "-" : $t->price_cents / 100)."/".$t->unit." ".($t->active ? "on" : "off").PHP_EOL; }' 2>&1 | tail -8
