@@ -199,6 +199,7 @@ return [
         'carrier_already' => ':code is already in :carrier.',
         'carrier_store_first' => ':code is not stored (rentable) yet: store it first, then put it in a dolly or box.',
         'carrier_to_rack' => 'A dolly or box goes to a rack place or storage, not to :place.',
+        'carrier_there' => ':carrier is already in :place.',
         'carrier_picked_already' => ':carrier is already picked for :order.',
         'carrier_not_on_order' => ':carrier holds pieces that are not on :order: :codes. Take them out first.',
         'carrier_not_out_with' => ':carrier is not out with :order.',
@@ -209,6 +210,7 @@ return [
         'office_rack_only' => ':code goes to a rack place or storage from the office, not to :place.',
     ],
     'zone_names' => [
+        'FACTORY' => 'Cluk Factory (hung in the venue)',
         'INBOUND' => 'Inbound',
         'UNKNOWN' => 'Unknown goods shelf',
         'CLEAN' => 'Cleaning area',
@@ -225,6 +227,7 @@ return [
         'A6-24H' => '24 h pick-up shelf',
     ],
     'types' => [
+        'venue' => 'Venue',
         'inbound' => 'Inbound',
         'cleaning' => 'Cleaning',
         'precheck' => 'Pre-check',

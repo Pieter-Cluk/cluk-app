@@ -181,7 +181,8 @@ class PhoneController extends Controller
         if ($found['type'] === 'asset') {
             $asset = $found['model'];
             // Scanned the piece that waits for its next step: open that step.
-            if ($asset->location && ($z = Moves::zoneOf($asset->location))) {
+            // (Not for a piece parked there in its dolly or box: it never started cleaning or a check.)
+            if ($asset->location && ! $asset->case_id && ($z = Moves::zoneOf($asset->location))) {
                 $open = Check::where('asset_id', $asset->id)->whereNull('finished_at')->latest('id')->first();
                 if ($z->type === 'cleaning' && ! $open?->cleaned_at) {
                     return redirect()->route('w.clean', $asset);

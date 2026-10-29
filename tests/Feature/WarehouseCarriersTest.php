@@ -104,9 +104,35 @@ class WarehouseCarriersTest extends TestCase
         $this->scan('LT-0002');
         $this->scan('GA3B1')->assertSessionHasNoErrors();
         $this->assertNull($p[2]->fresh()->case_id);
-        // A dolly cannot go to cleaning.
+        // A dolly can be parked anywhere, e.g. in cleaning: its pieces go along and keep their status.
         $this->scan('DOLLY-01');
-        $this->scan('CLEAN')->assertSessionHasErrors('code');
+        $this->scan('CLEAN')->assertSessionHasNoErrors();
+        $this->assertSame(['CLEAN', 'CLEAN'], [$dolly->fresh()->location, $p[1]->fresh()->location]);
+        $this->assertSame(\App\Models\Equipment\Asset::AVAILABLE, $p[1]->fresh()->status);
+        // From there a piece can go back to a rack on its own (it was parked with its dolly).
+        $this->scan('LT-0001');
+        $this->scan('GA2B1')->assertSessionHasNoErrors();
+        $this->assertSame('GA2B1', $p[1]->fresh()->location);
+        // And the dolly to the Factory, then back to a rack.
+        $this->scan('DOLLY-01');
+        $this->scan('FACTORY')->assertSessionHasNoErrors();
+        $this->assertSame('FACTORY', $dolly->fresh()->location);
+        $this->scan('DOLLY-01');
+        $this->scan('FACTORY')->assertSessionHasErrors('code'); // already there
+        $this->scan('GA2B2')->assertSessionHasNoErrors();
+        $this->assertSame('GA2B2', $dolly->fresh()->location);
+    }
+
+    public function test_a_piece_in_stock_can_hang_in_the_factory_and_come_back(): void
+    {
+        [$p] = $this->job();
+        $this->scan('LT-0003');
+        $this->scan('FACTORY')->assertSessionHasNoErrors();
+        $this->assertSame('FACTORY', $p[3]->fresh()->location);
+        $this->scan('LT-0003');
+        $this->scan('GA1B1')->assertSessionHasNoErrors();
+        $this->assertSame('GA1B1', $p[3]->fresh()->location);
+        $this->assertSame('Cluk Factory (hung in the venue)', \App\Services\Warehouse\Moves::label('FACTORY'));
     }
 
     public function test_pick_a_dolly_load_it_and_return_piece_by_piece(): void

@@ -199,6 +199,7 @@ return [
         'carrier_already' => ':code zit al in :carrier.',
         'carrier_store_first' => ':code is nog niet opgeslagen (verhuurbaar): sla hem eerst op, leg hem dan in een dolly of box.',
         'carrier_to_rack' => 'Een dolly of box gaat naar een rekplaats of opslag, niet naar :place.',
+        'carrier_there' => ':carrier staat al in :place.',
         'carrier_picked_already' => ':carrier is al gepickt voor :order.',
         'carrier_not_on_order' => ':carrier bevat stuks die niet op :order staan: :codes. Haal ze er eerst uit.',
         'carrier_not_out_with' => ':carrier is niet weg met :order.',
@@ -209,6 +210,7 @@ return [
         'office_rack_only' => ':code gaat vanuit het kantoor naar een rekplaats of opslag, niet naar :place.',
     ],
     'zone_names' => [
+        'FACTORY' => 'Cluk Factory (opgehangen in de zaal)',
         'INBOUND' => 'Inbound',
         'UNKNOWN' => 'Rek onbekende goederen',
         'CLEAN' => 'Opkuisruimte',
@@ -225,6 +227,7 @@ return [
         'A6-24H' => '24 u-afhaalrek',
     ],
     'types' => [
+        'venue' => 'Zaal',
         'inbound' => 'Inbound',
         'cleaning' => 'Opkuis',
         'precheck' => 'Pre-check',

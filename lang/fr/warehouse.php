@@ -199,6 +199,7 @@ return [
         'carrier_already' => ':code est déjà dans :carrier.',
         'carrier_store_first' => ':code n’est pas encore rangé (louable) : rangez-le d’abord, puis mettez-le dans un dolly ou une caisse.',
         'carrier_to_rack' => 'Un dolly ou une caisse va dans un emplacement de rayonnage ou le stockage, pas à :place.',
+        'carrier_there' => ':carrier est déjà dans :place.',
         'carrier_picked_already' => ':carrier est déjà préparé pour :order.',
         'carrier_not_on_order' => ':carrier contient des pièces qui ne sont pas sur :order : :codes. Sortez-les d’abord.',
         'carrier_not_out_with' => ':carrier n’est pas sorti avec :order.',
@@ -209,6 +210,7 @@ return [
         'office_rack_only' => ':code va depuis le bureau vers un emplacement de rayonnage ou le stockage, pas vers :place.',
     ],
     'zone_names' => [
+        'FACTORY' => 'Cluk Factory (accroché dans la salle)',
         'INBOUND' => 'Inbound',
         'UNKNOWN' => 'Étagère marchandises inconnues',
         'CLEAN' => 'Zone de nettoyage',
@@ -225,6 +227,7 @@ return [
         'A6-24H' => 'Étagère de retrait 24 h',
     ],
     'types' => [
+        'venue' => 'Salle',
         'inbound' => 'Inbound',
         'cleaning' => 'Nettoyage',
         'precheck' => 'Pré-contrôle',

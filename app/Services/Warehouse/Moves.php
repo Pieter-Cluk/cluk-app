@@ -121,6 +121,10 @@ class Moves
         if (! $from) {
             return; // first time on the route: anywhere
         }
+        // Parked with its dolly/box, or hung in the Factory: it may go anywhere from there, and into the Factory from anywhere in stock.
+        if ($asset->case_id || $from->type === 'venue' || ($toZone?->type === 'venue' && $asset->status === Asset::AVAILABLE)) {
+            return;
+        }
         if ($from->type === 'cleaning' && ! Check::where('asset_id', $asset->id)->whereNull('finished_at')->whereNotNull('cleaned_at')->exists()) {
             $fail('clean_first');
         }

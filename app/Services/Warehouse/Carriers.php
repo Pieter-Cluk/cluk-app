@@ -97,7 +97,11 @@ class Carriers
         Move::create(['asset_id' => $asset->id, 'item_id' => $asset->item_id, 'from_code' => $case->code, 'to_code' => $asset->location, 'kind' => 'unpack', 'user_id' => $by->id, 'case_id' => $case->id]);
     }
 
-    /** Move a case with everything in it to a rack place (or storage, inbound). Returns the number of pieces moved. */
+    /**
+     * Move a case with everything in it to any place: a rack place, a zone (cleaning, a pre-check, a street…) or the
+     * Factory. The case is parked there as a whole: the pieces inside keep their status and do not start cleaning or
+     * a check. Returns the number of pieces moved.
+     */
     public static function move(Asset $case, Zone|Position $to, User $by): int
     {
         $r = ['carrier' => $case->code, 'place' => Moves::label($to->code)];
@@ -107,21 +111,17 @@ class Carriers
         if ($case->status !== Asset::AVAILABLE) {
             self::fail('carrier_store_first', ['code' => $case->code]);
         }
-        if ($to instanceof Zone && ! in_array($to->type, ['storage', 'inbound'], true)) {
-            self::fail('carrier_to_rack', $r);
+        if ($case->location === $to->code) {
+            self::fail('carrier_there', $r);
         }
-        if ($to instanceof Position && ! in_array($to->use, ['rental', 'spare'], true)) {
-            self::fail('not_rental_place', ['place' => $to->code]);
-        }
-        $pieces = $case->packed()->with('item')->get()->reject(fn (Asset $a) => $a->location === $to->code);
-        // Every piece must be allowed to go there; otherwise nothing moves and the crew sees why.
-        foreach ($pieces as $a) {
-            Moves::check($a, $to);
-        }
+        $pieces = $case->packed()->with('item')->get()->reject(fn (Asset $a) => $a->location === $to->code || $a->status === Asset::RETIRED);
 
         return DB::transaction(function () use ($case, $to, $by, $pieces) {
             foreach ($pieces as $a) {
-                Moves::move($a, $to, $by, $case);
+                // Only the place changes: the pieces were in stock when they went in the case and stay so.
+                $from = $a->location;
+                $a->update(['location' => $to->code]);
+                Move::create(['asset_id' => $a->id, 'item_id' => $a->item_id, 'from_code' => $from, 'to_code' => $to->code, 'kind' => 'move', 'user_id' => $by->id, 'case_id' => $case->id]);
             }
             $from = $case->location;
             $case->update(['location' => $to->code]);
