@@ -21,7 +21,7 @@ return [
     'linkedin' => [
         'client_id' => env('LINKEDIN_CLIENT_ID'),
         'client_secret' => env('LINKEDIN_CLIENT_SECRET'),
-        'version' => env('LINKEDIN_API_VERSION', '202509'),
+        'version' => env('LINKEDIN_API_VERSION', '202605'),
         'scopes' => ['r_organization_social', 'w_organization_social', 'rw_organization_admin'],
     ],
     'google' => [
