@@ -24,8 +24,8 @@ jobs:
           sshpass -e ssh -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
           W=$(readlink -f ~/webroots/by-route/app.cluk.live_)
           cd "$W/app" || exit 1
-          echo "== SOL items (read only)"
-          php artisan tinker --execute='$all = App\Models\Equipment\Item::where("category_id", "!=", 1)->get(); foreach ($all->filter(fn ($s) => preg_match("/\\bS[OŌ]L\\b|SOL ?1|SOL ?I\\b|interconnect|jumper|truecon/i", $s->name." ".$s->type." ".$s->search_words) || stripos((string) $s->brand, "elation") !== false)->take(30) as $s) { echo $s->id." | ".$s->number." | ".$s->name." | ".$s->brand." | ".$s->category_id."/".$s->subcategory_id." | serial=".($s->serial ? 1 : 0)." stock=".$s->stock_qty." day=".$s->day_price_cents." photo=".($s->photo_path ? 1 : 0).PHP_EOL; }' 2>&1 | tail -32
+          echo "== requests mailbox"
+          php artisan tinker --execute='echo "status before: ".(App\Services\Mail\RequestsMailbox::status() ?? "not read yet")." paused=".(Cache::get("requests_mailbox.pause") ? "yes" : "no")." since=".Cache::get("requests_mailbox.since", "-").PHP_EOL; Cache::forget("requests_mailbox.pause"); $n = App\Services\Mail\RequestsMailbox::scan(); echo "read now: ".$n." new, status ".App\Services\Mail\RequestsMailbox::status().PHP_EOL; foreach (App\Models\Sales\IncomingMessage::where("channel", "email")->latest("id")->take(5)->get() as $m) { echo "  item ".$m->id." at ".$m->received_at." forwarded=".(($m->payload["forwarded_by"] ?? null) ? "yes" : "no")." sender_domain=".Str::after((string) $m->from_email, "@")." company=".($m->company_id ? "matched" : "-")." contact=".($m->contact_id ? "matched" : "-")." files=".count($m->payload["attachments"] ?? [])." body_chars=".strlen((string) $m->body).PHP_EOL; }' 2>&1 | tail -10
           echo "== migrations and labour rates"
           php artisan migrate:status 2>&1 | tail -4
           php artisan tinker --execute='foreach (App\Models\Sales\LabourType::orderBy("position")->get() as $t) { echo $t->name("en")." ".($t->price_cents === null ? "-" : $t->price_cents / 100)."/".$t->unit." ".($t->active ? "on" : "off").PHP_EOL; }' 2>&1 | tail -8
