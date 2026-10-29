@@ -123,6 +123,19 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame('GA2B2', $dolly->fresh()->location);
     }
 
+    public function test_a_dolly_can_go_to_every_zone(): void
+    {
+        [$p] = $this->job();
+        $this->scan('LT-0001');
+        $this->scan('DOLLY-01')->assertSessionHasNoErrors();
+        $dolly = self::case('DOLLY-01');
+        foreach (\App\Models\Warehouse\Zone::where('active', true)->where('type', '!=', 'storage')->orderBy('sort')->pluck('code') as $code) {
+            $this->scan('DOLLY-01');
+            $r = $this->scan($code);
+            $this->assertSame($code, $dolly->fresh()->location, $code.': '.json_encode(session('errors')?->all()));
+        }
+    }
+
     public function test_a_piece_in_stock_can_hang_in_the_factory_and_come_back(): void
     {
         [$p] = $this->job();
