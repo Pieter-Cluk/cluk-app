@@ -45,9 +45,9 @@ class WebsiteNewsTest extends TestCase
     {
         $this->posts();
         $this->get('/site')->assertOk()->assertSee('New L-Acoustics K2 in the warehouse')->assertSee('Two desks free at Afrit 6')
-            ->assertSee('Latest posts')->assertDontSee('#CLUK-dry-hire')->assertDontSee('LinkedIn only');
+            ->assertSee('Latest posts')->assertDontSee('#CLUK-dry-hire');
         $this->get('/site/news')->assertOk()->assertSee('Team lunch')->assertSee('Wedding season at Factory');
-        $this->get('/site/news?part=sales')->assertOk()->assertSee('Autumn promo on Astera tubes')->assertDontSee('Team lunch');
+        $this->get('/site/news?part=sales')->assertOk()->assertSee('Autumn promo on Astera tubes')->assertSee('LinkedIn only')->assertDontSee('Team lunch');
         $this->get('/site/news?part=dryhire&lang=nl')->assertOk()->assertSee('Nieuws')->assertSee('New L-Acoustics K2');
         $this->get('/site/sales')->assertOk()->assertSee('Autumn promo on Astera tubes');
     }
@@ -58,7 +58,7 @@ class WebsiteNewsTest extends TestCase
         Http::fake(['cdn.example/*' => Http::response(base64_decode('/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAAA//EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AN//Z'), 200, ['Content-Type' => 'image/jpeg'])]);
         $k2 = Post::where('external_id', 'p1')->first();
         $this->get('/site/news/image/'.$k2->id)->assertOk();
-        $this->get('/site/news/image/'.Post::where('external_id', 'p6')->value('id'))->assertNotFound(); // LinkedIn is not on the website
+        $this->get('/site/news/image/'.Post::where('external_id', 'p6')->value('id'))->assertOk(); // LinkedIn is on the website too
         $this->get('/site/news/video/'.$k2->id)->assertNotFound(); // no video kept for this post
     }
 
