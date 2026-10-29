@@ -45,7 +45,9 @@
         <section class="ph-card">
             <b>{{ $here['label'] }}</b> <small class="muted">{{ $here['code'] }}</small>
             @foreach ($here['carriers'] as $c)
-                <p><b>{{ $c->item->name }} · {{ $c->code }}</b> <small class="muted">· {{ trans_choice('warehouse.carriers.count', $c->packed_count, ['n' => $c->packed_count]) }}</small></p>
+                @php($n = $c->packed->count() + (int) $c->counted->sum('qty'))
+                <p><b>{{ $c->item->name }} · {{ $c->code }}</b> <small class="muted">· {{ trans_choice('warehouse.carriers.count', $n, ['n' => $n]) }}</small>
+                    @if ($n > 0)<br><small class="muted">{{ \Illuminate\Support\Str::limit($c->packed->map(fn ($a) => $a->code.' '.$a->item->name)->merge($c->counted->map(fn ($x) => $x->qty.' × '.($x->item->type ?: $x->item->name)))->implode(' · '), 160) }}</small>@endif</p>
             @endforeach
             @if ($here['assets']->isEmpty() && $here['carriers']->isEmpty())
                 <p class="muted">{{ __('warehouse.scan.empty_place') }}</p>

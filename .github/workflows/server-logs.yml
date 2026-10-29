@@ -24,6 +24,8 @@ jobs:
           sshpass -e ssh -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
           W=$(readlink -f ~/webroots/by-route/app.cluk.live_)
           cd "$W/app" || exit 1
+          echo "== boxes at inbound (contents check)"
+          php artisan tinker --execute='foreach (App\Models\Equipment\Asset::with("item")->where("location", "INBOUND")->whereNull("case_id")->get()->filter->isContainer() as $c) { echo $c->code." ".$c->item->name." status=".$c->status." packed=".App\Models\Equipment\Asset::where("case_id", $c->id)->count()." packed_here=".App\Models\Equipment\Asset::where("case_id", $c->id)->where("location", $c->location)->count()." counted=".DB::table("equipment_case_items")->where("case_id", $c->id)->sum("qty").PHP_EOL; }' 2>&1 | tail -15
           echo "== migrations and labour rates"
           php artisan migrate:status 2>&1 | tail -4
           php artisan tinker --execute='foreach (App\Models\Sales\LabourType::orderBy("position")->get() as $t) { echo $t->name("en")." ".($t->price_cents === null ? "-" : $t->price_cents / 100)."/".$t->unit." ".($t->active ? "on" : "off").PHP_EOL; }' 2>&1 | tail -8

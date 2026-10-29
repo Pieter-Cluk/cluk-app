@@ -71,7 +71,8 @@ class PhoneController extends Controller
         $pending = $this->pending($request);
         $here = null;
         if ($code = $request->session()->get('w.here')) {
-            $all = Asset::with('item')->withCount('packed')->where('location', $code)->whereNull('case_id')->orderBy('code')->limit(80)->get();
+            // Boxes and cases: their loose pieces and their counted items (cables, softsteels…) both count as contents.
+            $all = Asset::with(['item', 'packed.item', 'counted.item'])->where('location', $code)->whereNull('case_id')->orderBy('code')->limit(80)->get();
             $here = ['code' => $code, 'label' => Moves::label($code), 'carriers' => $all->filter->isContainer()->values(), 'assets' => $all->reject->isContainer()->values()];
         }
         $next = [];
