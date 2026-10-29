@@ -27,8 +27,6 @@ env:
   SSH_HOST: ssh.cys6r88bx.service.one
   SSH_USER: cys6r88bx_ssh
   APP_URL: https://app.cluk.live
-  # The website's own address (empty = preview on app.cluk.live/site). A repository variable WEBSITE_HOST overrides it.
-  WEBSITE_HOST: ${{ vars.WEBSITE_HOST || 'www.cluk.live' }}
   DB_HOST: cys6r88bx.mysql.service.one.com
   DB_DATABASE: cys6r88bx_clukapp
   DB_USERNAME: cys6r88bx_clukapp
@@ -52,6 +50,10 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    env:
+      # The website's own address (empty = preview on app.cluk.live/site). A repository variable WEBSITE_HOST overrides it.
+      # Only for the server: the tests run with the preview addresses.
+      WEBSITE_HOST: ${{ vars.WEBSITE_HOST || 'www.cluk.live' }}
     steps:
       - uses: actions/checkout@v4
 
