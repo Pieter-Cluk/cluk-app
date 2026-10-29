@@ -78,6 +78,10 @@ class RunBackgroundChecks
             if (Cache::add('jobs:bounces:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 15), 1, 1000)) {
                 \App\Services\Mail\Bounces::scan();
             }
+            // requests@cluk.live: new mails become items in Sales › Incoming (every 5 minutes).
+            if (Cache::add('jobs:requestsmail:'.$now->format('Y-m-d-H').':'.intdiv($now->minute, 5), 1, 400)) {
+                \App\Services\Mail\RequestsMailbox::scan();
+            }
             // Social media: planned posts go out on time; the figures of one account at a time every 15 minutes.
             if (Cache::add('jobs:social:'.$now->format('Y-m-d-H-i'), 1, 120)) {
                 Social::publishDue();

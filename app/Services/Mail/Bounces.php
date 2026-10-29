@@ -243,7 +243,7 @@ class Bounces
         }
     }
 
-    private static function token(): string
+    public static function token(): string
     {
         return Cache::remember('graph-mail-token', 3000, function () {
             $r = Http::asForm()->timeout(15)->post('https://login.microsoftonline.com/'.config('services.microsoft.tenant').'/oauth2/v2.0/token', [

@@ -4,6 +4,8 @@
             <div class="kicker">{{ mb_strtoupper(__('nav.items.sales')) }}</div>
             <h1>{{ __('deals.tabs.incoming') }}</h1>
             <p class="muted">{{ __('deals.incoming.intro') }}</p>
+            @php($mb = \App\Services\Mail\RequestsMailbox::status())
+            @if ($mb !== 'off')<p class="muted small">{{ __('deals.incoming.mailbox.'.($mb ?? 'waiting'), ['box' => \App\Services\Mail\RequestsMailbox::box()]) }}</p>@endif
         </div>
     </div>
     @include('partials.flash')
@@ -60,6 +62,11 @@
                         <dt>{{ __('deals.incoming.received') }}</dt><dd>{{ $selected->received_at?->format('d/m/Y H:i') }}</dd>
                     </dl>
                     @if ($selected->body)<div class="message-body">{!! nl2br(e($selected->body)) !!}</div>@endif
+                    @if ($selected->payload['forwarded_by'] ?? null)<p class="muted small mt">{{ __('deals.incoming.forwarded_by', ['email' => $selected->payload['forwarded_by']]) }}</p>@endif
+                    @if ($selected->payload['attachments'] ?? null)
+                        <p class="mt"><b class="small">{{ __('deals.incoming.attachments') }}</b></p>
+                        <ul class="plain-list small">@foreach ($selected->payload['attachments'] as $i => $f)<li><a href="{{ route('incoming.file', [$selected, $i]) }}">📎 {{ $f['name'] }}</a> <span class="muted">· {{ number_format($f['size'] / 1024, 0, ',', '.') }} kB</span></li>@endforeach</ul>
+                    @endif
                     @if ($selected->handled_note)<p class="muted small mt">{{ __('deals.incoming.statuses.'.$selected->status) }}: {{ $selected->handled_note }}</p>@endif
                     @if ($selected->deal_id)<p class="mt"><a href="{{ route('deals.show', $selected->deal_id) }}">{{ __('deals.incoming.go_deal') }}</a></p>@endif
                     @if (($selected->payload['type'] ?? null) === 'chat' && ($selected->payload['chat_id'] ?? null))<p class="mt"><a class="primary" href="{{ route('chats.show', $selected->payload['chat_id']) }}">{{ __('chats.open_chat') }}</a></p>@endif

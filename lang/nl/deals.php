@@ -156,6 +156,14 @@ return [
         'qualify_first' => 'Vink eerst de drie kwalificatievragen aan.',
     ],
     'incoming' => [
+        'forwarded_by' => 'Doorgestuurd door :email',
+        'attachments' => 'Bijlagen',
+        'mailbox' => [
+            'ok' => 'Mails die naar :box gestuurd of doorgestuurd worden, komen hier vanzelf binnen (elke 5 minuten nagekeken).',
+            'waiting' => 'Mails die naar :box gestuurd of doorgestuurd worden, komen hier vanzelf binnen (eerste controle binnen 5 minuten).',
+            'missing' => 'De mailbox :box bestaat nog niet: maak hem aan als gedeelde mailbox in Microsoft 365, dan komen mails daarheen hier binnen.',
+            'no_access' => 'De app mag :box nog niet lezen (Microsoft 365-machtiging Mail.Read).',
+        ],
         'intro' => 'Elke vraag via website, mail, sociale media en telefoon komt hier eerst binnen. Maak er een deal van, voeg toe aan een deal, vraag meer info of leg opzij.',
         'to_handle' => 'Te behandelen',
         'handled' => 'Behandeld',

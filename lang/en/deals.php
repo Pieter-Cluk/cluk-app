@@ -156,6 +156,14 @@ return [
         'qualify_first' => 'Tick the three qualification checks first.',
     ],
     'incoming' => [
+        'forwarded_by' => 'Forwarded by :email',
+        'attachments' => 'Attachments',
+        'mailbox' => [
+            'ok' => 'Mails sent or forwarded to :box arrive here by themselves (checked every 5 minutes).',
+            'waiting' => 'Mails sent or forwarded to :box will arrive here by themselves (first check within 5 minutes).',
+            'missing' => 'The mailbox :box does not exist yet: create it as a shared mailbox in Microsoft 365, then mails sent or forwarded there arrive here.',
+            'no_access' => 'The app may not read :box yet (Microsoft 365 permission Mail.Read).',
+        ],
         'intro' => 'Every question from website, mail, socials and phone lands here first. Make a deal of it, add it to a deal, ask for more or put it aside.',
         'to_handle' => 'To handle',
         'handled' => 'Handled',

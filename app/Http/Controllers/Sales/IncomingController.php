@@ -64,6 +64,15 @@ class IncomingController extends Controller
         return redirect()->route('incoming.index', ['open' => $item->id])->with('status', __('deals.incoming.flash.added'));
     }
 
+    /** An attachment of a mail that came in through requests@. */
+    public function file(IncomingMessage $item, int $i): \Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        $f = $item->payload['attachments'][$i] ?? null;
+        abort_unless($f && \Illuminate\Support\Facades\Storage::disk('local')->exists($f['path']), 404);
+
+        return \Illuminate\Support\Facades\Storage::disk('local')->download($f['path'], $f['name']);
+    }
+
     /** Website form posts here (with the shared token). */
     public function intake(Request $request): JsonResponse
     {

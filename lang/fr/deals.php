@@ -156,6 +156,14 @@ return [
         'qualify_first' => 'Cochez d’abord les trois critères de qualification.',
     ],
     'incoming' => [
+        'forwarded_by' => 'Transféré par :email',
+        'attachments' => 'Pièces jointes',
+        'mailbox' => [
+            'ok' => 'Les mails envoyés ou transférés à :box arrivent ici automatiquement (vérifié toutes les 5 minutes).',
+            'waiting' => 'Les mails envoyés ou transférés à :box arriveront ici automatiquement (premier contrôle dans les 5 minutes).',
+            'missing' => 'La boîte :box n’existe pas encore : créez-la comme boîte partagée dans Microsoft 365, ensuite les mails envoyés là arrivent ici.',
+            'no_access' => 'L’app ne peut pas encore lire :box (autorisation Microsoft 365 Mail.Read).',
+        ],
         'intro' => 'Chaque demande du site, du mail, des réseaux et du téléphone arrive d’abord ici. Créez une affaire, ajoutez-la à une affaire, demandez plus d’infos ou mettez de côté.',
         'to_handle' => 'À traiter',
         'handled' => 'Traités',

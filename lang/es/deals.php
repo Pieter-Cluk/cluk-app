@@ -156,6 +156,14 @@ return [
         'qualify_first' => 'Marca primero los tres criterios de calificación.',
     ],
     'incoming' => [
+        'forwarded_by' => 'Reenviado por :email',
+        'attachments' => 'Adjuntos',
+        'mailbox' => [
+            'ok' => 'Los correos enviados o reenviados a :box llegan aquí solos (se revisa cada 5 minutos).',
+            'waiting' => 'Los correos enviados o reenviados a :box llegarán aquí solos (primera revisión en 5 minutos).',
+            'missing' => 'El buzón :box aún no existe: créalo como buzón compartido en Microsoft 365 y los correos enviados allí llegarán aquí.',
+            'no_access' => 'La app aún no puede leer :box (permiso de Microsoft 365 Mail.Read).',
+        ],
         'intro' => 'Toda consulta de la web, correo, redes y teléfono llega aquí primero. Conviértela en oportunidad, añádela a una, pide más datos o descártala.',
         'to_handle' => 'Por atender',
         'handled' => 'Atendidos',

@@ -342,6 +342,7 @@ Route::middleware('auth:web')->group(function () {
     Route::middleware('nav:sales')->prefix('sales')->group(function () {
         Route::get('/', [DealController::class, 'index'])->name('deals.index');
         Route::get('/incoming', [IncomingController::class, 'index'])->name('incoming.index');
+        Route::get('/incoming/{item}/files/{i}', [IncomingController::class, 'file'])->whereNumber(['item', 'i'])->name('incoming.file');
         Route::get('/chats', [\App\Http\Controllers\Sales\ChatController::class, 'index'])->name('chats.index');
         Route::get('/chats/{chat}', [\App\Http\Controllers\Sales\ChatController::class, 'show'])->whereNumber('chat')->name('chats.show');
         Route::get('/chats/{chat}/poll', [\App\Http\Controllers\Sales\ChatController::class, 'poll'])->whereNumber('chat')->name('chats.poll');

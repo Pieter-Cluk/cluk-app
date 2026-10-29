@@ -15,6 +15,8 @@ return [
 
     // A blind copy of every mail to customers and other outside people (empty: none). See App\\Support\\MailCopy.
     'mail_copy' => env('MAIL_COPY_TO', 'info@cluk.live'),
+    // Shared mailbox for requests: every mail there (sent or forwarded) becomes an item in Sales › Incoming.
+    'requests_mailbox' => env('REQUESTS_MAILBOX', 'requests@cluk.live'),
 
     // Backups (database + uploaded files): a folder outside the website.
     'backup_path' => env('BACKUP_PATH', storage_path('backups')),
