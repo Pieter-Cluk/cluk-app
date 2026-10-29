@@ -89,7 +89,7 @@ $site = function () {
 if ($host = config('website.host')) {
     // The website on its own address (WEBSITE_HOST, e.g. www.cluk.live). The other spelling (cluk.live) and the
     // old preview links (app.cluk.live/site/…) go to the same page there, with their query string (UTM codes).
-    $to = fn (Request $r, string $path) => redirect()->away('https://'.$host.'/'.ltrim($path, '/').(($q = $r->getQueryString()) ? '?'.$q : ''), 301);
+    $to = fn (Request $r, string $path) => redirect()->away('https://'.$host.'/'.ltrim($path, '/').(($q = (string) $r->server('QUERY_STRING')) !== '' ? '?'.$q : ''), 301);
     $other = str_starts_with($host, 'www.') ? substr($host, 4) : 'www.'.$host;
     Route::domain($other)->get('/{any?}', fn (Request $r, string $any = '') => $to($r, $any))->where('any', '.*')->name('site.other');
     if ($appHost = parse_url((string) config('app.url'), PHP_URL_HOST)) {
