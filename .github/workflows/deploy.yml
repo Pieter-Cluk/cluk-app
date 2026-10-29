@@ -11,6 +11,8 @@ name: Deploy to app.cluk.live
 #   NBB_CBSO_KEY (optional: annual accounts from the National Bank on the customer card)
 #   META_APP_ID, META_APP_SECRET, META_CONFIG_ID (optional: Media › Social media, Facebook and Instagram)
 #   LINKEDIN_CLIENT_ID, LINKEDIN_CLIENT_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (optional: Social media)
+# Repository variable (not secret): WEBSITE_HOST = the website's own address (www.cluk.live); empty = preview on
+#   app.cluk.live/site. The domain must point to the same web root as app.cluk.live first.
 # Repository variable (not secret): BACKUP_OFFSITE_USER = the Microsoft 365 account whose OneDrive keeps a copy of
 #   every backup (needs the application permission Files.ReadWrite.All on the CLUK app). Empty = no copy.
 
@@ -115,6 +117,7 @@ jobs:
           MAIL_FROM_ADDRESS=${{ vars.MAIL_FROM_ADDRESS || 'noreply@cluk.live' }}
           MAIL_FROM_NAME=CLUK
           BACKUP_OFFSITE_USER=${{ vars.BACKUP_OFFSITE_USER || '' }}
+          WEBSITE_HOST=${{ vars.WEBSITE_HOST || '' }}
           MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
           MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}
           MICROSOFT_CLIENT_SECRET="$(trim "$MICROSOFT_CLIENT_SECRET")"
