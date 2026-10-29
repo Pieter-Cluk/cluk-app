@@ -90,11 +90,14 @@ class DryHireCatalogue
         })->values()->all();
 
         $used = collect($rows);
+        // Fields on the item cards that are not offered as a filter (they still show on the product page).
+        $noFilter = $attrs->whereIn('key', (array) config('website.dryhire_no_filter', []))->pluck('id');
 
         return [
             'items' => $rows,
             'cats' => $cats->filter(fn ($c) => $used->contains('c', $c->id))->map(fn ($c) => ['id' => $c->id, 'code' => $c->code, 'slug' => $c->slug, 'name' => $c->label($locale)])->values()->all(),
-            'subs' => $subs->filter(fn ($s) => $used->contains('s', $s->id))->map(fn ($s) => ['id' => $s->id, 'c' => $s->category_id, 'slug' => $s->slug, 'name' => $s->label($locale), 'a' => $s->attrs->pluck('id')->all()])->values()->all(),
+            'subs' => $subs->filter(fn ($s) => $used->contains('s', $s->id))->map(fn ($s) => ['id' => $s->id, 'c' => $s->category_id, 'slug' => $s->slug, 'name' => $s->label($locale),
+                'a' => $s->attrs->pluck('id')->diff($noFilter)->values()->all()])->values()->all(),
             'attrs' => $attrs->map(fn ($a) => ['id' => $a->id, 'key' => $a->key, 'name' => $a->label($locale),
                 'o' => $a->options->map(fn ($o) => ['id' => $o->id, 'l' => $o->setRelation('attribute', $a)->display($locale)])->values()->all()])->values()->all(),
             'tags' => Tag::of('dryhire')->where('active', true)->orderBy('sort')->get()->map(fn ($t) => ['id' => $t->id, 'slug' => $t->slug, 'name' => $t->label($locale)])->values()->all(),

@@ -20,6 +20,10 @@ return [
 
     'dryhire_kinds' => ['item', 'package'],
 
+    // Item card fields that are not offered as a filter on the dry-hire pages (still shown on the product page).
+    // frequency_band: only the Shure wireless systems have one.
+    'dryhire_no_filter' => ['frequency_band'],
+
     // Photo sizes the website asks for (width in pixels).
     'photo_widths' => [480, 1200],
 
