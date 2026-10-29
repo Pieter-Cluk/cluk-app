@@ -30,7 +30,7 @@ class WallController extends Controller
         app()->setLocale(array_key_exists($lang, config('cluk.locales')) ? $lang : 'nl');
 
         if ($view === 'entrance') {
-            $data = ['screen' => $screen, 'key' => $key, 'guests' => Entrance::guests(), 'rooms' => Entrance::rooms()];
+            $data = ['screen' => $screen, 'key' => $key, 'guests' => Entrance::guests(), 'notices' => Entrance::notices(), 'rooms' => Entrance::rooms()];
             if ($request->query('part') === 'panel') {
                 // Polled every minute: only the agenda, plus the slideshow version (a change makes the screen reload).
                 return response(view('wall.entrance-panel', $data)->render())->header('X-Slides', Entrance::slidesVersion())->header('Cache-Control', 'no-store');
@@ -62,7 +62,7 @@ class WallController extends Controller
     public function index(Request $request): View
     {
         return view('wall.index', ['screens' => WallScreen::orderBy('id')->get(), 'manageAll' => $request->user()->canUseModule('warehouse', 2), 'manageEntrance' => $request->user()->canUseModule('warehouse', 2) || $request->user()->canUseModule('afrit6', 2),
-            'entrance' => ['slides' => Entrance::slides()->count(), 'guests' => \App\Models\Afrit6\Guest::live()->whereDate('date', today())->count()]]);
+            'entrance' => ['slides' => Entrance::slides()->count(), 'guests' => \App\Models\Afrit6\Guest::live()->where('kind', 'guest')->whereDate('date', today())->count()]]);
     }
 
     public function renew(Request $request, WallScreen $screen): RedirectResponse

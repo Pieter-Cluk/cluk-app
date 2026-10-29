@@ -106,6 +106,7 @@ return [
         'leak' => 'Un lien d’affichage ne montre que cette vue. Lien divulgué ? Cliquez sur « Nouveau lien » : l’ancien cesse aussitôt de fonctionner.',
     ],
     'entrance' => [
+        'today' => 'Aujourd’hui à Afrit 6',
         'welcome' => 'Bienvenue',
         'welcome_to' => 'Bienvenue à Afrit 6',
         'hello' => 'Co-working, salle de réunion et bureaux. Faites comme chez vous.',

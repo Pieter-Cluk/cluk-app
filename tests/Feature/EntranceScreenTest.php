@@ -117,10 +117,38 @@ class EntranceScreenTest extends TestCase
         }
     }
 
+    public function test_the_team_adds_guests_and_notices_from_messages(): void
+    {
+        $sales = User::factory()->create(['role_id' => Role::where('slug', 'manager')->value('id'), 'locale' => 'en']);
+        $m = Member::factory()->active()->create(['locale' => 'en', 'reg_company_name' => 'Studio Noord']);
+        Guest::create(['member_id' => $m->id, 'date' => today(), 'time' => '11:00', 'name' => 'Member Guest']);
+
+        $this->actingAs($sales)->get(route('messages.index'))->assertOk()->assertSee('Entrance screen');
+        $this->actingAs($sales)->get(route('messages.entrance'))->assertOk()->assertSee('Member Guest')->assertSee('added by the member');
+        $this->actingAs($sales)->post(route('messages.entrance.store'), ['kind' => 'guest', 'date' => today()->toDateString(), 'time' => '10:00', 'names' => "Jan Peeters\nEls Maes", 'company' => 'Acme', 'on_screen' => '1'])->assertRedirect(route('messages.entrance'));
+        $this->actingAs($sales)->post(route('messages.entrance.store'), ['kind' => 'notice', 'date' => today()->toDateString(), 'time' => '12:30', 'text' => 'Lunch & learn in the meeting room'])->assertRedirect();
+        $this->actingAs($sales)->post(route('messages.entrance.store'), ['kind' => 'notice', 'date' => today()->toDateString(), 'text' => ''])->assertSessionHasErrors('text');
+
+        $html = $this->get('/wall/entrance?key='.$this->screen()->token.'&lang=en')->assertOk()
+            ->assertSee('Jan Peeters')->assertSee('Els Maes')->assertSee('visiting CLUK')->assertSee('Today at Afrit 6')->assertSee('Lunch &amp; learn in the meeting room', false)->getContent();
+        $this->assertSame(1, substr_count($html, 'Lunch &amp; learn'));
+        $this->assertSame(3, Guest::where('kind', 'guest')->count());
+
+        // The member's own list only shows their guests.
+        $this->actingAs($m, 'member')->get('/afrit6/portal/guests')->assertOk()->assertSee('Member Guest')->assertDontSee('Jan Peeters')->assertDontSee('Lunch');
+
+        $notice = Guest::where('kind', 'notice')->first();
+        $this->actingAs($sales)->post(route('messages.entrance.cancel', $notice))->assertRedirect();
+        $this->get('/wall/entrance?key='.$this->screen()->token.'&lang=en')->assertDontSee('Lunch &amp; learn', false);
+
+        $readOnly = User::factory()->create(['role_id' => Role::where('slug', 'read-only')->value('id'), 'locale' => 'en']);
+        $this->actingAs($readOnly)->post(route('messages.entrance.store'), ['kind' => 'notice', 'date' => today()->toDateString(), 'text' => 'x'])->assertForbidden();
+    }
+
     public function test_every_language_has_the_texts(): void
     {
         foreach (['nl', 'fr', 'es'] as $l) {
-            foreach (['guests' => 'guests', 'wall.entrance' => 'wall.entrance'] as $k) {
+            foreach (['guests' => 'guests', 'wall.entrance' => 'wall.entrance', 'entrance' => 'entrance'] as $k) {
                 $this->assertSame(array_keys(trans($k, [], 'en')), array_keys(trans($k, [], $l)), $k.' '.$l);
             }
             $this->assertNotSame('wall.admin.screen_entrance', trans('wall.admin.screen_entrance', [], $l));

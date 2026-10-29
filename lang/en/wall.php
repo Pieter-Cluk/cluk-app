@@ -106,6 +106,7 @@ return [
         'leak' => 'A display link only shows that one view. Link leaked? Click “New link”: the old one stops working at once.',
     ],
     'entrance' => [
+        'today' => 'Today at Afrit 6',
         'welcome' => 'Welcome',
         'welcome_to' => 'Welcome to Afrit 6',
         'hello' => 'Co-working, meeting room and offices. Make yourself at home.',

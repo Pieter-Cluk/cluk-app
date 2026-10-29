@@ -22,7 +22,7 @@ class GuestController extends Controller
         $m = $this->member($request);
 
         return view('afrit6.portal.guests', [
-            'upcoming' => Guest::where('member_id', $m->id)->live()->whereDate('date', '>=', today())->orderBy('date')->orderBy('time')->get(),
+            'upcoming' => Guest::where('member_id', $m->id)->where('kind', 'guest')->live()->whereDate('date', '>=', today())->orderBy('date')->orderBy('time')->get(),
         ]);
     }
 

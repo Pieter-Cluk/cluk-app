@@ -22,6 +22,15 @@
     </section>
 @endif
 
+@if ($notices->isNotEmpty())
+    <section class="en-block">
+        <h3>{{ __('wall.entrance.today') }}</h3>
+        @foreach ($notices as $n)
+            <div @class(['en-room', 'en-notice', 'en-past' => $n['past']])>@if ($n['time'])<time>{{ $n['time'] }}</time>@endif<span>{{ $n['text'] }}</span></div>
+        @endforeach
+    </section>
+@endif
+
 <section class="en-block">
     <h3>{{ __('wall.entrance.room') }}</h3>
     @forelse ($rooms->reject(fn ($r) => $r['done']) as $r)

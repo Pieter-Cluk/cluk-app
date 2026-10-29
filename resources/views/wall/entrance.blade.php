@@ -38,6 +38,8 @@ body.idle{cursor:none}
 .en-guests small{display:block;font-size:1.05vw;color:var(--muted);margin-top:.2vw}
 .en-room{display:flex;gap:1vw;align-items:baseline;padding:.7vw 0;border-top:1px solid rgba(255,255,255,.12);font-size:1.3vw}
 .en-room time{color:var(--muted);min-width:8.5vw}
+.en-notice time{min-width:5vw}
+.en-room.en-past{opacity:.55}
 .en-room small{color:var(--muted)}
 .en-room em{margin-left:auto;font-style:normal;font-size:.95vw;font-weight:700;background:var(--green);color:#0f1a0b;border-radius:99px;padding:.2vw .7vw}
 .en-muted{margin:0;font-size:1.2vw;color:var(--muted)}

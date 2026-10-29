@@ -30,15 +30,23 @@ class Entrance
 
     public static function guests(): Collection
     {
-        return Guest::with('member.company')->live()->whereDate('date', today())->get()
+        return Guest::with('member.company')->live()->where('kind', 'guest')->whereDate('date', today())->get()
             ->sortBy(fn (Guest $g) => $g->time ?? '99:99')->values()
             ->map(fn (Guest $g) => [
                 'time' => $g->time,
                 'name' => $g->on_screen ? $g->name : null,
                 'company' => $g->on_screen ? $g->company : null,
-                'host' => $g->member?->companyName() ?: $g->member?->name,
+                'host' => $g->member ? ($g->member->companyName() ?: $g->member->name) : 'CLUK',
                 'past' => $g->time !== null && $g->time < now()->subHour()->format('H:i'),
             ]);
+    }
+
+    /** Short notices from the CLUK team for today (Media › Messages › Entrance screen). */
+    public static function notices(): Collection
+    {
+        return Guest::live()->where('kind', 'notice')->whereDate('date', today())->get()
+            ->sortBy(fn (Guest $g) => $g->time ?? '00:00')->values()
+            ->map(fn (Guest $g) => ['time' => $g->time, 'text' => $g->name, 'past' => $g->time !== null && $g->time < now()->subHour()->format('H:i')]);
     }
 
     public static function rooms(): Collection

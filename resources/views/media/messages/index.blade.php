@@ -10,7 +10,7 @@
     </div>
     @include('partials.flash')
     <nav class="tabs">
-        @foreach (\App\Models\Media\Message::KINDS as $k)<a @class(['tab', 'tab-on' => $kind === $k]) href="{{ route('messages.index', ['kind' => $k]) }}">{{ __('messages.kinds.'.$k) }} <small class="muted">{{ $counts[$k] }}</small></a>@endforeach
+        @foreach (\App\Models\Media\Message::KINDS as $k)<a @class(['tab', 'tab-on' => $kind === $k]) href="{{ route('messages.index', ['kind' => $k]) }}">{{ __('messages.kinds.'.$k) }} <small class="muted">{{ $counts[$k] }}</small></a>@endforeach<a class="tab" href="{{ route('messages.entrance') }}">{{ __('entrance.tab') }}</a>
     </nav>
     <p class="muted mt">{{ __('messages.hints.'.$kind) }}@if ($audience !== null) <b>{{ trans_choice('messages.audience', $audience, ['n' => $audience]) }}</b>@endif</p>
     @if (in_array($kind, ['birthday', 'banner'], true))

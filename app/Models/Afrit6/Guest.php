@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/** A guest an Afrit 6 member expects; welcomed on the entrance screen on that day. */
-#[Fillable(['member_id', 'date', 'time', 'name', 'company', 'on_screen', 'note', 'cancelled_at'])]
+/** A guest a member (or CLUK) expects, or a CLUK notice: shown on the entrance screen on that day. */
+#[Fillable(['kind', 'member_id', 'user_id', 'date', 'time', 'name', 'company', 'on_screen', 'note', 'cancelled_at'])]
 class Guest extends Model
 {
     protected $table = 'afrit6_guests';
@@ -22,6 +22,11 @@ class Guest extends Model
     public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\User::class);
     }
 
     public function scopeLive(Builder $q): Builder

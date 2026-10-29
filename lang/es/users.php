@@ -159,6 +159,8 @@ return [
             'crm_company_restored' => 'Recuperó una empresa',
             'import_done' => 'Importó una hoja de cálculo',
             'labour_rates_changed' => 'Tarifas de mano de obra cambiadas',
+            'entrance_added' => 'Añadido a la pantalla de entrada',
+            'entrance_removed' => 'Quitado de la pantalla de entrada',
             'afrit6_place_set' => 'Ubicación Afrit 6 asignada',
             'afrit6_place_freed' => 'Ubicación Afrit 6 liberada',
             'afrit6_member_approved' => 'Aprobó un miembro de Afrit 6',

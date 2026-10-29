@@ -106,6 +106,7 @@ return [
         'leak' => 'Een schermlink toont alleen dat ene overzicht. Link uitgelekt? Klik op “Nieuwe link”: de oude werkt meteen niet meer.',
     ],
     'entrance' => [
+        'today' => 'Vandaag in Afrit 6',
         'welcome' => 'Welkom',
         'welcome_to' => 'Welkom in Afrit 6',
         'hello' => 'Co-working, vergaderzaal en kantoren. Voel je thuis.',

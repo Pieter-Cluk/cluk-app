@@ -195,6 +195,9 @@ Route::middleware('auth:web')->group(function () {
     // Media › Messages: birthday card, newsletters, promotions, banner on quotes.
     Route::prefix('media/messages')->middleware('nav:messages')->group(function () {
         Route::get('/', [MessageController::class, 'index'])->name('messages.index');
+        Route::get('/entrance', [\App\Http\Controllers\Media\EntranceController::class, 'index'])->name('messages.entrance');
+        Route::post('/entrance', [\App\Http\Controllers\Media\EntranceController::class, 'store'])->middleware('throttle:60,1')->name('messages.entrance.store');
+        Route::post('/entrance/{entry}/cancel', [\App\Http\Controllers\Media\EntranceController::class, 'cancel'])->whereNumber('entry')->name('messages.entrance.cancel');
         Route::get('/{message}', [MessageController::class, 'edit'])->whereNumber('message')->name('messages.edit');
         Route::middleware('level:sales,2')->group(function () {
             Route::get('/new', [MessageController::class, 'create'])->name('messages.create');

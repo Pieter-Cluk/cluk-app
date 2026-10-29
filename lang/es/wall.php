@@ -106,6 +106,7 @@ return [
         'leak' => 'Un enlace solo muestra esa vista. ¿Se ha filtrado? Pulse «Nuevo enlace»: el antiguo deja de funcionar al instante.',
     ],
     'entrance' => [
+        'today' => 'Hoy en Afrit 6',
         'welcome' => 'Bienvenidos',
         'welcome_to' => 'Bienvenidos a Afrit 6',
         'hello' => 'Co-working, sala de reuniones y oficinas. Siéntete como en casa.',
