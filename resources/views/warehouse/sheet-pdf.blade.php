@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <style>
-@page { size: A4 portrait; margin: 10mm 10mm 8mm 10mm; }
+@page { size: {{ $paper }} portrait; margin: 10mm 10mm 8mm 10mm; }
 body { font-family: 'DejaVu Sans', sans-serif; color: #111; margin: 0; }
 .page { page-break-after: always; }
 .page:last-child { page-break-after: auto; }

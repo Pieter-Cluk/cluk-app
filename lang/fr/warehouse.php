@@ -530,7 +530,7 @@ return [
     ],
     'sheets' => [
         'card' => 'Feuilles QR pour les chariots et la zone d’emballage',
-        'card_hint' => 'A4 avec de grands codes QR (chaque feuille sur un A4) : à accrocher aux transpalettes électriques et chariots rétractables, et à la zone d’emballage. Scannez avec l’appareil photo ou l’écran de scan.',
+        'card_hint' => 'A4 avec de grands codes QR (chariots sur un A3, zone d’emballage sur un A4) : à accrocher aux transpalettes électriques et chariots rétractables, et à la zone d’emballage. Scannez avec l’appareil photo ou l’écran de scan.',
         'titles' => [
             'truck' => 'Transpalettes & chariots rétractables',
             'packing' => 'Zone d’emballage',

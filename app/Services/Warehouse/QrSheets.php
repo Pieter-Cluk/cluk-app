@@ -27,8 +27,8 @@ class QrSheets
 
     /** Per sheet: the tasks and zone types first, then (truck) the most used pallet places. */
     private const CONTENT = [
-        'truck' => ['tasks' => ['scan', 'delivery', 'done'], 'zones' => ['INBOUND', 'DISPATCH', 'A6-24H', 'UNKNOWN'], 'places' => 0],
-        'packing' => ['tasks' => ['scan', 'add', 'remove', 'done', 'afrit6'], 'zones' => ['DISPATCH'], 'places' => 0],
+        'truck' => ['tasks' => ['scan', 'delivery', 'done'], 'zones' => ['INBOUND', 'DISPATCH', 'A6-24H', 'UNKNOWN'], 'places' => 0, 'paper' => 'A3'],
+        'packing' => ['tasks' => ['scan', 'add', 'remove', 'done', 'afrit6'], 'zones' => ['DISPATCH'], 'places' => 0, 'paper' => 'A4'],
     ];
 
     /** @return list<array{code: string, title: string, hint: string, url: string}> */
@@ -68,6 +68,11 @@ class QrSheets
         return $top->concat($pallets->sortKeys()->reject(fn ($p) => $top->contains('code', $p->code))->take($n - $top->count()))->values();
     }
 
+    public static function paper(string $sheet): string
+    {
+        return self::CONTENT[$sheet]['paper'];
+    }
+
     public static function png(string $data): string
     {
         return (new QRCode(new QROptions([
@@ -79,12 +84,15 @@ class QrSheets
     public static function pdf(string $sheet): string
     {
         $cells = array_map(fn ($c) => $c + ['png' => self::png($c['url'])], self::cells($sheet));
-        // Everything on one A4: 2 columns (3 when there are more than 6 codes); the rows share the height.
+        // Everything on one page (A3 for the trucks: bigger codes, readable from about 1.5 m; A4 for the packing zone).
+        // 2 columns (3 when there are more than 6 codes); the rows share the height.
+        $paper = self::paper($sheet);
+        [$w, $h] = $paper === 'A3' ? [277, 372] : [188, 250];
         $cols = count($cells) > 6 ? 3 : 2;
         $rows = max(1, (int) ceil(count($cells) / $cols));
-        $rowMm = (int) floor(250 / $rows);
-        $html = view('warehouse.sheet-pdf', ['sheet' => $sheet, 'pages' => [$cells], 'cols' => $cols, 'rowMm' => $rowMm,
-            'qrMm' => min((int) floor(188 / $cols) - 6, $rowMm - 27, 92), 'compact' => $cols > 2 || $rows > 2,
+        $rowMm = (int) floor($h / $rows);
+        $html = view('warehouse.sheet-pdf', ['sheet' => $sheet, 'pages' => [$cells], 'cols' => $cols, 'rowMm' => $rowMm, 'paper' => $paper,
+            'qrMm' => min((int) floor($w / $cols) - 6, $rowMm - 27, 100), 'compact' => $paper === 'A4' && ($cols > 2 || $rows > 2),
             'logo' => is_file($f = public_path('images/cluk-logo.png')) ? 'data:image/png;base64,'.base64_encode((string) file_get_contents($f)) : null])->render();
         $o = new Options;
         $o->set('isRemoteEnabled', false);
@@ -94,7 +102,7 @@ class QrSheets
         $o->set('fontCache', storage_path('framework/cache'));
         $pdf = new Dompdf($o);
         $pdf->loadHtml($html, 'UTF-8');
-        $pdf->setPaper('A4');
+        $pdf->setPaper($paper);
         $pdf->render();
 
         return (string) $pdf->output();

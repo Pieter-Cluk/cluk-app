@@ -17,7 +17,7 @@
     @if ($tab === 'locations')
         <section class="card mt">
             <div class="card-head"><div><h2>{{ __('warehouse.sheets.card') }}</h2><p class="muted small">{{ __('warehouse.sheets.card_hint') }}</p></div>
-                <div class="inline-form">@foreach (\App\Services\Warehouse\QrSheets::SHEETS as $sh)<a class="btn" href="{{ route('warehouse.sheet', $sh) }}" target="_blank" rel="noopener">{{ __('warehouse.sheets.titles.'.$sh) }} (PDF)</a>@endforeach</div>
+                <div class="inline-form">@foreach (\App\Services\Warehouse\QrSheets::SHEETS as $sh)<a class="btn" href="{{ route('warehouse.sheet', $sh) }}" target="_blank" rel="noopener">{{ __('warehouse.sheets.titles.'.$sh) }} (PDF · {{ \App\Services\Warehouse\QrSheets::paper($sh) }})</a>@endforeach</div>
             </div>
         </section>
         <form method="get" class="inline-form mt">

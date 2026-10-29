@@ -530,7 +530,7 @@ return [
     ],
     'sheets' => [
         'card' => 'QR sheets for trucks and the packing zone',
-        'card_hint' => 'A4 with big QR codes (each sheet on one A4): hang them on the pallet trucks and reach trucks, and at the packing zone. Scan with the phone camera or in the scan screen.',
+        'card_hint' => 'A4 with big QR codes (trucks on one A3, packing zone on one A4): hang them on the pallet trucks and reach trucks, and at the packing zone. Scan with the phone camera or in the scan screen.',
         'titles' => [
             'truck' => 'Pallet & reach trucks',
             'packing' => 'Packing zone',
