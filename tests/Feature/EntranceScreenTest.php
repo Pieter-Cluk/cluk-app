@@ -107,6 +107,16 @@ class EntranceScreenTest extends TestCase
         $this->assertNotSame('cluk.rights.wall.screens', __('cluk.rights.wall.screens'));
     }
 
+    public function test_office_screens_have_full_screen_and_refresh_without_reload(): void
+    {
+        foreach (['planning', 'today'] as $view) {
+            $key = WallScreen::where('view', $view)->value('token');
+            $html = $this->get('/wall/'.$view.'?lang=en&key='.$key)->assertOk()->assertSee('id="wall-full"', false)->assertSee('id="wall-root"', false)->getContent();
+            $this->assertStringContainsString('<noscript><meta http-equiv="refresh"', $html); // only without JavaScript
+            $this->assertSame(1, substr_count($html, 'http-equiv="refresh"'));
+        }
+    }
+
     public function test_every_language_has_the_texts(): void
     {
         foreach (['nl', 'fr', 'es'] as $l) {
