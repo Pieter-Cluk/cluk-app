@@ -11,7 +11,7 @@
       @if ($news->isNotEmpty())
       <ol>
         @foreach ($news as $p)
-          <li><a href="{{ $p['url'] }}" target="_blank" rel="noopener"><span class="meta">@if ($p['topic'] ?? null)<span class="tag {{ ['promo' => 'promo-t', 'new' => 'new-t'][$p['topic']] ?? '' }}">{{ __('site.sales.tag_'.$p['topic']) }}</span>@endif @include('site._icon', ['i' => $p['platform'] === 'instagram' ? 'ig' : 'fb'])<time datetime="{{ $p['date']->toIso8601String() }}">{{ $p['date']->locale(app()->getLocale())->translatedFormat('j M') }}</time></span><b>{{ $p['title'] ?: (\Illuminate\Support\Str::limit($p['text'], 80) ?: ucfirst((string) $p['platform']).' · '.$p['date']->locale(app()->getLocale())->translatedFormat('j F Y')) }}</b></a></li>
+          <li><a href="{{ $p['url'] }}" target="_blank" rel="noopener"><span class="meta">@if ($p['topic'] ?? null)<span class="tag {{ ['promo' => 'promo-t', 'new' => 'new-t'][$p['topic']] ?? '' }}">{{ __('site.sales.tag_'.$p['topic']) }}</span>@endif @include('site._icon', ['i' => ['instagram' => 'ig', 'linkedin' => 'li'][$p['platform']] ?? 'fb'])<time datetime="{{ $p['date']->toIso8601String() }}">{{ $p['date']->locale(app()->getLocale())->translatedFormat('j M') }}</time></span><b>{{ $p['title'] ?: (\Illuminate\Support\Str::limit($p['text'], 80) ?: (['linkedin' => 'LinkedIn'][$p['platform']] ?? ucfirst((string) $p['platform'])).' · '.$p['date']->locale(app()->getLocale())->translatedFormat('j F Y')) }}</b></a></li>
         @endforeach
       </ol>
       @else

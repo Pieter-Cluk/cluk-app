@@ -106,17 +106,53 @@ class LinkedIn extends Provider
         }
     }
 
+    /** The picture (or video) of a post: single media, the first of several pictures, or the thumbnail of a link. */
+    private static function mediaUrn(array $content): ?string
+    {
+        return $content['media']['id'] ?? ($content['multiImage']['images'][0]['id'] ?? ($content['article']['thumbnail'] ?? null));
+    }
+
+    /** A download link for an image, or the thumbnail of a video. */
+    private function mediaUrl(Account $a, string $urn): ?string
+    {
+        try {
+            if (str_contains($urn, ':video:')) {
+                return $this->api($a->token)->get(self::API.'videos/'.rawurlencode($urn))->json('thumbnail');
+            }
+
+            return $this->api($a->token)->get(self::API.'images/'.rawurlencode($urn))->json('downloadUrl');
+        } catch (Throwable) {
+            return null;
+        }
+    }
+
     public function syncPosts(Account $a): void
     {
-        $posts = $this->ok($this->api($a->token)->get(self::API.'posts?author='.rawurlencode(self::urn($a)).'&q=author&count=20'), 'LinkedIn posts')['elements'] ?? [];
+        // The first time a page is synced: the last 100 posts; after that the newest 20.
+        $count = $a->posts_synced_at ? 20 : 50;
+        $posts = [];
+        for ($start = 0; $start < ($a->posts_synced_at ? 20 : 100); $start += $count) {
+            $page = $this->ok($this->api($a->token)->get(self::API.'posts?author='.rawurlencode(self::urn($a)).'&q=author&count='.$count.'&start='.$start), 'LinkedIn posts')['elements'] ?? [];
+            $posts = array_merge($posts, $page);
+            if (count($page) < $count) {
+                break;
+            }
+        }
         $byUrn = [];
         foreach ($posts as $p) {
+            $media = self::mediaUrn($p['content'] ?? []);
             $byUrn[$p['id']] = $this->post($a, $p['id'], [
                 'published_at' => isset($p['publishedAt']) ? Carbon::createFromTimestampMs($p['publishedAt']) : (isset($p['createdAt']) ? Carbon::createFromTimestampMs($p['createdAt']) : null),
-                'kind' => isset($p['content']['media']) ? 'photo' : (isset($p['content']['article']) ? 'link' : 'post'),
+                'kind' => $media && str_contains($media, ':video:') ? 'video' : (isset($p['content']['media']) || isset($p['content']['multiImage']) ? 'photo' : (isset($p['content']['article']) ? 'link' : 'post')),
                 'text' => isset($p['commentary']) ? preg_replace('/\\\\(.)/', '$1', $p['commentary']) : null,
                 'permalink' => 'https://www.linkedin.com/feed/update/'.$p['id'],
             ]);
+            // The picture: LinkedIn gives a short-lived download link; PostMedia keeps our own copy right after the sync.
+            if ($media && ! $byUrn[$p['id']]->thumb_path) {
+                if ($url = $this->mediaUrl($a, $media)) {
+                    $byUrn[$p['id']]->forceFill(['thumb_url' => $url])->saveQuietly();
+                }
+            }
         }
         $shares = array_filter(array_keys($byUrn), fn ($u) => str_contains($u, ':share:'));
         $ugc = array_filter(array_keys($byUrn), fn ($u) => str_contains($u, ':ugcPost:'));

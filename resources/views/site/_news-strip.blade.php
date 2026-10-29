@@ -33,8 +33,8 @@
           @elseif ($p['image'])<img src="{{ $p['image'] }}" alt="" loading="lazy">
           @else<span>{{ \Illuminate\Support\Str::limit($p['text'], 120) }}</span>@endif
         </span>
-        <span class="cs-meta">{{ ucfirst((string) $p['platform']) }} · {{ $p['date']->locale(app()->getLocale())->translatedFormat('j M Y') }}</span>
-        <b>{{ $p['title'] ?: (\Illuminate\Support\Str::limit($p['text'], 80) ?: ucfirst((string) $p['platform']).' · '.$p['date']->locale(app()->getLocale())->translatedFormat('j F Y')) }}</b>
+        <span class="cs-meta">{{ (['linkedin' => 'LinkedIn'][$p['platform']] ?? ucfirst((string) $p['platform'])) }} · {{ $p['date']->locale(app()->getLocale())->translatedFormat('j M Y') }}</span>
+        <b>{{ $p['title'] ?: (\Illuminate\Support\Str::limit($p['text'], 80) ?: (['linkedin' => 'LinkedIn'][$p['platform']] ?? ucfirst((string) $p['platform'])).' · '.$p['date']->locale(app()->getLocale())->translatedFormat('j F Y')) }}</b>
       </a>
     @endforeach
   </div>

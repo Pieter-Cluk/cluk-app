@@ -1,7 +1,7 @@
 {{-- One social post: picture or muted looping video, title, where and when it was posted. $p from SocialFeed. --}}
 @php
     $labels = ['dryhire' => __('site.nav.dryhire'), 'sales' => __('site.nav.sales'), 'factory' => __('site.nav.factory'), 'afrit6' => __('site.nav.afrit6')];
-    $pf = ucfirst((string) $p['platform']);
+    $pf = (['linkedin' => 'LinkedIn'][$p['platform']] ?? ucfirst((string) $p['platform']));
 @endphp
 <article class="npost {{ $size ?? '' }}">
   <a class="nmedia" href="{{ $p['url'] }}" target="_blank" rel="noopener" aria-label="{{ __('site.news.open', ['platform' => $pf]) }}: {{ $p['title'] }}">
@@ -15,8 +15,8 @@
     @endif
   </a>
   <div class="nmeta">
-    <span class="nsrc">@include('site._icon', ['i' => $p['platform'] === 'instagram' ? 'ig' : 'fb']){{ __('site.news.on', ['platform' => $pf]) }} · <time datetime="{{ $p['date']->toIso8601String() }}">{{ $p['date']->locale(app()->getLocale())->translatedFormat('j M Y') }}</time></span>
+    <span class="nsrc">@include('site._icon', ['i' => ['instagram' => 'ig', 'linkedin' => 'li'][$p['platform']] ?? 'fb']){{ __('site.news.on', ['platform' => $pf]) }} · <time datetime="{{ $p['date']->toIso8601String() }}">{{ $p['date']->locale(app()->getLocale())->translatedFormat('j M Y') }}</time></span>
     @foreach ($p['sections'] as $s)<span class="ntag">{{ $labels[$s] }}</span>@endforeach
   </div>
-  <h3><a href="{{ $p['url'] }}" target="_blank" rel="noopener">{{ $p['title'] ?: (\Illuminate\Support\Str::limit($p['text'], 90) ?: ucfirst((string) $p['platform']).' · '.$p['date']->locale(app()->getLocale())->translatedFormat('j F Y')) }}</a></h3>
+  <h3><a href="{{ $p['url'] }}" target="_blank" rel="noopener">{{ $p['title'] ?: (\Illuminate\Support\Str::limit($p['text'], 90) ?: (['linkedin' => 'LinkedIn'][$p['platform']] ?? ucfirst((string) $p['platform'])).' · '.$p['date']->locale(app()->getLocale())->translatedFormat('j F Y')) }}</a></h3>
 </article>

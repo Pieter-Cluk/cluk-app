@@ -23,7 +23,7 @@ class PostMedia
     /** The newest posts of an account that miss a copy: a few pictures and one video per run. */
     public static function keepFor(Account $a, int $images = 12, int $videos = 1): void
     {
-        if (! in_array($a->platform, ['facebook', 'instagram'], true)) {
+        if (! in_array($a->platform, ['facebook', 'instagram', 'linkedin'], true)) {
             return;
         }
         $posts = Post::where('account_id', $a->id)->latest('published_at')->limit(60)->get();
