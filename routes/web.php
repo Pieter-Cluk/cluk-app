@@ -561,6 +561,9 @@ Route::middleware('auth:web')->group(function () {
     // Warehouse: the app on the crew's phone (scan the piece, then where it goes).
     Route::get('/l/{code}', fn (string $code) => redirect()->route('w.scan', ['scanned' => strtoupper($code)]))->where('code', '[A-Za-z0-9\-]+')->middleware('nav:warehouse')->name('w.loc');
     Route::get('/L/{code}', fn (string $code) => redirect()->route('w.scan', ['scanned' => strtoupper($code)]))->where('code', '[A-Za-z0-9\-]+')->middleware('nav:warehouse');
+    // Task codes on the truck and packing sheets: open a phone screen or set what the next scans do.
+    Route::get('/w/do/{task}', [PhoneController::class, 'task'])->where('task', '[A-Za-z0-9]+')->middleware('nav:warehouse')->name('w.do');
+    Route::get('/W/DO/{task}', [PhoneController::class, 'task'])->where('task', '[A-Za-z0-9]+')->middleware('nav:warehouse');
     Route::prefix('w')->name('w.')->middleware('nav:warehouse')->group(function () {
         Route::get('/', [PhoneController::class, 'home'])->name('home');
         Route::get('/scan', [PhoneController::class, 'scan'])->name('scan');
@@ -604,6 +607,7 @@ Route::middleware('auth:web')->group(function () {
     Route::prefix('warehouse')->middleware('nav:warehouse')->group(function () {
         Route::get('/', [WarehouseController::class, 'index'])->name('warehouse.index');
         Route::get('/labels', [WarehouseLabelController::class, 'index'])->name('warehouse.labels');
+        Route::get('/sheets/{sheet}', [WarehouseLabelController::class, 'sheet'])->whereIn('sheet', \App\Services\Warehouse\QrSheets::SHEETS)->name('warehouse.sheet');
         Route::post('/labels/locations', [WarehouseLabelController::class, 'locations'])->middleware('level:warehouse,2')->name('warehouse.labels.locations');
         Route::post('/labels/items', [WarehouseLabelController::class, 'items'])->middleware('level:warehouse,2')->name('warehouse.labels.items');
         Route::post('/assets/{asset}/release', [WarehouseController::class, 'release'])->whereNumber('asset')->middleware('right:warehouse.release_repair')->name('warehouse.release');

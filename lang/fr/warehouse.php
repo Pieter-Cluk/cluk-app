@@ -528,4 +528,37 @@ return [
         'ret_done' => 'Terminé avec ce dolly/cette caisse',
         'ret_hint' => 'Scannez d’abord un dolly ou une caisse, puis chaque pièce qui y va. Chaque pièce doit être scannée : le contenu d’un dolly n’est jamais compté à l’aveugle.',
     ],
+    'sheets' => [
+        'card' => 'Feuilles QR pour les chariots et la zone d’emballage',
+        'card_hint' => 'A4 avec de grands codes QR (lisibles à environ 1,5 m) : à accrocher aux transpalettes électriques et chariots rétractables, et à la zone d’emballage. Scannez avec l’appareil photo ou l’écran de scan. La feuille chariot reprend les emplacements palette les plus utilisés ces 6 derniers mois.',
+        'titles' => [
+            'truck' => 'Transpalettes & chariots rétractables',
+            'packing' => 'Zone d’emballage',
+        ],
+        'tasks' => [
+            'home' => 'Accueil',
+            'scan' => 'Scanner',
+            'delivery' => 'Livraison entrante',
+            'afrit6' => 'Demandes Afrit 6',
+            'add' => 'Remplir une caisse',
+            'remove' => 'Sortir d’une caisse',
+            'done' => 'Terminé · recommencer',
+        ],
+        'task_hints' => [
+            'home' => 'Ouvre l’accueil de l’entrepôt',
+            'scan' => 'Ouvre le scanner',
+            'delivery' => 'Enregistrer la marchandise entrante',
+            'afrit6' => 'Recevoir, emballer, stocker pour les membres',
+            'add' => 'Les pièces scannées entrent dans la caisse ouverte',
+            'remove' => 'Les pièces scannées sortent de la caisse',
+            'done' => 'Ferme la caisse ouverte et vide le scanner',
+        ],
+        'zone_hint' => 'Scannez après une pièce ou une caisse pour la mettre ici',
+        'foot' => 'Entrepôt CLUK · scannez avec l’appareil photo ou l’écran de scan · imprimé le :date',
+        'mode_set' => [
+            'add' => 'Remplir : scannez une caisse, puis les pièces qui y entrent.',
+            'remove' => 'Sortir : scannez une caisse, puis les pièces qui en sortent.',
+            'done' => 'Terminé : le scanner est vidé.',
+        ],
+    ],
 ];

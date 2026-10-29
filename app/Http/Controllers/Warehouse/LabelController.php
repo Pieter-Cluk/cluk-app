@@ -71,6 +71,13 @@ class LabelController extends Controller
         return view('warehouse.labels', ['tab' => $tab, 'q' => $q, 'new' => $new, 'assets' => $assets, 'counted' => $counted]);
     }
 
+    /** A4 sheet with big QR codes for the pallet trucks / reach trucks, or for the packing zone (PDF). */
+    public function sheet(string $sheet): \Symfony\Component\HttpFoundation\Response
+    {
+        return response(\App\Services\Warehouse\QrSheets::pdf($sheet), 200, ['Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="cluk-qr-'.$sheet.'-'.now()->format('Ymd').'.pdf"']);
+    }
+
     public function locations(Request $request): View
     {
         $d = $request->validate(['codes' => ['required', 'array', 'max:800'], 'codes.*' => ['string', 'max:20'], 'layout' => ['nullable', 'in:'.implode(',', self::LAYOUTS)]]);

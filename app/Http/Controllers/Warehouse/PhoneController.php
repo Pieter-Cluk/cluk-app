@@ -85,9 +85,31 @@ class PhoneController extends Controller
             'carrier' => $this->openCarrier($request), 'mode' => $request->session()->get('w.carrier_mode', 'add')]);
     }
 
+    /** A task code from the truck or packing sheet (scanned with the phone camera or in the scan screen). */
+    public function task(Request $request, string $task): RedirectResponse
+    {
+        $task = strtolower($task);
+        abort_unless(in_array($task, \App\Services\Warehouse\QrSheets::TASKS, true), 404);
+        $work = fn () => abort_unless($request->user()->canUseModule('warehouse', 2), 403);
+
+        if (in_array($task, ['add', 'remove', 'done'], true)) {
+            $work();
+            $task === 'done'
+                ? $request->session()->forget(['w.pending', 'w.here', 'w.carrier', 'w.carrier_mode'])
+                : $request->session()->put('w.carrier_mode', $task);
+
+            return redirect()->route('w.scan')->with('status', __('warehouse.sheets.mode_set.'.$task));
+        }
+
+        return redirect()->route(['home' => 'w.home', 'scan' => 'w.scan', 'delivery' => 'w.delivery', 'afrit6' => 'w.a6'][$task]);
+    }
+
     public function scanPost(Request $request): RedirectResponse
     {
         $code = (string) $request->validate(['code' => ['required', 'string', 'max:200']])['code'];
+        if (preg_match('#/w/do/([a-z0-9]+)/?$#i', trim($code), $m)) {
+            return $this->task($request, $m[1]);
+        }
         $found = Moves::resolve($code);
         if (! $found) {
             return redirect()->route('w.scan')->withErrors(['code' => __('warehouse.errors.unknown', ['code' => mb_strimwidth($code, 0, 40, '…')])]);

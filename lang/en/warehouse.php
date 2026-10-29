@@ -528,4 +528,37 @@ return [
         'ret_done' => 'Done with this dolly/box',
         'ret_hint' => 'Scan a dolly or box first, then every piece that goes in it. Each piece must be scanned: what is in a dolly is never counted blindly.',
     ],
+    'sheets' => [
+        'card' => 'QR sheets for trucks and the packing zone',
+        'card_hint' => 'A4 with big QR codes (readable from about 1.5 m): hang them on the pallet trucks and reach trucks, and at the packing zone. Scan with the phone camera or in the scan screen. The truck sheet takes the pallet places used most in the last 6 months.',
+        'titles' => [
+            'truck' => 'Pallet & reach trucks',
+            'packing' => 'Packing zone',
+        ],
+        'tasks' => [
+            'home' => 'Start',
+            'scan' => 'Scan',
+            'delivery' => 'Delivery in',
+            'afrit6' => 'Afrit 6 requests',
+            'add' => 'Fill a case',
+            'remove' => 'Take out of a case',
+            'done' => 'Finished · start over',
+        ],
+        'task_hints' => [
+            'home' => 'Opens the warehouse start screen',
+            'scan' => 'Opens the scanner',
+            'delivery' => 'Register goods that come in',
+            'afrit6' => 'Receive, pack, store for members',
+            'add' => 'Next scanned pieces go into the open case',
+            'remove' => 'Next scanned pieces come out of the case',
+            'done' => 'Closes the open case and clears the scanner',
+        ],
+        'zone_hint' => 'Scan after a piece or case to put it here',
+        'foot' => 'CLUK warehouse · scan with the phone camera or the scan screen · printed :date',
+        'mode_set' => [
+            'add' => 'Fill mode: scan a case, then the pieces that go in.',
+            'remove' => 'Take-out mode: scan a case, then the pieces that come out.',
+            'done' => 'Done: the scanner is cleared.',
+        ],
+    ],
 ];

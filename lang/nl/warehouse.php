@@ -528,4 +528,37 @@ return [
         'ret_done' => 'Klaar met deze dolly/box',
         'ret_hint' => 'Scan eerst een dolly of box, dan elk stuk dat erin gaat. Elk stuk moet gescand worden: wat in een dolly zit, wordt nooit blind geteld.',
     ],
+    'sheets' => [
+        'card' => 'QR-bladen voor de heftrucks en de inpakzone',
+        'card_hint' => 'A4 met grote QR-codes (leesbaar van ongeveer 1,5 m): hang ze aan de elektrische transpallets en reachtrucks, en aan de inpakzone. Scan met de gsm-camera of in het scanscherm. Het truckblad neemt de palletplaatsen die de laatste 6 maanden het meest gebruikt werden.',
+        'titles' => [
+            'truck' => 'Transpallets & reachtrucks',
+            'packing' => 'Inpakzone',
+        ],
+        'tasks' => [
+            'home' => 'Start',
+            'scan' => 'Scannen',
+            'delivery' => 'Levering binnen',
+            'afrit6' => 'Afrit 6-aanvragen',
+            'add' => 'Koffer vullen',
+            'remove' => 'Uit koffer halen',
+            'done' => 'Klaar · opnieuw',
+        ],
+        'task_hints' => [
+            'home' => 'Opent het startscherm van het magazijn',
+            'scan' => 'Opent de scanner',
+            'delivery' => 'Binnenkomende goederen registreren',
+            'afrit6' => 'Ontvangen, inpakken, stockeren voor leden',
+            'add' => 'Volgende gescande stukken gaan in de open koffer',
+            'remove' => 'Volgende gescande stukken gaan uit de koffer',
+            'done' => 'Sluit de open koffer en maakt de scanner leeg',
+        ],
+        'zone_hint' => 'Scan na een stuk of koffer om het hier te zetten',
+        'foot' => 'CLUK magazijn · scan met de gsm-camera of het scanscherm · afgedrukt :date',
+        'mode_set' => [
+            'add' => 'Vullen: scan een koffer, daarna de stukken die erin gaan.',
+            'remove' => 'Uithalen: scan een koffer, daarna de stukken die eruit gaan.',
+            'done' => 'Klaar: de scanner is leeg.',
+        ],
+    ],
 ];

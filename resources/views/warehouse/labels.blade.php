@@ -15,6 +15,11 @@
     </nav>
 
     @if ($tab === 'locations')
+        <section class="card mt">
+            <div class="card-head"><div><h2>{{ __('warehouse.sheets.card') }}</h2><p class="muted small">{{ __('warehouse.sheets.card_hint') }}</p></div>
+                <div class="inline-form">@foreach (\App\Services\Warehouse\QrSheets::SHEETS as $sh)<a class="btn" href="{{ route('warehouse.sheet', $sh) }}" target="_blank" rel="noopener">{{ __('warehouse.sheets.titles.'.$sh) }} (PDF)</a>@endforeach</div>
+            </div>
+        </section>
         <form method="get" class="inline-form mt">
             <label class="field"><span>{{ __('warehouse.labels.floor') }}</span><select name="floor" onchange="this.form.submit()"><option value="">{{ __('warehouse.labels.all') }}</option>@foreach (['G', 'M'] as $f)<option value="{{ $f }}" @selected($floor === $f)>{{ __('warehouse.floors.'.$f) }}</option>@endforeach</select></label>
             <label class="field"><span>{{ __('warehouse.labels.row') }}</span><select name="row" onchange="this.form.submit()"><option value="">{{ __('warehouse.labels.all') }}</option>@foreach ($rows as $r)<option value="{{ $r }}" @selected($row === $r)>{{ $r }}</option>@endforeach</select></label>

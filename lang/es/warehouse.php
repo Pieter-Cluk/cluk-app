@@ -528,4 +528,37 @@ return [
         'ret_done' => 'Listo con este dolly/caja',
         'ret_hint' => 'Escanea primero un dolly o una caja, luego cada pieza que va dentro. Cada pieza debe escanearse: el contenido de un dolly nunca se cuenta a ciegas.',
     ],
+    'sheets' => [
+        'card' => 'Hojas QR para las carretillas y la zona de embalaje',
+        'card_hint' => 'A4 con códigos QR grandes (legibles a unos 1,5 m): cuélgalas en las transpaletas eléctricas y carretillas retráctiles, y en la zona de embalaje. Escanea con la cámara del móvil o en la pantalla de escaneo. La hoja de carretillas toma las ubicaciones de palé más usadas en los últimos 6 meses.',
+        'titles' => [
+            'truck' => 'Transpaletas y retráctiles',
+            'packing' => 'Zona de embalaje',
+        ],
+        'tasks' => [
+            'home' => 'Inicio',
+            'scan' => 'Escanear',
+            'delivery' => 'Entrega entrante',
+            'afrit6' => 'Solicitudes Afrit 6',
+            'add' => 'Llenar una caja',
+            'remove' => 'Sacar de una caja',
+            'done' => 'Listo · empezar de nuevo',
+        ],
+        'task_hints' => [
+            'home' => 'Abre el inicio del almacén',
+            'scan' => 'Abre el escáner',
+            'delivery' => 'Registrar la mercancía que entra',
+            'afrit6' => 'Recibir, embalar, almacenar para miembros',
+            'add' => 'Las piezas escaneadas entran en la caja abierta',
+            'remove' => 'Las piezas escaneadas salen de la caja',
+            'done' => 'Cierra la caja abierta y vacía el escáner',
+        ],
+        'zone_hint' => 'Escanea tras una pieza o caja para ponerla aquí',
+        'foot' => 'Almacén CLUK · escanea con la cámara del móvil o la pantalla de escaneo · impreso el :date',
+        'mode_set' => [
+            'add' => 'Llenar: escanea una caja y luego las piezas que entran.',
+            'remove' => 'Sacar: escanea una caja y luego las piezas que salen.',
+            'done' => 'Listo: el escáner está vacío.',
+        ],
+    ],
 ];
