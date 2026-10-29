@@ -10,10 +10,11 @@ use App\Http\Controllers\Site\PrivacyController;
 use App\Http\Controllers\Site\SalesController;
 use App\Http\Controllers\Site\TrackController;
 use App\Http\Controllers\Site\WebMediaController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
-| The public website. Served on WEBSITE_HOST (cluk.live) when that is set,
+| The public website. Served on WEBSITE_HOST (www.cluk.live) when that is set,
 | otherwise previewed under /site on the app's own address.
 */
 $site = function () {
@@ -86,7 +87,14 @@ $site = function () {
 };
 
 if ($host = config('website.host')) {
-    Route::domain('www.'.$host)->get('/{any?}', fn (string $any = '') => redirect()->away('https://'.$host.'/'.$any, 301))->where('any', '.*');
+    // The website on its own address (WEBSITE_HOST, e.g. www.cluk.live). The other spelling (cluk.live) and the
+    // old preview links (app.cluk.live/site/…) go to the same page there, with their query string (UTM codes).
+    $to = fn (Request $r, string $path) => redirect()->away('https://'.$host.'/'.ltrim($path, '/').(($q = (string) $r->server('QUERY_STRING')) !== '' ? '?'.$q : ''), 301);
+    $other = str_starts_with($host, 'www.') ? substr($host, 4) : 'www.'.$host;
+    Route::domain($other)->get('/{any?}', fn (Request $r, string $any = '') => $to($r, $any))->where('any', '.*')->name('site.other');
+    if ($appHost = parse_url((string) config('app.url'), PHP_URL_HOST)) {
+        Route::domain($appHost)->get('/site/{any?}', fn (Request $r, string $any = '') => $to($r, $any))->where('any', '.*')->name('site.preview');
+    }
     Route::domain($host)->name('site.')->group($site);
 } else {
     Route::prefix('site')->name('site.')->group($site);

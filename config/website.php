@@ -5,8 +5,9 @@
 | Public website (cluk.live)
 |--------------------------------------------------------------------------
 | The website runs inside this app. Until cluk.live points to the app, the
-| pages are previewed under app.cluk.live/site. Set WEBSITE_HOST=cluk.live
-| (and point the domain to the same public folder) to serve them there.
+| pages are previewed under app.cluk.live/site. Set WEBSITE_HOST=www.cluk.live
+| (and point cluk.live and www.cluk.live to the same public folder) to serve them
+| there; cluk.live and the old app.cluk.live/site links then forward to it.
 */
 
 return [

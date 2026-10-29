@@ -8,6 +8,11 @@ Options -Indexes
     # Never serve hidden files (.env, .git…) from anywhere.
     RewriteRule (^|/)\. - [F,L]
 
+    # Trailing slash: forward to the address without it (here, so the inner app/public path never shows).
+    RewriteCond %{REQUEST_URI} !^/app/public/
+    RewriteCond %{REQUEST_URI} ^(.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
     # Everything goes to the app's public folder.
     RewriteCond %{REQUEST_URI} !^/app/public/
     RewriteRule ^(.*)$ app/public/$1 [L]
