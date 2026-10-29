@@ -530,7 +530,7 @@ return [
     ],
     'sheets' => [
         'card' => 'Hojas QR para las carretillas y la zona de embalaje',
-        'card_hint' => 'A4 con códigos QR grandes (legibles a unos 1,5 m): cuélgalas en las transpaletas eléctricas y carretillas retráctiles, y en la zona de embalaje. Escanea con la cámara del móvil o en la pantalla de escaneo. La hoja de carretillas toma las ubicaciones de palé más usadas en los últimos 6 meses.',
+        'card_hint' => 'A4 con códigos QR grandes (cada hoja en un A4): cuélgalas en las transpaletas eléctricas y carretillas retráctiles, y en la zona de embalaje. Escanea con la cámara del móvil o en la pantalla de escaneo.',
         'titles' => [
             'truck' => 'Transpaletas y retráctiles',
             'packing' => 'Zona de embalaje',

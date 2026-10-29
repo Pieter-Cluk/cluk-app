@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * A4 sheets with big QR codes to hang on the pallet trucks and reach trucks, and at the packing zone:
- * the tasks (open a phone screen, or switch what the scanner does) and the most used places.
+ * the tasks (open a phone screen, or switch what the scanner does) and the main zones, all on one A4.
  * The codes are short upper-case links (fewer, bigger squares) and readable from about 1.5 m.
  */
 class QrSheets
@@ -27,7 +27,7 @@ class QrSheets
 
     /** Per sheet: the tasks and zone types first, then (truck) the most used pallet places. */
     private const CONTENT = [
-        'truck' => ['tasks' => ['scan', 'delivery', 'done'], 'zones' => ['INBOUND', 'DISPATCH', 'UNKNOWN'], 'places' => 6],
+        'truck' => ['tasks' => ['scan', 'delivery', 'done'], 'zones' => ['INBOUND', 'DISPATCH', 'A6-24H', 'UNKNOWN'], 'places' => 0],
         'packing' => ['tasks' => ['scan', 'add', 'remove', 'done', 'afrit6'], 'zones' => ['DISPATCH'], 'places' => 0],
     ];
 
@@ -79,7 +79,12 @@ class QrSheets
     public static function pdf(string $sheet): string
     {
         $cells = array_map(fn ($c) => $c + ['png' => self::png($c['url'])], self::cells($sheet));
-        $html = view('warehouse.sheet-pdf', ['sheet' => $sheet, 'pages' => array_chunk($cells, 4),
+        // Everything on one A4: 2 columns (3 when there are more than 6 codes); the rows share the height.
+        $cols = count($cells) > 6 ? 3 : 2;
+        $rows = max(1, (int) ceil(count($cells) / $cols));
+        $rowMm = (int) floor(250 / $rows);
+        $html = view('warehouse.sheet-pdf', ['sheet' => $sheet, 'pages' => [$cells], 'cols' => $cols, 'rowMm' => $rowMm,
+            'qrMm' => min((int) floor(188 / $cols) - 6, $rowMm - 27, 92), 'compact' => $cols > 2 || $rows > 2,
             'logo' => is_file($f = public_path('images/cluk-logo.png')) ? 'data:image/png;base64,'.base64_encode((string) file_get_contents($f)) : null])->render();
         $o = new Options;
         $o->set('isRemoteEnabled', false);

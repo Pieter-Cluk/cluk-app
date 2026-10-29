@@ -11,11 +11,11 @@ body { font-family: 'DejaVu Sans', sans-serif; color: #111; margin: 0; }
 .head img { height: 8mm; float: left; margin-top: 2mm; }
 .head h1 { font-size: 15pt; margin: 0; padding-top: 2.5mm; text-align: right; }
 table.grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
-table.grid td { width: 50%; height: 121mm; text-align: center; vertical-align: top; padding: 1.5mm 2mm 0 2mm; }
-.qr { width: 92mm; height: 92mm; display: block; margin: 0 auto; }
-.title { font-size: 22pt; font-weight: bold; line-height: 1.1; margin-top: 1mm; }
-.hint { font-size: 11pt; color: #444; margin-top: 0.8mm; }
-.code { font-size: 8pt; color: #777; letter-spacing: 0.5pt; }
+table.grid td { width: {{ round(100 / $cols, 2) }}%; height: {{ $rowMm }}mm; text-align: center; vertical-align: top; padding: 1.5mm 2mm 0 2mm; }
+.qr { width: {{ $qrMm }}mm; height: {{ $qrMm }}mm; display: block; margin: 0 auto; }
+.title { font-size: {{ $compact ? 14 : 20 }}pt; font-weight: bold; line-height: 1.1; margin-top: 1mm; }
+.hint { font-size: {{ $compact ? 7.5 : 10 }}pt; color: #444; margin-top: 0.8mm; }
+.code { font-size: {{ $compact ? 6.5 : 8 }}pt; color: #777; letter-spacing: 0.5pt; }
 .foot { font-size: 7.5pt; color: #666; text-align: center; margin-top: 1mm; }
 </style>
 </head>
@@ -24,12 +24,12 @@ table.grid td { width: 50%; height: 121mm; text-align: center; vertical-align: t
     <div class="page">
         <div class="head">@if ($logo)<img src="{{ $logo }}" alt="CLUK">@endif<h1>{{ __('warehouse.sheets.titles.'.$sheet) }}@if (count($pages) > 1) · {{ $i + 1 }}/{{ count($pages) }}@endif</h1></div>
         <table class="grid">
-            @foreach (array_chunk($cells, 2) as $row)
+            @foreach (array_chunk($cells, $cols) as $row)
                 <tr>
                     @foreach ($row as $c)
                         <td><img class="qr" src="{{ $c['png'] }}" alt="{{ $c['code'] }}"><div class="title">{{ $c['title'] }}</div><div class="hint">{{ $c['hint'] }}</div><div class="code">{{ $c['code'] }}</div></td>
                     @endforeach
-                    @if (count($row) === 1)<td></td>@endif
+                    @for ($k = count($row); $k < $cols; $k++)<td></td>@endfor
                 </tr>
             @endforeach
         </table>

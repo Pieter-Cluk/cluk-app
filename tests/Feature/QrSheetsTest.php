@@ -31,12 +31,11 @@ class QrSheetsTest extends TestCase
         }
 
         $truck = collect(QrSheets::cells('truck'));
-        $this->assertSame(['SCAN', 'DELIVERY', 'DONE', 'INBOUND', 'DISPATCH', 'UNKNOWN'], $truck->take(6)->pluck('code')->all());
-        $this->assertSame($busy->code, $truck[6]['code']); // most used first
-        $this->assertSame(12, $truck->count());
+        $this->assertSame(['SCAN', 'DELIVERY', 'DONE', 'INBOUND', 'DISPATCH', 'A6-24H', 'UNKNOWN'], $truck->pluck('code')->all());
+        $this->assertSame($busy->code, QrSheets::mostUsed(1)->first()->code); // still available for later use
         $this->assertSame(strtoupper($truck[0]['url']), $truck[0]['url']); // upper case: fewer, bigger squares
         $this->assertStringEndsWith('/W/DO/SCAN', $truck[0]['url']);
-        $this->assertStringEndsWith('/L/'.$busy->code, $truck[6]['url']);
+        $this->assertStringEndsWith('/L/A6-24H', $truck[5]['url']);
         $this->assertSame(['SCAN', 'ADD', 'REMOVE', 'DONE', 'AFRIT6', 'DISPATCH'], collect(QrSheets::cells('packing'))->pluck('code')->all());
 
         foreach (QrSheets::SHEETS as $s) {

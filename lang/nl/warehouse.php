@@ -530,7 +530,7 @@ return [
     ],
     'sheets' => [
         'card' => 'QR-bladen voor de heftrucks en de inpakzone',
-        'card_hint' => 'A4 met grote QR-codes (leesbaar van ongeveer 1,5 m): hang ze aan de elektrische transpallets en reachtrucks, en aan de inpakzone. Scan met de gsm-camera of in het scanscherm. Het truckblad neemt de palletplaatsen die de laatste 6 maanden het meest gebruikt werden.',
+        'card_hint' => 'A4 met grote QR-codes (elk blad op één A4): hang ze aan de elektrische transpallets en reachtrucks, en aan de inpakzone. Scan met de gsm-camera of in het scanscherm.',
         'titles' => [
             'truck' => 'Transpallets & reachtrucks',
             'packing' => 'Inpakzone',
