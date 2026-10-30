@@ -6,12 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ $title ? $title.' · ' : '' }}Afrit 6</title>
 <link rel="stylesheet" href="{{ asset('css/cluk.css') }}?v={{ @filemtime(public_path('css/cluk.css')) }}">
-@include('partials.favicon')
+@include('partials.afrit6-favicon')
 </head>
 <body>
 <div class="login member">
     <header class="login-top member-top">
-        <a class="member-brand" href="{{ route('afrit6.login') }}"><span class="six">6</span> AFRIT 6</a>
+        <a class="member-brand" href="{{ route('afrit6.login') }}"><img class="a6-logo" src="{{ asset('images/afrit6-logo.png') }}?v=1" alt="Afrit 6" width="137" height="48"></a>
         <div class="member-right">
         @include('partials.site-switch', ['current' => 'afrit6'])
         <nav class="login-langs" aria-label="{{ __('login.language') }}">

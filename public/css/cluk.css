@@ -303,6 +303,8 @@ a.chip{text-decoration:none}
 .a6-sign b{font-size:26px;line-height:1}
 .a6-sign i{width:2px;height:22px;background:#f4c430}
 .a6-word{font-weight:800;font-size:24px;letter-spacing:1px}
+.a6-logo{display:block;height:56px;width:auto;max-width:60vw}
+@media (max-width:700px){.a6-logo{height:38px}}
 .p-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .p-right .iconbtn{background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
 .p-right .btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}

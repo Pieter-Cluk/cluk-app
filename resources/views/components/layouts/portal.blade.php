@@ -7,14 +7,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ $title ? $title.' · ' : '' }}Afrit 6</title>
 <link rel="stylesheet" href="{{ asset('css/cluk.css') }}?v={{ @filemtime(public_path('css/cluk.css')) }}">
-@include('partials.favicon')
+@include('partials.afrit6-favicon')
 </head>
 <body class="portal-body">
 <div class="portal">
     <header class="p-top">
         <a class="a6-brand" href="{{ route('afrit6.portal') }}" aria-label="Afrit 6">
-            <span class="a6-sign" aria-hidden="true"><b>6</b><i></i><svg width="22" height="18" viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="4.5"><path d="M1 12h22M13 3l9 9-9 9"/></svg></span>
-            <span class="a6-word">AFRIT 6</span>
+            <img class="a6-logo" src="{{ asset('images/afrit6-logo.png') }}?v=1" alt="Afrit 6" width="137" height="48">
         </a>
         <div class="p-right">
             @include('partials.site-switch', ['current' => 'afrit6'])
