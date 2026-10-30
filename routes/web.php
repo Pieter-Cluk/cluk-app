@@ -371,6 +371,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/quotes/{quote}/send', [QuoteController::class, 'send'])->whereNumber('quote')->name('quotes.send');
             Route::post('/quotes/{quote}/revise', [QuoteController::class, 'revise'])->whereNumber('quote')->name('quotes.revise');
             Route::post('/quotes/{quote}/accepted', [QuoteController::class, 'markAccepted'])->whereNumber('quote')->name('quotes.accepted');
+            Route::post('/quotes/{quote}/declined', [QuoteController::class, 'markDeclined'])->whereNumber('quote')->name('quotes.declined');
             Route::post('/chats/{chat}/reply', [\App\Http\Controllers\Sales\ChatController::class, 'reply'])->whereNumber('chat')->name('chats.reply');
             Route::post('/chats/{chat}/close', [\App\Http\Controllers\Sales\ChatController::class, 'close'])->whereNumber('chat')->name('chats.close');
             Route::post('/chats/{chat}/link', [\App\Http\Controllers\Sales\ChatController::class, 'link'])->whereNumber('chat')->name('chats.link');
@@ -688,6 +689,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/{quote}/prices', [SalesQuoteController::class, 'requestPrices'])->whereNumber('quote')->middleware('throttle:10,1')->name('psales.prices');
             Route::post('/{quote}/deliver', [SalesQuoteController::class, 'deliver'])->whereNumber('quote')->name('psales.deliver');
             Route::post('/{quote}/cancel', [SalesQuoteController::class, 'cancel'])->whereNumber('quote')->name('psales.cancel');
+            Route::post('/{quote}/declined', [SalesQuoteController::class, 'markDeclined'])->whereNumber('quote')->name('psales.declined');
         });
     });
     // Old addresses (bookmarks, emails) keep working.

@@ -163,6 +163,16 @@ class SalesQuoteController extends Controller
             : back()->with('status', __('psales.early_in_stock'));
     }
 
+    /** The customer said no outside the link (phone, mail). */
+    public function markDeclined(Request $request, SalesQuote $quote): RedirectResponse
+    {
+        abort_unless(in_array($quote->status, ['draft', 'sent'], true), 409);
+        $d = $request->validate(['reason' => ['nullable', 'string', 'max:500']]);
+        SalesFlow::decline($quote, trim(($d['reason'] ?? '').' ('.__('psales.declined_by', ['name' => $request->user()->name]).')'));
+
+        return back()->with('status', __('psales.declined_saved'));
+    }
+
     public function confirm(Request $request, SalesQuote $quote): RedirectResponse
     {
         abort_unless($quote->status === 'accepted', 409);

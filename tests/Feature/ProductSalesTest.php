@@ -178,6 +178,26 @@ class ProductSalesTest extends TestCase
         $this->assertSame(1, PurchaseRequest::count());
     }
 
+    public function test_staff_can_record_a_declined_sales_quote(): void
+    {
+        $admin = $this->as('admin');
+        [$item] = $this->catalogue($admin);
+        $customer = Company::create(['name' => 'Demo Theatre vzw', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'en']);
+        $elke = $this->as('sales');
+        $this->actingAs($elke)->post('/sales/sales-quotes', ['company_id' => $customer->id, 'title' => 'No thanks'])->assertRedirect();
+        $q = SalesQuote::firstOrFail();
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $item->id, 'qty' => 1]);
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/send', ['to' => 'jo@theatre.example']);
+        $this->actingAs($elke)->get(route('psales.show', $q))->assertSee('Mark as declined');
+
+        $this->actingAs($elke)->post(route('psales.declined', $q), ['reason' => 'Too expensive'])->assertRedirect();
+        $q->refresh();
+        $this->assertSame('declined', $q->status);
+        $this->assertStringContainsString('Too expensive', $q->decline_reason);
+        $this->assertStringContainsString($elke->name, $q->decline_reason);
+        $this->actingAs($elke)->post(route('psales.declined', $q), ['reason' => 'again'])->assertStatus(409);
+    }
+
     public function test_pages_in_every_language(): void
     {
         $admin = $this->as('admin');

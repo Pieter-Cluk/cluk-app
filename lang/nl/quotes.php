@@ -129,6 +129,11 @@ return [
     'mark_accepted' => 'Klant aanvaardde telefonisch of per mail',
     'mark_accepted_hint' => 'Noteer het hier zodat het materiaal geboekt is. Het komt in het logboek op jouw naam.',
     'mark_accepted_go' => 'Als aanvaard markeren',
+    'mark_declined' => 'Klant weigerde (telefonisch of per mail)',
+    'mark_declined_hint' => 'Leg het hier vast: het materiaal wordt niet langer voor deze offerte vastgehouden. Er gaat geen mail naar de klant. Zet de deal op verloren op de dealpagina als de job weg is.',
+    'mark_declined_go' => 'Als geweigerd markeren',
+    'decline_reason' => 'Reden',
+    'decline_note' => 'Notitie (optioneel)',
     'confirmed_by' => 'Bevestigd door',
     'po' => 'Bestelnummer',
     'state' => [
@@ -197,6 +202,7 @@ return [
         'button' => 'Open de offerte',
     ],
     'log' => [
+        'declined_staff' => ':code als geweigerd gemarkeerd door :name: :reason',
         'created' => 'Offerte :number gestart.',
         'sent' => 'Offerte :code verstuurd naar :to (:total excl. btw).',
         'revised' => 'Nieuwe versie :code gestart.',
@@ -205,6 +211,7 @@ return [
         'declined' => 'Offerte :code geweigerd: :reason',
     ],
     'flash' => [
+        'declined' => 'Als geweigerd gemarkeerd.',
         'created' => 'Offerte :number gestart.',
         'saved' => 'Bewaard en herberekend.',
         'line_added' => 'Lijn toegevoegd.',

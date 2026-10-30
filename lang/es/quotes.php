@@ -129,6 +129,11 @@ return [
     'mark_accepted' => 'El cliente aceptó por teléfono o correo',
     'mark_accepted_hint' => 'Anótalo aquí para que el material quede reservado. Queda en el registro a tu nombre.',
     'mark_accepted_go' => 'Marcar como aceptado',
+    'mark_declined' => 'El cliente rechazó (por teléfono o correo)',
+    'mark_declined_hint' => 'Regístralo aquí: el material ya no se reserva para este presupuesto. No se envía correo al cliente. Marca el deal como perdido en su página si el trabajo se pierde.',
+    'mark_declined_go' => 'Marcar como rechazado',
+    'decline_reason' => 'Motivo',
+    'decline_note' => 'Nota (opcional)',
     'confirmed_by' => 'Confirmado por',
     'po' => 'Número de pedido',
     'state' => [
@@ -197,6 +202,7 @@ return [
         'button' => 'Abrir el presupuesto',
     ],
     'log' => [
+        'declined_staff' => ':code marcado como rechazado por :name: :reason',
         'created' => 'Presupuesto :number iniciado.',
         'sent' => 'Presupuesto :code enviado a :to (:total sin IVA).',
         'revised' => 'Nueva versión :code iniciada.',
@@ -205,6 +211,7 @@ return [
         'declined' => 'Presupuesto :code rechazado: :reason',
     ],
     'flash' => [
+        'declined' => 'Marcado como rechazado.',
         'created' => 'Presupuesto :number iniciado.',
         'saved' => 'Guardado y recalculado.',
         'line_added' => 'Línea añadida.',

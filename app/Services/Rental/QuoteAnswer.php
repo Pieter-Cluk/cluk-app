@@ -67,6 +67,14 @@ class QuoteAnswer
         self::tellOwner($quote, 'declined');
     }
 
+    /** The customer said no by phone or mail: recorded by a colleague (no mails go out). */
+    public static function declineByStaff(Quote $quote, string $reason, ?string $note, \App\Models\User $by): void
+    {
+        $quote->forceFill(['status' => 'declined', 'answered_at' => now(), 'decline_reason' => $reason, 'answer_note' => $note, 'reserved_until' => null])->save();
+        AuditLog::record('quote.declined', $quote, ['reason' => $reason, 'recorded_by_staff' => true], $by);
+        $quote->deal?->log('system', __('quotes.log.declined_staff', ['code' => $quote->code(), 'reason' => __('quotes.decline_reasons.'.$reason), 'name' => $by->name]).($note ? "\n".$note : ''), $by);
+    }
+
     private static function tellOwner(Quote $quote, string $what): void
     {
         $owner = $quote->owner ?? $quote->deal?->owner;

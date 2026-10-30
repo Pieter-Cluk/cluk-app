@@ -129,6 +129,11 @@ return [
     'mark_accepted' => 'Customer accepted by phone or mail',
     'mark_accepted_hint' => 'Record it here so the equipment is booked. It is written in the log under your name.',
     'mark_accepted_go' => 'Mark as accepted',
+    'mark_declined' => 'Customer declined (by phone or mail)',
+    'mark_declined_hint' => 'Record it here: the equipment is no longer kept for this quote. No mail goes to the customer. Mark the deal as lost on the deal page if the job is gone.',
+    'mark_declined_go' => 'Mark as declined',
+    'decline_reason' => 'Reason',
+    'decline_note' => 'Note (optional)',
     'confirmed_by' => 'Confirmed by',
     'po' => 'PO number',
     'state' => [
@@ -197,6 +202,7 @@ return [
         'button' => 'Open the quote',
     ],
     'log' => [
+        'declined_staff' => ':code marked as declined by :name: :reason',
         'created' => 'Quote :number started.',
         'sent' => 'Quote :code sent to :to (:total excl. VAT).',
         'revised' => 'New version :code started.',
@@ -205,6 +211,7 @@ return [
         'declined' => 'Quote :code declined: :reason',
     ],
     'flash' => [
+        'declined' => 'Marked as declined.',
         'created' => 'Quote :number started.',
         'saved' => 'Saved and recalculated.',
         'line_added' => 'Line added.',

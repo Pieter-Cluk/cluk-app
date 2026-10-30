@@ -313,6 +313,26 @@ class QuotesTest extends TestCase
         Notification::assertNotSentTo($this->sales, QuoteAnswered::class);
     }
 
+    public function test_staff_can_record_a_decline_by_phone(): void
+    {
+        Notification::fake();
+        $this->spiider();
+        $quote = $this->quote();
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/lines', ['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 1]);
+        $quote = $this->sendIt($quote);
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertSee('Mark as declined');
+
+        $this->actingAs($this->sales)->post(route('quotes.declined', $quote), ['reason' => 'nonsense'])->assertSessionHasErrors('reason');
+        $this->actingAs($this->sales)->post(route('quotes.declined', $quote), ['reason' => 'price', 'note' => 'Too expensive'])->assertRedirect();
+        $quote->refresh();
+        $this->assertSame(['declined', 'price', 'Too expensive'], [$quote->status, $quote->decline_reason, $quote->answer_note]);
+        $this->assertSame($this->sales->id, AuditLog::where('action', 'quote.declined')->value('actor_id'));
+        Notification::assertNotSentTo($this->sales, QuoteAnswered::class);
+
+        // Only once: a declined quote cannot be declined again.
+        $this->actingAs($this->sales)->post(route('quotes.declined', $quote), ['reason' => 'price'])->assertStatus(409);
+    }
+
     public function test_permissions(): void
     {
         $quote = $this->quote();

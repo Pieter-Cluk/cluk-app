@@ -129,6 +129,11 @@ return [
     'mark_accepted' => 'Le client a accepté par téléphone ou mail',
     'mark_accepted_hint' => 'Notez-le ici pour que le matériel soit réservé. C’est inscrit au journal à votre nom.',
     'mark_accepted_go' => 'Marquer comme accepté',
+    'mark_declined' => 'Client a refusé (par téléphone ou mail)',
+    'mark_declined_hint' => 'Enregistrez-le ici : le matériel n’est plus réservé pour cette offre. Aucun mail ne part vers le client. Marquez le deal comme perdu sur la page du deal si le job est perdu.',
+    'mark_declined_go' => 'Marquer comme refusé',
+    'decline_reason' => 'Raison',
+    'decline_note' => 'Note (facultatif)',
     'confirmed_by' => 'Confirmé par',
     'po' => 'Numéro de commande',
     'state' => [
@@ -197,6 +202,7 @@ return [
         'button' => 'Ouvrir le devis',
     ],
     'log' => [
+        'declined_staff' => ':code marqué comme refusé par :name : :reason',
         'created' => 'Devis :number commencé.',
         'sent' => 'Devis :code envoyé à :to (:total HTVA).',
         'revised' => 'Nouvelle version :code commencée.',
@@ -205,6 +211,7 @@ return [
         'declined' => 'Devis :code refusé : :reason',
     ],
     'flash' => [
+        'declined' => 'Marqué comme refusé.',
         'created' => 'Devis :number commencé.',
         'saved' => 'Enregistré et recalculé.',
         'line_added' => 'Ligne ajoutée.',
