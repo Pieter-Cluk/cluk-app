@@ -15,7 +15,7 @@
         <h2>{{ __('purchasing.suppliers') }}</h2>
         @foreach ($pq->suppliers as $s)
             <div class="p-line"><span><b>{{ $s->name }}</b><br><small class="muted">{{ $pq->lines->filter(fn ($l) => ! $l->item || $l->item->suppliers->contains('id', $s->id))->map(fn ($l) => $l->qty.' × '.$l->name)->implode(' · ') }}</small></span>
-                <span class="muted">{{ $s->pivot->replied_at ? __('purchasing.replied_on', ['date' => $s->pivot->replied_at->format('d/m H:i')]) : ($s->pivot->sent_at ? __('purchasing.sent_on', ['date' => $s->pivot->sent_at->format('d/m H:i')]) : __('purchasing.not_sent')) }}</span></div>
+                <span class="muted">{{ $s->pivot->replied_at ? __('purchasing.replied_on', ['date' => \Illuminate\Support\Carbon::parse($s->pivot->replied_at)->format('d/m H:i')]) : ($s->pivot->sent_at ? __('purchasing.sent_on', ['date' => \Illuminate\Support\Carbon::parse($s->pivot->sent_at)->format('d/m H:i')]) : __('purchasing.not_sent')) }}</span></div>
         @endforeach
         @if ($pq->status === 'draft' && $canWork)<form method="post" action="{{ route('purchasing.send', $pq) }}" class="mt">@csrf<button class="primary" type="submit">{{ __('purchasing.send_all') }}</button></form>@endif
         <p class="mt"><a href="{{ route('purchasing.pq.print', $pq) }}" target="_blank" rel="noopener">{{ __('purchasing.print_pq') }}</a></p>

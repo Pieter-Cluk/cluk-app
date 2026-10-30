@@ -121,12 +121,17 @@ class ProductSalesTest extends TestCase
 
         $buyer = $this->as('asset-manager');
         $buyer->forceFill(['role_id' => Role::where('slug', 'admin')->value('id')])->save();
+        // The sent request opens (sent dates on the suppliers), and the task lists show the work.
+        $this->actingAs($buyer)->get('/purchasing/requests/'.$pq->id)->assertOk();
+        $this->actingAs($elke)->get('/dashboard')->assertOk()->assertSee('Sales orders to buy in and confirm');
         // Supplier A: 35% (77.35), on the 29th; supplier B: net 80.00, on the 27th.
         $this->actingAs($buyer)->post('/purchasing/requests/'.$pq->id.'/replies', ['r' => [$pqLine->id => [
             $a->id => ['disc' => '35', 'date' => today()->addDays(8)->toDateString()],
             $b->id => ['net' => '80.00', 'date' => today()->addDays(6)->toDateString()],
         ]]])->assertSessionHasNoErrors();
         $this->assertSame($a->id, $pqLine->fresh()->chosen_company_id); // cheapest
+        $this->actingAs($buyer)->get('/purchasing/requests/'.$pq->id)->assertOk();
+        $this->actingAs($buyer)->get('/dashboard?who=all')->assertOk()->assertSee('Supplier replies to compare');
         $this->actingAs($buyer)->post('/purchasing/requests/'.$pq->id.'/replies', ['order' => '1'])->assertSessionHasNoErrors();
         $po = PurchaseOrder::firstOrFail();
         $this->assertSame([$a->id, 30940, 'sent'], [$po->company_id, $po->total_cents, $po->status]);

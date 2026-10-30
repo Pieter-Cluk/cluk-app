@@ -105,6 +105,18 @@ class DashboardController extends Controller
             $t[] = ['n' => Deal::open()->when($who === 'me', fn ($q) => $q->where('owner_id', $u->id))->where('check_date', true)->whereNotNull('event_start')->where('event_start', '<=', today()->addDays(14))->count(), 'key' => 'deals_soon', 'url' => route('deals.index'), 'tone' => 'info'];
             $t[] = ['n' => Quote::whereIn('status', ['change'])->when($who === 'me', fn ($q) => $q->where('owner_id', $u->id))->count(), 'key' => 'quote_changes', 'url' => route('quotes.index'), 'tone' => 'warn'];
         }
+        // Product sales: accepted quotes to buy in and confirm, confirmed ones to deliver; purchasing: replies to compare, late.
+        if ($u->canUseModule('sales', 2) || $u->canUseModule('purchasing', 2)) {
+            $sq = fn (string $st) => \App\Models\ProductSales\SalesQuote::where('status', $st)->when($who === 'me' && ! $u->canUseModule('purchasing', 2), fn ($q) => $q->where('owner_id', $u->id));
+            $t[] = ['n' => $sq('accepted')->count(), 'key' => 'sales_accepted', 'url' => route('psales.index', ['tab' => 'purchasing']), 'tone' => 'warn'];
+            $t[] = ['n' => $sq('confirmed')->count(), 'key' => 'sales_deliver', 'url' => route('psales.index', ['tab' => 'confirmed']), 'tone' => 'info'];
+        }
+        if ($u->canUseModule('purchasing', 2)) {
+            $pqs = \App\Models\Purchasing\PurchaseRequest::with('suppliers')->where('status', 'sent')->get();
+            $t[] = ['n' => $pqs->filter(fn ($r) => $r->repliedCount() > 0)->count(), 'key' => 'purchase_replies', 'url' => route('purchasing.index', ['f' => 'reply']), 'tone' => 'warn'];
+            $t[] = ['n' => $pqs->filter->isLate()->count() + \App\Models\Purchasing\PurchaseOrder::with('lines')->whereIn('status', ['sent', 'confirmed'])->get()->filter->isLate()->count(),
+                'key' => 'purchase_late', 'url' => route('purchasing.index'), 'tone' => 'warn'];
+        }
         if ($u->canUseModule('dryhire', 2)) {
             $t[] = ['n' => $mine(Order::where('status', 'allocation'))->count(), 'key' => 'orders', 'url' => route('orders.index'), 'tone' => 'warn'];
         }
