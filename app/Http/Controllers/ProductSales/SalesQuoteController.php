@@ -152,6 +152,17 @@ class SalesQuoteController extends Controller
         return back()->with('status', __('psales.accepted'));
     }
 
+    /** Supplier prices before the customer says yes (draft or sent quote). */
+    public function requestPrices(Request $request, SalesQuote $quote): RedirectResponse
+    {
+        abort_unless($request->user()->canUseModule('sales', 2) || $request->user()->canUseModule('purchasing', 2), 403);
+        abort_unless(in_array($quote->status, ['draft', 'sent'], true), 409);
+        $pq = SalesFlow::requestPrices($quote, $request->user());
+
+        return $pq ? redirect()->route('purchasing.pq', $pq)->with('status', __('psales.early_sent', ['number' => $pq->number]))
+            : back()->with('status', __('psales.early_in_stock'));
+    }
+
     public function confirm(Request $request, SalesQuote $quote): RedirectResponse
     {
         abort_unless($quote->status === 'accepted', 409);

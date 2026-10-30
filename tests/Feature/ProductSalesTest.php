@@ -155,6 +155,29 @@ class ProductSalesTest extends TestCase
         $this->assertSame([0, 'delivered'], [$item->fresh()->stock_qty, $q->fresh()->status]);
     }
 
+    public function test_supplier_prices_before_the_customer_accepts(): void
+    {
+        $admin = $this->as('admin');
+        [$item] = $this->catalogue($admin);
+        $customer = Company::create(['name' => 'Demo Theatre vzw', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'en']);
+        $elke = $this->as('sales');
+        $this->actingAs($elke)->post('/sales/sales-quotes', ['company_id' => $customer->id, 'title' => 'Early prices'])->assertRedirect();
+        $q = SalesQuote::firstOrFail();
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $item->id, 'qty' => 10]);
+        $this->actingAs($elke)->get(route('psales.show', $q))->assertOk()->assertSee('Request prices from suppliers');
+
+        $this->actingAs($elke)->post(route('psales.prices', $q))->assertRedirect();
+        $pq = PurchaseRequest::firstOrFail();
+        $this->assertSame(['sent', $q->id, 4], [$pq->status, $pq->sales_quote_id, $pq->lines()->value('qty')]); // 6 in stock
+        $this->actingAs($elke)->get(route('psales.show', $q))->assertDontSee('Request prices from suppliers')->assertSee($pq->number);
+
+        // The customer accepts: the early request is used, no second one.
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/send', ['to' => 'jo@theatre.example']);
+        $this->post('/sq/'.$q->fresh()->token.'/accept', ['name' => 'Jo Peeters', 'terms' => '1'])->assertRedirect();
+        $this->assertSame('accepted', $q->fresh()->status);
+        $this->assertSame(1, PurchaseRequest::count());
+    }
+
     public function test_pages_in_every_language(): void
     {
         $admin = $this->as('admin');

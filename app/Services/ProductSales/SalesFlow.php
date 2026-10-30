@@ -2,6 +2,7 @@
 
 namespace App\Services\ProductSales;
 
+use App\Models\Purchasing\PurchaseRequest;
 use App\Models\AuditLog;
 use App\Models\ProductSales\SalesQuote;
 use App\Models\User;
@@ -48,6 +49,32 @@ class SalesFlow
         SalesMails::sent($q->fresh(['lines', 'contact', 'owner']), $message, $by);
     }
 
+    /**
+     * Ask the suppliers for prices before the customer has accepted (draft or sent quote): what is not in free stock.
+     * Returns the request, or null when everything is in stock.
+     */
+    public static function requestPrices(SalesQuote $q, User $by): ?PurchaseRequest
+    {
+        $buy = [];
+        foreach ($q->lines()->with('item.suppliers')->get() as $l) {
+            if ($l->kind !== 'item' || ! $l->item) {
+                continue;
+            }
+            $short = $l->qty - min($l->qty, $l->item->freeStock($q->id));
+            if ($short > 0) {
+                $buy[] = ['item' => $l->item, 'qty' => $short, 'purpose' => 'sales', 'quote_line_id' => $l->id];
+            }
+        }
+        if (! $buy) {
+            return null;
+        }
+        $need = collect($buy)->max(fn ($b) => $b['item']->leadDays());
+        $pq = Purchasing::create($buy, $by, $q, Purchasing::workdays(today(), $need + 1), __('psales.early_note', ['quote' => $q->number]));
+        Purchasing::send($pq, $by);
+
+        return $pq;
+    }
+
     /** Accepted: pieces in stock are kept for this sale, the rest goes to a price request to the suppliers. */
     public static function accept(SalesQuote $q, string $name, ?string $po, ?User $by = null): void
     {
@@ -69,7 +96,9 @@ class SalesFlow
                 $deal->log('stage', __('quotes.log.accepted', ['code' => $q->code(), 'name' => $name, 'po' => $po ?: '—']), $by);
                 $deal->forceFill(['stage' => 'won', 'closed_at' => now(), 'closed_by_id' => $by?->id ?? $deal->owner_id, 'value_cents' => $q->net_cents])->save();
             }
-            if ($buy) {
+            // Prices already asked before the acceptance: that request is used, no second one goes out.
+            $early = $q->requests()->whereNotIn('status', ['cancelled'])->exists();
+            if ($buy && ! $early) {
                 $owner = $q->owner ?? $by ?? User::query()->orderBy('id')->first();
                 $need = collect($buy)->max(fn ($b) => $b['item']->leadDays());
                 $pq = Purchasing::create($buy, $owner, $q, Purchasing::workdays(today(), $need + 1));

@@ -98,6 +98,14 @@
                 </section>
             @endif
 
+            @if ($canWork && in_array($q->status, ['draft', 'sent'], true) && $q->requests->whereNotIn('status', ['cancelled'])->isEmpty() && $q->lines->where('kind', 'item')->isNotEmpty())
+                <section class="card">
+                    <h2>{{ __('psales.early_title') }}</h2>
+                    <p class="muted small">{{ __('psales.early_hint') }}</p>
+                    <form method="post" action="{{ route('psales.prices', $q) }}" onsubmit="return confirm(@js(__('psales.early_confirm')))">@csrf<button class="btn" type="submit">{{ __('psales.early_button') }}</button></form>
+                </section>
+            @endif
+
             @if ($q->requests->isNotEmpty())
                 <section class="card">
                     <h2>{{ __('psales.purchasing') }}</h2>

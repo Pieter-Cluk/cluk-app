@@ -685,6 +685,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/{quote}/send', [SalesQuoteController::class, 'send'])->whereNumber('quote')->name('psales.send');
             Route::post('/{quote}/accept', [SalesQuoteController::class, 'accept'])->whereNumber('quote')->name('psales.accept');
             Route::post('/{quote}/confirm', [SalesQuoteController::class, 'confirm'])->whereNumber('quote')->name('psales.confirm');
+            Route::post('/{quote}/prices', [SalesQuoteController::class, 'requestPrices'])->whereNumber('quote')->middleware('throttle:10,1')->name('psales.prices');
             Route::post('/{quote}/deliver', [SalesQuoteController::class, 'deliver'])->whereNumber('quote')->name('psales.deliver');
             Route::post('/{quote}/cancel', [SalesQuoteController::class, 'cancel'])->whereNumber('quote')->name('psales.cancel');
         });
