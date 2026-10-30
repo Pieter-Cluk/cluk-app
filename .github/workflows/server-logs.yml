@@ -34,7 +34,10 @@ jobs:
           php artisan tinker --execute='$d = App\Services\Website\DigitalToday::get(); echo "total=".$d["total"]." web_events=".$d["web"]["events"]." visitors=".$d["web"]["visitors"]." views=".$d["web"]["views"]." actions=".$d["web"]["actions"]." social=".$d["social"]["interactions"]." reach=".$d["social"]["reach"].PHP_EOL; foreach ($d["sources"] as $s) { echo "  source ".$s["key"]."=".$s["n"].PHP_EOL; } $ev = DB::table("web_events")->where("created_at", ">=", today())->get(); foreach ($ev->groupBy("visitor_id") as $vid => $list) { $v = DB::table("web_visitors")->find($vid); echo "  visitor ".$vid." device=".($v->device ?? "?")." first_seen=".substr((string) ($v->first_seen_at ?? ""), 0, 16)." ref=".(parse_url((string) ($v->referrer ?? ""), PHP_URL_HOST) ?: "-")." utm=".($v->utm_source ?? "-")." linked=".(($v->email ?? null) || ($v->customer_account_id ?? null) ? "yes" : "no")." staff_domain=".(str_ends_with(strtolower((string) ($v->email ?? "")), "@cluk.live") ? "yes" : "no")." events=".$list->count()." ".json_encode($list->countBy("type")->all())." ".substr($list->min("created_at"), 11, 5)."-".substr($list->max("created_at"), 11, 5).PHP_EOL; }' 2>&1 | tail -30
           echo "== log files"; ls -la storage/logs/ 2>&1 | tail -5
           echo "== latest errors (message lines only)"
-          cat storage/logs/laravel*.log 2>/dev/null | grep -E '^\[[0-9-]+ [0-9:]+\] [a-z]+\.(ERROR|WARNING|CRITICAL)' | tail -25 | cut -c1-600
+          cat storage/logs/laravel*.log 2>/dev/null | grep -E '^\[[0-9-]+ [0-9:]+\] [a-z]+\.(ERROR|WARNING|CRITICAL)' | grep -v 'Social sync' | tail -12 | cut -c1-900
+          echo "== latest errors with place (ERROR only)"
+          cat storage/logs/laravel*.log 2>/dev/null | grep -E '^\[[0-9-]+ [0-9:]+\] [a-z]+\.(ERROR|CRITICAL)' | tail -4 | sed -E 's/\{"userId".*//' | cut -c1-900
+          grep -A3 -E '^\[[0-9-]+ [0-9:]+\] [a-z]+\.ERROR' storage/logs/laravel*.log 2>/dev/null | grep -E '#0 |#1 |#2 ' | tail -6 | cut -c1-300
           echo "== outgoing: VIES"
           curl -s -o /dev/null -m 15 -w '%{http_code}\n' https://ec.europa.eu/taxation_customs/vies/rest-api/check-vat-number -X POST -H 'Content-Type: application/json' -d '{"countryCode":"BE","vatNumber":"1010948054"}' || echo failed
           echo "== outgoing: Microsoft"
