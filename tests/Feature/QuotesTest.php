@@ -333,6 +333,15 @@ class QuotesTest extends TestCase
         $this->actingAs($this->sales)->post(route('quotes.declined', $quote), ['reason' => 'price'])->assertStatus(409);
     }
 
+    public function test_staff_can_mark_a_draft_as_declined(): void
+    {
+        $quote = $this->quote();
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertSee('Mark as declined');
+        $this->actingAs($this->sales)->post(route('quotes.declined', $quote), ['reason' => 'cancelled'])->assertRedirect();
+        $this->assertSame(['declined', 'cancelled'], [$quote->fresh()->status, $quote->fresh()->decline_reason]);
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertDontSee('Mark as declined');
+    }
+
     public function test_permissions(): void
     {
         $quote = $this->quote();

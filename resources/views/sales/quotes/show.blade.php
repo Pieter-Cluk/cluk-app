@@ -57,18 +57,12 @@
                         <button class="btn" type="submit">{{ __('quotes.mark_accepted_go') }}</button>
                     </form>
                 </details>
-                <details class="mt" @if ($errors->has('reason')) open @endif>
-                    <summary>{{ __('quotes.mark_declined') }}</summary>
-                    <p class="muted small">{{ __('quotes.mark_declined_hint') }}</p>
-                    <form method="post" action="{{ route('quotes.declined', $quote) }}" class="inline-form">
-                        @csrf
-                        <select name="reason" required aria-label="{{ __('quotes.decline_reason') }}"><option value="">{{ __('quotes.decline_reason') }}</option>@foreach (\App\Models\Sales\Quote::DECLINE_REASONS as $r)<option value="{{ $r }}">{{ __('quotes.decline_reasons.'.$r) }}</option>@endforeach</select>
-                        <input name="note" maxlength="1000" placeholder="{{ __('quotes.decline_note') }}" aria-label="{{ __('quotes.decline_note') }}">
-                        <button class="btn btn-danger" type="submit">{{ __('quotes.mark_declined_go') }}</button>
-                    </form>
-                </details>
+                @include('sales.quotes._decline')
             @endif
         </section>
+    @endif
+    @if ($canWork && $quote->isDraft())
+        <section class="card">@include('sales.quotes._decline')</section>
     @endif
 
     <div class="split split-wide">

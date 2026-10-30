@@ -347,7 +347,7 @@ class QuoteController extends Controller
     public function markDeclined(Request $request, Quote $quote): RedirectResponse
     {
         $this->guard($request, $quote, false);
-        abort_unless(in_array($quote->status, ['sent', 'change'], true), 409);
+        abort_unless(in_array($quote->status, ['draft', 'sent', 'change'], true), 409);
         $d = $request->validate(['reason' => ['required', Rule::in(Quote::DECLINE_REASONS)], 'note' => ['nullable', 'string', 'max:1000']]);
         QuoteAnswer::declineByStaff($quote, $d['reason'], $d['note'] ?? null, $request->user());
 
