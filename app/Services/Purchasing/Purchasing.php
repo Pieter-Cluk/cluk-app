@@ -41,7 +41,7 @@ class Purchasing
     /** @param  list<array{item: SalesItem, qty: int, purpose?: string, quote_line_id?: int}>  $lines */
     public static function create(array $lines, User $by, ?SalesQuote $quote = null, ?Carbon $neededBy = null, ?string $note = null, string $delivery = 'supplier'): PurchaseRequest
     {
-        return DB::transaction(function () use ($lines, $by, $quote, $neededBy, $note) {
+        return DB::transaction(function () use ($lines, $by, $quote, $neededBy, $note, $delivery) {
             $pq = PurchaseRequest::create(['number' => PurchaseRequest::nextNumber('PQ'), 'status' => 'draft', 'sales_quote_id' => $quote?->id,
                 'needed_by' => $neededBy, 'note' => $note, 'created_by_id' => $by->id, 'delivery' => $delivery]);
             $suppliers = [];
