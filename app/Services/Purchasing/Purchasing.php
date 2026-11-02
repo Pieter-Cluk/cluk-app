@@ -11,6 +11,7 @@ use App\Models\Purchasing\PurchaseRequest;
 use App\Models\Purchasing\Reply;
 use App\Models\User;
 use App\Services\Afrit6\Pricing;
+use App\Services\Finance\ExchangeRates;
 use App\Services\Rental\Orders;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -93,8 +94,23 @@ class Purchasing
             foreach ($pq->lines as $line) {
                 foreach ($data[$line->id] ?? [] as $companyId => $v) {
                     $net = null;
+                    $fx = ['currency' => 'EUR', 'foreign_cents' => null, 'rate' => null, 'rate_date' => null];
+                    $cur = strtoupper((string) ($v['cur'] ?? 'EUR')) ?: 'EUR';
                     if (($v['net'] ?? '') !== '' && $v['net'] !== null) {
-                        $net = (int) round((float) str_replace(',', '.', (string) $v['net']) * 100);
+                        $amount = (int) round((float) str_replace(',', '.', (string) $v['net']) * 100);
+                        if ($cur === 'EUR') {
+                            $net = $amount;
+                        } else {
+                            // The price as the supplier gave it, turned into euro at the ECB day rate of the day it was entered.
+                            $old = Reply::where('purchase_request_line_id', $line->id)->where('company_id', $companyId)->first();
+                            $fxRate = $old && $old->currency === $cur && $old->foreign_cents === $amount && $old->rate
+                                ? ['rate' => $old->rate, 'date' => $old->rate_date?->toDateString()] : ExchangeRates::rate($cur);
+                            if (! $fxRate) {
+                                throw ValidationException::withMessages(['r' => __('purchasing.errors.no_rate', ['currency' => $cur])]);
+                            }
+                            $net = ExchangeRates::toEurCents($amount, $fxRate['rate']);
+                            $fx = ['currency' => $cur, 'foreign_cents' => $amount, 'rate' => $fxRate['rate'], 'rate_date' => $fxRate['date']];
+                        }
                     } elseif (($v['disc'] ?? '') !== '' && $v['disc'] !== null && $line->item) {
                         $net = (int) round($line->item->list_price_cents * (1 - (float) str_replace(',', '.', (string) $v['disc']) / 100));
                     }
@@ -104,7 +120,7 @@ class Purchasing
 
                         continue;
                     }
-                    Reply::updateOrCreate(['purchase_request_line_id' => $line->id, 'company_id' => $companyId], ['net_cents' => $net, 'delivery_date' => $date]);
+                    Reply::updateOrCreate(['purchase_request_line_id' => $line->id, 'company_id' => $companyId], ['net_cents' => $net, 'delivery_date' => $date] + $fx);
                     $pq->suppliers()->updateExistingPivot($companyId, ['replied_at' => now()]);
                 }
                 $line->load('replies');
@@ -129,13 +145,19 @@ class Purchasing
         return DB::transaction(function () use ($pq, $by) {
             $orders = [];
             foreach ($pq->lines->groupBy('chosen_company_id') as $companyId => $lines) {
+                // All of this supplier's prices in one foreign currency: the order is in that currency too.
+                $chosen = $lines->map(fn ($l) => $l->replies->firstWhere('company_id', $l->chosen_company_id));
+                $curs = $chosen->pluck('currency')->map(fn ($c) => $c ?: 'EUR')->unique();
+                $fx = $curs->count() === 1 && $curs->first() !== 'EUR' ? $chosen->first() : null;
                 $po = PurchaseOrder::create(['number' => PurchaseRequest::nextNumber('PO'), 'purchase_request_id' => $pq->id, 'company_id' => $companyId, 'status' => 'sent',
-                    'sent_at' => now(), 'created_by_id' => $by->id, 'delivery' => $pq->delivery ?: 'supplier']);
+                    'sent_at' => now(), 'created_by_id' => $by->id, 'delivery' => $pq->delivery ?: 'supplier',
+                    'currency' => $fx ? $fx->currency : 'EUR', 'rate' => $fx?->rate, 'rate_date' => $fx?->rate_date]);
                 $total = 0;
                 foreach ($lines as $l) {
                     $r = $l->replies->firstWhere('company_id', $l->chosen_company_id);
                     $po->lines()->create(['sales_item_id' => $l->sales_item_id, 'sales_quote_line_id' => $l->sales_quote_line_id, 'name' => $l->name, 'qty' => $l->qty,
-                        'unit_cents' => $r->net_cents, 'amount_cents' => $r->net_cents * $l->qty, 'delivery_date' => $r->delivery_date, 'purpose' => $l->purpose]);
+                        'unit_cents' => $r->net_cents, 'amount_cents' => $r->net_cents * $l->qty, 'delivery_date' => $r->delivery_date, 'purpose' => $l->purpose,
+                        'unit_foreign_cents' => $fx ? $r->foreign_cents : null]);
                     $total += $r->net_cents * $l->qty;
                     $l->quoteLine?->update(['cost_cents' => $r->net_cents]);
                 }

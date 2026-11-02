@@ -26,11 +26,11 @@
         <tbody>
             @foreach ($doc->lines as $l)
                 <tr><td class="num">{{ $l->qty }}</td><td>{{ $l->name }}@if ($l->item)<br><small>{{ $l->item->orderCodes($isPo ? $doc->supplier : null) }}</small>@endif</td>
-                    @if ($isPo)<td>{{ $l->delivery_date?->format('d/m/Y') ?? '—' }}</td><td class="num nowrap">{{ $eur($l->unit_cents) }}</td><td class="num nowrap">{{ $eur($l->amount_cents) }}</td>@else<td>__________</td><td>__________</td>@endif</tr>
+                    @if ($isPo)<td>{{ $l->delivery_date?->format('d/m/Y') ?? '—' }}</td><td class="num nowrap">{{ $doc->money($l->unit_cents, $l->unit_foreign_cents) }}</td><td class="num nowrap">{{ $doc->money($l->amount_cents, $l->unit_foreign_cents !== null ? $l->unit_foreign_cents * $l->qty : null) }}</td>@else<td>__________</td><td>__________</td>@endif</tr>
             @endforeach
         </tbody>
     </table>
-    @if ($isPo)<div class="doc-totals"><div class="grand"><span>{{ __('purchasing.total_excl') }}</span><span>{{ $eur($doc->total_cents) }}</span></div></div>@endif
+    @if ($isPo)<div class="doc-totals"><div class="grand"><span>{{ __('purchasing.total_excl') }}</span><span>{{ $doc->totalForSupplier() }}</span></div></div>@endif
     <section class="doc-notes"><p>{{ $isPo ? __('purchasing.doc.po_note') : __($doc->delivery === 'cluk' ? 'purchasing.doc.pq_note_cluk' : 'purchasing.doc.pq_note') }}</p></section>
     @if ($isPo)<div class="doc-signs"><div class="sign"><span>{{ __('purchasing.doc.sign_cluk') }}</span></div><div class="sign"><span>{{ __('purchasing.doc.sign_supplier') }}</span></div></div>@endif
     <footer class="doc-foot">{{ trim($me->legal_name.' '.$me->legal_form) }} · {{ $me->street }}, {{ $me->postcode }} {{ $me->city }} · {{ \App\Support\VatNumber::format($me->vat_number) }}</footer>

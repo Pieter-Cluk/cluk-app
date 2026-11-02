@@ -16,14 +16,14 @@
             <tbody>
                 @foreach ($po->lines as $l)
                     <tr><td class="num">{{ $l->qty }}</td><td><b>{{ $l->name }}</b><br><small class="muted">{{ $l->item?->number }}@if ($l->quoteLine) · {{ $l->quoteLine->quote?->number }}@endif</small></td><td>{{ __('purchasing.purposes.'.$l->purpose) }}</td>
-                        <td class="num nowrap">{{ $eur($l->unit_cents) }}</td><td class="num nowrap">{{ $eur($l->amount_cents) }}</td>
+                        <td class="num nowrap">{{ $eur($l->unit_cents) }}@if ($po->foreign() && $l->unit_foreign_cents !== null)<br><small class="muted">{{ $po->money($l->unit_cents, $l->unit_foreign_cents) }}</small>@endif</td><td class="num nowrap">{{ $eur($l->amount_cents) }}@if ($po->foreign() && $l->unit_foreign_cents !== null)<br><small class="muted">{{ $po->money($l->amount_cents, $l->unit_foreign_cents * $l->qty) }}</small>@endif</td>
                         <td>@if ($open)<input type="date" name="dates[{{ $l->id }}]" value="{{ $l->delivery_date?->toDateString() }}" aria-label="{{ __($po->delivery === 'cluk' ? 'purchasing.ready_at' : 'purchasing.delivery_us') }}">@else{{ $l->delivery_date?->format('d/m/Y') ?? '—' }}@endif</td>
                         <td class="num">{{ $l->received_qty }} / {{ $l->qty }}</td></tr>
                 @endforeach
             </tbody>
         </table>
         <div class="pad card-foot">
-            <b>{{ __('purchasing.total_excl') }} {{ $eur($po->total_cents) }}</b>
+            <b>{{ __('purchasing.total_excl') }} {{ $eur($po->total_cents) }}</b>@if ($po->foreign()) <span class="muted small">· {{ __('purchasing.fx_order', ['total' => $po->totalForSupplier(), 'rate' => rtrim(rtrim(number_format((float) $po->rate, 4, ',', '.'), '0'), ','), 'currency' => $po->currency, 'date' => $po->rate_date?->format('d/m/Y')]) }}</span>@endif
             @if ($open)<span class="inline-form"><label class="field" style="margin:0"><span>{{ __('purchasing.delivery') }}</span><select name="delivery">@foreach (\App\Models\Purchasing\PurchaseRequest::DELIVERY as $o)<option value="{{ $o }}" @selected($po->delivery === $o)>{{ __('purchasing.delivery_by.'.$o) }}</option>@endforeach</select></label><input name="their_ref" maxlength="80" value="{{ $po->their_ref }}" placeholder="{{ __('purchasing.their_ref_label') }}" aria-label="{{ __('purchasing.their_ref_label') }}"><button class="primary" type="submit">{{ $po->status === 'confirmed' ? __('purchasing.update_dates') : __('purchasing.mark_confirmed') }}</button></span>@endif
         </div>
     </form>

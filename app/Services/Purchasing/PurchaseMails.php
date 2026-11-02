@@ -60,8 +60,8 @@ class PurchaseMails
             greeting: __('mails.hello_plain'),
             intro: [__($po->delivery === 'cluk' ? 'purchasing.mail.order_intro_cluk' : 'purchasing.mail.order_intro')],
             details: [__('mails.label.our_ref') => $po->number] + self::delivery($po->delivery),
-            rows: $po->lines->map(fn ($l) => [(string) $l->qty, $l->name.($l->item ? ' · '.$l->item->orderCodes($po->supplier) : '').($l->delivery_date ? ' · '.$l->delivery_date->format('d/m/Y') : ''), Pricing::eur($l->amount_cents)])->all(),
-            totals: [__('purchasing.total_excl') => Pricing::eur($po->total_cents)],
+            rows: $po->lines->map(fn ($l) => [(string) $l->qty, $l->name.($l->item ? ' · '.$l->item->orderCodes($po->supplier) : '').($l->delivery_date ? ' · '.$l->delivery_date->format('d/m/Y') : ''), $po->money($l->amount_cents, $l->unit_foreign_cents !== null ? $l->unit_foreign_cents * $l->qty : null)])->all(),
+            totals: [__('purchasing.total_excl') => $po->totalForSupplier()],
             next: [__($po->delivery === 'cluk' ? 'purchasing.mail.order_next_cluk' : 'purchasing.mail.order_next')],
             signer: $by,
         ));

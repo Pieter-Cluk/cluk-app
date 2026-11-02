@@ -719,8 +719,9 @@ img.av{object-fit:cover;background:var(--surface-subtle);padding:0}
 .inbox-item.is-on{background:var(--brand-tint)}
 .pq-item{border-top:1px solid var(--line);padding:14px 0}
 .pq-item:first-child{border-top:0}
-.pq-row{display:grid;grid-template-columns:28px minmax(160px,1.6fr) 90px 110px 150px 90px 120px;gap:8px;align-items:center;padding:6px 0}
+.pq-row{display:grid;grid-template-columns:28px minmax(160px,1.6fr) 90px 180px 150px 90px 120px;gap:8px;align-items:center;padding:6px 0}
 .pq-row input{min-height:36px;width:100%}
+.pq-net{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.pq-net select{width:72px;min-height:36px;padding-left:6px;padding-right:6px}.pq-net input{flex:1;min-width:0;width:auto}.pq-net small{flex-basis:100%;line-height:1.2}
 .pq-tag{font-size:11px;color:var(--brand-strong);font-weight:700}
 .pq-wait{opacity:.75}
 @media (max-width:900px){.pq-row{grid-template-columns:28px minmax(0,1fr) minmax(0,1fr)}.pq-row > :nth-child(n+4){grid-column:2/-1}}

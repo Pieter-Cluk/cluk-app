@@ -25,6 +25,7 @@
         <h2>{{ __('purchasing.compare') }}</h2>
         <p class="muted small">{{ __('purchasing.compare_hint') }}</p>
         @foreach ($pq->lines as $l)
+            @php($lastCur ??= $pq->lines->flatMap->replies->where('currency', '!=', 'EUR')->pluck('currency', 'company_id')->all())
             @php($cheap = $l->cheapest())
             @php($fast = $l->fastest())
             @php($sell = $l->quoteLine?->unit_cents)
@@ -39,7 +40,12 @@
                         <input type="radio" name="choose[{{ $l->id }}]" value="{{ $s->id }}" @checked($l->chosen_company_id === $s->id) @disabled(! $open) aria-label="{{ __('purchasing.use', ['name' => $s->name]) }}">
                         <span><b>{{ $s->name }}</b><br><small class="muted">{{ $r ? __('purchasing.replied_usual', ['n' => $s->pivot->discount_bp / 100]) : __('purchasing.waiting_usual', ['n' => $s->pivot->discount_bp / 100]) }}</small></span>
                         <input type="number" step="0.1" min="0" max="100" name="r[{{ $l->id }}][{{ $s->id }}][disc]" value="{{ $disc }}" @disabled(! $open) aria-label="{{ __('purchasing.their_disc') }}">
-                        <input type="number" step="0.01" min="0" name="r[{{ $l->id }}][{{ $s->id }}][net]" value="{{ $r?->net_cents !== null ? number_format($r->net_cents / 100, 2, '.', '') : '' }}" @disabled(! $open) aria-label="{{ __('purchasing.net') }}">
+                        @php($cur = $r?->currency ?: ($lastCur[$s->id] ?? 'EUR'))
+                        <span class="pq-net">
+                            <select name="r[{{ $l->id }}][{{ $s->id }}][cur]" @disabled(! $open) aria-label="{{ __('purchasing.currency') }}">@foreach (\App\Services\Finance\ExchangeRates::CURRENCIES as $c)<option @selected($cur === $c)>{{ $c }}</option>@endforeach</select>
+                            <input type="number" step="0.01" min="0" name="r[{{ $l->id }}][{{ $s->id }}][net]" value="{{ $r?->foreign_cents !== null && $r->currency !== 'EUR' ? number_format($r->foreign_cents / 100, 2, '.', '') : ($r?->net_cents !== null ? number_format($r->net_cents / 100, 2, '.', '') : '') }}" @disabled(! $open) aria-label="{{ __('purchasing.net') }}">
+                            @if ($r && $r->currency !== 'EUR' && $r->rate)<small class="muted">{{ __('purchasing.fx_note', ['eur' => $eur($r->net_cents), 'rate' => rtrim(rtrim(number_format($r->rate, 4, ',', '.'), '0'), ','), 'currency' => $r->currency, 'date' => $r->rate_date?->format('d/m')]) }}</small>@endif
+                        </span>
                         <input type="date" name="r[{{ $l->id }}][{{ $s->id }}][date]" value="{{ $r?->delivery_date?->toDateString() }}" @disabled(! $open) aria-label="{{ __($pq->delivery === 'cluk' ? 'purchasing.ready_at' : 'purchasing.delivery_us') }}">
                         <span>@if ($seeMargin && $sell && $r?->net_cents !== null)<b @class(['txt-danger' => ($sell - $r->net_cents) / $sell < 0.1])>{{ number_format(($sell - $r->net_cents) / $sell * 100, 1, ',', '') }}%</b>@endif</span>
                         <span class="pq-tag">{{ collect([$cheap && $cheap->company_id === $s->id && $l->replies->whereNotNull('net_cents')->count() > 1 ? __('purchasing.cheapest') : null, $fast && $fast->company_id === $s->id && $l->replies->whereNotNull('delivery_date')->count() > 1 ? __('purchasing.fastest') : null])->filter()->implode(' · ') }}</span>
