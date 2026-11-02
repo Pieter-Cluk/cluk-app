@@ -63,7 +63,8 @@ class PurchasingController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $d = $request->validate(['qty' => ['array'], 'qty.*' => ['nullable', 'integer', 'min:0', 'max:100000'], 'purpose' => ['array'], 'purpose.*' => [Rule::in(RequestLine::PURPOSES)],
-            'needed_by' => ['nullable', 'date'], 'note' => ['nullable', 'string', 'max:500'], 'send' => ['boolean']]);
+            'needed_by' => ['nullable', 'date'], 'note' => ['nullable', 'string', 'max:500'], 'send' => ['boolean'],
+            'delivery' => ['nullable', Rule::in(\App\Models\Purchasing\PurchaseRequest::DELIVERY)]]);
         $lines = [];
         foreach (array_filter($d['qty'] ?? []) as $id => $qty) {
             $item = SalesItem::with('suppliers')->find($id);
@@ -74,7 +75,7 @@ class PurchasingController extends Controller
         if (! $lines) {
             return back()->withInput()->withErrors(['qty' => __('purchasing.errors.no_lines')]);
         }
-        $pq = Purchasing::create($lines, $request->user(), null, isset($d['needed_by']) ? Carbon::parse($d['needed_by']) : null, $d['note'] ?? null);
+        $pq = Purchasing::create($lines, $request->user(), null, isset($d['needed_by']) ? Carbon::parse($d['needed_by']) : null, $d['note'] ?? null, $d['delivery'] ?? 'supplier');
         if ($request->boolean('send')) {
             Purchasing::send($pq, $request->user());
         }
@@ -101,7 +102,10 @@ class PurchasingController extends Controller
     {
         abort_unless(in_array($pq->status, ['draft', 'sent'], true), 409);
         $d = $request->validate(['r' => ['array'], 'r.*.*.disc' => ['nullable', 'numeric', 'min:0', 'max:100'], 'r.*.*.net' => ['nullable', 'numeric', 'min:0'], 'r.*.*.date' => ['nullable', 'date'],
-            'choose' => ['array'], 'choose.*' => ['nullable', 'integer']]);
+            'choose' => ['array'], 'choose.*' => ['nullable', 'integer'], 'delivery' => ['nullable', Rule::in(PurchaseRequest::DELIVERY)]]);
+        if (! empty($d['delivery']) && $d['delivery'] !== $pq->delivery) {
+            $pq->update(['delivery' => $d['delivery']]);
+        }
         Purchasing::saveReplies($pq, $d['r'] ?? [], $d['choose'] ?? [], $request->user());
         if ($request->boolean('order')) {
             $orders = Purchasing::order($pq->fresh(), $request->user());
@@ -131,8 +135,8 @@ class PurchasingController extends Controller
     public function confirm(Request $request, PurchaseOrder $po): RedirectResponse
     {
         abort_unless(in_array($po->status, ['sent', 'confirmed'], true), 409);
-        $d = $request->validate(['their_ref' => ['nullable', 'string', 'max:80'], 'dates' => ['array'], 'dates.*' => ['nullable', 'date']]);
-        Purchasing::confirm($po->load('lines.quoteLine'), $d['their_ref'] ?? null, $d['dates'] ?? [], $request->user());
+        $d = $request->validate(['their_ref' => ['nullable', 'string', 'max:80'], 'dates' => ['array'], 'dates.*' => ['nullable', 'date'], 'delivery' => ['nullable', Rule::in(PurchaseOrder::DELIVERY)]]);
+        Purchasing::confirm($po->load('lines.quoteLine'), $d['their_ref'] ?? null, $d['dates'] ?? [], $request->user(), $d['delivery'] ?? null);
 
         return back()->with('status', __('purchasing.confirmed'));
     }

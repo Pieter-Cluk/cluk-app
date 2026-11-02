@@ -10,9 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** A purchase order (PO) to one supplier. */
-#[Fillable(['number', 'purchase_request_id', 'company_id', 'status', 'their_ref', 'total_cents', 'invoice_cents', 'invoice_checked_at', 'sent_at', 'confirmed_at', 'received_at', 'created_by_id'])]
+#[Fillable(['number', 'purchase_request_id', 'company_id', 'status', 'their_ref', 'total_cents', 'invoice_cents', 'invoice_checked_at', 'sent_at', 'confirmed_at', 'received_at', 'created_by_id', 'delivery'])]
 class PurchaseOrder extends Model
 {
+    /** supplier: they deliver to our warehouse; cluk: we organise the transport and collect the goods. */
+    public const DELIVERY = ['supplier', 'cluk'];
+
     public const STATUSES = ['sent', 'confirmed', 'received', 'cancelled'];
 
     protected function casts(): array

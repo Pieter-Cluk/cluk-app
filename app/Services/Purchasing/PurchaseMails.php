@@ -31,17 +31,22 @@ class PurchaseMails
         return $me->warehouse_address ?: trim($me->street.', '.$me->postcode.' '.$me->city, ', ');
     }
 
+    /** "Deliver to: our warehouse", or "Transport: organised by CLUK, we collect the goods at your address". */
+    private static function delivery(string $by): array
+    {
+        return $by === 'cluk' ? [__('purchasing.mail.transport') => __('purchasing.mail.transport_cluk')] : [__('purchasing.mail.deliver_to') => self::deliverTo()];
+    }
+
     public static function request(PurchaseRequest $pq, Company $s, Collection $lines, string $to, User $by): bool
     {
         return self::send($s, $to, fn () => new Confirmation(
             subject: __('purchasing.mail.request_subject', ['number' => $pq->number]),
             greeting: __('mails.hello_plain'),
-            intro: [__('purchasing.mail.request_intro')],
+            intro: [__($pq->delivery === 'cluk' ? 'purchasing.mail.request_intro_cluk' : 'purchasing.mail.request_intro')],
             details: array_filter([
                 __('mails.label.our_ref') => $pq->number,
                 __('purchasing.mail.needed') => $pq->needed_by?->locale(app()->getLocale())->translatedFormat('j F Y'),
-                __('purchasing.mail.deliver_to') => self::deliverTo(),
-            ]),
+            ] + self::delivery($pq->delivery)),
             rows: $lines->map(fn ($l) => [(string) $l->qty, $l->name.($l->item ? ' · '.$l->item->orderCodes($s) : ''), ''])->values()->all(),
             next: [__('purchasing.mail.request_next')],
             signer: $by,
@@ -53,11 +58,11 @@ class PurchaseMails
         return self::send($po->supplier, $to, fn () => new Confirmation(
             subject: __('purchasing.mail.order_subject', ['number' => $po->number]),
             greeting: __('mails.hello_plain'),
-            intro: [__('purchasing.mail.order_intro')],
-            details: [__('mails.label.our_ref') => $po->number, __('purchasing.mail.deliver_to') => self::deliverTo()],
+            intro: [__($po->delivery === 'cluk' ? 'purchasing.mail.order_intro_cluk' : 'purchasing.mail.order_intro')],
+            details: [__('mails.label.our_ref') => $po->number] + self::delivery($po->delivery),
             rows: $po->lines->map(fn ($l) => [(string) $l->qty, $l->name.($l->item ? ' · '.$l->item->orderCodes($po->supplier) : '').($l->delivery_date ? ' · '.$l->delivery_date->format('d/m/Y') : ''), Pricing::eur($l->amount_cents)])->all(),
             totals: [__('purchasing.total_excl') => Pricing::eur($po->total_cents)],
-            next: [__('purchasing.mail.order_next')],
+            next: [__($po->delivery === 'cluk' ? 'purchasing.mail.order_next_cluk' : 'purchasing.mail.order_next')],
             signer: $by,
         ));
     }

@@ -13,9 +13,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /** A price request (PQ) to every supplier of the items, to compare and choose. */
-#[Fillable(['number', 'status', 'sales_quote_id', 'needed_by', 'note', 'created_by_id', 'sent_at'])]
+#[Fillable(['number', 'status', 'sales_quote_id', 'needed_by', 'note', 'created_by_id', 'sent_at', 'delivery'])]
 class PurchaseRequest extends Model
 {
+    /** supplier: they deliver to our warehouse; cluk: we organise the transport and collect the goods. */
+    public const DELIVERY = ['supplier', 'cluk'];
+
     protected function casts(): array
     {
         return ['needed_by' => 'date', 'sent_at' => 'datetime'];

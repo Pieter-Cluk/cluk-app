@@ -38,11 +38,11 @@ class Purchasing
     }
 
     /** @param  list<array{item: SalesItem, qty: int, purpose?: string, quote_line_id?: int}>  $lines */
-    public static function create(array $lines, User $by, ?SalesQuote $quote = null, ?Carbon $neededBy = null, ?string $note = null): PurchaseRequest
+    public static function create(array $lines, User $by, ?SalesQuote $quote = null, ?Carbon $neededBy = null, ?string $note = null, string $delivery = 'supplier'): PurchaseRequest
     {
         return DB::transaction(function () use ($lines, $by, $quote, $neededBy, $note) {
             $pq = PurchaseRequest::create(['number' => PurchaseRequest::nextNumber('PQ'), 'status' => 'draft', 'sales_quote_id' => $quote?->id,
-                'needed_by' => $neededBy, 'note' => $note, 'created_by_id' => $by->id]);
+                'needed_by' => $neededBy, 'note' => $note, 'created_by_id' => $by->id, 'delivery' => $delivery]);
             $suppliers = [];
             foreach ($lines as $l) {
                 $pq->lines()->create(['sales_item_id' => $l['item']->id, 'sales_quote_line_id' => $l['quote_line_id'] ?? null, 'name' => $l['item']->name(),
@@ -130,7 +130,7 @@ class Purchasing
             $orders = [];
             foreach ($pq->lines->groupBy('chosen_company_id') as $companyId => $lines) {
                 $po = PurchaseOrder::create(['number' => PurchaseRequest::nextNumber('PO'), 'purchase_request_id' => $pq->id, 'company_id' => $companyId, 'status' => 'sent',
-                    'sent_at' => now(), 'created_by_id' => $by->id]);
+                    'sent_at' => now(), 'created_by_id' => $by->id, 'delivery' => $pq->delivery ?: 'supplier']);
                 $total = 0;
                 foreach ($lines as $l) {
                     $r = $l->replies->firstWhere('company_id', $l->chosen_company_id);
@@ -155,9 +155,13 @@ class Purchasing
     }
 
     /** The supplier confirmed: their reference and the delivery dates. The sales lines get the date + 1 working day. */
-    public static function confirm(PurchaseOrder $po, ?string $ref, array $dates, User $by): void
+    public static function confirm(PurchaseOrder $po, ?string $ref, array $dates, User $by, ?string $delivery = null): void
     {
-        DB::transaction(function () use ($po, $ref, $dates, $by) {
+        DB::transaction(function () use ($po, $ref, $dates, $by, $delivery) {
+            if ($delivery && $delivery !== $po->delivery) {
+                $po->update(['delivery' => $delivery]);
+                AuditLog::record('purchase.delivery', $po, ['delivery' => $delivery], $by);
+            }
             foreach ($po->lines as $l) {
                 $d = $dates[$l->id] ?? null;
                 $l->update(['delivery_date' => $d ?: $l->delivery_date]);

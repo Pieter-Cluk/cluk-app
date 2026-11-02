@@ -5,26 +5,26 @@
         <div>
             <div class="kicker"><a href="{{ route('purchasing.index', ['tab' => 'po']) }}">{{ mb_strtoupper(__('nav.items.purchasing')) }}</a> · {{ $po->number }}</div>
             <h1>{{ __('purchasing.po_title', ['number' => $po->number, 'supplier' => $po->supplier->name]) }}</h1>
-            <p class="muted">@if ($po->request)<a href="{{ route('purchasing.pq', $po->request) }}">{{ $po->request->number }}</a>@endif @if ($po->request?->salesQuote) · <a href="{{ route('psales.show', $po->request->salesQuote) }}">{{ $po->request->salesQuote->number }} · {{ $po->request->salesQuote->customerName() }}</a>@endif @if ($po->their_ref) · {{ __('purchasing.their_ref', ['ref' => $po->their_ref]) }}@endif</p>
+            <p class="muted">@if ($po->request)<a href="{{ route('purchasing.pq', $po->request) }}">{{ $po->request->number }}</a>@endif @if ($po->request?->salesQuote) · <a href="{{ route('psales.show', $po->request->salesQuote) }}">{{ $po->request->salesQuote->number }} · {{ $po->request->salesQuote->customerName() }}</a>@endif @if ($po->their_ref) · {{ __('purchasing.their_ref', ['ref' => $po->their_ref]) }}@endif · {{ __('purchasing.delivery_by.'.($po->delivery ?: 'supplier')) }}</p>
         </div>
         <span @class(['pill', 'pill-ok' => in_array($po->status, ['confirmed', 'received'], true), 'pill-warn' => $po->status === 'sent', 'pill-danger' => $po->isLate()])>{{ $po->isLate() ? __('purchasing.late') : __('purchasing.po_status.'.$po->status) }}</span>
     </div>
     @include('partials.flash')
     <form method="post" action="{{ route('purchasing.confirm', $po) }}" class="card card-flush">@csrf
         <table class="table">
-            <thead><tr><th class="num">{{ __('purchasing.cols.qty') }}</th><th>{{ __('purchasing.cols.items') }}</th><th>{{ __('purchasing.purpose') }}</th><th class="num">{{ __('purchasing.net') }}</th><th class="num">{{ __('purchasing.cols.amount') }}</th><th>{{ __('purchasing.delivery_us') }}</th><th class="num">{{ __('purchasing.received_qty') }}</th></tr></thead>
+            <thead><tr><th class="num">{{ __('purchasing.cols.qty') }}</th><th>{{ __('purchasing.cols.items') }}</th><th>{{ __('purchasing.purpose') }}</th><th class="num">{{ __('purchasing.net') }}</th><th class="num">{{ __('purchasing.cols.amount') }}</th><th>{{ __($po->delivery === 'cluk' ? 'purchasing.ready_at' : 'purchasing.delivery_us') }}</th><th class="num">{{ __('purchasing.received_qty') }}</th></tr></thead>
             <tbody>
                 @foreach ($po->lines as $l)
                     <tr><td class="num">{{ $l->qty }}</td><td><b>{{ $l->name }}</b><br><small class="muted">{{ $l->item?->number }}@if ($l->quoteLine) · {{ $l->quoteLine->quote?->number }}@endif</small></td><td>{{ __('purchasing.purposes.'.$l->purpose) }}</td>
                         <td class="num nowrap">{{ $eur($l->unit_cents) }}</td><td class="num nowrap">{{ $eur($l->amount_cents) }}</td>
-                        <td>@if ($open)<input type="date" name="dates[{{ $l->id }}]" value="{{ $l->delivery_date?->toDateString() }}" aria-label="{{ __('purchasing.delivery_us') }}">@else{{ $l->delivery_date?->format('d/m/Y') ?? '—' }}@endif</td>
+                        <td>@if ($open)<input type="date" name="dates[{{ $l->id }}]" value="{{ $l->delivery_date?->toDateString() }}" aria-label="{{ __($po->delivery === 'cluk' ? 'purchasing.ready_at' : 'purchasing.delivery_us') }}">@else{{ $l->delivery_date?->format('d/m/Y') ?? '—' }}@endif</td>
                         <td class="num">{{ $l->received_qty }} / {{ $l->qty }}</td></tr>
                 @endforeach
             </tbody>
         </table>
         <div class="pad card-foot">
             <b>{{ __('purchasing.total_excl') }} {{ $eur($po->total_cents) }}</b>
-            @if ($open)<span class="inline-form"><input name="their_ref" maxlength="80" value="{{ $po->their_ref }}" placeholder="{{ __('purchasing.their_ref_label') }}" aria-label="{{ __('purchasing.their_ref_label') }}"><button class="primary" type="submit">{{ $po->status === 'confirmed' ? __('purchasing.update_dates') : __('purchasing.mark_confirmed') }}</button></span>@endif
+            @if ($open)<span class="inline-form"><label class="field" style="margin:0"><span>{{ __('purchasing.delivery') }}</span><select name="delivery">@foreach (\App\Models\Purchasing\PurchaseRequest::DELIVERY as $o)<option value="{{ $o }}" @selected($po->delivery === $o)>{{ __('purchasing.delivery_by.'.$o) }}</option>@endforeach</select></label><input name="their_ref" maxlength="80" value="{{ $po->their_ref }}" placeholder="{{ __('purchasing.their_ref_label') }}" aria-label="{{ __('purchasing.their_ref_label') }}"><button class="primary" type="submit">{{ $po->status === 'confirmed' ? __('purchasing.update_dates') : __('purchasing.mark_confirmed') }}</button></span>@endif
         </div>
     </form>
     <div class="split-2 mt">
