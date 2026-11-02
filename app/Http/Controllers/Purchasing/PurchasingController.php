@@ -101,7 +101,7 @@ class PurchasingController extends Controller
     public function replies(Request $request, PurchaseRequest $pq): RedirectResponse
     {
         abort_unless(in_array($pq->status, ['draft', 'sent'], true), 409);
-        $d = $request->validate(['r' => ['array'], 'r.*.*.disc' => ['nullable', 'numeric', 'min:0', 'max:100'], 'r.*.*.net' => ['nullable', 'numeric', 'min:0'], 'r.*.*.date' => ['nullable', 'date'],
+        $d = $request->validate(['r' => ['array'], 'r.*.*.disc' => ['nullable', 'numeric', 'min:0', 'max:100'], 'r.*.*.net' => ['nullable', 'numeric', 'min:0'], 'r.*.*.date' => ['nullable', 'date'], 'r.*.*.cur' => ['nullable', Rule::in(\App\Services\Finance\ExchangeRates::CURRENCIES)],
             'choose' => ['array'], 'choose.*' => ['nullable', 'integer'], 'delivery' => ['nullable', Rule::in(PurchaseRequest::DELIVERY)]]);
         if (! empty($d['delivery']) && $d['delivery'] !== $pq->delivery) {
             $pq->update(['delivery' => $d['delivery']]);
