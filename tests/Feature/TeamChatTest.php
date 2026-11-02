@@ -147,4 +147,22 @@ class TeamChatTest extends TestCase
         $clukie = new \App\Services\Assistant\StaffClukie(\App\Models\Assistant\AssistantChat::firstOrFail(), $crew);
         $this->assertSame(['error' => 'no access'], $clukie->tool('find_customers', ['query' => 'demo']));
     }
+    public function test_every_staff_clukie_tool_sends_its_inputs_as_an_object(): void
+    {
+        // The AI service refuses the whole question when a tool's properties are a JSON list ([]) instead of an object ({}).
+        config(['services.anthropic.key' => 'test-key']);
+        Http::fake(['api.anthropic.com/*' => Http::response(['stop_reason' => 'end_turn', 'content' => [['type' => 'text', 'text' => 'Hallo!']]])]);
+        $sales = $this->user('sales');
+        $this->actingAs($sales, 'web')->postJson(route('assistant.message'), ['text' => 'Wat staat er open?'])->assertOk()->assertJsonPath('messages.1.body', 'Hallo!');
+        Http::assertSent(function ($req) {
+            $raw = json_decode($req->body());
+            $names = collect($raw->tools)->pluck('name')->all();
+            $this->assertContains('incoming_list', $names);
+            foreach ($raw->tools as $t) {
+                $this->assertIsObject($t->input_schema->properties, $t->name.' properties must be a JSON object');
+            }
+
+            return true;
+        });
+    }
 }
