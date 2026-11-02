@@ -2,8 +2,9 @@
 @if (auth()->check() && config('clukie.enabled') && \App\Services\Assistant\StaffClukie::available())
 @php
     $ckClips = collect(config('clukie.clips'))->filter(fn ($p) => is_file(public_path($p)))->map(fn ($p) => asset($p).'?v='.filemtime(public_path($p)))->all();
+    // The chat key carries the login session: a new login starts with an empty chat.
     $ckCfg = [
-        'locale' => app()->getLocale(), 'store' => 'clukie-staff-'.auth()->id().'-'.substr(sha1(session()->getId()), 0, 10), 'prefix' => 'clukie-staff-'.auth()->id(), // a new login starts an empty chat 'max' => 2000, 'base' => rtrim(url('/'), '/'),
+        'locale' => app()->getLocale(), 'store' => 'clukie-staff-'.auth()->id().'-'.substr(sha1(session()->getId()), 0, 10), 'prefix' => 'clukie-staff-'.auth()->id(), 'max' => 2000, 'base' => rtrim(url('/'), '/'),
         'available' => true, 'team_open' => true, 'next' => '', 'customer' => true, 'team' => false,
         'img' => asset('images/clukie/clukie.jpg'), 'head' => asset('images/clukie/clukie-head.jpg'), 'clips' => (object) $ckClips,
         'url' => ['message' => route('assistant.message'), 'poll' => route('assistant.poll'), 'team' => route('assistant.message')],
