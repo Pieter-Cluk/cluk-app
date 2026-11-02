@@ -24,6 +24,10 @@ jobs:
           sshpass -e ssh -o ConnectTimeout=20 "$SSH_USER@$SSH_HOST" 'bash -s' > report.txt 2>&1 <<'REMOTE'
           W=$(readlink -f ~/webroots/by-route/app.cluk.live_)
           cd "$W/app" || exit 1
+          echo "== clukie chats (last 8)"
+          php artisan tinker --execute='foreach (App\Models\Website\Chat::latest("last_message_at")->take(8)->get() as $c) { echo "  #".$c->id." ".$c->status." msgs=".$c->messages()->count()." last=".substr((string) $c->last_message_at, 0, 16)." page=".$c->page.PHP_EOL; foreach ($c->messages()->latest("id")->take(4)->get()->reverse() as $m) { echo "     ".$m->role.": ".mb_substr(str_replace("\n", " ", (string) $m->body), 0, 70).(! empty($m->meta["failed"]) ? " [failed: ".$m->meta["failed"]."]" : "").PHP_EOL; } }' 2>&1 | tail -60
+          echo "== clukie log lines today"
+          grep -h "Clukie" storage/logs/laravel-$(date +%Y-%m-%d).log 2>/dev/null | tail -10 | cut -c1-300
           echo "== dollies and boxes"
           php artisan tinker --execute='$c = App\Models\Equipment\Asset::with("item")->get()->filter->isContainer(); echo "containers: ".$c->count()." by status ".json_encode($c->countBy("status"))." out_order=".$c->whereNotNull("out_order_id")->count().PHP_EOL; foreach ($c->take(12) as $a) { echo "  ".$a->code." ".$a->status." at ".($a->location ?? "-")." out=".($a->out_order_id ?? "-").PHP_EOL; } echo "zones: ".App\Models\Warehouse\Zone::where("active", true)->orderBy("sort")->get()->map(fn ($z) => $z->code."(".$z->type.")")->implode(" ").PHP_EOL; echo "moves into zones by cases today: ".App\Models\Warehouse\Move::whereNull("case_id")->whereDate("created_at", today())->whereIn("asset_id", $c->pluck("id"))->get()->map(fn ($m) => $m->to_code)->implode(", ").PHP_EOL;' 2>&1 | tail -20
           echo "== migrations and labour rates"
