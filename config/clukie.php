@@ -24,6 +24,8 @@ return [
     'clips' => [
         'idle' => 'images/clukie/idle.mp4',
         'wave' => 'images/clukie/wave.mp4',
-        // still to come: 'think', 'thumbs', 'hop' (same format: 512 × 512 MP4 on black, no sound)
+        'think' => 'images/clukie/think.mp4',   // while Clukie looks something up (loops)
+        'thumbs' => 'images/clukie/thumbs.mp4', // product cards shown, added to the basket, handed over
+        'hop' => 'images/clukie/hop.mp4',       // when Clukie first appears on the page
     ],
 ];
