@@ -124,7 +124,7 @@ class StaffClukie
     /** Only the tools this user may use. */
     public function tools(): array
     {
-        $q = fn (string $name, string $desc, array $props, array $req = []) => ['name' => $name, 'description' => $desc, 'input_schema' => ['type' => 'object', 'properties' => $props, 'required' => $req]];
+        $q = fn (string $name, string $desc, array $props, array $req = []) => ['name' => $name, 'description' => $desc, 'input_schema' => ['type' => 'object', 'properties' => $props ?: new \stdClass, 'required' => $req]]; // {} not [] for a tool without inputs
         $text = fn (string $d) => ['type' => 'string', 'description' => $d];
         $tools = [$q('search_help', 'Search the platform\'s help articles (how things work, step by step).', ['query' => $text('A few keywords, e.g. "label printer", "approve proforma".')], ['query'])];
         if ($this->user->canUseModule('dryhire') || $this->user->canUseModule('warehouse')) {
