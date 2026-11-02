@@ -5,7 +5,7 @@
         <div>
             <div class="kicker"><a href="{{ route('purchasing.index') }}">{{ mb_strtoupper(__('nav.items.purchasing')) }}</a> · {{ $pq->number }}</div>
             <h1>{{ __('purchasing.pq_title', ['number' => $pq->number]) }}</h1>
-            <p class="muted">@if ($pq->salesQuote){!! __('purchasing.for_sale', ['customer' => e($pq->salesQuote->customerName()), 'quote' => '<a href="'.route('psales.show', $pq->salesQuote).'">'.e($pq->salesQuote->number).'</a>']) !!}@else{{ __('purchasing.for_stock') }}@endif @if ($pq->needed_by) · {{ __('purchasing.needed', ['date' => $pq->needed_by->format('d/m/Y')]) }}@endif</p>
+            <p class="muted">@if ($pq->salesQuote){!! __('purchasing.for_sale', ['customer' => e($pq->salesQuote->customerName()), 'quote' => '<a href="'.route('psales.show', $pq->salesQuote).'">'.e($pq->salesQuote->number).'</a>']) !!}@else{{ __('purchasing.for_stock') }}@endif @if ($pq->needed_by) · {{ __('purchasing.needed', ['date' => $pq->needed_by->format('d/m/Y')]) }}@endif · {{ __('purchasing.delivery_by.'.($pq->delivery ?: 'supplier')) }}</p>
         </div>
         <span @class(['pill', 'pill-ok' => $pq->status === 'ordered', 'pill-warn' => $pq->status === 'sent', 'pill-off' => in_array($pq->status, ['draft', 'cancelled'], true)])>{{ __('purchasing.pq_status.'.$pq->status) }} · {{ __('purchasing.replied', ['n' => $pq->repliedCount(), 'of' => $pq->suppliers->count()]) }}</span>
     </div>
@@ -25,13 +25,14 @@
         <h2>{{ __('purchasing.compare') }}</h2>
         <p class="muted small">{{ __('purchasing.compare_hint') }}</p>
         @foreach ($pq->lines as $l)
+            @php($lastCur ??= $pq->lines->flatMap->replies->where('currency', '!=', 'EUR')->pluck('currency', 'company_id')->all())
             @php($cheap = $l->cheapest())
             @php($fast = $l->fastest())
             @php($sell = $l->quoteLine?->unit_cents)
             <div class="pq-item">
                 <b>{{ $l->qty }} × {{ $l->name }}</b>
                 <small class="muted">{{ $l->item?->number }} · {{ __('psales.items.list_price') }} {{ $eur($l->item?->list_price_cents) }}@if ($sell && $seeMargin) · {{ __('purchasing.we_sell', ['price' => $eur($sell)]) }}@endif · {{ __('purchasing.purposes.'.$l->purpose) }}</small>
-                <div class="pq-row muted small"><span></span><span>{{ __('purchasing.cols.supplier') }}</span><span>{{ __('purchasing.their_disc') }}</span><span>{{ __('purchasing.net') }}</span><span>{{ __('purchasing.delivery_us') }}</span><span>@if ($seeMargin){{ __('psales.cols.margin') }}@endif</span><span></span></div>
+                <div class="pq-row muted small"><span></span><span>{{ __('purchasing.cols.supplier') }}</span><span>{{ __('purchasing.their_disc') }}</span><span>{{ __('purchasing.net') }}</span><span>{{ __($pq->delivery === 'cluk' ? 'purchasing.ready_at' : 'purchasing.delivery_us') }}</span><span>@if ($seeMargin){{ __('psales.cols.margin') }}@endif</span><span></span></div>
                 @foreach ($l->item?->suppliers ?? [] as $s)
                     @php($r = $l->replies->firstWhere('company_id', $s->id))
                     @php($disc = $r?->net_cents !== null && $l->item->list_price_cents ? round((1 - $r->net_cents / $l->item->list_price_cents) * 100, 1) : null)
@@ -39,8 +40,13 @@
                         <input type="radio" name="choose[{{ $l->id }}]" value="{{ $s->id }}" @checked($l->chosen_company_id === $s->id) @disabled(! $open) aria-label="{{ __('purchasing.use', ['name' => $s->name]) }}">
                         <span><b>{{ $s->name }}</b><br><small class="muted">{{ $r ? __('purchasing.replied_usual', ['n' => $s->pivot->discount_bp / 100]) : __('purchasing.waiting_usual', ['n' => $s->pivot->discount_bp / 100]) }}</small></span>
                         <input type="number" step="0.1" min="0" max="100" name="r[{{ $l->id }}][{{ $s->id }}][disc]" value="{{ $disc }}" @disabled(! $open) aria-label="{{ __('purchasing.their_disc') }}">
-                        <input type="number" step="0.01" min="0" name="r[{{ $l->id }}][{{ $s->id }}][net]" value="{{ $r?->net_cents !== null ? number_format($r->net_cents / 100, 2, '.', '') : '' }}" @disabled(! $open) aria-label="{{ __('purchasing.net') }}">
-                        <input type="date" name="r[{{ $l->id }}][{{ $s->id }}][date]" value="{{ $r?->delivery_date?->toDateString() }}" @disabled(! $open) aria-label="{{ __('purchasing.delivery_us') }}">
+                        @php($cur = $r?->currency ?: ($lastCur[$s->id] ?? 'EUR'))
+                        <span class="pq-net">
+                            <select name="r[{{ $l->id }}][{{ $s->id }}][cur]" @disabled(! $open) aria-label="{{ __('purchasing.currency') }}">@foreach (\App\Services\Finance\ExchangeRates::CURRENCIES as $c)<option @selected($cur === $c)>{{ $c }}</option>@endforeach</select>
+                            <input type="number" step="0.01" min="0" name="r[{{ $l->id }}][{{ $s->id }}][net]" value="{{ $r?->foreign_cents !== null && $r->currency !== 'EUR' ? number_format($r->foreign_cents / 100, 2, '.', '') : ($r?->net_cents !== null ? number_format($r->net_cents / 100, 2, '.', '') : '') }}" @disabled(! $open) aria-label="{{ __('purchasing.net') }}">
+                            @if ($r && $r->currency !== 'EUR' && $r->rate)<small class="muted">{{ __('purchasing.fx_note', ['eur' => $eur($r->net_cents), 'rate' => rtrim(rtrim(number_format($r->rate, 4, ',', '.'), '0'), ','), 'currency' => $r->currency, 'date' => $r->rate_date?->format('d/m')]) }}</small>@endif
+                        </span>
+                        <input type="date" name="r[{{ $l->id }}][{{ $s->id }}][date]" value="{{ $r?->delivery_date?->toDateString() }}" @disabled(! $open) aria-label="{{ __($pq->delivery === 'cluk' ? 'purchasing.ready_at' : 'purchasing.delivery_us') }}">
                         <span>@if ($seeMargin && $sell && $r?->net_cents !== null)<b @class(['txt-danger' => ($sell - $r->net_cents) / $sell < 0.1])>{{ number_format(($sell - $r->net_cents) / $sell * 100, 1, ',', '') }}%</b>@endif</span>
                         <span class="pq-tag">{{ collect([$cheap && $cheap->company_id === $s->id && $l->replies->whereNotNull('net_cents')->count() > 1 ? __('purchasing.cheapest') : null, $fast && $fast->company_id === $s->id && $l->replies->whereNotNull('delivery_date')->count() > 1 ? __('purchasing.fastest') : null])->filter()->implode(' · ') }}</span>
                     </label>
@@ -49,6 +55,7 @@
         @endforeach
         @if ($open)
             <div class="inline-form mt">
+                <label class="field"><span>{{ __('purchasing.delivery') }}</span><select name="delivery">@foreach (\App\Models\Purchasing\PurchaseRequest::DELIVERY as $o)<option value="{{ $o }}" @selected($pq->delivery === $o)>{{ __('purchasing.delivery_by.'.$o) }}</option>@endforeach</select></label>
                 <button class="btn" type="submit">{{ __('purchasing.save_replies') }}</button>
                 <button class="primary" type="submit" name="order" value="1">{{ __('purchasing.order') }}</button>
             </div>

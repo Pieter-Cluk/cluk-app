@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** A supplier's answer on one line: net price and delivery date to us. */
-#[Fillable(['purchase_request_line_id', 'company_id', 'net_cents', 'delivery_date'])]
+#[Fillable(['purchase_request_line_id', 'company_id', 'net_cents', 'delivery_date', 'currency', 'foreign_cents', 'rate', 'rate_date'])]
 class Reply extends Model
 {
     protected $table = 'purchase_request_replies';
 
     protected function casts(): array
     {
-        return ['net_cents' => 'integer', 'delivery_date' => 'date'];
+        return ['net_cents' => 'integer', 'delivery_date' => 'date', 'foreign_cents' => 'integer', 'rate' => 'float', 'rate_date' => 'date'];
     }
 
     public function company(): BelongsTo

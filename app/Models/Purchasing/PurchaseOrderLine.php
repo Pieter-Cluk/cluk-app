@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['purchase_order_id', 'sales_item_id', 'sales_quote_line_id', 'name', 'qty', 'unit_cents', 'amount_cents', 'delivery_date', 'purpose', 'received_qty'])]
+#[Fillable(['purchase_order_id', 'sales_item_id', 'sales_quote_line_id', 'name', 'qty', 'unit_cents', 'amount_cents', 'delivery_date', 'purpose', 'received_qty', 'unit_foreign_cents'])]
 class PurchaseOrderLine extends Model
 {
     protected function casts(): array
     {
-        return ['qty' => 'integer', 'unit_cents' => 'integer', 'amount_cents' => 'integer', 'received_qty' => 'integer', 'delivery_date' => 'date'];
+        return ['qty' => 'integer', 'unit_cents' => 'integer', 'amount_cents' => 'integer', 'received_qty' => 'integer', 'delivery_date' => 'date', 'unit_foreign_cents' => 'integer'];
     }
 
     public function order(): BelongsTo

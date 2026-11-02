@@ -10,14 +10,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** A purchase order (PO) to one supplier. */
-#[Fillable(['number', 'purchase_request_id', 'company_id', 'status', 'their_ref', 'total_cents', 'invoice_cents', 'invoice_checked_at', 'sent_at', 'confirmed_at', 'received_at', 'created_by_id'])]
+#[Fillable(['number', 'purchase_request_id', 'company_id', 'status', 'their_ref', 'total_cents', 'invoice_cents', 'invoice_checked_at', 'sent_at', 'confirmed_at', 'received_at', 'created_by_id', 'delivery', 'currency', 'rate', 'rate_date'])]
 class PurchaseOrder extends Model
 {
+    /** supplier: they deliver to our warehouse; cluk: we organise the transport and collect the goods. */
+    public const DELIVERY = ['supplier', 'cluk'];
+
     public const STATUSES = ['sent', 'confirmed', 'received', 'cancelled'];
 
     protected function casts(): array
     {
-        return ['total_cents' => 'integer', 'invoice_cents' => 'integer', 'invoice_checked_at' => 'datetime', 'sent_at' => 'datetime', 'confirmed_at' => 'datetime', 'received_at' => 'datetime'];
+        return ['total_cents' => 'integer', 'invoice_cents' => 'integer', 'invoice_checked_at' => 'datetime', 'sent_at' => 'datetime', 'confirmed_at' => 'datetime', 'received_at' => 'datetime', 'rate' => 'float', 'rate_date' => 'date'];
     }
 
     public function lines(): HasMany
@@ -56,5 +59,25 @@ class PurchaseOrder extends Model
     public function invoiceDiffers(): bool
     {
         return $this->invoice_cents !== null && $this->invoice_cents !== $this->total_cents && ! $this->invoice_checked_at;
+    }
+
+    /** Priced in the supplier's own currency (not euro). */
+    public function foreign(): bool
+    {
+        return $this->currency && $this->currency !== 'EUR';
+    }
+
+    /** A line amount as the supplier sees it: in their currency, else in euro. */
+    public function money(int $eurCents, ?int $foreignCents): string
+    {
+        return $this->foreign() && $foreignCents !== null ? \App\Services\Finance\ExchangeRates::format($foreignCents, $this->currency) : \App\Services\Afrit6\Pricing::eur($eurCents);
+    }
+
+    /** The order total in the supplier's currency (sum of the lines), else in euro. */
+    public function totalForSupplier(): string
+    {
+        return $this->foreign() && $this->lines->every(fn ($l) => $l->unit_foreign_cents !== null)
+            ? \App\Services\Finance\ExchangeRates::format((int) $this->lines->sum(fn ($l) => $l->unit_foreign_cents * $l->qty), $this->currency)
+            : \App\Services\Afrit6\Pricing::eur((int) $this->total_cents);
     }
 }
