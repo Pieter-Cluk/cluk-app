@@ -9,6 +9,8 @@
   if (!el) return;
   var C = JSON.parse(el.textContent || '{}'), T = C.t || {}, STORE = C.store || 'clukie-chat', SEEN = STORE + '-nudged';
   var S = { token: null, last: 0, open: false, busy: false, status: 'bot', unread: 0 };
+  // cfg.prefix (team Clukie): chats of earlier login sessions are forgotten, so every session starts clean
+  if (C.prefix) { try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf(C.prefix) === 0 && k !== STORE && k !== STORE + '-nudged') localStorage.removeItem(k); }); } catch (e) {} }
   try { var saved = JSON.parse(localStorage.getItem(STORE) || 'null'); if (saved && saved.token) { S.token = saved.token; } } catch (e) {}
   function keep() { try { localStorage.setItem(STORE, JSON.stringify({ token: S.token })); } catch (e) {} }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
