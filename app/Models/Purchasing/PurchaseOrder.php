@@ -20,7 +20,7 @@ class PurchaseOrder extends Model
 
     protected function casts(): array
     {
-        return ['total_cents' => 'integer', 'invoice_cents' => 'integer', 'invoice_checked_at' => 'datetime', 'sent_at' => 'datetime', 'confirmed_at' => 'datetime', 'received_at' => 'datetime'];
+        return ['total_cents' => 'integer', 'invoice_cents' => 'integer', 'invoice_checked_at' => 'datetime', 'sent_at' => 'datetime', 'confirmed_at' => 'datetime', 'received_at' => 'datetime', 'rate' => 'float', 'rate_date' => 'date'];
     }
 
     public function lines(): HasMany
