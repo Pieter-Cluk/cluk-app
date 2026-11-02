@@ -58,8 +58,8 @@ class PurchasingTransportCurrencyTest extends TestCase
         $pq = PurchaseRequest::firstOrFail();
         $this->assertSame('cluk', $pq->delivery);
         Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'po@usaudio.example'
-            && str_contains($n->intro[0], 'collected at your address') && in_array('Organised by CLUK: we collect the goods at your address', $n->details, true));
-        $this->actingAs($admin)->get('/purchasing/requests/'.$pq->id.'/print')->assertOk()->assertSee('ex works')->assertDontSee('Deliver to');
+            && str_contains($n->intro[0], 'pick-up date') && str_contains($n->intro[0], 'dimensions (L × W × H) and weight') && in_array('Organised by CLUK: we collect the goods at your address', $n->details, true));
+        $this->actingAs($admin)->get('/purchasing/requests/'.$pq->id.'/print')->assertOk()->assertSee('ex works')->assertSee('the pick-up date')->assertDontSee('Deliver to');
 
         // US price 90.00 USD (= € 83.33 at 1.08), Belgian price € 85.00: the US one is cheapest.
         $line = $pq->lines()->firstOrFail();
@@ -85,7 +85,7 @@ class PurchasingTransportCurrencyTest extends TestCase
         $this->assertSame(9000, $po->lines()->value('unit_foreign_cents'));
         Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'po@usaudio.example'
             && str_contains($n->subject, $po->number) && str_contains(implode(' ', $n->totals), 'US$900.00') && str_contains($n->rows[0][2], 'US$900.00'));
-        $this->actingAs($admin)->get('/purchasing/orders/'.$po->id.'/print')->assertOk()->assertSee('US$900.00')->assertSee('Organised by CLUK')->assertSee('Ready for collection');
+        $this->actingAs($admin)->get('/purchasing/orders/'.$po->id.'/print')->assertOk()->assertSee('US$900.00')->assertSee('Organised by CLUK')->assertSee('Pick-up date')->assertSee('dimensions L × W × H and weight')->assertDontSee('delivery date');
         $this->actingAs($admin)->get('/purchasing/orders/'.$po->id)->assertOk()->assertSee('€ 833,30', false)->assertSee('US$900.00');
 
         // Switching back to delivery by the supplier on the order.

@@ -17,7 +17,7 @@
     </div>
     @if ($isPo)
         <div class="doc-parties"><div><div class="doc-label">{{ mb_strtoupper(__('purchasing.doc.supplier')) }}</div><b>{{ $doc->supplier->name }}</b><br>@if ($doc->supplier->street){{ $doc->supplier->street }}<br>{{ $doc->supplier->postcode }} {{ $doc->supplier->city }}<br>@endif @if ($doc->supplier->vat_number){{ $doc->supplier->formattedVat() }}@endif</div>
-            <dl class="doc-meta">@if ($doc->delivery === 'cluk')<dt>{{ __('purchasing.doc.transport') }}</dt><dd>{{ __('purchasing.doc.transport_cluk') }}</dd>@else<dt>{{ __('purchasing.doc.deliver_to') }}</dt><dd>{{ $me->warehouse_address ?: $me->street.', '.$me->postcode.' '.$me->city }}</dd>@endif@if ($doc->their_ref)<dt>{{ __('purchasing.their_ref_label') }}</dt><dd>{{ $doc->their_ref }}</dd>@endif</dl></div>
+            <dl class="doc-meta">@if ($doc->delivery === 'cluk')<dt>{{ __('purchasing.doc.transport') }}</dt><dd>{{ __('purchasing.doc.transport_cluk') }}</dd>@else<dt>{{ __('purchasing.doc.deliver_to') }}</dt><dd>{{ $me->warehouse_address ?: $me->street.', '.$me->postcode.' '.$me->city }}</dd>@endif @if ($doc->their_ref)<dt>{{ __('purchasing.their_ref_label') }}</dt><dd>{{ $doc->their_ref }}</dd>@endif</dl></div>
     @else
         <p class="doc-intro">{{ __($doc->delivery === 'cluk' ? 'purchasing.doc.pq_intro_cluk' : 'purchasing.doc.pq_intro') }}</p>
     @endif
@@ -31,7 +31,7 @@
         </tbody>
     </table>
     @if ($isPo)<div class="doc-totals"><div class="grand"><span>{{ __('purchasing.total_excl') }}</span><span>{{ $doc->totalForSupplier() }}</span></div></div>@endif
-    <section class="doc-notes"><p>{{ $isPo ? __('purchasing.doc.po_note') : __($doc->delivery === 'cluk' ? 'purchasing.doc.pq_note_cluk' : 'purchasing.doc.pq_note') }}</p></section>
+    <section class="doc-notes"><p>{{ $isPo ? __($doc->delivery === 'cluk' ? 'purchasing.doc.po_note_cluk' : 'purchasing.doc.po_note') : __($doc->delivery === 'cluk' ? 'purchasing.doc.pq_note_cluk' : 'purchasing.doc.pq_note') }}</p></section>
     @if ($isPo)<div class="doc-signs"><div class="sign"><span>{{ __('purchasing.doc.sign_cluk') }}</span></div><div class="sign"><span>{{ __('purchasing.doc.sign_supplier') }}</span></div></div>@endif
     <footer class="doc-foot">{{ trim($me->legal_name.' '.$me->legal_form) }} · {{ $me->street }}, {{ $me->postcode }} {{ $me->city }} · {{ \App\Support\VatNumber::format($me->vat_number) }}</footer>
 </article>
