@@ -68,6 +68,7 @@ return [
     'rights' => [
         'afrit6.approve_members',
         'afrit6.door_codes',
+        'afrit6.manage_members',
         'companies.see_health',
         'equipment.website',
         'finance.see_margins',

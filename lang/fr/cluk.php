@@ -32,6 +32,7 @@ return [
         'afrit6' => [
             'approve_members' => 'Approuver les nouveaux membres Afrit 6',
             'door_codes' => 'Voir et modifier les codes de porte',
+            'manage_members' => 'Gérer les membres Afrit 6 : tout ajouter, modifier et supprimer (propriétaire)',
         ],
         'companies' => [
             'see_health' => 'Voir la santé financière et le crédit',

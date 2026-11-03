@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Afrit6\MemberAdminController;
+use App\Http\Controllers\Afrit6\MemberManageController;
 use App\Http\Controllers\Afrit6\MemberAuthController;
 use App\Http\Controllers\Afrit6\PortalController;
 use App\Http\Controllers\Afrit6\StaffWorkspaceController;
@@ -449,6 +450,19 @@ Route::middleware('auth:web')->group(function () {
         });
         Route::put('/members/{member}/door-code', [StaffWorkspaceController::class, 'doorCode'])->whereNumber('member')->middleware('right:afrit6.door_codes')->name('door');
         Route::post('/members/{member}/statements', [StaffWorkspaceController::class, 'storeStatement'])->whereNumber('member')->middleware('level:afrit6,3')->name('statements.store');
+        // The owner's tools (right off for everyone by default).
+        Route::middleware('right:afrit6.manage_members')->group(function () {
+            Route::get('/members/new', [MemberManageController::class, 'create'])->name('manage.create');
+            Route::post('/members', [MemberManageController::class, 'store'])->name('manage.store');
+            Route::put('/members/{member}', [MemberManageController::class, 'update'])->whereNumber('member')->name('manage.update');
+            Route::delete('/members/{member}', [MemberManageController::class, 'destroy'])->whereNumber('member')->name('manage.destroy');
+            Route::post('/members/{member}/welcome', [MemberManageController::class, 'sendWelcome'])->whereNumber('member')->name('manage.welcome');
+            Route::post('/members/{member}/desk-days', [MemberManageController::class, 'addDeskDay'])->whereNumber('member')->name('manage.desk_day');
+            Route::post('/members/{member}/room', [MemberManageController::class, 'addRoom'])->whereNumber('member')->name('manage.room');
+            Route::delete('/members/{member}/bookings/{kind}/{id}', [MemberManageController::class, 'removeBooking'])->whereNumber(['member', 'id'])->whereIn('kind', ['desk', 'room', 'guest'])->name('manage.booking_remove');
+            Route::put('/members/{member}/rentals/{rental}', [MemberManageController::class, 'updateRental'])->whereNumber(['member', 'rental'])->name('manage.rental');
+            Route::delete('/members/{member}/rentals/{rental}', [MemberManageController::class, 'deleteRental'])->whereNumber(['member', 'rental'])->name('manage.rental_delete');
+        });
         Route::middleware('right:afrit6.approve_members')->group(function () {
             Route::post('/members/{member}/approve', [MemberAdminController::class, 'approve'])->whereNumber('member')->name('approve');
             Route::post('/members/{member}/decline', [MemberAdminController::class, 'decline'])->whereNumber('member')->name('decline');

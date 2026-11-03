@@ -32,6 +32,7 @@ return [
         'afrit6' => [
             'approve_members' => 'Approve new Afrit 6 members',
             'door_codes' => 'See and change door codes',
+            'manage_members' => 'Manage Afrit 6 members: add, change and delete anything (owner)',
         ],
         'companies' => [
             'see_health' => 'See financial health and credit',

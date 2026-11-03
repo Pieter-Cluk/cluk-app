@@ -130,6 +130,14 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+        // A member added by CLUK chooses a first password: the link in the welcome mail works for 7 days.
+        'member_invites' => [
+            'provider' => 'members',
+            'table' => 'member_password_reset_tokens',
+            'expire' => 10080,
+            'throttle' => 0,
+        ],
     ],
 
     /*

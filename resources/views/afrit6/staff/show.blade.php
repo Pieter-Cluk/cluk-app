@@ -55,6 +55,7 @@
                 </section>
             @endif
             @include('afrit6.staff._member-workspace')
+            @if ($canManage)@include('afrit6.staff._owner')@endif
         </div>
 
         <aside class="stack">

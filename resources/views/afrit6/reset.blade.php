@@ -1,9 +1,10 @@
-<x-layouts.member :title="__('afrit6.forgot.new_title')">
-    <h1>{{ __('afrit6.forgot.new_title') }}</h1>
+<x-layouts.member :title="__(($invite ?? false) ? 'afrit6.manage.welcome_title' : 'afrit6.forgot.new_title')">
+    <h1>{{ __(($invite ?? false) ? 'afrit6.manage.welcome_title' : 'afrit6.forgot.new_title') }}</h1>
     @include('afrit6._messages')
     <form method="post" action="{{ route('afrit6.password.update') }}" class="member-form">
         @csrf
         <input type="hidden" name="token" value="{{ $token }}">
+        @if ($invite ?? false)<input type="hidden" name="invite" value="1">@endif
         <label class="mfield"><span>{{ __('afrit6.fields.email') }}</span><input type="email" name="email" value="{{ old('email', $email) }}" required autocomplete="email"></label>
         <label class="mfield"><span>{{ __('afrit6.fields.choose_password') }}</span><input type="password" name="password" required autocomplete="new-password" minlength="10"></label>
         <ul class="pw-rules">

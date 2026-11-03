@@ -264,7 +264,7 @@ class MemberAuthController extends Controller
 
     public function showReset(Request $request, string $token): View
     {
-        return view('afrit6.reset', ['token' => $token, 'email' => (string) $request->query('email')]);
+        return view('afrit6.reset', ['token' => $token, 'email' => (string) $request->query('email'), 'invite' => $request->boolean('invite')]);
     }
 
     public function reset(Request $request): RedirectResponse
@@ -278,7 +278,9 @@ class MemberAuthController extends Controller
             'password' => ['required', 'string', 'max:200', new MemberPassword($member?->first_name, $member?->last_name, $request->input('email'))],
         ]);
 
-        $status = Password::broker('members')->reset(
+        // The longer welcome link only counts for a member CLUK added who never logged in yet.
+        $broker = $request->boolean('invite') && $member && ! $member->last_login_at ? 'member_invites' : 'members';
+        $status = Password::broker($broker)->reset(
             $request->only('email', 'password', 'token'),
             function (Member $member, string $password) {
                 $member->forceFill(['password' => $password, 'remember_token' => Str::random(60)]);

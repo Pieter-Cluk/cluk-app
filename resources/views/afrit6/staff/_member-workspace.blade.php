@@ -4,7 +4,18 @@
     @forelse ($rentals as $r)
         <div class="p-line">
             <span><b>{{ $r->space->code }}</b> <small class="muted">{{ $r->starts_on->format('d/m/Y') }} → {{ $r->ends_on?->format('d/m/Y') ?? __('workspace.desks.open_ended') }} · {{ __('workspace.desks.per_month', ['amount' => $eur($r->monthly_price_cents)]) }}</small></span>
-            @if ($canDesks && (! $r->ends_on || $r->ends_on->gte(today())))
+            @if ($canManage ?? false)
+                <details><summary class="linkbtn">{{ __('afrit6.manage.change') }}</summary>
+                    <form method="post" action="{{ route('afrit6.staff.manage.rental', [$member, $r]) }}" class="inline-form mt">
+                        @csrf @method('PUT')
+                        <input type="date" name="starts_on" value="{{ $r->starts_on->toDateString() }}" required aria-label="{{ __('workspace.staff.starts_on') }}">
+                        <input type="date" name="ends_on" value="{{ $r->ends_on?->toDateString() }}" aria-label="{{ __('workspace.staff.ends_on') }}">
+                        <input type="number" step="0.01" min="0" name="price" value="{{ number_format($r->monthly_price_cents / 100, 2, '.', '') }}" required aria-label="{{ __('workspace.staff.price_month') }}">
+                        <button class="btn" type="submit">{{ __('afrit6.manage.save') }}</button>
+                    </form>
+                    <form method="post" action="{{ route('afrit6.staff.manage.rental_delete', [$member, $r]) }}" class="mt" onsubmit="return confirm(@js(__('afrit6.manage.rental_delete_confirm')))">@csrf @method('DELETE')<button class="linkbtn txt-danger" type="submit">{{ __('afrit6.manage.rental_delete') }}</button></form>
+                </details>
+            @elseif ($canDesks && (! $r->ends_on || $r->ends_on->gte(today())))
                 <form method="post" action="{{ route('afrit6.staff.desks.end', [$member, $r]) }}" class="inline-form">
                     @csrf
                     <input type="date" name="ends_on" min="{{ $r->starts_on->toDateString() }}" value="{{ ($r->ends_on ?? today())->toDateString() }}" aria-label="{{ __('workspace.staff.end') }}">

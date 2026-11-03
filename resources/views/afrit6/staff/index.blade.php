@@ -5,7 +5,10 @@
             <h1>{{ __('nav.items.afrit6') }}</h1>
             <p class="muted">{{ __('afrit6.staff.intro') }}</p>
         </div>
-        <a class="btn" href="{{ route('afrit6.login') }}" target="_blank" rel="noopener">{{ __('afrit6.staff.open_portal') }}</a>
+        <div class="form-actions">
+            @if (auth()->user()->hasRight('afrit6.manage_members'))<a class="primary" href="{{ route('afrit6.staff.manage.create') }}">{{ __('afrit6.manage.add') }}</a>@endif
+            <a class="btn" href="{{ route('afrit6.login') }}" target="_blank" rel="noopener">{{ __('afrit6.staff.open_portal') }}</a>
+        </div>
     </div>
     @include('partials.flash')
     @include('afrit6.staff._tabs', ['section' => 'members'])

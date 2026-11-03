@@ -32,6 +32,7 @@ return [
         'afrit6' => [
             'approve_members' => 'Nieuwe Afrit 6-leden goedkeuren',
             'door_codes' => 'Deurcodes bekijken en wijzigen',
+            'manage_members' => 'Afrit 6-leden beheren: alles toevoegen, wijzigen en verwijderen (eigenaar)',
         ],
         'companies' => [
             'see_health' => 'Financiële gezondheid en krediet bekijken',

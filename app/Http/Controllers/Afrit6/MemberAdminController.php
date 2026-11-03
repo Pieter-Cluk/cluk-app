@@ -7,7 +7,6 @@ use App\Models\Afrit6\ServiceRequest;
 use App\Models\Afrit6\Space;
 use App\Models\AuditLog;
 use App\Models\Company;
-use App\Models\Contact;
 use App\Models\Member;
 use App\Notifications\MemberApproved;
 use App\Services\Afrit6\StatementBuilder;
@@ -16,7 +15,6 @@ use App\Services\ViesRecheck;
 use App\Support\SafeMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -68,6 +66,17 @@ class MemberAdminController extends Controller
             'storage' => ($st = ServiceRequest::where('member_id', $member->id)->runningStorage()->with('places')->orderBy('date')->get()),
             'placeChoices' => $st->mapWithKeys(fn ($r) => [$r->id => \App\Services\Afrit6\StoragePlaces::choices($r)]),
             'openTasks' => ServiceRequest::where('member_id', $member->id)->open()->with('assignee')->orderBy('date')->get(),
+            'canManage' => ($manage = $request->user()->hasRight('afrit6.manage_members')),
+            'companies' => $manage ? MemberManageController::companyChoices() : collect(),
+            'bookings' => $manage ? collect()
+                ->concat(\App\Models\Afrit6\DeskBooking::with('space')->where('member_id', $member->id)->whereNull('cancelled_at')->whereDate('date', '>=', today()->subDays(90))->get()
+                    ->map(fn ($b) => ['kind' => 'desk', 'id' => $b->id, 'date' => $b->date, 'what' => $b->space->code.' · '.__('workspace.days.parts.'.$b->part), 'amount' => $b->price_cents]))
+                ->concat(\App\Models\Afrit6\RoomBooking::where('member_id', $member->id)->whereNull('cancelled_at')->whereDate('date', '>=', today()->subDays(90))->get()
+                    ->map(fn ($b) => ['kind' => 'room', 'id' => $b->id, 'date' => $b->date, 'what' => __('afrit6.manage.room').' · '.$b->timeRange(), 'amount' => null]))
+                ->concat(\App\Models\Afrit6\Guest::where('member_id', $member->id)->whereNull('cancelled_at')->whereDate('date', '>=', today()->subDays(90))->get()
+                    ->map(fn ($g) => ['kind' => 'guest', 'id' => $g->id, 'date' => $g->date, 'what' => __('afrit6.manage.guest').' · '.$g->name, 'amount' => null]))
+                ->sortByDesc(fn ($b) => $b['date']->toDateString())->values() : collect(),
+            'deskSpaces' => $manage ? Space::desks()->get() : collect(),
         ]);
     }
 
@@ -86,46 +95,7 @@ class MemberAdminController extends Controller
             throw ValidationException::withMessages(['email_checked' => __('afrit6.staff.confirm_email_first')]);
         }
 
-        DB::transaction(function () use ($member) {
-            $company = $member->company
-                ?? ($member->reg_vat_number ? Company::where('vat_number', $member->reg_vat_number)->first() : null)
-                ?? Company::create([
-                    'name' => $member->reg_company_name ?: $member->name,
-                    'vat_number' => $member->reg_vat_number,
-                    'country' => $member->reg_country === 'XX' ? 'BE' : $member->reg_country,
-                    'street' => $member->reg_address,
-                    'email' => $member->email,
-                    'phone' => $member->mobile,
-                    'language' => $member->locale,
-                    'is_customer' => true,
-                    'is_supplier' => false,
-                    'vat_regime' => 'auto',
-                ]);
-            if ($member->vies_status && $company->vies_status === null && $company->vat_number === $member->reg_vat_number) {
-                $company->forceFill(['vies_status' => $member->vies_status, 'vies_reason' => $member->vies_reason, 'vies_name' => $member->vies_name, 'vies_checked_at' => now()])->save();
-            }
-            if (! $company->is_customer) {
-                $company->update(['is_customer' => true]);
-            }
-
-            $contact = Contact::where('email', $member->email)->first() ?? Contact::create([
-                'first_name' => $member->first_name, 'last_name' => $member->last_name, 'email' => $member->email,
-                'mobile' => $member->mobile, 'language' => $member->locale, 'newsletter' => $member->newsletter,
-            ]);
-            $company->contacts()->syncWithoutDetaching([$contact->id => ['job_title' => null]]);
-
-            $member->forceFill([
-                'status' => Member::ACTIVE,
-                'company_id' => $company->id,
-                'contact_id' => $contact->id,
-                'approved_at' => now(),
-                'decided_by_id' => auth()->id(),
-                'decline_reason' => null,
-                'email_verified_at' => $member->email_verified_at ?? now(),
-            ])->save();
-
-            AuditLog::record('afrit6.member_approved', $member, ['company' => $company->name]);
-        });
+        \App\Services\Afrit6\MemberApproval::approve($member, $request->user());
 
         SafeMail::notify($member, new MemberApproved);
 
