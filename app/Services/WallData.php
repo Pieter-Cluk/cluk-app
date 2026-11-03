@@ -72,20 +72,34 @@ class WallData
         return ['out' => $out->sortBy('at')->values(), 'in' => $in->sortBy('at')->values()];
     }
 
-    /** Equipment out now per category, as % of what we own. */
+    /**
+     * Equipment physically out now per category, as % of the real stock in that category: serial pieces that are
+     * out with a job, and counted pieces picked and not back yet. Dollies and boxes do not count. Shows the (at most
+     * 5) categories with the most out.
+     */
     public static function fleetOut(): Collection
     {
         $owned = self::ownedPerCategory();
         $used = [];
-        foreach (Order::with(['lines.item.contents', 'lines.subhireLines.request'])->open()->where('out_from', '<=', now())->where('out_until', '>=', now())->get() as $o) {
+        $serial = Asset::query()->where('equipment_assets.status', Asset::OUT)
+            ->join('equipment_items', 'equipment_items.id', '=', 'equipment_assets.item_id')
+            ->whereNotIn('equipment_items.kind', ['service', 'case'])
+            ->selectRaw('equipment_items.category as cat, count(*) as n')->groupBy('equipment_items.category')->pluck('n', 'cat');
+        foreach ($serial as $cat => $n) {
+            $used[$cat ?: '—'] = ($used[$cat ?: '—'] ?? 0) + (int) $n;
+        }
+        $orders = Order::with(['lines.item.contents'])->where('status', 'approved')->whereNotNull('loaded_at')->whereNull('returned_at')->get();
+        foreach ($orders as $o) {
             foreach ($o->lines as $l) {
-                if ($l->needsStock()) {
-                    self::addUse($used, $l->item, $l->ownNeeded());
+                if ($l->needsStock() && ! $l->bySerial() && $l->item->kind !== 'case') {
+                    self::addUse($used, $l->item, max(0, (int) $l->picked_qty - (int) $l->returned_qty));
                 }
             }
         }
 
-        return $owned->sortDesc()->take(5)->map(fn ($n, $cat) => $n ? (int) round(min(100, ($used[$cat] ?? 0) / $n * 100)) : 0);
+        return collect($used)->filter(fn ($n, $cat) => $n > 0 && ($owned[$cat] ?? 0) > 0)
+            ->map(fn ($n, $cat) => max(1, (int) round(min(100, $n / $owned[$cat] * 100))))
+            ->sortDesc()->take(5);
     }
 
     /** Small facts about Afrit 6 and the Factory today. */
@@ -123,11 +137,11 @@ class WallData
     /** @return array<string, int> category => pieces we own */
     private static function ownedPerCategory(): Collection
     {
-        $serial = Asset::query()->whereNotIn('status', [Asset::RETIRED, Asset::REPAIR])
+        $serial = Asset::query()->whereNotIn('equipment_assets.status', [Asset::RETIRED, Asset::REPAIR, Asset::LABEL])
             ->join('equipment_items', 'equipment_items.id', '=', 'equipment_assets.item_id')
-            ->where('equipment_items.kind', '!=', 'service')
+            ->whereNotIn('equipment_items.kind', ['service', 'case'])
             ->selectRaw('equipment_items.category as cat, count(*) as n')->groupBy('equipment_items.category')->pluck('n', 'cat');
-        $counted = Item::where('serial', false)->whereIn('kind', ['item', 'case'])->where('active', true)
+        $counted = Item::where('serial', false)->where('kind', 'item')->where('active', true)->where('stock_qty', '>', 0)
             ->selectRaw('category as cat, sum(stock_qty) as n')->groupBy('category')->pluck('n', 'cat');
         $all = collect();
         foreach ([$serial, $counted] as $list) {

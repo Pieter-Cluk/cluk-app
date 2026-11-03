@@ -44,6 +44,7 @@ return [
     ],
     'fleet' => 'Parc sorti maintenant',
     'no_fleet' => 'Pas encore de stock dans l’app.',
+    'nothing_out' => 'Rien n’est sorti sur un job pour le moment.',
     'desks' => 'Bureaux occupés aujourd’hui',
     'room' => 'Salle de réunion aujourd’hui',
     'bookings' => '{0} aucune réservation|{1} :n réservation|[2,*] :n réservations',

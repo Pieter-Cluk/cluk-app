@@ -44,6 +44,7 @@ return [
     ],
     'fleet' => 'Materiaal nu buiten',
     'no_fleet' => 'Nog geen stock in de app.',
+    'nothing_out' => 'Er is nu niets buiten op een job.',
     'desks' => 'Bureaus bezet vandaag',
     'room' => 'Vergaderzaal vandaag',
     'bookings' => '{0} geen boekingen|{1} :n boeking|[2,*] :n boekingen',

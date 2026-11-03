@@ -327,6 +327,29 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame(['LT-0001', 'LT-0002', 'LT-0003'], $free());
     }
 
+    public function test_the_wall_shows_what_is_physically_out_against_the_real_stock(): void
+    {
+        [$p, $order] = $this->job();
+        $p[1]->item->update(['category' => 'Light']);
+        Item::create(['number' => 'LT-CLAMP', 'kind' => 'item', 'name' => 'Clamp', 'category' => 'Rigging', 'serial' => false, 'stock_qty' => 200]);
+        Item::create(['number' => 'LT-NOSTOCK', 'kind' => 'item', 'name' => 'Not in stock', 'category' => 'Light', 'serial' => false, 'stock_qty' => 0]);
+        // Booked for now but still on the rack: nothing is out yet.
+        $order->update(['out_from' => now()->subHour()]);
+        $this->assertSame([], \App\Services\WallData::fleetOut()->all());
+
+        // Loaded: 2 of the 3 blinders we own are out (the dollies and the empty item do not count).
+        foreach ([1, 2] as $i) {
+            $p[$i]->update(['status' => Asset::OUT, 'location' => 'OUT', 'out_order_id' => $order->id]);
+        }
+        self::case('DOLLY-01')->update(['status' => Asset::OUT, 'out_order_id' => $order->id]);
+        $order->update(['loaded_at' => now()]);
+        $this->assertSame(['Light' => 67], \App\Services\WallData::fleetOut()->all());
+
+        // One comes back early: the wall goes down at once.
+        $p[1]->update(['status' => Asset::AVAILABLE, 'location' => 'INBOUND', 'out_order_id' => null]);
+        $this->assertSame(['Light' => 33], \App\Services\WallData::fleetOut()->all());
+    }
+
     public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void
     {
         [$p, $order] = $this->job();

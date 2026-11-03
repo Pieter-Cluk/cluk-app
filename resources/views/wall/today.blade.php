@@ -45,7 +45,7 @@
         @forelse ($fleet as $cat => $pct)
             <div class="mrow"><span class="ml">{{ $cat }}</span><div class="mbar"><span style="width: {{ $pct }}%"></span></div><b>{{ $pct }}%</b></div>
         @empty
-            <p class="empty">{{ __('wall.no_fleet') }}</p>
+            <p class="empty">{{ __('wall.nothing_out') }}</p>
         @endforelse
     </section>
     <section class="panel">

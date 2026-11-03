@@ -44,6 +44,7 @@ return [
     ],
     'fleet' => 'Fleet out now',
     'no_fleet' => 'No stock in the app yet.',
+    'nothing_out' => 'Nothing out with a job right now.',
     'desks' => 'Desks taken today',
     'room' => 'Meeting room today',
     'bookings' => '{0} no bookings|{1} :n booking|[2,*] :n bookings',
