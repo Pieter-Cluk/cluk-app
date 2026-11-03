@@ -304,6 +304,29 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame(['LIGACCELASOLIBARNDOOR' => 2], collect(\App\Services\Warehouse\Carriers::kitAllowance($order))->mapWithKeys(fn ($n, $id) => [Item::find($id)->number => $n])->all());
     }
 
+    public function test_pieces_back_from_a_job_are_free_again_before_its_end_date(): void
+    {
+        [$p, $order] = $this->job();
+        foreach ([1, 2] as $i) {
+            $p[$i]->update(['status' => Asset::OUT, 'location' => 'OUT', 'out_order_id' => $order->id]);
+        }
+        $order->update(['loaded_at' => now()]);
+        $next = Order::create(['number' => 'R-OC-2026-0201', 'status' => 'allocation', 'company_id' => $order->company_id, 'title' => 'Next show', 'language' => 'en',
+            'out_from' => now()->addDay(), 'out_until' => now()->addDays(3), 'use_from' => today()->addDay(), 'use_until' => today()->addDays(2), 'vat_rate_bp' => 2100, 'net_cents' => 1]);
+        $free = fn () => \App\Services\Rental\Orders::availability($next)->freeAssets($p[1]->item)->pluck('code')->all();
+        $this->assertSame(['LT-0003'], $free());
+
+        // One blinder is back (early): it is free for the next job; the other is still out.
+        $p[1]->update(['status' => Asset::AVAILABLE, 'location' => 'INBOUND', 'out_order_id' => null]);
+        $this->assertSame(['LT-0001', 'LT-0003'], $free());
+        $this->assertSame(2, \App\Services\Rental\Orders::availability($next)->free($p[1]->item));
+
+        // The return is closed: nothing of the first job is held any more.
+        $p[2]->update(['status' => Asset::AVAILABLE, 'location' => 'INBOUND', 'out_order_id' => null]);
+        $order->update(['returned_at' => now()]);
+        $this->assertSame(['LT-0001', 'LT-0002', 'LT-0003'], $free());
+    }
+
     public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void
     {
         [$p, $order] = $this->job();

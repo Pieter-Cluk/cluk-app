@@ -42,19 +42,29 @@ class Availability
             }
         }
 
-        $orders = Order::whereIn('status', [...Order::OPEN, 'reopened'])->overlapping($from, $until)
+        // A job that came back early no longer holds anything: what is back is free again, even before the end
+        // date. While a job is out, only what is still out with it is held.
+        $orders = Order::whereIn('status', [...Order::OPEN, 'reopened'])->whereNull('returned_at')->overlapping($from, $until)
             ->when($exceptOrderId, fn ($q) => $q->whereKeyNot($exceptOrderId))
-            ->with(['lines.item.contents', 'lines.subhireLines.request', 'lines.assets'])->get();
+            ->with(['lines.item.contents', 'lines.subhireLines.request', 'lines.assets.asset'])->get();
         foreach ($orders as $order) {
+            $stillOut = fn (OrderAsset $oa) => ! $order->loaded_at || ($oa->asset && $oa->asset->status === Asset::OUT && $oa->asset->out_order_id === $order->id);
             foreach ($order->lines as $line) {
-                if ($line->needsStock()) {
+                if (! $line->needsStock()) {
+                    continue;
+                }
+                if (! $order->loaded_at) {
                     $this->add($line->item, $line->ownNeeded());
+                } elseif ($line->bySerial()) {
+                    $this->add($line->item, $line->assets->filter($stillOut)->count());
+                } else {
+                    $this->add($line->item, max(0, (int) $line->picked_qty - (int) $line->returned_qty));
+                }
+                foreach ($line->assets->filter($stillOut) as $oa) {
+                    $this->bookedAssets[$oa->asset_id] = true;
                 }
             }
         }
-
-        OrderAsset::query()->whereIn('order_id', $orders->pluck('id'))->pluck('asset_id')
-            ->each(fn ($id) => $this->bookedAssets[$id] = true);
     }
 
     private function add(Item $item, int $qty): void
