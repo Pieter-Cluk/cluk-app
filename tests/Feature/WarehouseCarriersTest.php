@@ -262,6 +262,48 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame('GA2B1', $p[2]->fresh()->location);
     }
 
+    public function test_scan_a_dolly_in_order_allocation_books_its_contents_and_kit_goes_along(): void
+    {
+        [$p, $order] = $this->job();
+        $order->assets()->delete();
+        $order->update(['status' => 'allocation']);
+        $blinder = $p[1]->item;
+        $barndoor = Item::create(['number' => 'LIGACCELASOLIBARNDOOR', 'kind' => 'item', 'name' => 'Elation Sol I Barndoor', 'type' => 'Sol I Barndoor', 'serial' => false, 'stock_qty' => 10, 'catalog_price_cents' => 10450]);
+        $blinder->children()->attach($barndoor->id, ['qty' => 1, 'role' => 'kit']);
+        $am = User::factory()->create(['role_id' => Role::where('slug', 'asset-manager')->value('id'), 'locale' => 'en']);
+        $dolly = self::case('DOLLY-05');
+        foreach ([1, 2] as $i) {
+            $p[$i]->update(['case_id' => $dolly->id, 'location' => $dolly->location]);
+        }
+        \App\Models\Equipment\CaseItem::create(['case_id' => $dolly->id, 'item_id' => $barndoor->id, 'qty' => 2]);
+
+        $this->actingAs($am)->get('/order-allocation/'.$order->id)->assertOk()->assertSee('Scan a dolly or box');
+        $this->actingAs($am)->post('/order-allocation/'.$order->id.'/case', ['code' => 'LT-0003'])->assertSessionHasErrors('code');
+        $this->actingAs($am)->post('/order-allocation/'.$order->id.'/case', ['code' => 'DOLLY-05'])->assertSessionHasNoErrors()->assertSessionHas('status', '2 pieces from DOLLY-05 booked.');
+        $this->assertEqualsCanonicalizing([$p[1]->id, $p[2]->id], $order->assets()->pluck('asset_id')->all());
+        $this->assertSame(0, $order->lines()->where('item_id', $barndoor->id)->count()); // no charge: not on the order
+
+        // Scanned in a line's code field it works too; a full order refuses more.
+        $order->assets()->delete();
+        $line = $order->lines()->first();
+        $this->actingAs($am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/allocate', ['code' => 'DOLLY-05'])->assertSessionHasNoErrors();
+        $this->assertSame(2, $order->assets()->count());
+        $p[3]->update(['case_id' => $dolly->id]);
+        $order->assets()->delete();
+        $this->actingAs($am)->post('/order-allocation/'.$order->id.'/case', ['code' => 'DOLLY-05'])->assertSessionHasErrors('code'); // 3 blinders, 2 needed
+        $this->assertSame(0, $order->assets()->count());
+        $p[3]->update(['case_id' => null]);
+
+        // Picking the dolly: the barndoors go along with the blinders.
+        $this->actingAs($am)->post('/order-allocation/'.$order->id.'/case', ['code' => 'DOLLY-05']);
+        $order->update(['status' => 'approved']);
+        $this->actingAs($this->crew)->post('/w/pick/'.$order->id.'/scan', ['code' => 'DOLLY-05'])->assertSessionHasNoErrors();
+        $this->assertSame('DISPATCH', $p[1]->fresh()->location);
+        // More accessories than the blinders come with: refused.
+        \App\Models\Equipment\CaseItem::where('case_id', $dolly->id)->update(['qty' => 3]);
+        $this->assertSame(['LIGACCELASOLIBARNDOOR' => 2], collect(\App\Services\Warehouse\Carriers::kitAllowance($order))->mapWithKeys(fn ($n, $id) => [Item::find($id)->number => $n])->all());
+    }
+
     public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void
     {
         [$p, $order] = $this->job();

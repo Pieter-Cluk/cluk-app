@@ -60,6 +60,9 @@ return [
     ],
     'send_all' => 'Envoyer toutes les demandes (:n)',
     'auto_all' => 'Allouer tout le stock automatiquement',
+    'case_code' => 'Scannez un dolly ou une boîte',
+    'case_go' => 'Réserver le contenu',
+    'case_hint' => 'Tout ce qui est dans le dolly ou la boîte est réservé pour cette commande en une fois. Les accessoires des articles (kit) suivent gratuitement.',
     'free_of' => ':n sur :total libres du :dates',
     'free_packages' => ':n packs complets libres du :dates',
     'short' => ':n manquants',
@@ -183,6 +186,7 @@ return [
     'sub_cancel' => 'Annuler cette demande',
     'sub_cancel_go' => 'Annuler la demande',
     'errors' => [
+        'not_a_case' => ':code n’est pas un dolly ni une boîte.',
         'prices_first' => 'Saisissez d’abord le prix du partenaire pour chaque ligne.',
         'not_covered' => 'Toutes les lignes ne sont pas encore couvertes.',
         'cannot_assign' => 'Vous ne pouvez pas transmettre cette commande à cette personne.',
@@ -192,6 +196,7 @@ return [
         'no_email' => 'Pas d’adresse e-mail pour : :names. Ajoutez-la sur la fiche société puis renvoyez.',
     ],
     'flash' => [
+        'case_allocated' => ':n pièce de :carrier réservée.|:n pièces de :carrier réservées.',
         'assigned' => 'Transmise à :name.',
         'allocated' => 'Stock alloué.',
         'released' => 'Libéré.',

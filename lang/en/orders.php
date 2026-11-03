@@ -60,6 +60,9 @@ return [
     ],
     'send_all' => 'Send all partner requests (:n)',
     'auto_all' => 'Auto-allocate all own stock',
+    'case_code' => 'Scan a dolly or box',
+    'case_go' => 'Book contents',
+    'case_hint' => 'Everything in the dolly or box is booked for this order at once. Accessories of the items (kit) go along at no charge.',
     'free_of' => ':n of :total free on :dates',
     'free_packages' => ':n complete packages free on :dates',
     'short' => ':n short',
@@ -183,6 +186,7 @@ return [
     'sub_cancel' => 'Cancel this request',
     'sub_cancel_go' => 'Cancel request',
     'errors' => [
+        'not_a_case' => ':code is not a dolly or box.',
         'prices_first' => 'Type the partner’s price for every line first.',
         'not_covered' => 'Not every line is covered yet.',
         'cannot_assign' => 'You cannot hand this order to that person.',
@@ -192,6 +196,7 @@ return [
         'no_email' => 'No email address for: :names. Add it on the company page, then send again.',
     ],
     'flash' => [
+        'case_allocated' => ':n piece from :carrier booked.|:n pieces from :carrier booked.',
         'assigned' => 'Handed over to :name.',
         'allocated' => 'Stock allocated.',
         'released' => 'Released.',

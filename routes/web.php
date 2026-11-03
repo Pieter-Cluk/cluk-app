@@ -518,6 +518,7 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/{order}/print', [OrderController::class, 'print'])->whereNumber('order')->name('orders.print');
         Route::post('/{order}/assign', [OrderController::class, 'assign'])->whereNumber('order')->name('orders.assign');
         Route::post('/{order}/auto', [OrderController::class, 'autoAllocate'])->whereNumber('order')->name('orders.auto');
+        Route::post('/{order}/case', [OrderController::class, 'allocateCase'])->whereNumber('order')->name('orders.case');
         Route::post('/{order}/lines/{line}/allocate', [OrderController::class, 'allocateLine'])->whereNumber(['order', 'line'])->name('orders.allocate');
         Route::post('/{order}/lines/{line}/clear', [OrderController::class, 'clearLine'])->whereNumber(['order', 'line'])->name('orders.clear');
         Route::delete('/{order}/assets/{orderAsset}', [OrderController::class, 'releaseAsset'])->whereNumber(['order', 'orderAsset'])->name('orders.release');

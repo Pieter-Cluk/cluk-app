@@ -172,6 +172,9 @@ return [
         'register' => 'Encontrado (etiqueta escaneada)',
     ],
     'errors' => [
+        'carrier_piece_busy' => ':code en :carrier ya está reservado para otro trabajo en estas fechas.',
+        'carrier_not_needed' => ':carrier contiene más de lo que :order aún necesita: :codes. Sácalo primero o añádelo al pedido.',
+        'carrier_count_busy' => ':carrier: no hay suficiente :code libre en estas fechas (quedan :n).',
         'unknown' => '“:code” no es una pieza ni un lugar conocido.',
         'retired' => ':code está de baja y no se puede mover.',
         'already' => ':code ya está en :place.',

@@ -60,6 +60,9 @@ return [
     ],
     'send_all' => 'Alle partneraanvragen versturen (:n)',
     'auto_all' => 'Alle eigen stock automatisch toewijzen',
+    'case_code' => 'Scan een dolly of box',
+    'case_go' => 'Inhoud boeken',
+    'case_hint' => 'Alles in de dolly of box wordt in één keer voor deze order geboekt. Toebehoren van de items (kit) gaan gratis mee.',
     'free_of' => ':n van :total vrij op :dates',
     'free_packages' => ':n volledige pakketten vrij op :dates',
     'short' => ':n tekort',
@@ -183,6 +186,7 @@ return [
     'sub_cancel' => 'Deze aanvraag annuleren',
     'sub_cancel_go' => 'Aanvraag annuleren',
     'errors' => [
+        'not_a_case' => ':code is geen dolly of box.',
         'prices_first' => 'Vul eerst de prijs van de partner in voor elke lijn.',
         'not_covered' => 'Nog niet elke lijn is gedekt.',
         'cannot_assign' => 'Je kunt deze order niet aan die persoon overdragen.',
@@ -192,6 +196,7 @@ return [
         'no_email' => 'Geen e-mailadres voor: :names. Vul het in op de bedrijfspagina en verstuur opnieuw.',
     ],
     'flash' => [
+        'case_allocated' => ':n stuk uit :carrier geboekt.|:n stuks uit :carrier geboekt.',
         'assigned' => 'Overgedragen aan :name.',
         'allocated' => 'Stock toegewezen.',
         'released' => 'Vrijgegeven.',

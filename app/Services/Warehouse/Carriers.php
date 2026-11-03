@@ -27,6 +27,107 @@ class Carriers
         throw ValidationException::withMessages(['code' => __('warehouse.errors.'.$key, $r)]);
     }
 
+    /**
+     * Accessories that go with the items of an order at no charge (the kit on the item card, e.g. the barndoor
+     * and gel frame of a Sol I Blinder): item id => how many may go along (pieces on the order × kit quantity).
+     *
+     * @return array<int, int>
+     */
+    public static function kitAllowance(Order $order): array
+    {
+        $out = [];
+        foreach ($order->lines()->with('item.kit')->get() as $l) {
+            if (! $l->needsStock()) {
+                continue;
+            }
+            foreach ($l->item->kit as $k) {
+                $out[$k->id] = ($out[$k->id] ?? 0) + $l->pieces() * max(1, (int) $k->pivot->qty);
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Book what is in a case for an order in Order allocation, with one scan: every serial piece in it goes on its
+     * line, counted items raise the booked count of their line, and accessories of items on the order (kit) go along
+     * at no charge. Anything else in the case, or more than the order still needs, stops it: the whole case goes out.
+     * Returns the number of pieces booked.
+     */
+    public static function allocate(Order $order, Asset $case): int
+    {
+        $r = ['carrier' => $case->code, 'order' => $order->number];
+        if (self::away($case)) {
+            self::fail('carrier_out', $r + ['order' => $case->outOrder?->number ?? '—']);
+        }
+        $avail = \App\Services\Rental\Orders::availability($order);
+        $lines = $order->lines()->with(['item', 'assets', 'subhireLines.request'])->get()->filter->needsStock();
+        $onOrder = $order->assets()->pluck('asset_id')->all();
+        $problems = collect();
+        $book = [];      // [line, asset]
+        $counts = [];    // line id => [line, extra]
+        $room = $lines->mapWithKeys(fn ($l) => [$l->id => $l->ownNeeded() - $l->ownAllocated()])->all();
+
+        foreach ($case->packed()->with('item')->get() as $a) {
+            if (in_array($a->id, $onOrder, true)) {
+                continue; // already booked on this order
+            }
+            $line = $lines->first(fn ($l) => $l->bySerial() && $l->item_id === $a->item_id && $room[$l->id] > 0);
+            if (! $line) {
+                $problems->push($a->code);
+
+                continue;
+            }
+            if (! $avail->freeAssets($a->item)->contains('id', $a->id)) {
+                self::fail('carrier_piece_busy', $r + ['code' => $a->code]);
+            }
+            $room[$line->id]--;
+            $book[] = [$line, $a];
+        }
+        $kit = self::kitAllowance($order);
+        foreach ($case->counted()->with('item')->get() as $ci) {
+            $left = $ci->qty;
+            foreach ($lines->filter(fn ($l) => ! $l->bySerial() && $l->item_id === $ci->item_id) as $l) {
+                $take = min($left, max(0, $room[$l->id]));
+                if ($take > 0) {
+                    $room[$l->id] -= $take;
+                    $counts[$l->id] = [$l, ($counts[$l->id][1] ?? 0) + $take];
+                    $left -= $take;
+                }
+            }
+            if ($left > 0 && ($kit[$ci->item_id] ?? 0) >= $left) {
+                $kit[$ci->item_id] -= $left;
+                $left = 0;
+            }
+            if ($left > 0) {
+                $problems->push($left.' × '.($ci->item->type ?: $ci->item->name));
+            }
+        }
+        if ($problems->isNotEmpty()) {
+            self::fail('carrier_not_needed', $r + ['codes' => $problems->implode(', ')]);
+        }
+        foreach ($counts as [$l, $extra]) {
+            $free = (int) $avail->free($l->item) - (int) $order->lines()->where('item_id', $l->item_id)->whereKeyNot($l->id)->sum('own_qty');
+            if ($l->own_qty + $extra > $free) {
+                self::fail('carrier_count_busy', $r + ['code' => $l->item->type ?: $l->item->name, 'n' => max(0, $free)]);
+            }
+        }
+
+        return DB::transaction(function () use ($order, $book, $counts) {
+            $n = 0;
+            foreach ($book as [$line, $a]) {
+                \App\Models\Rental\OrderAsset::create(['order_id' => $order->id, 'order_line_id' => $line->id, 'asset_id' => $a->id]);
+                $n++;
+            }
+            foreach ($counts as [$l, $extra]) {
+                $l->update(['own_qty' => $l->own_qty + $extra]);
+                $n += $extra;
+            }
+
+            return $n;
+        });
+    }
+
     /** Is this case with a customer (out with or picked for an order)? */
     private static function away(Asset $case): bool
     {
@@ -149,13 +250,17 @@ class Carriers
         $pieces = $case->packed()->get();
         $strangers = $pieces->reject(fn (Asset $a) => in_array($a->id, $onOrder, true))->pluck('code');
         // Counted items in the case: on the order, and not more than still to pick.
+        // Accessories of items on the order (kit) go along at no charge.
         $counted = [];
+        $kit = self::kitAllowance($order);
         foreach ($case->counted()->with('item')->get() as $ci) {
             $line = Moves::countedLine($order, $ci->item);
-            if (! $line || $line->picked_qty + $ci->qty > $line->ownAllocated()) {
-                $strangers->push($ci->qty.' × '.($ci->item->type ?: $ci->item->name));
-            } else {
+            if ($line && $line->picked_qty + $ci->qty <= $line->ownAllocated()) {
                 $counted[] = [$line, $ci->qty];
+            } elseif (! $line && ($kit[$ci->item_id] ?? 0) >= $ci->qty) {
+                $kit[$ci->item_id] -= $ci->qty;
+            } else {
+                $strangers->push($ci->qty.' × '.($ci->item->type ?: $ci->item->name));
             }
         }
         if ($strangers->isNotEmpty()) {

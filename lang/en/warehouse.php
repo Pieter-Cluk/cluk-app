@@ -172,6 +172,9 @@ return [
         'register' => 'Found (label scanned)',
     ],
     'errors' => [
+        'carrier_piece_busy' => ':code in :carrier is already booked for another job on these dates.',
+        'carrier_not_needed' => ':carrier holds more than :order still needs: :codes. Take those out first, or add them to the order.',
+        'carrier_count_busy' => ':carrier: not enough :code free on these dates (:n left).',
         'unknown' => '“:code” is not a piece or a place we know.',
         'retired' => ':code is retired and cannot move.',
         'already' => ':code is already in :place.',

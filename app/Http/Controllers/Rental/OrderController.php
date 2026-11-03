@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Services\Afrit6\Pricing;
 use App\Services\Rental\OrderChanges;
 use App\Services\Rental\Orders;
+use App\Services\Warehouse\Carriers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -121,6 +122,20 @@ class OrderController extends Controller
         return back()->with('status', __('orders.flash.allocated'));
     }
 
+    /** Scan a dolly or box: everything in it is booked for the order at once. */
+    public function allocateCase(Request $request, Order $order): RedirectResponse
+    {
+        $this->work($request, $order);
+        $found = \App\Services\Warehouse\Moves::resolve((string) $request->validate(['code' => ['required', 'string', 'max:200']])['code']);
+        $case = ($found['type'] ?? null) === 'asset' && $found['model']->isContainer() ? $found['model'] : null;
+        if (! $case) {
+            throw ValidationException::withMessages(['code' => __('orders.errors.not_a_case', ['code' => mb_strimwidth((string) $request->input('code'), 0, 40, '…')])]);
+        }
+        $n = Carriers::allocate($order, $case);
+
+        return back()->with('status', trans_choice('orders.flash.case_allocated', $n, ['n' => $n, 'carrier' => $case->code]));
+    }
+
     public function allocateLine(Request $request, Order $order, OrderLine $line): RedirectResponse
     {
         $this->work($request, $order);
@@ -128,6 +143,14 @@ class OrderController extends Controller
         abort_unless($line->needsStock(), 404);
         $line->load(['item', 'assets', 'subhireLines.request']);
 
+        $found = $request->filled('code') ? \App\Services\Warehouse\Moves::resolve((string) $request->input('code')) : null;
+        $case = ($found['type'] ?? null) === 'asset' ? $found['model'] : null;
+        if ($case && $case->isContainer() && $case->item_id !== $line->item_id) {
+            // A dolly or box: book everything in it at once (accessories of the items go along at no charge).
+            $n = Carriers::allocate($order, $case);
+
+            return back()->with('status', trans_choice('orders.flash.case_allocated', $n, ['n' => $n, 'carrier' => $case->code]));
+        }
         if ($line->bySerial() && $request->filled('code')) {
             // Add one piece by its code (typed or scanned).
             $asset = Asset::where('code', strtoupper(trim((string) $request->input('code'))))->where('item_id', $line->item_id)->first();

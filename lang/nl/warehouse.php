@@ -172,6 +172,9 @@ return [
         'register' => 'Gevonden (label gescand)',
     ],
     'errors' => [
+        'carrier_piece_busy' => ':code in :carrier is op deze data al voor een andere job geboekt.',
+        'carrier_not_needed' => ':carrier bevat meer dan :order nog nodig heeft: :codes. Haal die er eerst uit, of zet ze op de order.',
+        'carrier_count_busy' => ':carrier: niet genoeg :code vrij op deze data (nog :n).',
         'unknown' => '“:code” is geen gekend stuk of plaats.',
         'retired' => ':code is uit dienst en kan niet bewegen.',
         'already' => ':code ligt al in :place.',

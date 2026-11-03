@@ -61,6 +61,11 @@
                 <form method="post" action="{{ route('orders.send', $order) }}">@csrf<button class="btn" type="submit" @disabled($drafts->isEmpty())>{{ __('orders.send_all', ['n' => $drafts->count()]) }}</button></form>
             @endif
             <form method="post" action="{{ route('orders.auto', $order) }}">@csrf<button class="btn" type="submit">{{ __('orders.auto_all') }}</button></form>
+            <form method="post" action="{{ route('orders.case', $order) }}" class="inline-form" title="{{ __('orders.case_hint') }}">
+                @csrf
+                <input name="code" placeholder="{{ __('orders.case_code') }}" aria-label="{{ __('orders.case_code') }}" autocomplete="off" required>
+                <button class="btn" type="submit">{{ __('orders.case_go') }}</button>
+            </form>
         </div>
     @endif
 
