@@ -82,7 +82,9 @@ class PhoneController extends Controller
             $next = collect($next)->map(fn ($c) => $c === Zone::RACKS ? __('warehouse.zone_names.RACKS') : Moves::label($c))->all();
         }
 
-        return view('warehouse.phone.scan', ['pending' => $pending, 'next' => $next, 'here' => $here, 'scanned' => $request->query('scanned'),
+        $pendingItem = ($id = $request->session()->get('w.pending_item')) ? Item::find($id) : null;
+
+        return view('warehouse.phone.scan', ['pending' => $pending, 'pendingItem' => $pendingItem, 'next' => $next, 'here' => $here, 'scanned' => $request->query('scanned'),
             'carrier' => $this->openCarrier($request), 'mode' => $request->session()->get('w.carrier_mode', 'add')]);
     }
 
@@ -116,6 +118,9 @@ class PhoneController extends Controller
             return redirect()->route('w.scan')->withErrors(['code' => __('warehouse.errors.unknown', ['code' => mb_strimwidth($code, 0, 40, '…')])]);
         }
         $request->session()->forget('w.here');
+        if ($found['type'] !== 'position' && $found['type'] !== 'zone') {
+            $request->session()->forget('w.pending_item');
+        }
         // A label printed in advance, scanned for the first time: the piece is found and now in stock.
         if ($found['type'] === 'asset' && $found['model']->status === Asset::LABEL) {
             $asset = $found['model'];
@@ -136,6 +141,10 @@ class PhoneController extends Controller
             $item = $found['model'];
             $name = $item->type ?: $item->name;
             if (! $open) {
+                // Loose on a shelf: the next scanned rack place is where this item is kept.
+                $request->session()->forget('w.pending');
+                $request->session()->put('w.pending_item', $item->id);
+
                 return redirect()->route('w.scan')->with('status', __('warehouse.carriers.counted_info', ['name' => $name, 'n' => $item->stock_qty]));
             }
             $remove = $request->session()->get('w.carrier_mode') === 'remove';
@@ -196,6 +205,19 @@ class PhoneController extends Controller
             return redirect()->route('w.scan')->with('status', __('warehouse.scan.picked_up', ['code' => $asset->code, 'name' => $asset->item->name, 'place' => Moves::label($asset->location)]));
         }
         $place = $found['model'];
+        // A counted item scanned before (loose, not in a box): it is kept on this rack place from now on.
+        if (($itemId = $request->session()->pull('w.pending_item')) && ($item = Item::find($itemId))) {
+            if (! $place instanceof Position) {
+                $request->session()->put('w.pending_item', $item->id);
+
+                return redirect()->route('w.scan')->withErrors(['code' => __('warehouse.errors.counted_to_rack', ['place' => Moves::label($place->code)])]);
+            }
+            $from = $item->position_code;
+            $item->update(['position_code' => $place->code]);
+            Move::create(['item_id' => $item->id, 'from_code' => $from, 'to_code' => $place->code, 'kind' => 'move', 'user_id' => $request->user()->id, 'note' => 'kept at']);
+
+            return redirect()->route('w.scan')->with('status', __('warehouse.carriers.counted_kept', ['name' => $item->type ?: $item->name, 'place' => $place->code]));
+        }
         $pending = $this->pending($request);
         if (! $pending) {
             $request->session()->put('w.here', $place->code);
@@ -218,7 +240,7 @@ class PhoneController extends Controller
 
     public function cancel(Request $request): RedirectResponse
     {
-        $request->session()->forget(['w.pending', 'w.here', 'w.carrier', 'w.carrier_mode']);
+        $request->session()->forget(['w.pending', 'w.pending_item', 'w.here', 'w.carrier', 'w.carrier_mode']);
 
         return redirect()->route('w.scan');
     }

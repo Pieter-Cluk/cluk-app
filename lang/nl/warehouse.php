@@ -172,6 +172,7 @@ return [
         'register' => 'Gevonden (label gescand)',
     ],
     'errors' => [
+        'counted_to_rack' => ':place is geen rekplaats: getelde items liggen op een rekplaats (bv. GA2B3).',
         'carrier_piece_busy' => ':code in :carrier is op deze data al voor een andere job geboekt.',
         'carrier_not_needed' => ':carrier bevat meer dan :order nog nodig heeft: :codes. Haal die er eerst uit, of zet ze op de order.',
         'carrier_count_busy' => ':carrier: niet genoeg :code vrij op deze data (nog :n).',
@@ -510,7 +511,9 @@ return [
         'step_add' => 'Scan de stuks die erin gaan. Scan een plaats om de hele case te verplaatsen.',
         'step_remove' => 'Scan de stuks die je eruit haalt. Scan een plaats om de hele case te verplaatsen.',
         'counted' => 'geteld',
-        'counted_info' => ':name is een geteld item (:n in voorraad). Open eerst een box, dolly of case om het erin te leggen.',
+        'counted_info' => ':name is een geteld item (:n in voorraad). Scan de rekplaats waar het ligt. Wil je het in een box, dolly of case leggen? Scan die dan eerst.',
+        'counted_kept' => ':name ligt nu op :place.',
+        'counted_where' => ':n in voorraad · ligt nu op :place · scan de rekplaats',
         'counted_in' => '+1 :name in :carrier (nu :n).',
         'counted_out' => '−1 :name uit :carrier (nu :n).',
         'counted_picked' => ':name gepickt: :n / :of.',

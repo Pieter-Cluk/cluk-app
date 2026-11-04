@@ -172,6 +172,7 @@ return [
         'register' => 'Found (label scanned)',
     ],
     'errors' => [
+        'counted_to_rack' => ':place is not a rack place: counted items are kept on a rack place (e.g. GA2B3).',
         'carrier_piece_busy' => ':code in :carrier is already booked for another job on these dates.',
         'carrier_not_needed' => ':carrier holds more than :order still needs: :codes. Take those out first, or add them to the order.',
         'carrier_count_busy' => ':carrier: not enough :code free on these dates (:n left).',
@@ -510,7 +511,9 @@ return [
         'step_add' => 'Scan the pieces that go in. Scan a place to move the whole case.',
         'step_remove' => 'Scan the pieces you take out. Scan a place to move the whole case.',
         'counted' => 'counted',
-        'counted_info' => ':name is a counted item (:n in stock). Open a box, dolly or case first to put it in.',
+        'counted_info' => ':name is a counted item (:n in stock). Scan the rack place where it lies. To put it in a box, dolly or case: scan that first.',
+        'counted_kept' => ':name is now kept at :place.',
+        'counted_where' => ':n in stock · now kept at :place · scan the rack place',
         'counted_in' => '+1 :name in :carrier (now :n).',
         'counted_out' => '−1 :name out of :carrier (now :n).',
         'counted_picked' => ':name picked: :n / :of.',

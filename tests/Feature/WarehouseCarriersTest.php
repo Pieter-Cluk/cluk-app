@@ -402,6 +402,22 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame([0, 33, 67, 33, 33], $row());
     }
 
+    public function test_a_loose_counted_item_is_scanned_onto_a_shelf(): void
+    {
+        $clamp = Item::create(['number' => 'RIG-CLAMP', 'kind' => 'item', 'name' => 'Clamp', 'type' => 'TAF clamp', 'serial' => false, 'stock_qty' => 200, 'position_code' => 'GA2B3']);
+        \App\Models\Warehouse\Position::firstOrCreate(['code' => 'GA1B1'], ['floor' => 'G', 'row' => 'A', 'rack' => '1', 'layer' => 'B', 'spot' => '1', 'kind' => 'rack', 'use' => 'store', 'active' => true]);
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'RIG-CLAMP'])->assertRedirect()->assertSessionHasNoErrors();
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('RIG-CLAMP')->assertSee('scan the rack place');
+        // A zone is not a rack place; the item keeps waiting.
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'INBOUND'])->assertSessionHasErrors('code');
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'GA1B1'])->assertSessionHas('status', 'TAF clamp is now kept at GA1B1.');
+        $this->assertSame('GA1B1', $clamp->fresh()->position_code);
+        $this->assertSame(200, $clamp->fresh()->stock_qty);
+        // The next place scan just shows that place again.
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'GA1B1']);
+        $this->assertSame('GA1B1', $clamp->fresh()->position_code);
+    }
+
     public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void
     {
         [$p, $order] = $this->job();

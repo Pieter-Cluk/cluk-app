@@ -27,6 +27,13 @@
             <small>{{ trans_choice('warehouse.carriers.count', $total, ['n' => $total]) }}</small>
             <form method="post" action="{{ route('w.scan.cancel') }}">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.carriers.close') }}</button></form>
         </section>
+    @elseif ($pendingItem ?? null)
+        <section class="ph-card ph-pending">
+            <small class="ph-step">{{ __('warehouse.scan.step2') }}</small>
+            <b>{{ $pendingItem->number }} · {{ $pendingItem->type ?: $pendingItem->name }}</b>
+            <small>{{ __('warehouse.carriers.counted_where', ['n' => $pendingItem->stock_qty, 'place' => $pendingItem->position_code ?: '—']) }}</small>
+            <form method="post" action="{{ route('w.scan.cancel') }}">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.scan.cancel') }}</button></form>
+        </section>
     @elseif ($pending)
         <section class="ph-card ph-pending">
             <small class="ph-step">{{ __('warehouse.scan.step2') }}</small>

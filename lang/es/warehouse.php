@@ -172,6 +172,7 @@ return [
         'register' => 'Encontrado (etiqueta escaneada)',
     ],
     'errors' => [
+        'counted_to_rack' => ':place no es una ubicación de estante: los artículos contados se guardan en una ubicación de estante (p. ej. GA2B3).',
         'carrier_piece_busy' => ':code en :carrier ya está reservado para otro trabajo en estas fechas.',
         'carrier_not_needed' => ':carrier contiene más de lo que :order aún necesita: :codes. Sácalo primero o añádelo al pedido.',
         'carrier_count_busy' => ':carrier: no hay suficiente :code libre en estas fechas (quedan :n).',
@@ -510,7 +511,9 @@ return [
         'step_add' => 'Escanea las piezas que entran. Escanea un lugar para mover todo el case.',
         'step_remove' => 'Escanea las piezas que sacas. Escanea un lugar para mover todo el case.',
         'counted' => 'contado',
-        'counted_info' => ':name es un artículo contado (:n en stock). Abre primero una caja, dolly o case para meterlo.',
+        'counted_info' => ':name es un artículo contado (:n en stock). Escanea la ubicación del estante donde está. Para meterlo en una caja, dolly o flight: escanéalo primero.',
+        'counted_kept' => ':name está ahora en :place.',
+        'counted_where' => ':n en stock · está en :place · escanea la ubicación',
         'counted_in' => '+1 :name en :carrier (ahora :n).',
         'counted_out' => '−1 :name fuera de :carrier (ahora :n).',
         'counted_picked' => ':name preparado: :n / :of.',
