@@ -19,7 +19,7 @@ lines = {l: v for l, v in lines.items() if l in langs}
 def azure_say(text, path):
     import urllib.request
     from xml.sax.saxutils import escape
-    key, region = os.environ['AZURE_SPEECH_KEY'], os.environ.get('AZURE_SPEECH_REGION') or 'westeurope'
+    key, region = os.environ['AZURE_SPEECH_KEY'], os.environ.get('AZURE_SPEECH_REGION') or 'northeurope'
     ssml = ('<speak version="1.0" xml:lang="nl-BE"><voice name="nl-BE-ArnaudNeural">'
             f'<prosody rate="-4%">{escape(text)}</prosody></voice></speak>').encode('utf-8')
     req = urllib.request.Request(f'https://{region}.tts.speech.microsoft.com/cognitiveservices/v1', data=ssml, method='POST', headers={
