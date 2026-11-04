@@ -23,6 +23,9 @@ class RequestsMailbox
 
     public const MAX_BYTES = 15 * 1024 * 1024;
 
+    /** Bounces only: a no-reply sender can be a real request from a platform (Eden, a booking form…). */
+    private const SKIP_SENDER = '/^(mailer-daemon|postmaster)@/i';
+
     private const SKIP_SUBJECT = '/^\s*(automatic reply|automatisch antwoord|réponse automatique|respuesta automática|abwesenheitsnotiz|out of office|afwezig|absent|undeliverable|onbestelbaar|non remis|delivery status notification|mail delivery failed)/i';
 
     private const FWD = '/^\s*((fw|fwd|tr|wg|doorst|rv|re)\s*:\s*)+/i';
@@ -53,7 +56,7 @@ class RequestsMailbox
             $token = Bounces::token();
             $url = "https://graph.microsoft.com/v1.0/users/{$box}/mailFolders/inbox/messages";
             $query = ['$filter' => 'receivedDateTime ge '.$since->copy()->utc()->format('Y-m-d\TH:i:s\Z'), '$orderby' => 'receivedDateTime asc', '$top' => 25,
-                '$select' => 'id,internetMessageId,subject,from,receivedDateTime,hasAttachments'];
+                '$select' => 'id,internetMessageId,subject,from,replyTo,receivedDateTime,hasAttachments'];
             $n = 0;
             $last = $since;
             for ($page = 0; $page < 4 && $url; $page++) {
@@ -124,7 +127,7 @@ class RequestsMailbox
         if (preg_match(self::SKIP_SUBJECT, (string) ($m['subject'] ?? ''))) {
             return 'skipped: automatic subject';
         }
-        if (preg_match('/^(no-?reply|mailer-daemon|postmaster)@/i', $from)) {
+        if (preg_match(self::SKIP_SENDER, $from)) {
             return 'skipped: sender '.Str::before($from, '@').'@';
         }
         $full = Http::withToken($token)->timeout(20)->get("https://graph.microsoft.com/v1.0/users/{$box}/messages/".rawurlencode($m['id']), ['$select' => 'internetMessageHeaders']);
@@ -143,8 +146,14 @@ class RequestsMailbox
         }
         $subject = (string) ($m['subject'] ?? '');
         $from = Str::lower((string) ($m['from']['emailAddress']['address'] ?? ''));
-        if (preg_match(self::SKIP_SUBJECT, $subject) || preg_match('/^(no-?reply|mailer-daemon|postmaster)@/i', $from) || $from === Str::lower(self::box())) {
+        if (preg_match(self::SKIP_SUBJECT, $subject) || preg_match(self::SKIP_SENDER, $from) || $from === Str::lower(self::box())) {
             return false;
+        }
+        // Platforms (e.g. a booking form) send from a no-reply address: the person to answer is in Reply-To.
+        $fromName = (string) ($m['from']['emailAddress']['name'] ?? '');
+        if (preg_match('/^(no-?reply|do-?not-?reply)@/i', $from) && ($reply = $m['replyTo'][0]['emailAddress'] ?? null) && filled($reply['address'] ?? null)) {
+            $from = Str::lower($reply['address']);
+            $fromName = (string) ($reply['name'] ?? $fromName);
         }
         $full = Http::withToken($token)->withHeaders(['Prefer' => 'outlook.body-content-type="text"'])->timeout(20)
             ->get("https://graph.microsoft.com/v1.0/users/{$box}/messages/".rawurlencode($m['id']), ['$select' => 'body,internetMessageHeaders,from']);
@@ -154,7 +163,7 @@ class RequestsMailbox
             return false;
         }
 
-        return (bool) self::make($subject, $from, (string) ($m['from']['emailAddress']['name'] ?? ''), (string) $full->json('body.content', ''),
+        return (bool) self::make($subject, $from, $fromName, (string) $full->json('body.content', ''),
             Carbon::parse($m['receivedDateTime']), $mailId, ($m['hasAttachments'] ?? false) ? fn () => self::attachments($token, $box, $m['id']) : null);
     }
 

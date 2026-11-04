@@ -92,6 +92,19 @@ class RequestsMailboxTest extends TestCase
         $this->actingAs($u)->get(route('incoming.index', ['open' => $b->id]))->assertSee('Forwarded by pieter@cluk.live');
     }
 
+    public function test_a_platform_mail_from_a_no_reply_address_comes_in_with_the_reply_to_person(): void
+    {
+        $eden = $this->msg('e1', 'Nieuwe aanvraag via Eden', 'noreply@platform.example', 'Eden');
+        $eden['replyTo'] = [['emailAddress' => ['address' => 'Organiser@Event.example', 'name' => 'An Organiser']]];
+        $plain = $this->msg('e2', 'Nieuwe aanvraag 2', 'no-reply@platform.example', 'Eden');
+        $this->fake([$eden, $plain, $this->msg('e3', 'Delivery', 'mailer-daemon@x.example')], ['e1' => ['body' => ['content' => 'Request for 4 blinders']]]);
+
+        $this->assertSame(2, RequestsMailbox::scan());
+        $a = IncomingMessage::where('subject', 'Nieuwe aanvraag via Eden')->firstOrFail();
+        $this->assertSame(['organiser@event.example', 'An Organiser'], [$a->from_email, $a->from_name]);
+        $this->assertSame('no-reply@platform.example', IncomingMessage::where('subject', 'Nieuwe aanvraag 2')->value('from_email'));
+    }
+
     public function test_a_missing_mailbox_is_shown_and_retried_later(): void
     {
         Http::fake(['login.microsoftonline.com/*' => Http::response(['access_token' => 'tok']), 'graph.microsoft.com/*' => Http::response(['error' => ['code' => 'ErrorInvalidUser']], 404)]);
