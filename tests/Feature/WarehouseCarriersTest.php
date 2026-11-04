@@ -416,6 +416,7 @@ class WarehouseCarriersTest extends TestCase
         // The next place scan just shows that place again.
         $this->actingAs($this->crew)->post('/w/scan', ['code' => 'GA1B1']);
         $this->assertSame('GA1B1', $clamp->fresh()->position_code);
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('200 ×')->assertSee('TAF clamp');
     }
 
     public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void

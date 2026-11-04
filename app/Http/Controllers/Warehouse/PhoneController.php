@@ -73,7 +73,10 @@ class PhoneController extends Controller
         if ($code = $request->session()->get('w.here')) {
             // Boxes and cases: their loose pieces and their counted items (cables, softsteels…) both count as contents.
             $all = Asset::with(['item', 'packed.item', 'counted.item'])->where('location', $code)->whereNull('case_id')->orderBy('code')->limit(80)->get();
-            $here = ['code' => $code, 'label' => Moves::label($code), 'carriers' => $all->filter->isContainer()->values(), 'assets' => $all->reject->isContainer()->values()];
+            // Counted items kept on this place (loose: what is not in a dolly, box or case).
+            $counted = Item::where('serial', false)->where('position_code', $code)->orderBy('number')->get()
+                ->map(fn ($i) => ['item' => $i, 'loose' => max(0, (int) $i->stock_qty - (int) CaseItem::where('item_id', $i->id)->sum('qty'))]);
+            $here = ['code' => $code, 'label' => Moves::label($code), 'carriers' => $all->filter->isContainer()->values(), 'assets' => $all->reject->isContainer()->values(), 'counted' => $counted];
         }
         $next = [];
         if ($pending) {

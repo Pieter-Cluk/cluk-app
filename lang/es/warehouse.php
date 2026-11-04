@@ -43,6 +43,7 @@ return [
         'moved' => ':code está ahora en :place.',
         'stored' => ':code guardado en :place · alquilable de nuevo.',
         'empty_place' => 'Aquí no hay nada.',
+        'counted_here' => 'artículo contado, :n en stock',
         'here_hint' => 'Escanea una pieza para moverla.',
         'hint' => 'Cada movimiento es un escaneo: primero la pieza, luego el lugar. La app solo permite movimientos que siguen la ruta.',
         'registered' => ':code · :name encontrado y en stock. Escanea ahora dónde va.',

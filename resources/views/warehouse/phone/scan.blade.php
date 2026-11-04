@@ -56,7 +56,10 @@
                 <p><b>{{ $c->item->name }} · {{ $c->code }}</b> <small class="muted">· {{ trans_choice('warehouse.carriers.count', $n, ['n' => $n]) }}</small>
                     @if ($n > 0)<br><small class="muted">{{ \Illuminate\Support\Str::limit($c->packed->map(fn ($a) => $a->code.' '.$a->item->name)->merge($c->counted->map(fn ($x) => $x->qty.' × '.($x->item->type ?: $x->item->name)))->implode(' · '), 160) }}</small>@endif</p>
             @endforeach
-            @if ($here['assets']->isEmpty() && $here['carriers']->isEmpty())
+            @if ($here['counted']->isNotEmpty())
+                <ul class="ph-list">@foreach ($here['counted'] as $c)<li><b>{{ $c['loose'] }} ×</b> {{ $c['item']->type ?: $c['item']->name }} <small class="muted">· {{ $c['item']->number }} · {{ __('warehouse.scan.counted_here', ['n' => $c['item']->stock_qty]) }}</small></li>@endforeach</ul>
+            @endif
+            @if ($here['assets']->isEmpty() && $here['carriers']->isEmpty() && $here['counted']->isEmpty())
                 <p class="muted">{{ __('warehouse.scan.empty_place') }}</p>
             @elseif ($here['assets']->isNotEmpty())
                 <ul class="ph-list">@foreach ($here['assets'] as $a)<li><b>{{ $a->code }}</b> {{ $a->item->name }} <small class="muted">· {{ __('equipment.statuses.'.$a->statusKey()) }}</small></li>@endforeach</ul>

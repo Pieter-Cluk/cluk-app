@@ -43,6 +43,7 @@ return [
         'moved' => ':code is now in :place.',
         'stored' => ':code stored on :place · rentable again.',
         'empty_place' => 'Nothing here.',
+        'counted_here' => 'counted item, :n in stock',
         'here_hint' => 'Scan a piece to move it.',
         'hint' => 'Every move is a scan: first the piece, then the place. The app only allows moves that fit the route.',
         'registered' => ':code · :name found and in stock. Now scan where it goes.',

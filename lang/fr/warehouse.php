@@ -43,6 +43,7 @@ return [
         'moved' => ':code est maintenant dans :place.',
         'stored' => ':code rangé en :place · à nouveau louable.',
         'empty_place' => 'Rien ici.',
+        'counted_here' => 'article compté, :n en stock',
         'here_hint' => 'Scannez une pièce pour la déplacer.',
         'hint' => 'Chaque mouvement est un scan : d’abord la pièce, puis la place. L’app n’accepte que les mouvements qui suivent le parcours.',
         'registered' => ':code · :name trouvé et en stock. Scannez maintenant où il va.',

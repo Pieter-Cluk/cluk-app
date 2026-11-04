@@ -43,6 +43,7 @@ return [
         'moved' => ':code ligt nu in :place.',
         'stored' => ':code ligt op :place · weer verhuurbaar.',
         'empty_place' => 'Hier ligt niets.',
+        'counted_here' => 'geteld item, :n in voorraad',
         'here_hint' => 'Scan een stuk om het te verplaatsen.',
         'hint' => 'Elke beweging is een scan: eerst het stuk, dan de plaats. De app laat enkel bewegingen toe die passen in de route.',
         'registered' => ':code · :name gevonden en in voorraad. Scan nu waar het naartoe gaat.',
