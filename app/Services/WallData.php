@@ -197,7 +197,7 @@ class WallData
         }
         $rows = [];
         foreach ($owned as $cat => $n) {
-            $rows[] = ['label' => $cat, 'sub' => __('wall.pieces_out'), 'cells' => array_map(fn ($i) => (int) round(min(100, ($use[$cat][$i] ?? 0) / $n * 100)), range(0, $days - 1))];
+            $rows[] = ['label' => $cat, 'sub' => __('wall.pieces_out'), 'cells' => array_map(fn ($i) => self::pct($use[$cat][$i] ?? 0, $n), range(0, $days - 1))];
         }
         $occ = Booking::occupancy($start, $end);
         $rows[] = ['label' => 'Cluk Factory', 'sub' => __('wall.venue_booked'), 'cells' => array_map(function ($i) use ($start, $occ) {
@@ -211,10 +211,16 @@ class WallData
             $d = $start->copy()->addDays($i);
             $n = DeskRental::activeOn($d)->whereIn('space_id', $deskIds)->distinct()->count('space_id') + DeskBooking::live()->whereDate('date', $d->toDateString())->distinct()->count('space_id');
 
-            return (int) round(min(100, $n / $desks * 100));
+            return self::pct($n, $desks);
         }, range(0, $days - 1))];
 
         return $rows;
+    }
+
+    /** Share in %, at least 1 when there is any activity (so a little is never shown as nothing). */
+    private static function pct(int|float $n, int|float $of): int
+    {
+        return $n > 0 && $of > 0 ? max(1, (int) round(min(100, $n / $of * 100))) : 0;
     }
 
     /** Job lanes: quotes in option, orders, Factory bookings, as bars over the days. */

@@ -1,7 +1,9 @@
 @extends('wall.layout')
 @php($end = $start->copy()->addDays($days - 1))
 @php($ti = (int) $start->diffInDays(today(), false))
-@php($ramp = ['#1f2a21', '#2f5a24', '#4f8f36', '#7cc35a', '#bde8a2'])
+{{-- Nothing, a little (1–9%), some (10–19%), then 20–39, 40–59, 60–79, 80+ --}}
+@php($ramp = ['#1f2a21', '#2b4630', '#33602c', '#4f8f36', '#6fae4a', '#9bd27a', '#bde8a2'])
+@php($step = fn ($p) => $p <= 0 ? 0 : ($p < 10 ? 1 : ($p < 20 ? 2 : min(6, 3 + intdiv($p - 20, 20)))))
 @php($q = fn ($o) => array_filter(['view' => 'planning', 'key' => $key ?: null, 'off' => $o ?: null]))
 @section('title'){{ __('wall.planning') }}@endsection
 @section('nav')
@@ -19,7 +21,7 @@
         @foreach ($heat as $row)
             <span class="rl">{{ $row['label'] }}<small>{{ $row['sub'] }}</small></span>
             @foreach ($row['cells'] as $i => $pct)
-                <span @class(['hc', 'hc-hot' => $pct > 90, 'hc-today' => $i === $ti, 'hc-light' => $pct < 45]) style="background: {{ $ramp[min(4, (int) floor($pct / 100 * 4.999))] }}" title="{{ $row['label'] }}: {{ $pct }}%">{{ $pct > 90 ? '!' : ($pct >= 75 ? $pct : '') }}</span>
+                <span @class(['hc', 'hc-hot' => $pct > 90, 'hc-today' => $i === $ti, 'hc-light' => $pct < 45]) style="background: {{ $ramp[$step($pct)] }}" title="{{ $row['label'] }}: {{ $pct }}%">{{ $pct > 90 ? '!' : ($pct >= 75 ? $pct : '') }}</span>
             @endforeach
         @endforeach
     </div>
