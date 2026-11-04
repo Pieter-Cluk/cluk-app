@@ -92,6 +92,10 @@
                     </div>
                 </div>
 
+                @php($sections = $quote->heading_totals ? \App\Support\LineSections::totals($quote->lines) : [])
+                @if ($canEdit)
+                    <label class="check small"><input type="checkbox" name="heading_totals" value="1" @checked($quote->heading_totals) onchange="this.form.requestSubmit()"><span>{{ __('quotes.heading_totals') }}</span></label>
+                @endif
                 <div class="table-wrap">
                     <table class="table table-tight quote-lines">
                         <thead><tr>
@@ -102,11 +106,17 @@
                             @forelse ($quote->lines as $line)
                                 @php($free = $line->item ? $avail->free($line->item) : null)
                                 @php($short = $free !== null && (float) $line->qty > $free)
-                                <tr @class(['line-text' => $line->kind === 'text'])>
+                                <tr id="line-{{ $line->id }}" @class(['line-text' => $line->kind === 'text', 'line-heading' => $line->heading])>
                                     <td>
                                         @if ($canEdit)
                                             <input type="hidden" name="lines[{{ $line->id }}][position]" value="{{ $line->position }}">
-                                            <input name="lines[{{ $line->id }}][name]" value="{{ $line->name }}" maxlength="200" required aria-label="{{ __('quotes.cols.item') }}">
+                                            <div class="line-name">
+                                                <span class="line-move">
+                                                    <button type="submit" name="move" value="{{ $line->id }}:up" class="iconbtn" title="{{ __('quotes.move_up') }}" aria-label="{{ __('quotes.move_up') }}: {{ $line->name }}" @disabled($loop->first)>▲</button>
+                                                    <button type="submit" name="move" value="{{ $line->id }}:down" class="iconbtn" title="{{ __('quotes.move_down') }}" aria-label="{{ __('quotes.move_down') }}: {{ $line->name }}" @disabled($loop->last)>▼</button>
+                                                </span>
+                                                <input name="lines[{{ $line->id }}][name]" value="{{ $line->name }}" maxlength="200" required aria-label="{{ $line->heading ? __('quotes.subtitle') : __('quotes.cols.item') }}">
+                                            </div>
                                         @else
                                             <b>{{ $line->name }}</b>
                                         @endif
@@ -135,6 +145,9 @@
                                         <td><button type="submit" form="rm-{{ $line->id }}" class="iconbtn" title="{{ __('quotes.remove') }}" aria-label="{{ __('quotes.remove') }}: {{ $line->name }}">✕</button></td>
                                     @endif
                                 </tr>
+                                @if (isset($sections[$line->id]))
+                                    <tr class="line-subtotal"><td colspan="5">{{ __('quotes.subtotal_of', ['name' => $sections[$line->id]['name']]) }}</td><td class="num nowrap"><b>{{ $eur($sections[$line->id]['cents']) }}</b></td>@if ($canEdit)<td></td>@endif</tr>
+                                @endif
                             @empty
                                 <tr><td colspan="7" class="muted">{{ __('quotes.no_lines') }}</td></tr>
                             @endforelse
@@ -181,6 +194,13 @@
                             @else
                                 <p class="muted small mt">{{ __('quotes.labour.none') }}@if (auth()->user()->canUseModule('settings', 2)) <a href="{{ route('settings.labour.index') }}">{{ __('nav.items.labour') }} →</a>@endif</p>
                             @endif
+                        </details>
+                        <details>
+                            <summary>{{ __('quotes.add_subtitle') }}</summary>
+                            <div class="stack-sm mt">
+                                <input name="name" form="add-heading-form" required maxlength="200" placeholder="{{ __('quotes.subtitle_hint') }}" aria-label="{{ __('quotes.add_subtitle') }}">
+                                <button class="btn" type="submit" form="add-heading-form">{{ __('quotes.add') }}</button>
+                            </div>
                         </details>
                         <details>
                             <summary>{{ __('quotes.add_text') }}</summary>
@@ -256,6 +276,7 @@
                 <form method="post" action="{{ route('quotes.lines.add', $quote) }}" id="add-item-form" hidden>@csrf<input type="hidden" name="kind" value="item"></form>
                 <form method="post" action="{{ route('quotes.lines.add', $quote) }}" id="add-charge-form" hidden>@csrf<input type="hidden" name="kind" value="charge"></form>
                 <form method="post" action="{{ route('quotes.lines.add', $quote) }}" id="add-text-form" hidden>@csrf<input type="hidden" name="kind" value="text"></form>
+                <form method="post" action="{{ route('quotes.lines.add', $quote) }}" id="add-heading-form" hidden>@csrf<input type="hidden" name="kind" value="text"><input type="hidden" name="heading" value="1"></form>
                 <form method="post" action="{{ route('quotes.labour.add', $quote) }}" id="add-labour-form" hidden>@csrf</form>
             @endif
             @if ($canEdit)

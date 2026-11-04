@@ -5,8 +5,11 @@
 <table class="doc-table">
     <thead><tr><th class="num">{{ __('quotes.cols.qty') }}</th><th>{{ __('quotes.cols.description') }}</th><th class="num">{{ __('quotes.factor') }}</th><th class="num">{{ __('quotes.cols.rate') }}</th><th class="num">{{ __('quotes.cols.amount') }}</th></tr></thead>
     <tbody>
+        @php($sections = $quote->heading_totals ? \App\Support\LineSections::totals($quote->lines) : [])
         @foreach ($quote->lines as $line)
-            @if ($line->kind === 'text')
+            @if ($line->heading)
+                <tr class="doc-heading"><td></td><td colspan="4"><b>{{ $line->name }}</b></td></tr>
+            @elseif ($line->kind === 'text')
                 <tr class="doc-text"><td></td><td colspan="4"><i>{{ $line->name }}</i></td></tr>
             @else
                 <tr>
@@ -16,6 +19,9 @@
                     <td class="num nowrap">{{ $eur($line->unit_price_cents) }}</td>
                     <td class="num nowrap">{{ $eur($line->amount_cents) }}</td>
                 </tr>
+            @endif
+            @if (isset($sections[$line->id]))
+                <tr class="doc-subtotal"><td></td><td colspan="3">{{ __('quotes.subtotal_of', ['name' => $sections[$line->id]['name']]) }}</td><td class="num nowrap"><b>{{ $eur($sections[$line->id]['cents']) }}</b></td></tr>
             @endif
         @endforeach
     </tbody>

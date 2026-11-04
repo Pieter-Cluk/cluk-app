@@ -40,12 +40,12 @@ class Orders
                 'project_discount_bp' => $quote->project_discount_bp, 'vat_code' => $quote->vat_code, 'vat_rate_bp' => $quote->vat_rate_bp,
                 'subtotal_cents' => $quote->subtotal_cents, 'discount_cents' => $quote->discount_cents, 'net_cents' => $quote->net_cents,
                 'vat_cents' => $quote->vat_cents, 'gross_cents' => $quote->gross_cents,
-                'logistics' => $quote->logistics ?? 'open', 'transport_cents' => (int) $quote->transport_cents, 'transport_note' => $quote->transport_note,
+                'heading_totals' => (bool) $quote->heading_totals, 'logistics' => $quote->logistics ?? 'open', 'transport_cents' => (int) $quote->transport_cents, 'transport_note' => $quote->transport_note,
             ]);
             $factor = $quote->defaultFactor();
             foreach ($quote->lines as $l) {
                 $order->lines()->create([
-                    'position' => $l->position, 'kind' => $l->kind, 'item_id' => $l->item_id, 'number' => $l->number, 'name' => $l->name,
+                    'position' => $l->position, 'kind' => $l->kind, 'heading' => (bool) $l->heading, 'item_id' => $l->item_id, 'number' => $l->number, 'name' => $l->name,
                     'qty' => $l->qty, 'unit_price_cents' => $l->unit_price_cents, 'factor' => $l->effectiveFactor($factor),
                     'discount_bp' => $l->discount_bp, 'amount_cents' => $l->amount_cents,
                 ]);

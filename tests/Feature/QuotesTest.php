@@ -342,6 +342,50 @@ class QuotesTest extends TestCase
         $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertDontSee('Mark as declined');
     }
 
+    public function test_lines_move_up_and_down_with_subtitles_and_subtotals(): void
+    {
+        $this->spiider();
+        $quote = $this->quote();
+        $show = '/sales/quotes/'.$quote->id;
+        $this->actingAs($this->sales)->post($show.'/lines', ['kind' => 'text', 'name' => 'Light', 'heading' => '1']);
+        $this->actingAs($this->sales)->post($show.'/lines', ['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 2]);
+        $this->actingAs($this->sales)->post($show.'/lines', ['kind' => 'charge', 'name' => 'Cables', 'qty' => 1, 'price' => 30]);
+        $this->actingAs($this->sales)->post($show.'/lines', ['kind' => 'text', 'name' => 'Audio', 'heading' => '1']);
+        $this->actingAs($this->sales)->post($show.'/lines', ['kind' => 'charge', 'name' => 'Mixer', 'qty' => 1, 'price' => 100]);
+        $quote->refresh();
+        [$light, $spiider, $cables, $audio, $mixer] = $quote->lines->all();
+        $this->assertTrue($light->heading);
+        $this->assertFalse($cables->heading);
+
+        $form = fn (array $extra) => $extra + [
+            'title' => $quote->title, 'language' => 'en', 'out_from' => $quote->out_from->format('Y-m-d H:i'), 'out_until' => $quote->out_until->format('Y-m-d H:i'),
+            'use_from' => $quote->use_from->toDateString(), 'use_until' => $quote->use_until->toDateString(),
+            'lines' => $quote->fresh()->lines->mapWithKeys(fn ($l) => [$l->id => ['name' => $l->name, 'qty' => $l->qtyLabel() ?: 0, 'position' => $l->position]])->all(),
+        ];
+        // Move the cables down, under Audio… and back up; the name change in the same submit is kept.
+        $data = $form(['move' => $cables->id.':down']);
+        $data['lines'][$cables->id]['name'] = 'Cable set';
+        $this->actingAs($this->sales)->put($show, $data)->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertSame(['Light', 'LT-SPIIDER', 'Audio', 'Cable set', 'Mixer'], $quote->fresh()->lines->map(fn ($l) => $l->number ?: $l->name)->all());
+        $this->actingAs($this->sales)->put($show, $form(['move' => $cables->id.':up']));
+        $this->assertSame(['Light', 'LT-SPIIDER', 'Cable set', 'Audio', 'Mixer'], $quote->fresh()->lines->map(fn ($l) => $l->number ?: $l->name)->all());
+
+        // Subtotals only when switched on.
+        $this->actingAs($this->sales)->get($show)->assertSee('Add a subtitle')->assertDontSee('Subtotal Light');
+        $this->actingAs($this->sales)->put($show, $form(['heading_totals' => '1']));
+        $quote->refresh();
+        $this->assertTrue($quote->heading_totals);
+        $totals = \App\Support\LineSections::totals($quote->lines);
+        $this->assertSame(['Light' => $spiider->fresh()->amount_cents + 3000, 'Audio' => 10000], collect($totals)->mapWithKeys(fn ($t) => [$t['name'] => $t['cents']])->all());
+        $this->actingAs($this->sales)->get($show)->assertSee('Subtotal Light')->assertSee('Subtotal Audio');
+        $this->actingAs($this->sales)->get(route('quotes.print', $quote))->assertSee('<b>Light</b>', false)->assertSee('Subtotal Audio');
+
+        // The order keeps subtitles and subtotals.
+        $order = \App\Services\Rental\Orders::fromQuote($quote->fresh());
+        $this->assertTrue($order->heading_totals);
+        $this->assertSame([true, false, false, true, false], $order->lines->map(fn ($l) => (bool) $l->heading)->all());
+    }
+
     public function test_permissions(): void
     {
         $quote = $this->quote();

@@ -144,6 +144,7 @@ class QuoteController extends Controller
             'lines.*.factor' => ['nullable', 'numeric', 'min:0', 'max:999'],
             'lines.*.discount' => ['nullable', 'numeric', 'min:0', 'max:100'],
             'lines.*.position' => ['nullable', 'integer', 'min:0', 'max:9999'],
+            'move' => ['nullable', 'regex:/^\d+:(up|down)$/'],
         ]);
         $useFrom = Carbon::parse($d['use_from']);
         $useUntil = Carbon::parse($d['use_until']);
@@ -153,7 +154,8 @@ class QuoteController extends Controller
             throw ValidationException::withMessages(['use_from' => __('quotes.errors.use_inside_out')]);
         }
 
-        DB::transaction(function () use ($quote, $d) {
+        DB::transaction(function () use ($quote, $d, $request) {
+            $quote->heading_totals = $request->boolean('heading_totals');
             $quote->fill(collect($d)->only(['title', 'language', 'contact_id', 'out_from', 'out_until', 'use_from', 'use_until', 'location', 'intro', 'notes'])->all());
             $quote->project_discount_bp = (int) round(((float) ($d['project_discount'] ?? 0)) * 100);
             if (array_key_exists('logistics', $d)) {
@@ -178,9 +180,16 @@ class QuoteController extends Controller
                 }
                 $line->save();
             }
+            if (! empty($d['move'])) {
+                [$id, $dir] = explode(':', $d['move']);
+                self::move($quote, (int) $id, $dir);
+            }
             $quote->load('company');
             $quote->recalculate();
         });
+        if (! empty($d['move'])) {
+            return redirect()->to(route('quotes.show', $quote).'#line-'.explode(':', $d['move'])[0]);
+        }
 
         return redirect()->route('quotes.show', $quote)->with('status', __('quotes.flash.saved'));
     }
@@ -195,6 +204,7 @@ class QuoteController extends Controller
             'name' => ['required_unless:kind,item', 'nullable', 'string', 'max:200'],
             'qty' => ['nullable', 'numeric', 'min:0', 'max:100000'],
             'price' => ['nullable', 'numeric', 'min:-1000000', 'max:1000000'],
+            'heading' => ['nullable', 'boolean'],
         ]);
         $position = (int) $quote->lines()->max('position') + 1;
         $qty = (float) ($d['qty'] ?? 1) ?: 1;
@@ -217,7 +227,7 @@ class QuoteController extends Controller
             }
         } else {
             $quote->lines()->create([
-                'kind' => $d['kind'], 'name' => $d['name'], 'qty' => $d['kind'] === 'text' ? 0 : $qty,
+                'kind' => $d['kind'], 'heading' => $d['kind'] === 'text' && $request->boolean('heading'), 'name' => $d['name'], 'qty' => $d['kind'] === 'text' ? 0 : $qty,
                 'unit_price_cents' => $d['kind'] === 'text' ? 0 : (int) round(((float) ($d['price'] ?? 0)) * 100),
                 'factor' => $d['kind'] === 'charge' ? 1 : null, 'position' => $position,
             ]);
@@ -225,6 +235,21 @@ class QuoteController extends Controller
         $quote->recalculate();
 
         return redirect()->to(route('quotes.show', $quote).'#add-item')->with('status', __('quotes.flash.line_added'));
+    }
+
+    /** Move a line one place up or down (positions are renumbered 1, 2, 3… first). */
+    private static function move(Quote $quote, int $id, string $dir): void
+    {
+        $ids = $quote->lines()->pluck('id')->all();
+        $i = array_search($id, $ids, true);
+        $j = $dir === 'up' ? $i - 1 : $i + 1;
+        if ($i === false || ! isset($ids[$j])) {
+            return;
+        }
+        [$ids[$i], $ids[$j]] = [$ids[$j], $ids[$i]];
+        foreach ($ids as $n => $lineId) {
+            QuoteLine::whereKey($lineId)->update(['position' => $n + 1]);
+        }
     }
 
     /** Labour from Settings › Labour rates: people × hours (or days) at the type's rate, in the quote's language. */
@@ -320,7 +345,7 @@ class QuoteController extends Controller
             $copy->status = 'draft';
             $copy->save();
             foreach ($quote->lines as $line) {
-                $copy->lines()->create($line->only(['position', 'kind', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
+                $copy->lines()->create($line->only(['position', 'kind', 'heading', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
             }
             $quote->update(['status' => 'replaced', 'reserved_until' => null]);
             $copy->recalculate();

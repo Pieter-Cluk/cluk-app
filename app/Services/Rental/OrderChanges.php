@@ -102,10 +102,10 @@ class OrderChanges
             $copy->version = Quote::where('number', $quote->number)->max('version') + 1;
             $copy->status = 'draft';
             // Transport may have been added on the order after the quote was won: the new version starts from that.
-            $copy->fill(['logistics' => $order->logistics ?? 'open', 'transport_cents' => (int) $order->transport_cents, 'transport_note' => $order->transport_note]);
+            $copy->fill(['heading_totals' => (bool) $order->heading_totals, 'logistics' => $order->logistics ?? 'open', 'transport_cents' => (int) $order->transport_cents, 'transport_note' => $order->transport_note]);
             $copy->save();
             foreach ($quote->lines as $line) {
-                $copy->lines()->create($line->only(['position', 'kind', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
+                $copy->lines()->create($line->only(['position', 'kind', 'heading', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
             }
             $copy->recalculate();
             $quote->update(['status' => 'replaced', 'reserved_until' => null]);
@@ -136,7 +136,7 @@ class OrderChanges
                 'customer_email' => $quote->sent_to ?: $order->customer_email, 'project_discount_bp' => $quote->project_discount_bp, 'vat_code' => $quote->vat_code,
                 'vat_rate_bp' => $quote->vat_rate_bp, 'subtotal_cents' => $quote->subtotal_cents, 'discount_cents' => $quote->discount_cents, 'net_cents' => $quote->net_cents,
                 'vat_cents' => $quote->vat_cents, 'gross_cents' => $quote->gross_cents,
-                'logistics' => $quote->logistics ?? 'open', 'transport_cents' => (int) $quote->transport_cents, 'transport_note' => $quote->transport_note,
+                'heading_totals' => (bool) $quote->heading_totals, 'logistics' => $quote->logistics ?? 'open', 'transport_cents' => (int) $quote->transport_cents, 'transport_note' => $quote->transport_note,
             ]);
             // Keep lines (with their pieces and sub-hire) for the same item; new ones are added, removed ones go.
             $old = $order->lines()->get();
@@ -144,7 +144,7 @@ class OrderChanges
             $factor = $quote->defaultFactor();
             foreach ($quote->lines as $l) {
                 $match = $old->first(fn (OrderLine $o) => ! isset($used[$o->id]) && $o->kind === $l->kind && $o->item_id === $l->item_id && ($l->item_id || $o->name === $l->name));
-                $data = ['position' => $l->position, 'kind' => $l->kind, 'item_id' => $l->item_id, 'number' => $l->number, 'name' => $l->name, 'qty' => $l->qty,
+                $data = ['position' => $l->position, 'kind' => $l->kind, 'heading' => (bool) $l->heading, 'item_id' => $l->item_id, 'number' => $l->number, 'name' => $l->name, 'qty' => $l->qty,
                     'unit_price_cents' => $l->unit_price_cents, 'factor' => $l->effectiveFactor($factor), 'discount_bp' => $l->discount_bp, 'amount_cents' => $l->amount_cents];
                 if ($match) {
                     $match->update($data);

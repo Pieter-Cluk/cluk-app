@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\DB;
 #[Fillable([
     'number', 'version', 'status', 'deal_id', 'company_id', 'contact_id', 'owner_id', 'title', 'language',
     'out_from', 'out_until', 'use_from', 'use_until', 'location', 'intro', 'notes', 'project_discount_bp',
-    'vat_code', 'vat_rate_bp', 'subtotal_cents', 'discount_cents', 'net_cents', 'vat_cents', 'gross_cents',
+    'heading_totals', 'vat_code', 'vat_rate_bp', 'subtotal_cents', 'discount_cents', 'net_cents', 'vat_cents', 'gross_cents',
     'token', 'sent_at', 'sent_by_id', 'sent_to', 'valid_until', 'reserved_until', 'answered_at', 'answered_name',
     'po_number', 'answered_ip', 'decline_reason', 'answer_note', 'logistics', 'transport_cents', 'transport_note',
 ])]
@@ -39,7 +39,7 @@ class Quote extends Model
 
     protected function casts(): array
     {
-        return [
+        return ['heading_totals' => 'boolean', 
             'out_from' => 'datetime', 'out_until' => 'datetime', 'use_from' => 'date', 'use_until' => 'date',
             'sent_at' => 'datetime', 'valid_until' => 'date', 'reserved_until' => 'datetime', 'answered_at' => 'datetime',
             'version' => 'integer', 'project_discount_bp' => 'integer', 'vat_rate_bp' => 'integer',
