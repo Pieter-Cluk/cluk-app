@@ -131,6 +131,7 @@ return [
         'kind' => 'Kind',
     ],
     'statuses' => [
+        'venue' => 'In use in the Factory',
         'available' => 'Available',
         'out' => 'Out on a job',
         'check' => 'In the check',

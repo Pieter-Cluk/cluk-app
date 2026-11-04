@@ -81,12 +81,19 @@ class WallData
     {
         $owned = self::ownedPerCategory();
         $used = [];
-        $serial = Asset::query()->where('equipment_assets.status', Asset::OUT)
+        // Out with a job, or in use in our own venue (the Cluk Factory).
+        $venues = Asset::venueCodes();
+        $serial = Asset::query()->where(fn ($q) => $q->where('equipment_assets.status', Asset::OUT)
+            ->orWhere(fn ($q) => $q->whereIn('equipment_assets.location', $venues)->whereNotIn('equipment_assets.status', [Asset::RETIRED, Asset::LABEL])))
             ->join('equipment_items', 'equipment_items.id', '=', 'equipment_assets.item_id')
             ->whereNotIn('equipment_items.kind', ['service', 'case'])
             ->selectRaw('equipment_items.category as cat, count(*) as n')->groupBy('equipment_items.category')->pluck('n', 'cat');
         foreach ($serial as $cat => $n) {
             $used[$cat ?: '—'] = ($used[$cat ?: '—'] ?? 0) + (int) $n;
+        }
+        $atVenue = \App\Models\Equipment\CaseItem::with('item')->whereIn('case_id', Asset::query()->whereIn('location', $venues)->select('id'))->get();
+        foreach ($atVenue as $ci) {
+            self::addUse($used, $ci->item, (int) $ci->qty);
         }
         $orders = Order::with(['lines.item.contents'])->where('status', 'approved')->whereNotNull('loaded_at')->whereNull('returned_at')->get();
         foreach ($orders as $o) {

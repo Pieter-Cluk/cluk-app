@@ -37,7 +37,7 @@
                 <p class="muted">{{ __('warehouse.office.zone_empty') }}</p>
             @else
                 <table class="table"><thead><tr><th>{{ __('warehouse.office.piece') }}</th><th>{{ __('warehouse.office.item') }}</th><th>{{ __('warehouse.office.place') }}</th><th>{{ __('warehouse.office.status') }}</th></tr></thead>
-                    <tbody>@foreach ($list as $a)<tr><td><a href="{{ route('equipment.assets.show', $a) }}">{{ $a->code }}</a></td><td>{{ $a->item->name }}</td><td>{{ $a->location }}</td><td>{{ __('equipment.statuses.'.$a->status) }}</td></tr>@endforeach</tbody></table>
+                    <tbody>@foreach ($list as $a)<tr><td><a href="{{ route('equipment.assets.show', $a) }}">{{ $a->code }}</a></td><td>{{ $a->item->name }}</td><td>{{ $a->location }}</td><td>{{ __('equipment.statuses.'.$a->statusKey()) }}</td></tr>@endforeach</tbody></table>
             @endif
         @endif
     </section>

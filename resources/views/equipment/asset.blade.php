@@ -6,7 +6,7 @@
         <div>
             <div class="kicker"><a href="{{ route('equipment.show', $asset->item) }}">{{ $asset->item->number }} · {{ $asset->item->name }}</a></div>
             <h1>{{ $asset->code }}</h1>
-            <p class="muted">{{ __('equipment.fields.serial_number') }}: {{ $asset->serial_number ?? '—' }} · <span @class(['pill', 'pill-ok' => $asset->status === 'available', 'pill-info' => $asset->status === 'out', 'pill-warn' => $asset->status === 'repair', 'pill-off' => $retired])>{{ __('equipment.statuses.'.$asset->status) }}@if ($retired) · {{ __('equipment.reasons.'.$asset->retired_reason) }}@endif</span></p>
+            <p class="muted">{{ __('equipment.fields.serial_number') }}: {{ $asset->serial_number ?? '—' }} · <span @class(['pill', 'pill-ok' => $asset->status === 'available', 'pill-info' => $asset->status === 'out', 'pill-warn' => $asset->status === 'repair', 'pill-off' => $retired])>{{ __('equipment.statuses.'.$asset->statusKey()) }}@if ($retired) · {{ __('equipment.reasons.'.$asset->retired_reason) }}@endif</span></p>
         </div>
     </div>
     @include('partials.flash')

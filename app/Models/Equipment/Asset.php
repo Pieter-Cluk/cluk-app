@@ -35,6 +35,24 @@ class Asset extends Model
 
     public const STATUSES = [self::AVAILABLE, self::OUT, self::CHECK, self::REPAIR, self::RETIRED];
 
+    /** Codes of the places where equipment is in use in our own venue (zone type "venue", e.g. FACTORY). */
+    public static function venueCodes(): array
+    {
+        return once(fn () => \App\Models\Warehouse\Zone::where('type', 'venue')->pluck('code')->all());
+    }
+
+    /** The status to show: an available piece in our own venue is "in use in the Factory". */
+    public function statusKey(): string
+    {
+        return $this->status === self::AVAILABLE && $this->isAtVenue() ? 'venue' : (string) $this->status;
+    }
+
+    /** Hung or set up in our own venue: in use, not free for a job. */
+    public function isAtVenue(): bool
+    {
+        return $this->location !== null && in_array($this->location, self::venueCodes(), true);
+    }
+
     public const RETIRE_REASONS = ['sold', 'lost', 'stolen', 'broken'];
 
     protected function casts(): array

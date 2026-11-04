@@ -131,6 +131,7 @@ return [
         'kind' => 'Soort',
     ],
     'statuses' => [
+        'venue' => 'In gebruik in de Factory',
         'available' => 'Beschikbaar',
         'out' => 'Op job',
         'check' => 'In controle',

@@ -31,7 +31,7 @@
         <section class="ph-card ph-pending">
             <small class="ph-step">{{ __('warehouse.scan.step2') }}</small>
             <b>{{ $pending->code }} · {{ $pending->item->name }}</b>
-            <small>{{ __('warehouse.scan.now', ['place' => \App\Services\Warehouse\Moves::label($pending->location)]) }} · {{ __('equipment.statuses.'.$pending->status) }}</small>
+            <small>{{ __('warehouse.scan.now', ['place' => \App\Services\Warehouse\Moves::label($pending->location)]) }} · {{ __('equipment.statuses.'.$pending->statusKey()) }}</small>
             @if ($next)<small>{{ __('warehouse.scan.next', ['places' => implode(', ', $next)]) }}</small>@endif
             <form method="post" action="{{ route('w.scan.cancel') }}">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.scan.cancel') }}</button></form>
         </section>
@@ -52,7 +52,7 @@
             @if ($here['assets']->isEmpty() && $here['carriers']->isEmpty())
                 <p class="muted">{{ __('warehouse.scan.empty_place') }}</p>
             @elseif ($here['assets']->isNotEmpty())
-                <ul class="ph-list">@foreach ($here['assets'] as $a)<li><b>{{ $a->code }}</b> {{ $a->item->name }} <small class="muted">· {{ __('equipment.statuses.'.$a->status) }}</small></li>@endforeach</ul>
+                <ul class="ph-list">@foreach ($here['assets'] as $a)<li><b>{{ $a->code }}</b> {{ $a->item->name }} <small class="muted">· {{ __('equipment.statuses.'.$a->statusKey()) }}</small></li>@endforeach</ul>
             @endif
             <p class="muted small">{{ __('warehouse.scan.here_hint') }}</p>
         </section>

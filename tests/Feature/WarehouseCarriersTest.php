@@ -350,6 +350,34 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame(['Light' => 33], \App\Services\WallData::fleetOut()->all());
     }
 
+    public function test_equipment_in_the_factory_is_in_use(): void
+    {
+        [$p, $order] = $this->job();
+        $order->assets()->delete();
+        $order->update(['status' => 'allocation']);
+        $item = $p[1]->item;
+        $item->update(['category' => 'Light']);
+        $avail = fn () => \App\Services\Rental\Orders::availability($order->fresh());
+        $this->assertSame(3, $avail()->free($item));
+
+        // One blinder hung in the Factory: not free for a job, shown as in use, counted as out on the wall.
+        $p[1]->update(['location' => 'FACTORY']);
+        $this->assertSame(2, $avail()->free($item));
+        $this->assertNotContains($p[1]->code, $avail()->freeAssets($item)->pluck('code')->all());
+        $this->assertSame('venue', $p[1]->fresh()->statusKey());
+        $this->assertSame(['Light' => 33], \App\Services\WallData::fleetOut()->all());
+        $this->actingAs($this->crew)->post('/order-allocation/'.$order->id.'/lines/'.$order->lines()->first()->id.'/allocate', ['code' => $p[1]->code])->assertSessionHasErrors();
+
+        // Counted pieces in a box standing in the Factory.
+        $clamp = Item::create(['number' => 'RIG-CLAMP', 'kind' => 'item', 'name' => 'Clamp', 'category' => 'Rigging', 'serial' => false, 'stock_qty' => 10]);
+        $box = self::case('BOX-07');
+        \App\Models\Equipment\CaseItem::create(['case_id' => $box->id, 'item_id' => $clamp->id, 'qty' => 4]);
+        $this->assertSame(10, $avail()->free($clamp));
+        $box->update(['location' => 'FACTORY']);
+        $this->assertSame(6, $avail()->free($clamp));
+        $this->assertSame(40, \App\Services\WallData::fleetOut()->get('Rigging'));
+    }
+
     public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void
     {
         [$p, $order] = $this->job();

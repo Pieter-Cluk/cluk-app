@@ -85,9 +85,12 @@ class Availability
             return PHP_INT_MAX;
         }
 
+        // What is in use in our own venue (the Cluk Factory) is not free for a job.
+        $venues = Asset::venueCodes();
+
         return $item->serial
-            ? $item->assets()->whereNotIn('status', [Asset::RETIRED, Asset::REPAIR, Asset::LABEL])->count()
-            : (int) $item->stock_qty;
+            ? $item->assets()->whereNotIn('status', [Asset::RETIRED, Asset::REPAIR, Asset::LABEL])->where(fn ($q) => $q->whereNull('location')->orWhereNotIn('location', $venues))->count()
+            : max(0, (int) $item->stock_qty - self::countedAtVenue($item->id));
     }
 
     public function reserved(Item $item): int
@@ -127,6 +130,13 @@ class Availability
     public function freeAssets(Item $item): Collection
     {
         return $item->assets()->whereNotIn('status', [Asset::RETIRED, Asset::REPAIR, Asset::LABEL])->orderByRaw("status = 'available' desc")->orderBy('code')->get()
-            ->reject(fn (Asset $a) => isset($this->bookedAssets[$a->id]))->values();
+            ->reject(fn (Asset $a) => isset($this->bookedAssets[$a->id]) || $a->isAtVenue())->values();
+    }
+
+    /** Counted pieces in dollies and boxes standing in our own venue. */
+    public static function countedAtVenue(int $itemId): int
+    {
+        return (int) \App\Models\Equipment\CaseItem::where('item_id', $itemId)
+            ->whereIn('case_id', Asset::query()->whereIn('location', Asset::venueCodes())->select('id'))->sum('qty');
     }
 }

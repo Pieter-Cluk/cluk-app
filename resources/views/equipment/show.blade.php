@@ -154,7 +154,7 @@
                                         @if ($canEdit)<td>@if ($a->status !== 'retired')<input type="checkbox" name="assets[]" value="{{ $a->id }}" aria-label="{{ $a->code }}">@endif</td>@endif
                                         <td><a href="{{ route('equipment.assets.show', $a) }}"><b>{{ $a->code }}</b></a></td>
                                         <td>{{ $a->serial_number ?? '—' }}</td>
-                                        <td><span @class(['pill', 'pill-ok' => $a->status === 'available', 'pill-info' => $a->status === 'out', 'pill-warn' => $a->status === 'repair', 'pill-off' => in_array($a->status, ['retired', 'label'], true)])>{{ __('equipment.statuses.'.$a->status) }}</span></td>
+                                        <td><span @class(['pill', 'pill-ok' => $a->statusKey() === 'available', 'pill-info' => in_array($a->statusKey(), ['out', 'venue'], true), 'pill-warn' => $a->status === 'repair', 'pill-off' => in_array($a->status, ['retired', 'label'], true)])>{{ __('equipment.statuses.'.$a->statusKey()) }}</span></td>
                                         <td>{{ $a->location ?? '—' }}@if ($a->case_id) <small class="muted">· {{ __('warehouse.carriers.in_it', ['carrier' => $a->container?->code]) }}</small>@endif</td>
                                         <td class="muted small">{{ $a->label_printed_at ? $a->label_printed_at->format('d/m/Y') : __('equipment.not_printed') }}</td>
                                     </tr>

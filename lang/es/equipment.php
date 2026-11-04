@@ -131,6 +131,7 @@ return [
         'kind' => 'Tipo',
     ],
     'statuses' => [
+        'venue' => 'En uso en la Factory',
         'available' => 'Disponible',
         'out' => 'En trabajo',
         'check' => 'En control',

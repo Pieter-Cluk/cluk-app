@@ -131,6 +131,7 @@ return [
         'kind' => 'Type',
     ],
     'statuses' => [
+        'venue' => 'Utilisé dans la Factory',
         'available' => 'Disponible',
         'out' => 'En location',
         'check' => 'En contrôle',
