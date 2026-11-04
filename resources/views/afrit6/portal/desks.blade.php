@@ -110,7 +110,7 @@
             @endif
 
             @if ($office)
-                <section class="card">
+                <section class="card" id="office">
                     <h2>{{ __('workspace.office.title') }}</h2>
                     <p class="muted">{{ __('workspace.office.intro') }}</p>
                     @if ($officeMine)
@@ -119,7 +119,7 @@
                         <p><span class="pill pill-warn">{{ __('workspace.services.status.'.$officeRequest->status) }}</span></p>
                         <p class="small"><a href="{{ route('afrit6.portal.services') }}">{{ __('workspace.office.follow') }} →</a></p>
                     @else
-                        <details class="svc">
+                        <details class="svc" @if (old('people') || old('wishes')) open @endif>
                             <summary><span class="btn">{{ __('workspace.office.ask') }}</span></summary>
                             <form method="post" action="{{ route('afrit6.portal.office') }}" class="form-grid form-grid-1">
                                 @csrf

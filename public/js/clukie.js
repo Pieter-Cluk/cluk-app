@@ -16,10 +16,17 @@
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function eur(c) { return '€ ' + (c / 100).toLocaleString(C.locale === 'en' ? 'en-GB' : 'nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function rich(s) {
-    return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
-      .replace(/(https?:\/\/[^\s<)]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+    // [label](https://…) links first (kept aside so the plain-URL rule below does not touch them).
+    var md = [];
+    s = esc(s).replace(/\[([^\]\n]{1,80})\]\((https?:\/\/[^\s)]+)\)/g, function (m, label, u) {
+      md.push('<a href="' + u + '"' + (C.same_tab && C.base && u.indexOf(C.base) === 0 ? '' : ' target="_blank" rel="noopener"') + '>' + label + '</a>');
+      return '\u0000' + (md.length - 1) + '\u0000';
+    });
+    return s.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+      .replace(/(https?:\/\/[^\s<)]+)/g, C.same_tab && C.base ? function (u) { return u.indexOf(C.base) === 0 ? '<a href="' + u + '">' + u + '</a>' : '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>'; } : '<a href="$1" target="_blank" rel="noopener">$1</a>')
       .replace(/(^|\s)(\/(?:dry-hire|sales)[^\s<,.)]*)/g, '$1<a href="' + (C.base || '') + '$2">$2</a>')
-      .replace(/\n/g, '<br>');
+      .replace(/\n/g, '<br>')
+      .replace(/\u0000(\d+)\u0000/g, function (m, i) { return md[+i]; });
   }
   function api(url, method, body) {
     var tok = document.querySelector('meta[name=csrf-token]');

@@ -56,6 +56,7 @@ class RunBackgroundChecks
             if (Cache::add('jobs:webprune:'.$now->toDateString(), 1, 90000)) {
                 WebActivity::prune();
                 \App\Http\Controllers\AssistantController::prune();
+                \App\Http\Controllers\Afrit6\ClukieController::prune();
                 \App\Services\Website\Clukie::prune();
             }
             // Company register (KBO web service): the oldest data first, a few every 10 minutes.

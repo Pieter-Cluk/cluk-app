@@ -162,7 +162,7 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
         Route::get('/portal', [PortalController::class, 'home'])->name('portal');
         Route::get('/accept', [PortalController::class, 'showAccept'])->name('accept');
         Route::post('/accept', [PortalController::class, 'accept'])->name('accept.store');
-        Route::middleware('member.active')->prefix('portal')->name('portal.')->group(function () {
+        Route::middleware(['member.active', \App\Http\Middleware\MemberPrefill::class])->prefix('portal')->name('portal.')->group(function () {
             Route::get('/desks', [WorkspaceController::class, 'desks'])->name('desks');
             Route::post('/desks/swap', [WorkspaceController::class, 'swapDesk'])->middleware('throttle:20,1')->name('desks.swap');
             Route::post('/desks/add', [WorkspaceController::class, 'addDesk'])->middleware('throttle:20,1')->name('desks.add');
@@ -179,6 +179,10 @@ Route::prefix('afrit6')->name('afrit6.')->group(function () {
             Route::post('/services/{serviceRequest}/stop', [WorkspaceController::class, 'stopStorage'])->whereNumber('serviceRequest')->name('services.stop');
             Route::post('/services/{serviceRequest}/reply', [WorkspaceController::class, 'reply'])->whereNumber('serviceRequest')->middleware('throttle:30,1')->name('services.reply');
             Route::get('/bill', [WorkspaceController::class, 'bill'])->name('bill');
+            Route::get('/help', [\App\Http\Controllers\Afrit6\HelpController::class, 'index'])->name('help');
+            Route::post('/clukie', [\App\Http\Controllers\Afrit6\ClukieController::class, 'message'])->middleware('throttle:15,1')->name('clukie');
+            Route::get('/clukie/poll', [\App\Http\Controllers\Afrit6\ClukieController::class, 'poll'])->middleware('throttle:60,1')->name('clukie.poll');
+            Route::get('/help/{topic}', [\App\Http\Controllers\Afrit6\HelpController::class, 'show'])->where('topic', '[a-z_]+')->name('help.show');
             Route::get('/guests', [\App\Http\Controllers\Afrit6\GuestController::class, 'index'])->name('guests');
             Route::post('/guests', [\App\Http\Controllers\Afrit6\GuestController::class, 'store'])->middleware('throttle:30,1')->name('guests.store');
             Route::post('/guests/{guest}/cancel', [\App\Http\Controllers\Afrit6\GuestController::class, 'cancel'])->whereNumber('guest')->name('guests.cancel');

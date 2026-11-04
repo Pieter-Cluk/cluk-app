@@ -71,7 +71,7 @@
         </section>
 
         <aside class="stack">
-            <section class="card card-accent">
+            <section id="new" class="card card-accent">
                 <h2>{{ __('workspace.services.new') }}</h2>
                 @foreach (['shelf', 'pallet', 'packing', 'receive', 'send'] as $kind)
                     <details class="svc" @if ($openKind === $kind) open @endif>

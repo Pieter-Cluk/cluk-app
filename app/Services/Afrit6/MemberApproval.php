@@ -38,7 +38,7 @@ class MemberApproval
 
             $contact = Contact::where('email', $member->email)->first() ?? Contact::create([
                 'first_name' => $member->first_name, 'last_name' => $member->last_name, 'email' => $member->email,
-                'mobile' => $member->mobile, 'language' => $member->locale, 'newsletter' => $member->newsletter,
+                'mobile' => $member->mobile, 'language' => $member->locale, 'newsletter' => (bool) $member->newsletter,
             ]);
             $company->contacts()->syncWithoutDetaching([$contact->id => ['job_title' => null]]);
 

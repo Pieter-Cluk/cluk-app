@@ -1131,3 +1131,19 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .sugg{position:relative;display:inline-block;width:auto;flex:1 1 200px;min-width:0}
 .sugg>input{width:100%}
 .form-grid .sugg,.field .sugg,.stack-sm .sugg{display:block}
+
+/* Afrit 6 member help */
+.a6-help-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.a6-help-card{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;color:inherit;text-decoration:none;transition:border-color .15s,transform .15s}
+.a6-help-card:hover{border-color:var(--brand);transform:translateY(-2px)}
+.a6-help-card strong{font-size:15px;line-height:1.3}
+.a6-help-thumb{position:relative;display:block;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#0d130f}
+.a6-help-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.a6-help-icon{position:absolute;inset:0;display:grid;place-items:center;font-size:42px;color:#f5d60a}
+.a6-help-play{position:absolute;right:10px;bottom:10px;width:38px;height:38px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.a6-help-show{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:start}
+.a6-help-video video{width:100%;border-radius:14px;background:#0d130f;display:block;aspect-ratio:16/9}
+.a6-help-novideo{aspect-ratio:16/9;border-radius:14px;background:#0d130f;display:grid;place-items:center;font-size:64px;color:#f5d60a}
+.a6-help-steps{margin:8px 0 0;padding-left:22px;display:grid;gap:8px}
+.a6-help-nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (max-width:860px){.a6-help-show{grid-template-columns:minmax(0,1fr)}}

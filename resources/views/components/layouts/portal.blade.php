@@ -31,16 +31,18 @@
     </header>
     @if ($member->isActive())
         <nav class="p-tabs" aria-label="Afrit 6">
-            @foreach (['overview' => 'afrit6.portal', 'desks' => 'afrit6.portal.desks', 'room' => 'afrit6.portal.room', 'guests' => 'afrit6.portal.guests', 'services' => 'afrit6.portal.services', 'bill' => 'afrit6.portal.bill'] as $key => $route)
+            @foreach (['overview' => 'afrit6.portal', 'desks' => 'afrit6.portal.desks', 'room' => 'afrit6.portal.room', 'guests' => 'afrit6.portal.guests', 'services' => 'afrit6.portal.services', 'bill' => 'afrit6.portal.bill', 'help' => 'afrit6.portal.help'] as $key => $route)
                 <a href="{{ route($route) }}" @class(['tab', 'tab-on' => $tab === $key]) @if ($tab === $key) aria-current="page" @endif>{{ __('workspace.nav.'.$key) }}</a>
             @endforeach
         </nav>
     @endif
     <main class="p-main">
         @include('partials.flash')
+        @if (request()->attributes->get('prefilled'))<p class="flash flash-ok a6-prefilled">{{ __('a6clukie.prefilled') }}</p>@endif
         {{ $slot }}
     </main>
     <footer class="p-foot"><img src="{{ asset('images/cluk-logo.png') }}" alt="cluk" height="20"><span>CONNECTING THE DOTS</span></footer>
 </div>
+@if ($member?->isActive())@include('partials.clukie-member')@endif
 </body>
 </html>
