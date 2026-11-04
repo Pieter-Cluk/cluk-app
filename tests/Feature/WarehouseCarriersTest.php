@@ -378,6 +378,30 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame(40, \App\Services\WallData::fleetOut()->get('Rigging'));
     }
 
+    public function test_the_planning_wall_remembers_equipment_that_stood_in_the_factory(): void
+    {
+        [$p, $order] = $this->job();
+        $order->update(['status' => 'cancelled']); // only the Factory counts here
+        $p[1]->item->update(['category' => 'Light']);
+        $start = today()->subDays(3);
+        $row = fn () => collect(\App\Services\WallData::heat($start, 5))->firstWhere('label', 'Light')['cells'];
+        $this->assertSame([0, 0, 0, 0, 0], $row());
+
+        // Hung in the Factory 2 days ago, taken down yesterday; another one still hangs there since yesterday.
+        \Illuminate\Support\Carbon::setTestNow(now()->subDays(2));
+        $p[1]->update(['location' => 'FACTORY']);
+        Move::create(['asset_id' => $p[1]->id, 'item_id' => $p[1]->item_id, 'from_code' => 'GA2B3', 'to_code' => 'FACTORY', 'kind' => 'move']);
+        \Illuminate\Support\Carbon::setTestNow(now()->addDay());
+        $p[1]->update(['location' => 'GA2B3']);
+        Move::create(['asset_id' => $p[1]->id, 'item_id' => $p[1]->item_id, 'from_code' => 'FACTORY', 'to_code' => 'GA2B3', 'kind' => 'move']);
+        $p[2]->update(['location' => 'FACTORY']);
+        Move::create(['asset_id' => $p[2]->id, 'item_id' => $p[2]->item_id, 'from_code' => 'GA2B3', 'to_code' => 'FACTORY', 'kind' => 'move']);
+        \Illuminate\Support\Carbon::setTestNow();
+
+        // 3 blinders owned: 2 days ago 1 (33%), yesterday 2 (67%), today and tomorrow 1 still hangs (33%).
+        $this->assertSame([0, 33, 67, 33, 33], $row());
+    }
+
     public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void
     {
         [$p, $order] = $this->job();

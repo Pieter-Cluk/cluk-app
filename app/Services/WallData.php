@@ -195,6 +195,11 @@ class WallData
                 }
             }
         }
+        foreach (self::venueUse($start, $days) as $cat => $perDay) {
+            foreach ($perDay as $i => $n) {
+                $use[$cat][$i] = ($use[$cat][$i] ?? 0) + $n;
+            }
+        }
         $rows = [];
         foreach ($owned as $cat => $n) {
             $rows[] = ['label' => $cat, 'sub' => __('wall.pieces_out'), 'cells' => array_map(fn ($i) => self::pct($use[$cat][$i] ?? 0, $n), range(0, $days - 1))];
@@ -215,6 +220,67 @@ class WallData
         }, range(0, $days - 1))];
 
         return $rows;
+    }
+
+    /**
+     * Equipment in use in our own venue (the Cluk Factory) per category and day, from the move history: a piece
+     * counts on every day it stood there, also after it left again. Counted pieces in a dolly or box there count
+     * with what is in the case now.
+     *
+     * @return array<string, array<int, int>>
+     */
+    public static function venueUse(Carbon $start, int $days): array
+    {
+        $venues = Asset::venueCodes();
+        if (! $venues) {
+            return [];
+        }
+        $from = $start->copy()->startOfDay();
+        $end = $start->copy()->addDays($days - 1)->endOfDay();
+        $moves = \App\Models\Warehouse\Move::whereNotNull('asset_id')->where(fn ($q) => $q->whereIn('to_code', $venues)->orWhereIn('from_code', $venues))
+            ->where('created_at', '<=', $end)->orderBy('created_at')->orderBy('id')->get(['asset_id', 'from_code', 'to_code', 'created_at'])->groupBy('asset_id');
+        $ids = $moves->keys()->merge(Asset::whereIn('location', $venues)->pluck('id'))->unique();
+        $use = [];
+        foreach (Asset::with(['item', 'counted.item'])->whereIn('id', $ids)->get() as $a) {
+            // Periods at the venue: in at a move to it, out at the next move elsewhere.
+            $spans = [];
+            $in = null;
+            foreach ($moves->get($a->id, collect()) as $m) {
+                $there = in_array($m->to_code, $venues, true);
+                if ($there && ! $in) {
+                    $in = $m->created_at;
+                } elseif (! $there && $in) {
+                    $spans[] = [$in, $m->created_at];
+                    $in = null;
+                } elseif (! $there && ! $in && in_array($m->from_code, $venues, true)) {
+                    $spans[] = [$from, $m->created_at]; // was there before the history starts
+                }
+            }
+            if ($a->isAtVenue()) {
+                $spans[] = [$in ?? $from, $end];
+            } elseif ($in) {
+                $spans[] = [$in, $end];
+            }
+            $what = $a->item->kind === 'case' ? $a->counted->map(fn ($ci) => [$ci->item, (int) $ci->qty]) : collect([[$a->item, 1]]);
+            if (in_array($a->status, [Asset::RETIRED, Asset::LABEL], true) || $what->isEmpty()) {
+                continue;
+            }
+            for ($i = 0; $i < $days; $i++) {
+                $d0 = $start->copy()->addDays($i)->startOfDay();
+                $d1 = $d0->copy()->endOfDay();
+                if (collect($spans)->contains(fn ($s) => $s[0]->lte($d1) && $s[1]->gte($d0))) {
+                    foreach ($what as [$item, $qty]) {
+                        $per = [];
+                        self::addUse($per, $item, $qty);
+                        foreach ($per as $cat => $n) {
+                            $use[$cat][$i] = ($use[$cat][$i] ?? 0) + $n;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $use;
     }
 
     /** Share in %, at least 1 when there is any activity (so a little is never shown as nothing). */
