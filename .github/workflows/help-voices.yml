@@ -1,0 +1,29 @@
+name: Help videos · voices
+# Makes the spoken explanation of the Afrit 6 help videos (tools/afrit6-help/lines.json) and keeps it as an artifact.
+on:
+  workflow_dispatch:
+
+jobs:
+  voices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install the voices
+        run: |
+          pip install -q "piper-tts>=1.3" kokoro-onnx soundfile numpy
+          mkdir -p /tmp/models && cd /tmp/models
+          curl -sSfL -o nl.onnx https://huggingface.co/rhasspy/piper-voices/resolve/main/nl/nl_BE/nathalie/medium/nl_BE-nathalie-medium.onnx
+          curl -sSfL -o nl.onnx.json https://huggingface.co/rhasspy/piper-voices/resolve/main/nl/nl_BE/nathalie/medium/nl_BE-nathalie-medium.onnx.json
+          curl -sSfL -o kokoro-v1.0.int8.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.int8.onnx
+          curl -sSfL -o voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+      - name: Speak
+        run: python3 tools/afrit6-help/voices.py tools/afrit6-help/lines.json /tmp/voices /tmp/models/nl.onnx /tmp/models
+      - uses: actions/upload-artifact@v4
+        with:
+          name: help-voices
+          path: /tmp/voices
+          retention-days: 7

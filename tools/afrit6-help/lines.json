@@ -1,0 +1,172 @@
+{
+ "nl": {
+  "tour": [
+   "Je portaal in één minuut. Wat je waar vindt in je Afrit 6-portaal.",
+   "Welkom in je Afrit 6-portaal. Hier regel je alles voor je werkplek.",
+   "Bovenaan staan de tabbladen: Bureaus, Vergaderzaal, Gasten, Magazijndiensten en Mijn rekening.",
+   "Je deurcode staat altijd op het overzicht. Klik op Toon om hem te zien.",
+   "Hier zie je je eigen bureaus.",
+   "En je volgende reservaties van de vergaderzaal, met je gratis momenten van deze week.",
+   "Onderaan zie je wat je deze maand al verbruikt hebt.",
+   "Vragen? Onder Help vind je alle filmpjes, en Klukkie helpt je rechtsonder verder.",
+   "Dat is alles! Meer hulp vind je onder Help, of vraag het aan Klukkie."
+  ],
+  "desk_day": [
+   "Een bureau voor een halve of hele dag. Zo boek je een vrij bureau voor een voormiddag, namiddag of een hele dag.",
+   "Ga naar het tabblad Bureaus.",
+   "Bovenaan boek je een bureau voor een voormiddag, namiddag of hele dag.",
+   "Kies de datum en het dagdeel.",
+   "Klik op Toon vrije bureaus.",
+   "Klik op een vrij bureau. Het is meteen geboekt.",
+   "Je boeking staat eronder. Zolang ze niet begonnen is, kun je ze nog annuleren.",
+   "Dat is alles! Meer hulp vind je onder Help, of vraag het aan Klukkie."
+  ],
+  "fixed_desk": [
+   "Je vaste bureau: wisselen of erbij vragen. Zo wissel je van bureau of vraag je een extra vast bureau.",
+   "Onder Vaste bureaus per maand zie je alle bureaus.",
+   "Groen is jouw bureau. Grijs is verhuurd, een stippellijn betekent vrij.",
+   "Klik op een vrij bureau.",
+   "Wil je verhuizen? Klik op Wissel. Vanaf morgen zit je daar, aan dezelfde prijs.",
+   "Of vraag het als extra bureau. Kies vanaf wanneer en klik op Dit bureau aanvragen.",
+   "Liever een eigen kantoor? Vraag bij Privékantoor een prijs.",
+   "Dat is alles! Meer hulp vind je onder Help, of vraag het aan Klukkie."
+  ],
+  "room": [
+   "De vergaderzaal reserveren. Zo reserveer je de vergaderzaal per half uur.",
+   "Elke week heb je per bureau één gratis moment van maximaal 2 uur.",
+   "Kies bovenaan de dag.",
+   "In de dagplanning zie je welke momenten vrij zijn.",
+   "Kies de opstelling: vergadering of klas.",
+   "Kies het beginuur.",
+   "Kies hoe lang je de zaal nodig hebt.",
+   "Klik op Reserveren.",
+   "Je reservatie staat bij Jouw reservaties. Daar kun je ze ook annuleren.",
+   "Dat is alles! Meer hulp vind je onder Help, of vraag het aan Klukkie."
+  ],
+  "guests": [
+   "Gasten aankondigen. Zo laat je weten wie er op bezoek komt.",
+   "Ga naar het tabblad Gasten.",
+   "Kies de datum en het uur van het bezoek.",
+   "Typ de naam van je gast. Meerdere gasten? Eén naam per regel.",
+   "Vul eventueel het bedrijf in.",
+   "Vink aan of de naam op het welkomstscherm aan de inkom mag komen.",
+   "Klik op Toevoegen.",
+   "Je gasten staan bij Verwachte gasten.",
+   "Dat is alles! Meer hulp vind je onder Help, of vraag het aan Klukkie."
+  ],
+  "storage": [
+   "Opslag: een rek of palletplaats. Zo vraag je opslag in het magazijn aan.",
+   "Ga naar Magazijndiensten. Rechts kies je een nieuwe aanvraag.",
+   "Kies Rekken. Voor grotere dingen kies je Palletplaatsen.",
+   "Vul in hoeveel je nodig hebt en vanaf wanneer.",
+   "Zet er eventueel een opmerking bij.",
+   "Klik op Aanvraag versturen. Het Afrit 6-team bevestigt je aanvraag.",
+   "Bij Jouw aanvragen volg je alles op. Je betaalt per gebruikte dag en stopt de huur hier zelf.",
+   "Dat is alles! Meer hulp vind je onder Help, of vraag het aan Klukkie."
+  ],
+  "parcels": [
+   "Pakjes ontvangen en versturen. Zo laat je weten dat er goederen binnenkomen of vertrekken.",
+   "Open bij Magazijndiensten Goederen ontvangen.",
+   "Vul in hoeveel kolli of pallets er komen, en wanneer.",
+   "Kies: op het vierentwintig-uur-afhaalrek, of meteen naar je opslag.",
+   "Klik op Aanvraag versturen. Het team neemt alles voor je in ontvangst.",
+   "Iets versturen? Gebruik Goederen versturen en vul de vervoerder in.",
+   "We kunnen ook voor je inpakken: kies Inpakken.",
+   "Dat is alles! Meer hulp vind je onder Help, of vraag het aan Klukkie."
+  ],
+  "door_bill": [
+   "Je deurcode en je rekening. Waar je je deurcode en je lopende rekening vindt.",
+   "Op het overzicht klik je bij Deurcode op Toon.",
+   "Nieuwe code nodig? Vraag hem hier aan.",
+   "Ga naar het tabblad Mijn rekening.",
+   "Hier zie je je lopende rekening van deze contractmaand, exclusief btw.",
+   "Daaronder staan je vorige maanden.",
+   "Dat is alles! Meer hulp vind je onder Help, of vraag het aan Klukkie."
+  ]
+ },
+ "en": {
+  "tour": [
+   "Your portal in one minute. What you find where in your Afrit 6 portal.",
+   "Welcome to your Afrit 6 portal. This is where you arrange everything for your workplace.",
+   "At the top are the tabs: Desks, Meeting room, Guests, Warehouse services and My bill.",
+   "Your door code is always on the overview. Click Show to see it.",
+   "Here you see your own desks.",
+   "And your next meeting room bookings, with your free moments this week.",
+   "At the bottom you see what you have used so far this month.",
+   "Questions? Under Help you find all the videos, and Cluckie helps you bottom right.",
+   "That's it! You find more help under Help, or just ask Cluckie."
+  ],
+  "desk_day": [
+   "A desk for half a day or a day. How to book a free desk for a morning, an afternoon or a whole day.",
+   "Go to the Desks tab.",
+   "At the top you book a desk for a morning, an afternoon or a whole day.",
+   "Pick the date and the part of the day.",
+   "Click Show free desks.",
+   "Click a free desk. It is booked right away.",
+   "Your booking shows below. As long as it hasn't started, you can still cancel it.",
+   "That's it! You find more help under Help, or just ask Cluckie."
+  ],
+  "fixed_desk": [
+   "Your fixed desk: swap or add one. How to move to another desk or ask for an extra fixed desk.",
+   "Under Fixed desks per month you see all desks.",
+   "Green is your desk. Grey is rented out, a dotted line means free.",
+   "Click a free desk.",
+   "Want to move? Click Swap. From tomorrow you sit there, at the same price.",
+   "Or ask for it as an extra desk. Pick from when and click Ask for this desk.",
+   "Rather have your own office? Ask for a price under Private office.",
+   "That's it! You find more help under Help, or just ask Cluckie."
+  ],
+  "room": [
+   "Book the meeting room. How to book the meeting room per half hour.",
+   "Every week you get one free moment of up to 2 hours per desk.",
+   "Pick the day at the top.",
+   "The day plan shows which moments are free.",
+   "Pick the setup: meeting or classroom.",
+   "Pick the start time.",
+   "Pick how long you need the room.",
+   "Click Book.",
+   "Your booking shows under Your bookings. You can cancel it there too.",
+   "That's it! You find more help under Help, or just ask Cluckie."
+  ],
+  "guests": [
+   "Announce your guests. How to let us know who is coming to visit.",
+   "Go to the Guests tab.",
+   "Pick the date and time of the visit.",
+   "Type your guest's name. More guests? One name per line.",
+   "Add their company if you like.",
+   "Tick whether the name may appear on the welcome screen at the entrance.",
+   "Click Add.",
+   "Your guests show under Expected guests.",
+   "That's it! You find more help under Help, or just ask Cluckie."
+  ],
+  "storage": [
+   "Storage: a shelf or pallet place. How to ask for storage in the warehouse.",
+   "Go to Warehouse services. On the right you start a new request.",
+   "Pick Shelves. For bigger things, pick Pallet places.",
+   "Fill in how many you need and from when.",
+   "Add a note if you like.",
+   "Click Send request. The Afrit 6 team confirms your request.",
+   "Under Your requests you follow everything up. You pay per day used and stop the rental here yourself.",
+   "That's it! You find more help under Help, or just ask Cluckie."
+  ],
+  "parcels": [
+   "Receive and send parcels. How to let us know goods are coming in or going out.",
+   "Under Warehouse services, open Receive goods.",
+   "Fill in how many parcels or pallets are coming, and when.",
+   "Choose: on the twenty-four hour pick-up shelf, or straight into your storage.",
+   "Click Send request. The team receives everything for you.",
+   "Sending something? Use Send goods and fill in the carrier.",
+   "We can also pack for you: pick Packing.",
+   "That's it! You find more help under Help, or just ask Cluckie."
+  ],
+  "door_bill": [
+   "Your door code and your bill. Where to find your door code and your running bill.",
+   "On the overview, click Show next to Door code.",
+   "Need a new code? Request it here.",
+   "Go to the My bill tab.",
+   "Here you see your running bill for this contract month, excluding VAT.",
+   "Below are your previous months.",
+   "That's it! You find more help under Help, or just ask Cluckie."
+  ]
+ }
+}
