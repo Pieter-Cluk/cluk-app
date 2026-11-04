@@ -67,8 +67,11 @@
             @if ($prices)<th class="num">{{ __('psales.cols.list') }}</th><th class="num">{{ __('psales.cols.disc') }}</th><th class="num">{{ __('quotes.cols.amount') }}</th>@else<th>{{ __('psales.doc.item_no') }}</th><th class="box">{{ __('psales.doc.check') }}</th>@endif
             @if ($type === 'oc')<th>{{ __('psales.cols.delivery') }}</th>@endif</tr></thead>
         <tbody>
+            @php($sections = $prices && $q->heading_totals ? \App\Support\LineSections::totals($q->lines) : [])
             @foreach ($q->lines as $l)
-                @if ($l->kind === 'text')
+                @if ($l->heading)
+                    <tr class="doc-heading"><td></td><td colspan="{{ ($prices ? 4 : 3) + ($type === 'oc' ? 1 : 0) }}"><b>{{ $l->name }}</b></td></tr>
+                @elseif ($l->kind === 'text')
                     <tr class="doc-text"><td></td><td colspan="{{ $prices ? 4 : 3 }}"><i>{{ $l->name }}</i></td></tr>
                 @elseif ($prices || $l->kind === 'item')
                     <tr><td class="num"><b>{{ $l->qty }}</b></td><td>{{ $l->name }}@if ($l->description)<br><small>{{ $l->description }}</small>@endif</td>
@@ -76,6 +79,9 @@
                         @else<td><small>{{ $l->item?->number }}</small></td><td class="box">☐</td>@endif
                         @if ($type === 'oc')<td>{{ $l->delivery_date?->format('d/m/Y') ?? '—' }}</td>@endif
                     </tr>
+                @endif
+                @if (isset($sections[$l->id]))
+                    <tr class="doc-subtotal"><td></td><td colspan="3">{{ __('quotes.subtotal_of', ['name' => $sections[$l->id]['name']]) }}</td><td class="num nowrap"><b>{{ $eur($sections[$l->id]['cents']) }}</b></td>@if ($type === 'oc')<td></td>@endif</tr>
                 @endif
             @endforeach
         </tbody>

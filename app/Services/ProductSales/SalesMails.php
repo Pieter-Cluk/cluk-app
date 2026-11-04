@@ -30,7 +30,14 @@ class SalesMails
 
     private static function table(SalesQuote $q, bool $dates = false): array
     {
-        $rows = $q->lines->map(fn ($l) => $l->kind === 'text' ? ['', '*'.$l->name.'*', ''] : [(string) $l->qty, $l->name.($dates && $l->delivery_date ? ' · '.__('psales.delivery_on', ['date' => $l->delivery_date->format('d/m/Y')]) : ''), Pricing::eur($l->amount_cents)])->all();
+        $sections = $q->heading_totals ? \App\Support\LineSections::totals($q->lines) : [];
+        $rows = [];
+        foreach ($q->lines as $l) {
+            $rows[] = $l->kind === 'text' ? ['', $l->heading ? '**'.$l->name.'**' : '*'.$l->name.'*', ''] : [(string) $l->qty, $l->name.($dates && $l->delivery_date ? ' · '.__('psales.delivery_on', ['date' => $l->delivery_date->format('d/m/Y')]) : ''), Pricing::eur($l->amount_cents)];
+            if (isset($sections[$l->id])) {
+                $rows[] = ['', '*'.__('quotes.subtotal_of', ['name' => $sections[$l->id]['name']]).'*', '**'.Pricing::eur($sections[$l->id]['cents']).'**'];
+            }
+        }
 
         return [$rows, [__('psales.total_excl') => Pricing::eur($q->net_cents), __('quotes.vat', ['pct' => $q->vatPercent()]) => Pricing::eur($q->vat_cents), __('quotes.total') => Pricing::eur($q->gross_cents)]];
     }

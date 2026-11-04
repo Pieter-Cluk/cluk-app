@@ -20,14 +20,18 @@
     <ol class="ps-flow mt">@foreach ($steps as $i => $s)<li @class(['on' => $s === $now, 'done' => array_search($now, $steps, true) > $i])>{{ __('psales.flow.'.$s) }}</li>@endforeach</ol>
 
     <form method="post" action="{{ route('psales.update', $q) }}" class="card card-flush mt" id="lines">@csrf @method('PUT')
+        @php($sections = $q->heading_totals ? \App\Support\LineSections::totals($q->lines) : [])
+        @if ($edit)<label class="check small pad"><input type="checkbox" name="heading_totals" value="1" @checked($q->heading_totals) onchange="this.form.requestSubmit()"><span>{{ __('quotes.heading_totals') }}</span></label>@endif
         <table class="table ps-lines">
             <thead><tr><th>{{ __('psales.cols.item') }}</th><th class="num">{{ __('psales.cols.qty') }}</th><th class="num">{{ __('psales.cols.list') }}</th><th class="num">{{ __('psales.cols.disc') }}</th><th class="num">{{ __('psales.cols.unit') }}</th>
                 @if ($seeCost)<th class="num">{{ __('psales.cols.cost') }}</th><th class="num">{{ __('psales.cols.margin') }}</th>@endif<th>{{ __('psales.cols.delivery') }}</th><th class="num">{{ __('psales.cols.total') }}</th><th></th></tr></thead>
             <tbody>
                 @forelse ($q->lines as $l)
                     @php($m = $l->marginBp())
-                    <tr @class(['ps-low' => $l->kind === 'item' && $m < \App\Models\ProductSales\SalesQuote::MIN_MARGIN_BP && $seeCost])>
-                        <td>@if ($l->kind === 'item')<b>{{ $l->name }}</b><br><small class="muted">{{ $l->item?->number }} · {{ $l->description }}</small>@elseif ($edit)<input name="lines[{{ $l->id }}][name]" value="{{ $l->name }}" maxlength="200" aria-label="{{ __('psales.cols.item') }}">@else<i>{{ $l->name }}</i>@endif</td>
+                    <tr id="line-{{ $l->id }}" @class(['ps-low' => $l->kind === 'item' && $m < \App\Models\ProductSales\SalesQuote::MIN_MARGIN_BP && $seeCost, 'line-heading' => $l->heading])>
+                        <td>@if ($edit)<div class="line-name"><span class="line-move"><button type="submit" name="move" value="{{ $l->id }}:up" class="iconbtn" title="{{ __('quotes.move_up') }}" aria-label="{{ __('quotes.move_up') }}: {{ $l->name }}" @disabled($loop->first)>▲</button><button type="submit" name="move" value="{{ $l->id }}:down" class="iconbtn" title="{{ __('quotes.move_down') }}" aria-label="{{ __('quotes.move_down') }}: {{ $l->name }}" @disabled($loop->last)>▼</button></span><div>@endif
+                        @if ($l->heading && ! $edit)<b>{{ $l->name }}</b>@elseif ($l->kind === 'item')<b>{{ $l->name }}</b><br><small class="muted">{{ $l->item?->number }} · {{ $l->description }}</small>@elseif ($edit)<input name="lines[{{ $l->id }}][name]" value="{{ $l->name }}" maxlength="200" aria-label="{{ __('psales.cols.item') }}">@else<i>{{ $l->name }}</i>@endif
+                        @if ($edit)</div></div>@endif</td>
                         <td class="num">@if ($edit && $l->kind !== 'text')<input type="number" min="1" name="lines[{{ $l->id }}][qty]" value="{{ $l->qty }}" class="w-xs" aria-label="{{ __('psales.cols.qty') }}">@else<input type="hidden" name="lines[{{ $l->id }}][qty]" value="{{ $l->qty }}">{{ $l->kind === 'text' ? '' : $l->qty }}@endif</td>
                         <td class="num nowrap">@if ($l->kind === 'charge' && $edit)<input type="number" step="0.01" min="0" name="lines[{{ $l->id }}][price]" value="{{ number_format($l->list_cents / 100, 2, '.', '') }}" class="w-sm" aria-label="{{ __('psales.cols.list') }}">@elseif ($l->kind !== 'text'){{ $eur($l->list_cents) }}@endif</td>
                         <td class="num">@if ($edit && $l->kind === 'item')<input type="number" step="0.5" min="0" max="100" name="lines[{{ $l->id }}][discount]" value="{{ rtrim(rtrim(number_format($l->discount_bp / 100, 2, '.', ''), '0'), '.') }}" class="w-xs" aria-label="{{ __('psales.cols.disc') }}">@elseif ($l->discount_bp){{ $pct($l->discount_bp) }}@endif</td>
@@ -42,6 +46,9 @@
                         <td class="num nowrap"><b>{{ $l->kind === 'text' ? '' : $eur($l->amount_cents) }}</b></td>
                         <td>@if ($edit)<button class="btn btn-sm btn-ghost" type="submit" form="rm-{{ $l->id }}" aria-label="{{ __('psales.remove') }}">×</button>@endif</td>
                     </tr>
+                    @if (isset($sections[$l->id]))
+                        <tr class="line-subtotal"><td colspan="{{ $seeCost ? 8 : 6 }}">{{ __('quotes.subtotal_of', ['name' => $sections[$l->id]['name']]) }}</td><td class="num nowrap"><b>{{ $eur($sections[$l->id]['cents']) }}</b></td><td></td></tr>
+                    @endif
                 @empty
                     <tr><td colspan="10" class="muted">{{ __('psales.no_lines') }}</td></tr>
                 @endforelse
@@ -76,7 +83,7 @@
                 <input type="number" name="qty" min="1" value="1" class="w-xs" aria-label="{{ __('psales.cols.qty') }}"><button class="btn" type="submit">{{ __('psales.add') }}</button>
             </form>
             <form method="post" action="{{ route('psales.lines.add', $q) }}" class="inline-form mt">@csrf
-                <select name="kind" aria-label="{{ __('psales.add_other') }}"><option value="charge">{{ __('psales.kinds.charge') }}</option><option value="text">{{ __('psales.kinds.text') }}</option></select>
+                <select name="kind" aria-label="{{ __('psales.add_other') }}"><option value="charge">{{ __('psales.kinds.charge') }}</option><option value="text">{{ __('psales.kinds.text') }}</option><option value="heading">{{ __('quotes.subtitle') }}</option></select>
                 <input name="name" maxlength="200" required placeholder="{{ __('psales.other_hint') }}" aria-label="{{ __('psales.add_other') }}"><button class="btn" type="submit">{{ __('psales.add') }}</button>
             </form>
         </section>

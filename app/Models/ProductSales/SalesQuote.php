@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 /** A sale of goods: quote (S-QUO) → accepted → purchasing → order confirmation (S-OC) → delivered. */
 #[Fillable([
-    'number', 'status', 'company_id', 'contact_id', 'owner_id', 'deal_id', 'title', 'language', 'intro', 'notes', 'valid_until', 'delivery_mode',
+    'heading_totals', 'number', 'status', 'company_id', 'contact_id', 'owner_id', 'deal_id', 'title', 'language', 'intro', 'notes', 'valid_until', 'delivery_mode',
     'vat_code', 'vat_rate_bp', 'subtotal_cents', 'cost_cents', 'net_cents', 'vat_cents', 'gross_cents', 'approved_by_id', 'approved_at', 'approved_sig',
     'approval_note', 'token', 'sent_at', 'sent_to', 'answered_at', 'answered_name', 'po_number', 'decline_reason', 'confirmed_at', 'delivered_at',
 ])]
@@ -31,7 +31,7 @@ class SalesQuote extends Model
     protected function casts(): array
     {
         return [
-            'valid_until' => 'date', 'approved_at' => 'datetime', 'sent_at' => 'datetime', 'answered_at' => 'datetime', 'confirmed_at' => 'datetime', 'delivered_at' => 'datetime',
+            'heading_totals' => 'boolean', 'valid_until' => 'date', 'approved_at' => 'datetime', 'sent_at' => 'datetime', 'answered_at' => 'datetime', 'confirmed_at' => 'datetime', 'delivered_at' => 'datetime',
             'vat_rate_bp' => 'integer', 'subtotal_cents' => 'integer', 'cost_cents' => 'integer', 'net_cents' => 'integer', 'vat_cents' => 'integer', 'gross_cents' => 'integer',
         ];
     }

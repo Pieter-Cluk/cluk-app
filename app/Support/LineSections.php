@@ -27,7 +27,7 @@ class LineSections
         foreach ($lines as $l) {
             if ($l->kind === 'text' && $l->heading) {
                 $flush();
-                $current = ['name' => $l->name, 'cents' => 0, 'last' => $l->id];
+                $current = ['name' => $l->name, 'cents' => 0, 'last' => null]; // a subtitle without lines gets no subtotal
             } elseif ($current) {
                 $current['cents'] += $l->kind === 'text' ? 0 : (int) $l->amount_cents;
                 $current['last'] = $l->id;

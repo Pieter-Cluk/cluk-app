@@ -80,8 +80,9 @@ class SalesQuoteController extends Controller
         $d = $request->validate(['title' => ['required', 'string', 'max:200'], 'contact_id' => ['nullable', 'integer', 'exists:contacts,id'], 'language' => ['required', Rule::in(array_keys(config('cluk.locales')))],
             'intro' => ['nullable', 'string', 'max:2000'], 'notes' => ['nullable', 'string', 'max:2000'], 'valid_until' => ['nullable', 'date'], 'delivery_mode' => ['required', Rule::in(['together', 'asap'])],
             'lines' => ['array'], 'lines.*.qty' => ['required', 'integer', 'min:1', 'max:100000'], 'lines.*.discount' => ['nullable', 'numeric', 'min:0', 'max:100'],
-            'lines.*.name' => ['nullable', 'string', 'max:200'], 'lines.*.price' => ['nullable', 'numeric', 'min:0', 'max:1000000']]);
-        $quote->update(collect($d)->except('lines')->all());
+            'lines.*.name' => ['nullable', 'string', 'max:200'], 'lines.*.price' => ['nullable', 'numeric', 'min:0', 'max:1000000'],
+            'move' => ['nullable', 'regex:/^\d+:(up|down)$/']]);
+        $quote->update(collect($d)->except(['lines', 'move'])->all() + ['heading_totals' => $request->boolean('heading_totals')]);
         foreach ($d['lines'] ?? [] as $id => $l) {
             $line = $quote->lines()->find($id);
             if (! $line) {
@@ -93,7 +94,22 @@ class SalesQuoteController extends Controller
             }
             $line->update($data);
         }
+        if (! empty($d['move'])) {
+            [$id, $dir] = explode(':', $d['move']);
+            $ids = $quote->lines()->pluck('id')->all();
+            $i = array_search((int) $id, $ids, true);
+            $j = $dir === 'up' ? $i - 1 : $i + 1;
+            if ($i !== false && isset($ids[$j])) {
+                [$ids[$i], $ids[$j]] = [$ids[$j], $ids[$i]];
+                foreach ($ids as $n => $lineId) {
+                    SalesQuoteLine::whereKey($lineId)->update(['position' => $n + 1]);
+                }
+            }
+        }
         $quote->recalculate();
+        if (! empty($d['move'])) {
+            return redirect()->to(route('psales.show', $quote).'#line-'.explode(':', $d['move'])[0]);
+        }
 
         return back()->with('status', __('psales.saved'));
     }
@@ -101,14 +117,14 @@ class SalesQuoteController extends Controller
     public function addLine(Request $request, SalesQuote $quote): RedirectResponse
     {
         $this->editable($quote);
-        $d = $request->validate(['item_id' => ['nullable', 'integer', 'exists:sales_items,id'], 'kind' => ['required', Rule::in(['item', 'charge', 'text'])], 'name' => ['required_unless:kind,item', 'nullable', 'string', 'max:200'], 'qty' => ['nullable', 'integer', 'min:1']]);
+        $d = $request->validate(['item_id' => ['nullable', 'integer', 'exists:sales_items,id'], 'kind' => ['required', Rule::in(['item', 'charge', 'text', 'heading'])], 'name' => ['required_unless:kind,item', 'nullable', 'string', 'max:200'], 'qty' => ['nullable', 'integer', 'min:1']]);
         $pos = (int) $quote->lines()->max('position') + 1;
         if ($d['kind'] === 'item') {
             $item = SalesItem::with('suppliers')->findOrFail($d['item_id']);
             $quote->lines()->create(['sales_item_id' => $item->id, 'kind' => 'item', 'name' => $item->name(), 'description' => $item->description, 'qty' => $d['qty'] ?? 1,
                 'cost_cents' => $item->costCents(), 'position' => $pos] + CustomerPrices::lineValues($quote->company, $item));
         } else {
-            $quote->lines()->create(['kind' => $d['kind'], 'name' => $d['name'], 'qty' => 1, 'position' => $pos]);
+            $quote->lines()->create(['kind' => $d['kind'] === 'heading' ? 'text' : $d['kind'], 'heading' => $d['kind'] === 'heading', 'name' => $d['name'], 'qty' => 1, 'position' => $pos]);
         }
         $quote->recalculate();
 

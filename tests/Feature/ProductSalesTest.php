@@ -198,6 +198,35 @@ class ProductSalesTest extends TestCase
         $this->actingAs($elke)->post(route('psales.declined', $q), ['reason' => 'again'])->assertStatus(409);
     }
 
+    public function test_sales_quote_subtitles_subtotals_and_moving_lines(): void
+    {
+        $admin = $this->as('admin');
+        [$item] = $this->catalogue($admin);
+        $customer = Company::create(['name' => 'Demo Theatre vzw', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'en']);
+        $elke = $this->as('sales');
+        $this->actingAs($elke)->post('/sales/sales-quotes', ['company_id' => $customer->id, 'title' => 'Parts']);
+        $q = SalesQuote::firstOrFail();
+        $base = '/sales/sales-quotes/'.$q->id;
+        $this->actingAs($elke)->post($base.'/lines', ['kind' => 'heading', 'name' => 'Audio']);
+        $this->actingAs($elke)->post($base.'/lines', ['kind' => 'item', 'item_id' => $item->id, 'qty' => 1]);
+        $this->actingAs($elke)->post($base.'/lines', ['kind' => 'heading', 'name' => 'Light']);
+        $this->actingAs($elke)->post($base.'/lines', ['kind' => 'charge', 'name' => 'Install']);
+        $q->refresh();
+        [$audio, $mic, $light, $install] = $q->lines->all();
+        $this->assertSame(['text', true], [$audio->kind, $audio->heading]);
+
+        $form = fn (array $extra) => $extra + ['title' => $q->title, 'language' => 'en', 'delivery_mode' => 'together',
+            'lines' => $q->fresh()->lines->mapWithKeys(fn ($l) => [$l->id => ['qty' => $l->qty, 'name' => $l->name] + ($l->kind === 'charge' ? ['price' => '120'] : [])])->all()];
+        $this->actingAs($elke)->put($base, $form(['move' => $install->id.':up']))->assertSessionHasNoErrors();
+        $this->assertSame(['Audio', $mic->name, 'Install', 'Light'], $q->fresh()->lines->pluck('name')->all());
+        $this->actingAs($elke)->put($base, $form(['heading_totals' => '1']))->assertSessionHasNoErrors();
+        $q->refresh();
+        $this->assertTrue($q->heading_totals);
+        $this->actingAs($elke)->get(route('psales.show', $q))->assertSee('Subtotal Audio');
+        $totals = collect(\App\Support\LineSections::totals($q->lines))->mapWithKeys(fn ($t) => [$t['name'] => $t['cents']])->all();
+        $this->assertSame(['Audio' => $mic->fresh()->amount_cents + 12000], $totals); // Light has no lines under it
+    }
+
     public function test_pages_in_every_language(): void
     {
         $admin = $this->as('admin');
