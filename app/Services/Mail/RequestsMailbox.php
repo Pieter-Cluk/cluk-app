@@ -88,6 +88,52 @@ class RequestsMailbox
         }
     }
 
+    /**
+     * Why each mail of the last days did or did not become an Incoming item (for checking, nothing is changed):
+     * [time, sender domain, folder, reason].
+     */
+    public static function explain(int $days = 2): array
+    {
+        $box = rawurlencode(self::box());
+        $token = Bounces::token();
+        $out = [];
+        foreach (['inbox', 'junkemail'] as $folder) {
+            $r = Http::withToken($token)->timeout(20)->get("https://graph.microsoft.com/v1.0/users/{$box}/mailFolders/{$folder}/messages", [
+                '$filter' => 'receivedDateTime ge '.now()->subDays($days)->utc()->format('Y-m-d\TH:i:s\Z'), '$orderby' => 'receivedDateTime desc', '$top' => 30,
+                '$select' => 'id,internetMessageId,subject,from,receivedDateTime']);
+            if (! $r->successful()) {
+                $out[] = [now()->toDateTimeString(), '-', $folder, 'error '.$r->status().' '.$r->json('error.code')];
+
+                continue;
+            }
+            foreach ($r->json('value', []) as $m) {
+                $out[] = [Carbon::parse($m['receivedDateTime'])->timezone(config('app.timezone'))->format('d/m H:i'), Str::after(Str::lower((string) ($m['from']['emailAddress']['address'] ?? '')), '@'), $folder, self::reason($token, $box, $m)];
+            }
+        }
+
+        return $out;
+    }
+
+    private static function reason(string $token, string $box, array $m): string
+    {
+        $mailId = (string) ($m['internetMessageId'] ?? $m['id']);
+        if (IncomingMessage::where('channel', 'email')->where('payload->mail_id', $mailId)->exists()) {
+            return 'in Incoming';
+        }
+        $from = Str::lower((string) ($m['from']['emailAddress']['address'] ?? ''));
+        if (preg_match(self::SKIP_SUBJECT, (string) ($m['subject'] ?? ''))) {
+            return 'skipped: automatic subject';
+        }
+        if (preg_match('/^(no-?reply|mailer-daemon|postmaster)@/i', $from)) {
+            return 'skipped: sender '.Str::before($from, '@').'@';
+        }
+        $full = Http::withToken($token)->timeout(20)->get("https://graph.microsoft.com/v1.0/users/{$box}/messages/".rawurlencode($m['id']), ['$select' => 'internetMessageHeaders']);
+        $h = collect($full->json('internetMessageHeaders', []))->mapWithKeys(fn ($x) => [Str::lower($x['name']) => $x['value']]);
+        $why = array_filter(['list-unsubscribe' => $h->has('list-unsubscribe'), 'auto-submitted='.$h->get('auto-submitted') => in_array(Str::lower((string) $h->get('auto-submitted', 'no')), ['auto-replied', 'auto-generated'], true), 'precedence=bulk' => Str::lower((string) $h->get('precedence', '')) === 'bulk']);
+
+        return $why ? 'skipped: '.implode(', ', array_keys($why)) : 'not taken yet (since '.Cache::get('requests_mailbox.since', '-').')';
+    }
+
     /** One mail: an Incoming item (once). */
     private static function take(string $token, string $box, array $m): bool
     {
