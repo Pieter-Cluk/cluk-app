@@ -29,9 +29,20 @@
         </section>
     @elseif ($pendingItem ?? null)
         <section class="ph-card ph-pending">
-            <small class="ph-step">{{ __('warehouse.scan.step2') }}</small>
             <b>{{ $pendingItem->number }} · {{ $pendingItem->type ?: $pendingItem->name }}</b>
-            <small>{{ __('warehouse.carriers.counted_where', ['n' => $pendingItem->stock_qty, 'place' => $pendingItem->position_code ?: '—']) }}</small>
+            <small>{{ __('warehouse.carriers.counted_where', ['n' => $pendingItem->stock_qty, 'place' => $pendingItem->placesLabel() ?: '—', 'left' => $pendingItem->unplacedQty()]) }}</small>
+            @if ($pendingPlace)
+                @php($atPlace = $pendingItem->places->firstWhere('position_code', $pendingPlace))
+                <form method="post" action="{{ route('w.scan.counted') }}" class="ph-count-form">
+                    @csrf
+                    <label><span>{{ __('warehouse.carriers.counted_how_many', ['place' => $pendingPlace]) }}</span>
+                        <input type="number" name="qty" inputmode="numeric" min="0" max="100000" required autofocus value="{{ old('qty', $atPlace?->qty ?? $pendingItem->unplacedQty()) }}"></label>
+                    <button class="primary" type="submit">{{ __('warehouse.carriers.counted_save') }}</button>
+                </form>
+                @error('qty')<p class="txt-danger small">{{ $message }}</p>@enderror
+            @else
+                <small class="ph-step">{{ __('warehouse.carriers.counted_scan_place') }}</small>
+            @endif
             <form method="post" action="{{ route('w.scan.cancel') }}">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.scan.cancel') }}</button></form>
         </section>
     @elseif ($pending)
@@ -46,7 +57,7 @@
         <p class="ph-step">{{ __('warehouse.scan.step1') }}</p>
     @endif
 
-    @include('warehouse.phone._scanbox', ['action' => route('w.scan.post'), 'scanned' => $scanned, 'autofocus' => true])
+    @include('warehouse.phone._scanbox', ['action' => route('w.scan.post'), 'scanned' => $scanned, 'autofocus' => ! ($pendingPlace ?? null)])
 
     @if ($here)
         <section class="ph-card">

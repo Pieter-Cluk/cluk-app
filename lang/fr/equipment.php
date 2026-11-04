@@ -235,11 +235,13 @@ return [
         'converted' => 'Passé en compté : :n pièces en stock. Imprimez une étiquette QR pour le type.',
     ],
     'kept' => [
-        'title' => 'Rangé à (emplacement)',
-        'go' => 'Enregistrer',
-        'hint' => 'Où ils sont rangés d’habitude, p. ex. GA1B1. L’équipe le voit sur la liste de préparation. Laissez vide s’il n’y a pas de place fixe. Pour mettre un nombre dans une boîte ou un flight-case, utilisez le bloc ci-dessous.',
-        'done' => 'Rangé maintenant à :place.',
-        'cleared' => 'Plus d’emplacement fixe.',
+        'title' => 'Emplacements et quantités',
+        'go' => 'Ajouter',
+        'save' => 'Enregistrer',
+        'hint' => 'Combien se trouvent sur quel emplacement, p. ex. 10 sur GA2C1. L’équipe le voit sur la liste de picking. Mettez une quantité à 0 pour retirer un emplacement. Pour en mettre dans une boîte ou un flight, utilisez le bloc ci-dessous.',
+        'done_n' => ':n maintenant sur :place.',
+        'removed' => 'Plus rien sur :place.',
+        'unplaced' => 'Pas encore placés : :n sur :stock (ni sur un emplacement, ni dans une boîte ou un flight).',
         'unknown' => '« :code » n’est pas un emplacement ni une zone de stockage. Choisissez-en un dans la liste.',
     ],
 ];

@@ -84,6 +84,7 @@
 
             @if ($digital)
                 @include('partials.digital-today', ['d' => $digital])
+                @if ($trend ?? null)@include('partials.digital-trend', ['t' => $trend])@endif
             @endif
 
             @if ($pipeline)

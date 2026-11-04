@@ -33,7 +33,7 @@
             @else
                 <li @class(['ph-line', 'ph-line-ok' => $l->picked_qty >= $l->ownAllocated() && ! $subWait])>
                     <div class="ph-line-head"><b>{{ $l->name }}</b><span class="ph-cnt">@if ($l->ownAllocated() > 0){{ $l->picked_qty }} / {{ $l->ownAllocated() }}@if ($l->rentQty() > 0) <small>{{ __('warehouse.pick.own') }}</small>@endif @else{{ __('warehouse.pick.partner_only') }}@endif</span></div>
-                    @if ($l->ownAllocated() > 0)<small class="muted">{{ $l->item->position_code ? __('warehouse.pick.kept_at', ['place' => $l->item->position_code]) : __('warehouse.pick.counted') }}</small>@endif
+                    @if ($l->ownAllocated() > 0)<small class="muted">{{ ($where = $l->item->placesLabel()) ? __('warehouse.pick.kept_at', ['place' => $where]) : __('warehouse.pick.counted') }}</small>@endif
                     @include('warehouse.phone._subhire-line')
                     @if (! $order->loaded_at && $l->ownAllocated() > 0)
                         <div class="ph-step-btns">

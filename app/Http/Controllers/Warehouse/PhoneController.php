@@ -13,6 +13,7 @@ use App\Models\Warehouse\Move;
 use App\Models\Warehouse\Position;
 use App\Models\Warehouse\Zone;
 use App\Services\Warehouse\Carriers;
+use App\Services\Warehouse\CountedPlaces;
 use App\Services\Warehouse\Checks;
 use App\Services\Warehouse\Moves;
 use App\Support\Images;
@@ -74,8 +75,8 @@ class PhoneController extends Controller
             // Boxes and cases: their loose pieces and their counted items (cables, softsteels…) both count as contents.
             $all = Asset::with(['item', 'packed.item', 'counted.item'])->where('location', $code)->whereNull('case_id')->orderBy('code')->limit(80)->get();
             // Counted items kept on this place (loose: what is not in a dolly, box or case).
-            $counted = Item::where('serial', false)->where('position_code', $code)->orderBy('number')->get()
-                ->map(fn ($i) => ['item' => $i, 'loose' => max(0, (int) $i->stock_qty - (int) CaseItem::where('item_id', $i->id)->sum('qty'))]);
+            $counted = \App\Models\Equipment\ItemPlace::with('item')->where('position_code', $code)->get()->sortBy('item.number')->values()
+                ->map(fn ($p) => ['item' => $p->item, 'loose' => $p->qty]);
             $here = ['code' => $code, 'label' => Moves::label($code), 'carriers' => $all->filter->isContainer()->values(), 'assets' => $all->reject->isContainer()->values(), 'counted' => $counted];
         }
         $next = [];
@@ -85,9 +86,10 @@ class PhoneController extends Controller
             $next = collect($next)->map(fn ($c) => $c === Zone::RACKS ? __('warehouse.zone_names.RACKS') : Moves::label($c))->all();
         }
 
-        $pendingItem = ($id = $request->session()->get('w.pending_item')) ? Item::find($id) : null;
+        $pendingItem = ($id = $request->session()->get('w.pending_item')) ? Item::with('places')->find($id) : null;
+        $pendingPlace = $pendingItem ? $request->session()->get('w.pending_place') : null;
 
-        return view('warehouse.phone.scan', ['pending' => $pending, 'pendingItem' => $pendingItem, 'next' => $next, 'here' => $here, 'scanned' => $request->query('scanned'),
+        return view('warehouse.phone.scan', ['pending' => $pending, 'pendingItem' => $pendingItem, 'pendingPlace' => $pendingPlace, 'next' => $next, 'here' => $here, 'scanned' => $request->query('scanned'),
             'carrier' => $this->openCarrier($request), 'mode' => $request->session()->get('w.carrier_mode', 'add')]);
     }
 
@@ -122,8 +124,9 @@ class PhoneController extends Controller
         }
         $request->session()->forget('w.here');
         if ($found['type'] !== 'position' && $found['type'] !== 'zone') {
-            $request->session()->forget('w.pending_item');
+            $request->session()->forget(['w.pending_item', 'w.pending_place']);
         }
+        $request->session()->forget('w.pending_place');
         // A label printed in advance, scanned for the first time: the piece is found and now in stock.
         if ($found['type'] === 'asset' && $found['model']->status === Asset::LABEL) {
             $asset = $found['model'];
@@ -215,11 +218,11 @@ class PhoneController extends Controller
 
                 return redirect()->route('w.scan')->withErrors(['code' => __('warehouse.errors.counted_to_rack', ['place' => Moves::label($place->code)])]);
             }
-            $from = $item->position_code;
-            $item->update(['position_code' => $place->code]);
-            Move::create(['item_id' => $item->id, 'from_code' => $from, 'to_code' => $place->code, 'kind' => 'move', 'user_id' => $request->user()->id, 'note' => 'kept at']);
+            // Next: how many lie here.
+            $request->session()->put('w.pending_item', $item->id);
+            $request->session()->put('w.pending_place', $place->code);
 
-            return redirect()->route('w.scan')->with('status', __('warehouse.carriers.counted_kept', ['name' => $item->type ?: $item->name, 'place' => $place->code]));
+            return redirect()->route('w.scan');
         }
         $pending = $this->pending($request);
         if (! $pending) {
@@ -241,9 +244,27 @@ class PhoneController extends Controller
         };
     }
 
+    /** A counted item on a rack place: how many lie there (replaces the count of that place; 0 = none there). */
+    public function countedQty(Request $request): RedirectResponse
+    {
+        $qty = (int) $request->validate(['qty' => ['required', 'integer', 'min:0', 'max:100000']])['qty'];
+        $item = Item::find($request->session()->get('w.pending_item'));
+        $code = $request->session()->get('w.pending_place');
+        if (! $item || ! $code) {
+            return redirect()->route('w.scan');
+        }
+        CountedPlaces::set($item, $code, $qty, $request->user());
+        $request->session()->forget(['w.pending_item', 'w.pending_place']);
+        $request->session()->put('w.here', $code);
+        $left = $item->fresh()->unplacedQty();
+
+        return redirect()->route('w.scan')->with('status', __('warehouse.carriers.counted_kept', ['n' => $qty, 'name' => $item->type ?: $item->name, 'place' => $code])
+            .($left > 0 ? ' '.__('warehouse.carriers.counted_left', ['n' => $left]) : ''));
+    }
+
     public function cancel(Request $request): RedirectResponse
     {
-        $request->session()->forget(['w.pending', 'w.pending_item', 'w.here', 'w.carrier', 'w.carrier_mode']);
+        $request->session()->forget(['w.pending', 'w.pending_item', 'w.pending_place', 'w.here', 'w.carrier', 'w.carrier_mode']);
 
         return redirect()->route('w.scan');
     }

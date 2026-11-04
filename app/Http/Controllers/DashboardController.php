@@ -48,6 +48,7 @@ class DashboardController extends Controller
             'shortages' => $u->canUseModule('dryhire', 2) ? Order::with('company')->where('status', 'allocation')->orderBy('out_from')->get()->filter(fn ($o) => $o->state() === 'subhire')->take(5)->values() : null,
             'week' => $this->week($u),
             'digital' => $u->canUseModule('sales') ? \App\Services\Website\DigitalToday::get() : null,
+            'trend' => $u->canUseModule('sales') ? \App\Services\Website\DigitalTrend::get() : null,
             'webLink' => ($i = \App\Support\Navigation::item('management')) && \App\Support\Navigation::canSee($i, $u),
         ]);
     }

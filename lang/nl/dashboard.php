@@ -189,4 +189,17 @@ return [
             'threads' => 'Threads',
         ],
     ],
+    'trend' => [
+        'title' => 'Digitale activiteit, laatste 30 dagen',
+        'sub' => 'Website per bezoeker; Facebook, Instagram en LinkedIn per dag (de platformen geven geen cijfers per uur).',
+        'per_day' => 'Per kanaal, per dag',
+        'visitors' => 'bezoekers',
+        'interactions' => 'interacties',
+        'posts' => 'Je posts: dag en uur waarop ze online kwamen',
+        'posts_sub' => 'Elk teken is een post op het uur dat hij gepubliceerd werd; hoe groter, hoe meer interacties. Klik op een teken om de post te openen.',
+        'size' => 'groter = meer interacties',
+        'no_posts' => 'Geen posts in de laatste 30 dagen.',
+        'interactions_n' => ':n interactie|:n interacties',
+        'note' => 'Interacties = likes, reacties, shares, bewaarde posts en kliks. Cijfers van sociale media komen tot een dag later binnen.',
+    ],
 ];

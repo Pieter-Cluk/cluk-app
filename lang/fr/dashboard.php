@@ -189,4 +189,17 @@ return [
             'threads' => 'Threads',
         ],
     ],
+    'trend' => [
+        'title' => 'Activité numérique, 30 derniers jours',
+        'sub' => 'Site par visiteur ; Facebook, Instagram et LinkedIn par jour (les plateformes ne donnent pas de chiffres par heure).',
+        'per_day' => 'Par canal, par jour',
+        'visitors' => 'visiteurs',
+        'interactions' => 'interactions',
+        'posts' => 'Vos posts : jour et heure de publication',
+        'posts_sub' => 'Chaque marque est un post à l’heure de sa publication ; plus elle est grande, plus il y a d’interactions. Cliquez pour ouvrir le post.',
+        'size' => 'plus grand = plus d’interactions',
+        'no_posts' => 'Aucun post ces 30 derniers jours.',
+        'interactions_n' => ':n interaction|:n interactions',
+        'note' => 'Interactions = j’aime, commentaires, partages, enregistrements et clics. Les chiffres des réseaux arrivent avec jusqu’à un jour de retard.',
+    ],
 ];

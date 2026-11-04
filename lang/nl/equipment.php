@@ -235,11 +235,13 @@ return [
         'converted' => 'Omgezet naar geteld: :n stuks in voorraad. Druk één QR-label voor het type af.',
     ],
     'kept' => [
-        'title' => 'Ligt op (rekplaats)',
-        'go' => 'Opslaan',
-        'hint' => 'Waar deze normaal liggen, bv. GA1B1. De ploeg ziet het op de picklijst. Laat leeg als er geen vaste plaats is. Om een aantal in een box of case te steken, gebruik het blok hieronder.',
-        'done' => 'Ligt nu op :place.',
-        'cleared' => 'Geen vaste rekplaats meer.',
+        'title' => 'Rekplaatsen en aantallen',
+        'go' => 'Toevoegen',
+        'save' => 'Bewaren',
+        'hint' => 'Hoeveel er op welke rekplaats liggen, bv. 10 op GA2C1. De ploeg ziet dit op de picklijst. Zet een aantal op 0 om een plaats weg te halen. Wil je er een aantal in een box of case leggen? Gebruik het blok hieronder.',
+        'done_n' => ':n liggen nu op :place.',
+        'removed' => 'Er ligt niets meer op :place.',
+        'unplaced' => 'Nog niet geplaatst: :n van :stock (niet op een rekplaats en niet in een box of case).',
         'unknown' => '“:code” is geen rekplaats of opslagzone. Kies er een uit de lijst.',
     ],
 ];

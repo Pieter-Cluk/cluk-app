@@ -189,4 +189,17 @@ return [
             'threads' => 'Threads',
         ],
     ],
+    'trend' => [
+        'title' => 'Digital activity, last 30 days',
+        'sub' => 'Website per visitor; Facebook, Instagram and LinkedIn per day (the platforms give no figures per hour).',
+        'per_day' => 'Per channel, per day',
+        'visitors' => 'visitors',
+        'interactions' => 'interactions',
+        'posts' => 'Your posts: day and time they went out',
+        'posts_sub' => 'Each mark is a post at the hour it was published; the bigger, the more interactions. Click a mark to open the post.',
+        'size' => 'bigger = more interactions',
+        'no_posts' => 'No posts in the last 30 days.',
+        'interactions_n' => ':n interaction|:n interactions',
+        'note' => 'Interactions = likes, comments, shares, saves and clicks. Social figures come in with a delay of up to a day.',
+    ],
 ];

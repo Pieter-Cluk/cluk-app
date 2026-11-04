@@ -1126,6 +1126,25 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .dg-src-row b{text-align:right;color:var(--ink)}
 .dg-note{margin-top:14px}
 @media (max-width:900px){.dg-top,.dg-charts{grid-template-columns:minmax(0,1fr)}}
+/* Dashboard: 30 days per channel + posts by day and hour */
+.dt-rows{display:flex;flex-direction:column;gap:6px}
+.dt-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;align-items:end}
+.dt-label{display:flex;flex-direction:column;gap:1px;padding-bottom:2px;font-size:13px}
+.dt-label b{display:flex;align-items:center;gap:6px;color:var(--ink)}
+.dt-key{width:10px;height:10px;border-radius:2px;display:inline-block}
+.dt-row svg{height:46px}
+.dt-bar{fill:var(--chart-1)}
+.dt .dg-col:hover .dt-bar{opacity:.75}
+.dt-ticks{position:relative;height:16px}
+.dt-ticks span{position:absolute;transform:translateX(-50%);font-size:11px;color:var(--muted);white-space:nowrap}
+.dt-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;margin:4px 0 6px;align-items:center}
+.dt-legend span{display:inline-flex;align-items:center;gap:6px}
+.dt-mark{stroke:var(--surface);stroke-width:2;fill-opacity:.85}
+.dt-post{cursor:pointer}
+.dt-posts{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
+.dt-post:hover .dt-mark{fill-opacity:1}
+.dt .dg-tip{white-space:normal;max-width:320px}
+@media (max-width:700px){.dt-row{grid-template-columns:minmax(0,1fr)}}
 
 /* Typing suggestions on free-text fields (suggest.js) */
 .sugg{position:relative;display:inline-block;width:auto;flex:1 1 200px;min-width:0}
@@ -1147,3 +1166,7 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .a6-help-steps{margin:8px 0 0;padding-left:22px;display:grid;gap:8px}
 .a6-help-nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media (max-width:860px){.a6-help-show{grid-template-columns:minmax(0,1fr)}}
+
+.ph-count-form{display:flex;gap:8px;align-items:flex-end;margin:10px 0}
+.ph-count-form label{display:flex;flex-direction:column;gap:4px;flex:1;font-size:14px}
+.ph-count-form input{font-size:22px;padding:8px 10px;width:100%}

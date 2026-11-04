@@ -402,21 +402,31 @@ class WarehouseCarriersTest extends TestCase
         $this->assertSame([0, 33, 67, 33, 33], $row());
     }
 
-    public function test_a_loose_counted_item_is_scanned_onto_a_shelf(): void
+    public function test_a_loose_counted_item_is_scanned_onto_a_shelf_with_a_count(): void
     {
-        $clamp = Item::create(['number' => 'RIG-CLAMP', 'kind' => 'item', 'name' => 'Clamp', 'type' => 'TAF clamp', 'serial' => false, 'stock_qty' => 200, 'position_code' => 'GA2B3']);
-        \App\Models\Warehouse\Position::firstOrCreate(['code' => 'GA1B1'], ['floor' => 'G', 'row' => 'A', 'rack' => '1', 'layer' => 'B', 'spot' => '1', 'kind' => 'rack', 'use' => 'store', 'active' => true]);
-        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'RIG-CLAMP'])->assertRedirect()->assertSessionHasNoErrors();
-        $this->actingAs($this->crew)->get('/w/scan')->assertSee('RIG-CLAMP')->assertSee('scan the rack place');
-        // A zone is not a rack place; the item keeps waiting.
-        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'INBOUND'])->assertSessionHasErrors('code');
-        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'GA1B1'])->assertSessionHas('status', 'TAF clamp is now kept at GA1B1.');
-        $this->assertSame('GA1B1', $clamp->fresh()->position_code);
-        $this->assertSame(200, $clamp->fresh()->stock_qty);
-        // The next place scan just shows that place again.
-        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'GA1B1']);
-        $this->assertSame('GA1B1', $clamp->fresh()->position_code);
-        $this->actingAs($this->crew)->get('/w/scan')->assertSee('200 ×')->assertSee('TAF clamp');
+        $steel = Item::create(['number' => 'RIGSOFT1M', 'kind' => 'item', 'name' => 'Softsteel 1m', 'type' => 'Softsteel 2T 1m', 'serial' => false, 'stock_qty' => 20, 'position_code' => 'GA2B3']);
+        \App\Models\Equipment\ItemPlace::create(['item_id' => $steel->id, 'position_code' => 'GA2B3', 'qty' => 20]);
+        foreach (['GA1B1', 'GA2C1', 'GA2B3'] as $c) {
+            \App\Models\Warehouse\Position::firstOrCreate(['code' => $c], ['floor' => 'G', 'row' => 'A', 'rack' => substr($c, 2, 1), 'layer' => substr($c, 3, 1), 'spot' => '1', 'kind' => 'rack', 'use' => 'store', 'active' => true]);
+        }
+        // All 20 were on GA2B3; actually only 10 lie there, 10 on GA2C1.
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'RIGSOFT1M'])->assertSessionHasNoErrors();
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('RIGSOFT1M')->assertSee('Scan the rack place where they lie.');
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'INBOUND'])->assertSessionHasErrors('code'); // not a rack place
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'GA2B3']);
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('How many lie on GA2B3?')->assertSee('value="20"', false);
+        $this->actingAs($this->crew)->post('/w/scan/counted', ['qty' => 10])->assertSessionHas('status', '10 × Softsteel 2T 1m now on GA2B3. 10 still not placed.');
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'RIGSOFT1M']);
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'GA2C1']);
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('value="10"', false); // proposes what is not placed yet
+        $this->actingAs($this->crew)->post('/w/scan/counted', ['qty' => 11])->assertSessionHasErrors('qty');
+        $this->actingAs($this->crew)->post('/w/scan/counted', ['qty' => 10])->assertSessionHasNoErrors();
+        $steel->refresh();
+        $this->assertSame('GA2B3 (10) · GA2C1 (10)', $steel->placesLabel());
+        $this->assertSame(20, $steel->stock_qty);
+        // The shelf shows what lies there.
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'GA2C1']);
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('10 ×')->assertSee('Softsteel 2T 1m');
     }
 
     public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void
@@ -484,16 +494,19 @@ class WarehouseCarriersTest extends TestCase
         $this->actingAs($admin)->post(route('equipment.counted.place', $barndoor), ['qty' => 12, 'place' => 'BOX-04'])->assertSessionHasNoErrors();
         $this->actingAs($admin)->post(route('equipment.counted.place', $barndoor), ['qty' => 9, 'place' => 'BOX-05'])->assertSessionHasErrors('place');
         $this->actingAs($admin)->post(route('equipment.counted.place', $barndoor), ['qty' => -2, 'place' => 'BOX-04'])->assertSessionHasNoErrors();
-        // Counted: the rack place where they are kept (any case of typing), shown on the card; nonsense is refused; empty clears it.
-        $this->actingAs($admin)->get(route('equipment.show', $barndoor))->assertSee('Kept at (rack place)')->assertSee('id="rack-codes"', false);
-        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => 'ga3b2'])->assertSessionHasNoErrors();
+        // Counted: how many lie on which rack place (any case of typing); never more than in stock; 0 takes a place away.
+        $this->actingAs($admin)->get(route('equipment.show', $barndoor))->assertSee('Rack places and counts')->assertSee('id="rack-codes"', false)->assertSee('Not placed yet: 10 of 20');
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => 'ga3b2', 'qty' => 6])->assertSessionHasNoErrors();
         $this->assertSame('GA3B2', $barndoor->fresh()->position_code);
-        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => 'NOPE-9'])->assertSessionHasErrors('position');
-        $this->assertSame('GA3B2', $barndoor->fresh()->position_code);
-        $this->assertSame(1, AuditLog::where('action', 'equipment.kept_at')->count());
-        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => ''])->assertSessionHasNoErrors();
-        $this->assertNull($barndoor->fresh()->position_code);
-        $this->actingAs($admin)->post(route('equipment.counted.kept', $item), ['position' => 'GA3B2'])->assertNotFound(); // serial items: per piece
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => 'NOPE-9', 'qty' => 1])->assertSessionHasErrors('position');
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => 'GA2B3', 'qty' => 5])->assertSessionHasErrors('position'); // only 4 left
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => 'GA2B3', 'qty' => 4])->assertSessionHasNoErrors();
+        $this->assertSame('GA3B2 (6) · GA2B3 (4)', $barndoor->fresh()->placesLabel());
+        $this->assertSame(0, $barndoor->fresh()->unplacedQty());
+        $this->assertSame(2, AuditLog::where('action', 'equipment.place_count')->count());
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $barndoor), ['position' => 'GA3B2', 'qty' => 0])->assertSessionHasNoErrors();
+        $this->assertSame('GA2B3', $barndoor->fresh()->position_code);
+        $this->actingAs($admin)->post(route('equipment.counted.kept', $item), ['position' => 'GA3B2', 'qty' => 1])->assertNotFound(); // serial items: per piece
         $this->assertSame(10, self::case('BOX-04')->counted()->value('qty'));
         $this->actingAs($admin)->get(route('equipment.show', $barndoor))->assertSee('10 × in BOX-04');
     }

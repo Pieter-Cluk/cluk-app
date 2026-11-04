@@ -7,6 +7,7 @@ use App\Models\Social\Account;
 use App\Models\Social\Daily;
 use App\Models\User;
 use App\Services\Website\DigitalToday;
+use App\Services\Website\DigitalTrend;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -60,6 +61,23 @@ class DigitalTodayTest extends TestCase
         if (! $warehouse->canUseModule('sales')) {
             $this->actingAs($warehouse)->get('/dashboard')->assertOk()->assertDontSee('Digital activity today');
         }
+    }
+
+    public function test_thirty_days_per_channel_and_posts_by_hour(): void
+    {
+        $fb = Account::where('platform', 'facebook')->first();
+        \App\Models\Social\Post::create(['account_id' => $fb->id, 'external_id' => 'p1', 'published_at' => today()->subDays(2)->setTime(18, 30), 'kind' => 'photo', 'text' => 'New SOL I blinders in stock', 'permalink' => 'https://facebook.example/p1', 'likes' => 12, 'comments' => 3, 'shares' => 1, 'saves' => 0, 'clicks' => 4]);
+        $t = DigitalTrend::get();
+        $this->assertCount(30, $t['dates']);
+        $rows = collect($t['rows'])->keyBy('key');
+        $this->assertSame(['website', 'facebook'], $rows->keys()->all()); // the switched-off Instagram account is left out
+        $this->assertSame(60, $rows['facebook']['total']); // 7 + 3 today, 50 yesterday
+        $this->assertSame(10, $rows['facebook']['values'][29]);
+        $post = $t['posts']->first();
+        $this->assertSame([27, 18.5, 20, 'circle'], [$post['day'], $post['hour'], $post['interactions'], $post['shape']]);
+
+        $sales = User::factory()->create(['role_id' => Role::where('slug', 'sales')->value('id'), 'locale' => 'en']);
+        $this->actingAs($sales)->get('/dashboard')->assertOk()->assertSee('Digital activity, last 30 days')->assertSee('https://facebook.example/p1', false)->assertSee('20 interactions');
     }
 
     public function test_every_language_has_the_texts(): void

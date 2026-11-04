@@ -45,8 +45,19 @@
         @php($inCases = \App\Models\Equipment\CaseItem::with('container')->where('item_id', $item->id)->where('qty', '>', 0)->get())
         <section class="card">
             <h2>{{ __('equipment.kept.title') }}</h2>
+            @foreach ($item->places as $pl)
+                <form method="post" action="{{ route('equipment.counted.kept', $item) }}" class="inline-form mt">@csrf
+                    <input type="hidden" name="position" value="{{ $pl->position_code }}">
+                    <b style="min-width:6em">{{ $pl->position_code }}</b>
+                    <input type="number" name="qty" value="{{ $pl->qty }}" min="0" max="100000" style="width:6em" aria-label="{{ __('warehouse.labels.how_many') }} {{ $pl->position_code }}">
+                    <button class="btn btn-sm" type="submit">{{ __('equipment.kept.save') }}</button>
+                </form>
+            @endforeach
+            @php($unplaced = $item->unplacedQty())
+            <p class="mt @if ($unplaced > 0) txt-warn @else muted @endif">{{ __('equipment.kept.unplaced', ['n' => $unplaced, 'stock' => $item->stock_qty]) }}</p>
             <form method="post" action="{{ route('equipment.counted.kept', $item) }}" class="inline-form">@csrf
-                <input name="position" list="rack-codes" value="{{ old('position', $item->position_code) }}" placeholder="GA1B1" maxlength="30" aria-label="{{ __('equipment.kept.title') }}" style="width:9em">
+                <input name="position" list="rack-codes" value="{{ old('position') }}" placeholder="GA1B1" maxlength="30" aria-label="{{ __('equipment.kept.title') }}" style="width:9em">
+                <input type="number" name="qty" value="{{ old('qty', $unplaced) }}" min="0" max="100000" style="width:6em" aria-label="{{ __('warehouse.labels.how_many') }}">
                 <button class="btn" type="submit">{{ __('equipment.kept.go') }}</button>
             </form>
             @error('position')<p class="txt-danger small">{{ $message }}</p>@enderror

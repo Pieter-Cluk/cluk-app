@@ -209,7 +209,8 @@ class StaffClukie
                 $row['where_free'] = $pieces->where('status', Asset::AVAILABLE)->countBy('location')->all();
             } else {
                 $row['stock'] = (int) $i->stock_qty;
-                $row['kept_at'] = $i->position_code;
+                $row['kept_at'] = $i->placesLabel();
+                $row['not_placed'] = $i->unplacedQty();
             }
 
             return $row;

@@ -235,11 +235,13 @@ return [
         'converted' => 'Pasado a contado: :n piezas en stock. Imprime una etiqueta QR para el tipo.',
     ],
     'kept' => [
-        'title' => 'Guardado en (ubicación)',
-        'go' => 'Guardar',
-        'hint' => 'Dónde se guardan normalmente, p. ej. GA1B1. El equipo lo ve en la lista de preparación. Déjalo vacío si no hay sitio fijo. Para meter una cantidad en una caja o flight case, usa el bloque de abajo.',
-        'done' => 'Ahora guardado en :place.',
-        'cleared' => 'Ya sin ubicación fija.',
+        'title' => 'Ubicaciones y cantidades',
+        'go' => 'Añadir',
+        'save' => 'Guardar',
+        'hint' => 'Cuántos hay en qué ubicación, p. ej. 10 en GA2C1. El equipo lo ve en la lista de picking. Pon una cantidad a 0 para quitar una ubicación. Para meter algunos en una caja o flight, usa el bloque de abajo.',
+        'done_n' => ':n ahora en :place.',
+        'removed' => 'Ya no hay nada en :place.',
+        'unplaced' => 'Aún sin ubicar: :n de :stock (ni en una ubicación ni en una caja o flight).',
         'unknown' => '«:code» no es una ubicación ni una zona de almacén. Elige una de la lista.',
     ],
 ];

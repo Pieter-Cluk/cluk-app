@@ -84,6 +84,7 @@ abstract class Provider
 
     protected static function ts(?string $v): ?Carbon
     {
-        return $v ? Carbon::parse($v) : null;
+        // In our own time zone: the database keeps the clock time as given (Meta and Google send UTC).
+        return $v ? Carbon::parse($v)->timezone(config('app.timezone')) : null;
     }
 }

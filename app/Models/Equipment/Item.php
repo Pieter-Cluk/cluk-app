@@ -79,6 +79,26 @@ class Item extends Model
         $this->forceFill(['photo_path' => $this->photos()->value('path')])->save();
     }
 
+    /** Counted items: how many lie on which rack place. */
+    public function places(): HasMany
+    {
+        return $this->hasMany(ItemPlace::class)->orderByDesc('qty')->orderBy('position_code');
+    }
+
+    /** Counted pieces in no place and in no dolly, box or case (still to be found and placed). */
+    public function unplacedQty(): int
+    {
+        return max(0, (int) $this->stock_qty - (int) $this->places()->sum('qty') - (int) CaseItem::where('item_id', $this->id)->sum('qty'));
+    }
+
+    /** "GA2C1 (10) · GA1B1 (5)": where the counted pieces lie. */
+    public function placesLabel(): ?string
+    {
+        $p = $this->relationLoaded('places') ? $this->places : $this->places()->get();
+
+        return $p->isNotEmpty() ? $p->map(fn ($x) => $x->position_code.' ('.$x->qty.')')->implode(' · ') : $this->position_code;
+    }
+
     public function assets(): HasMany
     {
         return $this->hasMany(Asset::class)->orderBy('code');

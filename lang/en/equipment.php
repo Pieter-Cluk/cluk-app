@@ -235,11 +235,13 @@ return [
         'converted' => 'Switched to counted: :n pieces in stock. Print one QR label for the type.',
     ],
     'kept' => [
-        'title' => 'Kept at (rack place)',
-        'go' => 'Save',
-        'hint' => 'Where these are normally kept, e.g. GA1B1. The crew sees it on the pick list. Leave empty for no fixed place. To put a number of them in a box or case, use the block below.',
-        'done' => 'Now kept at :place.',
-        'cleared' => 'No fixed rack place any more.',
+        'title' => 'Rack places and counts',
+        'go' => 'Add',
+        'save' => 'Save',
+        'hint' => 'How many lie on which rack place, e.g. 10 on GA2C1. The crew sees it on the pick list. Set a count to 0 to take a place away. To put a number of them in a box or case, use the block below.',
+        'done_n' => ':n now on :place.',
+        'removed' => 'Nothing on :place any more.',
+        'unplaced' => 'Not placed yet: :n of :stock (not on a rack place and not in a box or case).',
         'unknown' => '“:code” is not a rack place or storage zone. Pick one from the list.',
     ],
 ];
