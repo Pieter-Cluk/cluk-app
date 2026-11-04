@@ -1,0 +1,31 @@
+name: Help videos · voice samples
+# A few sample sentences in candidate voices, to pick a more natural voice for the help videos.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  samples:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Speak the samples
+        run: |
+          pip install -q edge-tts
+          mkdir -p /tmp/s && cd /tmp/s
+          T="Elke week heb je per bureau één gratis moment van maximaal twee uur. Kies bovenaan de dag, en in de dagplanning zie je meteen welke momenten nog vrij zijn."
+          for v in nl-BE-DenaNeural nl-BE-ArnaudNeural nl-NL-FennaNeural nl-NL-ColetteNeural; do
+            edge-tts --voice "$v" --rate=-4% --text "$T" --write-media "$v.mp3"
+          done
+          ls -la
+      - name: Keep on the voice-samples branch
+        run: |
+          git config --global user.name "github-actions" && git config --global user.email "actions@github.com"
+          git init -q -b voice-samples /tmp/vrepo && cp /tmp/s/*.mp3 /tmp/vrepo/ && cd /tmp/vrepo
+          git add -A && git commit -q -m "Voice samples"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" voice-samples
