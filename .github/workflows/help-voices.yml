@@ -2,6 +2,10 @@ name: Help videos · voices
 # Makes the spoken explanation of the Afrit 6 help videos (tools/afrit6-help/lines.json) and keeps it as an artifact.
 on:
   workflow_dispatch:
+    inputs:
+      langs:
+        description: 'Languages to make (nl, en or nl,en)'
+        default: 'nl'
 
 permissions:
   contents: write
@@ -24,6 +28,10 @@ jobs:
           curl -sSfL -o kokoro-v1.0.int8.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.int8.onnx
           curl -sSfL -o voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
       - name: Speak
+        env:
+          LANGS: ${{ inputs.langs || 'nl' }}
+          AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
+          AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}
         run: python3 tools/afrit6-help/voices.py tools/afrit6-help/lines.json /tmp/voices /tmp/models/nl.onnx /tmp/models
       # The result goes to a separate branch "help-voices" (only voice files), fetched by whoever renders the videos.
       - name: Keep on the help-voices branch
@@ -31,6 +39,11 @@ jobs:
           sudo apt-get install -y -qq flac >/dev/null
           cd /tmp/voices && find . -name '*.wav' -exec flac -s --best --delete-input-file {} \;
           git config --global user.name "github-actions" && git config --global user.email "actions@github.com"
-          git init -q -b help-voices /tmp/vrepo && cp -r /tmp/voices/. /tmp/vrepo/ && cd /tmp/vrepo
-          git add -A && git commit -q -m "Help voices for ${{ github.sha }}"
-          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" help-voices
+          # Keep the other language(s) already on the branch; only the languages made now are replaced.
+          git clone -q --depth 1 -b help-voices "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" /tmp/vrepo \
+            || git init -q -b help-voices /tmp/vrepo
+          cd /tmp/vrepo && for l in $(ls /tmp/voices); do rm -rf "$l"; done && cp -r /tmp/voices/. . 
+          git add -A && git commit -q -m "Help voices (${LANGS:-nl}) for ${{ github.sha }}"
+          git push -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" help-voices
+        env:
+          LANGS: ${{ inputs.langs || 'nl' }}
