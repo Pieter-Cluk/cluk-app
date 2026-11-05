@@ -147,6 +147,9 @@
                                     @foreach ($suppliers->sortByDesc(fn ($s) => in_array('subhire', $s->supplies ?? [], true)) as $s)<option value="{{ $s->id }}">{{ $s->name }}</option>@endforeach
                                 </select>
                                 <input type="number" name="qty" min="1" max="{{ $line->pieces() }}" value="{{ max(1, $short) }}" class="in-num in-sm" aria-label="{{ __('orders.pieces') }}">
+                                <fieldset class="tr-pick" aria-label="{{ __('orders.transport.title') }}">
+                                    @foreach (\App\Models\Rental\SubhireRequest::TRANSPORT as $opt)<label class="check"><input type="radio" name="transport" value="{{ $opt }}" required> {{ __('orders.transport.short.'.$opt) }}</label>@endforeach
+                                </fieldset>
                                 <button @class(['btn', 'primary' => $short > 0]) type="submit">{{ __('orders.rent_go') }}</button>
                             </form>
                             @if ($suppliers->isEmpty())<small class="muted">{{ __('orders.no_suppliers') }}</small>@endif

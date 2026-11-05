@@ -31,6 +31,7 @@ return [
     'tab_pq' => 'Solicitudes (PQ) · :n',
     'tab_po' => 'Órdenes de compra (PO) · :n',
     'filters' => [
+        'transport' => 'Elegir transporte',
         'all' => 'Todos',
         'reply' => 'Respuestas recibidas',
         'wait' => 'En espera',
@@ -59,6 +60,7 @@ return [
     'needed' => 'necesario ± :date',
     'late' => 'Con retraso',
     'pq_states' => [
+        'transport' => 'Elegir transporte',
         'reply' => 'Respuestas · elegir',
         'wait' => 'Esperando respuestas',
         'closed' => 'Cerrada',
@@ -130,6 +132,7 @@ return [
     'save' => 'Guardar',
     'print_po' => 'Imprimir la orden',
     'errors' => [
+        'delivery' => 'Elija quién organiza el transporte: entrega el proveedor o recogemos nosotros.',
         'no_rate' => 'Ahora mismo no hay tipo de cambio del día para :currency. Introduce el precio en EUR o inténtalo más tarde.',
         'choose_all' => 'Cada artículo necesita un proveedor elegido con precio.',
         'no_lines' => 'Indica una cantidad para al menos un artículo con proveedor.',
@@ -141,18 +144,19 @@ return [
     'fx_order' => 'para el proveedor: :total (1 EUR = :rate :currency, BCE :date)',
     'ready_at' => 'Fecha de recogida',
     'mail' => [
+        'transport_supplier' => 'Organizado por usted: entregue en nuestro almacén',
         'transport' => 'Transporte',
         'transport_cluk' => 'Organizado por CLUK: recogemos la mercancía en vuestras instalaciones',
         'request_intro_cluk' => '¿Podéis darnos vuestro mejor precio para los artículos de abajo, en fábrica? CLUK organiza el transporte y los recoge en vuestras instalaciones. Indicadnos también la fecha de recogida y los bultos: cuántos, con sus medidas (L × A × H) y peso.',
         'order_intro_cluk' => 'Por favor, preparad los artículos de abajo al precio que nos disteis. CLUK organiza el transporte y los recoge en vuestras instalaciones.',
         'order_next_cluk' => 'Por favor, confirmad este pedido respondiendo a este correo con vuestra referencia, la fecha y dirección de recogida, y los bultos: cuántos, con sus medidas (L × A × H) y peso. Después reservamos el transporte.',
         'request_subject' => 'Solicitud de precio :number',
-        'request_intro' => '¿Puede darnos su mejor precio y fecha de entrega para los artículos siguientes?',
+        'request_intro' => '¿Puede darnos su mejor precio y fecha de entrega para los artículos siguientes? Usted organiza el transporte y entrega en nuestro almacén; incluya los costes de transporte.',
         'request_next' => 'Es una solicitud de precio, no un pedido. Responda a este correo.',
         'needed' => 'Necesario para',
         'deliver_to' => 'Entregar en',
         'order_subject' => 'Orden de compra :number',
-        'order_intro' => 'Por favor, entregue los artículos siguientes al precio y fecha acordados.',
+        'order_intro' => 'Por favor, entregue los artículos siguientes en nuestro almacén al precio y fecha acordados. Usted organiza el transporte.',
         'order_next' => 'Confirme este pedido y la fecha respondiendo a este correo, con su referencia.',
     ],
     'doc' => [
@@ -170,4 +174,12 @@ return [
         'sign_cluk' => 'Pedido por CLUK BV',
         'sign_supplier' => 'Confirmado por el proveedor / fecha',
     ],
+    'delivery_choose' => '¿Quién organiza el transporte?',
+    'delivery_hint' => [
+        'supplier' => 'El proveedor organiza el transporte y entrega en nuestro almacén',
+        'cluk' => 'CLUK reserva el transporte y recoge en el proveedor',
+    ],
+    'delivery_missing' => 'Elija quién organiza el transporte antes de enviar esta solicitud.',
+    'delivery_missing_short' => 'Transporte aún no elegido',
+    'delivery_pick' => 'Elegir…',
 ];

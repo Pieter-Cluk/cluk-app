@@ -53,7 +53,7 @@ class SalesFlow
      * Ask the suppliers for prices before the customer has accepted (draft or sent quote): what is not in free stock.
      * Returns the request, or null when everything is in stock.
      */
-    public static function requestPrices(SalesQuote $q, User $by): ?PurchaseRequest
+    public static function requestPrices(SalesQuote $q, User $by, string $delivery): ?PurchaseRequest
     {
         $buy = [];
         foreach ($q->lines()->with('item.suppliers')->get() as $l) {
@@ -69,7 +69,7 @@ class SalesFlow
             return null;
         }
         $need = collect($buy)->max(fn ($b) => $b['item']->leadDays());
-        $pq = Purchasing::create($buy, $by, $q, Purchasing::workdays(today(), $need + 1), __('psales.early_note', ['quote' => $q->number]));
+        $pq = Purchasing::create($buy, $by, $q, Purchasing::workdays(today(), $need + 1), __('psales.early_note', ['quote' => $q->number]), $delivery);
         Purchasing::send($pq, $by);
 
         return $pq;
@@ -101,8 +101,8 @@ class SalesFlow
             if ($buy && ! $early) {
                 $owner = $q->owner ?? $by ?? User::query()->orderBy('id')->first();
                 $need = collect($buy)->max(fn ($b) => $b['item']->leadDays());
-                $pq = Purchasing::create($buy, $owner, $q, Purchasing::workdays(today(), $need + 1));
-                Purchasing::send($pq, $owner);
+                // Kept as a draft: someone chooses who arranges the transport, then sends it (dashboard task).
+                Purchasing::create($buy, $owner, $q, Purchasing::workdays(today(), $need + 1));
             }
         });
         if (! $by) {

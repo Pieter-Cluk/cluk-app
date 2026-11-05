@@ -18,8 +18,8 @@
         </table>
         <div class="pad stack-sm">
             <div class="inline-form"><label class="field"><span>{{ __('purchasing.needed_by') }}</span><input type="date" name="needed_by" value="{{ old('needed_by') }}"></label>
-                <label class="field"><span>{{ __('purchasing.note') }}</span><input name="note" maxlength="500" value="{{ old('note') }}"></label>
-                <label class="field"><span>{{ __('purchasing.delivery') }}</span><select name="delivery">@foreach (\App\Models\Purchasing\PurchaseRequest::DELIVERY as $o)<option value="{{ $o }}" @selected(old('delivery', 'supplier') === $o)>{{ __('purchasing.delivery_by.'.$o) }}</option>@endforeach</select></label></div>
+                <label class="field"><span>{{ __('purchasing.note') }}</span><input name="note" maxlength="500" value="{{ old('note') }}"></label></div>
+            <div class="field"><span>{{ __('purchasing.delivery_choose') }}</span>@include('purchasing._delivery', ['value' => null])</div>
             <input type="hidden" name="send" value="0"><label class="check"><input type="checkbox" name="send" value="1" checked> {{ __('purchasing.send_now') }}</label>
             <div><button class="primary" type="submit">{{ __('purchasing.create') }}</button></div>
         </div>

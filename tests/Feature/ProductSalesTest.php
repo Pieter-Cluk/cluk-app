@@ -113,14 +113,31 @@ class ProductSalesTest extends TestCase
         $this->assertSame(['accepted', '2026-118'], [$q->status, $q->po_number]);
         $this->assertSame(6, $line->fresh()->from_stock);
 
-        // A price request for the 4 missing pieces went to both suppliers.
+        // A price request for the 4 missing pieces waits as a draft until someone chooses who arranges the transport.
         $pq = PurchaseRequest::firstOrFail();
-        $this->assertSame(['sent', 4], [$pq->status, $pq->lines()->value('qty')]);
-        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'sales@dps.example' && str_contains($n->subject, $pq->number));
+        $this->assertSame(['draft', 4, null], [$pq->status, $pq->lines()->value('qty'), $pq->delivery]);
+        Notification::assertNotSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'sales@dps.example');
         $pqLine = $pq->lines()->firstOrFail();
 
         $buyer = $this->as('asset-manager');
         $buyer->forceFill(['role_id' => Role::where('slug', 'admin')->value('id')])->save();
+        $this->actingAs($buyer)->get('/dashboard')->assertOk()->assertSee('Purchase requests: choose transport');
+        $this->actingAs($buyer)->get('/purchasing?f=transport')->assertOk()->assertSee($pq->number);
+        $this->actingAs($buyer)->get('/purchasing/requests/'.$pq->id)->assertOk()->assertSee('Who arranges the transport?');
+        $this->actingAs($buyer)->post('/purchasing/requests/'.$pq->id.'/send')->assertSessionHasErrors('delivery');
+        $this->assertSame('draft', $pq->fresh()->status);
+        $this->actingAs($buyer)->post('/purchasing/requests/'.$pq->id.'/send', ['delivery' => 'supplier'])->assertSessionHasNoErrors();
+        $pq->refresh();
+        $this->assertSame(['sent', 'supplier'], [$pq->status, $pq->delivery]);
+        // Both suppliers got it, worded clearly: they arrange the transport and deliver to us.
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, function ($n, $c, $to) use ($pq) {
+            if ($to->routes['mail'] !== 'sales@dps.example' || ! str_contains($n->subject, $pq->number)) {
+                return false;
+            }
+            $text = implode(' ', $n->intro).' '.implode(' ', $n->details);
+
+            return str_contains($text, 'You arrange the transport') && str_contains($text, 'please deliver to our warehouse');
+        });
         // The sent request opens (sent dates on the suppliers), and the task lists show the work.
         $this->actingAs($buyer)->get('/purchasing/requests/'.$pq->id)->assertOk();
         $this->actingAs($elke)->get('/dashboard')->assertOk()->assertSee('Sales orders to buy in and confirm');
@@ -166,7 +183,9 @@ class ProductSalesTest extends TestCase
         $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $item->id, 'qty' => 10]);
         $this->actingAs($elke)->get(route('psales.show', $q))->assertOk()->assertSee('Request prices from suppliers');
 
-        $this->actingAs($elke)->post(route('psales.prices', $q))->assertRedirect();
+        $this->actingAs($elke)->post(route('psales.prices', $q))->assertSessionHasErrors('delivery');
+        $this->assertSame(0, PurchaseRequest::count());
+        $this->actingAs($elke)->post(route('psales.prices', $q), ['delivery' => 'supplier'])->assertRedirect();
         $pq = PurchaseRequest::firstOrFail();
         $this->assertSame(['sent', $q->id, 4], [$pq->status, $pq->sales_quote_id, $pq->lines()->value('qty')]); // 6 in stock
         $this->actingAs($elke)->get(route('psales.show', $q))->assertDontSee('Request prices from suppliers')->assertSee($pq->number);
@@ -236,7 +255,7 @@ class ProductSalesTest extends TestCase
         $q = SalesQuote::firstOrFail();
         $this->actingAs($admin)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'item', 'item_id' => $item->id, 'qty' => 2]);
         $this->actingAs($admin)->post('/sales/sales-quotes/'.$q->id.'/lines', ['kind' => 'charge', 'name' => 'Delivery']);
-        $this->actingAs($admin)->post('/purchasing/requests', ['qty' => [$item->id => 5], 'purpose' => [$item->id => 'rental'], 'send' => '0'])->assertRedirect();
+        $this->actingAs($admin)->post('/purchasing/requests', ['qty' => [$item->id => 5], 'purpose' => [$item->id => 'rental'], 'delivery' => 'supplier', 'send' => '0'])->assertRedirect();
         $pq = PurchaseRequest::firstOrFail();
         foreach (array_keys(config('cluk.locales')) as $locale) {
             $admin->forceFill(['locale' => $locale])->save();

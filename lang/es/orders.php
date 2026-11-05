@@ -186,6 +186,7 @@ return [
     'sub_cancel' => 'Cancelar esta solicitud',
     'sub_cancel_go' => 'Cancelar solicitud',
     'errors' => [
+        'transport_missing' => 'Elija primero quién organiza el transporte (recogemos o ellos entregan) para: :names. Abra la solicitud, elija y envíe de nuevo.',
         'not_a_case' => ':code no es un dolly ni una caja.',
         'prices_first' => 'Escribe primero el precio del socio en cada línea.',
         'not_covered' => 'Aún no están cubiertas todas las líneas.',
@@ -248,4 +249,21 @@ return [
         'adjust_sent' => 'Modificación enviada a :to.',
         'adjusted_n' => '{1} 1 modificación enviada, última :date|[2,*] :n modificaciones enviadas, última :date',
     ],
+    'transport' => [
+        'title' => 'Transporte',
+        'short' => [
+            'cluk' => 'Recogemos',
+            'partner' => 'Ellos entregan',
+        ],
+        'options' => [
+            'cluk' => 'Recogemos nosotros',
+            'partner' => 'Ellos entregan',
+        ],
+        'hints' => [
+            'cluk' => 'CLUK recoge en el socio y lo devuelve todo',
+            'partner' => 'El socio entrega en nuestro almacén y lo recoge después',
+        ],
+    ],
+    'transport_required' => 'Elija quién organiza el transporte: recogemos nosotros o ellos entregan.',
+    'transport_missing' => 'Elija quién organiza el transporte antes de enviar esta solicitud.',
 ];

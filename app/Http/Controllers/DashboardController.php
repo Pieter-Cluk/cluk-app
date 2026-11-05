@@ -117,6 +117,7 @@ class DashboardController extends Controller
             $t[] = ['n' => $pqs->filter(fn ($r) => $r->repliedCount() > 0)->count(), 'key' => 'purchase_replies', 'url' => route('purchasing.index', ['f' => 'reply']), 'tone' => 'warn'];
             $t[] = ['n' => $pqs->filter->isLate()->count() + \App\Models\Purchasing\PurchaseOrder::with('lines')->whereIn('status', ['sent', 'confirmed'])->get()->filter->isLate()->count(),
                 'key' => 'purchase_late', 'url' => route('purchasing.index'), 'tone' => 'warn'];
+            $t[] = ['n' => \App\Models\Purchasing\PurchaseRequest::where('status', 'draft')->whereNull('delivery')->count(), 'key' => 'purchase_transport', 'url' => route('purchasing.index', ['f' => 'transport']), 'tone' => 'warn'];
         }
         if ($u->canUseModule('dryhire', 2)) {
             $t[] = ['n' => $mine(Order::where('status', 'allocation'))->count(), 'key' => 'orders', 'url' => route('orders.index'), 'tone' => 'warn'];

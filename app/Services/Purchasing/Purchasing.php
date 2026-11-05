@@ -39,7 +39,7 @@ class Purchasing
     }
 
     /** @param  list<array{item: SalesItem, qty: int, purpose?: string, quote_line_id?: int}>  $lines */
-    public static function create(array $lines, User $by, ?SalesQuote $quote = null, ?Carbon $neededBy = null, ?string $note = null, string $delivery = 'supplier'): PurchaseRequest
+    public static function create(array $lines, User $by, ?SalesQuote $quote = null, ?Carbon $neededBy = null, ?string $note = null, ?string $delivery = null): PurchaseRequest
     {
         return DB::transaction(function () use ($lines, $by, $quote, $neededBy, $note, $delivery) {
             $pq = PurchaseRequest::create(['number' => PurchaseRequest::nextNumber('PQ'), 'status' => 'draft', 'sales_quote_id' => $quote?->id,
@@ -62,6 +62,9 @@ class Purchasing
     /** Email every supplier the lines it carries. Returns the suppliers without an email address. */
     public static function send(PurchaseRequest $pq, User $by): array
     {
+        if (! in_array($pq->delivery, PurchaseRequest::DELIVERY, true)) {
+            throw new \DomainException('Choose who arranges the transport before sending.');
+        }
         $pq->load(['lines.item.suppliers', 'suppliers']);
         $missing = [];
         foreach ($pq->suppliers as $s) {
@@ -150,7 +153,7 @@ class Purchasing
                 $curs = $chosen->pluck('currency')->map(fn ($c) => $c ?: 'EUR')->unique();
                 $fx = $curs->count() === 1 && $curs->first() !== 'EUR' ? $chosen->first() : null;
                 $po = PurchaseOrder::create(['number' => PurchaseRequest::nextNumber('PO'), 'purchase_request_id' => $pq->id, 'company_id' => $companyId, 'status' => 'sent',
-                    'sent_at' => now(), 'created_by_id' => $by->id, 'delivery' => $pq->delivery ?: 'supplier',
+                    'sent_at' => now(), 'created_by_id' => $by->id, 'delivery' => $pq->delivery ?? throw new \DomainException('Choose who arranges the transport before ordering.'),
                     'currency' => $fx ? $fx->currency : 'EUR', 'rate' => $fx?->rate, 'rate_date' => $fx?->rate_date]);
                 $total = 0;
                 foreach ($lines as $l) {

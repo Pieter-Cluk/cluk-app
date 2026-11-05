@@ -132,7 +132,7 @@ class OrdersTest extends TestCase
         $partner = $this->supplier();
         $line = $order->lines()->where('item_id', $this->spiider->id)->first();
 
-        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2])->assertSessionHasNoErrors();
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2, 'transport' => 'partner'])->assertSessionHasNoErrors();
         $request = SubhireRequest::firstOrFail();
         $this->assertSame('draft', $request->status);
         $this->assertSame('SHQ-'.now()->year.'-0001', $request->number);
@@ -146,7 +146,7 @@ class OrdersTest extends TestCase
         // Accepting needs prices.
         $this->actingAs($this->am)->post('/sub-hire/'.$request->id.'/accept')->assertSessionHasErrors('price');
         $sl = $request->lines()->first();
-        $this->actingAs($this->am)->put('/sub-hire/'.$request->id, [
+        $this->actingAs($this->am)->put('/sub-hire/'.$request->id, ['transport' => 'partner',
             'their_ref' => 'Q-55871', 'delivery_at' => '2026-11-12T16:00', 'return_at' => '2026-11-17T10:00', 'extra' => '40',
             'lines' => [$sl->id => ['qty' => 2, 'price' => '55', 'factor' => '2', 'discount' => '']],
         ])->assertSessionHasNoErrors();
@@ -166,17 +166,63 @@ class OrdersTest extends TestCase
         $this->assertSame(5500, SubhireLine::lastPrice($partner->id, $this->spiider->id));
     }
 
+    /** Who arranges the transport must be chosen, and the partner's mail says it plainly. */
+    public function test_transport_must_be_chosen_and_the_mail_says_who_drives(): void
+    {
+        $order = $this->order(8);
+        $line = $order->lines()->where('item_id', $this->spiider->id)->first();
+        $partner = $this->supplier(['language' => 'en', 'street' => 'Hafenstraße 4', 'postcode' => '50667', 'city' => 'Köln']);
+        $url = '/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire';
+
+        $this->actingAs($this->am)->get('/order-allocation/'.$order->id)->assertOk()->assertSee('name="transport"', false)->assertSee('We pick up');
+        $this->actingAs($this->am)->post($url, ['supplier_id' => $partner->id, 'qty' => 2])->assertSessionHasErrors('transport');
+        $this->assertSame(0, SubhireRequest::count());
+
+        // A draft from before (no choice yet) blocks sending, and nothing goes out.
+        \App\Services\Rental\Orders::addSubhire($order, $line, $partner, 2, $this->am);
+        $request = SubhireRequest::firstOrFail();
+        $this->assertNull($request->transport);
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/send-requests')->assertSessionHasErrors('supplier');
+        $this->assertSame('draft', $request->fresh()->status);
+        Notification::assertNotSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'hire@demolight.de');
+        $this->actingAs($this->am)->get('/sub-hire/'.$request->id)->assertOk()->assertSee('Choose who arranges the transport before this request is sent.');
+        $this->actingAs($this->am)->put('/sub-hire/'.$request->id, ['delivery_at' => '2026-11-13T16:00', 'return_at' => '2026-11-16T10:00'])->assertSessionHasErrors('transport');
+
+        // We pick up: the mail says CLUK collects at their address and brings it back.
+        $this->actingAs($this->am)->post($url, ['supplier_id' => $partner->id, 'qty' => 1, 'transport' => 'cluk'])->assertSessionHasNoErrors();
+        $this->assertSame('cluk', $request->fresh()->transport);
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/send-requests')->assertSessionHasNoErrors();
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, function ($n) {
+            $text = implode(' ', $n->intro).' | '.implode(' | ', array_keys($n->details)).' | '.implode(' | ', $n->details).' | '.implode(' ', $n->next);
+
+            return str_contains($text, 'CLUK picks up the items at your address and brings them back')
+                && str_contains($text, 'CLUK picks up at your address') && str_contains($text, 'Hafenstraße 4, 50667 Köln')
+                && str_contains($text, 'pick-up address') && ! str_contains($text, 'Delivery to us');
+        });
+
+        // They deliver: the mail says they bring it to our warehouse and collect it there.
+        $other = $this->supplier(['name' => 'Partner Two', 'email' => 'two@partner.example', 'language' => 'en']);
+        $this->actingAs($this->am)->post($url, ['supplier_id' => $other->id, 'qty' => 1, 'transport' => 'partner'])->assertSessionHasNoErrors();
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/send-requests')->assertSessionHasNoErrors();
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, function ($n, $c, $to) {
+            $text = implode(' ', $n->intro).' | '.implode(' | ', array_keys($n->details));
+
+            return $to->routes['mail'] === 'two@partner.example' && str_contains($text, 'you deliver the items to our warehouse')
+                && str_contains($text, 'Delivery to us') && str_contains($text, 'You collect at our warehouse');
+        });
+    }
+
     public function test_not_available_opens_the_pieces_again_and_no_email_is_reported(): void
     {
         $order = $this->order(8);
         $line = $order->lines()->where('item_id', $this->spiider->id)->first();
         $mute = $this->supplier(['name' => 'No Mail BV', 'email' => null]);
-        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $mute->id, 'qty' => 2]);
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $mute->id, 'qty' => 2, 'transport' => 'partner']);
         $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/send-requests')->assertSessionHasErrors('supplier');
 
         $partner = $this->supplier();
         SubhireRequest::first()->delete();
-        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2]);
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2, 'transport' => 'partner']);
         $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/send-requests');
         $request = SubhireRequest::where('supplier_id', $partner->id)->first();
         $this->actingAs($this->am)->post('/sub-hire/'.$request->id.'/not-available')->assertRedirect('/order-allocation/'.$order->id);
@@ -238,7 +284,7 @@ class OrdersTest extends TestCase
         $order = $this->order(8);
         $partner = $this->supplier();
         $line = $order->lines()->where('item_id', $this->spiider->id)->first();
-        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2]);
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2, 'transport' => 'partner']);
         $request = SubhireRequest::first();
         $this->actingAs($this->am)->get('/sub-hire/'.$request->id)->assertOk()->assertSee('Does it still pay off?');
         $this->actingAs($this->as('warehouse'))->get('/sub-hire/'.$request->id)->assertOk()->assertDontSee('Does it still pay off?');
@@ -249,7 +295,7 @@ class OrdersTest extends TestCase
         $order = $this->order(8);
         $partner = $this->supplier();
         $line = $order->lines()->where('item_id', $this->spiider->id)->first();
-        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2]);
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2, 'transport' => 'partner']);
         $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/auto');
         $request = SubhireRequest::first();
         $admin = $this->as('admin');

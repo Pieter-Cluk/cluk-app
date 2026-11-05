@@ -109,7 +109,9 @@
                 <section class="card">
                     <h2>{{ __('psales.early_title') }}</h2>
                     <p class="muted small">{{ __('psales.early_hint') }}</p>
-                    <form method="post" action="{{ route('psales.prices', $q) }}" onsubmit="return confirm(@js(__('psales.early_confirm')))">@csrf<button class="btn" type="submit">{{ __('psales.early_button') }}</button></form>
+                    <form method="post" action="{{ route('psales.prices', $q) }}" class="stack-sm" onsubmit="return confirm(@js(__('psales.early_confirm')))">@csrf
+                        @include('purchasing._delivery', ['value' => null])
+                        <div><button class="btn" type="submit">{{ __('psales.early_button') }}</button></div></form>
                 </section>
             @endif
 

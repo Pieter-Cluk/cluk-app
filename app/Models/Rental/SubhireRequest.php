@@ -16,13 +16,16 @@ use Illuminate\Support\Facades\DB;
  * the confirmation (SHC). One per partner per order.
  */
 #[Fillable([
-    'number', 'confirm_number', 'order_id', 'supplier_id', 'status', 'delivery_at', 'return_at', 'sent_to', 'sent_at',
+    'number', 'confirm_number', 'order_id', 'supplier_id', 'status', 'transport', 'delivery_at', 'return_at', 'sent_to', 'sent_at',
     'their_ref', 'note', 'extra_cents', 'extra_text', 'total_cents', 'answered_at', 'accepted_at', 'accepted_by_id', 'created_by_id',
     'confirmed_snapshot', 'adjusted_at', 'adjust_count', 'received_at', 'received_by_id', 'in_photos', 'in_note', 'handed_back_at', 'handed_back_by_id', 'out_photos', 'out_note',
 ])]
 class SubhireRequest extends Model
 {
     public const STATUSES = ['draft', 'sent', 'accepted', 'not_available', 'cancelled'];
+
+    /** Who arranges the transport (must be chosen): cluk = we pick up and bring back; partner = they deliver and collect. */
+    public const TRANSPORT = ['cluk', 'partner'];
 
     protected function casts(): array
     {

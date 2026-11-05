@@ -173,7 +173,8 @@ class SalesQuoteController extends Controller
     {
         abort_unless($request->user()->canUseModule('sales', 2) || $request->user()->canUseModule('purchasing', 2), 403);
         abort_unless(in_array($quote->status, ['draft', 'sent'], true), 409);
-        $pq = SalesFlow::requestPrices($quote, $request->user());
+        $d = $request->validate(['delivery' => ['required', \Illuminate\Validation\Rule::in(\App\Models\Purchasing\PurchaseRequest::DELIVERY)]], ['delivery.required' => __('purchasing.errors.delivery')]);
+        $pq = SalesFlow::requestPrices($quote, $request->user(), $d['delivery']);
 
         return $pq ? redirect()->route('purchasing.pq', $pq)->with('status', __('psales.early_sent', ['number' => $pq->number]))
             : back()->with('status', __('psales.early_in_stock'));

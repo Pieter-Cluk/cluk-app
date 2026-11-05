@@ -82,11 +82,11 @@ class OrderChangesTest extends TestCase
         $order = $this->order(8);
         $partner = $this->supplier(['language' => 'en']);
         $line = $order->lines()->where('item_id', $this->spiider->id)->first();
-        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2]);
+        $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/lines/'.$line->id.'/subhire', ['supplier_id' => $partner->id, 'qty' => 2, 'transport' => 'partner']);
         $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/send-requests');
         $r = SubhireRequest::firstOrFail();
         $sl = $r->lines()->first();
-        $this->actingAs($this->am)->put('/sub-hire/'.$r->id, ['delivery_at' => '2026-11-13T16:00', 'return_at' => '2026-11-16T10:00', 'lines' => [$sl->id => ['qty' => 2, 'price' => '55', 'factor' => '1']]]);
+        $this->actingAs($this->am)->put('/sub-hire/'.$r->id, ['transport' => 'partner', 'delivery_at' => '2026-11-13T16:00', 'return_at' => '2026-11-16T10:00', 'lines' => [$sl->id => ['qty' => 2, 'price' => '55', 'factor' => '1']]]);
         $this->actingAs($this->am)->post('/sub-hire/'.$r->id.'/accept')->assertSessionHasNoErrors();
         $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/auto');
         $this->actingAs($this->am)->post('/order-allocation/'.$order->id.'/approve')->assertSessionHasNoErrors();

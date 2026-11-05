@@ -100,6 +100,8 @@ return [
     'mine' => 'Mijn',
     'everyone' => 'Iedereen',
     'tasks' => [
+        'purchase_transport' => 'Aankoopaanvragen: transport kiezen',
+        'purchase_transport_s' => 'concepten die wachten tot iemand kiest wie het transport regelt',
         'web_accounts' => 'Website-logins goed te keuren',
         'web_accounts_s' => 'klanten die zich registreerden op de website',
         'to_invoice' => 'Orders te pre-factureren',

@@ -100,6 +100,8 @@ return [
     'mine' => 'Las mías',
     'everyone' => 'Todos',
     'tasks' => [
+        'purchase_transport' => 'Solicitudes de compra: elegir transporte',
+        'purchase_transport_s' => 'borradores a la espera de elegir quién organiza el transporte',
         'web_accounts' => 'Accesos de la web por aprobar',
         'web_accounts_s' => 'clientes registrados en la web',
         'to_invoice' => 'Pedidos por prefacturar',

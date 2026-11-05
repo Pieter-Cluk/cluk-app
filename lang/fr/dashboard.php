@@ -100,6 +100,8 @@ return [
     'mine' => 'Les miennes',
     'everyone' => 'Tout le monde',
     'tasks' => [
+        'purchase_transport' => 'Demandes d’achat : choisir le transport',
+        'purchase_transport_s' => 'brouillons en attente du choix de qui organise le transport',
         'web_accounts' => 'Comptes du site à approuver',
         'web_accounts_s' => 'clients inscrits sur le site web',
         'to_invoice' => 'Commandes à préfacturer',

@@ -20,7 +20,7 @@
         <a @class(['tab', 'tab-on' => $tab === 'po']) href="{{ route('purchasing.index', ['tab' => 'po']) }}">{{ __('purchasing.tab_po', ['n' => $counts['po']]) }}</a>
     </nav>
     <nav class="chips mt">
-        @foreach ($tab === 'pq' ? ['', 'reply', 'wait', 'closed'] : ['', 'run', 'invoice', 'closed'] as $f)<a @class(['chip', 'chip-on' => $filt === $f]) href="{{ route('purchasing.index', array_filter(['tab' => $tab, 'f' => $f])) }}">{{ __('purchasing.filters.'.($f ?: 'all')) }}</a>@endforeach
+        @foreach ($tab === 'pq' ? ['', 'transport', 'reply', 'wait', 'closed'] : ['', 'run', 'invoice', 'closed'] as $f)<a @class(['chip', 'chip-on' => $filt === $f]) href="{{ route('purchasing.index', array_filter(['tab' => $tab, 'f' => $f])) }}">{{ __('purchasing.filters.'.($f ?: 'all')) }}</a>@endforeach
     </nav>
     <section class="card card-flush mt">
         <table class="table">
@@ -35,7 +35,7 @@
                             <td><small>{{ $r->lines->map(fn ($l) => $l->qty.' × '.$l->name)->implode(' · ') }}</small></td>
                             <td><small>{{ $r->needed_by ? __('purchasing.needed', ['date' => $r->needed_by->format('d/m')]) : '—' }}</small></td>
                             <td class="num">—</td>
-                            <td><span @class(['pill', 'pill-warn' => $st === 'reply', 'pill-info' => $st === 'wait', 'pill-off' => $st === 'closed', 'pill-danger' => $r->isLate()])>{{ $r->isLate() ? __('purchasing.late') : __('purchasing.pq_states.'.$st) }}</span></td></tr>
+                            <td><span @class(['pill', 'pill-warn' => in_array($st, ['reply', 'transport'], true), 'pill-info' => $st === 'wait', 'pill-off' => $st === 'closed', 'pill-danger' => $r->isLate()])>{{ $r->isLate() ? __('purchasing.late') : __('purchasing.pq_states.'.$st) }}</span></td></tr>
                     @else
                         @php($st = $poState($r))
                         <tr><td><a href="{{ route('purchasing.po', $r) }}"><b>{{ $r->number }}</b></a><br><small class="muted">{{ $r->sent_at ? __('purchasing.sent_on', ['date' => $r->sent_at->format('d/m')]) : '' }}</small></td>

@@ -186,6 +186,7 @@ return [
     'sub_cancel' => 'Deze aanvraag annuleren',
     'sub_cancel_go' => 'Aanvraag annuleren',
     'errors' => [
+        'transport_missing' => 'Kies eerst wie het transport regelt (wij halen op of zij leveren) voor: :names. Open de aanvraag, kies en verstuur opnieuw.',
         'not_a_case' => ':code is geen dolly of box.',
         'prices_first' => 'Vul eerst de prijs van de partner in voor elke lijn.',
         'not_covered' => 'Nog niet elke lijn is gedekt.',
@@ -248,4 +249,21 @@ return [
         'adjust_sent' => 'Wijziging gestuurd naar :to.',
         'adjusted_n' => '{1} 1 wijziging gestuurd, laatst :date|[2,*] :n wijzigingen gestuurd, laatst :date',
     ],
+    'transport' => [
+        'title' => 'Transport',
+        'short' => [
+            'cluk' => 'Wij halen op',
+            'partner' => 'Zij leveren',
+        ],
+        'options' => [
+            'cluk' => 'Wij halen op',
+            'partner' => 'Zij leveren',
+        ],
+        'hints' => [
+            'cluk' => 'CLUK haalt op bij de partner en brengt alles terug',
+            'partner' => 'De partner levert aan ons magazijn en haalt nadien weer op',
+        ],
+    ],
+    'transport_required' => 'Kies wie het transport regelt: wij halen op, of zij leveren.',
+    'transport_missing' => 'Kies wie het transport regelt voor deze aanvraag vertrekt.',
 ];

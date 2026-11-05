@@ -10,6 +10,7 @@ use App\Services\Rental\OrderMails;
 use App\Services\Rental\Orders;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -62,6 +63,7 @@ class SubhireController extends Controller
         abort_if($subhire->handed_back_at, 409);
         $d = $request->validate([
             'their_ref' => ['nullable', 'string', 'max:80'],
+            'transport' => ['required', Rule::in(SubhireRequest::TRANSPORT)],
             'delivery_at' => ['required', 'date'],
             'return_at' => ['required', 'date', 'after:delivery_at'],
             'note' => ['nullable', 'string', 'max:2000'],
@@ -75,7 +77,7 @@ class SubhireController extends Controller
         ]);
         DB::transaction(function () use ($subhire, $d) {
             $subhire->update([
-                'their_ref' => $d['their_ref'] ?? null, 'delivery_at' => $d['delivery_at'], 'return_at' => $d['return_at'], 'note' => $d['note'] ?? null,
+                'their_ref' => $d['their_ref'] ?? null, 'transport' => $d['transport'], 'delivery_at' => $d['delivery_at'], 'return_at' => $d['return_at'], 'note' => $d['note'] ?? null,
                 'extra_cents' => (int) round(((float) ($d['extra'] ?? 0)) * 100), 'extra_text' => $d['extra_text'] ?? null,
                 'answered_at' => $subhire->status === 'sent' && collect($d['lines'] ?? [])->contains(fn ($l) => ($l['price'] ?? '') !== '') ? ($subhire->answered_at ?? now()) : $subhire->answered_at,
             ]);

@@ -92,7 +92,7 @@ class BrandsAndCodesTest extends TestCase
         }
 
         // The supplier gets their own article number and the manufacturer's code on the price request.
-        Purchasing::send(Purchasing::create([['item' => $mic->fresh('suppliers'), 'qty' => 4]], $admin), $admin);
+        Purchasing::send(Purchasing::create([['item' => $mic->fresh('suppliers'), 'qty' => 4]], $admin, null, null, null, 'supplier'), $admin);
         Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'orders@dad.example'
             && str_contains($n->rows[0][1], 'DAD-778812') && str_contains($n->rows[0][1], 'SM58-LCE') && str_contains($n->rows[0][1], 'S-100001'));
         $this->assertSame(1, PurchaseRequest::count());

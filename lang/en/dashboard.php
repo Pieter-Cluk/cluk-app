@@ -100,6 +100,8 @@ return [
     'mine' => 'Mine',
     'everyone' => 'Everyone',
     'tasks' => [
+        'purchase_transport' => 'Purchase requests: choose transport',
+        'purchase_transport_s' => 'drafts waiting until someone chooses who arranges the transport',
         'web_accounts' => 'Website logins to approve',
         'web_accounts_s' => 'customers who registered on the website',
         'to_invoice' => 'Orders to pre-invoice',

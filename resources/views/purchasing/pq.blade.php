@@ -5,7 +5,7 @@
         <div>
             <div class="kicker"><a href="{{ route('purchasing.index') }}">{{ mb_strtoupper(__('nav.items.purchasing')) }}</a> · {{ $pq->number }}</div>
             <h1>{{ __('purchasing.pq_title', ['number' => $pq->number]) }}</h1>
-            <p class="muted">@if ($pq->salesQuote){!! __('purchasing.for_sale', ['customer' => e($pq->salesQuote->customerName()), 'quote' => '<a href="'.route('psales.show', $pq->salesQuote).'">'.e($pq->salesQuote->number).'</a>']) !!}@else{{ __('purchasing.for_stock') }}@endif @if ($pq->needed_by) · {{ __('purchasing.needed', ['date' => $pq->needed_by->format('d/m/Y')]) }}@endif · {{ __('purchasing.delivery_by.'.($pq->delivery ?: 'supplier')) }}</p>
+            <p class="muted">@if ($pq->salesQuote){!! __('purchasing.for_sale', ['customer' => e($pq->salesQuote->customerName()), 'quote' => '<a href="'.route('psales.show', $pq->salesQuote).'">'.e($pq->salesQuote->number).'</a>']) !!}@else{{ __('purchasing.for_stock') }}@endif @if ($pq->needed_by) · {{ __('purchasing.needed', ['date' => $pq->needed_by->format('d/m/Y')]) }}@endif · {{ $pq->delivery ? __('purchasing.delivery_by.'.$pq->delivery) : __('purchasing.delivery_missing_short') }}</p>
         </div>
         <span @class(['pill', 'pill-ok' => $pq->status === 'ordered', 'pill-warn' => $pq->status === 'sent', 'pill-off' => in_array($pq->status, ['draft', 'cancelled'], true)])>{{ __('purchasing.pq_status.'.$pq->status) }} · {{ __('purchasing.replied', ['n' => $pq->repliedCount(), 'of' => $pq->suppliers->count()]) }}</span>
     </div>
@@ -17,7 +17,10 @@
             <div class="p-line"><span><b>{{ $s->name }}</b><br><small class="muted">{{ $pq->lines->filter(fn ($l) => ! $l->item || $l->item->suppliers->contains('id', $s->id))->map(fn ($l) => $l->qty.' × '.$l->name)->implode(' · ') }}</small></span>
                 <span class="muted">{{ $s->pivot->replied_at ? __('purchasing.replied_on', ['date' => \Illuminate\Support\Carbon::parse($s->pivot->replied_at)->format('d/m H:i')]) : ($s->pivot->sent_at ? __('purchasing.sent_on', ['date' => \Illuminate\Support\Carbon::parse($s->pivot->sent_at)->format('d/m H:i')]) : __('purchasing.not_sent')) }}</span></div>
         @endforeach
-        @if ($pq->status === 'draft' && $canWork)<form method="post" action="{{ route('purchasing.send', $pq) }}" class="mt">@csrf<button class="primary" type="submit">{{ __('purchasing.send_all') }}</button></form>@endif
+        @if ($pq->status === 'draft' && $canWork)<form method="post" action="{{ route('purchasing.send', $pq) }}" class="mt stack-sm">@csrf
+            @unless ($pq->delivery)<p class="flash flash-err">{{ __('purchasing.delivery_missing') }}</p>@endunless
+            <div class="field"><span>{{ __('purchasing.delivery_choose') }}</span>@include('purchasing._delivery', ['value' => $pq->delivery])</div>
+            <div><button class="primary" type="submit">{{ __('purchasing.send_all') }}</button></div></form>@endif
         <p class="mt"><a href="{{ route('purchasing.pq.print', $pq) }}" target="_blank" rel="noopener">{{ __('purchasing.print_pq') }}</a></p>
     </section>
 
@@ -55,7 +58,7 @@
         @endforeach
         @if ($open)
             <div class="inline-form mt">
-                <label class="field"><span>{{ __('purchasing.delivery') }}</span><select name="delivery">@foreach (\App\Models\Purchasing\PurchaseRequest::DELIVERY as $o)<option value="{{ $o }}" @selected($pq->delivery === $o)>{{ __('purchasing.delivery_by.'.$o) }}</option>@endforeach</select></label>
+                <label class="field"><span>{{ __('purchasing.delivery') }}</span><select name="delivery" required>@unless ($pq->delivery)<option value="">{{ __('purchasing.delivery_pick') }}</option>@endunless @foreach (\App\Models\Purchasing\PurchaseRequest::DELIVERY as $o)<option value="{{ $o }}" @selected($pq->delivery === $o)>{{ __('purchasing.delivery_by.'.$o) }}</option>@endforeach</select></label>
                 <button class="btn" type="submit">{{ __('purchasing.save_replies') }}</button>
                 <button class="primary" type="submit" name="order" value="1">{{ __('purchasing.order') }}</button>
             </div>

@@ -31,6 +31,7 @@ return [
     'tab_pq' => 'Prijsaanvragen (PQ) · :n',
     'tab_po' => 'Aankooporders (PO) · :n',
     'filters' => [
+        'transport' => 'Transport kiezen',
         'all' => 'Alle',
         'reply' => 'Antwoorden binnen',
         'wait' => 'Wachtend',
@@ -59,6 +60,7 @@ return [
     'needed' => 'nodig ± :date',
     'late' => 'Te laat',
     'pq_states' => [
+        'transport' => 'Transport kiezen',
         'reply' => 'Antwoorden binnen · kiezen',
         'wait' => 'Wacht op antwoorden',
         'closed' => 'Afgesloten',
@@ -130,6 +132,7 @@ return [
     'save' => 'Bewaren',
     'print_po' => 'Aankooporder afdrukken',
     'errors' => [
+        'delivery' => 'Kies wie het transport regelt: de leverancier levert, of wij halen op.',
         'no_rate' => 'Er is nu geen dagkoers voor :currency beschikbaar. Geef de prijs in EUR in, of probeer straks opnieuw.',
         'choose_all' => 'Elk artikel heeft een gekozen leverancier met een prijs nodig.',
         'no_lines' => 'Vul een aantal in voor minstens één artikel met een leverancier.',
@@ -141,18 +144,19 @@ return [
     'fx_order' => 'voor de leverancier: :total (1 EUR = :rate :currency, ECB :date)',
     'ready_at' => 'Ophaaldatum',
     'mail' => [
+        'transport_supplier' => 'Door u geregeld: gelieve te leveren aan ons magazijn',
         'transport' => 'Transport',
         'transport_cluk' => 'Georganiseerd door CLUK: wij halen de goederen op bij jullie',
         'request_intro_cluk' => 'Kunnen jullie ons je beste prijs geven voor de artikelen hieronder, af fabriek: CLUK organiseert het transport en haalt ze bij jullie op. Laat ons ook de ophaaldatum weten en de colli: hoeveel, met hun afmetingen (L × B × H) en gewicht.',
         'order_intro_cluk' => 'Gelieve de artikelen hieronder klaar te zetten aan de prijs die je ons gaf. CLUK organiseert het transport en haalt ze bij jullie op.',
         'order_next_cluk' => 'Gelieve deze bestelling te bevestigen door op deze e-mail te antwoorden met jullie referentie, de ophaaldatum en het ophaaladres, en de colli: hoeveel, met hun afmetingen (L × B × H) en gewicht. Dan boeken wij het transport.',
         'request_subject' => 'Prijsaanvraag :number',
-        'request_intro' => 'Kan u ons uw beste prijs en leverdatum geven voor de artikels hieronder?',
+        'request_intro' => 'Kan u ons uw beste prijs en leverdatum geven voor de artikels hieronder? U regelt het transport en levert aan ons magazijn; gelieve de transportkosten mee te rekenen.',
         'request_next' => 'Dit is een prijsaanvraag, geen bestelling. Antwoord gewoon op deze e-mail.',
         'needed' => 'Nodig tegen',
         'deliver_to' => 'Leveren aan',
         'order_subject' => 'Aankooporder :number',
-        'order_intro' => 'Gelieve de artikels hieronder te leveren aan de prijs en datum die u ons gaf.',
+        'order_intro' => 'Gelieve de artikels hieronder te leveren aan ons magazijn, aan de prijs en datum die u ons gaf. U regelt het transport.',
         'order_next' => 'Gelieve deze bestelling en de leverdatum te bevestigen door op deze e-mail te antwoorden, met uw referentie.',
     ],
     'doc' => [
@@ -170,4 +174,12 @@ return [
         'sign_cluk' => 'Besteld door CLUK BV',
         'sign_supplier' => 'Bevestigd door de leverancier / datum',
     ],
+    'delivery_choose' => 'Wie regelt het transport?',
+    'delivery_hint' => [
+        'supplier' => 'De leverancier regelt het transport en levert aan ons magazijn',
+        'cluk' => 'CLUK boekt het transport en haalt op bij de leverancier',
+    ],
+    'delivery_missing' => 'Kies wie het transport regelt voor deze aanvraag vertrekt.',
+    'delivery_missing_short' => 'Transport nog niet gekozen',
+    'delivery_pick' => 'Kies…',
 ];

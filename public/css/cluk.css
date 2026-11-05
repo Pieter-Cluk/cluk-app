@@ -1170,3 +1170,4 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .ph-count-form{display:flex;gap:8px;align-items:flex-end;margin:10px 0}
 .ph-count-form label{display:flex;flex-direction:column;gap:4px;flex:1;font-size:14px}
 .ph-count-form input{font-size:22px;padding:8px 10px;width:100%}
+.tr-pick{display:flex;gap:10px;border:0;padding:0;margin:0;flex-wrap:wrap}

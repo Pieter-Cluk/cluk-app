@@ -34,7 +34,8 @@ class PurchaseMails
     /** "Deliver to: our warehouse", or "Transport: organised by CLUK, we collect the goods at your address". */
     private static function delivery(string $by): array
     {
-        return $by === 'cluk' ? [__('purchasing.mail.transport') => __('purchasing.mail.transport_cluk')] : [__('purchasing.mail.deliver_to') => self::deliverTo()];
+        return $by === 'cluk' ? [__('purchasing.mail.transport') => __('purchasing.mail.transport_cluk')]
+            : [__('purchasing.mail.transport') => __('purchasing.mail.transport_supplier'), __('purchasing.mail.deliver_to') => self::deliverTo()];
     }
 
     public static function request(PurchaseRequest $pq, Company $s, Collection $lines, string $to, User $by): bool

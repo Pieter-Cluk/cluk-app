@@ -43,6 +43,32 @@ class OrderMails
         return $first ? __('mails.hello', ['name' => $first]) : __('mails.hello_plain');
     }
 
+    /** Who arranges the transport, said plainly so the partner cannot misread it. */
+    private static function transportLine(SubhireRequest $r): string
+    {
+        return $r->transport === 'cluk' ? __('mails.subhire.transport_cluk') : __('mails.subhire.transport_partner', ['address' => self::warehouse()]);
+    }
+
+    /** The two moments, worded for who drives: we pick up at the partner, or they deliver to our warehouse. */
+    private static function transportDetails(SubhireRequest $r): array
+    {
+        if ($r->transport === 'cluk') {
+            $at = $r->supplier->address();
+
+            return [
+                __('mails.label.transport') => __('mails.subhire.transport_cluk_short'),
+                __('mails.label.pickup_partner') => self::when($r->delivery_at).($at ? ' · '.$at : ''),
+                __('mails.label.back_partner') => self::when($r->return_at),
+            ];
+        }
+
+        return [
+            __('mails.label.transport') => __('mails.subhire.transport_partner_short'),
+            __('mails.label.delivery') => self::when($r->delivery_at).' · '.self::warehouse(),
+            __('mails.label.collect_partner') => self::when($r->return_at),
+        ];
+    }
+
     public static function priceRequest(SubhireRequest $r, User $by): bool
     {
         $r->loadMissing(['supplier', 'lines']);
@@ -51,15 +77,14 @@ class OrderMails
         return self::send($r->sent_to, $lang, fn () => new Confirmation(
             subject: __('mails.subhire.request_subject', ['number' => $r->number]),
             greeting: __('mails.hello_plain'),
-            intro: [__('mails.subhire.request_intro')],
+            intro: [__('mails.subhire.request_intro'), self::transportLine($r)],
             details: [
                 __('mails.label.our_ref') => $r->number,
-                __('mails.label.delivery') => self::when($r->delivery_at).' · '.self::warehouse(),
-                __('mails.label.return_partner') => self::when($r->return_at),
+                ...self::transportDetails($r),
                 __('mails.label.days') => (string) $r->days(),
             ],
             rows: $r->lines->map(fn ($l) => [(string) $l->qty, $l->name, ''])->all(),
-            next: [__('mails.subhire.request_next')],
+            next: [__('mails.subhire.request_next'), ...($r->transport === 'cluk' ? [__('mails.subhire.request_next_cluk')] : [])],
             signer: $by,
         ));
     }
@@ -72,12 +97,11 @@ class OrderMails
         return self::send($r->sent_to, $lang, fn () => new Confirmation(
             subject: __('mails.subhire.confirm_subject', ['number' => $r->confirm_number]),
             greeting: __('mails.hello_plain'),
-            intro: [__('mails.subhire.confirm_intro')],
+            intro: [__('mails.subhire.confirm_intro'), self::transportLine($r)],
             details: array_filter([
                 __('mails.label.our_ref') => $r->confirm_number.' ('.$r->number.')',
                 __('mails.label.your_ref') => $r->their_ref,
-                __('mails.label.delivery') => self::when($r->delivery_at).' · '.self::warehouse(),
-                __('mails.label.return_partner') => self::when($r->return_at),
+                ...self::transportDetails($r),
             ]),
             rows: $r->lines->map(fn ($l) => [(string) $l->qty, $l->name, Pricing::eur($l->amount_cents)])->all()
                 + ($r->extra_cents ? [99 => ['', (string) ($r->extra_text ?: __('orders.extra')), Pricing::eur($r->extra_cents)]] : []),
@@ -101,18 +125,17 @@ class OrderMails
             foreach ($changes as [$k, $a, $b]) {
                 $was[] = $k === 'qty'
                     ? __('mails.subhire.change_qty', ['name' => $a, 'was' => $b[0], 'now' => $b[1]])
-                    : __('mails.subhire.change_'.$k, ['was' => self::when($a), 'now' => self::when($b)]);
+                    : __('mails.subhire.change_'.$k.($r->transport === 'cluk' ? '_cluk' : ''), ['was' => self::when($a), 'now' => self::when($b)]);
             }
 
             return new Confirmation(
                 subject: __('mails.subhire.adjust_subject', ['number' => $r->confirm_number]),
                 greeting: __('mails.hello_plain'),
-                intro: array_values(array_filter([__('mails.subhire.adjust_intro', ['number' => $r->confirm_number]), ...array_map(fn ($w) => '• '.$w, $was ?: [__('mails.subhire.no_changes')]), $message])),
+                intro: array_values(array_filter([__('mails.subhire.adjust_intro', ['number' => $r->confirm_number]), ...array_map(fn ($w) => '• '.$w, $was ?: [__('mails.subhire.no_changes')]), $message, self::transportLine($r)])),
                 details: array_filter([
                     __('mails.label.our_ref') => $r->confirm_number.' ('.$r->number.')',
                     __('mails.label.your_ref') => $r->their_ref,
-                    __('mails.label.delivery') => self::when($r->delivery_at).' · '.self::warehouse(),
-                    __('mails.label.return_partner') => self::when($r->return_at),
+                    ...self::transportDetails($r),
                 ]),
                 rows: $r->lines->map(fn ($l) => [(string) $l->qty, $l->name, $l->amount_cents ? Pricing::eur($l->amount_cents) : ''])->all(),
                 totals: $r->total_cents ? [__('quotes.total_excl') => Pricing::eur($r->total_cents)] : [],

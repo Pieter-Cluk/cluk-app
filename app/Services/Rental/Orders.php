@@ -107,7 +107,7 @@ class Orders
     }
 
     /** Ask a partner for pieces of a line: joins the draft request for that partner, or starts one. */
-    public static function addSubhire(Order $order, OrderLine $line, Company $supplier, int $qty, User $by): SubhireRequest
+    public static function addSubhire(Order $order, OrderLine $line, Company $supplier, int $qty, User $by, ?string $transport = null): SubhireRequest
     {
         $request = SubhireRequest::firstOrCreate(
             ['order_id' => $order->id, 'supplier_id' => $supplier->id, 'status' => 'draft'],
@@ -117,6 +117,9 @@ class Orders
                 'return_at' => $order->out_until->copy()->addDay()->setTime(10, 0),
             ],
         );
+        if ($transport && $transport !== $request->transport) {
+            $request->update(['transport' => $transport]);
+        }
         $existing = $request->lines()->where('order_line_id', $line->id)->first();
         if ($existing) {
             $existing->update(['qty' => $existing->qty + $qty]);
@@ -156,6 +159,9 @@ class Orders
                 $request->delete();
 
                 continue;
+            }
+            if (! $request->transport) {
+                continue; // who arranges the transport is chosen first (checked before sending)
             }
             $to = self::supplierEmail($request->supplier);
             if (! $to) {

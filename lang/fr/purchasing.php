@@ -31,6 +31,7 @@ return [
     'tab_pq' => 'Demandes de prix (PQ) · :n',
     'tab_po' => 'Bons de commande (PO) · :n',
     'filters' => [
+        'transport' => 'Choisir le transport',
         'all' => 'Tous',
         'reply' => 'Réponses reçues',
         'wait' => 'En attente',
@@ -59,6 +60,7 @@ return [
     'needed' => 'nécessaire ± :date',
     'late' => 'En retard',
     'pq_states' => [
+        'transport' => 'Choisir le transport',
         'reply' => 'Réponses reçues · choisir',
         'wait' => 'En attente de réponses',
         'closed' => 'Clôturée',
@@ -130,6 +132,7 @@ return [
     'save' => 'Enregistrer',
     'print_po' => 'Imprimer le bon de commande',
     'errors' => [
+        'delivery' => 'Choisissez qui organise le transport : le fournisseur livre, ou nous enlevons.',
         'no_rate' => 'Aucun cours du jour pour :currency n’est disponible pour l’instant. Saisissez le prix en EUR ou réessayez plus tard.',
         'choose_all' => 'Chaque article doit avoir un fournisseur choisi avec un prix.',
         'no_lines' => 'Indiquez une quantité pour au moins un article avec fournisseur.',
@@ -141,18 +144,19 @@ return [
     'fx_order' => 'pour le fournisseur : :total (1 EUR = :rate :currency, BCE :date)',
     'ready_at' => 'Date d’enlèvement',
     'mail' => [
+        'transport_supplier' => 'Organisé par vous : merci de livrer à notre entrepôt',
         'transport' => 'Transport',
         'transport_cluk' => 'Organisé par CLUK : nous enlevons la marchandise chez vous',
         'request_intro_cluk' => 'Pourriez-vous nous donner votre meilleur prix pour les articles ci-dessous, départ usine : CLUK organise le transport et vient les enlever chez vous. Merci d’indiquer aussi la date d’enlèvement et les colis : combien, avec leurs dimensions (L × l × H) et leur poids.',
         'order_intro_cluk' => 'Merci de préparer les articles ci-dessous au prix que vous nous avez donné. CLUK organise le transport et vient les enlever chez vous.',
         'order_next_cluk' => 'Merci de confirmer cette commande en répondant à cet e-mail avec votre référence, la date et l’adresse d’enlèvement, et les colis : combien, avec leurs dimensions (L × l × H) et leur poids. Nous réservons ensuite le transport.',
         'request_subject' => 'Demande de prix :number',
-        'request_intro' => 'Pouvez-vous nous donner votre meilleur prix et votre délai pour les articles ci-dessous ?',
+        'request_intro' => 'Pouvez-vous nous donner votre meilleur prix et votre délai pour les articles ci-dessous ? Vous organisez le transport et livrez à notre entrepôt ; merci d’inclure les frais de transport.',
         'request_next' => 'Ceci est une demande de prix, pas une commande. Répondez simplement à cet e-mail.',
         'needed' => 'Nécessaire pour le',
         'deliver_to' => 'Livrer à',
         'order_subject' => 'Bon de commande :number',
-        'order_intro' => 'Merci de livrer les articles ci-dessous au prix et à la date convenus.',
+        'order_intro' => 'Merci de livrer les articles ci-dessous à notre entrepôt, au prix et à la date convenus. Vous organisez le transport.',
         'order_next' => 'Merci de confirmer cette commande et la date en répondant à cet e-mail, avec votre référence.',
     ],
     'doc' => [
@@ -170,4 +174,12 @@ return [
         'sign_cluk' => 'Commandé par CLUK BV',
         'sign_supplier' => 'Confirmé par le fournisseur / date',
     ],
+    'delivery_choose' => 'Qui organise le transport ?',
+    'delivery_hint' => [
+        'supplier' => 'Le fournisseur organise le transport et livre à notre entrepôt',
+        'cluk' => 'CLUK réserve le transport et enlève chez le fournisseur',
+    ],
+    'delivery_missing' => 'Choisissez qui organise le transport avant l’envoi de cette demande.',
+    'delivery_missing_short' => 'Transport pas encore choisi',
+    'delivery_pick' => 'Choisir…',
 ];

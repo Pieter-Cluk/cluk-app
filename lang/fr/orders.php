@@ -186,6 +186,7 @@ return [
     'sub_cancel' => 'Annuler cette demande',
     'sub_cancel_go' => 'Annuler la demande',
     'errors' => [
+        'transport_missing' => 'Choisissez d’abord qui organise le transport (nous enlevons ou ils livrent) pour : :names. Ouvrez la demande, choisissez, puis renvoyez.',
         'not_a_case' => ':code n’est pas un dolly ni une boîte.',
         'prices_first' => 'Saisissez d’abord le prix du partenaire pour chaque ligne.',
         'not_covered' => 'Toutes les lignes ne sont pas encore couvertes.',
@@ -248,4 +249,21 @@ return [
         'adjust_sent' => 'Modification envoyée à :to.',
         'adjusted_n' => '{1} 1 modification envoyée, dernière :date|[2,*] :n modifications envoyées, dernière :date',
     ],
+    'transport' => [
+        'title' => 'Transport',
+        'short' => [
+            'cluk' => 'Nous enlevons',
+            'partner' => 'Ils livrent',
+        ],
+        'options' => [
+            'cluk' => 'Nous enlevons',
+            'partner' => 'Ils livrent',
+        ],
+        'hints' => [
+            'cluk' => 'CLUK enlève chez le partenaire et rapporte tout',
+            'partner' => 'Le partenaire livre à notre entrepôt et reprend ensuite',
+        ],
+    ],
+    'transport_required' => 'Choisissez qui organise le transport : nous enlevons, ou ils livrent.',
+    'transport_missing' => 'Choisissez qui organise le transport avant d’envoyer cette demande.',
 ];

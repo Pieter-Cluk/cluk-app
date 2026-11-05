@@ -186,6 +186,7 @@ return [
     'sub_cancel' => 'Cancel this request',
     'sub_cancel_go' => 'Cancel request',
     'errors' => [
+        'transport_missing' => 'Choose who arranges the transport first (we pick up or they deliver) for: :names. Open the request, choose, then send again.',
         'not_a_case' => ':code is not a dolly or box.',
         'prices_first' => 'Type the partner’s price for every line first.',
         'not_covered' => 'Not every line is covered yet.',
@@ -248,4 +249,21 @@ return [
         'adjust_sent' => 'Adjustment sent to :to.',
         'adjusted_n' => '{1} 1 adjustment sent, last :date|[2,*] :n adjustments sent, last :date',
     ],
+    'transport' => [
+        'title' => 'Transport',
+        'short' => [
+            'cluk' => 'We pick up',
+            'partner' => 'They deliver',
+        ],
+        'options' => [
+            'cluk' => 'We pick up',
+            'partner' => 'They deliver',
+        ],
+        'hints' => [
+            'cluk' => 'CLUK collects at the partner and brings everything back',
+            'partner' => 'The partner delivers to our warehouse and collects afterwards',
+        ],
+    ],
+    'transport_required' => 'Choose who arranges the transport: we pick up, or they deliver.',
+    'transport_missing' => 'Choose who arranges the transport before this request is sent.',
 ];

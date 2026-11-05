@@ -98,9 +98,11 @@ class PurchasingTransportCurrencyTest extends TestCase
     {
         Http::fake([ExchangeRates::URL => Http::response('down', 503)]);
         [$admin, $item, $us] = $this->setup_();
-        $this->actingAs($admin)->post('/purchasing/requests', ['qty' => [$item->id => 2], 'purpose' => [$item->id => 'sales'], 'send' => '0'])->assertRedirect();
+        // Who arranges the transport must be chosen: there is no default.
+        $this->actingAs($admin)->post('/purchasing/requests', ['qty' => [$item->id => 2], 'purpose' => [$item->id => 'sales'], 'send' => '0'])->assertSessionHasErrors('delivery');
+        $this->actingAs($admin)->post('/purchasing/requests', ['qty' => [$item->id => 2], 'purpose' => [$item->id => 'sales'], 'delivery' => 'supplier', 'send' => '0'])->assertRedirect();
         $pq = PurchaseRequest::firstOrFail();
-        $this->assertSame('supplier', $pq->delivery); // the default: the supplier delivers to us
+        $this->assertSame('supplier', $pq->delivery);
         $line = $pq->lines()->firstOrFail();
         $this->actingAs($admin)->post('/purchasing/requests/'.$pq->id.'/replies', ['r' => [$line->id => [$us->id => ['cur' => 'USD', 'net' => '90']]]])
             ->assertSessionHasErrors('r');

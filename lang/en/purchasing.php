@@ -31,6 +31,7 @@ return [
     'tab_pq' => 'Price requests (PQ) · :n',
     'tab_po' => 'Purchase orders (PO) · :n',
     'filters' => [
+        'transport' => 'Choose transport',
         'all' => 'All',
         'reply' => 'Replies in',
         'wait' => 'Waiting',
@@ -59,6 +60,7 @@ return [
     'needed' => 'needed ± :date',
     'late' => 'Late',
     'pq_states' => [
+        'transport' => 'Choose transport',
         'reply' => 'Replies in · choose',
         'wait' => 'Waiting for replies',
         'closed' => 'Closed',
@@ -130,6 +132,7 @@ return [
     'save' => 'Save',
     'print_po' => 'Print the purchase order',
     'errors' => [
+        'delivery' => 'Choose who arranges the transport: the supplier delivers, or we pick up.',
         'no_rate' => 'No day rate for :currency is available right now. Enter the price in EUR, or try again later.',
         'choose_all' => 'Every item needs a chosen supplier with a price.',
         'no_lines' => 'Fill in a quantity for at least one item that has a supplier.',
@@ -141,18 +144,19 @@ return [
     'fx_order' => 'to the supplier: :total (1 EUR = :rate :currency, ECB :date)',
     'ready_at' => 'Pick-up date',
     'mail' => [
+        'transport_supplier' => 'Arranged by you: please deliver to our warehouse',
         'transport' => 'Transport',
         'transport_cluk' => 'Organised by CLUK: we collect the goods at your address',
         'request_intro_cluk' => 'Could you give us your best price for the items below, ex works: CLUK organises the transport and collects them at your address. Please also tell us the pick-up date and the packages: how many, with their dimensions (L × W × H) and weight.',
         'order_intro_cluk' => 'Please prepare the items below at the price you gave us. CLUK organises the transport and collects them at your address.',
         'order_next_cluk' => 'Please confirm this order by replying to this email with your reference, the pick-up date and address, and the packages: how many, with their dimensions (L × W × H) and weight. We then book the transport.',
         'request_subject' => 'Price request :number',
-        'request_intro' => 'Could you give us your best price and delivery date for the items below?',
+        'request_intro' => 'Could you give us your best price and delivery date for the items below? You arrange the transport and deliver to our warehouse; please include the transport costs.',
         'request_next' => 'This is a price request, not an order. Just reply to this email.',
         'needed' => 'Needed by',
         'deliver_to' => 'Deliver to',
         'order_subject' => 'Purchase order :number',
-        'order_intro' => 'Please deliver the items below at the price and date you gave us.',
+        'order_intro' => 'Please deliver the items below to our warehouse at the price and date you gave us. You arrange the transport.',
         'order_next' => 'Please confirm this order and the delivery date by replying to this email, with your reference.',
     ],
     'doc' => [
@@ -170,4 +174,12 @@ return [
         'sign_cluk' => 'Ordered by CLUK BV',
         'sign_supplier' => 'Confirmed by the supplier / date',
     ],
+    'delivery_choose' => 'Who arranges the transport?',
+    'delivery_hint' => [
+        'supplier' => 'The supplier arranges the transport and delivers to our warehouse',
+        'cluk' => 'CLUK books the transport and collects at the supplier',
+    ],
+    'delivery_missing' => 'Choose who arranges the transport before this request goes out.',
+    'delivery_missing_short' => 'Transport not chosen yet',
+    'delivery_pick' => 'Choose…',
 ];

@@ -27,6 +27,16 @@
             @if ($edit)<form method="post" action="{{ route('subhire.update', $r) }}" id="sub-form">@csrf @method('PUT')@endif
             <section class="card">
                 <h2>{{ __('orders.partner_quote') }}</h2>
+                @if ($edit)
+                    <div class="lg-choice mb" role="radiogroup" aria-label="{{ __('orders.transport.title') }}">
+                        @foreach (\App\Models\Rental\SubhireRequest::TRANSPORT as $opt)
+                            <label class="lg-opt"><input type="radio" name="transport" value="{{ $opt }}" required @checked(old('transport', $r->transport) === $opt)><span><b>{{ __('orders.transport.options.'.$opt) }}</b><small class="muted">{{ __('orders.transport.hints.'.$opt) }}</small></span></label>
+                        @endforeach
+                    </div>
+                @else
+                    <p>{{ __('orders.transport.title') }}: <b>{{ $r->transport ? __('orders.transport.options.'.$r->transport) : '—' }}</b></p>
+                @endif
+                @unless ($r->transport)<p class="flash flash-err">{{ __('orders.transport_missing') }}</p>@endunless
                 <div class="form-grid">
                     <label class="field"><span>{{ __('orders.delivery') }}</span>@if ($edit)<input type="datetime-local" name="delivery_at" required value="{{ $r->delivery_at?->format('Y-m-d\TH:i') }}">@else<b>{{ $r->delivery_at?->format('d/m/Y H:i') }}</b>@endif</label>
                     <label class="field"><span>{{ __('orders.return') }}</span>@if ($edit)<input type="datetime-local" name="return_at" required value="{{ $r->return_at?->format('Y-m-d\TH:i') }}">@else<b>{{ $r->return_at?->format('d/m/Y H:i') }}</b>@endif</label>

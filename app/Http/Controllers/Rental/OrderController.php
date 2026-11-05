@@ -203,8 +203,9 @@ class OrderController extends Controller
         $d = $request->validate([
             'supplier_id' => ['required', 'integer', Rule::exists('companies', 'id')->where('is_supplier', true)],
             'qty' => ['required', 'integer', 'min:1', 'max:'.$line->pieces()],
-        ]);
-        $request = Orders::addSubhire($order, $line, Company::findOrFail($d['supplier_id']), (int) $d['qty'], $me);
+            'transport' => ['required', Rule::in(\App\Models\Rental\SubhireRequest::TRANSPORT)],
+        ], ['transport.required' => __('orders.transport_required')]);
+        $request = Orders::addSubhire($order, $line, Company::findOrFail($d['supplier_id']), (int) $d['qty'], $me, $d['transport']);
 
         return back()->with('status', __('orders.flash.subhire_added', ['supplier' => $request->supplier->name]));
     }
@@ -213,6 +214,10 @@ class OrderController extends Controller
     {
         $me = $this->work($request, $order);
         abort_unless($me->canUseModule('purchasing', 2), 403);
+        $noTransport = $order->subhires()->where('status', 'draft')->whereNull('transport')->with('supplier')->get();
+        if ($noTransport->isNotEmpty()) {
+            return back()->withErrors(['supplier' => __('orders.errors.transport_missing', ['names' => $noTransport->pluck('supplier.name')->implode(', ')])]);
+        }
         $missing = Orders::sendRequests($order, $me);
         if ($missing) {
             return back()->withErrors(['supplier' => __('orders.errors.no_email', ['names' => implode(', ', $missing)])]);

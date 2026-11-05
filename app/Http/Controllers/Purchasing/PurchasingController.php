@@ -27,6 +27,7 @@ class PurchasingController extends Controller
         $pos = PurchaseOrder::with(['supplier', 'lines', 'request.salesQuote.company'])->latest('id')->limit(300)->get();
         $pqState = fn (PurchaseRequest $r) => match (true) {
             in_array($r->status, ['ordered', 'cancelled'], true) => 'closed',
+            $r->status === 'draft' && ! $r->delivery => 'transport',
             $r->status === 'sent' && $r->repliedCount() >= max(1, $r->suppliers->count()) => 'reply',
             $r->status === 'sent' && $r->repliedCount() > 0 => 'reply',
             default => 'wait',
@@ -64,7 +65,7 @@ class PurchasingController extends Controller
     {
         $d = $request->validate(['qty' => ['array'], 'qty.*' => ['nullable', 'integer', 'min:0', 'max:100000'], 'purpose' => ['array'], 'purpose.*' => [Rule::in(RequestLine::PURPOSES)],
             'needed_by' => ['nullable', 'date'], 'note' => ['nullable', 'string', 'max:500'], 'send' => ['boolean'],
-            'delivery' => ['nullable', Rule::in(\App\Models\Purchasing\PurchaseRequest::DELIVERY)]]);
+            'delivery' => ['required', Rule::in(\App\Models\Purchasing\PurchaseRequest::DELIVERY)]], ['delivery.required' => __('purchasing.errors.delivery')]);
         $lines = [];
         foreach (array_filter($d['qty'] ?? []) as $id => $qty) {
             $item = SalesItem::with('suppliers')->find($id);
@@ -75,7 +76,7 @@ class PurchasingController extends Controller
         if (! $lines) {
             return back()->withInput()->withErrors(['qty' => __('purchasing.errors.no_lines')]);
         }
-        $pq = Purchasing::create($lines, $request->user(), null, isset($d['needed_by']) ? Carbon::parse($d['needed_by']) : null, $d['note'] ?? null, $d['delivery'] ?? 'supplier');
+        $pq = Purchasing::create($lines, $request->user(), null, isset($d['needed_by']) ? Carbon::parse($d['needed_by']) : null, $d['note'] ?? null, $d['delivery']);
         if ($request->boolean('send')) {
             Purchasing::send($pq, $request->user());
         }
@@ -93,6 +94,11 @@ class PurchasingController extends Controller
     public function send(Request $request, PurchaseRequest $pq): RedirectResponse
     {
         abort_unless($pq->status === 'draft', 409);
+        $d = $request->validate(['delivery' => ['required', Rule::in(PurchaseRequest::DELIVERY)]], ['delivery.required' => __('purchasing.errors.delivery')]);
+        if ($d['delivery'] !== $pq->delivery) {
+            $pq->update(['delivery' => $d['delivery']]);
+            AuditLog::record('purchase.delivery', $pq, ['delivery' => $d['delivery']], $request->user());
+        }
         $missing = Purchasing::send($pq, $request->user());
 
         return back()->with('status', $missing ? __('purchasing.sent_missing', ['names' => implode(', ', $missing)]) : __('purchasing.sent'));
@@ -102,7 +108,7 @@ class PurchasingController extends Controller
     {
         abort_unless(in_array($pq->status, ['draft', 'sent'], true), 409);
         $d = $request->validate(['r' => ['array'], 'r.*.*.disc' => ['nullable', 'numeric', 'min:0', 'max:100'], 'r.*.*.net' => ['nullable', 'numeric', 'min:0'], 'r.*.*.date' => ['nullable', 'date'], 'r.*.*.cur' => ['nullable', Rule::in(\App\Services\Finance\ExchangeRates::CURRENCIES)],
-            'choose' => ['array'], 'choose.*' => ['nullable', 'integer'], 'delivery' => ['nullable', Rule::in(PurchaseRequest::DELIVERY)]]);
+            'choose' => ['array'], 'choose.*' => ['nullable', 'integer'], 'delivery' => [$pq->delivery ? 'nullable' : 'required', Rule::in(PurchaseRequest::DELIVERY)]], ['delivery.required' => __('purchasing.errors.delivery')]);
         if (! empty($d['delivery']) && $d['delivery'] !== $pq->delivery) {
             $pq->update(['delivery' => $d['delivery']]);
         }
