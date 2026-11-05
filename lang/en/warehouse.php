@@ -174,7 +174,7 @@ return [
     ],
     'errors' => [
         'counted_too_many' => 'Only :n more fit on :place: :stock in stock, the rest is on other places or in boxes.',
-        'counted_to_rack' => ':place is not a rack place: counted items are kept on a rack place (e.g. GA2B3).',
+        'counted_to_rack' => ':place is not a rack place: counted items are kept on a rack place (e.g. GA2B3) or in the Factory.',
         'carrier_piece_busy' => ':code in :carrier is already booked for another job on these dates.',
         'carrier_not_needed' => ':carrier holds more than :order still needs: :codes. Take those out first, or add them to the order.',
         'carrier_count_busy' => ':carrier: not enough :code free on these dates (:n left).',

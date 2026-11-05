@@ -35,7 +35,8 @@ class CountedPlaces
             } else {
                 $row = ItemPlace::updateOrCreate(['item_id' => $item->id, 'position_code' => $code], ['qty' => $qty]);
             }
-            $main = $item->places()->first()?->position_code;
+            // "Kept at" (pick list) is where they lie in the warehouse: not the venue, where they are in use.
+            $main = $item->places()->whereNotIn('position_code', \App\Models\Equipment\Asset::venueCodes())->first()?->position_code;
             $item->forceFill(['position_code' => $main])->save();
             Move::create(['item_id' => $item->id, 'qty' => $qty, 'to_code' => $code, 'kind' => 'move', 'user_id' => $by?->id, 'note' => "count {$before} → {$qty}"]);
             AuditLog::record('equipment.place_count', $item, ['place' => $code, 'from' => $before, 'to' => $qty], $by);

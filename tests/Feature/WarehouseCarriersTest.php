@@ -429,6 +429,37 @@ class WarehouseCarriersTest extends TestCase
         $this->actingAs($this->crew)->get('/w/scan')->assertSee('10 ×')->assertSee('Softsteel 2T 1m');
     }
 
+    /** Counted items hung loose in the Factory: scanned there with a count, in use (not free, on the wall, remembered). */
+    public function test_loose_counted_items_can_hang_in_the_factory(): void
+    {
+        $steel = Item::create(['number' => 'RIGSOFT1M', 'kind' => 'item', 'name' => 'Softsteel 1m', 'type' => 'Softsteel 2T 1m', 'category' => 'Rigging', 'serial' => false, 'stock_qty' => 20, 'position_code' => 'GA2C1']);
+        \App\Models\Equipment\ItemPlace::create(['item_id' => $steel->id, 'position_code' => 'GA2C1', 'qty' => 10]);
+        \App\Models\Warehouse\Position::firstOrCreate(['code' => 'GA2C1'], ['floor' => 'G', 'row' => 'A', 'rack' => '2', 'layer' => 'C', 'spot' => '1', 'kind' => 'rack', 'use' => 'store', 'active' => true]);
+        $free = fn () => (new \App\Services\Rental\Availability(today(), today()->addDay()))->free($steel);
+        $this->assertSame(20, $free());
+
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'RIGSOFT1M'])->assertSessionHasNoErrors();
+        $this->actingAs($this->crew)->post('/w/scan', ['code' => 'FACTORY'])->assertSessionHasNoErrors();
+        $this->actingAs($this->crew)->get('/w/scan')->assertSee('How many lie on Cluk Factory')->assertSee('value="10"', false);
+        $this->actingAs($this->crew)->post('/w/scan/counted', ['qty' => 10])->assertSessionHas('status', '10 × Softsteel 2T 1m now on Cluk Factory (hung in the venue).');
+        $steel->refresh();
+        $this->assertSame('FACTORY (10) · GA2C1 (10)', $steel->placesLabel());
+        $this->assertSame('GA2C1', $steel->position_code); // picked from the shelf, not from the venue
+        $this->assertSame(0, $steel->unplacedQty());
+
+        // In use: not free for a job, counted as out on the wall, and on the planning wall today.
+        $this->assertSame(10, $free());
+        $this->assertSame(50, \App\Services\WallData::fleetOut()->get('Rigging'));
+        $this->assertSame(10, \App\Services\WallData::venueUse(today(), 1)['Rigging'][0]);
+
+        // Taken down tomorrow: free again; the planning wall still shows today and tomorrow, and nothing after.
+        \Illuminate\Support\Carbon::setTestNow(now()->addDay());
+        \App\Services\Warehouse\CountedPlaces::set($steel, 'FACTORY', 0, $this->crew);
+        $this->assertSame(20, (new \App\Services\Rental\Availability(today(), today()->addDay()))->free($steel->fresh()));
+        $this->assertSame([10, 10, 0], array_replace([0, 0, 0], \App\Services\WallData::venueUse(today()->subDay(), 3)['Rigging'] ?? []));
+        \Illuminate\Support\Carbon::setTestNow();
+    }
+
     public function test_counted_items_in_a_box_on_the_pick_list_and_back(): void
     {
         [$p, $order] = $this->job();

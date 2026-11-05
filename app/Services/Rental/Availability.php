@@ -137,6 +137,7 @@ class Availability
     public static function countedAtVenue(int $itemId): int
     {
         return (int) \App\Models\Equipment\CaseItem::where('item_id', $itemId)
-            ->whereIn('case_id', Asset::query()->whereIn('location', Asset::venueCodes())->select('id'))->sum('qty');
+            ->whereIn('case_id', Asset::query()->whereIn('location', Asset::venueCodes())->select('id'))->sum('qty')
+            + (int) \App\Models\Equipment\ItemPlace::where('item_id', $itemId)->whereIn('position_code', Asset::venueCodes())->sum('qty');
     }
 }

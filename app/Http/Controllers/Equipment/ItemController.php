@@ -383,7 +383,7 @@ class ItemController extends Controller
         abort_if($item->serial || $item->kind !== 'item', 404);
         $d = $request->validate(['position' => ['required', 'string', 'max:30'], 'qty' => ['required', 'integer', 'min:0', 'max:100000']]);
         $code = strtoupper(trim((string) $d['position']));
-        if (! Position::where('code', $code)->where('active', true)->exists() && ! Zone::where('code', $code)->where('active', true)->where('type', 'storage')->exists()) {
+        if (! Position::where('code', $code)->where('active', true)->exists() && ! Zone::where('code', $code)->where('active', true)->whereIn('type', ['storage', 'venue'])->exists()) {
             throw ValidationException::withMessages(['position' => __('equipment.kept.unknown', ['code' => mb_strimwidth($code, 0, 30, '…')])]);
         }
         \App\Services\Warehouse\CountedPlaces::set($item, $code, (int) $d['qty'], $request->user(), 'position');

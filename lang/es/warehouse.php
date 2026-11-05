@@ -174,7 +174,7 @@ return [
     ],
     'errors' => [
         'counted_too_many' => 'Solo caben :n más en :place: :stock en stock, el resto está en otras ubicaciones o en cajas.',
-        'counted_to_rack' => ':place no es una ubicación de estante: los artículos contados se guardan en una ubicación de estante (p. ej. GA2B3).',
+        'counted_to_rack' => ':place no es un hueco de estantería: los artículos contados se guardan en un hueco (p. ej. GA2B3) o en la Factory.',
         'carrier_piece_busy' => ':code en :carrier ya está reservado para otro trabajo en estas fechas.',
         'carrier_not_needed' => ':carrier contiene más de lo que :order aún necesita: :codes. Sácalo primero o añádelo al pedido.',
         'carrier_count_busy' => ':carrier: no hay suficiente :code libre en estas fechas (quedan :n).',

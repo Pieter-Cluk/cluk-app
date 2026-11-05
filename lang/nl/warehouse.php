@@ -174,7 +174,7 @@ return [
     ],
     'errors' => [
         'counted_too_many' => 'Er kunnen er maar :n meer op :place: :stock in voorraad, de rest ligt op andere plaatsen of in boxen.',
-        'counted_to_rack' => ':place is geen rekplaats: getelde items liggen op een rekplaats (bv. GA2B3).',
+        'counted_to_rack' => ':place is geen rekplaats: getelde artikelen liggen op een rekplaats (bv. GA2B3) of hangen in de Factory.',
         'carrier_piece_busy' => ':code in :carrier is op deze data al voor een andere job geboekt.',
         'carrier_not_needed' => ':carrier bevat meer dan :order nog nodig heeft: :codes. Haal die er eerst uit, of zet ze op de order.',
         'carrier_count_busy' => ':carrier: niet genoeg :code vrij op deze data (nog :n).',

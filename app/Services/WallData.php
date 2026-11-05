@@ -95,6 +95,12 @@ class WallData
         foreach ($atVenue as $ci) {
             self::addUse($used, $ci->item, (int) $ci->qty);
         }
+        // Counted items hung loose in the venue (no box): their count there.
+        foreach (\App\Models\Equipment\ItemPlace::with('item.contents')->whereIn('position_code', $venues)->get() as $ip) {
+            if ($ip->item) {
+                self::addUse($used, $ip->item, (int) $ip->qty);
+            }
+        }
         $orders = Order::with(['lines.item.contents'])->where('status', 'approved')->whereNotNull('loaded_at')->whereNull('returned_at')->get();
         foreach ($orders as $o) {
             foreach ($o->lines as $l) {
@@ -275,6 +281,30 @@ class WallData
                         foreach ($per as $cat => $n) {
                             $use[$cat][$i] = ($use[$cat][$i] ?? 0) + $n;
                         }
+                    }
+                }
+            }
+        }
+
+        // Counted items hung loose in the venue: the count there per day, from the count history (kept after they leave).
+        $counts = \App\Models\Warehouse\Move::whereNull('asset_id')->whereNotNull('item_id')->whereIn('to_code', $venues)->where('note', 'like', 'count %')
+            ->where('created_at', '<=', $end)->orderBy('created_at')->orderBy('id')->get(['item_id', 'to_code', 'qty', 'created_at'])->groupBy(fn ($m) => $m->item_id.'|'.$m->to_code);
+        $items = Item::with('contents')->whereIn('id', $counts->keys()->map(fn ($k) => (int) explode('|', $k)[0])->unique())->get()->keyBy('id');
+        foreach ($counts as $k => $list) {
+            $item = $items[(int) explode('|', $k)[0]] ?? null;
+            if (! $item) {
+                continue;
+            }
+            for ($i = 0; $i < $days; $i++) {
+                $d0 = $start->copy()->addDays($i)->startOfDay();
+                $d1 = $d0->copy()->endOfDay();
+                $before = $list->filter(fn ($m) => $m->created_at->lt($d0))->last();
+                $qty = max((int) $before?->qty, (int) $list->filter(fn ($m) => $m->created_at->between($d0, $d1))->max('qty'));
+                if ($qty > 0) {
+                    $per = [];
+                    self::addUse($per, $item, $qty);
+                    foreach ($per as $cat => $n) {
+                        $use[$cat][$i] = ($use[$cat][$i] ?? 0) + $n;
                     }
                 }
             }

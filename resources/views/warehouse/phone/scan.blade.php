@@ -35,7 +35,7 @@
                 @php($atPlace = $pendingItem->places->firstWhere('position_code', $pendingPlace))
                 <form method="post" action="{{ route('w.scan.counted') }}" class="ph-count-form">
                     @csrf
-                    <label><span>{{ __('warehouse.carriers.counted_how_many', ['place' => $pendingPlace]) }}</span>
+                    <label><span>{{ __('warehouse.carriers.counted_how_many', ['place' => \App\Services\Warehouse\Moves::label($pendingPlace)]) }}</span>
                         <input type="number" name="qty" inputmode="numeric" min="0" max="100000" required autofocus value="{{ old('qty', $atPlace?->qty ?? $pendingItem->unplacedQty()) }}"></label>
                     <button class="primary" type="submit">{{ __('warehouse.carriers.counted_save') }}</button>
                 </form>

@@ -213,7 +213,8 @@ class PhoneController extends Controller
         $place = $found['model'];
         // A counted item scanned before (loose, not in a box): it is kept on this rack place from now on.
         if (($itemId = $request->session()->pull('w.pending_item')) && ($item = Item::find($itemId))) {
-            if (! $place instanceof Position) {
+            // A rack place, a storage zone, or our own venue (hung in the Factory: in use there).
+            if (! $place instanceof Position && ! ($place instanceof Zone && in_array($place->type, ['storage', 'venue'], true))) {
                 $request->session()->put('w.pending_item', $item->id);
 
                 return redirect()->route('w.scan')->withErrors(['code' => __('warehouse.errors.counted_to_rack', ['place' => Moves::label($place->code)])]);
@@ -258,7 +259,7 @@ class PhoneController extends Controller
         $request->session()->put('w.here', $code);
         $left = $item->fresh()->unplacedQty();
 
-        return redirect()->route('w.scan')->with('status', __('warehouse.carriers.counted_kept', ['n' => $qty, 'name' => $item->type ?: $item->name, 'place' => $code])
+        return redirect()->route('w.scan')->with('status', __('warehouse.carriers.counted_kept', ['n' => $qty, 'name' => $item->type ?: $item->name, 'place' => Moves::label($code)])
             .($left > 0 ? ' '.__('warehouse.carriers.counted_left', ['n' => $left]) : ''));
     }
 
