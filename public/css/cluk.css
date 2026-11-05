@@ -1126,6 +1126,7 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .dg-src-row b{text-align:right;color:var(--ink)}
 .dg-note{margin-top:14px}
 @media (max-width:900px){.dg-top,.dg-charts{grid-template-columns:minmax(0,1fr)}}
+.dg-charts-one{grid-template-columns:minmax(0,1fr)}
 /* Dashboard: 30 days per channel + posts by day and hour */
 .dt-rows{display:flex;flex-direction:column;gap:6px}
 .dt-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;align-items:end}

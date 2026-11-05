@@ -4,10 +4,10 @@
     $max = max(1, max($d['hours']));
     $step = collect([1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000])->first(fn ($s) => $max / $s <= 4) ?? 10000;
     $top = (int) (ceil($max / $step) * $step);
-    $W = 480; $L = 30; $R = 8; $T = 10; $B = 130;
-    $band = ($W - $L - $R) / 24; $bw = min(14, $band - 4);
+    // Full width of the card: a wide, low plot (text stays at its normal size).
+    $W = 1000; $H = 190; $L = 34; $R = 8; $T = 10; $B = 166;
+    $band = ($W - $L - $R) / 24; $bw = min(24, $band - 6);
     $y = fn ($v) => $B - ($v / $top) * ($B - $T);
-    $srcMax = max(1, (int) $d['sources']->max('n'));
 @endphp
 <section class="card dg">
     <div class="card-head">
@@ -32,11 +32,11 @@
         </div>
     </div>
 
-    <div class="dg-charts">
+    <div class="dg-charts dg-charts-one">
         <figure class="dg-fig">
             <figcaption>{{ __('dashboard.digital.per_hour') }}</figcaption>
             <div class="dg-plot">
-                <svg viewBox="0 0 {{ $W }} 150" role="img" aria-label="{{ __('dashboard.digital.per_hour') }}">
+                <svg viewBox="0 0 {{ $W }} {{ $H }}" role="img" aria-label="{{ __('dashboard.digital.per_hour') }}">
                     @for ($v = 0; $v <= $top; $v += $step)
                         <line class="dg-grid" x1="{{ $L }}" x2="{{ $W - $R }}" y1="{{ round($y($v), 1) }}" y2="{{ round($y($v), 1) }}" @if ($v === 0) data-base @endif />
                         <text class="dg-ax" x="{{ $L - 6 }}" y="{{ round($y($v), 1) + 4 }}" text-anchor="end">{{ $v }}</text>
@@ -49,7 +49,7 @@
                                 @php($yt = $y($n)) @php($r = min(4, ($B - $yt) / 2)) @php($x0 = $cx - $bw / 2)
                                 <path class="dg-bar" d="M{{ round($x0, 1) }} {{ $B }}V{{ round($yt + $r, 1) }}Q{{ round($x0, 1) }} {{ round($yt, 1) }} {{ round($x0 + $r, 1) }} {{ round($yt, 1) }}H{{ round($x0 + $bw - $r, 1) }}Q{{ round($x0 + $bw, 1) }} {{ round($yt, 1) }} {{ round($x0 + $bw, 1) }} {{ round($yt + $r, 1) }}V{{ $B }}Z" />
                             @endif
-                            @if ($h % 3 === 0)<text class="dg-ax" x="{{ round($cx, 1) }}" y="146" text-anchor="middle">{{ sprintf('%02d', $h) }}h</text>@endif
+                            @if ($h % 2 === 0)<text class="dg-ax" x="{{ round($cx, 1) }}" y="{{ $H - 4 }}" text-anchor="middle">{{ sprintf('%02d', $h) }}h</text>@endif
                         </g>
                     @endforeach
                     @if ($d['now'] < 23)
@@ -58,20 +58,6 @@
                     @endif
                 </svg>
                 <div class="dg-tip" hidden></div>
-            </div>
-        </figure>
-
-        <figure class="dg-fig">
-            <figcaption>{{ __('dashboard.digital.where') }}</figcaption>
-            <div class="dg-src">
-                @foreach ($d['sources'] as $s)
-                    <div class="dg-src-row" title="{{ __('dashboard.digital.src.'.$s['key']) }} · {{ $fmt($s['n']) }}">
-                        <span>{{ __('dashboard.digital.src.'.$s['key']) }}</span>
-                        <i><em style="width: {{ $s['n'] > 0 ? max(2, round($s['n'] / $srcMax * 100, 1)) : 0 }}%"></em></i>
-                        <b>{{ $fmt($s['n']) }}</b>
-                    </div>
-                @endforeach
-                @unless ($d['social']['connected'])<p class="muted small">{{ __('dashboard.digital.no_social') }}</p>@endunless
             </div>
         </figure>
     </div>
