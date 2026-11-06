@@ -1172,3 +1172,21 @@ pre.code-line{white-space:pre-wrap;word-break:break-all;background:var(--surface
 .ph-count-form label{display:flex;flex-direction:column;gap:4px;flex:1;font-size:14px}
 .ph-count-form input{font-size:22px;padding:8px 10px;width:100%}
 .tr-pick{display:flex;gap:10px;border:0;padding:0;margin:0;flex-wrap:wrap}
+/* Action toggles (details > summary) and link buttons: they look like buttons, not like a line of text. */
+:is(details:not([class]),details.mt,details.mt-xs,details.mt-sm,details.pl-row,details.logo-edit,details.ftask-foot,details.contact-edit,details.td-edit)>summary:not(.btn,.iconbtn,.primary,.small),summary.linkbtn,.linkbtn{display:inline-flex;align-items:center;gap:8px;width:fit-content;list-style:none;border:1px solid var(--line);background:var(--surface);color:var(--brand-strong);border-radius:6px;padding:6px 12px;min-height:36px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 1px rgba(0,0,0,.05);text-decoration:none}
+:is(details:not([class]),details.mt,details.mt-xs,details.mt-sm,details.pl-row,details.logo-edit,details.ftask-foot,details.contact-edit,details.td-edit)>summary:not(.btn,.iconbtn,.primary,.small):hover,.linkbtn:hover{background:var(--brand-tint);border-color:var(--brand)}
+:is(details:not([class]),details.mt,details.mt-xs,details.mt-sm,details.pl-row,details.logo-edit,details.ftask-foot,details.contact-edit,details.td-edit)>summary:not(.btn,.iconbtn,.primary,.small)::-webkit-details-marker{display:none}
+/* A chevron shows it opens: right when closed, down when open. */
+:is(details:not([class]),details.mt,details.mt-xs,details.mt-sm,details.pl-row,details.logo-edit,details.ftask-foot,details.contact-edit,details.td-edit)>summary:not(.btn,.iconbtn,.primary,.small)::before,summary.linkbtn::before{content:"";width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s;flex:none}
+details[open]>summary:not(.btn,.iconbtn,.primary,.small)::before{transform:rotate(45deg) translate(-1px,-1px)}
+details[open]>summary.linkbtn,:is(details:not([class]),details.mt,details.mt-xs,details.mt-sm,details.pl-row)[open]>summary:not(.btn,.iconbtn,.primary,.small){margin-bottom:10px;background:var(--surface-subtle)}
+.linkbtn.danger{color:var(--danger-text)}
+.linkbtn.danger:hover{background:var(--danger-bg);border-color:var(--danger-text)}
+.linkbtn.light{color:#fff;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.3)}
+/* A whole card that opens: the header gets an open/close chevron button on the right. */
+details.card>summary{list-style:none;display:flex;align-items:center;gap:10px;cursor:pointer;min-height:40px}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:"";margin-left:auto;flex:none;width:30px;height:30px;border:1px solid var(--line);border-radius:6px;background:var(--surface) center/12px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23327b1d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");transition:transform .15s}
+details.card[open]>summary::after{transform:rotate(180deg)}
+details.card>summary:hover::after{background-color:var(--brand-tint);border-color:var(--brand)}
+details.card[open]>summary{margin-bottom:12px}
