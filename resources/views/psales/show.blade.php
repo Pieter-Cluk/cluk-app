@@ -153,6 +153,9 @@
                     @if (in_array($q->status, ['draft', 'sent'], true))
                         <details class="mt"><summary>{{ __('psales.mark_declined') }}</summary><form method="post" action="{{ route('psales.declined', $q) }}" class="stack-sm mt">@csrf<input name="reason" maxlength="400" placeholder="{{ __('psales.declined_reason') }}" aria-label="{{ __('psales.declined_reason') }}"><div><button class="btn btn-danger" type="submit">{{ __('psales.mark_declined_go') }}</button></div></form></details>
                     @endif
+                    @if (in_array($q->status, ['accepted', 'confirmed', 'delivered'], true))
+                        @include('sales.quotes._bill_to', ['q' => $q, 'action' => route('psales.bill_to', $q)])
+                    @endif
                     @if (in_array($q->status, ['draft', 'sent', 'accepted'], true))
                         <details class="mt"><summary>{{ __('psales.cancel') }}</summary><form method="post" action="{{ route('psales.cancel', $q) }}" class="mt">@csrf<button class="btn btn-danger" type="submit">{{ __('psales.cancel_go') }}</button></form></details>
                     @endif

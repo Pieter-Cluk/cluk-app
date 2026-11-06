@@ -313,6 +313,45 @@ class QuotesTest extends TestCase
         Notification::assertNotSentTo($this->sales, QuoteAnswered::class);
     }
 
+    /** Accepted, but the customer wants the invoice on another company: no new quote, everything follows. */
+    public function test_an_accepted_quote_can_be_invoiced_to_another_company(): void
+    {
+        Notification::fake();
+        $this->spiider();
+        $quote = $this->quote();
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/lines', ['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 1]);
+        $quote = $this->sendIt($quote);
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/accepted', ['name' => 'Sarah Peeters', 'po_number' => 'PO 1']);
+        $order = \App\Models\Rental\Order::where('quote_id', $quote->id)->firstOrFail();
+        $pf = \App\Services\Finance\PreInvoices::make('rental', $order, $this->sales);
+
+        $other = $this->company(['name' => 'Holding Peeters NV']);
+        $main = Contact::create(['first_name' => 'Jan', 'last_name' => 'Main', 'email' => 'jan@holding.be', 'language' => 'en']);
+        $billing = Contact::create(['first_name' => 'Els', 'last_name' => 'Boekhouding', 'email' => 'facturen@holding.be', 'language' => 'en']);
+        $other->contacts()->attach($main->id, ['is_main' => true]);
+        $other->contacts()->attach($billing->id, ['is_billing' => true]);
+
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertSee('Invoice to another company');
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/bill-to', ['company_id' => $quote->company_id])->assertSessionHasErrors('company_id');
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/bill-to', ['company_id' => $other->id, 'resend' => '1'])
+            ->assertSessionHas('status', 'The invoice now goes to Holding Peeters NV (contact: Els Boekhouding). The confirmation was sent again.');
+
+        // The yes and the prices stay; quote, order, deal and the pre-invoice being checked follow.
+        $quote->refresh();
+        $this->assertSame(['accepted', 'Sarah Peeters', $other->id, $billing->id], [$quote->status, $quote->answered_name, $quote->company_id, $quote->contact_id]);
+        $this->assertSame([$other->id, $billing->id, $quote->gross_cents], [$order->fresh()->company_id, $order->fresh()->contact_id, $order->fresh()->gross_cents]);
+        $this->assertSame($other->id, $quote->deal->company_id);
+        $this->assertSame([$other->id, 'check'], [$pf->fresh()->company_id, $pf->fresh()->status]);
+        $this->assertTrue(AuditLog::where('action', 'quote.bill_to')->where('actor_id', $this->sales->id)->exists());
+        $this->assertStringContainsString('Holding Peeters NV', $quote->deal->activities()->latest('id')->value('body'));
+
+        // Once the invoice exists: no more changes (credit note and new invoice in the accounting).
+        $pf->update(['status' => 'sent']);
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertSee('Make a credit note and a new invoice in OkiOki');
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/bill-to', ['company_id' => $this->company(['name' => 'Third BV'])->id])->assertSessionHasErrors('company_id');
+        $this->assertSame($other->id, $quote->fresh()->company_id);
+    }
+
     public function test_staff_can_record_a_decline_by_phone(): void
     {
         Notification::fake();

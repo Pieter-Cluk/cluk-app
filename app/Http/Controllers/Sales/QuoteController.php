@@ -368,6 +368,23 @@ class QuoteController extends Controller
         return redirect()->route('quotes.show', $quote)->with('status', __('quotes.flash.accepted'));
     }
 
+    /** Accepted, but the invoice goes to another company: no new quote, the yes and the prices stay. */
+    public function billTo(Request $request, Quote $quote): RedirectResponse
+    {
+        $this->guard($request, $quote, false);
+        abort_unless($quote->status === 'accepted', 409);
+        $d = $request->validate(['company_id' => ['required', 'integer', 'exists:companies,id', Rule::notIn([$quote->company_id])], 'resend' => ['nullable', 'boolean']],
+            ['company_id.not_in' => __('quotes.bill_to.same')]);
+        if ($why = \App\Services\Sales\InvoiceCompany::blocked($quote)) {
+            return back()->withErrors(['company_id' => $why]);
+        }
+        \App\Services\Sales\InvoiceCompany::change($quote, \App\Models\Company::findOrFail($d['company_id']), $request->user());
+        $quote->refresh();
+        $mailed = ($d['resend'] ?? false) && ! \App\Services\Factory\Bookings::forQuote($quote) && \App\Services\Rental\QuoteMails::accepted($quote);
+
+        return redirect()->route('quotes.show', $quote)->with('status', __('quotes.bill_to.done', ['company' => $quote->company->name, 'contact' => $quote->contact?->name ?? '—']).($mailed ? ' '.__('quotes.bill_to.mailed') : ''));
+    }
+
     /** The customer said no outside the link (phone, mail): record it with the reason. */
     public function markDeclined(Request $request, Quote $quote): RedirectResponse
     {

@@ -251,4 +251,16 @@ return [
             'day' => 'day',
         ],
     ],
+    'bill_to' => [
+        'title' => 'Invoice to another company',
+        'hint' => 'The customer\'s yes and the prices stay; the quote, the order or booking and the deal move to the new company. The contact becomes its billing contact (else its main contact). VAT follows the new company.',
+        'company' => 'New company to invoice',
+        'resend' => 'Send the order confirmation again, to the new company',
+        'go' => 'Change the invoice company',
+        'same' => 'That is already the company on this quote.',
+        'locked' => 'The invoice already exists (:number is sent to the accounting). Make a credit note and a new invoice in OkiOki.',
+        'done' => 'The invoice now goes to :company (contact: :contact).',
+        'mailed' => 'The confirmation was sent again.',
+        'log' => ':code: invoice moved from :from to :to.',
+    ],
 ];

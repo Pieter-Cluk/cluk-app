@@ -180,6 +180,21 @@ class SalesQuoteController extends Controller
             : back()->with('status', __('psales.early_in_stock'));
     }
 
+    /** Accepted, but the invoice goes to another company: no new quote, the yes and the prices stay. */
+    public function billTo(Request $request, SalesQuote $quote): RedirectResponse
+    {
+        abort_unless(in_array($quote->status, ['accepted', 'confirmed', 'delivered'], true), 409);
+        $d = $request->validate(['company_id' => ['required', 'integer', 'exists:companies,id', \Illuminate\Validation\Rule::notIn([$quote->company_id])]],
+            ['company_id.not_in' => __('quotes.bill_to.same')]);
+        if ($why = \App\Services\Sales\InvoiceCompany::blocked($quote)) {
+            return back()->withErrors(['company_id' => $why]);
+        }
+        \App\Services\Sales\InvoiceCompany::change($quote, \App\Models\Company::findOrFail($d['company_id']), $request->user());
+        $quote->refresh();
+
+        return back()->with('status', __('quotes.bill_to.done', ['company' => $quote->company->name, 'contact' => $quote->contact?->name ?? '—']));
+    }
+
     /** The customer said no outside the link (phone, mail). */
     public function markDeclined(Request $request, SalesQuote $quote): RedirectResponse
     {

@@ -46,6 +46,9 @@
                     <form method="post" action="{{ route('quotes.revise', $quote) }}">@csrf<button class="primary" type="submit">{{ __('quotes.revise') }}</button></form>
                 @endif
             </div>
+            @if ($canWork && $quote->status === 'accepted')
+                @include('sales.quotes._bill_to', ['q' => $quote, 'action' => route('quotes.bill_to', $quote), 'resend' => ! \App\Services\Factory\Bookings::forQuote($quote)])
+            @endif
             @if ($canWork && in_array($quote->status, ['sent', 'change'], true))
                 <details class="mt">
                     <summary>{{ __('quotes.mark_accepted') }}</summary>

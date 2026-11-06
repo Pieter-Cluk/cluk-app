@@ -251,4 +251,16 @@ return [
             'day' => 'día',
         ],
     ],
+    'bill_to' => [
+        'title' => 'Facturar a otra empresa',
+        'hint' => 'El sí del cliente y los precios se mantienen; el presupuesto, el pedido o la reserva y el deal pasan a la nueva empresa. El contacto pasa a ser su contacto de facturación (si no, el principal). El IVA sigue a la nueva empresa.',
+        'company' => 'Nueva empresa a facturar',
+        'resend' => 'Enviar de nuevo la confirmación del pedido a la nueva empresa',
+        'go' => 'Cambiar la empresa facturada',
+        'same' => 'Esa ya es la empresa de este presupuesto.',
+        'locked' => 'La factura ya existe (:number está en contabilidad). Haga una nota de crédito y una nueva factura en OkiOki.',
+        'done' => 'La factura va ahora a :company (contacto: :contact).',
+        'mailed' => 'La confirmación se ha enviado de nuevo.',
+        'log' => ':code: factura movida de :from a :to.',
+    ],
 ];

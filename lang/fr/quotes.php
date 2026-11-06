@@ -251,4 +251,16 @@ return [
             'day' => 'jour',
         ],
     ],
+    'bill_to' => [
+        'title' => 'Facturer une autre société',
+        'hint' => 'L’accord du client et les prix restent ; le devis, la commande ou la réservation et le deal passent à la nouvelle société. Le contact devient son contact de facturation (sinon le contact principal). La TVA suit la nouvelle société.',
+        'company' => 'Nouvelle société à facturer',
+        'resend' => 'Renvoyer la confirmation de commande à la nouvelle société',
+        'go' => 'Changer la société facturée',
+        'same' => 'C’est déjà la société de ce devis.',
+        'locked' => 'La facture existe déjà (:number est partie en comptabilité). Faites une note de crédit et une nouvelle facture dans OkiOki.',
+        'done' => 'La facture va maintenant à :company (contact : :contact).',
+        'mailed' => 'La confirmation a été renvoyée.',
+        'log' => ':code : facture déplacée de :from vers :to.',
+    ],
 ];

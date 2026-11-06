@@ -251,4 +251,16 @@ return [
             'day' => 'dag',
         ],
     ],
+    'bill_to' => [
+        'title' => 'Factuur op een ander bedrijf',
+        'hint' => 'Het akkoord van de klant en de prijzen blijven; offerte, order of boeking en deal gaan naar het nieuwe bedrijf. Het contact wordt de facturatiecontact (anders het hoofdcontact). De btw volgt het nieuwe bedrijf.',
+        'company' => 'Nieuw bedrijf voor de factuur',
+        'resend' => 'De orderbevestiging opnieuw sturen, naar het nieuwe bedrijf',
+        'go' => 'Factuurbedrijf wijzigen',
+        'same' => 'Dat is al het bedrijf op deze offerte.',
+        'locked' => 'De factuur bestaat al (:number is naar de boekhouding). Maak een creditnota en een nieuwe factuur in OkiOki.',
+        'done' => 'De factuur gaat nu naar :company (contact: :contact).',
+        'mailed' => 'De bevestiging is opnieuw verstuurd.',
+        'log' => ':code: factuur verplaatst van :from naar :to.',
+    ],
 ];
