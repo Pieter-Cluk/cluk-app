@@ -173,4 +173,5 @@ return [
         'pause' => 'Mettre en pause',
         'resume' => 'Reprendre',
     ],
+    'still_off' => 'C’est encore désactivé : les dates seules ne le lancent pas. Cliquez sur Activer pour l’utiliser.',
 ];

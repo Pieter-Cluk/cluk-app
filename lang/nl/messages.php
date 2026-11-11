@@ -173,4 +173,5 @@ return [
         'pause' => 'Pauzeren',
         'resume' => 'Verdergaan',
     ],
+    'still_off' => 'Dit staat nog uit: data alleen starten het niet. Klik op Aanzetten om het te gebruiken.',
 ];

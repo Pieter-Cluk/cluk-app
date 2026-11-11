@@ -173,4 +173,5 @@ return [
         'pause' => 'Pause',
         'resume' => 'Carry on',
     ],
+    'still_off' => 'It is still switched off: dates alone do not start it. Click Switch on to use it.',
 ];

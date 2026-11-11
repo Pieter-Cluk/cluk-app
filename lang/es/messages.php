@@ -173,4 +173,5 @@ return [
         'pause' => 'Pausar',
         'resume' => 'Continuar',
     ],
+    'still_off' => 'Todavía está desactivado: las fechas solas no lo inician. Haga clic en Activar para usarlo.',
 ];

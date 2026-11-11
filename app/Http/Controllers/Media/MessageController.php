@@ -74,7 +74,7 @@ class MessageController extends Controller
 
     private function savedText(Message $m): string
     {
-        return __('messages.saved').($m->translationsOutdated() ? ' '.__(Translator::available() ? 'messages.translate_failed' : 'messages.no_translator') : '');
+        return __('messages.saved').(! in_array($m->kind, Message::MAILED, true) && ! $m->active ? ' '.__('messages.still_off') : '').($m->translationsOutdated() ? ' '.__(Translator::available() ? 'messages.translate_failed' : 'messages.no_translator') : '');
     }
 
     private function fill(Request $request, Message $m): void

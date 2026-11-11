@@ -109,8 +109,10 @@ class MessagesTest extends TestCase
 
     public function test_birthday_card_with_picture_and_the_banner_on_quotes(): void
     {
-        $this->actingAs($this->admin)->post('/media/messages', ['kind' => 'birthday', 'title' => 'Card 2027', 'subject' => ['en' => 'Our newsletter'], 'body' => ['en' => 'Hi {name}, read the news.'], 'image' => UploadedFile::fake()->image('cake.jpg')]);
+        $this->actingAs($this->admin)->post('/media/messages', ['kind' => 'birthday', 'title' => 'Card 2027', 'subject' => ['en' => 'Our newsletter'], 'body' => ['en' => 'Hi {name}, read the news.'], 'image' => UploadedFile::fake()->image('cake.jpg')])
+            ->assertSessionHas('status', fn ($s) => str_contains($s, 'It is still switched off'));
         $card = Message::firstOrFail();
+        $this->actingAs($this->admin)->get('/media/messages/'.$card->id)->assertSee('Click Switch on to use it');
         $this->actingAs($this->admin)->post('/media/messages/'.$card->id.'/toggle');
         $this->assertTrue($card->fresh()->active);
         $c = Company::create(['name' => 'Demo Agency BV', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'nl']);

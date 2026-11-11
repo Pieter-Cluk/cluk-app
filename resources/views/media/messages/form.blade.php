@@ -141,7 +141,7 @@
                 @else
                     <section class="card stack-sm">
                         <h2>{{ __('messages.use_title') }}</h2>
-                        <p>{{ __($m->active ? 'messages.is_on.'.$m->kind : 'messages.is_off.'.$m->kind) }}</p>
+                        @if ($m->active)<p>{{ __('messages.is_on.'.$m->kind) }}</p>@else<p class="flash flash-warn">{{ __('messages.is_off.'.$m->kind) }} {{ __('messages.still_off') }}</p>@endif
                         <form method="post" action="{{ route('messages.toggle', $m) }}">@csrf<button @class(['btn', 'primary' => ! $m->active]) type="submit">{{ __($m->active ? 'messages.switch_off' : 'messages.switch_on') }}</button></form>
                     </section>
                 @endif
