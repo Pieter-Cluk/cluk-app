@@ -111,7 +111,7 @@ class DealController extends Controller
         $deal->fill($d);
         $changes = array_keys($deal->getDirty());
         $deal->save();
-        if (array_intersect($changes, ['company_id', 'contact_id']) && ($n = \App\Services\Sales\InvoiceCompany::followDeal($deal, $request->user()))) {
+        if ($n = \App\Services\Sales\InvoiceCompany::followDeal($deal, $request->user())) { // drafts always follow (also after an earlier change)
             $followed = trans_choice('quotes.bill_to.followed', $n, ['n' => $n, 'company' => $deal->company?->name]);
         }
         if ($changes) {
