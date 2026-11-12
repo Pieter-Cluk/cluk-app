@@ -252,6 +252,9 @@ return [
         ],
     ],
     'bill_to' => [
+        'followed' => '{1} The draft quote is now for :company too.|[2,*] The :n draft quotes are now for :company too.',
+        'deal_moved' => 'This quote was made for :quote, but the deal is now on :deal. Make a new version: it will be for :deal.',
+        'deal_moved_accepted' => 'This quote was accepted for :quote, but the deal is now on :deal. Use "Invoice to another company" below.',
         'title' => 'Invoice to another company',
         'hint' => 'The customer\'s yes and the prices stay; the quote, the order or booking and the deal move to the new company. The contact becomes its billing contact (else its main contact). VAT follows the new company.',
         'company' => 'New company to invoice',

@@ -252,6 +252,9 @@ return [
         ],
     ],
     'bill_to' => [
+        'followed' => '{1} El presupuesto borrador ahora también es para :company.|[2,*] Los :n presupuestos borrador ahora también son para :company.',
+        'deal_moved' => 'Este presupuesto se hizo para :quote, pero el deal ahora está en :deal. Haga una nueva versión: será para :deal.',
+        'deal_moved_accepted' => 'Este presupuesto se aceptó para :quote, pero el deal ahora está en :deal. Use «Facturar a otra empresa» abajo.',
         'title' => 'Facturar a otra empresa',
         'hint' => 'El sí del cliente y los precios se mantienen; el presupuesto, el pedido o la reserva y el deal pasan a la nueva empresa. El contacto pasa a ser su contacto de facturación (si no, el principal). El IVA sigue a la nueva empresa.',
         'company' => 'Nueva empresa a facturar',

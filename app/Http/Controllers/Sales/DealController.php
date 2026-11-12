@@ -111,11 +111,14 @@ class DealController extends Controller
         $deal->fill($d);
         $changes = array_keys($deal->getDirty());
         $deal->save();
+        if (array_intersect($changes, ['company_id', 'contact_id']) && ($n = \App\Services\Sales\InvoiceCompany::followDeal($deal, $request->user()))) {
+            $followed = trans_choice('quotes.bill_to.followed', $n, ['n' => $n, 'company' => $deal->company?->name]);
+        }
         if ($changes) {
             $deal->log('system', __('deals.log.updated', ['fields' => implode(', ', array_map(fn ($f) => __('deals.fields.'.$f), $changes))]));
         }
 
-        return back()->with('status', __('deals.flash.saved'));
+        return back()->with('status', trim(__('deals.flash.saved').' '.($followed ?? '')));
     }
 
     private function validateDeal(Request $request, bool $new): array

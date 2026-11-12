@@ -352,6 +352,34 @@ class QuotesTest extends TestCase
         $this->assertSame($other->id, $quote->fresh()->company_id);
     }
 
+    /** The deal moves to another company: drafts follow, a sent quote says so and its new version is for the new company. */
+    public function test_quotes_follow_when_the_deal_moves_to_another_company(): void
+    {
+        Notification::fake();
+        $this->spiider();
+        $sent = $this->quote();
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$sent->id.'/lines', ['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 1]);
+        $sent = $this->sendIt($sent);
+        $deal = $sent->deal;
+        $this->actingAs($this->sales)->post('/sales/deals/'.$deal->id.'/quotes');
+        $draft = Quote::where('deal_id', $deal->id)->where('status', 'draft')->firstOrFail();
+
+        $other = $this->company(['name' => 'Holding Peeters NV']);
+        $billing = Contact::create(['first_name' => 'Els', 'last_name' => 'Boekhouding', 'email' => 'facturen@holding.be', 'language' => 'nl']);
+        $other->contacts()->attach($billing->id, ['is_billing' => true]);
+        $this->actingAs($this->sales)->put('/sales/deals/'.$deal->id, ['title' => $deal->title, 'module' => $deal->module, 'company_id' => $other->id, 'contact_id' => $deal->contact_id])
+            ->assertSessionHas('status', fn ($s) => str_contains($s, 'The draft quote is now for Holding Peeters NV too.'));
+        $this->assertSame([$other->id, $billing->id], [$draft->fresh()->company_id, $draft->fresh()->contact_id]);
+
+        // The sent quote keeps what the customer saw, says the deal moved, and its new version is for the new company.
+        $this->assertNotSame($other->id, $sent->fresh()->company_id);
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$sent->id)->assertSee('but the deal is now on Holding Peeters NV');
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$sent->id.'/revise')->assertRedirect();
+        $new = Quote::where('number', $sent->number)->where('version', 2)->firstOrFail();
+        $this->assertSame([$other->id, $billing->id, 'draft'], [$new->company_id, $new->contact_id, $new->status]);
+        $this->assertSame(1, $new->lines()->count());
+    }
+
     public function test_staff_can_record_a_decline_by_phone(): void
     {
         Notification::fake();

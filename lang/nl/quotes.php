@@ -252,6 +252,9 @@ return [
         ],
     ],
     'bill_to' => [
+        'followed' => '{1} De conceptofferte staat nu ook op :company.|[2,*] De :n conceptoffertes staan nu ook op :company.',
+        'deal_moved' => 'Deze offerte is gemaakt voor :quote, maar de deal staat nu op :deal. Maak een nieuwe versie: die is voor :deal.',
+        'deal_moved_accepted' => 'Deze offerte is aanvaard voor :quote, maar de deal staat nu op :deal. Gebruik hieronder "Factuur op een ander bedrijf".',
         'title' => 'Factuur op een ander bedrijf',
         'hint' => 'Het akkoord van de klant en de prijzen blijven; offerte, order of boeking en deal gaan naar het nieuwe bedrijf. Het contact wordt de facturatiecontact (anders het hoofdcontact). De btw volgt het nieuwe bedrijf.',
         'company' => 'Nieuw bedrijf voor de factuur',

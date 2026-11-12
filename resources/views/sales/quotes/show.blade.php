@@ -14,6 +14,9 @@
         @include('sales.quotes._status', ['quote' => $quote, 'lg' => true])
     </div>
     @include('partials.flash')
+    @if ($quote->deal?->company_id && $quote->deal->company_id !== $quote->company_id && $quote->isLatest() && ! in_array($quote->status, ['draft', 'replaced', 'cancelled'], true))
+        <p class="flash flash-warn">{{ __($quote->status === 'accepted' ? 'quotes.bill_to.deal_moved_accepted' : 'quotes.bill_to.deal_moved', ['quote' => $quote->customerName(), 'deal' => $quote->deal->company?->name]) }}</p>
+    @endif
 
     @if ($quote->status !== 'draft')
         <section @class(['card', 'answer-box', 'answer-'.$quote->displayStatus()])>

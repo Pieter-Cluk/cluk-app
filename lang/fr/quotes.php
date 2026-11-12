@@ -252,6 +252,9 @@ return [
         ],
     ],
     'bill_to' => [
+        'followed' => '{1} Le devis brouillon est maintenant aussi pour :company.|[2,*] Les :n devis brouillons sont maintenant aussi pour :company.',
+        'deal_moved' => 'Ce devis a été fait pour :quote, mais le deal est maintenant sur :deal. Faites une nouvelle version : elle sera pour :deal.',
+        'deal_moved_accepted' => 'Ce devis a été accepté pour :quote, mais le deal est maintenant sur :deal. Utilisez « Facturer une autre société » ci-dessous.',
         'title' => 'Facturer une autre société',
         'hint' => 'L’accord du client et les prix restent ; le devis, la commande ou la réservation et le deal passent à la nouvelle société. Le contact devient son contact de facturation (sinon le contact principal). La TVA suit la nouvelle société.',
         'company' => 'Nouvelle société à facturer',

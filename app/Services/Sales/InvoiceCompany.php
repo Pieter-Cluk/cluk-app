@@ -45,12 +45,7 @@ class InvoiceCompany
         $set = ['company_id' => $company->id, 'contact_id' => $contact?->id];
 
         DB::transaction(function () use ($q, $set, $company, $contact, $by, $was) {
-            $q->forceFill($set);
-            $rate = $q->setRelation('company', $company)->vatRateNow();
-            $q->forceFill(['vat_code' => $rate?->code, 'vat_rate_bp' => $rate?->rate_bp ?? 0]);
-            $q->vat_cents = (int) round($q->net_cents * $q->vat_rate_bp / 10000);
-            $q->gross_cents = $q->net_cents + $q->vat_cents;
-            $q->save();
+            self::apply($q, $company, $contact);
 
             if ($q instanceof Quote) {
                 if ($booking = Bookings::forQuote($q)) {
@@ -77,6 +72,44 @@ class InvoiceCompany
             AuditLog::record('quote.bill_to', $q, $data, $by);
             $q->deal?->log('system', __('quotes.bill_to.log', ['code' => $q instanceof Quote ? $q->code() : $q->number, 'from' => $was?->name ?? '—', 'to' => $company->name]), $by);
         });
+    }
+
+    /** Put a quote on a company: company, contact and the VAT that goes with that company. */
+    public static function apply(Quote|SalesQuote $q, Company $company, ?Contact $contact): void
+    {
+        $q->forceFill(['company_id' => $company->id, 'contact_id' => $contact?->id]);
+        $rate = $q->setRelation('company', $company)->setRelation('contact', $contact)->vatRateNow();
+        $q->forceFill(['vat_code' => $rate?->code, 'vat_rate_bp' => $rate?->rate_bp ?? 0]);
+        $q->vat_cents = (int) round($q->net_cents * $q->vat_rate_bp / 10000);
+        $q->gross_cents = $q->net_cents + $q->vat_cents;
+        $q->save();
+    }
+
+    /**
+     * The deal moved to another company (or contact): its draft quotes follow straight away. Quotes already sent keep
+     * what the customer saw; a new version takes the deal's company, an accepted one is changed with change().
+     */
+    public static function followDeal(\App\Models\Sales\Deal $deal, User $by): int
+    {
+        if (! $deal->company_id) {
+            return 0;
+        }
+        $company = $deal->company()->first();
+        // The deal's contact if they belong to the new company, else that company's billing or main contact.
+        $contact = $deal->contact_id && $company->contacts()->whereKey($deal->contact_id)->exists() ? Contact::find($deal->contact_id) : self::contactFor($company);
+        $n = 0;
+        foreach ([$deal->quotes()->where('status', 'draft')->get(), $deal->salesQuotes()->where('status', 'draft')->get()] as $list) {
+            foreach ($list as $q) {
+                if ($q->company_id !== $company->id || $q->contact_id !== $contact?->id) {
+                    $was = $q->company?->name;
+                    self::apply($q, $company, $contact);
+                    AuditLog::record('quote.bill_to', $q, ['from' => $was, 'to' => $company->name, 'contact' => $contact?->name, 'via' => 'deal'], $by);
+                    $n++;
+                }
+            }
+        }
+
+        return $n;
     }
 
     /** Pre-invoices made from this quote (rental: the order and its charges; Factory: the booking; sales: the quote). */

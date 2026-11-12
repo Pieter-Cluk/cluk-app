@@ -9,7 +9,7 @@
         <form method="post" action="{{ $action }}" class="stack-sm">
             @csrf
             <label class="field"><span>{{ __('quotes.bill_to.company') }}</span>
-                <select data-pick name="company_id" required><option value="">—</option>@foreach (\App\Models\Company::active()->whereKeyNot($q->company_id)->orderBy('name')->get(['id', 'name']) as $c)<option value="{{ $c->id }}" @selected((string) old('company_id') === (string) $c->id)>{{ $c->name }}</option>@endforeach</select>
+                <select data-pick name="company_id" required><option value="">—</option>@foreach (\App\Models\Company::active()->whereKeyNot($q->company_id)->orderBy('name')->get(['id', 'name']) as $c)<option value="{{ $c->id }}" @selected((string) old('company_id', $q->deal?->company_id !== $q->company_id ? $q->deal?->company_id : null) === (string) $c->id)>{{ $c->name }}</option>@endforeach</select>
             </label>
             @error('company_id')<p class="flash flash-err">{{ $message }}</p>@enderror
             @if ($resend ?? false)<label class="check"><input type="checkbox" name="resend" value="1"> {{ __('quotes.bill_to.resend') }}</label>@endif

@@ -344,6 +344,12 @@ class QuoteController extends Controller
             $copy->version = $quote->version + 1;
             $copy->status = 'draft';
             $copy->save();
+            // The new version is for the deal's company now (it may have moved to another company).
+            if ($quote->deal?->company_id && $quote->deal->company_id !== $quote->company_id) {
+                $company = $quote->deal->company;
+                $dealContact = $quote->deal->contact_id && $company->contacts()->whereKey($quote->deal->contact_id)->exists() ? $quote->deal->contact : null;
+                \App\Services\Sales\InvoiceCompany::apply($copy, $company, $dealContact ?? \App\Services\Sales\InvoiceCompany::contactFor($company));
+            }
             foreach ($quote->lines as $line) {
                 $copy->lines()->create($line->only(['position', 'kind', 'heading', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
             }
