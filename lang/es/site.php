@@ -44,7 +44,7 @@ return [
         'results' => '<b>:n</b> resultados para «:q»', 'products' => '<b>:n</b> productos', 'clear_all' => 'Borrar todo',
         'nothing' => 'No hay resultados para :q', 'nothing_text' => 'Prueba con una marca o una palabra más sencilla, o quita un filtro. También subalquilamos: pregúntanos y lo buscamos.',
         'ask_else' => 'Pedir otra cosa',
-        'per_day' => '/ día', 'on_request' => 'Precio a consultar', 'in_stock' => ':n disponibles ya!', 'system' => 'Sistema',
+        'per_day' => '/ día', 'on_request' => 'Precio a consultar', 'in_stock' => ':n en stock', 'available_now' => ':n disponibles ya!', 'system' => 'Sistema',
         'add' => 'Añadir a la solicitud', 'in_request' => 'En tu solicitud', 'update' => 'Actualizar solicitud', 'one_less' => 'Uno menos', 'one_more' => 'Uno más', 'quantity' => 'Cantidad',
         'often' => 'Se alquila a menudo con', 'close' => 'Cerrar', 'open_page' => 'Abrir la página del producto',
         'l_brand' => 'Marca', 'l_number' => 'Referencia', 'l_weight' => 'Peso', 'l_size' => 'Medidas (an × l × al)', 'l_price' => 'Precio por día', 'l_pieces' => '¡Disponible ya!',

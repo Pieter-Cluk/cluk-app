@@ -45,7 +45,7 @@ return [
         'results' => '<b>:n</b> results for “:q”', 'products' => '<b>:n</b> products', 'clear_all' => 'Clear all',
         'nothing' => 'Nothing matches :q', 'nothing_text' => 'Try a brand or a simpler word, or remove a filter. We also sub-hire: ask us and we find it for you.',
         'ask_else' => 'Ask for something else',
-        'per_day' => '/ day', 'on_request' => 'Price on request', 'in_stock' => ':n available now!', 'system' => 'System',
+        'per_day' => '/ day', 'on_request' => 'Price on request', 'in_stock' => ':n in stock', 'available_now' => ':n available now!', 'system' => 'System',
         'add' => 'Add to request', 'in_request' => 'In your request', 'update' => 'Update request', 'one_less' => 'One less', 'one_more' => 'One more', 'quantity' => 'Quantity',
         'often' => 'Often hired with', 'close' => 'Close', 'open_page' => 'Open the product page',
         'l_brand' => 'Brand', 'l_number' => 'Item number', 'l_weight' => 'Weight', 'l_size' => 'Size (w × l × h)', 'l_price' => 'Day price', 'l_pieces' => 'Available now!',

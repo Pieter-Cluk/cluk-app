@@ -44,7 +44,7 @@ return [
         'results' => '<b>:n</b> résultats pour « :q »', 'products' => '<b>:n</b> produits', 'clear_all' => 'Tout effacer',
         'nothing' => 'Aucun résultat pour :q', 'nothing_text' => 'Essayez une marque ou un mot plus simple, ou retirez un filtre. Nous sous-louons aussi : demandez-nous et nous le trouvons.',
         'ask_else' => 'Demander autre chose',
-        'per_day' => '/ jour', 'on_request' => 'Prix sur demande', 'in_stock' => ':n disponibles maintenant !', 'system' => 'Système',
+        'per_day' => '/ jour', 'on_request' => 'Prix sur demande', 'in_stock' => ':n en stock', 'available_now' => ':n disponibles maintenant !', 'system' => 'Système',
         'add' => 'Ajouter à la demande', 'in_request' => 'Dans votre demande', 'update' => 'Mettre à jour', 'one_less' => 'Un de moins', 'one_more' => 'Un de plus', 'quantity' => 'Quantité',
         'often' => 'Souvent loué avec', 'close' => 'Fermer', 'open_page' => 'Ouvrir la page produit',
         'l_brand' => 'Marque', 'l_number' => 'Référence', 'l_weight' => 'Poids', 'l_size' => 'Dimensions (l × L × h)', 'l_price' => 'Prix par jour', 'l_pieces' => 'Disponible maintenant !',

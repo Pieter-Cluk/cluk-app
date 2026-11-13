@@ -56,6 +56,10 @@ class WebsiteCatalogueTest extends TestCase
         $this->assertSame(1, collect($data['items'])->firstWhere('id', $i->id)['q']);
         $this->getJson('/site/dry-hire/data/'.$i->id)->assertJsonPath('qty', 1);
         $this->get('/site/dry-hire/'.$i->id.'-sol-i-blinder')->assertSee('Available now!');
+        // The list uses its own text (the account texts also have an "in stock" for sales products).
+        $cfg = json_decode(html_entity_decode($this->between($this->get('/site/dry-hire')->getContent(), '<script type="application/json" id="dh-cfg">', '</script>')), true);
+        $this->assertSame(':n available now!', $cfg['t']['available_now']);
+        $this->assertStringContainsString("tr('available_now'", file_get_contents(public_path('js/site-dryhire.js')));
 
         \App\Models\Equipment\ItemPlace::where('item_id', $i->id)->update(['qty' => 4]);
         \Illuminate\Support\Facades\Cache::flush();

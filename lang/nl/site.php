@@ -44,7 +44,7 @@ return [
         'results' => '<b>:n</b> resultaten voor “:q”', 'products' => '<b>:n</b> producten', 'clear_all' => 'Alles wissen',
         'nothing' => 'Niets gevonden voor :q', 'nothing_text' => 'Probeer een merk of een eenvoudiger woord, of haal een filter weg. We huren ook bij: vraag het ons en we zoeken het voor je.',
         'ask_else' => 'Vraag iets anders',
-        'per_day' => '/ dag', 'on_request' => 'Prijs op aanvraag', 'in_stock' => ':n nu beschikbaar!', 'system' => 'Systeem',
+        'per_day' => '/ dag', 'on_request' => 'Prijs op aanvraag', 'in_stock' => ':n op voorraad', 'available_now' => ':n nu beschikbaar!', 'system' => 'Systeem',
         'add' => 'Toevoegen aan aanvraag', 'in_request' => 'In je aanvraag', 'update' => 'Aanvraag bijwerken', 'one_less' => 'Eén minder', 'one_more' => 'Eén meer', 'quantity' => 'Aantal',
         'often' => 'Vaak samen gehuurd', 'close' => 'Sluiten', 'open_page' => 'Open de productpagina',
         'l_brand' => 'Merk', 'l_number' => 'Artikelnummer', 'l_weight' => 'Gewicht', 'l_size' => 'Afmetingen (b × l × h)', 'l_price' => 'Dagprijs', 'l_pieces' => 'Nu beschikbaar!',

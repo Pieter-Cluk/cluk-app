@@ -174,10 +174,10 @@
     return '<article class="card" data-id="' + it.id + '" tabindex="0" aria-label="' + esc(it.nm) + '">' + addBtn(it) + visual(it, toks) +
       (it.k === 'p' ? '<span class="badge">' + esc(T.system) + '</span>' : '') +
       '<div class="body"><h3>' + hl(it.nm, toks) + '</h3><div class="sub">' + esc((subById[it.s] || {}).name || '') + '</div>' +
-      '<div class="meta">' + priceHtml(it) + (it.q ? '<span class="stock num">' + tr('in_stock', { n: '<b>' + it.q + '</b>' }) + '</span>' : '') + '</div></div></article>';
+      '<div class="meta">' + priceHtml(it) + (it.q ? '<span class="stock num">' + tr('available_now', { n: '<b>' + it.q + '</b>' }) + '</span>' : '') + '</div></div></article>';
   }
   function lrow(it, toks) {
-    return '<div class="lrow" data-id="' + it.id + '" tabindex="0" role="button" aria-label="' + esc(it.nm) + '"><span class="no">' + esc(it.n) + '</span><span><span class="nm">' + hl(it.nm, toks) + '</span><br><span class="sub">' + esc((subById[it.s] || {}).name || '') + '</span></span><span class="sub sub2">' + esc(it.b || '') + '</span><span class="stock num">' + (it.q ? tr('in_stock', { n: '<b>' + it.q + '</b>' }) : '') + '</span>' + priceHtml(it) + addBtn(it) + '</div>';
+    return '<div class="lrow" data-id="' + it.id + '" tabindex="0" role="button" aria-label="' + esc(it.nm) + '"><span class="no">' + esc(it.n) + '</span><span><span class="nm">' + hl(it.nm, toks) + '</span><br><span class="sub">' + esc((subById[it.s] || {}).name || '') + '</span></span><span class="sub sub2">' + esc(it.b || '') + '</span><span class="stock num">' + (it.q ? tr('available_now', { n: '<b>' + it.q + '</b>' }) : '') + '</span>' + priceHtml(it) + addBtn(it) + '</div>';
   }
 
   // ---------- results, rendered in chunks while scrolling ----------
