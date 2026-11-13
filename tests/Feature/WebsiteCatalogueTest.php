@@ -47,6 +47,23 @@ class WebsiteCatalogueTest extends TestCase
         $this->get('/site/dry-hire')->assertOk()->assertDontSee('L-Acoustics KS28 subwoofer')->assertSee('L-Acoustics K2');
     }
 
+    /** For urgent requests: the site shows what can leave now (not hanging in the Factory, not out), and nothing when none. */
+    public function test_the_site_shows_what_is_available_now(): void
+    {
+        $i = $this->item('SOL1', 'Sol I blinder', 'SUB', 'AUD');
+        \App\Models\Equipment\ItemPlace::create(['item_id' => $i->id, 'position_code' => 'FACTORY', 'qty' => 3]);
+        $data = DryHireCatalogue::data('en');
+        $this->assertSame(1, collect($data['items'])->firstWhere('id', $i->id)['q']);
+        $this->getJson('/site/dry-hire/data/'.$i->id)->assertJsonPath('qty', 1);
+        $this->get('/site/dry-hire/'.$i->id.'-sol-i-blinder')->assertSee('Available now!');
+
+        \App\Models\Equipment\ItemPlace::where('item_id', $i->id)->update(['qty' => 4]);
+        \Illuminate\Support\Facades\Cache::flush();
+        \Illuminate\Support\Once::flush();
+        $this->assertEmpty(collect(DryHireCatalogue::data('en')['items'])->firstWhere('id', $i->id)['q'] ?? 0);
+        $this->get('/site/dry-hire/'.$i->id.'-sol-i-blinder')->assertDontSee('Available now!');
+    }
+
     public function test_names_follow_the_visitor_language(): void
     {
         $this->item('KS28', 'L-Acoustics KS28 subwoofer', 'SPK', 'AUD');

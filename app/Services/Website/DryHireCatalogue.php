@@ -50,6 +50,7 @@ class DryHireCatalogue
             Category::max('updated_at'), Subcategory::max('updated_at'), Attribute::max('updated_at'), Tag::max('updated_at'),
             DB::table('equipment_assets')->max('updated_at'), DB::table('equipment_assets')->count(),
             json_encode([config('website.only_ticked'), config('rental.factor')]),
+            intdiv(time(), 300), // "available now" moves with jobs going out and coming back: fresh every 5 minutes
         ]);
 
         return Cache::remember('site.dryhire.'.$locale.'.'.md5($stamp), 600, fn () => self::build($locale));
@@ -66,8 +67,9 @@ class DryHireCatalogue
         $subs = Subcategory::where('active', true)->with('attrs:id')->orderBy('sort')->get();
         $attrs = Attribute::of('dryhire')->with(['options' => fn ($q) => $q->where('active', true)])->orderBy('sort')->get();
 
-        $rows = $items->map(function (Item $i) {
-            $qty = $i->kind === 'package' ? 0 : ($i->serial ? (int) $i->pieces : (int) $i->stock_qty);
+        $now = self::availableNow();
+        $rows = $items->map(function (Item $i) use ($now) {
+            $qty = $i->kind === 'package' ? 0 : $now->free($i);
 
             return array_filter([
                 'id' => $i->id,
@@ -111,11 +113,32 @@ class DryHireCatalogue
         ];
     }
 
+    /**
+     * What can leave today, for urgent requests: our stock minus what is out on jobs, booked for today or hanging in
+     * our venue. Only shown on the website when at least one is free. Use free($item): never below 0.
+     */
+    public static function availableNow(): object
+    {
+        return once(function () {
+            $a = new \App\Services\Rental\Availability(now(), now()->endOfDay());
+
+            return new class($a)
+            {
+                public function __construct(private \App\Services\Rental\Availability $a) {}
+
+                public function free(Item $item): int
+                {
+                    return max(0, (int) $this->a->free($item));
+                }
+            };
+        });
+    }
+
     /** Everything the product panel and the product page show. */
     public static function detail(Item $item, string $locale): array
     {
         $item->loadMissing(['productCategory', 'productSubcategory', 'options.attribute', 'tags', 'photos', 'contents']);
-        $qty = $item->kind === 'package' ? 0 : $item->totalQty();
+        $qty = $item->kind === 'package' ? 0 : self::availableNow()->free($item);
         $fmt = fn (?float $v, int $d = 2) => $v === null ? null : rtrim(rtrim(number_format($v, $d, $locale === 'en' ? '.' : ',', ''), '0'), '.,');
         $size = $item->width_m && $item->length_m && $item->height_m ? $fmt($item->width_m).' × '.$fmt($item->length_m).' × '.$fmt($item->height_m).' m' : null;
         $related = self::query()->where('subcategory_id', $item->subcategory_id)->whereKeyNot($item->id)
