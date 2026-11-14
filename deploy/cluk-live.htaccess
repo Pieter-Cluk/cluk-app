@@ -1,0 +1,11 @@
+# cluk.live and www.cluk.live web root (one.com), written by every deploy (deploy/cluk-live.htaccess).
+# Tools hosted on cluk.live itself (the dB meter in ./tools); everything else goes to the same page
+# on the CLUK website. 302 (temporary) on purpose: cluk.live itself will become the website's address
+# later. The page path and UTM codes are kept. "via" makes the address differ from one a browser may
+# still remember from 29 Oct (a permanent forward app.cluk.live/site/... -> www.cluk.live/...).
+Options -Indexes
+RewriteEngine On
+RewriteRule (^|/)\. - [F,L]
+RewriteRule ^tools/ - [L]
+RewriteRule ^$ https://app.cluk.live/site?via=cluk.live [R=302,L,QSA]
+RewriteRule ^(.+?)/?$ https://app.cluk.live/site/$1?via=cluk.live [R=302,L,QSA]

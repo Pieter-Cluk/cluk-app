@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="dB-meter">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>dB-meter</title>
+<style>
+:root{color-scheme:dark;
+  --bg:#0b0d12;--panel:#11141b;--fg:#e8eaf0;--mut:#8a90a0;--acc:#36d399;--warn:#f5a524;--over:#ff4d4f;
+  --line:#232836;--tile:#141822;--glow:none;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --num:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,monospace;
+}
+.theme-day{color-scheme:light;--bg:#f3f4f6;--panel:#ffffff;--fg:#111827;--mut:#6b7280;--acc:#047857;--warn:#c2410c;--over:#dc2626;--line:#e2e5ea;--tile:#ffffff}
+.theme-neon{--bg:#06010d;--panel:#0d0517;--fg:#fdf4ff;--mut:#a78bfa;--acc:#22d3ee;--warn:#facc15;--over:#fb2c6a;--line:#2a0f52;--tile:#10061d;--glow:0 0 .12em currentColor,0 0 .4em currentColor}
+.theme-led{--bg:#000;--panel:#0a0303;--fg:#ff4a3d;--mut:#8a2a22;--acc:#ff3b30;--warn:#ffb000;--over:#ff1a1a;--line:#2a0805;--tile:#070101;--glow:0 0 .08em rgba(255,59,48,.9),0 0 .35em rgba(255,59,48,.5)}
+.theme-mini{--bg:#000;--panel:#0c0c0c;--fg:#fff;--mut:#7a7a7a;--acc:#fff;--warn:#ffb000;--over:#ff3030;--line:#1e1e1e;--tile:transparent}
+.theme-led .mainval,.theme-led .tv{font-style:italic;letter-spacing:.04em}
+.theme-mini .tile{border:0;background:none}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:var(--font);-webkit-tap-highlight-color:transparent}
+body{transition:background .3s,color .3s}
+button,select,input{font:inherit;color:inherit}
+#app{display:flex;height:100%}
+#view{flex:1;display:flex;flex-direction:column;padding:clamp(12px,2.2vw,36px);gap:clamp(8px,1.4vw,22px);min-width:0;position:relative;overflow:hidden;background:var(--bg)}
+#panel{width:390px;flex:none;background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding:14px 16px 40px;font-size:14px}
+body.display #panel,body.fs #panel,body.nopanel #panel{display:none}
+@media (max-width:900px){
+  #app{flex-direction:column;height:auto;min-height:100%}
+  #view{height:72vh;flex:none}
+  body.display #view,body.fs #view,body.nopanel #view{height:100vh;height:100dvh}
+  #panel{width:auto;border-left:0;border-top:1px solid var(--line)}
+}
+/* top bar */
+.topbar{position:absolute;top:10px;right:10px;left:10px;display:flex;gap:8px;align-items:center;justify-content:flex-end;z-index:5;pointer-events:none}
+.topbar>*{pointer-events:auto}
+.badge{font-size:12px;padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--mut);background:var(--bg);white-space:nowrap}
+.badge.bad{color:var(--warn);border-color:var(--warn)}
+.badge.clip{color:#fff;background:var(--over);border-color:var(--over)}
+.badge:empty{display:none}
+.iconbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--tile);cursor:pointer;display:grid;place-items:center;font-size:20px;line-height:1;transition:opacity .4s}
+.iconbtn:hover{border-color:var(--acc)}
+body.idle .iconbtn,body.idle .badge.soft{opacity:0}
+body.idle{cursor:none}
+.spacer{flex:1}
+/* main readout */
+.readout{flex:1;min-height:0;container-type:size;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.mainlabel{font-size:max(14px,min(5.2cqw,9cqh));color:var(--mut);font-weight:600;letter-spacing:.02em}
+.mainlabel sub,.tl sub{font-size:.72em;vertical-align:-.2em}
+.mainrow{display:flex;align-items:baseline;justify-content:center;gap:.06em;font-size:min(27cqw,62cqh)}
+.mainval{font-family:var(--num);font-weight:700;line-height:.95;font-variant-numeric:tabular-nums;color:var(--acc);text-shadow:var(--glow);transition:color .25s}
+.unit{font-size:.22em;color:var(--mut);font-weight:600}
+.limitbox{margin-top:.6em;font-size:max(13px,min(3.4cqw,6cqh));color:var(--mut);display:flex;gap:.6em;align-items:center;flex-wrap:wrap;justify-content:center}
+.pill{padding:.15em .7em;border-radius:99px;font-weight:700;color:#000;background:var(--acc)}
+body.st-warn .mainval,body.st-warn .tile.lim .tv{color:var(--warn)}
+body.st-over .mainval,body.st-over .tile.lim .tv{color:var(--over)}
+body.st-warn .pill{background:var(--warn)}
+body.st-over .pill{background:var(--over);color:#fff}
+body.alertbg.st-over #view{animation:flash 1.2s infinite}
+@keyframes flash{0%,100%{background:var(--bg)}50%{background:color-mix(in srgb,var(--over) 28%,var(--bg))}}
+/* bar */
+.bar{position:relative;height:clamp(16px,3.2vh,34px);border-radius:8px;background:var(--tile);border:1px solid var(--line);overflow:hidden;flex:none}
+.barfill{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,var(--acc) 0%,var(--acc) 62%,var(--warn) 80%,var(--over) 100%);background-size:var(--bw,100%) 100%;transition:width .08s linear}
+.barmark{position:absolute;top:0;bottom:0;width:2px;background:var(--fg);opacity:.75}
+.barmark.w{background:var(--warn)}.barmark.m{background:var(--over)}
+.barscale{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-top:-4px;flex:none;font-family:var(--num)}
+/* graph */
+.graphwrap{position:relative;flex:0 0 22%;min-height:90px}
+canvas#graph{width:100%;height:100%;display:block}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:clamp(6px,1vw,14px);flex:none}
+.tile{background:var(--tile);border:1px solid var(--line);border-radius:14px;padding:clamp(8px,1vw,14px);min-width:0;container-type:inline-size}
+.tl{font-size:clamp(11px,1.1vw,15px);color:var(--mut);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tv{font-family:var(--num);font-weight:700;font-size:clamp(16px,19cqw,52px);font-variant-numeric:tabular-nums;text-shadow:var(--glow);white-space:nowrap}
+.tv small{font-size:.45em;color:var(--mut);font-weight:600;margin-left:.15em}
+.hidden{display:none!important}
+#waiting{position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 82%,transparent);font-size:clamp(16px,2.4vw,30px);color:var(--mut);z-index:4;text-align:center;padding:20px}
+/* panel */
+#panel h1{font-size:18px;margin:4px 0 12px;display:flex;align-items:center;gap:8px}
+#panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:22px 0 8px;border-top:1px solid var(--line);padding-top:16px}
+.row{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}
+.row>label{flex:1;min-width:120px}
+.col{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.col>span,.row>span.lbl{font-size:12px;color:var(--mut)}
+select,input[type=number],input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%;min-width:0}
+input[type=number]{width:90px}
+.btn{padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:var(--tile);cursor:pointer;font-weight:600}
+.btn:hover{border-color:var(--acc)}
+.btn.pri{background:var(--acc);color:#000;border-color:var(--acc)}
+.btn.big{width:100%;padding:13px;font-size:16px}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.note{font-size:12px;color:var(--mut);line-height:1.45}
+.note.warn{color:var(--warn)}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{flex:1;padding:8px;border:0;background:transparent;cursor:pointer;font-weight:600;color:var(--mut)}
+.seg button.on{background:var(--acc);color:#000}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+.checks label{display:flex;gap:6px;align-items:center;font-size:13px;cursor:pointer}
+.checks label sub{font-size:.7em}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:12px;color:var(--mut)}
+.kv b{color:var(--fg);font-weight:600}
+code.link{display:block;word-break:break-all;background:var(--bg);border:1px solid var(--line);padding:8px;border-radius:8px;font-size:12px}
+/* dialog */
+dialog{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:18px;padding:20px;width:min(560px,94vw);max-height:92vh}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog h2{margin:0 0 6px;font-size:20px}
+dialog ol{padding-left:20px;line-height:1.5;font-size:14px}
+.prog{height:8px;background:var(--bg);border-radius:9px;overflow:hidden;margin:12px 0}
+.prog>div{height:100%;width:0;background:var(--acc);transition:width .1s}
+.result{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:14px;line-height:1.5}
+.result:empty{display:none}
+.livecal{font-family:var(--num);font-size:34px;font-weight:700;text-align:center;margin:8px 0}
+.dlgfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.restore{background:color-mix(in srgb,var(--warn) 14%,var(--bg));border:1px solid var(--warn);border-radius:12px;padding:10px 12px;font-size:13px;margin:6px 0 12px;line-height:1.45}
+.oprow{display:grid;grid-template-columns:1fr 1fr 28px;gap:4px;margin:6px 0;padding-bottom:6px;border-bottom:1px dashed var(--line);align-items:center}
+.oprow input{padding:6px 6px}
+.oprow button{border:0;background:none;color:var(--mut);cursor:pointer;font-size:16px}
+/* report */
+#report{position:fixed;inset:0;z-index:100;background:#4b5563;overflow:auto;-webkit-overflow-scrolling:touch}
+.rp-toolbar{position:sticky;top:0;z-index:2;display:flex;gap:8px;align-items:center;padding:10px 16px;background:#111827;color:#fff;flex-wrap:wrap}
+.rp-toolbar .btn{background:#1f2937;border-color:#374151;color:#fff}
+.rp-toolbar .btn.pri{background:#10b981;border-color:#10b981;color:#000}
+.rp-page{width:794px;height:1123px;margin:20px auto;background:#fff;color:#111827;padding:40px 46px;box-shadow:0 8px 30px rgba(0,0,0,.35);position:relative;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.4}
+.rp-page h1{font-size:24px;margin:0}
+.rp-page h2{font-size:15px;margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #111827;text-transform:none;letter-spacing:0;color:#111827}
+.rp-page h3{font-size:14px;margin:0}
+.rp-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #111827;padding-bottom:10px}
+.rp-sub{color:#4b5563;font-size:13px}
+.rp-info{display:grid;grid-template-columns:120px 1fr 120px 1fr;gap:3px 10px;margin-top:12px}
+.rp-info span{color:#6b7280}
+.rp-info b{font-weight:600}
+.rp-sum{display:flex;gap:18px;align-items:center;margin-top:6px}
+.rp-stats{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rp-stat{border:1px solid #e5e7eb;border-radius:8px;padding:7px 9px}
+.rp-stat span{display:block;color:#6b7280;font-size:10.5px}
+.rp-stat b{font-size:18px;font-variant-numeric:tabular-nums}
+.rp-stat b small{font-size:11px;color:#6b7280;font-weight:600}
+.rp-legend{display:flex;gap:14px;color:#4b5563;font-size:10.5px;margin-top:4px;flex-wrap:wrap}
+.rp-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.rp-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.rp-table th{text-align:left;color:#6b7280;font-weight:600;border-bottom:1px solid #d1d5db;padding:5px 4px}
+.rp-table td{border-bottom:1px solid #eef0f3;padding:6px 4px;vertical-align:middle;font-variant-numeric:tabular-nums}
+.grade{display:inline-grid;place-items:center;min-width:30px;height:24px;padding:0 6px;border-radius:6px;color:#fff;font-weight:800;font-size:13px}
+.zbar{display:flex;height:12px;width:120px;border-radius:3px;overflow:hidden;background:#e5e7eb}
+.rp-op{border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;margin-bottom:14px}
+.rp-ophead{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+.rp-ophead .grade{height:38px;min-width:46px;font-size:20px}
+.rp-opstats{display:flex;gap:10px;color:#374151;font-size:11px;flex-wrap:wrap}
+.rp-foot{position:absolute;left:46px;right:46px;bottom:16px;color:#9ca3af;font-size:9.5px;border-top:1px solid #e5e7eb;padding-top:5px}
+.rp-footnote{color:#6b7280;font-style:italic;margin-bottom:2px}
+.rp-footrow{display:flex;justify-content:space-between}
+.rp-badge{display:inline-block;border:1.5px solid #b45309;color:#b45309;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.rp-disc{border:1px solid #fcd34d;background:#fffbeb;border-radius:8px;padding:2px 12px}
+.rp-method{font-size:11px;color:#374151}
+.rp-method li{margin:2px 0}
+@media print{
+  @page{size:A4;margin:0}
+  html,body{height:auto;background:#fff}
+  #app,dialog{display:none!important}
+  #report{position:static;background:none;overflow:visible}
+  .rp-toolbar{display:none}
+  .rp-page{margin:0;box-shadow:none;page-break-after:always;break-after:page}
+}
+</style>
+</head>
+<body class="theme-night">
+<div id="app">
+  <main id="view">
+    <div class="topbar">
+      <span class="badge bad soft" id="calBadge"></span>
+      <span class="badge clip" id="clipBadge"></span>
+      <span class="spacer"></span>
+      <button class="iconbtn" id="panelBtn" title="Instellingen tonen/verbergen">⚙︎</button>
+      <button class="iconbtn" id="fsBtn" title="Volledig scherm (F)">⛶</button>
+    </div>
+    <div class="readout">
+      <div class="mainlabel" id="mainLabel">L<sub>AF</sub></div>
+      <div class="mainrow"><span class="mainval" id="mainValue">--.-</span><span class="unit" id="mainUnit">dB(A)</span></div>
+      <div class="limitbox" id="limitBox"></div>
+    </div>
+    <div id="barWrap">
+      <div class="bar"><div class="barfill" id="barFill"></div><div class="barmark w" id="markW"></div><div class="barmark m" id="markM"></div></div>
+      <div class="barscale"><span>30</span><span>50</span><span>70</span><span>90</span><span>110</span><span>130</span></div>
+    </div>
+    <div class="graphwrap" id="graphWrap"><canvas id="graph"></canvas></div>
+    <div class="tiles" id="tiles"></div>
+    <div id="waiting" class="hidden"></div>
+  </main>
+
+  <aside id="panel">
+    <h1>🔊 dB-meter</h1>
+    <div id="restoreBox" class="restore hidden"></div>
+
+    <button class="btn pri big" id="startBtn">▶ Start meting</button>
+    <div class="row" style="justify-content:flex-end;margin-top:4px"><button class="btn sm" id="demoBtn" title="Probeer de app met een gesimuleerd signaal en voorbeeldgegevens">🎛 Demo zonder microfoon</button></div>
+    <div class="col">
+      <span>Microfoon</span>
+      <select id="micSel"><option value="">— start eerst de meting —</option></select>
+    </div>
+    <div class="kv" id="micInfo"></div>
+    <div class="note warn hidden" id="agcWarn">Let op: deze browser past automatische versterking toe op de microfoon. Metingen kunnen onbetrouwbaar zijn. Chrome of Edge werkt het best.</div>
+    <div class="row">
+      <button class="btn sm" id="resetBtn">↺ Reset meting (Leq, max, min)</button>
+      <button class="btn sm" id="csvBtn">⬇ Export CSV</button>
+    </div>
+
+    <h2>Kalibratie</h2>
+    <div class="kv" id="calInfo"></div>
+    <button class="btn big" id="calBtn" style="margin-top:10px">🎯 Kalibratie-assistent</button>
+    <div class="row">
+      <span class="lbl">Fijnregeling</span>
+      <button class="btn sm" data-trim="-1">−1</button>
+      <button class="btn sm" data-trim="-0.1">−0.1</button>
+      <button class="btn sm" data-trim="0.1">+0.1</button>
+      <button class="btn sm" data-trim="1">+1</button>
+    </div>
+
+    <h2>Meetopstelling</h2>
+    <div class="col"><span>Meetpositie</span><input type="text" id="rPosition" placeholder="bv. opgehangen boven dansvloer, 4 m hoog, 90°"></div>
+    <div class="col"><span>Speakers / opstelling</span><input type="text" id="rSetup" placeholder="bv. line array 2×8 + 6 subs, point source delays"></div>
+    <div class="row"><span class="lbl" style="flex:1">Correctiefactor (meetpositie → luidste publieksplek)</span><input type="number" id="rCorr" step="0.1" value="0"><span class="lbl">dB</span></div>
+    <button class="btn sm" id="corrBtn">🎯 Correctiefactor bepalen (met roze ruis)</button>
+    <p class="note">De correctiefactor wordt bij alle getoonde waarden, de CSV en het verslag opgeteld. Bepaal hem één keer per opstelling door tegelijk te meten op de meetpositie en op de luidste publieksplek.</p>
+
+    <h2>Weergave</h2>
+    <div class="seg" id="viewTabs"><button data-v="main" class="on">Dit scherm</button><button data-v="ext">Display 2</button></div>
+    <p class="note" id="viewTabNote">Instellingen voor het scherm waarop je nu kijkt.</p>
+    <div class="col"><span>Look</span>
+      <select id="vTheme">
+        <option value="night">Nacht (donker)</option>
+        <option value="day">Dag (licht)</option>
+        <option value="auto">Automatisch dag/nacht (07:00–19:00 = dag)</option>
+        <option value="neon">Neon / club</option>
+        <option value="led">LED-display (rood)</option>
+        <option value="mini">Minimaal (groot, zwart-wit)</option>
+      </select>
+    </div>
+    <div class="row">
+      <label class="col"><span>Hoofdwaarde</span><select id="vKey"></select></label>
+      <label class="col" style="flex:0 0 90px;min-width:0"><span>Weging</span><select id="vW"><option>A</option><option>C</option><option>Z</option></select></label>
+    </div>
+    <div class="row">
+      <label class="col"><span>Decimalen</span><select id="vDec"><option value="0">0 (85)</option><option value="1">1 (85.3)</option></select></label>
+      <label class="col"><span>Taal labels</span><select id="vLang"><option value="nl">Nederlands</option><option value="en">English</option></select></label>
+    </div>
+    <div class="checks" style="margin:10px 0">
+      <label><input type="checkbox" id="vBar"> Niveaubalk</label>
+      <label><input type="checkbox" id="vGraph"> Grafiek</label>
+      <label><input type="checkbox" id="vLimit"> Limietstatus</label>
+      <label><input type="checkbox" id="vAlert"> Knipper bij overschrijding</label>
+    </div>
+    <div class="col"><span>Grafiek-periode</span>
+      <select id="vRange"><option value="60">1 minuut</option><option value="300">5 minuten</option><option value="900">15 minuten</option><option value="3600">60 minuten</option></select>
+    </div>
+    <div class="col"><span>Extra waarden (tegels)</span><div class="checks" id="tileChecks"></div></div>
+
+    <h2>Limiet</h2>
+    <div class="row"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="limOn"> Limietbewaking aan</label></div>
+    <p class="note">De limiet wordt mee bewaard in het evenementprofiel (zie Evenement &amp; verslag), zodat elk evenement zijn eigen limiet heeft.</p>
+    <div class="col"><span>Voorinstelling</span>
+      <select id="limPreset">
+        <option value="cat1">Vlarem cat. 1 – max 85 dB(A) L<sub>Aeq</sub> 15 min</option>
+        <option value="cat2">Vlarem cat. 2 – max 95 dB(A) L<sub>Aeq</sub> 15 min</option>
+        <option value="cat3">Vlarem cat. 3 – max 100 dB(A) L<sub>Aeq</sub> 60 min</option>
+        <option value="custom">Eigen instelling</option>
+      </select>
+    </div>
+    <div class="row">
+      <label class="col"><span>Meetwaarde</span><select id="limKey"></select></label>
+      <label class="col" style="flex:0 0 80px;min-width:0"><span>Weging</span><select id="limW"><option>A</option><option>C</option><option>Z</option></select></label>
+    </div>
+    <div class="row">
+      <label class="col"><span>Waarschuwing vanaf</span><input type="number" id="limWarn" step="0.5"></label>
+      <label class="col"><span>Maximum</span><input type="number" id="limMax" step="0.5"></label>
+    </div>
+    <p class="note">Controleer altijd zelf welke norm en categorie op jouw evenement van toepassing is. Deze app is geen gecertificeerde klasse 1- of klasse 2-meter (IEC 61672-1). VLAREM II vraagt voor de meetplicht een klasse 2-meter of een begrenzer.</p>
+
+    <h2>Evenement &amp; verslag (PDF)</h2>
+    <div class="col"><span>Evenementprofiel</span>
+      <div class="row" style="margin:0"><select id="profSel" style="flex:1;width:auto"></select><button class="btn sm" id="profSave" title="Bewaar evenementgegevens, meetopstelling, limiet en logo onder een naam">💾 Bewaar</button><button class="btn sm" id="profDel" title="Profiel verwijderen">🗑</button></div>
+      <span class="note">Een profiel bewaart de evenementgegevens, de meetopstelling, de <b>limiet</b> en het logo. Kies het profiel van het evenement en alles staat juist.</span>
+    </div>
+    <div class="col"><span>Evenement</span><input type="text" id="rEvent" placeholder="naam van het evenement"></div>
+    <div class="row">
+      <label class="col"><span>Locatie</span><input type="text" id="rLocation"></label>
+      <label class="col"><span>Organisator</span><input type="text" id="rOrganizer"></label>
+    </div>
+    <div class="col"><span>Opgesteld door</span><input type="text" id="rAuthor"></div>
+    <div class="col"><span>Opmerkingen</span><input type="text" id="rNotes"></div>
+    <div class="col"><span>Logo op het verslag</span>
+      <div class="row" style="margin:0"><img id="logoPrev" alt="" style="max-height:40px;max-width:140px;background:#fff;border-radius:6px;padding:3px;display:none"><button class="btn sm" id="logoBtn">Logo kiezen…</button><button class="btn sm" id="logoDel">Standaard</button><input type="file" id="logoFile" accept="image/*" class="hidden"></div>
+      <span class="note" id="logoNote">Standaard wordt logo.png uit de map op de server gebruikt (indien aanwezig).</span>
+    </div>
+    <div class="col"><span>Tijdsloten: technieker + band (van – tot)</span>
+      <div id="opList"></div>
+      <div class="row"><button class="btn sm" id="opAdd">+ Operator</button><button class="btn sm" id="opSwitch" title="Sluit de huidige operator af op dit moment en start een nieuwe">⇄ Nu wisselen</button></div>
+    </div>
+    <div class="row">
+      <label class="col"><span>Verslag van (leeg = begin)</span><input type="time" id="rFrom"></label>
+      <label class="col"><span>tot (leeg = einde)</span><input type="time" id="rTo"></label>
+    </div>
+    <div class="col"><span>Taal van het verslag</span><select id="rLang"><option value="en">English</option><option value="nl">Nederlands</option></select></div>
+    <button class="btn pri big" id="reportBtn">📄 Maak verslag</button>
+    <p class="note">De meting wordt elke 30 seconden in deze browser bewaard. Na een crash of herstart kan je verder meten of alsnog een verslag maken.</p>
+
+    <h2>Live delen</h2>
+    <div class="row"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="relayOn"> Live meting delen via link</label></div>
+    <div id="relayBox" class="hidden">
+      <p class="note">Iedereen met deze link volgt de live meting en de gemiddelden op eender welk toestel: gsm, tablet of pc in de back-office. <b>Elke meting krijgt een nieuwe, unieke link</b>, en die werkt alleen zolang de meting loopt. Het display toont de instellingen van tab “Display 2”.</p>
+      <code class="link" id="relayLink"></code>
+      <div class="row" id="relayBtns"><button class="btn sm" id="relayMail">📧 E-mail</button><button class="btn sm" id="relayCopy">Kopieer link</button><button class="btn sm hidden" id="relayShare">Delen…</button><button class="btn sm" id="relayQrBtn">QR-code</button></div>
+      <div id="relayQr" class="hidden" style="background:#fff;padding:10px;border-radius:10px;width:max-content;margin:6px 0;line-height:0"></div>
+      <div class="note" id="relayStatus"></div>
+    </div>
+
+    <h2>Tweede scherm</h2>
+    <p class="note" id="screenInfo"></p>
+    <button class="btn big" id="openDispBtn">🖥 Open display op tweede scherm</button>
+    <p class="note">Klik in het display-venster op ⛶ (of druk <b>F</b>, of dubbelklik) voor volledig scherm zonder browserbalk. Het display gebruikt de instellingen van tab “Display 2”.</p>
+
+    <h2>Back-up</h2>
+    <div class="row">
+      <button class="btn sm" id="expBtn">⬇ Instellingen + kalibraties</button>
+      <button class="btn sm" id="impBtn">⬆ Importeren</button>
+      <input type="file" id="impFile" accept="application/json" class="hidden">
+    </div>
+    <p class="note">Instellingen en kalibraties worden per browser bewaard. Met export/import zet je ze over naar een ander toestel.</p>
+  </aside>
+</div>
+
+<dialog id="calDlg">
+  <h2>Kalibratie</h2>
+  <div class="note" id="calDlgMic"></div>
+  <div class="seg" id="calTabs" style="margin:12px 0">
+    <button data-m="cal" class="on">Kalibrator</button><button data-m="ref">Referentiemeter</button><button data-m="man">Handmatig</button><button data-m="corr">Correctiefactor</button>
+  </div>
+  <section data-m="cal">
+    <ol>
+      <li>Plaats de akoestische kalibrator (1 kHz) op de microfoon en zet hem aan.</li>
+      <li>Kies het niveau van je kalibrator.</li>
+      <li>Klik op <b>Start meting</b> en raak niets aan gedurende 5 seconden.</li>
+    </ol>
+    <div class="row"><span class="lbl">Kalibratorniveau</span>
+      <select id="calTarget" style="width:auto"><option value="94">94 dB</option><option value="114">114 dB</option><option value="custom">ander…</option></select>
+      <input type="number" id="calTargetCustom" class="hidden" step="0.1" value="94">
+    </div>
+    <button class="btn pri" id="calRun">Start meting (5 s)</button>
+  </section>
+  <section data-m="ref" class="hidden">
+    <ol>
+      <li>Zet een geijkte referentie-geluidsmeter naast deze microfoon (zelfde plaats en richting).</li>
+      <li>Zorg voor een constant, luid geluid (≥ 70 dB). Gebruik eventueel de roze ruis hieronder via de speakers.</li>
+      <li>Klik op <b>Start meting</b> en lees tegelijk de L<sub>eq</sub> of de gemiddelde waarde af op de referentiemeter.</li>
+      <li>Vul die waarde in en sla op.</li>
+    </ol>
+    <div class="row">
+      <span class="lbl">Weging</span><select id="refW" style="width:auto"><option>A</option><option>C</option><option>Z</option></select>
+      <button class="btn pri" id="refRun">Start meting (10 s)</button>
+    </div>
+    <div class="row"><span class="lbl">Waarde op referentiemeter</span><input type="number" id="refVal" step="0.1" placeholder="bv. 82.4"><span class="lbl">dB</span></div>
+  </section>
+  <section data-m="man" class="hidden">
+    <p class="note">De offset is het getal dat bij het ruwe microfoonsignaal (dBFS) wordt opgeteld om dB SPL te krijgen. Pas aan tot de waarde overeenkomt met een referentie.</p>
+    <div class="row"><span class="lbl">Offset</span><input type="number" id="manOff" step="0.1"><span class="lbl">dB</span>
+      <button class="btn sm" data-man="-1">−1</button><button class="btn sm" data-man="-0.1">−0.1</button><button class="btn sm" data-man="0.1">+0.1</button><button class="btn sm" data-man="1">+1</button>
+    </div>
+  </section>
+  <section data-m="corr" class="hidden">
+    <p class="note">Bepaalt het verschil tussen de vaste (opgehangen) meetmicrofoon en de luidste plek waar publiek staat. Kalibreer de microfoon eerst.</p>
+    <ol>
+      <li>Hang de microfoon op zijn definitieve plaats.</li>
+      <li>Stuur roze ruis naar de PA (kies hieronder de uitgang, bv. je Scarlett naar de mengtafel) en zet het niveau op minstens 85 dB(A).</li>
+      <li>Ga met een referentiemeter (A-weging, L<sub>eq</sub>) naar de luidste publieksplek, op oorhoogte.</li>
+      <li>Klik op <b>Start meting</b> en lees tegelijk de L<sub>Aeq</sub> over 10 seconden af op de referentiemeter.</li>
+    </ol>
+    <div class="row"><button class="btn pri" id="corrRun">Start meting (10 s)</button></div>
+    <div class="row"><span class="lbl">Referentiemeter op publieksplek</span><input type="number" id="corrVal" step="0.1" placeholder="bv. 97.2"><span class="lbl">dB(A)</span></div>
+  </section>
+  <div id="noiseBox" class="hidden" style="border-top:1px solid var(--line);margin-top:10px;padding-top:8px">
+    <div class="row"><span class="lbl">Uitgang testsignaal</span><select id="noiseOut" style="flex:1;width:auto"><option value="">Standaard uitgang</option></select></div>
+    <div class="row"><button class="btn sm" id="noiseBtn">▶ Roze ruis</button><span class="lbl">Volume</span><input type="range" id="noiseVol" min="0" max="1" step="0.01" value="0.05" style="flex:1"></div>
+    <p class="note warn">Begin laag en regel het niveau op met de fader van je mengtafel.</p>
+  </div>
+  <div class="livecal" id="calLive">-- dB</div>
+  <div class="prog"><div id="calProg"></div></div>
+  <div class="result" id="calResult"></div>
+  <div class="dlgfoot">
+    <button class="btn" id="calDefault">Standaard herstellen</button>
+    <span class="spacer"></span>
+    <button class="btn" id="calClose">Sluiten</button>
+    <button class="btn pri" id="calSave" disabled>Opslaan</button>
+  </div>
+</dialog>
+
+<div id="report" class="hidden">
+  <div class="rp-toolbar">
+    <b>Verslag</b><span class="spacer"></span>
+    <span id="rpStatus" style="font-size:13px;opacity:.8"></span>
+    <button class="btn pri" id="rpPdf">⬇ Download PDF</button>
+    <button class="btn" id="rpPrint">🖨 Afdrukken</button>
+    <button class="btn" id="rpClose">✕ Sluiten</button>
+  </div>
+  <div id="rpPages"></div>
+</div>
+
+<script>
+'use strict';
+/* ============================================================
+   dB-meter — browser-based sound level meter
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const params = new URLSearchParams(location.search);
+const IS_DISPLAY = params.has('display');
+const ROOM = (params.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+if (location.protocol === 'http:' && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+  location.replace('https://' + location.host + location.pathname + location.search);
+}
+const DEFAULT_OFFSET = 100;
+const LS_SET = 'dbm-settings-v1', LS_CAL = 'dbm-cal-v1';
+
+/* ---------- labels ---------- */
+const KEYS = ['F','S','Leq1','Leq60','Leq300','Leq900','Leq3600','LeqS','Fmax','Fmin','peak'];
+const KEYNAME = {
+  nl:{F:'Fast (live)',S:'Slow',Leq1:'Leq 1 s',Leq60:'Leq 1 min',Leq300:'Leq 5 min',Leq900:'Leq 15 min',Leq3600:'Leq 60 min',LeqS:'Leq sessie',Fmax:'Max (Fast)',Fmin:'Min (Fast)',peak:'Piek'},
+};
+const T = {
+  nl:{session:'sessie',clock:'Tijd',elapsed:'Meetduur',limit:'Limiet',ok:'OK',warn:'Let op',over:'Overschreden',uncal:'niet gekalibreerd',now:'nu',waiting:'Wachten op meter…',ended:'De meting is beëindigd. Deze link is niet meer geldig.',unknown:'Deze link is onbekend of verlopen.',inactive:'De meting is momenteel niet actief.',offline:'Geen verbinding met de server…'},
+  en:{session:'session',clock:'Time',elapsed:'Elapsed',limit:'Limit',ok:'OK',warn:'Caution',over:'Over limit',uncal:'not calibrated',now:'now',waiting:'Waiting for meter…',ended:'The measurement has ended. This link is no longer valid.',unknown:'This link is unknown or has expired.',inactive:'The measurement is currently not active.',offline:'No connection to the server…'}
+};
+function label(w, k, lang = 'nl') {
+  const tt = T[lang] || T.nl;
+  switch (k) {
+    case 'F': return `L<sub>${w}F</sub>`;
+    case 'S': return `L<sub>${w}S</sub>`;
+    case 'Fmax': return `L<sub>${w}Fmax</sub>`;
+    case 'Fmin': return `L<sub>${w}Fmin</sub>`;
+    case 'peak': return `L<sub>${w}peak</sub>`;
+    case 'LeqS': return `L<sub>${w}eq</sub> ${tt.session}`;
+    case 'Leq1': return `L<sub>${w}eq</sub> 1 s`;
+    default: return `L<sub>${w}eq</sub> ${{Leq60:'1 min',Leq300:'5 min',Leq900:'15 min',Leq3600:'60 min'}[k]}`;
+  }
+}
+const TILE_OPTS = ['A:Leq60','A:Leq300','A:Leq900','A:Leq3600','A:LeqS','A:F','A:S','A:Fmax','A:Fmin',
+                   'C:Leq60','C:Leq900','C:Leq3600','C:LeqS','C:F','C:peak','Z:F','Z:peak','clock','elapsed'];
+const LIMIT_PRESETS = {
+  cat1:{w:'A',key:'Leq900',warn:82,max:85},
+  cat2:{w:'A',key:'Leq900',warn:92,max:95},
+  cat3:{w:'A',key:'Leq3600',warn:97,max:100},
+};
+
+/* ---------- settings ---------- */
+const defView = (o = {}) => Object.assign({
+  theme:'night', w:'A', key:'F', decimals:1, bar:true, graph:true, limitBox:true, alertBg:false,
+  tiles:['A:Leq60','A:Leq900','A:Fmax','C:Leq60','C:peak','clock'], graphRange:300, lang:'nl'
+}, o);
+const DEFAULTS = {
+  views:{ main:defView(), ext:defView({key:'Leq900', graph:false, bar:true, alertBg:true, tiles:['A:F','C:Leq900','clock']}) },
+  limit:{ on:true, preset:'cat2', ...LIMIT_PRESETS.cat2 },
+  deviceId:'', relay:{ on:false, room:'', live:false },
+  report:{ event:'', location:'', organizer:'', author:'', notes:'', position:'', setup:'', corr:0, ops:[], from:'', to:'', logo:'', lang:'en' },
+  profiles:{}, profile:''
+};
+function load(key, def) { try { return JSON.parse(localStorage.getItem(key)) ?? def; } catch { return def; } }
+function merge(def, val) {
+  if (typeof def !== 'object' || def === null || Array.isArray(def)) return val === undefined ? def : val;
+  const out = {}; for (const k in def) out[k] = merge(def[k], val ? val[k] : undefined);
+  if (val) for (const k in val) if (!(k in out)) out[k] = val[k];
+  return out;
+}
+let S = merge(DEFAULTS, load(LS_SET, {}));
+let CAL = load(LS_CAL, {});
+function save() { try { localStorage.setItem(LS_SET, JSON.stringify(S)); localStorage.setItem(LS_CAL, JSON.stringify(CAL)); } catch {} }
+
+/* ---------- audio worklet (A/C/Z weighting, Fast/Slow) ---------- */
+const WORKLET_SRC = `
+class BQ{constructor(c){this.b0=c[0];this.b1=c[1];this.b2=c[2];this.a1=c[3];this.a2=c[4];this.z1=0;this.z2=0;}
+ run(x){const y=this.b0*x+this.z1;this.z1=this.b1*x-this.a1*y+this.z2;this.z2=this.b2*x-this.a2*y;return y;}}
+function bil(f,fs){const k=-Math.PI*f/fs;return (1+k)/(1-k);}
+function mz(f,fs){return Math.exp(-2*Math.PI*f/fs);}
+function sec(z1,z2,p1,p2){return [1,-(z1+z2),z1*z2,-(p1+p2),p1*p2];}
+function mag(S,f,fs){const w=2*Math.PI*f/fs,c1=Math.cos(w),s1=-Math.sin(w),c2=Math.cos(2*w),s2=-Math.sin(2*w);let m=1;
+ for(const [b0,b1,b2,a1,a2] of S){m*=Math.hypot(b0+b1*c1+b2*c2,b1*s1+b2*s2)/Math.hypot(1+a1*c1+a2*c2,a1*s1+a2*s2);}return m;}
+function norm(S,fs){const g=1/mag(S,1000,fs);S[0]=[S[0][0]*g,S[0][1]*g,S[0][2]*g,S[0][3],S[0][4]];return S;}
+class Meter extends AudioWorkletProcessor{
+ constructor(){super();const fs=sampleRate;
+  const p1=bil(20.598997,fs),p2=bil(107.65265,fs),p3=bil(737.86223,fs),p4=mz(12194.217,fs);
+  const hi=[1,0,0,-2*p4,p4*p4];
+  this.A=norm([sec(1,1,p1,p1),sec(1,1,p2,p3),hi.slice()],fs).map(c=>new BQ(c));
+  this.C=norm([sec(1,1,p1,p1),hi.slice()],fs).map(c=>new BQ(c));
+  // octave band filters (2x RBJ band-pass, 1 octave) for spectrum logging
+  this.OB=[];
+  for(const fc of [31.5,63,125,250,500,1000,2000,4000,8000,16000]){
+   if(fc*1.2>=fs/2){this.OB.push(null);continue;}
+   const w0=2*Math.PI*fc/fs,al=Math.sin(w0)*Math.sinh(Math.LN2/2*w0/Math.sin(w0)),a0=1+al;
+   const c=[al/a0,0,-al/a0,-2*Math.cos(w0)/a0,(1-al)/a0];
+   this.OB.push([new BQ(c),new BQ(c)]);
+  }
+  this.bs=new Float64Array(10);
+  this.kF=1-Math.exp(-1/(0.125*fs));this.kS=1-Math.exp(-1/fs);
+  this.eAF=this.eAS=this.eCF=this.eCS=this.eZF=this.eZS=0;
+  this.block=Math.round(fs*0.05);this.clr();
+ }
+ clr(){this.n=0;this.sA=this.sC=this.sZ=0;this.mxAF=this.mxCF=this.mxZF=0;this.mnAF=this.mnCF=this.mnZF=Infinity;this.pkC=this.pkZ=0;}
+ process(inputs){
+  const ch=inputs[0]&&inputs[0][0];if(!ch)return true;
+  const A0=this.A[0],A1=this.A[1],A2=this.A[2],C0=this.C[0],C1=this.C[1],kF=this.kF,kS=this.kS;
+  let eAF=this.eAF,eAS=this.eAS,eCF=this.eCF,eCS=this.eCS,eZF=this.eZF,eZS=this.eZS;
+  let sA=0,sC=0,sZ=0,mxAF=this.mxAF,mxCF=this.mxCF,mxZF=this.mxZF,mnAF=this.mnAF,mnCF=this.mnCF,mnZF=this.mnZF,pkC=this.pkC,pkZ=this.pkZ;
+  for(let i=0;i<ch.length;i++){
+   const x=ch[i];const a=A2.run(A1.run(A0.run(x)));const c=C1.run(C0.run(x));
+   const a2=a*a,c2=c*c,z2=x*x;
+   eAF+=(a2-eAF)*kF;eAS+=(a2-eAS)*kS;eCF+=(c2-eCF)*kF;eCS+=(c2-eCS)*kS;eZF+=(z2-eZF)*kF;eZS+=(z2-eZS)*kS;
+   sA+=a2;sC+=c2;sZ+=z2;
+   if(eAF>mxAF)mxAF=eAF;if(eAF<mnAF)mnAF=eAF;if(eCF>mxCF)mxCF=eCF;if(eCF<mnCF)mnCF=eCF;if(eZF>mxZF)mxZF=eZF;if(eZF<mnZF)mnZF=eZF;
+   const ac=c<0?-c:c;if(ac>pkC)pkC=ac;const az=x<0?-x:x;if(az>pkZ)pkZ=az;
+  }
+  const OB=this.OB,bs=this.bs;
+  for(let b=0;b<10;b++){const f=OB[b];if(!f)continue;const f0=f[0],f1=f[1];let acc=0;
+   for(let i=0;i<ch.length;i++){const y=f1.run(f0.run(ch[i]));acc+=y*y;}bs[b]+=acc;}
+  this.eAF=eAF;this.eAS=eAS;this.eCF=eCF;this.eCS=eCS;this.eZF=eZF;this.eZS=eZS;
+  this.sA+=sA;this.sC+=sC;this.sZ+=sZ;this.mxAF=mxAF;this.mxCF=mxCF;this.mxZF=mxZF;this.mnAF=mnAF;this.mnCF=mnCF;this.mnZF=mnZF;this.pkC=pkC;this.pkZ=pkZ;
+  this.n+=ch.length;
+  if(this.n>=this.block){
+   this.port.postMessage({n:this.n,sA:this.sA,sC:this.sC,sZ:this.sZ,eAF,eAS,eCF,eCS,eZF,eZS,
+    mxAF:this.mxAF,mxCF:this.mxCF,mxZF:this.mxZF,mnAF:this.mnAF,mnCF:this.mnCF,mnZF:this.mnZF,pkC:this.pkC,pkZ:this.pkZ,bands:Array.from(this.bs)});
+   this.clr();this.bs.fill(0);
+  }
+  return true;
+ }
+}
+registerProcessor('db-meter',Meter);`;
+
+/* ---------- meter state ---------- */
+const M = { running:false, fs:48000, live:null, warm:0, startTime:0, clipUntil:0, calc:null, micLabel:'', micKey:'' };
+const HKEYS = ['t','A','C','Z','AFmax','Cpk','B'];
+function resetMeasure() {
+  if (M.running) window.onNewMeasurement?.();
+  M.hist = { t:[], A:[], C:[], Z:[], AFmax:[], Cpk:[], B:[] };
+  M.sec = newSec(); M.sess = { A:0, C:0, Z:0, n:0 };
+  M.mx = { A:0, C:0, Z:0 }; M.mn = { A:Infinity, C:Infinity, Z:Infinity }; M.pk = { C:0, Z:0 };
+  M.startTime = Date.now(); M.dirty = true;
+}
+function newSec() { return { n:0, A:0, C:0, Z:0, AFmax:0, Cpk:0, B:new Float64Array(10) }; }
+resetMeasure();
+
+let ctx = null, node = null, stream = null, src = null;
+function calOffset() { return CAL[M.micKey]?.offset ?? DEFAULT_OFFSET; }
+function corrDb() { return +(S.report?.corr) || 0; }
+function curOffset() { return calOffset() + corrDb(); }
+function isCal() { return !!CAL[M.micKey]; }
+
+async function ensureCtx() {
+  if (ctx) { if (ctx.state === 'suspended') await ctx.resume(); return; }
+  ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint:'interactive' });
+  const url = URL.createObjectURL(new Blob([WORKLET_SRC], { type:'application/javascript' }));
+  await ctx.audioWorklet.addModule(url);
+  node = new AudioWorkletNode(ctx, 'db-meter', { numberOfInputs:1, numberOfOutputs:1, channelCount:1, channelCountMode:'explicit' });
+  const mute = ctx.createGain(); mute.gain.value = 0; node.connect(mute).connect(ctx.destination);
+  node.port.onmessage = e => onBlock(e.data);
+  M.fs = ctx.sampleRate;
+  if (ctx.state === 'suspended') await ctx.resume();
+}
+
+let demoNodes = null;
+async function startDemo() {
+  await ensureCtx(); stopStream();
+  const c = ctx, len = c.sampleRate * 4, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+  let b0 = 0, b1 = 0, b2 = 0, mx = 0;
+  for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; b0 = .997 * b0 + w * .029; b1 = .985 * b1 + w * .032; b2 = .95 * b2 + w * .048; d[i] = b0 + b1 + b2 + w * .1; mx = Math.max(mx, Math.abs(d[i])); }
+  for (let i = 0; i < len; i++) d[i] /= mx;
+  const srcN = c.createBufferSource(); srcN.buffer = buf; srcN.loop = true;
+  const g = c.createGain(); g.gain.value = 0.22;
+  const lfo = c.createOscillator(); lfo.frequency.value = 0.04; const lg = c.createGain(); lg.gain.value = 0.09; lfo.connect(lg).connect(g.gain);
+  const kick = c.createOscillator(); kick.type = 'square'; kick.frequency.value = 2.1; const kg = c.createGain(); kg.gain.value = 0.05; kick.connect(kg).connect(g.gain);
+  srcN.connect(g).connect(node); srcN.start(); lfo.start(); kick.start();
+  demoNodes = [srcN, lfo, kick, g];
+  M.micLabel = 'Demo-signaal (gesimuleerd)'; M.micKey = 'demo';
+  if (!M.running) window.onNewMeasurement?.();
+  CAL.demo = { offset:121, method:'kalibrator 94 dB', date:new Date().toISOString() };
+  M.warm = 0; M.running = true; M.demo = true;
+  updatePanel(); window.relayUi?.();
+}
+function demoHistory() {
+  resetMeasure();
+  const off = curOffset(), N = 3 * 3600, t0 = Date.now() - N * 1000, H = M.hist, ms = db => Math.pow(10, (db - off) / 10);
+  for (let i = 0; i < N; i++) {
+    const h = i / 3600; let base = h < 1 ? 88 : h < 2 ? 94.5 : 91; base += 2.5 * Math.sin(i / 380) + (Math.random() - .5) * 3;
+    const bass = h < 1 ? 11 : h < 2 ? 16 : 13;
+    H.t.push(t0 + (i + 1) * 1000); H.A.push(ms(base)); H.C.push(ms(base + bass)); H.Z.push(ms(base + bass + 1));
+    H.AFmax.push(ms(base + 5)); H.Cpk.push(Math.pow(10, (base + bass + 12 - off) / 20));
+    const B = new Float32Array(10); for (let k = 0; k < 10; k++) B[k] = ms(base + (k < 3 ? bass : 0) - k * 1.5 + (h >= 1 && h < 2 && k < 2 ? 4 : 0) + (Math.random() - .5) * 2); H.B.push(B);
+    M.sess.A += H.A[i]; M.sess.C += H.C[i]; M.sess.Z += H.Z[i]; M.sess.n++;
+  }
+  M.startTime = t0;
+  const hm = t => { const d = new Date(t); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+  S.report.ops = [{ name:'Jan', band:'The Openers', from:hm(t0), to:hm(t0 + 3600e3) }, { name:'Tom', band:'Headliner XL', from:hm(t0 + 3600e3), to:hm(t0 + 7200e3) }, { name:'Jan', band:'DJ Nightshift', from:hm(t0 + 7200e3), to:'' }];
+  if (!S.report.event) S.report.event = 'Demo-evenement';
+}
+async function startAudio(deviceId) {
+  if (M.demo) { demoNodes?.forEach(n => { try { n.stop?.(); n.disconnect(); } catch {} }); demoNodes = null; M.demo = false; }
+  if (!navigator.mediaDevices?.getUserMedia) throw new Error('Deze browser geeft geen toegang tot de microfoon (HTTPS nodig).');
+  await ensureCtx();
+  stopStream();
+  const audio = { echoCancellation:false, noiseSuppression:false, autoGainControl:false, channelCount:1 };
+  if (deviceId) audio.deviceId = { exact:deviceId };
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio }); }
+  catch (e) {
+    if (deviceId && (e.name === 'OverconstrainedError' || e.name === 'NotFoundError')) { delete audio.deviceId; stream = await navigator.mediaDevices.getUserMedia({ audio }); }
+    else throw e;
+  }
+  const track = stream.getAudioTracks()[0];
+  const st = track.getSettings ? track.getSettings() : {};
+  M.micLabel = track.label || 'Microfoon';
+  M.micKey = M.micLabel || st.deviceId || 'default';
+  S.deviceId = st.deviceId || deviceId || ''; save();
+  src = ctx.createMediaStreamSource(stream); src.connect(node);
+  if (!M.running) window.onNewMeasurement?.();
+  M.warm = 0; M.running = true; window.relayUi?.();
+  if (!M.hist.A.length) resetMeasure();
+  track.onended = () => { setStatus('Microfoon losgekoppeld.'); stopAudio(); };
+  $('#agcWarn').classList.toggle('hidden', !(st.autoGainControl === true || st.noiseSuppression === true));
+  await refreshDevices();
+  keepAwake();
+  updatePanel();
+}
+function stopStream() { try { src && src.disconnect(); } catch {} src = null; if (stream) stream.getTracks().forEach(t => t.stop()); stream = null; }
+function stopAudio() { if (M.running) window.onStopMeasurement?.(); stopStream(); if (demoNodes) { demoNodes.forEach(n => { try { n.stop?.(); n.disconnect(); } catch {} }); demoNodes = null; M.demo = false; } M.running = false; M.live = null; updatePanel(); }
+
+function onBlock(d) {
+  M.live = d;
+  if (M.warm < 10) { M.warm++; return; }               // let filters settle (~0.5 s)
+  const s = M.sec;
+  s.n += d.n; s.A += d.sA; s.C += d.sC; s.Z += d.sZ;
+  if (d.bands) for (let b = 0; b < 10; b++) s.B[b] += d.bands[b];
+  if (d.mxAF > s.AFmax) s.AFmax = d.mxAF; if (d.pkC > s.Cpk) s.Cpk = d.pkC;
+  for (const w of 'ACZ') { M.mx[w] = Math.max(M.mx[w], d['mx'+w+'F']); M.mn[w] = Math.min(M.mn[w], d['mn'+w+'F']); }
+  M.pk.C = Math.max(M.pk.C, d.pkC); M.pk.Z = Math.max(M.pk.Z, d.pkZ);
+  if (d.pkZ >= 0.985) M.clipUntil = performance.now() + 1500;
+  if (M.calc) {
+    const c = M.calc; c.sum += d['s'+c.w]; c.n += d.n; c.blocks.push(d['s'+c.w] / d.n); c.pk = Math.max(c.pk, d.pkZ);
+    if (c.n >= M.fs * c.dur) { M.calc = null; c.done(c); }
+  }
+  if (s.n >= M.fs) {
+    const H = M.hist;
+    H.t.push(Date.now()); H.A.push(s.A / s.n); H.C.push(s.C / s.n); H.Z.push(s.Z / s.n); H.AFmax.push(s.AFmax); H.Cpk.push(s.Cpk);
+    H.B.push(Float32Array.from(s.B, x => x / s.n));
+    M.sess.A += s.A; M.sess.C += s.C; M.sess.Z += s.Z; M.sess.n += s.n; M.dirty = true;
+    if (H.A.length > 86400) { for (const k of HKEYS) H[k].shift(); }
+    M.sec = newSec();
+  }
+}
+
+function meanLast(arr, n) { n = Math.min(n, arr.length); if (!n) return 0; let s = 0; for (let i = arr.length - n; i < arr.length; i++) s += arr[i]; return s / n; }
+function compute() {
+  const off = curOffset(), d = M.live;
+  const db = ms => ms > 0 ? 10 * Math.log10(ms) + off : NaN;
+  const dbp = a => a > 0 ? 20 * Math.log10(a) + off : NaN;
+  const v = {};
+  for (const w of ['A','C','Z']) {
+    const H = M.hist[w];
+    v[w] = {
+      F: db(d && d['e'+w+'F']), S: db(d && d['e'+w+'S']),
+      Leq1: db(H[H.length-1]), Leq60: db(meanLast(H,60)), Leq300: db(meanLast(H,300)),
+      Leq900: db(meanLast(H,900)), Leq3600: db(meanLast(H,3600)),
+      LeqS: db(M.sess.n ? M.sess[w] / M.sess.n : 0),
+      Fmax: db(M.mx[w]), Fmin: db(isFinite(M.mn[w]) ? M.mn[w] : 0), peak: NaN
+    };
+  }
+  v.C.peak = dbp(M.pk.C); v.Z.peak = dbp(M.pk.Z);
+  for (const w in v) for (const k in v[w]) v[w][k] = isFinite(v[w][k]) ? Math.round(v[w][k] * 10) / 10 : null;
+  return v;
+}
+function limitState(v) {
+  const L = S.limit;
+  if (!L.on) return { state:'off' };
+  const val = v[L.w]?.[L.key];
+  let st = 'ok'; if (val != null) { if (val >= L.max) st = 'over'; else if (val >= L.warn) st = 'warn'; }
+  return { state:st, val, w:L.w, key:L.key, warn:L.warn, max:L.max };
+}
+function histFor(w, range) {
+  const H = M.hist[w], off = curOffset(), buckets = Math.min(300, range), per = range / buckets, out = [];
+  for (let b = 0; b < buckets; b++) {
+    const i0 = H.length - range + Math.floor(b * per), i1 = H.length - range + Math.floor((b + 1) * per);
+    let s = 0, c = 0; for (let i = Math.max(i0, 0); i < i1; i++) { s += H[i]; c++; }
+    out.push(c && s > 0 ? Math.round((10 * Math.log10(s / c) + off) * 10) / 10 : null);
+  }
+  return out;
+}
+function elapsedStr(ms) { const t = Math.floor(ms / 1000), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60; return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+
+/* ---------- rendering (shared by meter and display) ---------- */
+function fmt(v, dec) { return v == null ? (dec ? '--.-' : '--') : v.toFixed(dec); }
+function resolveTheme(t) { if (t !== 'auto') return t; const h = new Date().getHours(); return (h >= 7 && h < 19) ? 'day' : 'night'; }
+function setTheme(t) {
+  const r = 'theme-' + resolveTheme(t);
+  if (!document.body.classList.contains(r)) {
+    document.body.className = document.body.className.replace(/\btheme-\w+/g, '').trim() + ' ' + r;
+    const m = document.querySelector('meta[name=theme-color]'); requestAnimationFrame(() => m.content = getComputedStyle(document.body).getPropertyValue('--bg').trim());
+  }
+}
+let tilesKey = '';
+function render(p, view) {
+  setTheme(view.theme);
+  const lang = view.lang, tt = T[lang] || T.nl, dec = +view.decimals;
+  const val = p.v ? p.v[view.w]?.[view.key] : null;
+  $('#mainLabel').innerHTML = label(view.w, view.key, lang);
+  $('#mainValue').textContent = fmt(val, dec);
+  $('#mainUnit').textContent = `dB(${view.w})`;
+  const L = p.limit || { state:'off' };
+  document.body.classList.toggle('st-warn', L.state === 'warn');
+  document.body.classList.toggle('st-over', L.state === 'over');
+  document.body.classList.toggle('alertbg', !!view.alertBg);
+  // limit box
+  const lb = $('#limitBox');
+  if (view.limitBox && L.state !== 'off') {
+    lb.classList.remove('hidden');
+    lb.innerHTML = `<span class="pill">${tt[L.state]}</span><span>${tt.limit} ${L.max} dB(${L.w}) · ${label(L.w, L.key, lang)}: <b>${fmt(L.val, 1)}</b></span>`;
+  } else lb.classList.add('hidden');
+  // bar (live Fast value of chosen weighting)
+  $('#barWrap').classList.toggle('hidden', !view.bar);
+  if (view.bar) {
+    const fv = p.v ? p.v[view.w]?.F : null;
+    const pct = v => Math.max(0, Math.min(100, (v - 30) / 100 * 100));
+    const bf = $('#barFill'); const w = fv == null ? 0 : pct(fv);
+    bf.style.width = w + '%'; bf.style.setProperty('--bw', (w > 0 ? 100 / w * 100 : 100) + '%');
+    const on = L.state !== 'off';
+    $('#markW').style.display = on ? '' : 'none'; $('#markM').style.display = on ? '' : 'none';
+    if (on) { $('#markW').style.left = pct(L.warn) + '%'; $('#markM').style.left = pct(L.max) + '%'; }
+  }
+  // graph
+  $('#graphWrap').classList.toggle('hidden', !view.graph);
+  if (view.graph) drawGraph($('#graph'), p.hist || [], L, view);
+  // tiles
+  const tl = $('#tiles');
+  tl.classList.toggle('hidden', !view.tiles.length);
+  const key = view.tiles.join(',') + lang + (L.w + L.key);
+  if (key !== tilesKey) {
+    tilesKey = key;
+    tl.innerHTML = view.tiles.map(t => {
+      const [w, k] = t.split(':');
+      const lim = k && L.state !== 'off' && w === L.w && k === L.key;
+      const lab = t === 'clock' ? tt.clock : t === 'elapsed' ? tt.elapsed : label(w, k, lang);
+      return `<div class="tile${lim ? ' lim' : ''}" data-t="${t}"><div class="tl">${lab}</div><div class="tv"></div></div>`;
+    }).join('');
+  }
+  for (const el of tl.children) {
+    const t = el.dataset.t, tv = el.lastElementChild;
+    if (t === 'clock') tv.textContent = new Date().toLocaleTimeString(lang === 'en' ? 'en-GB' : 'nl-BE', { hour:'2-digit', minute:'2-digit' });
+    else if (t === 'elapsed') tv.textContent = p.elapsed != null ? elapsedStr(p.elapsed) : '--';
+    else { const [w, k] = t.split(':'); tv.innerHTML = `${fmt(p.v ? p.v[w]?.[k] : null, dec)}<small>dB</small>`; }
+  }
+  // badges
+  $('#calBadge').textContent = p.v && p.cal === false ? '⚠ ' + tt.uncal : '';
+  $('#clipBadge').textContent = p.clip ? 'CLIP' : '';
+}
+
+function drawGraph(cv, data, L, view) {
+  const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+  if (!W || !H) return;
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+  const cs = getComputedStyle(document.body), col = n => cs.getPropertyValue(n).trim();
+  const vals = data.filter(x => x != null);
+  let lo = 30, hi = 120;
+  if (vals.length) { lo = Math.min(40, Math.floor((Math.min(...vals) - 5) / 10) * 10); hi = Math.max(100, Math.ceil((Math.max(...vals) + 5) / 10) * 10); }
+  if (L.state !== 'off') hi = Math.max(hi, Math.ceil((L.max + 5) / 10) * 10);
+  const padL = 34, padB = 16, gw = W - padL - 4, gh = H - padB - 4;
+  const y = v => 4 + gh - (v - lo) / (hi - lo) * gh, x = i => padL + (data.length > 1 ? i / (data.length - 1) : 0) * gw;
+  g.font = '11px ' + col('--num'); g.fillStyle = col('--mut'); g.strokeStyle = col('--line'); g.lineWidth = 1;
+  for (let v = lo; v <= hi; v += 10) { const yy = Math.round(y(v)) + .5; g.beginPath(); g.moveTo(padL, yy); g.lineTo(W - 4, yy); g.stroke(); g.fillText(v, 4, yy + 4); }
+  const tt = T[view.lang] || T.nl, r = view.graphRange;
+  g.fillText(r >= 300 ? `-${r / 60} min` : `-${r} s`, padL, H - 3);
+  g.textAlign = 'right'; g.fillText(tt.now, W - 4, H - 3); g.textAlign = 'left';
+  if (L.state !== 'off') {
+    g.setLineDash([6, 5]); g.lineWidth = 1.5;
+    for (const [v, c] of [[L.warn, '--warn'], [L.max, '--over']]) { g.strokeStyle = col(c); g.beginPath(); g.moveTo(padL, y(v)); g.lineTo(W - 4, y(v)); g.stroke(); }
+    g.setLineDash([]);
+  }
+  const acc = col('--acc');
+  g.beginPath(); let started = false, first = 0, last = 0;
+  data.forEach((v, i) => { if (v == null) return; if (!started) { g.moveTo(x(i), y(v)); started = true; first = i; } else g.lineTo(x(i), y(v)); last = i; });
+  if (!started) return;
+  g.strokeStyle = acc; g.lineWidth = 2; g.lineJoin = 'round'; g.stroke();
+  g.lineTo(x(last), 4 + gh); g.lineTo(x(first), 4 + gh); g.closePath();
+  g.globalAlpha = .15; g.fillStyle = acc; g.fill(); g.globalAlpha = 1;
+}
+
+/* ---------- fullscreen, idle, wake lock ---------- */
+function isFs() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+function toggleFs() {
+  const el = document.documentElement;
+  if (isFs()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  else { const f = el.requestFullscreen || el.webkitRequestFullscreen; if (f) f.call(el).catch?.(() => {}); else alert('Volledig scherm wordt niet ondersteund in deze browser. Tip: voeg de pagina toe aan je beginscherm.'); }
+}
+function onFsChange() { document.body.classList.toggle('fs', isFs()); setTimeout(() => render(lastP || {}, lastView || S.views.main), 50); }
+document.addEventListener('fullscreenchange', onFsChange); document.addEventListener('webkitfullscreenchange', onFsChange);
+$('#fsBtn').onclick = toggleFs;
+document.addEventListener('keydown', e => { if (e.target.matches('input,select,textarea')) return; if (e.key === 'f' || e.key === 'F') toggleFs(); });
+$('#view').addEventListener('dblclick', e => { if (!e.target.closest('button')) toggleFs(); });
+let idleT; function wake() { document.body.classList.remove('idle'); clearTimeout(idleT); if (IS_DISPLAY || isFs()) idleT = setTimeout(() => document.body.classList.add('idle'), 3000); }
+['mousemove','touchstart','keydown'].forEach(ev => document.addEventListener(ev, wake, { passive:true }));
+let wakeLock = null;
+async function keepAwake() { try { if ('wakeLock' in navigator && document.visibilityState === 'visible' && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => wakeLock = null); } } catch {} }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && (M.running || IS_DISPLAY)) keepAwake(); });
+window.addEventListener('resize', () => { if (lastP) render(lastP, lastView); });
+
+let lastP = null, lastView = null;
+const bc = 'BroadcastChannel' in window ? new BroadcastChannel('dbmeter-v1') : null;
+
+/* ============================================================
+   DISPLAY MODE
+   ============================================================ */
+if (IS_DISPLAY) {
+  document.body.classList.add('display');
+  $('#panelBtn').classList.add('hidden');
+  document.title = 'dB-display';
+  let lastMsg = 0, lastTs = 0;
+  const show = p => { lastP = p; lastView = merge(defView(), p.view); render(p, lastView); };
+  render({}, S.views.ext); lastView = S.views.ext;
+  let remote = 'wait';
+  if (ROOM) {
+    let busy = false;
+    setInterval(async () => {
+      if (busy) return; busy = true;
+      try {
+        const r = await fetch('relay.php?room=' + ROOM + '&_=' + Date.now(), { cache:'no-store' });
+        if (r.status === 404) remote = 'unknown';
+        else if (r.ok) {
+          const p = await r.json();
+          if (p.status) remote = p.status;
+          else { remote = 'live'; if (p.ts !== lastTs) { lastTs = p.ts; lastMsg = Date.now(); show(p); } }
+        } else remote = 'error';
+      } catch { remote = 'offline'; }
+      busy = false;
+    }, 1000);
+  } else if (bc) {
+    bc.onmessage = e => { if (e.data?.type === 'state') { lastMsg = Date.now(); show(e.data.p); } };
+  }
+  setInterval(() => {
+    const tt = T[lastView?.lang] || T.nl;
+    const stale = Date.now() - lastMsg > (ROOM ? 6000 : 2500) || (ROOM && remote !== 'live');
+    const w = $('#waiting'); w.classList.toggle('hidden', !stale);
+    w.textContent = !ROOM ? tt.waiting : remote === 'ended' ? tt.ended : remote === 'unknown' ? tt.unknown : remote === 'inactive' ? tt.inactive : remote === 'offline' || remote === 'error' ? tt.offline : tt.waiting;
+    if (stale && lastP) { render({ ...lastP, v:null, limit:{ state:'off' } }, lastView); }
+  }, 1000);
+  keepAwake(); wake();
+} else {
+/* ============================================================
+   METER (control) MODE
+   ============================================================ */
+  let tab = 'main';
+  // populate selects
+  const keyOpts = KEYS.map(k => `<option value="${k}">${KEYNAME.nl[k]}</option>`).join('');
+  $('#vKey').innerHTML = keyOpts;
+  $('#limKey').innerHTML = ['Leq60','Leq300','Leq900','Leq3600','LeqS','F','S'].map(k => `<option value="${k}">${KEYNAME.nl[k]}</option>`).join('');
+  $('#tileChecks').innerHTML = TILE_OPTS.map(t => {
+    const [w, k] = t.split(':');
+    const lab = t === 'clock' ? 'Klok' : t === 'elapsed' ? 'Meetduur' : label(w, k);
+    return `<label><input type="checkbox" value="${t}"> ${lab}</label>`;
+  }).join('');
+
+  function fillView() {
+    const v = S.views[tab];
+    $('#vTheme').value = v.theme; $('#vKey').value = v.key; $('#vW').value = v.w; $('#vDec').value = v.decimals;
+    $('#vLang').value = v.lang; $('#vBar').checked = v.bar; $('#vGraph').checked = v.graph; $('#vLimit').checked = v.limitBox;
+    $('#vAlert').checked = v.alertBg; $('#vRange').value = v.graphRange;
+    $$('#tileChecks input').forEach(i => i.checked = v.tiles.includes(i.value));
+    $$('#viewTabs button').forEach(b => b.classList.toggle('on', b.dataset.v === tab));
+    $('#viewTabNote').textContent = tab === 'main' ? 'Instellingen voor het scherm waarop je nu kijkt.' : 'Instellingen voor het tweede scherm / online display (bv. groot getal voor publiek of DJ).';
+  }
+  function readView() {
+    const v = S.views[tab];
+    v.theme = $('#vTheme').value; v.key = $('#vKey').value; v.w = $('#vW').value; v.decimals = +$('#vDec').value;
+    v.lang = $('#vLang').value; v.bar = $('#vBar').checked; v.graph = $('#vGraph').checked; v.limitBox = $('#vLimit').checked;
+    v.alertBg = $('#vAlert').checked; v.graphRange = +$('#vRange').value;
+    // keep the user's tile order: existing ones first, then newly checked
+    const checked = $$('#tileChecks input').filter(i => i.checked).map(i => i.value);
+    v.tiles = v.tiles.filter(t => checked.includes(t)).concat(checked.filter(t => !v.tiles.includes(t)));
+    save(); tick(true);
+  }
+  $$('#viewTabs button').forEach(b => b.onclick = () => { tab = b.dataset.v; fillView(); });
+  ['#vTheme','#vKey','#vW','#vDec','#vLang','#vBar','#vGraph','#vLimit','#vAlert','#vRange'].forEach(s => $(s).addEventListener('change', readView));
+  $('#tileChecks').addEventListener('change', readView);
+
+  // limit
+  function fillLimit() {
+    const L = S.limit;
+    $('#limOn').checked = L.on; $('#limPreset').value = L.preset; $('#limKey').value = L.key; $('#limW').value = L.w;
+    $('#limWarn').value = L.warn; $('#limMax').value = L.max;
+  }
+  $('#limPreset').onchange = () => { const p = $('#limPreset').value; S.limit.preset = p; if (LIMIT_PRESETS[p]) Object.assign(S.limit, LIMIT_PRESETS[p]); fillLimit(); save(); tilesKey = ''; };
+  ['#limOn','#limKey','#limW','#limWarn','#limMax'].forEach(s => $(s).addEventListener('change', () => {
+    const L = S.limit; L.on = $('#limOn').checked; L.key = $('#limKey').value; L.w = $('#limW').value;
+    L.warn = parseFloat($('#limWarn').value) || 0; L.max = parseFloat($('#limMax').value) || 0;
+    const pr = LIMIT_PRESETS[L.preset];
+    if (pr && (pr.key !== L.key || pr.w !== L.w || pr.warn !== L.warn || pr.max !== L.max)) { L.preset = 'custom'; $('#limPreset').value = 'custom'; }
+    save(); tilesKey = '';
+  }));
+
+  // start / stop / mic
+  function setStatus(t) { $('#micInfo').innerHTML = t; }
+  window.setStatus = setStatus;
+  $('#startBtn').onclick = async () => {
+    if (M.running) { stopAudio(); autosave(); return; }
+    if (M.blockSave) { M.blockSave = false; $('#restoreBox').classList.add('hidden'); resetMeasure(); }
+    try { await startAudio(S.deviceId); }
+    catch (e) { setStatus(`<span style="color:var(--over);grid-column:span 2">${e.name === 'NotAllowedError' ? 'Toegang tot de microfoon geweigerd. Sta het toe via het slotje in de adresbalk.' : (e.message || e)}<br>Tip: probeer de demo zonder microfoon.</span>`); }
+  };
+  $('#micSel').onchange = async () => {
+    const id = $('#micSel').value;
+    if (M.hist.t.length > 60 && !confirm('Een andere microfoon kiezen start een nieuwe meting (de kalibratie verschilt per microfoon). Doorgaan?')) { refreshDevices(); return; }
+    try { resetMeasure(); await startAudio(id); } catch (e) { setStatus(String(e.message || e)); }
+  };
+  async function refreshDevices() {
+    if (!navigator.mediaDevices?.enumerateDevices) return;
+    const devs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'audioinput');
+    const sel = $('#micSel'); const cur = stream?.getAudioTracks()[0]?.getSettings?.().deviceId || S.deviceId;
+    sel.innerHTML = devs.map((d, i) => {
+      const lab = d.label || `Microfoon ${i + 1}`;
+      return `<option value="${d.deviceId}">${esc(lab)}${CAL[lab] ? '  ✓ gekalibreerd' : ''}</option>`;
+    }).join('') || '<option value="">Geen microfoon gevonden</option>';
+    if (cur && devs.some(d => d.deviceId === cur)) sel.value = cur;
+  }
+  window.refreshDevices = refreshDevices;
+  navigator.mediaDevices?.addEventListener?.('devicechange', () => { refreshDevices(); });
+  function esc(s) { return s.replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c])); }
+  $('#demoBtn').onclick = async () => {
+    if (M.hist.t.length > 600 && !M.demo && !confirm('De demo vervangt de huidige meetgegevens door voorbeeldgegevens. Doorgaan?')) return;
+    M.blockSave = true; $('#restoreBox').classList.add('hidden');   // demo data is never saved
+    try { await startDemo(); demoHistory(); fillReport(); setStatus('<span>Demo</span><b>gesimuleerd signaal + 3 uur voorbeeldgegevens</b>'); }
+    catch (e) { setStatus(String(e.message || e)); }
+  };
+  $('#resetBtn').onclick = () => { if (!confirm('Meting wissen en opnieuw beginnen? Ook de bewaarde meting wordt gewist.')) return; resetMeasure(); M.blockSave = false; IDB.del('session'); $('#restoreBox').classList.add('hidden'); };
+
+  function updatePanel() {
+    $('#startBtn').textContent = M.running ? '■ Stop meting' : '▶ Start meting';
+    $('#startBtn').classList.toggle('pri', !M.running);
+    if (M.running) setStatus(`<span>Actief</span><b>${esc(M.micLabel)}</b><span>Samplerate</span><b>${M.fs} Hz</b>`);
+    const c = CAL[M.micKey];
+    $('#calInfo').innerHTML = M.micKey
+      ? `<span>Microfoon</span><b>${esc(M.micLabel)}</b><span>Offset</span><b>${calOffset().toFixed(1)} dB</b><span>Status</span><b style="color:${c ? 'var(--acc)' : 'var(--warn)'}">${c ? 'gekalibreerd (' + esc(c.method) + ', ' + new Date(c.date).toLocaleDateString('nl-BE') + ')' : 'niet gekalibreerd – standaardwaarde'}</b>`
+      : '<span>Start eerst de meting om de microfoon te kiezen.</span>';
+  }
+  window.updatePanel = updatePanel;
+  $$('[data-trim]').forEach(b => b.onclick = () => {
+    if (!M.micKey) return;
+    const off = Math.round((calOffset() + parseFloat(b.dataset.trim)) * 10) / 10;
+    CAL[M.micKey] = { offset:off, method:'handmatig bijgesteld', date:new Date().toISOString() };
+    save(); updatePanel(); refreshDevices();
+  });
+
+  // panel toggle
+  $('#panelBtn').onclick = () => { document.body.classList.toggle('nopanel'); setTimeout(() => tick(true), 30); };
+
+  /* ---------- calibration dialog ---------- */
+  let calMode = 'cal', pendingOffset = null, noiseSrc = null, noiseGain = null;
+  const dlg = $('#calDlg');
+  function calTab(m) {
+    calMode = m; $$('#calTabs button').forEach(b => b.classList.toggle('on', b.dataset.m === m));
+    $$('#calDlg section').forEach(s => s.classList.toggle('hidden', s.dataset.m !== m));
+    pendingOffset = m === 'man' ? calOffset() : null; $('#manOff').value = calOffset().toFixed(1);
+    $('#calResult').innerHTML = ''; $('#calSave').disabled = m !== 'man'; $('#calProg').style.width = '0';
+    $('#noiseBox').classList.toggle('hidden', !(m === 'ref' || m === 'corr'));
+    if (m === 'ref' || m === 'corr') listOutputs();
+  }
+  async function listOutputs() {
+    try {
+      const outs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'audiooutput');
+      const sel = $('#noiseOut'), cur = sel.value;
+      sel.innerHTML = '<option value="">Standaard uitgang</option>' + outs.filter(d => d.deviceId !== 'default').map(d => `<option value="${d.deviceId}">${esc(d.label || 'Uitgang')}</option>`).join('');
+      if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
+    } catch {}
+  }
+  $$('#calTabs button').forEach(b => b.onclick = () => calTab(b.dataset.m));
+  $('#calBtn').onclick = async () => {
+    if (!M.running) { try { await startAudio(S.deviceId); } catch (e) { alert('Kan de microfoon niet starten: ' + (e.message || e)); return; } }
+    $('#calDlgMic').innerHTML = `Microfoon: <b>${esc(M.micLabel)}</b> · huidige offset ${calOffset().toFixed(1)} dB`;
+    calTab('cal'); dlg.showModal();
+  };
+  $('#corrBtn').onclick = async () => { await $('#calBtn').onclick(); if (dlg.open) calTab('corr'); };
+  $('#calTarget').onchange = () => $('#calTargetCustom').classList.toggle('hidden', $('#calTarget').value !== 'custom');
+  function measure(w, dur) { return new Promise(done => { M.calc = { w, dur, sum:0, n:0, blocks:[], pk:0, done }; }); }
+  async function runMeasure(w, dur, btn) {
+    btn.disabled = true; $('#calSave').disabled = true; $('#calResult').innerHTML = 'Bezig met meten…';
+    const c = await measure(w, dur);
+    btn.disabled = false;
+    const raw = 10 * Math.log10(c.sum / c.n);
+    const bl = c.blocks.map(x => Math.max(x, 1e-12)).map(x => 10 * Math.log10(x)).sort((a, b) => a - b);
+    const spread = bl.length ? bl[Math.floor(bl.length * .95)] - bl[Math.floor(bl.length * .05)] : 99;
+    const warns = [];
+    if (c.pk >= 0.985) warns.push('Het signaal stuurt de microfoon over (clipping). Verlaag het invoerniveau van de microfoon of het volume.');
+    if (raw < -70) warns.push('Het signaal is erg zwak. Controleer of de juiste microfoon gekozen is en of de geluidsbron aan staat.');
+    if (spread > 3) warns.push(`Het niveau schommelde ${spread.toFixed(1)} dB tijdens de meting. Gebruik een constanter geluid.`);
+    return { raw, spread, warns };
+  }
+  $('#calRun').onclick = async () => {
+    const target = $('#calTarget').value === 'custom' ? parseFloat($('#calTargetCustom').value) : parseFloat($('#calTarget').value);
+    const r = await runMeasure('Z', 5, $('#calRun'));
+    pendingOffset = target - r.raw; pendingOffset = Math.round(pendingOffset * 10) / 10;
+    pendingMethod = `kalibrator ${target} dB`;
+    showResult(r, target);
+  };
+  let pendingMethod = '';
+  $('#refRun').onclick = async () => {
+    const w = $('#refW').value;
+    const r = await runMeasure(w, 10, $('#refRun'));
+    calRefRaw = r.raw; calRefRes = r;
+    updateRef();
+  };
+  let calRefRaw = null, calRefRes = null;
+  function updateRef() {
+    if (calRefRaw == null) return;
+    const ref = parseFloat($('#refVal').value);
+    if (!isFinite(ref)) { $('#calResult').innerHTML = `Gemeten: <b>${calRefRaw.toFixed(1)} dBFS</b>. Vul nu de waarde van de referentiemeter in.`; $('#calSave').disabled = true; return; }
+    pendingOffset = Math.round((ref - calRefRaw) * 10) / 10; pendingMethod = `referentiemeter dB(${$('#refW').value})`;
+    showResult(calRefRes, ref);
+  }
+  $('#refVal').addEventListener('input', updateRef);
+  function showResult(r, target) {
+    $('#calResult').innerHTML =
+      `Gemeten ruw niveau: <b>${r.raw.toFixed(1)} dBFS</b><br>Referentie: <b>${target.toFixed(1)} dB</b><br>` +
+      `Nieuwe offset: <b>${pendingOffset.toFixed(1)} dB</b> <span class="note">(was ${calOffset().toFixed(1)})</span>` +
+      r.warns.map(w => `<div class="note warn" style="margin-top:6px">⚠ ${w}</div>`).join('');
+    $('#calSave').disabled = false;
+  }
+  let corrRaw = null, corrRes = null, pendingCorr = null;
+  $('#corrRun').onclick = async () => { const r = await runMeasure('A', 10, $('#corrRun')); corrRaw = r.raw; corrRes = r; updateCorr(); };
+  function updateCorr() {
+    if (corrRaw == null) return;
+    const atMic = corrRaw + calOffset(), ref = parseFloat($('#corrVal').value);
+    if (!isFinite(ref)) { $('#calResult').innerHTML = `Op de microfoonpositie: <b>${atMic.toFixed(1)} dB(A)</b>. Vul nu de waarde van de referentiemeter in.`; $('#calSave').disabled = true; return; }
+    pendingCorr = Math.round((ref - atMic) * 10) / 10;
+    $('#calResult').innerHTML = `Microfoonpositie: <b>${atMic.toFixed(1)} dB(A)</b> · publieksplek: <b>${ref.toFixed(1)} dB(A)</b><br>Correctiefactor: <b>${pendingCorr >= 0 ? '+' : ''}${pendingCorr.toFixed(1)} dB</b> <span class="note">(was ${corrDb().toFixed(1)})</span>` +
+      (isCal() ? '' : '<div class="note warn" style="margin-top:6px">⚠ De microfoon is nog niet gekalibreerd; kalibreer eerst voor een betrouwbaar resultaat.</div>') +
+      corrRes.warns.map(w => `<div class="note warn" style="margin-top:6px">⚠ ${w}</div>`).join('');
+    $('#calSave').disabled = false;
+  }
+  $('#corrVal').addEventListener('input', updateCorr);
+  $('#manOff').addEventListener('input', () => { pendingOffset = parseFloat($('#manOff').value); pendingMethod = 'handmatig'; $('#calSave').disabled = !isFinite(pendingOffset); });
+  $$('[data-man]').forEach(b => b.onclick = () => { pendingOffset = Math.round(((isFinite(pendingOffset) ? pendingOffset : calOffset()) + parseFloat(b.dataset.man)) * 10) / 10; $('#manOff').value = pendingOffset.toFixed(1); pendingMethod = 'handmatig'; $('#calSave').disabled = false; });
+  $('#calSave').onclick = () => {
+    if (calMode === 'corr') {
+      if (!isFinite(pendingCorr)) return;
+      S.report.corr = pendingCorr; $('#rCorr').value = pendingCorr; save(); updatePanel();
+      $('#calResult').innerHTML = `✅ Correctiefactor ${pendingCorr >= 0 ? '+' : ''}${pendingCorr.toFixed(1)} dB opgeslagen.`; $('#calSave').disabled = true; return;
+    }
+    if (!isFinite(pendingOffset)) return;
+    CAL[M.micKey] = { offset:pendingOffset, method:pendingMethod || 'handmatig', date:new Date().toISOString() };
+    save(); updatePanel(); refreshDevices();
+    $('#calResult').innerHTML = '✅ Kalibratie opgeslagen voor deze microfoon.'; $('#calSave').disabled = true;
+    $('#calDlgMic').innerHTML = `Microfoon: <b>${esc(M.micLabel)}</b> · huidige offset ${calOffset().toFixed(1)} dB`;
+  };
+  $('#calDefault').onclick = () => { if (confirm('Kalibratie van deze microfoon wissen?')) { delete CAL[M.micKey]; save(); updatePanel(); refreshDevices(); calTab(calMode); $('#calDlgMic').innerHTML = `Microfoon: <b>${esc(M.micLabel)}</b> · huidige offset ${calOffset().toFixed(1)} dB`; } };
+  $('#calClose').onclick = () => { stopNoise(); M.calc = null; dlg.close(); };
+  dlg.addEventListener('close', () => { stopNoise(); M.calc = null; });
+  // pink noise generator (Paul Kellet)
+  let noiseCtx = null;
+  async function startNoise() {
+    const id = $('#noiseOut').value;
+    try { noiseCtx = new AudioContext(id ? { sinkId:id } : {}); } catch { noiseCtx = new AudioContext(); }
+    if (id && noiseCtx.sinkId !== id && noiseCtx.setSinkId) { try { await noiseCtx.setSinkId(id); } catch { alert('Deze browser kan niet naar die uitgang sturen; het signaal gaat naar de standaard uitgang.'); } }
+    const ctx = noiseCtx;
+    const len = ctx.sampleRate * 8, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, mx = 0;
+    for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1;
+      b0 = .99886 * b0 + w * .0555179; b1 = .99332 * b1 + w * .0750759; b2 = .969 * b2 + w * .153852; b3 = .8665 * b3 + w * .3104856;
+      b4 = .55 * b4 + w * .5329522; b5 = -.7616 * b5 - w * .016898; d[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * .5362; b6 = w * .115926; mx = Math.max(mx, Math.abs(d[i])); }
+    for (let i = 0; i < len; i++) d[i] /= mx;
+    noiseSrc = ctx.createBufferSource(); noiseSrc.buffer = buf; noiseSrc.loop = true;
+    noiseGain = ctx.createGain(); noiseGain.gain.value = +$('#noiseVol').value;
+    noiseSrc.connect(noiseGain).connect(ctx.destination); noiseSrc.start();
+    $('#noiseBtn').textContent = '■ Stop ruis';
+  }
+  function stopNoise() { if (noiseSrc) { try { noiseSrc.stop(); } catch {} noiseSrc = null; } if (noiseCtx) { noiseCtx.close().catch(() => {}); noiseCtx = null; } $('#noiseBtn').textContent = '▶ Roze ruis'; }
+  $('#noiseOut').onchange = () => { if (noiseSrc) { stopNoise(); startNoise(); } };
+  $('#noiseBtn').onclick = () => noiseSrc ? stopNoise() : startNoise();
+  $('#noiseVol').oninput = () => { if (noiseGain) noiseGain.gain.value = +$('#noiseVol').value; };
+
+  /* ---------- second screen ---------- */
+  function screenInfo() {
+    const ext = window.screen.isExtended;
+    $('#screenInfo').innerHTML = ext === true ? '✅ Tweede scherm gedetecteerd.'
+      : ext === false ? 'Geen tweede scherm gedetecteerd. Sluit een scherm aan, of open het display en sleep het venster zelf.'
+      : 'Deze browser kan geen tweede scherm detecteren (Chrome/Edge wel). Open het display en sleep het venster naar het andere scherm.';
+  }
+  screenInfo(); window.screen.addEventListener?.('change', screenInfo); setInterval(screenInfo, 5000);
+  let extWin = null;
+  $('#openDispBtn').onclick = async () => {
+    let feat = 'popup,width=1280,height=720';
+    if ('getScreenDetails' in window) {
+      try {
+        const sd = await window.getScreenDetails();
+        const other = sd.screens.find(s => s !== sd.currentScreen) || null;
+        if (other) feat = `popup,left=${other.availLeft},top=${other.availTop},width=${other.availWidth},height=${other.availHeight}`;
+      } catch {}
+    }
+    extWin = window.open(location.pathname + '?display=1', 'dbm-display', feat);
+    if (!extWin) alert('Pop-up geblokkeerd. Sta pop-ups toe voor deze site en probeer opnieuw.');
+  };
+
+  /* ---------- live delen (relay) ---------- */
+  function newRoom() { const a = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (const x of crypto.getRandomValues(new Uint8Array(12))) s += a[x % a.length]; return s; }
+  const shareLink = () => location.origin + location.pathname + '?display=1&room=' + S.relay.room;
+  function endRoom(room) { if (!room) return; try { navigator.sendBeacon ? navigator.sendBeacon('relay.php?room=' + room + '&end=1', '') : fetch('relay.php?room=' + room + '&end=1', { method:'POST', keepalive:true }); } catch {} }
+  window.onNewMeasurement = () => { if (S.relay.room && S.relay.live) endRoom(S.relay.room); S.relay.room = newRoom(); S.relay.live = false; save(); relayUi(); };
+  window.onStopMeasurement = () => { if (S.relay.on && S.relay.live) endRoom(S.relay.room); S.relay.live = false; save(); relayUi(); };
+  window.addEventListener('pagehide', () => { if (M.running && S.relay.on && S.relay.live) endRoom(S.relay.room); });
+  function relayUi() {
+    $('#relayOn').checked = S.relay.on; $('#relayBox').classList.toggle('hidden', !S.relay.on);
+    const active = M.running && S.relay.room;
+    $('#relayLink').textContent = active ? shareLink() : 'Start de meting: dan wordt er een unieke link aangemaakt.';
+    $('#relayBtns').classList.toggle('hidden', !active);
+    if (!active) { $('#relayQr').classList.add('hidden'); $('#relayStatus').textContent = ''; }
+    $('#relayShare').classList.toggle('hidden', !navigator.share);
+    if (!$('#relayQr').classList.contains('hidden')) drawQr();
+  }
+  window.relayUi = relayUi;
+  $('#relayOn').onchange = () => { S.relay.on = $('#relayOn').checked; if (S.relay.on && M.running && !S.relay.room) S.relay.room = newRoom(); if (!S.relay.on && S.relay.live) { endRoom(S.relay.room); S.relay.live = false; S.relay.room = newRoom(); } save(); relayUi(); };
+  const shareText = () => {
+    const ev = S.report.event || (S.report.lang === 'nl' ? 'het evenement' : 'the event');
+    return S.report.lang === 'nl'
+      ? { subject:`Live geluidsmeting – ${ev}`, body:`Volg de live geluidsmeting van ${ev} via deze link:\n\n${shareLink()}\n\nDe link werkt zolang de meting loopt.` }
+      : { subject:`Live sound level – ${ev}`, body:`Follow the live sound level measurement of ${ev} here:\n\n${shareLink()}\n\nThe link works while the measurement is running.` };
+  };
+  $('#relayMail').onclick = () => { const t = shareText(); location.href = `mailto:?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent(t.body)}`; };
+  $('#relayShare').onclick = () => { const t = shareText(); navigator.share?.({ title:t.subject, text:t.body.split('\n\n')[0], url:shareLink() }).catch(() => {}); };
+  $('#relayCopy').onclick = () => { navigator.clipboard?.writeText(shareLink()); $('#relayCopy').textContent = 'Gekopieerd ✓'; setTimeout(() => $('#relayCopy').textContent = 'Kopieer link', 1500); };
+  async function drawQr() {
+    try {
+      if (!window.qrcode) await new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = 'lib/qrcode.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
+      const q = window.qrcode(0, 'M'); q.addData(shareLink()); q.make(); $('#relayQr').innerHTML = q.createSvgTag({ cellSize:4, margin:2 });
+    } catch { $('#relayQr').textContent = 'QR-code kon niet geladen worden.'; }
+  }
+  $('#relayQrBtn').onclick = () => { const el = $('#relayQr'); el.classList.toggle('hidden'); if (!el.classList.contains('hidden')) drawQr(); };
+  let relayBusy = false;
+  function relaySend(p) {
+    if (!S.relay.on || !S.relay.room || !M.running || relayBusy) return;
+    relayBusy = true;
+    fetch('relay.php?room=' + S.relay.room, { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify(p) })
+      .then(r => { if (r.ok && !S.relay.live) { S.relay.live = true; save(); } $('#relayStatus').textContent = r.ok ? '● live – link actief' : '⚠ server-fout ' + r.status + ' (staat relay.php op de server?)'; $('#relayStatus').style.color = r.ok ? 'var(--acc)' : 'var(--warn)'; })
+      .catch(() => { $('#relayStatus').textContent = '⚠ geen verbinding met de server'; $('#relayStatus').style.color = 'var(--warn)'; })
+      .finally(() => relayBusy = false);
+  }
+
+  /* ---------- CSV / backup ---------- */
+  function download(name, text, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }
+  const pad = n => String(n).padStart(2, '0');
+  const stamp = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  $('#csvBtn').onclick = () => {
+    const H = M.hist; if (!H.A.length) { alert('Nog geen meetgegevens.'); return; }
+    const off = curOffset(), f = x => x > 0 ? (10 * Math.log10(x) + off).toFixed(1).replace('.', ',') : '', fp = x => x > 0 ? (20 * Math.log10(x) + off).toFixed(1).replace('.', ',') : '';
+    const R = S.report, q = x => String(x || '').replace(/[;\r\n]/g, ' ');
+    const rows = [`Evenement;${q(R.event)}`, `Locatie;${q(R.location)}`, `Microfoon;${q(M.micLabel)}`,
+      `Kalibratie-offset;${calOffset().toFixed(1).replace('.', ',')};${isCal() ? CAL[M.micKey].method : 'niet gekalibreerd'}`,
+      `Meetpositie;${q(R.position)}`, `Opstelling;${q(R.setup)}`, `Correctiefactor (dB);${corrDb().toFixed(1).replace('.', ',')}`, '',
+      'Tijd;LAeq 1s;LCeq 1s;LZeq 1s;LAFmax 1s;LCpeak 1s'];
+    for (let i = 0; i < H.A.length; i++) rows.push([stamp(new Date(H.t[i])), f(H.A[i]), f(H.C[i]), f(H.Z[i]), f(H.AFmax[i]), fp(H.Cpk[i])].join(';'));
+    const d = new Date(H.t[0]);
+    download(`dbmeter_${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.csv`, '﻿' + rows.join('\r\n'), 'text/csv');
+  };
+  $('#expBtn').onclick = () => download('dbmeter-instellingen.json', JSON.stringify({ settings:S, calibrations:CAL }, null, 2), 'application/json');
+  $('#impBtn').onclick = () => $('#impFile').click();
+  $('#impFile').onchange = async () => {
+    try { const j = JSON.parse(await $('#impFile').files[0].text()); if (j.settings) S = merge(DEFAULTS, j.settings); if (j.calibrations) CAL = j.calibrations; save(); fillView(); fillLimit(); fillReport(); profUi(); logoUi(); relayUi(); updatePanel(); refreshDevices(); tilesKey = ''; alert('Geïmporteerd.'); }
+    catch (e) { alert('Ongeldig bestand.'); }
+    $('#impFile').value = '';
+  };
+
+  /* ---------- meetopstelling & verslag: velden ---------- */
+  const RF = { rPosition:'position', rSetup:'setup', rCorr:'corr', rEvent:'event', rLocation:'location', rOrganizer:'organizer', rAuthor:'author', rNotes:'notes', rFrom:'from', rTo:'to', rLang:'lang' };
+  function fillReport() { for (const id in RF) $('#' + id).value = S.report[RF[id]] ?? ''; renderOps(); }
+  for (const id in RF) $('#' + id).addEventListener('input', () => {
+    const k = RF[id]; S.report[k] = k === 'corr' ? (parseFloat($('#' + id).value) || 0) : $('#' + id).value; save(); if (k === 'corr') updatePanel();
+  });
+  const hhmm = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  function renderOps() {
+    $('#opList').innerHTML = S.report.ops.map((o, i) => `<div class="oprow" data-i="${i}"><input type="text" data-k="name" placeholder="Technieker" value="${esc(o.name || '')}"><input type="text" data-k="band" placeholder="Band / artiest" value="${esc(o.band || '')}"><button data-del="${i}" title="Verwijderen">✕</button><input type="time" data-k="from" value="${o.from || ''}" title="van"><input type="time" data-k="to" value="${o.to || ''}" title="tot"></div>`).join('')
+      || '<p class="note">Nog geen operators. Voeg ze toe om per geluidstechnieker een beoordeling te krijgen.</p>';
+  }
+  $('#opList').addEventListener('input', e => { const r = e.target.closest('.oprow'); if (!r || !e.target.dataset.k) return; S.report.ops[+r.dataset.i][e.target.dataset.k] = e.target.value; save(); });
+  $('#opList').addEventListener('click', e => { const d = e.target.dataset.del; if (d == null) return; S.report.ops.splice(+d, 1); save(); renderOps(); });
+  const focusLastOp = () => { const r = $$('#opList .oprow'); r.length && r[r.length - 1].querySelector('input').focus(); };
+  $('#opAdd').onclick = () => { const last = S.report.ops[S.report.ops.length - 1]; S.report.ops.push({ name:last?.name || '', band:'', from:last?.to || hhmm(new Date()), to:'' }); save(); renderOps(); focusLastOp(); };
+  $('#opSwitch').onclick = () => { const now = hhmm(new Date()), last = S.report.ops[S.report.ops.length - 1]; if (last && !last.to) last.to = now; S.report.ops.push({ name:last?.name || '', band:'', from:now, to:'' }); save(); renderOps(); focusLastOp(); };
+
+  /* ---------- logo ---------- */
+  let serverLogo = null;
+  (() => { for (const f of ['logo.png', 'logo.svg', 'logo.jpg']) { const im = new Image(); im.onload = () => { if (!serverLogo) { serverLogo = f; logoUi(); } }; im.src = f + '?v=1'; } })();
+  function logoSrc() { return S.report.logo || serverLogo || ''; }
+  function logoUi() {
+    const src = logoSrc(), im = $('#logoPrev');
+    im.style.display = src ? '' : 'none'; if (src) im.src = src;
+    $('#logoNote').textContent = S.report.logo ? 'Eigen logo gekozen (bewaard in deze browser en in het profiel).' : serverLogo ? `Logo van de server (${serverLogo}).` : 'Geen logo. Kies er een, of zet logo.png in de map op de server.';
+  }
+  $('#logoBtn').onclick = () => $('#logoFile').click();
+  $('#logoDel').onclick = () => { S.report.logo = ''; save(); logoUi(); };
+  $('#logoFile').onchange = () => {
+    const f = $('#logoFile').files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      const im = new Image();
+      im.onload = () => {   // shrink to max 800 px wide, keep transparency
+        const sc = Math.min(1, 800 / im.width, 300 / im.height), c = document.createElement('canvas');
+        c.width = Math.round(im.width * sc) || 1; c.height = Math.round(im.height * sc) || 1;
+        c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+        S.report.logo = /svg/.test(f.type) && rd.result.length < 200000 ? rd.result : c.toDataURL('image/png');
+        save(); logoUi();
+      };
+      im.src = rd.result;
+    };
+    rd.readAsDataURL(f); $('#logoFile').value = '';
+  };
+
+  /* ---------- evenementprofielen ---------- */
+  const PROF_KEYS = ['event','location','organizer','author','notes','position','setup','corr','logo','lang'];
+  function profUi() {
+    const names = Object.keys(S.profiles).sort((a, b) => a.localeCompare(b));
+    $('#profSel').innerHTML = '<option value="">— geen profiel —</option>' + names.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+    $('#profSel').value = S.profile && S.profiles[S.profile] ? S.profile : '';
+  }
+  $('#profSel').onchange = () => {
+    const n = $('#profSel').value; S.profile = n;
+    const pr = S.profiles[n];
+    if (pr) {
+      for (const k of PROF_KEYS) if (k in pr) S.report[k] = pr[k];
+      if (pr.limit) S.limit = { ...S.limit, ...pr.limit };
+      fillReport(); fillLimit(); logoUi(); updatePanel(); tilesKey = '';
+    }
+    save();
+  };
+  $('#profSave').onclick = () => {
+    const n = (prompt('Naam van het evenementprofiel:', S.profile || S.report.event || '') || '').trim(); if (!n) return;
+    if (S.profiles[n] && n !== S.profile && !confirm(`Profiel "${n}" bestaat al. Overschrijven?`)) return;
+    const pr = {}; for (const k of PROF_KEYS) pr[k] = S.report[k]; pr.limit = { ...S.limit };
+    S.profiles[n] = pr; S.profile = n; save(); profUi();
+  };
+  $('#profDel').onclick = () => { const n = $('#profSel').value; if (!n || !confirm(`Profiel "${n}" verwijderen?`)) return; delete S.profiles[n]; S.profile = ''; save(); profUi(); };
+
+  /* ---------- bewaren in de browser (IndexedDB) ---------- */
+  const IDB = {
+    db:null,
+    open() { if (this.db) return Promise.resolve(this.db); return new Promise((res, rej) => { const r = indexedDB.open('dbmeter', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(this.db = r.result); r.onerror = () => rej(r.error); }); },
+    async get(k) { const db = await this.open(); return new Promise(res => { const q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => res(q.result); q.onerror = () => res(null); }); },
+    async set(k, v) { const db = await this.open(); return new Promise(res => { const tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(v, k); tx.oncomplete = () => res(true); tx.onerror = () => res(false); }); },
+    async del(k) { const db = await this.open(); return new Promise(res => { const tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').delete(k); tx.oncomplete = () => res(true); tx.onerror = () => res(false); }); }
+  };
+  M.blockSave = true;
+  async function autosave() {
+    if (M.blockSave || !M.dirty || !M.hist.t.length) return;
+    M.dirty = false;
+    try { await IDB.set('session', { v:1, hist:M.hist, sess:M.sess, mx:M.mx, mn:M.mn, pk:M.pk, startTime:M.startTime, micLabel:M.micLabel, micKey:M.micKey }); } catch {}
+  }
+  setInterval(autosave, 30000);
+  window.addEventListener('pagehide', autosave);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') autosave(); });
+  function restoreFrom(o) {
+    M.hist = o.hist; for (const k of HKEYS) if (!M.hist[k]) M.hist[k] = [];
+    M.sess = o.sess; M.mx = o.mx; M.mn = o.mn; M.pk = o.pk; M.startTime = o.startTime; M.sec = newSec();
+    if (!M.running) { M.micKey = o.micKey; M.micLabel = o.micLabel; }
+    M.dirty = false; updatePanel();
+  }
+  const fmtDT = t => new Date(t).toLocaleString('nl-BE', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+  function showRestore(html, buttons, o) {
+    const box = $('#restoreBox'); box.classList.remove('hidden');
+    box.innerHTML = html + (buttons ? `<div class="row"><button class="btn sm pri" id="rsLoad">Laden</button><button class="btn sm" id="rsNew">Nieuwe meting</button></div><div class="note">Laden = verder meten of alsnog een verslag maken. Start je een nieuwe meting, dan wordt de vorige overschreven.</div>` : ` <a href="#" id="rsHide">verbergen</a>`);
+    if (buttons) {
+      $('#rsLoad').onclick = () => { restoreFrom(o); M.blockSave = false; box.innerHTML = '✅ Vorige meting geladen. Klik op Start om verder te meten, of maak meteen het verslag.'; };
+      $('#rsNew').onclick = () => { IDB.del('session'); M.blockSave = false; box.classList.add('hidden'); };
+    } else $('#rsHide').onclick = e => { e.preventDefault(); box.classList.add('hidden'); };
+  }
+  function autoStart() { navigator.permissions?.query({ name:'microphone' }).then(p => { if (p.state === 'granted') startAudio(S.deviceId).catch(() => {}); }).catch(() => {}); }
+  IDB.get('session').then(o => {
+    if (!o || !o.hist?.t?.length) { M.blockSave = false; autoStart(); return; }
+    const first = o.hist.t[0], last = o.hist.t[o.hist.t.length - 1];
+    if (Date.now() - last < 30 * 60000) {
+      restoreFrom(o); M.blockSave = false;
+      showRestore(`🔄 Meting hervat na onderbreking (gestart ${fmtDT(first)}).`, false); autoStart();
+    } else showRestore(`💾 Vorige meting gevonden: <b>${fmtDT(first)} – ${fmtDT(last)}</b> (${elapsedStr(last - first)}).`, true, o);
+  }).catch(() => { M.blockSave = false; autoStart(); });
+
+  /* ---------- verslag ---------- */
+  const BANDS = ['31,5','63','125','250','500','1k','2k','4k','8k','16k'];
+  const GR = [{ min:90, g:'A', t:'Uitstekend', c:'#16a34a' }, { min:75, g:'B', t:'Goed', c:'#65a30d' }, { min:60, g:'C', t:'Voldoende', c:'#ca8a04' }, { min:40, g:'D', t:'Zwak', c:'#ea580c' }, { min:-1, g:'E', t:'Onvoldoende', c:'#dc2626' }];
+  const gradeOf = s => GR.find(g => s >= g.min);
+  const ZC = { ok:'#22c55e', warn:'#f59e0b', over:'#ef4444', none:'#e5e7eb' };
+  const db10 = (x, off) => x > 0 ? 10 * Math.log10(x) + off : NaN;
+  const f1 = v => isFinite(v) ? v.toFixed(1) : '–';
+  const pc = v => isFinite(v) ? (v * 100 < 1 && v > 0 ? '<1' : Math.round(v * 100)) + '%' : '–';
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const durStr = ms => { const m = Math.round(ms / 60000), h = Math.floor(m / 60); return h ? `${h}u ${pad(m % 60)}min` : `${m} min`; };
+  const fmtDur = s => s == null ? '–' : s < 60 ? `${Math.round(s)} s` : `${(s / 60).toFixed(1)} min`;
+  const fmtHM = t => { const d = new Date(t); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+  function resolveTime(str, after) { if (!str) return null; const [h, m] = str.split(':').map(Number); const d = new Date(after); d.setHours(h, m, 0, 0); while (d.getTime() < after) d.setDate(d.getDate() + 1); return d.getTime(); }
+  function idxAt(t) { const a = M.hist.t; let lo = 0, hi = a.length; while (lo < hi) { const mid = (lo + hi) >> 1; if (a[mid] < t) lo = mid + 1; else hi = mid; } return lo; }
+  function limLabel(lang) { return label(S.limit.w, S.limit.key, lang).replace(/<\/?sub>/g, ''); }
+  function limitSeries(off) {
+    const L = S.limit, H = M.hist, arr = H[L.w], n = arr.length, out = new Float64Array(n);
+    if (L.key === 'F' && L.w === 'A') { for (let i = 0; i < n; i++) out[i] = db10(H.AFmax[i], off); return out; }
+    if (L.key === 'LeqS') { let s = 0; for (let i = 0; i < n; i++) { s += arr[i]; out[i] = db10(s / (i + 1), off); } return out; }
+    const W = { Leq60:60, Leq300:300, Leq900:900, Leq3600:3600 }[L.key] || 1;
+    let s = 0; for (let i = 0; i < n; i++) { s += arr[i]; if (i >= W) s -= arr[i - W]; out[i] = db10(Math.max(s, 0) / Math.min(i + 1, W), off); }
+    return out;
+  }
+  function stats(i0, i1, lim, off) {
+    const H = M.hist, L = S.limit, pkThr = Math.pow(10, (135 - off) / 20);
+    let n = 0, over = 0, warn = 0, overSum = 0, sA = 0, sC = 0, sZ = 0, maxLim = -Infinity, af = 0, cpk = 0, peaks = 0;
+    const ranges = Array.isArray(i0) ? i0 : [[i0, i1]];
+    for (const [ra, rb] of ranges) for (let i = ra; i < rb; i++) {
+      n++; const v = lim[i];
+      if (v >= L.max) { over++; overSum += v - L.max; } else if (v >= L.warn) warn++;
+      if (v > maxLim) maxLim = v;
+      sA += H.A[i]; sC += H.C[i]; sZ += H.Z[i];
+      if (H.AFmax[i] > af) af = H.AFmax[i]; if (H.Cpk[i] > cpk) cpk = H.Cpk[i]; if (H.Cpk[i] >= pkThr) peaks++;
+    }
+    if (!n) return null;
+    const LA = db10(sA / n, off), LC = db10(sC / n, off), LZ = db10(sZ / n, off), bass = LC - LA;
+    const fOver = over / n, fWarn = warn / n, avgOver = over ? overSum / over : 0, pph = peaks / Math.max(n / 3600, 0.25);
+    const pen = { over:60 * fOver, warn:15 * fWarn, sev:Math.min(15, avgOver * 2), bass:clamp(bass - 15, 0, 10), peak:Math.min(10, 2 * Math.log2(1 + pph)) };
+    const score = Math.max(0, Math.round(100 - pen.over - pen.warn - pen.sev - pen.bass - pen.peak));
+    return { n, fOver, fWarn, fOk:1 - fOver - fWarn, avgOver, LA, LC, LZ, bass, maxLim, af:db10(af, off), cpk:cpk > 0 ? 20 * Math.log10(cpk) + off : NaN, peaks, pph, pen, score, grade:gradeOf(score) };
+  }
+  function bandMean(i0, i1) {
+    const B = M.hist.B, s = new Float64Array(10); let n = 0;
+    for (let i = i0; i < i1; i++) { const b = B[i]; if (!b) continue; for (let k = 0; k < 10; k++) s[k] += b[k]; n++; }
+    return n ? Array.from(s, x => x / n) : null;
+  }
+  function spectrum(i0, i1, ev) {
+    const op = bandMean(i0, i1); if (!op || !ev) return null;
+    const B = M.hist.B, diff = op.map((x, k) => x > 0 && ev[k] > 0 ? 10 * Math.log10(x / ev[k]) : null), dur = [], pct = [];
+    for (let k = 0; k < 10; k++) {
+      if (diff[k] == null) { dur.push(null); pct.push(null); continue; }
+      const thr = ev[k] * Math.pow(10, 0.3); let run = 0, runs = 0, tot = 0, el = 0, n = 0;
+      for (let i = i0; i < i1; i++) {
+        let s = 0, c = 0; for (let j = Math.max(i0, i - 1); j <= Math.min(i1 - 1, i + 1); j++) if (B[j]) { s += B[j][k]; c++; }
+        if (!c) continue; n++;
+        if (s / c >= thr) { run++; el++; } else if (run) { runs++; tot += run; run = 0; }
+      }
+      if (run) { runs++; tot += run; }
+      dur.push(runs ? tot / runs : 0); pct.push(n ? el / n : 0);
+    }
+    return { diff, dur, pct };
+  }
+  function cnv(w, h) { const c = document.createElement('canvas'); c.width = w * 2; c.height = h * 2; c.style.width = w + 'px'; c.style.height = h + 'px'; c.style.display = 'block'; const g = c.getContext('2d'); g.scale(2, 2); g.font = '10px system-ui,-apple-system,Segoe UI,Roboto,sans-serif'; g.textBaseline = 'alphabetic'; return [c, g]; }
+  function timeTicks(t0, t1) {
+    const step = [5, 10, 15, 30, 60, 120, 180, 240, 360].map(m => m * 60000).find(s => (t1 - t0) / s <= 9) || 720 * 60000;
+    const base = new Date(t0); base.setHours(0, 0, 0, 0); const out = [];
+    for (let t = base.getTime() + Math.ceil((t0 - base.getTime()) / step) * step; t <= t1; t += step) out.push(t);
+    return out;
+  }
+  function gauge(score, size) {
+    const [c, g] = cnv(size, size * 0.78), cx = size / 2, cy = size * 0.5, r = size * 0.42, lw = size * 0.1;
+    for (const [a, b, col] of [[0, 40, '#dc2626'], [40, 60, '#ea580c'], [60, 75, '#ca8a04'], [75, 90, '#65a30d'], [90, 100, '#16a34a']]) {
+      g.beginPath(); g.strokeStyle = col; g.lineWidth = lw; g.arc(cx, cy, r, Math.PI * (1 + a / 100) + 0.012, Math.PI * (1 + b / 100) - 0.012); g.stroke();
+    }
+    g.fillStyle = '#6b7280'; g.textAlign = 'center'; g.font = `600 ${size * 0.055}px system-ui,sans-serif`;
+    for (const v of [0, 40, 60, 75, 90, 100]) { const a = Math.PI * (1 + v / 100); g.fillText(v, cx + Math.cos(a) * (r - lw * 1.05), cy + Math.sin(a) * (r - lw * 1.05) + 4); }
+    const ang = Math.PI * (1 + score / 100);
+    g.strokeStyle = '#111827'; g.lineWidth = size * 0.022; g.lineCap = 'round'; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.cos(ang) * (r + lw * 0.3), cy + Math.sin(ang) * (r + lw * 0.3)); g.stroke();
+    g.fillStyle = '#111827'; g.beginPath(); g.arc(cx, cy, size * 0.035, 0, 7); g.fill();
+    const gr = gradeOf(score);
+    g.font = `800 ${size * 0.15}px system-ui,sans-serif`; g.fillStyle = gr.c; g.fillText(`${score}`, cx, cy + size * 0.18);
+    g.font = `700 ${size * 0.065}px system-ui,sans-serif`; g.fillText(`${gr.g} · ${RL.grades[GR.indexOf(gr)]}`, cx, cy + size * 0.26);
+    return c;
+  }
+  function strip(i0, i1, lim, ops, w) {
+    const H = M.hist, L = S.limit, t0 = H.t[i0] - 1000, t1 = H.t[i1 - 1], h = ops.length > 1 ? 58 : 36, [c, g] = cnv(w, h), x = t => (t - t0) / (t1 - t0 || 1) * w;
+    g.fillStyle = ZC.none; g.fillRect(0, 0, w, 20);
+    const mins = Math.max(1, Math.ceil((t1 - t0) / 60000));
+    for (let m = 0; m < mins; m++) {
+      const a = t0 + m * 60000, b = Math.min(t1, a + 60000), ia = Math.max(i0, idxAt(a)), ib = Math.min(i1, idxAt(b));
+      let mx = -Infinity; for (let i = ia; i < ib; i++) if (lim[i] > mx) mx = lim[i];
+      if (!isFinite(mx)) continue;
+      g.fillStyle = mx >= L.max ? ZC.over : mx >= L.warn ? ZC.warn : ZC.ok; g.fillRect(x(a), 0, x(b) - x(a) + 0.6, 20);
+    }
+    g.fillStyle = '#6b7280'; g.textAlign = 'center';
+    for (const t of timeTicks(t0, t1)) { g.fillRect(x(t), 20, 1, 4); g.fillText(fmtHM(t), clamp(x(t), 14, w - 14), 33); }
+    if (ops.length > 1) ops.forEach((o, k) => {
+      const a = x(o.t0), b = x(o.t1);
+      g.fillStyle = k % 2 ? '#c7d2fe' : '#e0e7ff'; g.fillRect(a, 40, b - a, 17);
+      g.save(); g.beginPath(); g.rect(a, 40, b - a, 17); g.clip(); g.fillStyle = '#1e3a8a'; g.textAlign = 'left'; g.font = '600 10px system-ui,sans-serif'; g.fillText(o.lab || o.name, a + 4, 52); g.restore();
+    });
+    return c;
+  }
+  function timeGraph(i0, i1, lim, ops, w, h, off) {
+    const H = M.hist, L = S.limit, t0 = H.t[i0] - 1000, t1 = H.t[i1 - 1], [c, g] = cnv(w, h);
+    const padL = 30, padR = 6, padB = 16, padT = ops && ops.length > 1 ? 16 : 6, gw = w - padL - padR, gh = h - padB - padT;
+    const span = Math.max(1, Math.ceil((t1 - t0) / 60000)), bm = Math.max(1, Math.ceil(span / 300)), pts = [];
+    for (let m = 0; m < span; m += bm) {
+      const a = t0 + m * 60000, b = Math.min(t1 + 1, a + bm * 60000), ia = Math.max(i0, idxAt(a)), ib = Math.min(i1, idxAt(b));
+      let s = 0, n = 0; for (let i = ia; i < ib; i++) { s += H.A[i]; n++; }
+      if (n) pts.push({ a, b, v:db10(s / n, off), lim:lim[ib - 1] });
+    }
+    const vs = pts.map(p => p.v).concat(pts.map(p => p.lim)).filter(isFinite);
+    const lo = Math.min(50, Math.floor((Math.min(...vs) - 5) / 10) * 10), hi = Math.max(Math.ceil((L.max + 8) / 10) * 10, Math.ceil((Math.max(...vs) + 5) / 10) * 10);
+    const x = t => padL + (t - t0) / (t1 - t0 || 1) * gw, y = v => padT + gh - (clamp(v, lo, hi) - lo) / (hi - lo) * gh;
+    if (ops && ops.length > 1) ops.forEach((o, k) => {
+      g.fillStyle = k % 2 ? 'rgba(99,102,241,.07)' : 'rgba(99,102,241,.0)'; g.fillRect(x(o.t0), padT, x(o.t1) - x(o.t0), gh);
+      g.save(); g.beginPath(); g.rect(x(o.t0), 0, x(o.t1) - x(o.t0), padT); g.clip(); g.fillStyle = '#4338ca'; g.font = '600 10px system-ui,sans-serif'; g.fillText(o.lab || o.name, x(o.t0) + 3, 11); g.restore();
+      g.fillStyle = '#c7d2fe'; g.fillRect(x(o.t0), padT, 1, gh);
+    });
+    g.fillStyle = 'rgba(239,68,68,.16)';
+    { let ra = null; pts.forEach((p, k) => { const o = p.lim >= L.max; if (o && ra == null) ra = p.a; if (ra != null && (!o || k === pts.length - 1)) { const rb = o ? p.b : p.a; g.fillRect(x(ra), padT, x(rb) - x(ra), gh); ra = null; } }); }
+    g.strokeStyle = '#e5e7eb'; g.fillStyle = '#6b7280'; g.lineWidth = 1; g.textAlign = 'right';
+    for (let v = lo; v <= hi; v += 10) { g.beginPath(); g.moveTo(padL, Math.round(y(v)) + .5); g.lineTo(w - padR, Math.round(y(v)) + .5); g.stroke(); g.fillText(v, padL - 4, y(v) + 3); }
+    g.textAlign = 'center'; for (const t of timeTicks(t0, t1)) g.fillText(fmtHM(t), clamp(x(t), padL + 12, w - 16), h - 3);
+    g.setLineDash([5, 4]); g.lineWidth = 1.2;
+    for (const [v, col] of [[L.warn, '#f59e0b'], [L.max, '#ef4444']]) { g.strokeStyle = col; g.beginPath(); g.moveTo(padL, y(v)); g.lineTo(w - padR, y(v)); g.stroke(); }
+    g.setLineDash([]);
+    const line = (key, col, lw) => { g.strokeStyle = col; g.lineWidth = lw; g.lineJoin = 'round'; g.beginPath(); let st = false; for (const p of pts) { const v = p[key]; if (!isFinite(v)) { st = false; continue; } const xx = x((p.a + p.b) / 2); st ? g.lineTo(xx, y(v)) : g.moveTo(xx, y(v)); st = true; } g.stroke(); };
+    line('v', '#3b82f6', 1.4); line('lim', '#111827', 2);
+    return c;
+  }
+  function specChart(sp, lvl, w, h) {
+    const [c, g] = cnv(w, h), padL = 30, padR = 60, padB = 38, padT = 10, gw = w - padL - padR, gh = h - padB - padT;
+    const vals = sp.diff.filter(v => v != null).concat([lvl || 0]).map(Math.abs);
+    const m = Math.max(6, Math.ceil(Math.max(...vals) + 1)), step = m <= 6 ? 2 : m <= 12 ? 3 : 6, mm = Math.ceil(m / step) * step;
+    const y = v => padT + gh / 2 - v / mm * gh / 2, bw = gw / 10;
+    g.textAlign = 'right'; g.fillStyle = '#6b7280'; g.lineWidth = 1;
+    for (let v = -mm; v <= mm; v += step) { g.strokeStyle = v ? '#eef0f3' : '#9ca3af'; g.beginPath(); g.moveTo(padL, Math.round(y(v)) + .5); g.lineTo(padL + gw, Math.round(y(v)) + .5); g.stroke(); g.fillText((v > 0 ? '+' : '') + v, padL - 4, y(v) + 3); }
+    for (let k = 0; k < 10; k++) {
+      const v = sp.diff[k], x0 = padL + k * bw; g.textAlign = 'center';
+      g.fillStyle = '#111827'; g.font = '600 10px system-ui,sans-serif'; g.fillText(RL.locale === 'en-GB' ? BANDS[k].replace(',', '.') : BANDS[k], x0 + bw / 2, h - padB + 12);
+      g.font = '9.5px system-ui,sans-serif'; g.fillStyle = '#6b7280';
+      g.fillText(sp.pct[k] ? 'Ø ' + fmtDur(sp.dur[k]) : '–', x0 + bw / 2, h - padB + 24);
+      g.fillText(sp.pct[k] != null ? pc(sp.pct[k]) : '', x0 + bw / 2, h - padB + 35);
+      if (v == null) continue;
+      g.fillStyle = v >= 3 ? '#ef4444' : v >= 1 ? '#f59e0b' : v <= -3 ? '#3b82f6' : v <= -1 ? '#93c5fd' : '#9ca3af';
+      const yt = Math.min(y(0), y(v)), hh = Math.max(1, Math.abs(y(v) - y(0)));
+      g.fillRect(x0 + bw * .2, yt, bw * .6, hh);
+      g.fillStyle = '#374151'; g.font = '600 9.5px system-ui,sans-serif';
+      g.fillText((v > 0 ? '+' : '') + v.toFixed(1), x0 + bw / 2, v >= 0 ? yt - 3 : yt + hh + 10);
+    }
+    if (lvl != null && isFinite(lvl)) {
+      g.setLineDash([5, 4]); g.strokeStyle = '#111827'; g.lineWidth = 1.3; g.beginPath(); g.moveTo(padL, y(lvl)); g.lineTo(padL + gw, y(lvl)); g.stroke(); g.setLineDash([]);
+      g.textAlign = 'left'; g.fillStyle = '#111827'; g.font = '600 9.5px system-ui,sans-serif'; g.fillText(RL.totalLbl, padL + gw + 4, y(lvl) - 1); g.fillText((lvl > 0 ? '+' : '') + lvl.toFixed(1) + ' dB', padL + gw + 4, y(lvl) + 10);
+    }
+    g.textAlign = 'left'; g.fillStyle = '#6b7280'; g.font = '9px system-ui,sans-serif'; g.fillText('Hz', padL + gw + 4, h - padB + 12);
+    return c;
+  }
+  const zbar = s => `<div class="zbar" style="width:100px"><div style="width:${s.fOk * 100}%;background:${ZC.ok}"></div><div style="width:${s.fWarn * 100}%;background:${ZC.warn}"></div><div style="width:${s.fOver * 100}%;background:${ZC.over}"></div></div>`;
+  const gradeBox = s => `<span class="grade" style="background:${s.grade.c}">${s.grade.g}</span>`;
+  const statBox = (lab, val, unit = 'dB') => `<div class="rp-stat"><span>${lab}</span><b>${val}${unit ? ` <small>${unit}</small>` : ''}</b></div>`;
+
+  const RT = {
+    nl:{ title:'Geluidsverslag', event:'Evenement', loc:'Locatie', org:'Organisator', pos:'Meetpositie', setup:'Opstelling', mic:'Microfoon', cal:'Kalibratie', uncal:'niet gekalibreerd',
+      corr:'Correctiefactor', limit:'Limiet', warnw:'waarschuwing', author:'Opgesteld door', techs:'Technieker(s)', notes:'Opmerkingen', overall:'Totaalbeoordeling',
+      total:'totaal', highest:'Hoogste', tOver:'Tijd boven limiet', tWarn:'Tijd in waarschuwingszone', bassShare:'(basaandeel)', peaks:'Pieken ≥ 135 dB(C)',
+      course:'Verloop t.o.v. de limiet (per minuut)', lgOk:'onder waarschuwingsgrens', lgWarn:'waarschuwingszone', lgOver:'boven limiet', lgNone:'geen meting',
+      overTime:'Geluidsniveau doorheen de tijd', perMin:'per minuut', limVal:'limietwaarde', limExc:'limiet overschreden', warnLim:'waarschuwing / limiet',
+      perSlot:'Beoordeling per tijdslot (technieker en band)', tech:'Technieker', band:'Band / artiest', period:'Periode', dist:'Tijdsverdeling', above:'boven', warnS:'waarsch.',
+      perTech:'Samenvatting per technieker', sets:'Sets', totTime:'Totale tijd', techNote:'De score per technieker is het gemiddelde van zijn sets, gewogen naar duur. De andere waarden gelden voor al zijn sets samen.',
+      howTitle:'Hoe wordt de score berekend?', howIntro:'Elk tijdslot start met <b>100 punten</b>. Er gaan punten af voor:',
+      how:[ (ll,L)=>`<b>Tijd boven de limiet</b> (${ll} ≥ ${L.max} dB): 0,6 punt per procent van de tijd (100% van de tijd = −60).`,
+            (ll,L)=>`<b>Tijd in de waarschuwingszone</b> (≥ ${L.warn} dB): 0,15 punt per procent van de tijd (max. −15).`,
+            ()=>`<b>Ernst van de overschrijding</b>: 2 punten per dB dat de limiet gemiddeld overschreden werd, max. 15.`,
+            ()=>`<b>Overmatig laag</b> (L<sub>Ceq</sub> − L<sub>Aeq</sub> boven 15 dB): 1 punt per dB, max. 10.`,
+            ()=>`<b>Impulspieken</b> (L<sub>Cpeak</sub> ≥ 135 dB(C)): oplopend met het aantal pieken per uur, max. 10.` ],
+      howWeight:'De <b>totaalscore</b> van het evenement en de score per technieker zijn het gemiddelde van de tijdsloten, gewogen naar hun duur. Eén slechte set weegt dus mee naar verhouding van zijn lengte.',
+      scale:'Schaal', howWhy:'Een goede geluidstechnieker houdt het niveau stabiel net onder de limiet, vermijdt pieken en houdt het laag onder controle. Zo blijft het evenement luid en energiek, maar veilig voor het gehoor en in regel met de vergunning.',
+      freqTitle:'Frequentieanalyse', freqText:"Op de volgende pagina's staat per tijdslot een octaafbandanalyse (31,5 Hz – 16 kHz, ongewogen). De balken tonen hoeveel dB een band gemiddeld luider (rood/oranje) of stiller (blauw) was dan het gemiddelde van het hele verslag. De stippellijn toont het verschil in totaalniveau: balken die boven de stippellijn uitsteken, zijn ook in verhouding sterker aanwezig in de mix. Onder elke band staat hoe lang zo'n verhoging (≥ 3 dB boven het gemiddelde) gemiddeld duurde (Ø) en welk deel van de tijd dat het geval was.",
+      discTitle:'Disclaimer', disc:(c,corr)=>`<b>Dit is een informatief document.</b> De gebruikte meetapparatuur is <b>niet</b> gecertificeerd als klasse 1- of klasse 2-geluidsmeter volgens IEC 61672-1 (NBN EN 61672-1) en dit verslag heeft geen officiële of juridische bewijswaarde. Voor de meetplicht onder VLAREM II is een meter die voldoet aan klasse 2 (of een geluidsbegrenzer) vereist; de handhaving meet met klasse 1-apparatuur. ${c ? `De meetketen werd wel gekalibreerd (${c}); de meter` : '<b>Let op: de meetketen werd voor deze meting niet gekalibreerd; de absolute niveaus zijn daardoor onzeker.</b> De meter'} registreert A-, C- en Z-gewogen niveaus met tijdconstanten Fast/Slow, per seconde. Alle niveaus zijn inclusief een correctiefactor van ${corr} dB voor de meetpositie.`,
+      mixed:'mixte', deduct:'Aftrek', dLimit:'limiet', dWarn:'waarschuwing', dSev:'ernst', dBass:'laag', dPeak:'pieken', freqVs:'Frequenties t.o.v. het gemiddelde van het evenement',
+      noFreq:'Geen frequentiegegevens beschikbaar.', generated:'Gegenereerd', page:'pagina', badge:'Informatief document',
+      foot:(c)=>`Informatief document – meetapparatuur niet gecertificeerd als klasse 1 of 2 (IEC 61672-1); gemeten met een gekalibreerde meetketen${c ? ' (' + c + ')' : ''}.`,
+      footUncal:'Informatief document – meetapparatuur niet gecertificeerd als klasse 1 of 2 (IEC 61672-1). Let op: de meetketen was niet gekalibreerd.',
+      unknownTech:'Geluidstechnieker (niet opgegeven)', unnamed:'Naamloos', file:'geluidsverslag', tooFew:'Te weinig meetgegevens voor een verslag (minimaal 1 minuut).', tooFewP:'De gekozen periode bevat te weinig meetgegevens.',
+      grades:['Uitstekend','Goed','Voldoende','Zwak','Onvoldoende'], locale:'nl-BE', h:'u', min:'min', totalLbl:'totaal' },
+    en:{ title:'Sound Level Report', event:'Event', loc:'Location', org:'Organiser', pos:'Measuring position', setup:'Sound system', mic:'Microphone', cal:'Calibration', uncal:'not calibrated',
+      corr:'Correction factor', limit:'Limit', warnw:'warning', author:'Prepared by', techs:'Sound engineer(s)', notes:'Notes', overall:'Overall rating',
+      total:'overall', highest:'Highest', tOver:'Time above limit', tWarn:'Time in warning zone', bassShare:'(low-end share)', peaks:'Peaks ≥ 135 dB(C)',
+      course:'Course relative to the limit (per minute)', lgOk:'below warning level', lgWarn:'warning zone', lgOver:'above limit', lgNone:'no data',
+      overTime:'Sound level over time', perMin:'per minute', limVal:'limit metric', limExc:'limit exceeded', warnLim:'warning / limit',
+      perSlot:'Rating per time slot (engineer and act)', tech:'Engineer', band:'Band / artist', period:'Period', dist:'Time distribution', above:'above', warnS:'warning',
+      perTech:'Summary per sound engineer', sets:'Sets', totTime:'Total time', techNote:'The score per engineer is the average of their sets, weighted by duration. The other values cover all of their sets combined.',
+      howTitle:'How is the score calculated?', howIntro:'Each time slot starts with <b>100 points</b>. Points are deducted for:',
+      how:[ (ll,L)=>`<b>Time above the limit</b> (${ll} ≥ ${L.max} dB): 0.6 points per percent of the time (100% of the time = −60).`,
+            (ll,L)=>`<b>Time in the warning zone</b> (≥ ${L.warn} dB): 0.15 points per percent of the time (max. −15).`,
+            ()=>`<b>Severity of exceedance</b>: 2 points per dB by which the limit was exceeded on average, max. 15.`,
+            ()=>`<b>Excessive low end</b> (L<sub>Ceq</sub> − L<sub>Aeq</sub> above 15 dB): 1 point per dB, max. 10.`,
+            ()=>`<b>Impulse peaks</b> (L<sub>Cpeak</sub> ≥ 135 dB(C)): increasing with the number of peaks per hour, max. 10.` ],
+      howWeight:'The <b>overall score</b> of the event and the score per engineer are the average of the time slots, weighted by duration. One poor set therefore counts in proportion to its length.',
+      scale:'Scale', howWhy:'A good sound engineer keeps the level steady just below the limit, avoids peaks and keeps the low end under control. That keeps the event loud and energetic, yet safe for hearing and compliant with the permit.',
+      freqTitle:'Frequency analysis', freqText:'The following pages show an octave-band analysis per time slot (31.5 Hz – 16 kHz, unweighted). The bars show how many dB a band was louder (red/orange) or quieter (blue) on average than the average of the whole report. The dashed line shows the difference in overall level: bars extending beyond the dashed line are also relatively stronger in the mix. Below each band: the average duration (Ø) of such an increase (≥ 3 dB above average) and the share of the time it occurred.',
+      discTitle:'Disclaimer', disc:(c,corr)=>`<b>This is an informative document.</b> The measuring equipment used is <b>not</b> certified as a Class 1 or Class 2 sound level meter according to IEC 61672-1 (NBN EN 61672-1), and this report has no official or legal evidential value. Compliance measurements under the Flemish VLAREM II regulations require a meter meeting Class 2 (or a sound limiter); enforcement authorities measure with Class 1 equipment. ${c ? `The measurement chain was, however, calibrated (${c}); the meter` : '<b>Note: the measurement chain was not calibrated for this measurement, so absolute levels are uncertain.</b> The meter'} records A-, C- and Z-weighted levels with Fast/Slow time weighting, every second. All levels include a correction factor of ${corr} dB for the measuring position.`,
+      mixed:'mixing', deduct:'Deductions', dLimit:'limit', dWarn:'warning', dSev:'severity', dBass:'low end', dPeak:'peaks', freqVs:'Frequencies relative to the event average',
+      noFreq:'No frequency data available.', generated:'Generated', page:'page', badge:'Informative document',
+      foot:(c)=>`Informative document – measuring equipment not certified as Class 1 or 2 (IEC 61672-1); measured with a calibrated measurement chain${c ? ' (' + c + ')' : ''}.`,
+      footUncal:'Informative document – measuring equipment not certified as Class 1 or 2 (IEC 61672-1). Note: the measurement chain was not calibrated.',
+      unknownTech:'Sound engineer (not specified)', unnamed:'Unnamed', file:'sound-level-report', tooFew:'Not enough measurement data for a report (minimum 1 minute).', tooFewP:'The selected period contains too little measurement data.',
+      grades:['Excellent','Good','Sufficient','Weak','Insufficient'], locale:'en-GB', h:'h', min:'min', totalLbl:'overall' }
+  };
+  let RL = RT.nl;
+  const calMethodTr = (m, lang) => lang !== 'en' ? m : String(m)
+    .replace('handmatig bijgesteld', 'manually adjusted').replace('handmatig', 'manual')
+    .replace('kalibrator', 'acoustic calibrator').replace('referentiemeter', 'reference meter');
+
+  let reportName = 'report.pdf';
+  function buildReport() {
+    const H = M.hist, R = S.report, L = S.limit, lang = R.lang === 'nl' ? 'nl' : 'en', t = RT[lang]; RL = t;
+    if (H.t.length < 60) { alert(t.tooFew); return; }
+    const off = curOffset(), lim = limitSeries(off), first = H.t[0] - 1000, early = first - 30 * 60000;
+    const ta = resolveTime(R.from, early), tb = R.to ? resolveTime(R.to, (ta || first) + 60000) : null;
+    const i0 = ta ? idxAt(ta) : 0, i1 = tb ? idxAt(tb) : H.t.length;
+    if (i1 - i0 < 60) { alert(t.tooFewP); return; }
+    const T0 = H.t[i0] - 1000, T1 = H.t[i1 - 1];
+    let ops = R.ops.filter(o => o.from).map(o => ({ name:(o.name || '').trim() || t.unnamed, band:(o.band || '').trim(), t0:resolveTime(o.from, early), to:o.to })).sort((a, b) => a.t0 - b.t0);
+    ops.forEach((o, k) => { o.t1 = o.to ? resolveTime(o.to, o.t0 + 60000) : (ops[k + 1]?.t0 ?? T1); });
+    ops = ops.map(o => ({ ...o, t0:Math.max(o.t0, T0), t1:Math.min(o.t1, T1) })).filter(o => o.t1 - o.t0 >= 60000);
+    if (!ops.length) ops = [{ name:t.unknownTech, band:'', t0:T0, t1:T1 }];
+    for (const o of ops) o.lab = o.band ? `${o.name} · ${o.band}` : o.name;
+    const ev = stats(i0, i1, lim, off), evBand = bandMean(i0, i1);
+    for (const o of ops) { o.j0 = Math.max(i0, idxAt(o.t0)); o.j1 = Math.min(i1, idxAt(o.t1)); o.st = stats(o.j0, o.j1, lim, off); o.sp = spectrum(o.j0, o.j1, evBand); }
+    ops = ops.filter(o => o.st);
+    const tmap = new Map();
+    for (const o of ops) { if (!tmap.has(o.name)) tmap.set(o.name, { name:o.name, sets:[], ms:0 }); const x = tmap.get(o.name); x.sets.push(o); x.ms += o.t1 - o.t0; }
+    let techs = [...tmap.values()];
+    const wavg = list => { let w = 0, s = 0; for (const o of list) { const d = o.j1 - o.j0; w += d; s += o.st.score * d; } return w ? Math.round(s / w) : 0; };
+    for (const x of techs) { x.st = stats(x.sets.map(o => [o.j0, o.j1]), null, lim, off); x.st.score = wavg(x.sets); x.st.grade = gradeOf(x.st.score); }
+    ev.score = wavg(ops); ev.grade = gradeOf(ev.score);
+    techs.sort((a, b) => b.st.score - a.st.score);
+    if (ops.length < 2) techs = [];
+    const gt = g => t.grades[GR.indexOf(g)];
+    const c = CAL[M.micKey], ll = limLabel(lang), d0 = new Date(T0);
+    const calTxt = c ? `${calMethodTr(c.method, lang)}, ${new Date(c.date).toLocaleDateString(t.locale)}` : '';
+    const dur = ms => { const m = Math.round(ms / 60000), h = Math.floor(m / 60); return h ? `${h}${t.h} ${pad(m % 60)}${t.min}` : `${m} ${t.min}`; };
+    const dateStr = d0.toLocaleDateString(t.locale, { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    const corrTxt = (corrDb() >= 0 ? '+' : '') + corrDb().toFixed(1);
+    reportName = `${t.file}_${(R.event || 'event').replace(/[^\w-]+/g, '_')}_${d0.getFullYear()}${pad(d0.getMonth() + 1)}${pad(d0.getDate())}.pdf`;
+    const zcap = s => `<span style="color:#6b7280;font-size:10px">${pc(s.fOver)} ${t.above} · ${pc(s.fWarn)} ${t.warnS}</span>`;
+    const scoreCell = s => `<div style="display:flex;align-items:center;gap:6px"><div style="flex:1;height:10px;background:#eef0f3;border-radius:5px;overflow:hidden"><div style="height:100%;width:${s.score}%;background:${s.grade.c}"></div></div><b>${s.score}</b>${gradeBox(s)}</div>`;
+    const pages = [];
+    pages.push(`
+      <div class="rp-head"><div style="display:flex;align-items:center;gap:16px">${logoSrc() ? `<img src="${logoSrc()}" alt="" style="max-height:56px;max-width:190px;object-fit:contain">` : ''}<div><h1>${t.title}</h1><div class="rp-sub">${esc(R.event || t.event)}</div></div></div>
+        <div style="text-align:right"><span class="rp-badge">${t.badge}</span><br><b>${dateStr}</b><div class="rp-sub">${fmtHM(T0)} – ${fmtHM(T1)} · ${dur(T1 - T0)}</div></div></div>
+      <div class="rp-info">
+        <span>${t.loc}</span><b>${esc(R.location || '–')}</b><span>${t.org}</span><b>${esc(R.organizer || '–')}</b>
+        <span>${t.pos}</span><b>${esc(R.position || '–')}</b><span>${t.setup}</span><b>${esc(R.setup || '–')}</b>
+        <span>${t.mic}</span><b>${esc(M.micLabel || '–')}</b><span>${t.cal}</span><b>${c ? esc(calTxt) : `<span style="color:#dc2626">${t.uncal}</span>`}</b>
+        <span>${t.corr}</span><b>${corrTxt} dB</b><span>${t.limit}</span><b>${L.max} dB(${L.w}) ${ll} <span style="color:#6b7280;font-weight:400">(${t.warnw} ${L.warn})</span></b>
+        <span>${t.author}</span><b>${esc(R.author || '–')}</b><span>${t.techs}</span><b>${[...new Set(ops.map(o => o.name))].map(esc).join(', ')}</b>
+        ${R.notes ? `<span>${t.notes}</span><b style="grid-column:span 3">${esc(R.notes)}</b>` : ''}
+      </div>
+      <h2>${t.overall}</h2>
+      <div class="rp-sum"><div data-c="gauge"></div><div class="rp-stats">
+        ${statBox(`L<sub>Aeq</sub> ${t.total}`, f1(ev.LA), 'dB(A)')}${statBox(`L<sub>Ceq</sub> ${t.total}`, f1(ev.LC), 'dB(C)')}${statBox(`${t.highest} ${ll}`, f1(ev.maxLim), 'dB(' + L.w + ')')}
+        ${statBox(t.tOver, pc(ev.fOver), '')}${statBox(t.tWarn, pc(ev.fWarn), '')}${statBox(`L<sub>C</sub> − L<sub>A</sub> ${t.bassShare}`, f1(ev.bass), 'dB')}
+        ${statBox('L<sub>AFmax</sub>', f1(ev.af), 'dB(A)')}${statBox('L<sub>Cpeak</sub> max', f1(ev.cpk), 'dB(C)')}${statBox(t.peaks, ev.peaks, '×')}
+      </div></div>
+      <h2>${t.course}</h2>
+      <div data-c="strip"></div>
+      <div class="rp-legend"><span><i style="background:${ZC.ok}"></i>${t.lgOk}</span><span><i style="background:${ZC.warn}"></i>${t.lgWarn} (≥ ${L.warn})</span><span><i style="background:${ZC.over}"></i>${t.lgOver} (≥ ${L.max})</span><span><i style="background:${ZC.none}"></i>${t.lgNone}</span></div>
+      <h2>${t.overTime}</h2>
+      <div data-c="graph"></div>
+      <div class="rp-legend"><span><i style="background:#3b82f6"></i>L<sub>Aeq</sub> ${t.perMin}</span><span><i style="background:#111827"></i>${ll} (${t.limVal})</span><span><i style="background:rgba(239,68,68,.35)"></i>${t.limExc}</span><span><i style="background:#f59e0b"></i>/ <i style="background:#ef4444"></i>${t.warnLim}</span></div>`);
+    pages.push(`
+      <h2 style="margin-top:0">${t.perSlot}</h2>
+      <table class="rp-table"><thead><tr><th>${t.tech}</th><th>${t.band}</th><th>${t.period}</th><th>L<sub>Aeq</sub></th><th>L<sub>C</sub>−L<sub>A</sub></th><th>${t.dist}</th><th>${t.highest} ${ll}</th><th style="width:130px">Score</th></tr></thead><tbody>
+      ${ops.map(o => `<tr><td><b>${esc(o.name)}</b></td><td>${esc(o.band || '–')}</td><td>${fmtHM(o.t0)}–${fmtHM(o.t1)}<br><span style="color:#6b7280">${dur(o.t1 - o.t0)}</span></td><td>${f1(o.st.LA)}</td><td>${f1(o.st.bass)}</td>
+        <td>${zbar(o.st)}${zcap(o.st)}</td><td>${f1(o.st.maxLim)}</td><td>${scoreCell(o.st)}</td></tr>`).join('')}
+      </tbody></table>
+      ${techs.length ? `<h2>${t.perTech}</h2>
+      <table class="rp-table"><thead><tr><th>${t.tech}</th><th>${t.sets}</th><th>${t.totTime}</th><th>L<sub>Aeq</sub></th><th>L<sub>C</sub>−L<sub>A</sub></th><th>${t.dist}</th><th style="width:130px">Score</th></tr></thead><tbody>
+      ${techs.map(x => `<tr><td><b>${esc(x.name)}</b></td><td>${x.sets.map(o => esc(o.band || fmtHM(o.t0) + '–' + fmtHM(o.t1))).join(', ')}</td><td>${dur(x.ms)}</td><td>${f1(x.st.LA)}</td><td>${f1(x.st.bass)}</td>
+        <td>${zbar(x.st)}${zcap(x.st)}</td><td>${scoreCell(x.st)}</td></tr>`).join('')}
+      </tbody></table>
+      <p style="color:#6b7280;margin:4px 0 0;font-size:10.5px">${t.techNote}</p>` : ''}
+      <h2>${t.howTitle}</h2>
+      <div class="rp-method">
+        <p>${t.howIntro}</p>
+        <ul>${t.how.map(f => `<li>${f(ll, L)}</li>`).join('')}</ul>
+        <p>${t.howWeight}</p>
+        <p>${t.scale}: ${GR.map((g, k) => `<b style="color:${g.c}">${g.g} ${k < 4 ? '≥ ' + g.min : '&lt; 40'} ${t.grades[k].toLowerCase()}</b>`).join(' · ')}.</p>
+        <p>${t.howWhy}</p>
+      </div>
+      <h2>${t.freqTitle}</h2>
+      <div class="rp-method"><p>${t.freqText}</p></div>
+      <h2>${t.discTitle}</h2>
+      <div class="rp-method rp-disc"><p>${t.disc(c ? esc(calTxt) : '', corrTxt)}</p></div>`);
+    for (let k = 0; k < ops.length; k += 2) {
+      pages.push(ops.slice(k, k + 2).map((o, j) => `
+        <div class="rp-op">
+          <div class="rp-ophead"><span class="grade" style="background:${o.st.grade.c}">${o.st.grade.g}</span>
+            <div style="flex:1"><h3>${esc(o.name)}${o.band ? ` <span style="font-weight:500;color:#4b5563">— ${t.mixed} ${esc(o.band)}</span>` : ''}</h3><div class="rp-sub">${fmtHM(o.t0)} – ${fmtHM(o.t1)} · ${dur(o.t1 - o.t0)} · <b style="color:${o.st.grade.c}">${gt(o.st.grade)} (${o.st.score}/100)</b></div></div>
+            <div style="width:130px">${zbar(o.st)}</div></div>
+          <div class="rp-opstats"><span>L<sub>Aeq</sub> <b>${f1(o.st.LA)}</b></span><span>L<sub>Ceq</sub> <b>${f1(o.st.LC)}</b></span><span>L<sub>C</sub>−L<sub>A</sub> <b>${f1(o.st.bass)}</b></span><span>${t.highest.toLowerCase()} ${ll} <b>${f1(o.st.maxLim)}</b></span><span>${t.lgOver} <b>${pc(o.st.fOver)}</b></span><span>${t.lgWarn} <b>${pc(o.st.fWarn)}</b></span><span>L<sub>AFmax</sub> <b>${f1(o.st.af)}</b></span><span>L<sub>Cpeak</sub> <b>${f1(o.st.cpk)}</b></span></div>
+          <div class="rp-opstats" style="color:#6b7280;margin-top:2px">${t.deduct}: ${t.dLimit} −${o.st.pen.over.toFixed(0)} · ${t.dWarn} −${o.st.pen.warn.toFixed(0)} · ${t.dSev} −${o.st.pen.sev.toFixed(0)} · ${t.dBass} −${o.st.pen.bass.toFixed(0)} · ${t.dPeak} −${o.st.pen.peak.toFixed(0)}</div>
+          <div data-c="opg${k + j}" style="margin-top:6px"></div>
+          <div style="font-weight:600;margin:8px 0 2px">${t.freqVs}</div>
+          <div data-c="ops${k + j}"></div>
+        </div>`).join(''));
+    }
+    const box = $('#rpPages'); box.innerHTML = '';
+    const footNote = c ? t.foot(esc(calTxt)) : t.footUncal;
+    pages.forEach((html, i) => {
+      const p = document.createElement('div'); p.className = 'rp-page';
+      p.innerHTML = html + `<div class="rp-foot"><div class="rp-footnote">${footNote}</div><div class="rp-footrow"><span>${esc(R.event || t.title)} · ${dateStr}</span><span>${t.generated} ${new Date().toLocaleString(t.locale)} · ${t.page} ${i + 1}/${pages.length}</span></div></div>`;
+      box.appendChild(p);
+    });
+    const put = (key, el) => { const x = box.querySelector(`[data-c="${key}"]`); if (x) x.appendChild(el); };
+    put('gauge', gauge(ev.score, 230));
+    put('strip', strip(i0, i1, lim, ops, 702));
+    put('graph', timeGraph(i0, i1, lim, ops, 702, 270, off));
+    ops.forEach((o, k) => {
+      put('opg' + k, timeGraph(o.j0, o.j1, lim, null, 672, 130, off));
+      if (o.sp) put('ops' + k, specChart(o.sp, o.st.LZ - ev.LZ, 672, 175));
+      else put('ops' + k, Object.assign(document.createElement('p'), { className:'note', textContent:t.noFreq }));
+    });
+    $('#report').classList.remove('hidden'); $('#report').scrollTop = 0; document.body.style.overflow = 'hidden';
+  }
+  window.buildReport = buildReport;
+  $('#reportBtn').onclick = buildReport;
+  $('#rpClose').onclick = () => { $('#report').classList.add('hidden'); $('#rpPages').innerHTML = ''; document.body.style.overflow = ''; };
+  $('#rpPrint').onclick = () => window.print();
+  function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('kan ' + src + ' niet laden')); document.head.appendChild(s); }); }
+  $('#rpPdf').onclick = async () => {
+    const st = $('#rpStatus'), btn = $('#rpPdf'); btn.disabled = true;
+    try {
+      st.textContent = 'PDF maken…';
+      if (!window.html2canvas) await loadScript('lib/html2canvas.min.js');
+      if (!window.jspdf) await loadScript('lib/jspdf.umd.min.js');
+      const pdf = new window.jspdf.jsPDF({ orientation:'p', unit:'mm', format:'a4', compress:true });
+      const pages = $$('#rpPages .rp-page');
+      for (let i = 0; i < pages.length; i++) {
+        st.textContent = `PDF maken… pagina ${i + 1}/${pages.length}`;
+        const cv = await html2canvas(pages[i], { scale:2, backgroundColor:'#ffffff', logging:false, scrollX:0, scrollY:0, windowWidth:900 });
+        if (i) pdf.addPage();
+        pdf.addImage(cv.toDataURL('image/jpeg', 0.9), 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+      }
+      pdf.save(reportName); st.textContent = '✓ PDF gedownload';
+    } catch (e) { st.textContent = 'Fout: ' + e.message + ' — gebruik Afdrukken → Opslaan als PDF.'; }
+    btn.disabled = false;
+  };
+
+  /* ---------- main loop ---------- */
+  let n = 0;
+  function tick(force) {
+    const v = M.running && M.live ? compute() : null;
+    const limit = v ? limitState(v) : { state:'off' };
+    const clip = performance.now() < M.clipUntil;
+    const elapsed = M.running ? Date.now() - M.startTime : null;
+    const base = { v, limit, cal:isCal(), clip, elapsed, ts:Date.now() };
+    const mv = S.views.main;
+    lastView = mv; lastP = { ...base, hist: mv.graph && v ? histFor(mv.w, mv.graphRange) : [] };
+    render(lastP, mv);
+    if (dlg.open) {
+      const lv = v ? v.Z.F : null;
+      const preview = (calMode === 'man' && isFinite(pendingOffset) && v) ? lv - curOffset() + pendingOffset : (lv == null ? null : lv - corrDb());
+      $('#calLive').textContent = (preview == null ? '--' : preview.toFixed(1)) + ' dB(Z)';
+      if (M.calc) $('#calProg').style.width = Math.min(100, M.calc.n / (M.fs * M.calc.dur) * 100) + '%';
+    }
+    const ev = S.views.ext;
+    const extP = { ...base, view:ev, hist: ev.graph && v ? histFor(ev.w, ev.graphRange) : null };
+    if (bc) bc.postMessage({ type:'state', p:extP });
+    if (!force && ++n % 10 === 0) relaySend(extP);
+  }
+  window.tick = tick;
+  setInterval(tick, 100);
+  fillView(); fillLimit(); fillReport(); profUi(); logoUi(); relayUi(); updatePanel();
+  wake();
+}
+</script>
+</body>
+</html>

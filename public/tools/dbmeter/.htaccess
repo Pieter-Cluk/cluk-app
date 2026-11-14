@@ -1,0 +1,2 @@
+# dB meter: a static page plus relay.php. Without this /tools/dbmeter/ answers 403 (-Indexes, and Laravel expects index.php).
+DirectoryIndex index.html
