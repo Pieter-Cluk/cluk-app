@@ -27,3 +27,6 @@ Homestead.yaml
 Thumbs.db
 /public/fonts/
 __pycache__/
+
+# dB meter: live measurement data of the relay
+public/tools/dbmeter/data/*.json

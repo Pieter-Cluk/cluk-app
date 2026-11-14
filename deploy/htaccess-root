@@ -9,7 +9,9 @@ Options -Indexes
     RewriteRule (^|/)\. - [F,L]
 
     # Trailing slash: forward to the address without it (here, so the inner app/public path never shows).
+    # Not for the static tools (/tools/dbmeter/ is a folder with its own index.html).
     RewriteCond %{REQUEST_URI} !^/app/public/
+    RewriteCond %{REQUEST_URI} !^/tools/
     RewriteCond %{REQUEST_URI} ^(.+)/$
     RewriteRule ^ %1 [L,R=301]
 

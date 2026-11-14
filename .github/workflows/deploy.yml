@@ -157,6 +157,18 @@ jobs:
           $SSH "bash '$WEBROOT/install.sh' '$WEBROOT' '$WEBROOT/build.tgz' && rm -f '$WEBROOT/install.sh'" 2>&1 | tee /tmp/install.log
           # The website's own address (cluk.live and www.cluk.live share one one.com web root): that web root
           # gets the same .htaccess and a link to this app, so the same app answers there.
+          # While the website lives on app.cluk.live/site, cluk.live keeps its own web root with the forward
+          # (deploy/cluk-live.htaccess) and the static tools (public/tools, e.g. the dB meter at cluk.live/tools/dbmeter/).
+          # The relay's live data (tools/dbmeter/data/*.json) on cluk.live is left alone.
+          if [ -z "$WEBSITE_HOST" ]; then
+            CLUKROOT=$($SSH "readlink -f ~/webroots/by-route/cluk.live_" || true)
+            echo "cluk.live web root: ${CLUKROOT:-not found}"
+            if [ -n "$CLUKROOT" ] && [ "$CLUKROOT" != "$WEBROOT" ]; then
+              $SSH "set -e; cd '$WEBROOT/app/public' && tar cf - --exclude='tools/dbmeter/data/*.json' tools | (cd '$CLUKROOT' && tar xf -) \
+                && mkdir -p '$CLUKROOT/tools/dbmeter/data' && cp '$WEBROOT/app/deploy/cluk-live.htaccess' '$CLUKROOT/.htaccess' \
+                && ls -la '$CLUKROOT/tools/dbmeter'" | tee -a /tmp/install.log
+            fi
+          fi
           if [ -n "$WEBSITE_HOST" ]; then
             SITEROOT=$($SSH "readlink -f ~/webroots/by-route/${WEBSITE_HOST}_" || true)
             echo "Website web root: ${SITEROOT:-not found}"
@@ -201,6 +213,18 @@ jobs:
           done
           c=$(curl -4 -s -o /dev/null -m 20 -w '%{http_code}' "https://${WEBSITE_HOST}/" || true)
           [ "$c" = "200" ] || echo "::warning title=Website address::https://${WEBSITE_HOST}/ answered HTTP $c"
+
+      - name: Check the dB meter on cluk.live
+        if: ${{ env.WEBSITE_HOST == '' }}
+        run: |
+          page=$(curl -4 -s -o /dev/null -m 20 -w '%{http_code}' https://cluk.live/tools/dbmeter/ || true)
+          relay=$(curl -4 -s -m 20 -w ' %{http_code}' 'https://cluk.live/tools/dbmeter/relay.php?room=TEST' || true)
+          data=$(curl -4 -s -o /dev/null -m 20 -w '%{http_code}' https://cluk.live/tools/dbmeter/data/ || true)
+          echo "page: $page · relay: $relay · data folder: $data"
+          [ "$page" = "200" ] || echo "::warning title=dB meter::https://cluk.live/tools/dbmeter/ answered HTTP $page"
+          echo "$relay" | grep -q '"status":"unknown"' || echo "::warning title=dB meter::relay.php answered: $relay"
+          [ "$data" = "403" ] || echo "::warning title=dB meter::the data folder answered HTTP $data (should be 403)"
+          echo "::notice title=dB meter::page $page, relay $relay, data folder $data"
 
       - name: Report
         if: always()
