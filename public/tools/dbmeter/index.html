@@ -124,6 +124,12 @@ dialog ol{padding-left:20px;line-height:1.5;font-size:14px}
 .stab.ok{color:var(--acc)}.stab.bad{color:var(--warn)}
 ol.steps{padding-left:22px;line-height:1.7;font-size:14px}
 ol.steps li{margin:4px 0}
+#tvPair{position:absolute;inset:0;z-index:6;display:grid;place-items:center;background:var(--bg);text-align:center;padding:24px}
+.tvp-title{font-size:clamp(20px,3vw,40px);font-weight:700;color:var(--mut);margin-bottom:2vh}
+.tvp-txt{font-size:clamp(16px,2.2vw,30px);line-height:1.4;max-width:1100px;margin:0 auto}
+.tvp-en{color:var(--mut);font-size:.8em}
+.tvp-code{font-family:var(--num);font-weight:800;font-size:clamp(80px,18vw,260px);letter-spacing:.15em;color:var(--acc);text-shadow:var(--glow);margin:3vh 0}
+.tvp-msg{font-size:clamp(14px,1.8vw,24px);color:var(--mut);min-height:1.5em}
 .dlgfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
 .restore{background:color-mix(in srgb,var(--warn) 14%,var(--bg));border:1px solid var(--warn);border-radius:12px;padding:10px 12px;font-size:13px;margin:6px 0 12px;line-height:1.45}
 .oprow{display:grid;grid-template-columns:1fr 1fr 28px;gap:4px;margin:6px 0;padding-bottom:6px;border-bottom:1px dashed var(--line);align-items:center}
@@ -184,6 +190,7 @@ ol.steps li{margin:4px 0}
       <span class="badge bad soft" id="calBadge"></span>
       <span class="badge clip" id="clipBadge"></span>
       <span class="spacer"></span>
+      <button class="iconbtn hidden" id="tvBtn" title="Stuur naar TV / Send to TV">📺</button>
       <button class="iconbtn" id="panelBtn" title="Instellingen tonen/verbergen">⚙︎</button>
       <button class="iconbtn" id="fsBtn" title="Volledig scherm (F)">⛶</button>
     </div>
@@ -199,6 +206,14 @@ ol.steps li{margin:4px 0}
     <div class="graphwrap" id="graphWrap"><canvas id="graph"></canvas></div>
     <div class="tiles" id="tiles"></div>
     <div id="waiting" class="hidden"></div>
+    <div id="tvPair" class="hidden">
+      <div class="tvp-in">
+        <div class="tvp-title">dB-meter</div>
+        <div class="tvp-txt">Tik op je telefoon of laptop in de dB-meter op <b>📺 Stuur naar TV</b> en vul deze code in:<br><span class="tvp-en">On your phone or laptop, tap <b>📺 Send to TV</b> in the dB meter and enter this code:</span></div>
+        <div class="tvp-code" id="tvCodeShow">····</div>
+        <div class="tvp-msg" id="tvPairMsg"></div>
+      </div>
+    </div>
   </main>
 
   <aside id="panel">
@@ -323,7 +338,7 @@ ol.steps li{margin:4px 0}
     <div id="relayBox" class="hidden">
       <p class="note">Iedereen met deze link volgt de live meting en de gemiddelden op eender welk toestel: gsm, tablet of pc in de back-office. <b>Elke meting krijgt een nieuwe, unieke link</b>, en die werkt alleen zolang de meting loopt. Het display toont de instellingen van tab “Display 2”.</p>
       <code class="link" id="relayLink"></code>
-      <div class="row" id="relayBtns"><button class="btn sm" id="relayMail">📧 E-mail</button><button class="btn sm" id="relayCopy">Kopieer link</button><button class="btn sm hidden" id="relayShare">Delen…</button><button class="btn sm" id="relayQrBtn">QR-code</button></div>
+      <div class="row" id="relayBtns"><button class="btn sm" id="relayMail">📧 E-mail</button><button class="btn sm" id="relayCopy">Kopieer link</button><button class="btn sm hidden" id="relayShare">Delen…</button><button class="btn sm" id="relayQrBtn">QR-code</button><button class="btn sm" id="relayTv">📺 Stuur naar TV</button></div>
       <div id="relayQr" class="hidden" style="background:#fff;padding:10px;border-radius:10px;width:max-content;margin:6px 0;line-height:0"></div>
       <div class="note" id="relayStatus"></div>
     </div>
@@ -412,6 +427,15 @@ ol.steps li{margin:4px 0}
   </div>
 </dialog>
 
+<dialog id="tvDlg">
+  <h2>📺 Stuur naar TV</h2>
+  <p class="note">Open op de TV (of een stick/tablet aan de TV) eenmalig het TV-adres hieronder. Er verschijnt een code van 4 tekens: vul die hier in.</p>
+  <code class="link" id="tvUrl"></code>
+  <div class="row" style="margin-top:12px"><input type="text" id="tvCode" maxlength="4" placeholder="CODE" autocomplete="off" autocapitalize="characters" style="font-family:var(--num);font-size:28px;letter-spacing:.3em;text-transform:uppercase;width:160px;text-align:center"><button class="btn pri" id="tvSend">Stuur</button></div>
+  <div class="note" id="tvMsg" style="min-height:20px"></div>
+  <div class="dlgfoot"><button class="btn" id="tvClose">Sluiten</button></div>
+</dialog>
+
 <div id="report" class="hidden">
   <div class="rp-toolbar">
     <b>Verslag</b><span class="spacer"></span>
@@ -431,7 +455,8 @@ ol.steps li{margin:4px 0}
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const params = new URLSearchParams(location.search);
-const IS_DISPLAY = params.has('display');
+const IS_TV = params.has('tv');
+const IS_DISPLAY = params.has('display') || IS_TV;
 const ROOM = (params.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 if (location.protocol === 'http:' && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
   location.replace('https://' + location.host + location.pathname + location.search);
@@ -828,6 +853,26 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 window.addEventListener('resize', () => { if (lastP) render(lastP, lastView); });
 
 let lastP = null, lastView = null;
+/* ---------- send to TV (pairing code) ---------- */
+const TV_URL = () => location.origin + location.pathname.replace(/index\.html$/, '') + 'tv/';
+function openTvDialog(room) {
+  const d = $('#tvDlg'); $('#tvUrl').textContent = TV_URL(); $('#tvMsg').textContent = ''; $('#tvCode').value = '';
+  d.dataset.room = room; d.showModal(); setTimeout(() => $('#tvCode').focus(), 50);
+}
+$('#tvClose').onclick = () => $('#tvDlg').close();
+$('#tvCode').addEventListener('keydown', e => { if (e.key === 'Enter') $('#tvSend').click(); });
+$('#tvSend').onclick = async () => {
+  const code = $('#tvCode').value.toUpperCase().replace(/[^A-Z0-9]/g, ''), room = $('#tvDlg').dataset.room, msg = $('#tvMsg');
+  if (code.length !== 4) { msg.textContent = 'Vul de 4 tekens in die op de TV staan.'; return; }
+  if (!room) { msg.textContent = 'Er loopt geen gedeelde meting.'; return; }
+  msg.textContent = 'Versturen…';
+  try {
+    const r = await fetch('relay.php?tv=' + code + '&pair=' + room, { method:'POST' });
+    if (r.ok) { msg.innerHTML = '✅ Verstuurd. De TV toont de meting binnen enkele seconden.'; setTimeout(() => $('#tvDlg').close(), 1800); }
+    else if (r.status === 404) msg.textContent = 'Deze code is onbekend. Staat het TV-adres open op de TV, en klopt de code?';
+    else msg.textContent = 'Fout van de server (' + r.status + ').';
+  } catch { msg.textContent = 'Geen verbinding met de server.'; }
+};
 const bc = 'BroadcastChannel' in window ? new BroadcastChannel('dbmeter-v1') : null;
 
 /* ============================================================
@@ -836,34 +881,67 @@ const bc = 'BroadcastChannel' in window ? new BroadcastChannel('dbmeter-v1') : n
 if (IS_DISPLAY) {
   document.body.classList.add('display');
   $('#panelBtn').classList.add('hidden');
-  document.title = 'dB-display';
-  let lastMsg = 0, lastTs = 0;
+  document.title = IS_TV ? 'dB-meter TV' : 'dB-display';
+  let lastMsg = 0, lastTs = 0, curRoom = ROOM, remote = 'wait', badSince = 0;
   const show = p => { lastP = p; lastView = merge(defView(), p.view); render(p, lastView); };
   render({}, S.views.ext); lastView = S.views.ext;
-  let remote = 'wait';
-  if (ROOM) {
-    let busy = false;
-    setInterval(async () => {
-      if (busy) return; busy = true;
+  if (curRoom && !IS_TV) { $('#tvBtn').classList.remove('hidden'); $('#tvBtn').onclick = () => openTvDialog(curRoom); }
+  // live data from the server (deellink / TV)
+  let busy = false;
+  setInterval(async () => {
+    if (!curRoom || busy) return; busy = true;
+    try {
+      const r = await fetch('relay.php?room=' + curRoom + '&_=' + Date.now(), { cache:'no-store' });
+      if (r.status === 404) remote = 'unknown';
+      else if (r.ok) {
+        const p = await r.json();
+        if (p.status) remote = p.status;
+        else { remote = 'live'; if (p.ts !== lastTs) { lastTs = p.ts; lastMsg = Date.now(); show(p); } }
+      } else remote = 'error';
+    } catch { remote = 'offline'; }
+    busy = false;
+  }, 1000);
+  if (!curRoom && !IS_TV && bc) bc.onmessage = e => { if (e.data?.type === 'state') { lastMsg = Date.now(); show(e.data.p); } };
+  // TV mode: show a pairing code until a phone sends a measurement
+  if (IS_TV) {
+    const A = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+    let code = ''; try { code = localStorage.getItem('dbm-tv-code') || ''; } catch {}
+    if (!/^[A-Z0-9]{4}$/.test(code)) { code = ''; for (const x of crypto.getRandomValues(new Uint8Array(4))) code += A[x % A.length]; try { localStorage.setItem('dbm-tv-code', code); } catch {} }
+    $('#tvCodeShow').textContent = code;
+    const pairScreen = (on, msg = '') => { $('#tvPair').classList.toggle('hidden', !on); $('#tvPairMsg').textContent = msg; };
+    pairScreen(true, 'Verbinden… / Connecting…');
+    let tvBusy = false;
+    const tvTick = async () => {
+      if (tvBusy) return; tvBusy = true;
       try {
-        const r = await fetch('relay.php?room=' + ROOM + '&_=' + Date.now(), { cache:'no-store' });
-        if (r.status === 404) remote = 'unknown';
-        else if (r.ok) {
-          const p = await r.json();
-          if (p.status) remote = p.status;
-          else { remote = 'live'; if (p.ts !== lastTs) { lastTs = p.ts; lastMsg = Date.now(); show(p); } }
-        } else remote = 'error';
-      } catch { remote = 'offline'; }
-      busy = false;
+        const r = await fetch('relay.php?tv=' + code + '&_=' + Date.now(), { method:'POST' });
+        if (r.ok) {
+          const j = await r.json();
+          if (j.room && j.room !== curRoom) { curRoom = j.room; remote = 'wait'; lastMsg = 0; lastTs = 0; badSince = 0; pairScreen(false); }
+          else if (!curRoom) pairScreen(true, 'Klaar om te ontvangen / Ready');
+        } else pairScreen(!curRoom || !$('#tvPair').classList.contains('hidden'), 'Server niet bereikbaar / Server unreachable (' + r.status + ')');
+      } catch { if (!curRoom) pairScreen(true, 'Geen verbinding / No connection…'); }
+      tvBusy = false;
+    };
+    tvTick(); setInterval(tvTick, 2000);
+    // measurement ended or gone → back to the code screen
+    setInterval(() => {
+      if (!curRoom) return;
+      const bad = remote === 'ended' || remote === 'unknown' || (remote === 'inactive');
+      if (!bad) { badSince = 0; return; }
+      if (!badSince) badSince = Date.now();
+      if (Date.now() - badSince > (remote === 'ended' ? 8000 : 30000)) {
+        fetch('relay.php?tv=' + code + '&clear=1', { method:'POST' }).catch(() => {});
+        curRoom = ''; lastP = null; render({}, lastView); pairScreen(true, remote === 'ended' ? 'Vorige meting beëindigd / Previous measurement ended' : '');
+      }
     }, 1000);
-  } else if (bc) {
-    bc.onmessage = e => { if (e.data?.type === 'state') { lastMsg = Date.now(); show(e.data.p); } };
   }
   setInterval(() => {
     const tt = T[lastView?.lang] || T.nl;
-    const stale = Date.now() - lastMsg > (ROOM ? 6000 : 2500) || (ROOM && remote !== 'live');
+    const live = curRoom || !IS_TV;
+    const stale = live && (Date.now() - lastMsg > (curRoom ? 6000 : 2500) || (curRoom && remote !== 'live'));
     const w = $('#waiting'); w.classList.toggle('hidden', !stale);
-    w.textContent = !ROOM ? tt.waiting : remote === 'ended' ? tt.ended : remote === 'unknown' ? tt.unknown : remote === 'inactive' ? tt.inactive : remote === 'offline' || remote === 'error' ? tt.offline : tt.waiting;
+    w.textContent = !curRoom ? tt.waiting : remote === 'ended' ? tt.ended : remote === 'unknown' ? tt.unknown : remote === 'inactive' ? tt.inactive : remote === 'offline' || remote === 'error' ? tt.offline : tt.waiting;
     if (stale && lastP) { render({ ...lastP, v:null, limit:{ state:'off' } }, lastView); }
   }, 1000);
   keepAwake(); wake();
@@ -1190,6 +1268,7 @@ if (IS_DISPLAY) {
       const q = window.qrcode(0, 'M'); q.addData(shareLink()); q.make(); $('#relayQr').innerHTML = q.createSvgTag({ cellSize:4, margin:2 });
     } catch { $('#relayQr').textContent = 'QR-code kon niet geladen worden.'; }
   }
+  $('#relayTv').onclick = () => { if (!S.relay.live) { $('#relayStatus').textContent = 'Wacht tot de link actief is (● live) en probeer opnieuw.'; return; } openTvDialog(S.relay.room); };
   $('#relayQrBtn').onclick = () => { const el = $('#relayQr'); el.classList.toggle('hidden'); if (!el.classList.contains('hidden')) drawQr(); };
   let relayBusy = false;
   function relaySend(p) {
