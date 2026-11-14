@@ -168,7 +168,9 @@ class WebDownloadsTest extends TestCase
         auth('web')->logout();
         $page = $this->get(route('site.downloads', ['lang' => 'en']))->assertOk()->assertSee('Tools')->assertSee('dB meter – live sound level')->getContent();
         $this->assertLessThan(strpos($page, 'General terms and conditions'), strpos($page, '>Tools<'));
-        $card = substr($page, strpos($page, 'dB meter – live sound level') - 200, 900);
+        $at = strpos($page, 'dB meter – live sound level');
+        $from = strrpos(substr($page, 0, $at), '<li>');
+        $card = substr($page, $from, strpos($page, '</li>', $at) - $from); // just this card
         $this->assertStringContainsString('>Open</a>', $card);
         $this->assertStringContainsString('target="_blank"', $card);
         $this->assertStringNotContainsString(' KB', $card);
