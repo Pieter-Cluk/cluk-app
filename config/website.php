@@ -37,7 +37,7 @@ return [
     ],
 
     // Downloads page (footer): the groups, in this order. Terms and conditions are always shown (rental.terms_files).
-    'download_categories' => ['terms', 'pricelists', 'technical', 'forms', 'brochures', 'other'],
+    'download_categories' => ['tools', 'terms', 'pricelists', 'technical', 'forms', 'brochures', 'other'],
 
     // A request sent from the website: max lines and quantity per line.
     'max_lines' => 200,

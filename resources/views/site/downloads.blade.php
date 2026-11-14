@@ -5,18 +5,22 @@
 <main class="newsp dlp">
   <header class="newsp-head gut"><h1>{{ __('site.downloads.title') }}</h1><p class="lab">{{ __('site.downloads.intro') }}</p></header>
   <div class="dl-wrap gut">
-    <section class="dl-group" id="terms">
-      <h2>{{ __('site.downloads.cats.terms') }}</h2>
-      <ul class="dl-list">
-        @foreach ($terms as $t)
-          <li><span class="dl-type">PDF</span><span class="dl-main"><b>{{ \App\Services\Website\SiteSettings::termsText($t['locale']) }}</b>@if ($tx = \App\Services\Website\SiteSettings::termsText($t['locale'], 'description'))<span class="dl-desc">{{ $tx }}</span>@endif<small>{{ __('site.downloads.langs.'.$t['locale']) }} · {{ max(1, (int) round($t['size'] / 1024)) }} KB</small></span>
-            <a class="dl-btn" href="{{ $t['url'] }}" target="_blank" rel="noopener">{{ __('site.downloads.open') }}</a></li>
-        @endforeach
-        @foreach ($groups['terms'] as $d)@include('site._download', ['d' => $d])@endforeach
-      </ul>
-    </section>
+    {{-- In the order of website.download_categories; the terms group is always there (the general terms in every language). --}}
     @foreach ($groups as $cat => $docs)
-      @continue($cat === 'terms' || $docs->isEmpty())
+      @if ($cat === 'terms')
+        <section class="dl-group" id="terms">
+          <h2>{{ __('site.downloads.cats.terms') }}</h2>
+          <ul class="dl-list">
+            @foreach ($terms as $t)
+              <li><span class="dl-type">PDF</span><span class="dl-main"><b>{{ \App\Services\Website\SiteSettings::termsText($t['locale']) }}</b>@if ($tx = \App\Services\Website\SiteSettings::termsText($t['locale'], 'description'))<span class="dl-desc">{{ $tx }}</span>@endif<small>{{ __('site.downloads.langs.'.$t['locale']) }} · {{ max(1, (int) round($t['size'] / 1024)) }} KB</small></span>
+                <a class="dl-btn" href="{{ $t['url'] }}" target="_blank" rel="noopener">{{ __('site.downloads.open') }}</a></li>
+            @endforeach
+            @foreach ($docs as $d)@include('site._download', ['d' => $d])@endforeach
+          </ul>
+        </section>
+        @continue
+      @endif
+      @continue($docs->isEmpty())
       <section class="dl-group" id="{{ $cat }}">
         <h2>{{ __('site.downloads.cats.'.$cat) }}</h2>
         <ul class="dl-list">@foreach ($docs as $d)@include('site._download', ['d' => $d])@endforeach</ul>

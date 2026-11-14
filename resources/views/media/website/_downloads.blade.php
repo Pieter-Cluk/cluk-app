@@ -38,7 +38,7 @@
             <div class="ws-dl-ext" aria-hidden="true">{{ $d->type() }}</div>
             <div class="ws-info">
                 <b>{{ $i + 1 }}. {{ $d->label(null, 'title') }}</b> <span class="muted small">{{ __('site.downloads.cats.'.$d->category) }} · {{ $d->locale ? __('site.downloads.langs.'.$d->locale) : __('site.downloads.any_language') }}</span>
-                <small class="muted">{{ $d->original_name }} · {{ $d->sizeLabel() }} · {{ __('website.downloads.access.'.$d->access) }}@unless ($d->active) · {{ __('website.slide.off') }}@endunless</small>
+                <small class="muted">@if ($d->isLink()){{ $d->url }}@else{{ $d->original_name }} · {{ $d->sizeLabel() }}@endif · {{ __('website.downloads.access.'.$d->access) }}@unless ($d->active) · {{ __('website.slide.off') }}@endunless</small>
                 <div class="small"><a href="{{ route('website.downloads.log', ['doc' => $d->id]) }}">{{ trans_choice('website.downloads.count', $d->downloads, ['n' => $d->downloads]) }}</a> · <a href="{{ route('site.downloads.file', $d->id) }}" target="_blank" rel="noopener">{{ __('website.downloads.link') }}</a></div>
                 @if ($canEdit)
                     <div class="ws-actions">
@@ -50,8 +50,8 @@
                         <summary class="linkbtn">{{ __('website.change') }}</summary>
                         <form method="post" action="{{ route('website.downloads.update', $d) }}" enctype="multipart/form-data" class="stack-sm mt">@csrf
                             @include('media.website._download-fields', ['d' => $d])
+                            @include('media.website._download-kind', ['d' => $d])
                             <div class="form-grid">
-                                <label class="field"><span>{{ __('website.downloads.new_file') }}</span><input type="file" name="file"><small>{{ __('website.downloads.same_link') }}</small></label>
                                 <label class="field"><span>{{ __('website.downloads.place') }}</span><input type="number" name="place" min="1" max="{{ $docs->count() }}" value="{{ $i + 1 }}"></label>
                             </div>
                             <input type="hidden" name="active" value="0"><label class="check"><input type="checkbox" name="active" value="1" @checked($d->active)> {{ __('website.downloads.active') }}</label>
@@ -65,10 +65,10 @@
         <p class="muted mt">{{ __('website.downloads.empty') }}</p>
     @endforelse
     @if ($canEdit)
-        <details class="ws-add" @if ($errors->hasAny(['file', 'title.en', 'access'])) open @endif>
+        <details class="ws-add" @if ($errors->hasAny(['file', 'url', 'title.en', 'access'])) open @endif>
             <summary class="primary">+ {{ __('website.downloads.add') }}</summary>
             <form method="post" action="{{ route('website.downloads.store') }}" enctype="multipart/form-data" class="stack-sm mt">@csrf
-                <label class="field"><span>{{ __('website.downloads.file') }}</span><input type="file" name="file" required><small>{{ __('website.downloads.file_hint') }}</small></label>
+                @include('media.website._download-kind', ['d' => null])
                 @include('media.website._download-fields', ['d' => null])
                 <div><button class="primary" type="submit">{{ __('website.add_go') }}</button></div>
             </form>

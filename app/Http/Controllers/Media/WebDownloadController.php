@@ -26,13 +26,11 @@ class WebDownloadController extends Controller
     {
         $this->can($request);
         $d = $this->validated($request, true);
-        $file = $request->file('file');
-        $doc = Download::create([
-            'path' => $file->storeAs('web-downloads', Str::random(32).'.'.strtolower($file->getClientOriginalExtension()), 'local'),
-            'original_name' => $this->fileName($file->getClientOriginalName()), 'mime' => $file->getMimeType(), 'size' => $file->getSize(),
+        $stored = $d['kind'] === 'link' ? ['url' => $d['url']] : $this->store_($request->file('file'));
+        $doc = Download::create($stored + [
             'sort' => (int) Download::max('sort') + 1, 'created_by_id' => $request->user()->id,
         ] + $this->fields($request, $d));
-        AuditLog::record('website.download_added', $doc, ['title' => $doc->label('en', 'title'), 'access' => $doc->access], $request->user());
+        AuditLog::record('website.download_added', $doc, array_filter(['title' => $doc->label('en', 'title'), 'access' => $doc->access, 'url' => $doc->url]), $request->user());
 
         return $this->back(__('website.downloads.flash.added'));
     }
@@ -42,16 +40,26 @@ class WebDownloadController extends Controller
         $this->can($request);
         $d = $this->validated($request, false);
         $values = $this->fields($request, $d);
-        if ($file = $request->file('file')) {
-            Storage::disk('local')->delete($download->path);
-            $values += ['path' => $file->storeAs('web-downloads', Str::random(32).'.'.strtolower($file->getClientOriginalExtension()), 'local'),
-                'original_name' => $this->fileName($file->getClientOriginalName()), 'mime' => $file->getMimeType(), 'size' => $file->getSize()];
+        $file = $request->file('file');
+        if ($d['kind'] === 'link') {
+            // Now a link: the stored file (if any) goes.
+            if ($download->path) {
+                Storage::disk('local')->delete($download->path);
+            }
+            $values += ['url' => $d['url'], 'path' => null, 'original_name' => null, 'mime' => null, 'size' => 0];
+        } elseif ($file) {
+            if ($download->path) {
+                Storage::disk('local')->delete($download->path);
+            }
+            $values += $this->store_($file) + ['url' => null];
+        } elseif ($download->isLink()) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['file' => __('website.downloads.file_needed')]);
         }
         $download->update($values);
         if ($request->filled('place')) {
             $this->placeAt($download, (int) $request->input('place'));
         }
-        AuditLog::record('website.download_changed', $download, ['title' => $download->label('en', 'title'), 'access' => $download->access, 'active' => $download->active, 'new_file' => (bool) $file], $request->user());
+        AuditLog::record('website.download_changed', $download, ['title' => $download->label('en', 'title'), 'access' => $download->access, 'active' => $download->active, 'new_file' => (bool) $file, 'url' => $download->url], $request->user());
 
         return $this->back(__('website.flash.saved'));
     }
@@ -133,10 +141,21 @@ class WebDownloadController extends Controller
         ]);
     }
 
+    /** @return array{path: string, original_name: string, mime: ?string, size: int} */
+    private function store_(\Illuminate\Http\UploadedFile $file): array
+    {
+        return ['path' => $file->storeAs('web-downloads', Str::random(32).'.'.strtolower($file->getClientOriginalExtension()), 'local'),
+            'original_name' => $this->fileName($file->getClientOriginalName()), 'mime' => $file->getMimeType(), 'size' => $file->getSize()];
+    }
+
     private function validated(Request $request, bool $new): array
     {
-        return $request->validate([
-            'file' => [$new ? 'required' : 'nullable', 'file', 'mimes:'.self::MIMES, 'max:'.self::MAX_KB],
+        $link = $request->input('kind') === 'link';
+
+        return ['kind' => $link ? 'link' : 'file'] + $request->validate([
+            'kind' => ['nullable', Rule::in(['file', 'link'])],
+            'url' => [$link ? 'required' : 'nullable', 'url:https', 'max:500'],
+            'file' => [$new && ! $link ? 'required' : 'nullable', 'file', 'mimes:'.self::MIMES, 'max:'.self::MAX_KB],
             'title' => ['required', 'array'], 'title.en' => ['required', 'string', 'max:160'], 'title.*' => ['nullable', 'string', 'max:160'],
             'description' => ['array'], 'description.*' => ['nullable', 'string', 'max:400'],
             'access' => ['required', Rule::in(Download::ACCESS)],

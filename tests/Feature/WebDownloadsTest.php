@@ -149,4 +149,52 @@ class WebDownloadsTest extends TestCase
         $other = User::factory()->create(['role_id' => Role::where('slug', 'sales')->value('id'), 'locale' => 'en']);
         $this->actingAs($other, 'web')->post(route('website.downloads.terms', 'fr'), ['title' => ['en' => 'x']])->assertForbidden();
     }
+    public function test_a_tool_link_under_tools_redirects_and_counts(): void
+    {
+        $url = 'https://cluk.live/tools/dbmeter/';
+        // Managed in the platform: a link needs no file, and only https.
+        $this->actingAs($this->editor, 'web')->post(route('website.downloads.store'), ['kind' => 'link', 'url' => 'http://cluk.live/tools/dbmeter/',
+            'title' => ['en' => 'dB meter – live sound level'], 'access' => 'open', 'category' => 'tools'])->assertSessionHasErrors('url');
+        $this->actingAs($this->editor, 'web')->post(route('website.downloads.store'), ['kind' => 'link', 'url' => $url,
+            'title' => ['en' => 'dB meter – live sound level', 'nl' => 'dB-meter – live geluidsniveau'], 'description' => ['en' => 'Measure, display and share the sound level live.'],
+            'access' => 'open', 'category' => 'tools'])->assertSessionHasNoErrors();
+        $d = Download::where('category', 'tools')->firstOrFail();
+        $this->assertTrue($d->isLink());
+        $this->assertSame(['TOOL', null, ''], [$d->type(), $d->path, $d->sizeLabel()]);
+        $this->assertSame($url, AuditLog::where('action', 'website.download_added')->latest('id')->first()->data['url']);
+        $this->actingAs($this->editor, 'web')->get(route('website.index', ['tab' => 'downloads']))->assertOk()->assertSee($url);
+
+        // On the website: in Tools (the first group), "Open" in a new tab, no file size.
+        auth('web')->logout();
+        $page = $this->get(route('site.downloads', ['lang' => 'en']))->assertOk()->assertSee('Tools')->assertSee('dB meter – live sound level')->getContent();
+        $this->assertLessThan(strpos($page, 'General terms and conditions'), strpos($page, '>Tools<'));
+        $at = strpos($page, 'dB meter – live sound level');
+        $from = strrpos(substr($page, 0, $at), '<li>');
+        $card = substr($page, $from, strpos($page, '</li>', $at) - $from); // just this card
+        $this->assertStringContainsString('>Open</a>', $card);
+        $this->assertStringContainsString('target="_blank"', $card);
+        $this->assertStringNotContainsString(' KB', $card);
+
+        // Opening it: off to the tool, counted.
+        $this->get(route('site.downloads.file', $d->id))->assertRedirect($url);
+        $this->assertSame(1, $d->fresh()->downloads);
+        $this->assertSame(1, DownloadLog::where('download_id', $d->id)->count());
+
+        // Asking who you are first works for links too.
+        $d->update(['access' => 'email']);
+        $this->flushSession();
+        $this->get(route('site.downloads.file', $d->id))->assertOk()->assertSee('Tell us who you are')->assertSee('>Open<', false);
+        $this->post(route('site.downloads.ask', $d->id), ['name' => 'Jan Peeters', 'email' => 'jan@demo.example'])->assertRedirect(route('site.downloads.file', $d->id));
+        $this->get(route('site.downloads.file', $d->id))->assertRedirect($url);
+        $this->assertSame(2, $d->fresh()->downloads);
+
+        // Turning a file into a link, and a link back into a file needs a file.
+        $f = $this->upload('open', 'Old tool manual');
+        $path = $f->path;
+        $this->actingAs($this->editor, 'web')->post(route('website.downloads.update', $f), ['kind' => 'link', 'url' => 'https://cluk.live/tools/other/', 'title' => ['en' => 'Other tool'], 'access' => 'open', 'category' => 'tools', 'active' => 1])->assertSessionHasNoErrors();
+        $this->assertSame(['https://cluk.live/tools/other/', null], [$f->fresh()->url, $f->fresh()->path]);
+        Storage::disk('local')->assertMissing($path);
+        $this->actingAs($this->editor, 'web')->post(route('website.downloads.update', $d), ['kind' => 'file', 'title' => ['en' => 'dB meter'], 'access' => 'open', 'category' => 'tools', 'active' => 1])->assertSessionHasErrors('file');
+        $this->assertSame($url, $d->fresh()->url);
+    }
 }

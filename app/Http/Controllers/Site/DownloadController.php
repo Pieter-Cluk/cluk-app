@@ -44,7 +44,12 @@ class DownloadController extends SiteController
 
             return view('site.downloads-ask', ['d' => $d]);
         }
-        abort_unless(Storage::disk('local')->exists($d->path), 404);
+        if ($d->isLink()) {
+            Downloads::log($d, $request); // a tool: counted and in the statistics like a file, then off to it
+
+            return redirect()->away($d->url);
+        }
+        abort_unless($d->path && Storage::disk('local')->exists($d->path), 404);
         Downloads::log($d, $request); // counts it, links it to who it is, and records it in the visitor statistics
         $name = Str::ascii($d->original_name ?: basename($d->path));
         $inline = in_array($d->mime, ['application/pdf', 'image/jpeg', 'image/png'], true);
