@@ -118,7 +118,12 @@ dialog ol{padding-left:20px;line-height:1.5;font-size:14px}
 .prog>div{height:100%;width:0;background:var(--acc);transition:width .1s}
 .result{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:14px;line-height:1.5}
 .result:empty{display:none}
-.livecal{font-family:var(--num);font-size:34px;font-weight:700;text-align:center;margin:8px 0}
+.livecal{font-family:var(--num);font-size:34px;font-weight:700;text-align:center;margin:2px 0}
+.livebox{text-align:center;margin-top:10px}
+.stab{font-weight:700;font-size:14px;min-height:20px}
+.stab.ok{color:var(--acc)}.stab.bad{color:var(--warn)}
+ol.steps{padding-left:22px;line-height:1.7;font-size:14px}
+ol.steps li{margin:4px 0}
 .dlgfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
 .restore{background:color-mix(in srgb,var(--warn) 14%,var(--bg));border:1px solid var(--warn);border-radius:12px;padding:10px 12px;font-size:13px;margin:6px 0 12px;line-height:1.45}
 .oprow{display:grid;grid-template-columns:1fr 1fr 28px;gap:4px;margin:6px 0;padding-bottom:6px;border-bottom:1px dashed var(--line);align-items:center}
@@ -286,7 +291,8 @@ dialog ol{padding-left:20px;line-height:1.5;font-size:14px}
 
     <h2>Evenement &amp; verslag (PDF)</h2>
     <div class="col"><span>Evenementprofiel</span>
-      <div class="row" style="margin:0"><select id="profSel" style="flex:1;width:auto"></select><button class="btn sm" id="profSave" title="Bewaar evenementgegevens, meetopstelling, limiet en logo onder een naam">💾 Bewaar</button><button class="btn sm" id="profDel" title="Profiel verwijderen">🗑</button></div>
+      <div class="row" style="margin:0"><select id="profSel" style="flex:1;width:auto"></select><button class="btn sm" id="profDel" title="Profiel verwijderen">🗑</button></div>
+      <div class="row" style="margin:4px 0 0"><input type="text" id="profName" placeholder="Naam profiel (bv. Factory – Friday Night)" style="flex:1;width:auto"><button class="btn sm" id="profSave" title="Bewaar evenementgegevens, meetopstelling, limiet en logo onder deze naam">💾 Bewaar</button></div>
       <span class="note">Een profiel bewaart de evenementgegevens, de meetopstelling, de <b>limiet</b> en het logo. Kies het profiel van het evenement en alles staat juist.</span>
     </div>
     <div class="col"><span>Evenement</span><input type="text" id="rEvent" placeholder="naam van het evenement"></div>
@@ -341,56 +347,61 @@ dialog ol{padding-left:20px;line-height:1.5;font-size:14px}
   <h2>Kalibratie</h2>
   <div class="note" id="calDlgMic"></div>
   <div class="seg" id="calTabs" style="margin:12px 0">
-    <button data-m="cal" class="on">Kalibrator</button><button data-m="ref">Referentiemeter</button><button data-m="man">Handmatig</button><button data-m="corr">Correctiefactor</button>
+    <button data-m="cal" class="on">Kalibrator</button><button data-m="ref">Toon + handmeter</button><button data-m="man">Handmatig</button><button data-m="corr">Correctiefactor</button>
   </div>
   <section data-m="cal">
-    <ol>
-      <li>Plaats de akoestische kalibrator (1 kHz) op de microfoon en zet hem aan.</li>
-      <li>Kies het niveau van je kalibrator.</li>
-      <li>Klik op <b>Start meting</b> en raak niets aan gedurende 5 seconden.</li>
+    <p class="note"><b>Aanbevolen.</b> Het meest nauwkeurig, en je hebt geen andere meter nodig. Een kalibrator speelt een vaste toon op een bekend niveau; dat getal staat op het toestel (meestal 94 dB).</p>
+    <ol class="steps">
+      <li>Schuif de kalibrator over de microfoon en zet hem aan.</li>
+      <li>Welk getal staat op je kalibrator?
+        <select id="calTarget" style="width:auto;margin-left:6px"><option value="94">94 dB</option><option value="114">114 dB</option><option value="custom">ander getal…</option></select>
+        <input type="number" id="calTargetCustom" class="hidden" step="0.1" value="94" style="width:90px">
+      </li>
+      <li>Wacht tot hieronder <b>✓ Stabiel</b> staat en klik op <b>Kalibreer</b>.</li>
     </ol>
-    <div class="row"><span class="lbl">Kalibratorniveau</span>
-      <select id="calTarget" style="width:auto"><option value="94">94 dB</option><option value="114">114 dB</option><option value="custom">ander…</option></select>
-      <input type="number" id="calTargetCustom" class="hidden" step="0.1" value="94">
-    </div>
-    <button class="btn pri" id="calRun">Start meting (5 s)</button>
+    <button class="btn pri" id="calRun">Kalibreer (5 s)</button>
   </section>
   <section data-m="ref" class="hidden">
-    <ol>
-      <li>Zet een geijkte referentie-geluidsmeter naast deze microfoon (zelfde plaats en richting).</li>
-      <li>Zorg voor een constant, luid geluid (≥ 70 dB). Gebruik eventueel de roze ruis hieronder via de speakers.</li>
-      <li>Klik op <b>Start meting</b> en lees tegelijk de L<sub>eq</sub> of de gemiddelde waarde af op de referentiemeter.</li>
-      <li>Vul die waarde in en sla op.</li>
+    <p class="note">Je speelt een toon van 1 kHz en vergelijkt met een handmeter. Bij 1 kHz geven A, C en Z <b>hetzelfde getal</b>: de weging op je handmeter maakt dus niet uit.</p>
+    <ol class="steps">
+      <li>Speel de toon: klik hieronder op <b>▶ 1 kHz-toon</b>, of stuur 1 kHz vanuit je mengtafel. Zet hem zo luid dat je handmeter tussen 80 en 95 dB toont.</li>
+      <li>Houd de handmeter <b>tegen onze microfoon</b> (minder dan 5 cm ertussen, zelfde richting). Bij een toon maakt elke centimeter verschil.</li>
+      <li>Wacht tot het getal op je handmeter stil staat en hieronder <b>✓ Stabiel</b> verschijnt.</li>
+      <li>Welk getal toont je handmeter?
+        <input type="number" id="refVal" step="0.1" placeholder="bv. 88.5" style="width:100px;margin-left:6px"> dB
+        <select id="refW" class="hidden"><option value="T" selected>1 kHz</option><option>A</option><option>C</option><option>Z</option></select>
+      </li>
     </ol>
-    <div class="row">
-      <span class="lbl">Weging</span><select id="refW" style="width:auto"><option>A</option><option>C</option><option>Z</option></select>
-      <button class="btn pri" id="refRun">Start meting (10 s)</button>
-    </div>
-    <div class="row"><span class="lbl">Waarde op referentiemeter</span><input type="number" id="refVal" step="0.1" placeholder="bv. 82.4"><span class="lbl">dB</span></div>
+    <button class="btn pri" id="refRun">Kalibreer (5 s)</button>
   </section>
   <section data-m="man" class="hidden">
-    <p class="note">De offset is het getal dat bij het ruwe microfoonsignaal (dBFS) wordt opgeteld om dB SPL te krijgen. Pas aan tot de waarde overeenkomt met een referentie.</p>
+    <p class="note">Ken je het kalibratiegetal (offset) van deze microfoon en geluidskaart al, bv. uit een vorige kalibratie? Vul het hier in. Het grote getal hieronder toont meteen het effect.</p>
     <div class="row"><span class="lbl">Offset</span><input type="number" id="manOff" step="0.1"><span class="lbl">dB</span>
       <button class="btn sm" data-man="-1">−1</button><button class="btn sm" data-man="-0.1">−0.1</button><button class="btn sm" data-man="0.1">+0.1</button><button class="btn sm" data-man="1">+1</button>
     </div>
   </section>
   <section data-m="corr" class="hidden">
-    <p class="note">Bepaalt het verschil tussen de vaste (opgehangen) meetmicrofoon en de luidste plek waar publiek staat. Kalibreer de microfoon eerst.</p>
-    <ol>
-      <li>Hang de microfoon op zijn definitieve plaats.</li>
-      <li>Stuur roze ruis naar de PA (kies hieronder de uitgang, bv. je Scarlett naar de mengtafel) en zet het niveau op minstens 85 dB(A).</li>
-      <li>Ga met een referentiemeter (A-weging, L<sub>eq</sub>) naar de luidste publieksplek, op oorhoogte.</li>
-      <li>Klik op <b>Start meting</b> en lees tegelijk de L<sub>Aeq</sub> over 10 seconden af op de referentiemeter.</li>
+    <p class="note">Hoeveel luider (of stiller) is het op de luidste publieksplek dan bij onze microfoon? Doe dit <b>na</b> de kalibratie, met de microfoon op zijn vaste plek.</p>
+    <ol class="steps">
+      <li>Speel <b>▶ Roze ruis</b> (hieronder) via de PA, op minstens 85 dB. Gebruik hier géén toon: een toon klinkt op elke plek in de zaal anders.</li>
+      <li>Zet je handmeter op <b>A</b> en op <b>LAeq</b> (gemiddelde), en ga naar de luidste publieksplek op oorhoogte.</li>
+      <li>Klik op <b>Meet (10 s)</b> en start tegelijk het gemiddelde op je handmeter.</li>
+      <li>Welk getal toont je handmeter na 10 seconden?
+        <input type="number" id="corrVal" step="0.1" placeholder="bv. 97.2" style="width:100px;margin-left:6px"> dB(A)
+      </li>
     </ol>
-    <div class="row"><button class="btn pri" id="corrRun">Start meting (10 s)</button></div>
-    <div class="row"><span class="lbl">Referentiemeter op publieksplek</span><input type="number" id="corrVal" step="0.1" placeholder="bv. 97.2"><span class="lbl">dB(A)</span></div>
+    <button class="btn pri" id="corrRun">Meet (10 s)</button>
   </section>
   <div id="noiseBox" class="hidden" style="border-top:1px solid var(--line);margin-top:10px;padding-top:8px">
-    <div class="row"><span class="lbl">Uitgang testsignaal</span><select id="noiseOut" style="flex:1;width:auto"><option value="">Standaard uitgang</option></select></div>
-    <div class="row"><button class="btn sm" id="noiseBtn">▶ Roze ruis</button><span class="lbl">Volume</span><input type="range" id="noiseVol" min="0" max="1" step="0.01" value="0.05" style="flex:1"></div>
+    <div class="row"><span class="lbl">Testsignaal naar</span><select id="noiseOut" style="flex:1;width:auto"><option value="">Standaard uitgang</option></select></div>
+    <div class="row"><button class="btn sm" id="toneBtn">▶ 1 kHz-toon</button><button class="btn sm" id="noiseBtn">▶ Roze ruis</button><span class="lbl">Volume</span><input type="range" id="noiseVol" min="0" max="1" step="0.01" value="0.05" style="flex:1"></div>
     <p class="note warn">Begin laag en regel het niveau op met de fader van je mengtafel.</p>
   </div>
-  <div class="livecal" id="calLive">-- dB</div>
+  <div class="livebox">
+    <div class="note" id="calLiveLbl">Live niveau</div>
+    <div class="livecal" id="calLive">-- dB</div>
+    <div class="stab" id="calStab"></div>
+  </div>
   <div class="prog"><div id="calProg"></div></div>
   <div class="result" id="calResult"></div>
   <div class="dlgfoot">
@@ -626,6 +637,7 @@ async function startAudio(deviceId) {
   src = ctx.createMediaStreamSource(stream); src.connect(node);
   if (!M.running) window.onNewMeasurement?.();
   M.warm = 0; M.running = true; window.relayUi?.();
+  try { window.dispatchEvent(new CustomEvent('dbm:started', { detail:{ mic:M.micLabel, calibrated:isCal(), agc:st.autoGainControl === true || st.noiseSuppression === true, sampleRate:M.fs } })); } catch {}
   if (!M.hist.A.length) resetMeasure();
   track.onended = () => { setStatus('Microfoon losgekoppeld.'); stopAudio(); };
   $('#agcWarn').classList.toggle('hidden', !(st.autoGainControl === true || st.noiseSuppression === true));
@@ -634,7 +646,7 @@ async function startAudio(deviceId) {
   updatePanel();
 }
 function stopStream() { try { src && src.disconnect(); } catch {} src = null; if (stream) stream.getTracks().forEach(t => t.stop()); stream = null; }
-function stopAudio() { if (M.running) window.onStopMeasurement?.(); stopStream(); if (demoNodes) { demoNodes.forEach(n => { try { n.stop?.(); n.disconnect(); } catch {} }); demoNodes = null; M.demo = false; } M.running = false; M.live = null; updatePanel(); }
+function stopAudio() { if (M.running) { window.onStopMeasurement?.(); try { window.dispatchEvent(new CustomEvent('dbm:stopped')); } catch {} } stopStream(); if (demoNodes) { demoNodes.forEach(n => { try { n.stop?.(); n.disconnect(); } catch {} }); demoNodes = null; M.demo = false; } M.running = false; M.live = null; updatePanel(); }
 
 function onBlock(d) {
   M.live = d;
@@ -646,8 +658,9 @@ function onBlock(d) {
   for (const w of 'ACZ') { M.mx[w] = Math.max(M.mx[w], d['mx'+w+'F']); M.mn[w] = Math.min(M.mn[w], d['mn'+w+'F']); }
   M.pk.C = Math.max(M.pk.C, d.pkC); M.pk.Z = Math.max(M.pk.Z, d.pkZ);
   if (d.pkZ >= 0.985) M.clipUntil = performance.now() + 1500;
+  (M.ring || (M.ring = [])).push({ t:d.bands ? d.bands[5] / d.n : 0, a:d.sA / d.n, z:d.sZ / d.n }); if (M.ring.length > 40) M.ring.shift();
   if (M.calc) {
-    const c = M.calc; c.sum += d['s'+c.w]; c.n += d.n; c.blocks.push(d['s'+c.w] / d.n); c.pk = Math.max(c.pk, d.pkZ);
+    const c = M.calc, sv = c.w === 'T' ? (d.bands ? d.bands[5] : 0) : d['s'+c.w]; c.sum += sv; c.n += d.n; c.blocks.push(sv / d.n); c.pk = Math.max(c.pk, d.pkZ);
     if (c.n >= M.fs * c.dur) { M.calc = null; c.done(c); }
   }
   if (s.n >= M.fs) {
@@ -990,30 +1003,42 @@ if (IS_DISPLAY) {
   $('#corrBtn').onclick = async () => { await $('#calBtn').onclick(); if (dlg.open) calTab('corr'); };
   $('#calTarget').onchange = () => $('#calTargetCustom').classList.toggle('hidden', $('#calTarget').value !== 'custom');
   function measure(w, dur) { return new Promise(done => { M.calc = { w, dur, sum:0, n:0, blocks:[], pk:0, done }; }); }
-  async function runMeasure(w, dur, btn) {
-    btn.disabled = true; $('#calSave').disabled = true; $('#calResult').innerHTML = 'Bezig met meten…';
-    const c = await measure(w, dur);
+  // Limits used by the calibration steps (also documented for Clukie).
+  const CAL_RULES = { cal:{ settle:2, dur:5, maxSpread:0.5, signal:'1 kHz band' }, ref:{ settle:2, dur:5, warnSpread:0.5, maxSpread:1.5, signal:'1 kHz band' }, corr:{ settle:2, dur:10, warnSpread:1.5, maxSpread:3, signal:'A-weighted, pink noise' },
+                      clip:0.985, weakDbfs:-70, bigChange:3, verifyTol:0.5, corrWarn:6, corrHigh:10 };
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  async function runMeasure(w, mode, btn) {
+    const R = CAL_RULES[mode];
+    btn.disabled = true; $('#calSave').disabled = true;
+    $('#calResult').innerHTML = `Signaal stabiliseren (${R.settle} s)…`; await sleep(R.settle * 1000);
+    $('#calResult').innerHTML = `Bezig met meten (${R.dur} s)…`;
+    const c = await measure(w, R.dur);
     btn.disabled = false;
     const raw = 10 * Math.log10(c.sum / c.n);
-    const bl = c.blocks.map(x => Math.max(x, 1e-12)).map(x => 10 * Math.log10(x)).sort((a, b) => a - b);
-    const spread = bl.length ? bl[Math.floor(bl.length * .95)] - bl[Math.floor(bl.length * .05)] : 99;
-    const warns = [];
-    if (c.pk >= 0.985) warns.push('Het signaal stuurt de microfoon over (clipping). Verlaag het invoerniveau van de microfoon of het volume.');
-    if (raw < -70) warns.push('Het signaal is erg zwak. Controleer of de juiste microfoon gekozen is en of de geluidsbron aan staat.');
-    if (spread > 3) warns.push(`Het niveau schommelde ${spread.toFixed(1)} dB tijdens de meting. Gebruik een constanter geluid.`);
-    return { raw, spread, warns };
+    // stability on 0.5 s windows (10 blocks of 50 ms), 5th to 95th percentile
+    const win = []; for (let i = 0; i + 10 <= c.blocks.length; i += 5) { let s = 0; for (let j = i; j < i + 10; j++) s += c.blocks[j]; win.push(10 * Math.log10(Math.max(s / 10, 1e-12))); }
+    win.sort((a, b) => a - b);
+    const spread = win.length ? win[Math.floor(win.length * .95)] - win[Math.floor(win.length * .05)] : 99;
+    const errors = [], warns = [];
+    if (c.pk >= CAL_RULES.clip) errors.push('Het signaal stuurt de microfoon over (clipping). Verlaag de gain van de geluidskaart of het volume en meet opnieuw.');
+    if (raw < CAL_RULES.weakDbfs) errors.push('Het signaal is te zwak (onder −70 dBFS). Controleer microfoon, kabel, 48V en of de bron aan staat, en meet opnieuw.');
+    if (spread > R.maxSpread) errors.push(`Het niveau schommelde ${spread.toFixed(1)} dB (max. ${R.maxSpread} dB). ${mode === 'cal' ? 'Controleer of de kalibrator goed op de microfoon zit en of het stil is rondom' : 'Gebruik een constant signaal (roze ruis)'} en meet opnieuw.`);
+    else if (R.warnSpread && spread > R.warnSpread) warns.push(`Het niveau schommelde ${spread.toFixed(1)} dB. Bruikbaar, maar een constanter signaal geeft een betrouwbaarder resultaat.`);
+    return { raw, spread, errors, warns, ok:!errors.length };
   }
+  function emit(name, detail) { try { window.dispatchEvent(new CustomEvent(name, { detail })); } catch {} }
   $('#calRun').onclick = async () => {
     const target = $('#calTarget').value === 'custom' ? parseFloat($('#calTargetCustom').value) : parseFloat($('#calTarget').value);
-    const r = await runMeasure('Z', 5, $('#calRun'));
+    const r = await runMeasure('T', 'cal', $('#calRun'));
     pendingOffset = target - r.raw; pendingOffset = Math.round(pendingOffset * 10) / 10;
     pendingMethod = `kalibrator ${target} dB`;
     showResult(r, target);
   };
   let pendingMethod = '';
   $('#refRun').onclick = async () => {
-    const w = $('#refW').value;
-    const r = await runMeasure(w, 10, $('#refRun'));
+    if (!isFinite(parseFloat($('#refVal').value))) { $('#calResult').innerHTML = '<b>Vul eerst het getal in dat je handmeter toont</b> (stap 4).'; $('#refVal').focus(); return; }
+    const w = $('#refW').value || 'T';
+    const r = await runMeasure(w, 'ref', $('#refRun'));
     calRefRaw = r.raw; calRefRes = r;
     updateRef();
   };
@@ -1021,29 +1046,41 @@ if (IS_DISPLAY) {
   function updateRef() {
     if (calRefRaw == null) return;
     const ref = parseFloat($('#refVal').value);
-    if (!isFinite(ref)) { $('#calResult').innerHTML = `Gemeten: <b>${calRefRaw.toFixed(1)} dBFS</b>. Vul nu de waarde van de referentiemeter in.`; $('#calSave').disabled = true; return; }
-    pendingOffset = Math.round((ref - calRefRaw) * 10) / 10; pendingMethod = `referentiemeter dB(${$('#refW').value})`;
+    if (!isFinite(ref)) { $('#calResult').innerHTML = `Gemeten. Vul nu het getal van je handmeter in.`; $('#calSave').disabled = true; return; }
+    pendingOffset = Math.round((ref - calRefRaw) * 10) / 10; pendingMethod = $('#refW').value === 'T' ? 'toon 1 kHz + handmeter' : `referentiemeter dB(${$('#refW').value})`;
     showResult(calRefRes, ref);
   }
   $('#refVal').addEventListener('input', updateRef);
   function showResult(r, target) {
-    $('#calResult').innerHTML =
-      `Gemeten ruw niveau: <b>${r.raw.toFixed(1)} dBFS</b><br>Referentie: <b>${target.toFixed(1)} dB</b><br>` +
-      `Nieuwe offset: <b>${pendingOffset.toFixed(1)} dB</b> <span class="note">(was ${calOffset().toFixed(1)})</span>` +
-      r.warns.map(w => `<div class="note warn" style="margin-top:6px">⚠ ${w}</div>`).join('');
-    $('#calSave').disabled = false;
+    const old = calOffset(), delta = pendingOffset - old, had = isCal();
+    const notes = [...r.warns];
+    if (had && Math.abs(delta) <= CAL_RULES.verifyTol) notes.unshift(`✓ Controle geslaagd: ${Math.abs(delta).toFixed(1)} dB verschil met de huidige kalibratie (max. ${CAL_RULES.verifyTol} dB).`);
+    else if (had && Math.abs(delta) > CAL_RULES.bigChange) notes.push(`Groot verschil (${delta > 0 ? '+' : ''}${delta.toFixed(1)} dB) met de vorige kalibratie. Is de gain, microfoon of geluidskaart veranderd? Controleer en meet eventueel opnieuw.`);
+    $('#calResult').innerHTML = (r.ok
+        ? `<b>Gelukt.</b> Na opslaan toont de app <b>${target.toFixed(1)} dB</b> voor dit geluid, net als ${calMode === 'cal' ? 'je kalibrator' : 'je handmeter'}. Klik op <b>Opslaan</b>.`
+        : `<b>Niet gelukt.</b> Los het probleem hieronder op en klik opnieuw op Kalibreer.`) +
+      `<div class="note" style="margin-top:6px">Details: ruw ${r.raw.toFixed(1)} dBFS · schommeling ${r.spread.toFixed(2)} dB · kalibratiegetal ${pendingOffset.toFixed(1)} (was ${old.toFixed(1)})</div>` +
+      r.errors.map(w => `<div class="note" style="margin-top:6px;color:var(--over)">✕ ${w}</div>`).join('') +
+      notes.map(w => `<div class="note ${w.startsWith('✓') ? '' : 'warn'}" style="margin-top:6px">${w.startsWith('✓') ? '' : '⚠ '}${w}</div>`).join('');
+    $('#calSave').disabled = !r.ok;
+    emit('dbm:calresult', { mode:calMode, ok:r.ok, raw:r.raw, spread:r.spread, reference:target, newOffset:pendingOffset, oldOffset:old, delta, errors:r.errors, warnings:notes });
   }
   let corrRaw = null, corrRes = null, pendingCorr = null;
-  $('#corrRun').onclick = async () => { const r = await runMeasure('A', 10, $('#corrRun')); corrRaw = r.raw; corrRes = r; updateCorr(); };
+  $('#corrRun').onclick = async () => { const r = await runMeasure('A', 'corr', $('#corrRun')); corrRaw = r.raw; corrRes = r; updateCorr(); };
   function updateCorr() {
     if (corrRaw == null) return;
     const atMic = corrRaw + calOffset(), ref = parseFloat($('#corrVal').value);
-    if (!isFinite(ref)) { $('#calResult').innerHTML = `Op de microfoonpositie: <b>${atMic.toFixed(1)} dB(A)</b>. Vul nu de waarde van de referentiemeter in.`; $('#calSave').disabled = true; return; }
+    if (!isFinite(ref)) { $('#calResult').innerHTML = `Bij onze microfoon gemeten: <b>${atMic.toFixed(1)} dB(A)</b>. Vul nu het getal van je handmeter in.`; $('#calSave').disabled = true; return; }
     pendingCorr = Math.round((ref - atMic) * 10) / 10;
-    $('#calResult').innerHTML = `Microfoonpositie: <b>${atMic.toFixed(1)} dB(A)</b> · publieksplek: <b>${ref.toFixed(1)} dB(A)</b><br>Correctiefactor: <b>${pendingCorr >= 0 ? '+' : ''}${pendingCorr.toFixed(1)} dB</b> <span class="note">(was ${corrDb().toFixed(1)})</span>` +
+    const cw = [];
+    if (Math.abs(pendingCorr) > CAL_RULES.corrHigh) cw.push(`Erg grote correctie (meer dan ${CAL_RULES.corrHigh} dB). Controleer of de referentiemeter op de juiste plek stond en dezelfde weging (A) gebruikte. Overweeg de microfoon dichter bij het publiek te hangen.`);
+    else if (Math.abs(pendingCorr) > CAL_RULES.corrWarn) cw.push(`Grote correctie (meer dan ${CAL_RULES.corrWarn} dB). Mogelijk, maar controleer de meetplaats; spreek deze factor best af met de toezichthouder.`);
+    $('#calResult').innerHTML = `Bij onze microfoon: <b>${atMic.toFixed(1)} dB(A)</b> · op de publieksplek: <b>${ref.toFixed(1)} dB(A)</b><br>Het is daar <b>${Math.abs(pendingCorr).toFixed(1)} dB ${pendingCorr >= 0 ? 'luider' : 'stiller'}</b>. Die correctie wordt na <b>Opslaan</b> bij alle waarden ${pendingCorr >= 0 ? 'opgeteld' : 'afgetrokken'}. <span class="note">(was ${corrDb() >= 0 ? '+' : ''}${corrDb().toFixed(1)})</span>` +
       (isCal() ? '' : '<div class="note warn" style="margin-top:6px">⚠ De microfoon is nog niet gekalibreerd; kalibreer eerst voor een betrouwbaar resultaat.</div>') +
-      corrRes.warns.map(w => `<div class="note warn" style="margin-top:6px">⚠ ${w}</div>`).join('');
-    $('#calSave').disabled = false;
+      corrRes.errors.map(w => `<div class="note" style="margin-top:6px;color:var(--over)">✕ ${w}</div>`).join('') +
+      [...cw, ...corrRes.warns].map(w => `<div class="note warn" style="margin-top:6px">⚠ ${w}</div>`).join('');
+    $('#calSave').disabled = !corrRes.ok;
+    emit('dbm:calresult', { mode:'corr', ok:corrRes.ok, raw:corrRaw, spread:corrRes.spread, reference:ref, atMic, newCorrection:pendingCorr, oldCorrection:corrDb(), errors:corrRes.errors, warnings:[...cw, ...corrRes.warns] });
   }
   $('#corrVal').addEventListener('input', updateCorr);
   $('#manOff').addEventListener('input', () => { pendingOffset = parseFloat($('#manOff').value); pendingMethod = 'handmatig'; $('#calSave').disabled = !isFinite(pendingOffset); });
@@ -1052,12 +1089,13 @@ if (IS_DISPLAY) {
     if (calMode === 'corr') {
       if (!isFinite(pendingCorr)) return;
       S.report.corr = pendingCorr; $('#rCorr').value = pendingCorr; save(); updatePanel();
-      $('#calResult').innerHTML = `✅ Correctiefactor ${pendingCorr >= 0 ? '+' : ''}${pendingCorr.toFixed(1)} dB opgeslagen.`; $('#calSave').disabled = true; return;
+      $('#calResult').innerHTML = `✅ Correctiefactor ${pendingCorr >= 0 ? '+' : ''}${pendingCorr.toFixed(1)} dB opgeslagen.`; $('#calSave').disabled = true; emit('dbm:corrected', { correction:pendingCorr }); return;
     }
     if (!isFinite(pendingOffset)) return;
     CAL[M.micKey] = { offset:pendingOffset, method:pendingMethod || 'handmatig', date:new Date().toISOString() };
     save(); updatePanel(); refreshDevices();
-    $('#calResult').innerHTML = '✅ Kalibratie opgeslagen voor deze microfoon.'; $('#calSave').disabled = true;
+    $('#calResult').innerHTML = '✅ Opgeslagen. De meter staat nu juist voor deze microfoon. Controle: het live getal hierboven moet nu overeenkomen met je kalibrator of handmeter.'; $('#calSave').disabled = true;
+    emit('dbm:calibrated', { mic:M.micLabel, offset:pendingOffset, method:CAL[M.micKey].method });
     $('#calDlgMic').innerHTML = `Microfoon: <b>${esc(M.micLabel)}</b> · huidige offset ${calOffset().toFixed(1)} dB`;
   };
   $('#calDefault').onclick = () => { if (confirm('Kalibratie van deze microfoon wissen?')) { delete CAL[M.micKey]; save(); updatePanel(); refreshDevices(); calTab(calMode); $('#calDlgMic').innerHTML = `Microfoon: <b>${esc(M.micLabel)}</b> · huidige offset ${calOffset().toFixed(1)} dB`; } };
@@ -1081,9 +1119,20 @@ if (IS_DISPLAY) {
     noiseSrc.connect(noiseGain).connect(ctx.destination); noiseSrc.start();
     $('#noiseBtn').textContent = '■ Stop ruis';
   }
-  function stopNoise() { if (noiseSrc) { try { noiseSrc.stop(); } catch {} noiseSrc = null; } if (noiseCtx) { noiseCtx.close().catch(() => {}); noiseCtx = null; } $('#noiseBtn').textContent = '▶ Roze ruis'; }
-  $('#noiseOut').onchange = () => { if (noiseSrc) { stopNoise(); startNoise(); } };
-  $('#noiseBtn').onclick = () => noiseSrc ? stopNoise() : startNoise();
+  async function startTone() {
+    const id = $('#noiseOut').value;
+    try { noiseCtx = new AudioContext(id ? { sinkId:id } : {}); } catch { noiseCtx = new AudioContext(); }
+    if (id && noiseCtx.sinkId !== id && noiseCtx.setSinkId) { try { await noiseCtx.setSinkId(id); } catch {} }
+    const o = noiseCtx.createOscillator(); o.frequency.value = 1000;
+    noiseGain = noiseCtx.createGain(); noiseGain.gain.value = +$('#noiseVol').value;
+    o.connect(noiseGain).connect(noiseCtx.destination); o.start(); noiseSrc = o; noiseKind = 'tone';
+    $('#toneBtn').textContent = '■ Stop toon';
+  }
+  let noiseKind = '';
+  function stopNoise() { $('#toneBtn').textContent = '▶ 1 kHz-toon'; noiseKind = ''; if (noiseSrc) { try { noiseSrc.stop(); } catch {} noiseSrc = null; } if (noiseCtx) { noiseCtx.close().catch(() => {}); noiseCtx = null; } $('#noiseBtn').textContent = '▶ Roze ruis'; }
+  $('#noiseOut').onchange = async () => { const k = noiseKind; if (noiseSrc) { stopNoise(); k === 'tone' ? await startTone() : (await startNoise(), noiseKind = 'noise'); } };
+  $('#noiseBtn').onclick = async () => { const was = noiseKind; if (noiseSrc) stopNoise(); if (was !== 'noise') { await startNoise(); noiseKind = 'noise'; } };
+  $('#toneBtn').onclick = async () => { const was = noiseKind; if (noiseSrc) stopNoise(); if (was !== 'tone') await startTone(); };
   $('#noiseVol').oninput = () => { if (noiseGain) noiseGain.gain.value = +$('#noiseVol').value; };
 
   /* ---------- second screen ---------- */
@@ -1227,6 +1276,7 @@ if (IS_DISPLAY) {
     const names = Object.keys(S.profiles).sort((a, b) => a.localeCompare(b));
     $('#profSel').innerHTML = '<option value="">— geen profiel —</option>' + names.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
     $('#profSel').value = S.profile && S.profiles[S.profile] ? S.profile : '';
+    $('#profName').value = S.profile || '';
   }
   $('#profSel').onchange = () => {
     const n = $('#profSel').value; S.profile = n;
@@ -1239,10 +1289,10 @@ if (IS_DISPLAY) {
     save();
   };
   $('#profSave').onclick = () => {
-    const n = (prompt('Naam van het evenementprofiel:', S.profile || S.report.event || '') || '').trim(); if (!n) return;
-    if (S.profiles[n] && n !== S.profile && !confirm(`Profiel "${n}" bestaat al. Overschrijven?`)) return;
+    const n = ($('#profName').value || S.profile || S.report.event || '').trim();
+    if (!n) { $('#profName').focus(); $('#profName').placeholder = 'Vul eerst een naam in'; return; }
     const pr = {}; for (const k of PROF_KEYS) pr[k] = S.report[k]; pr.limit = { ...S.limit };
-    S.profiles[n] = pr; S.profile = n; save(); profUi();
+    S.profiles[n] = pr; S.profile = n; save(); profUi(); $('#profName').value = n; emit('dbm:profile', { name:n });
   };
   $('#profDel').onclick = () => { const n = $('#profSel').value; if (!n || !confirm(`Profiel "${n}" verwijderen?`)) return; delete S.profiles[n]; S.profile = ''; save(); profUi(); };
 
@@ -1502,7 +1552,7 @@ if (IS_DISPLAY) {
   let RL = RT.nl;
   const calMethodTr = (m, lang) => lang !== 'en' ? m : String(m)
     .replace('handmatig bijgesteld', 'manually adjusted').replace('handmatig', 'manual')
-    .replace('kalibrator', 'acoustic calibrator').replace('referentiemeter', 'reference meter');
+    .replace('toon 1 kHz + handmeter', '1 kHz tone + reference meter').replace('kalibrator', 'acoustic calibrator').replace('referentiemeter', 'reference meter');
 
   let reportName = 'report.pdf';
   function buildReport() {
@@ -1641,6 +1691,21 @@ if (IS_DISPLAY) {
     btn.disabled = false;
   };
 
+  /* ---------- state for assistants (Clukie) ---------- */
+  let lastLimState = null;
+  window.dbm = {
+    rules:CAL_RULES,
+    getState() {
+      const v = M.running && M.live ? compute() : null, R = S.report;
+      const missing = []; if (!R.event) missing.push('report.event'); if (!R.location) missing.push('report.location'); if (!R.organizer) missing.push('report.organizer');
+      if (!R.position) missing.push('report.position'); if (!R.ops.length) missing.push('report.ops'); if (!isCal()) missing.push('calibration');
+      return { running:M.running, demo:!!M.demo, mic:M.micLabel, micKey:M.micKey, calibrated:isCal(), calibration:CAL[M.micKey] || null, offset:calOffset(), correction:corrDb(),
+        agcWarning:!$('#agcWarn').classList.contains('hidden'), clip:performance.now() < M.clipUntil, sampleRate:M.fs, values:v, limit:{ ...S.limit }, limitState:v ? limitState(v) : { state:'off' },
+        profile:S.profile, report:{ ...R, logo:R.logo ? '(set)' : '' }, share:{ on:S.relay.on, live:S.relay.live, link:S.relay.on && M.running ? location.origin + location.pathname + '?display=1&room=' + S.relay.room : '' },
+        secondScreen:window.screen.isExtended ?? null, seconds:M.hist.t.length, missing };
+    }
+  };
+
   /* ---------- main loop ---------- */
   let n = 0;
   function tick(force) {
@@ -1649,13 +1714,29 @@ if (IS_DISPLAY) {
     const clip = performance.now() < M.clipUntil;
     const elapsed = M.running ? Date.now() - M.startTime : null;
     const base = { v, limit, cal:isCal(), clip, elapsed, ts:Date.now() };
+    if (limit.state !== lastLimState) { if (lastLimState !== null && (limit.state === 'warn' || limit.state === 'over')) emit('dbm:limit', limit); lastLimState = limit.state; }
     const mv = S.views.main;
     lastView = mv; lastP = { ...base, hist: mv.graph && v ? histFor(mv.w, mv.graphRange) : [] };
     render(lastP, mv);
     if (dlg.open) {
-      const lv = v ? v.Z.F : null;
-      const preview = (calMode === 'man' && isFinite(pendingOffset) && v) ? lv - curOffset() + pendingOffset : (lv == null ? null : lv - corrDb());
-      $('#calLive').textContent = (preview == null ? '--' : preview.toFixed(1)) + ' dB(Z)';
+      // live level + stability of the signal that this tab measures
+      const key = calMode === 'corr' ? 'a' : calMode === 'man' ? 'z' : 't', ring = M.running ? (M.ring || []) : [];
+      const off = calMode === 'man' && isFinite(pendingOffset) ? pendingOffset : calOffset();
+      const last = ring.slice(-20); let e = 0; for (const b of last) e += b[key]; e = last.length ? e / last.length : 0;
+      const raw = e > 0 ? 10 * Math.log10(e) : -Infinity;
+      $('#calLiveLbl').textContent = key === 't' ? 'Live niveau van de 1 kHz-toon (zonder correctiefactor)' : key === 'a' ? 'Live niveau bij onze microfoon, dB(A)' : 'Live niveau, dB(Z)';
+      $('#calLive').textContent = isFinite(raw) ? (raw + off).toFixed(1) + ' dB' : '-- dB';
+      const st = $('#calStab'), lim = calMode === 'corr' ? CAL_RULES.corr.warnSpread : CAL_RULES[calMode === 'ref' ? 'ref' : 'cal'].maxSpread;
+      if (!M.running || ring.length < 40) { st.textContent = M.running ? 'Even wachten…' : 'Meting staat niet aan'; st.className = 'stab'; }
+      else if (performance.now() < M.clipUntil) { st.textContent = '✕ Te luid (CLIP): zet de gain of het volume lager'; st.className = 'stab bad'; }
+      else if (raw < CAL_RULES.weakDbfs) { st.textContent = key === 't' ? 'Geen 1 kHz-toon gehoord' : 'Te weinig signaal'; st.className = 'stab bad'; }
+      else if (calMode === 'man') { st.textContent = ''; st.className = 'stab'; }
+      else {
+        const w = []; for (let i = 0; i + 5 <= ring.length; i += 5) { let x = 0; for (let j = i; j < i + 5; j++) x += ring[j][key]; w.push(10 * Math.log10(Math.max(x / 5, 1e-12))); }
+        const spread = Math.max(...w) - Math.min(...w);
+        if (spread <= lim) { st.textContent = '✓ Stabiel'; st.className = 'stab ok'; }
+        else { st.textContent = `Wacht… het niveau schommelt ${spread.toFixed(1)} dB`; st.className = 'stab bad'; }
+      }
       if (M.calc) $('#calProg').style.width = Math.min(100, M.calc.n / (M.fs * M.calc.dur) * 100) + '%';
     }
     const ev = S.views.ext;
