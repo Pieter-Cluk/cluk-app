@@ -10,7 +10,7 @@ class DbMeterFilesTest extends TestCase
     public function test_the_meter_files_are_in_place(): void
     {
         $dir = public_path('tools/dbmeter');
-        foreach (['index.html', 'relay.php', 'manifest.webmanifest', 'icon.svg', 'lib/html2canvas.min.js', 'lib/jspdf.umd.min.js', 'lib/qrcode.js', 'data/.htaccess'] as $f) {
+        foreach (['index.html', 'relay.php', 'manifest.webmanifest', 'icon.svg', 'lib/html2canvas.min.js', 'lib/jspdf.umd.min.js', 'lib/qrcode.js', 'data/.htaccess', 'tv/index.html'] as $f) {
             $this->assertFileExists($dir.'/'.$f);
         }
         $this->assertStringContainsString('DirectoryIndex index.html', file_get_contents($dir.'/.htaccess'));

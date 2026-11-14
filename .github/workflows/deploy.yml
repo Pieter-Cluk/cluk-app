@@ -220,11 +220,13 @@ jobs:
           page=$(curl -4 -s -o /dev/null -m 20 -w '%{http_code}' https://cluk.live/tools/dbmeter/ || true)
           relay=$(curl -4 -s -m 20 -w ' %{http_code}' 'https://cluk.live/tools/dbmeter/relay.php?room=TEST' || true)
           data=$(curl -4 -s -o /dev/null -m 20 -w '%{http_code}' https://cluk.live/tools/dbmeter/data/ || true)
+          tv=$(curl -4 -s -o /dev/null -m 20 -w '%{http_code}' https://cluk.live/tools/dbmeter/tv/ || true)
+          [ "$tv" = "200" ] || echo "::warning title=dB meter::https://cluk.live/tools/dbmeter/tv/ answered HTTP $tv"
           echo "page: $page · relay: $relay · data folder: $data"
           [ "$page" = "200" ] || echo "::warning title=dB meter::https://cluk.live/tools/dbmeter/ answered HTTP $page"
           echo "$relay" | grep -q '"status":"unknown"' || echo "::warning title=dB meter::relay.php answered: $relay"
           [ "$data" = "403" ] || echo "::warning title=dB meter::the data folder answered HTTP $data (should be 403)"
-          echo "::notice title=dB meter::page $page, relay $relay, data folder $data"
+          echo "::notice title=dB meter::page $page, relay $relay, data folder $data, tv $tv"
 
       - name: Report
         if: always()
