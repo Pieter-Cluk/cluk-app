@@ -242,7 +242,7 @@ return [
     'downloads' => [
         'title' => 'Descargas', 'meta' => 'Condiciones generales, listas de precios, fichas técnicas, formularios y folletos de CLUK para descargar.',
         'intro' => 'Condiciones generales, listas de precios, fichas técnicas y formularios. Descarga gratuita.',
-        'cats' => ['terms' => 'Condiciones generales', 'pricelists' => 'Listas de precios', 'technical' => 'Fichas técnicas', 'forms' => 'Formularios', 'brochures' => 'Folletos', 'other' => 'Otros documentos'],
+        'cats' => ['tools' => 'Herramientas', 'terms' => 'Condiciones generales', 'pricelists' => 'Listas de precios', 'technical' => 'Fichas técnicas', 'forms' => 'Formularios', 'brochures' => 'Folletos', 'other' => 'Otros documentos'],
         'terms_doc' => 'Condiciones generales', 'download' => 'Descargar', 'open' => 'Abrir', 'any_language' => 'Todos los idiomas', 'empty' => 'Todavía no hay documentos.',
         'langs' => ['en' => 'Inglés', 'nl' => 'Neerlandés', 'fr' => 'Francés', 'es' => 'Español'],
         'for_customers' => 'para clientes con cuenta', 'login_needed' => 'Inicia sesión para descargar este documento.', 'ask_intro' => 'Dinos quién eres y empieza la descarga. Solo lo preguntamos una vez por visita.', 'name' => 'Nombre', 'email' => 'Email', 'company' => 'Empresa (opcional)', 'privacy' => 'Guardamos tu nombre y email con esta descarga, para que nuestro equipo pueda ayudarte. Nunca los compartimos.', 'have_login' => '¿Tienes cuenta?', 'have_login_text' => 'Inicia sesión y descarga sin rellenar nada.',
