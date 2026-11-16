@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /** A kind of labour (installation, technician…) with its rate per hour or per day, excl. VAT. */
-#[Fillable(['names', 'unit', 'price_cents', 'active', 'position'])]
+#[Fillable(['names', 'unit', 'used_for', 'price_cents', 'active', 'position'])]
 class LabourType extends Model
 {
     public const UNITS = ['hour', 'day'];
+
+    /** Which quotes offer it: rental (and Cluk Factory) quotes, sales quotes (repair, maintenance) or both. */
+    public const USED_FOR = ['rental', 'sales', 'both'];
 
     protected function casts(): array
     {
@@ -21,6 +24,12 @@ class LabourType extends Model
     public function scopeOffered(Builder $q): Builder
     {
         return $q->where('active', true)->whereNotNull('price_cents')->orderBy('position')->orderBy('id');
+    }
+
+    /** Offered on rental quotes or on sales quotes. */
+    public function scopeFor(Builder $q, string $module): Builder
+    {
+        return $q->offered()->whereIn('used_for', [$module, 'both']);
     }
 
     public function name(?string $locale = null): string

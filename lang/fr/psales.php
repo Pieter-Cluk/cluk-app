@@ -139,7 +139,7 @@ return [
     'oc' => 'Confirmation de commande',
     'excl' => 'HTVA',
     'errors' => [
-        'no_lines' => 'Ajoutez d’abord au moins un article.',
+        'no_lines' => 'Ajoutez d’abord au moins un article ou une ligne de main-d’œuvre.',
         'needs_approval' => 'Une ligne est sous 10 % de marge : un responsable doit approuver d’abord.',
         'dates_missing' => 'Tous les articles n’ont pas encore de date de livraison.',
     ],
@@ -342,4 +342,8 @@ return [
             'no_price' => 'pas de prix',
         ],
     ],
+    'labour' => 'Ajouter de la main-d’œuvre (réparation, entretien)',
+    'labour_amount' => 'Heures',
+    'labour_note' => 'Quoi (facultatif), ex. remplacer le ventilateur',
+    'labour_added' => 'Main-d’œuvre ajoutée.',
 ];

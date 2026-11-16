@@ -137,6 +137,12 @@ return [
         'vat_deleted' => 'Gepland tarief verwijderd.',
     ],
     'labour' => [
+        'used_for' => 'Gebruikt op',
+        'used' => [
+            'rental' => 'Verhuur- & Factory-offertes',
+            'sales' => 'Verkoopoffertes',
+            'both' => 'Alle offertes',
+        ],
         'intro' => 'De soorten arbeid die je op verhuur- en Cluk Factory-offertes kan zetten, met hun tarief excl. btw. Een soort zonder tarief wordt nog niet aangeboden op offertes.',
         'name' => 'Naam (per taal, zoals op de offerte)',
         'unit' => 'Per',

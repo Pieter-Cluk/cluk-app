@@ -184,7 +184,7 @@
                                 </div>
                             </div>
                         </details>
-                        @php($labour = \App\Models\Sales\LabourType::offered()->get())
+                        @php($labour = \App\Models\Sales\LabourType::for('rental')->get())
                         <details @if ($errors->hasAny(['labour_type_id', 'people', 'amount'])) open @endif>
                             <summary>{{ __('quotes.labour.add') }}</summary>
                             @if ($labour->isNotEmpty())

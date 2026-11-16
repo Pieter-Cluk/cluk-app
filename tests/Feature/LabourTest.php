@@ -39,15 +39,16 @@ class LabourTest extends TestCase
     {
         $this->seed(RoleSeeder::class);
         $admin = $this->as('admin');
-        $this->assertSame(4, LabourType::count());
-        $this->assertSame(0, LabourType::offered()->count());
+        $this->assertSame(5, LabourType::count());
+        $this->assertSame(0, LabourType::for('rental')->count());
+        $this->assertSame(['Technician · repair & maintenance'], LabourType::for('sales')->get()->map->name('en')->all()); // €60/h
         $tech = LabourType::orderBy('position')->get()[2];
 
         $this->actingAs($admin)->get(route('settings.labour.index'))->assertOk()->assertSee('Technician / operator')->assertSee('No rate yet');
         $rows = LabourType::all()->mapWithKeys(fn ($t) => [$t->id => ['names' => $t->names, 'unit' => 'hour', 'price' => $t->is($tech) ? '55' : '', 'active' => '1']])->all();
         $this->actingAs($admin)->put(route('settings.labour.save'), ['t' => $rows, 'new' => ['names' => ['en' => 'Rigger', 'nl' => 'Rigger'], 'unit' => 'day', 'price' => '480']])->assertRedirect();
         $this->assertSame(5500, $tech->fresh()->price_cents);
-        $this->assertSame(['Technician / operator', 'Rigger'], LabourType::offered()->get()->map->name('en')->all());
+        $this->assertSame(['Technician / operator', 'Rigger'], LabourType::for('rental')->get()->map->name('en')->all());
         $this->assertTrue(AuditLog::where('action', 'labour.rates_changed')->exists());
 
         $this->actingAs($this->as('sales'))->get(route('settings.labour.index'))->assertForbidden();
@@ -71,6 +72,11 @@ class LabourTest extends TestCase
         $line = $quote->lines()->where('labour_type_id', $tech->id)->firstOrFail();
         $this->assertSame('Technieker / operator · 2 personen × 8 u · opbouw 13/11', $line->name);
         $this->assertSame([16.0, 5500, 'charge', 88000], [(float) $line->qty, $line->unit_price_cents, $line->kind, $line->fresh()->amount_cents]);
+
+        // Sales-only labour (repair) is not offered on rental quotes.
+        $repair = LabourType::where('used_for', 'sales')->firstOrFail();
+        $this->actingAs($sales)->get(route('quotes.show', $quote))->assertDontSee('repair &amp; maintenance', false);
+        $this->actingAs($sales)->post(route('quotes.labour.add', $quote), ['labour_type_id' => $repair->id, 'people' => 1, 'amount' => 2])->assertSessionHasErrors('labour_type_id');
 
         // A type without a rate can't be used.
         $inst = LabourType::orderBy('position')->first();

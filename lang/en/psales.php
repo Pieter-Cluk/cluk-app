@@ -139,7 +139,7 @@ return [
     'oc' => 'Order confirmation',
     'excl' => 'excl. VAT',
     'errors' => [
-        'no_lines' => 'Add at least one item first.',
+        'no_lines' => 'Add at least one item or labour line first.',
         'needs_approval' => 'A line is under 10% margin: a sales manager has to approve first.',
         'dates_missing' => 'Not every item has a delivery date yet.',
     ],
@@ -342,4 +342,8 @@ return [
             'no_price' => 'no price',
         ],
     ],
+    'labour' => 'Add labour (repair, maintenance)',
+    'labour_amount' => 'Hours',
+    'labour_note' => 'What (optional), e.g. replace fan',
+    'labour_added' => 'Labour added.',
 ];

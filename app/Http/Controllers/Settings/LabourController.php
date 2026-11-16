@@ -25,7 +25,7 @@ class LabourController extends Controller
         $d = $request->validate([
             't' => ['array'], 't.*.names' => ['array'], 't.*.names.*' => ['nullable', 'string', 'max:80'],
             't.*.unit' => ['required', Rule::in(LabourType::UNITS)], 't.*.price' => ['nullable', 'numeric', 'min:0', 'max:100000'],
-            't.*.active' => ['boolean'],
+            't.*.active' => ['boolean'], 't.*.used_for' => ['nullable', Rule::in(LabourType::USED_FOR)], 'new.used_for' => ['nullable', Rule::in(LabourType::USED_FOR)],
             'new' => ['array'], 'new.names' => ['array'], 'new.names.*' => ['nullable', 'string', 'max:80'],
             'new.unit' => ['nullable', Rule::in(LabourType::UNITS)], 'new.price' => ['nullable', 'numeric', 'min:0', 'max:100000'],
         ]);
@@ -38,7 +38,7 @@ class LabourController extends Controller
                 continue;
             }
             $names = $clean($row['names'] ?? []) ?: $type->names;
-            $new = ['names' => $names, 'unit' => $row['unit'], 'price_cents' => $cents($row['price'] ?? null), 'active' => (bool) ($row['active'] ?? false)];
+            $new = ['names' => $names, 'unit' => $row['unit'], 'price_cents' => $cents($row['price'] ?? null), 'active' => (bool) ($row['active'] ?? false), 'used_for' => $row['used_for'] ?? $type->used_for];
             if ($type->price_cents !== $new['price_cents'] || $type->unit !== $new['unit']) {
                 $changes[] = $type->name('en').': '.($type->price_cents === null ? '—' : number_format($type->price_cents / 100, 2)).'/'.$type->unit.' → '.($new['price_cents'] === null ? '—' : number_format($new['price_cents'] / 100, 2)).'/'.$new['unit'];
             }
@@ -46,7 +46,7 @@ class LabourController extends Controller
         }
         $newNames = $clean($d['new']['names'] ?? []);
         if ($newNames) {
-            $t = LabourType::create(['names' => $newNames, 'unit' => $d['new']['unit'] ?? 'hour', 'price_cents' => $cents($d['new']['price'] ?? null), 'active' => true,
+            $t = LabourType::create(['names' => $newNames, 'unit' => $d['new']['unit'] ?? 'hour', 'price_cents' => $cents($d['new']['price'] ?? null), 'active' => true, 'used_for' => $d['new']['used_for'] ?? 'rental',
                 'position' => (int) LabourType::max('position') + 1]);
             $changes[] = 'new: '.$t->name('en');
         }

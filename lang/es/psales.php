@@ -139,7 +139,7 @@ return [
     'oc' => 'Confirmación de pedido',
     'excl' => 'sin IVA',
     'errors' => [
-        'no_lines' => 'Añade primero al menos un artículo.',
+        'no_lines' => 'Añada primero al menos un artículo o una línea de mano de obra.',
         'needs_approval' => 'Una línea está bajo el 10 % de margen: un responsable debe aprobar primero.',
         'dates_missing' => 'Aún no todos los artículos tienen fecha de entrega.',
     ],
@@ -342,4 +342,8 @@ return [
             'no_price' => 'sin precio',
         ],
     ],
+    'labour' => 'Añadir mano de obra (reparación, mantenimiento)',
+    'labour_amount' => 'Horas',
+    'labour_note' => 'Qué (opcional), p. ej. cambiar el ventilador',
+    'labour_added' => 'Mano de obra añadida.',
 ];

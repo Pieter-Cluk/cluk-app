@@ -217,6 +217,29 @@ class ProductSalesTest extends TestCase
         $this->actingAs($elke)->post(route('psales.declined', $q), ['reason' => 'again'])->assertStatus(409);
     }
 
+    /** Repair or maintenance: labour lines at the technician rate (€60/h); a quote with only labour can be sent. */
+    public function test_labour_lines_on_a_sales_quote(): void
+    {
+        $customer = Company::create(['name' => 'Demo Theatre vzw', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'nl']);
+        $elke = $this->as('sales');
+        $this->actingAs($elke)->post('/sales/sales-quotes', ['company_id' => $customer->id, 'title' => 'Repair mixer'])->assertRedirect();
+        $q = SalesQuote::firstOrFail();
+        $tech = \App\Models\Sales\LabourType::where('used_for', 'sales')->firstOrFail();
+        $this->assertSame(6000, $tech->price_cents);
+
+        $this->actingAs($elke)->get(route('psales.show', $q))->assertSee('Add labour (repair, maintenance)')->assertSee('Technician · repair &amp; maintenance · € 60,00/h', false);
+        $this->actingAs($elke)->post(route('psales.labour', $q), ['labour_type_id' => $tech->id, 'amount' => 2, 'note' => 'ventilator vervangen'])->assertSessionHasNoErrors();
+        $this->actingAs($elke)->post(route('psales.labour', $q), ['labour_type_id' => $tech->id, 'amount' => 1.5])->assertSessionHasNoErrors();
+        $lines = $q->lines()->orderBy('position')->get();
+        $this->assertSame(['Technieker · herstelling & onderhoud · ventilator vervangen', 2, 6000, 12000], [$lines[0]->name, $lines[0]->qty, $lines[0]->unit_cents, $lines[0]->amount_cents]);
+        $this->assertSame(['Technieker · herstelling & onderhoud · 1,5 u × € 60,00/u', 1, 9000], [$lines[1]->name, $lines[1]->qty, $lines[1]->amount_cents]);
+        $this->assertSame(21000, $q->fresh()->net_cents);
+
+        // Only labour: it can still be sent.
+        $this->actingAs($elke)->post('/sales/sales-quotes/'.$q->id.'/send', ['to' => 'jo@theatre.example'])->assertSessionHasNoErrors();
+        $this->assertSame('sent', $q->fresh()->status);
+    }
+
     public function test_sales_quote_subtitles_subtotals_and_moving_lines(): void
     {
         $admin = $this->as('admin');

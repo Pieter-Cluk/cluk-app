@@ -137,6 +137,12 @@ return [
         'vat_deleted' => 'Tipo previsto eliminado.',
     ],
     'labour' => [
+        'used_for' => 'Se usa en',
+        'used' => [
+            'rental' => 'Presupuestos de alquiler y Factory',
+            'sales' => 'Presupuestos de venta',
+            'both' => 'Todos los presupuestos',
+        ],
         'intro' => 'Los tipos de mano de obra que puedes añadir a presupuestos de alquiler y de Cluk Factory, con su tarifa sin IVA. Un tipo sin tarifa aún no se ofrece en los presupuestos.',
         'name' => 'Nombre (por idioma, como en el presupuesto)',
         'unit' => 'Por',

@@ -257,7 +257,7 @@ class QuoteController extends Controller
     {
         $this->guard($request, $quote);
         $d = $request->validate([
-            'labour_type_id' => ['required', 'integer', Rule::exists('labour_types', 'id')->where('active', true)->whereNotNull('price_cents')],
+            'labour_type_id' => ['required', 'integer', Rule::exists('labour_types', 'id')->where('active', true)->whereNotNull('price_cents')->whereIn('used_for', ['rental', 'both'])],
             'people' => ['required', 'integer', 'min:1', 'max:200'],
             'amount' => ['required', 'numeric', 'min:0.25', 'max:1000'],
             'when' => ['nullable', 'string', 'max:60'],

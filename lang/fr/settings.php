@@ -137,6 +137,12 @@ return [
         'vat_deleted' => 'Taux prévu supprimé.',
     ],
     'labour' => [
+        'used_for' => 'Utilisé sur',
+        'used' => [
+            'rental' => 'Devis location & Factory',
+            'sales' => 'Devis de vente',
+            'both' => 'Tous les devis',
+        ],
         'intro' => 'Les types de main-d’œuvre à ajouter aux offres de location et Cluk Factory, avec leur tarif HTVA. Un type sans tarif n’est pas encore proposé dans les offres.',
         'name' => 'Nom (par langue, comme sur l’offre)',
         'unit' => 'Par',

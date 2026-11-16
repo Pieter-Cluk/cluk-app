@@ -702,6 +702,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/', [SalesQuoteController::class, 'store'])->name('psales.store');
             Route::put('/{quote}', [SalesQuoteController::class, 'update'])->whereNumber('quote')->name('psales.update');
             Route::post('/{quote}/lines', [SalesQuoteController::class, 'addLine'])->whereNumber('quote')->name('psales.lines.add');
+            Route::post('/{quote}/labour', [SalesQuoteController::class, 'addLabour'])->whereNumber('quote')->name('psales.labour');
             Route::delete('/{quote}/lines/{line}', [SalesQuoteController::class, 'removeLine'])->whereNumber(['quote', 'line'])->name('psales.lines.remove');
             Route::post('/{quote}/approve', [SalesQuoteController::class, 'approve'])->whereNumber('quote')->name('psales.approve');
             Route::post('/{quote}/send', [SalesQuoteController::class, 'send'])->whereNumber('quote')->name('psales.send');

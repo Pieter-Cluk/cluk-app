@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['sales_quote_id', 'sales_item_id', 'kind', 'heading', 'name', 'description', 'qty', 'list_cents', 'discount_bp', 'unit_cents', 'cost_cents', 'amount_cents', 'from_stock', 'delivery_date', 'position'])]
+#[Fillable(['sales_quote_id', 'sales_item_id', 'labour_type_id', 'kind', 'heading', 'name', 'description', 'qty', 'list_cents', 'discount_bp', 'unit_cents', 'cost_cents', 'amount_cents', 'from_stock', 'delivery_date', 'position'])]
 class SalesQuoteLine extends Model
 {
     protected function casts(): array

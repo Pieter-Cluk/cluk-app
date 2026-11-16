@@ -139,7 +139,7 @@ return [
     'oc' => 'Orderbevestiging',
     'excl' => 'excl. btw',
     'errors' => [
-        'no_lines' => 'Voeg eerst minstens één artikel toe.',
+        'no_lines' => 'Voeg eerst minstens één artikel of arbeidslijn toe.',
         'needs_approval' => 'Een lijn zit onder 10% marge: een salesmanager moet eerst goedkeuren.',
         'dates_missing' => 'Nog niet elk artikel heeft een leverdatum.',
     ],
@@ -342,4 +342,8 @@ return [
             'no_price' => 'geen prijs',
         ],
     ],
+    'labour' => 'Arbeid toevoegen (herstelling, onderhoud)',
+    'labour_amount' => 'Uren',
+    'labour_note' => 'Wat (optioneel), bv. ventilator vervangen',
+    'labour_added' => 'Arbeid toegevoegd.',
 ];

@@ -137,6 +137,12 @@ return [
         'vat_deleted' => 'Planned rate deleted.',
     ],
     'labour' => [
+        'used_for' => 'Used on',
+        'used' => [
+            'rental' => 'Rental & Factory quotes',
+            'sales' => 'Sales quotes',
+            'both' => 'All quotes',
+        ],
         'intro' => 'The kinds of labour you can put on rental and Cluk Factory quotes, with their rate excl. VAT. A type without a rate is not offered on quotes yet.',
         'name' => 'Name (per language, as on the quote)',
         'unit' => 'Per',

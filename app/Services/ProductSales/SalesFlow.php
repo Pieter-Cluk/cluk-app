@@ -26,7 +26,7 @@ class SalesFlow
     public static function send(SalesQuote $q, string $to, ?string $message, User $by): void
     {
         $q->load('lines');
-        if ($q->lines->where('kind', 'item')->isEmpty()) {
+        if ($q->lines->whereIn('kind', ['item', 'charge'])->isEmpty()) {
             throw ValidationException::withMessages(['lines' => __('psales.errors.no_lines')]);
         }
         if ($q->needsApproval()) {

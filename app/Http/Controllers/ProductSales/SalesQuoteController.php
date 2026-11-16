@@ -131,6 +131,34 @@ class SalesQuoteController extends Controller
         return back();
     }
 
+    /** Labour (repair, maintenance) from Settings › Labour rates: hours (or days) at the rate, in the quote's language. */
+    public function addLabour(Request $request, SalesQuote $quote): RedirectResponse
+    {
+        $this->editable($quote);
+        $d = $request->validate([
+            'labour_type_id' => ['required', 'integer', Rule::exists('labour_types', 'id')->where('active', true)->whereNotNull('price_cents')->whereIn('used_for', ['sales', 'both'])],
+            'amount' => ['required', 'numeric', 'min:0.25', 'max:1000'],
+            'note' => ['nullable', 'string', 'max:80'],
+        ]);
+        $type = \App\Models\Sales\LabourType::findOrFail($d['labour_type_id']);
+        $amount = round((float) $d['amount'] * 4) / 4; // quarter hours
+        $whole = abs($amount - round($amount)) < 0.001;
+        $fmt = fn (float $n) => rtrim(rtrim(number_format($n, 2, ',', ''), '0'), ',');
+        $lang = $quote->language ?: 'nl';
+        $name = \App\Support\InLocale::run($lang, fn () => $type->name($lang)
+            .($whole ? '' : ' · '.$fmt($amount).' '.__('quotes.labour.units.'.$type->unit).' × '.\App\Services\Afrit6\Pricing::eur($type->price_cents).'/'.__('quotes.labour.per.'.$type->unit))
+            .(! empty($d['note']) ? ' · '.trim($d['note']) : ''));
+        // Whole hours: hours × rate. A part hour: one line with the total (quantities are whole numbers).
+        $quote->lines()->create([
+            'kind' => 'charge', 'labour_type_id' => $type->id, 'name' => mb_substr($name, 0, 200),
+            'qty' => $whole ? (int) round($amount) : 1, 'list_cents' => $whole ? (int) $type->price_cents : (int) round($type->price_cents * $amount),
+            'discount_bp' => 0, 'cost_cents' => 0, 'position' => (int) $quote->lines()->max('position') + 1,
+        ]);
+        $quote->recalculate();
+
+        return back()->with('status', __('psales.labour_added'));
+    }
+
     public function removeLine(SalesQuote $quote, SalesQuoteLine $line): RedirectResponse
     {
         $this->editable($quote);

@@ -86,6 +86,21 @@
                 <select name="kind" aria-label="{{ __('psales.add_other') }}"><option value="charge">{{ __('psales.kinds.charge') }}</option><option value="text">{{ __('psales.kinds.text') }}</option><option value="heading">{{ __('quotes.subtitle') }}</option></select>
                 <input name="name" maxlength="200" required placeholder="{{ __('psales.other_hint') }}" aria-label="{{ __('psales.add_other') }}"><button class="btn" type="submit">{{ __('psales.add') }}</button>
             </form>
+            @php($labour = \App\Models\Sales\LabourType::for('sales')->get())
+            <details class="mt" @if ($errors->hasAny(['labour_type_id', 'amount'])) open @endif>
+                <summary>{{ __('psales.labour') }}</summary>
+                @if ($labour->isNotEmpty())
+                    <form method="post" action="{{ route('psales.labour', $q) }}" class="inline-form">@csrf
+                        <select name="labour_type_id" required aria-label="{{ __('quotes.labour.type') }}">@foreach ($labour as $lt)<option value="{{ $lt->id }}">{{ $lt->name() }} · {{ $eur($lt->price_cents) }}/{{ __('quotes.labour.per.'.$lt->unit) }}</option>@endforeach</select>
+                        <label class="field"><span>{{ __('psales.labour_amount') }}</span><input type="number" name="amount" value="1" min="0.25" step="0.25" class="w-xs" required></label>
+                        <input name="note" maxlength="80" placeholder="{{ __('psales.labour_note') }}" aria-label="{{ __('psales.labour_note') }}">
+                        <button class="btn" type="submit">{{ __('psales.add') }}</button>
+                    </form>
+                    @error('labour_type_id')<p class="flash flash-err">{{ $message }}</p>@enderror
+                @else
+                    <p class="muted small">{{ __('quotes.labour.none') }}@if (auth()->user()->canUseModule('settings', 2)) <a href="{{ route('settings.labour.index') }}">{{ __('nav.items.labour') }} →</a>@endif</p>
+                @endif
+            </details>
         </section>
     @endif
 
@@ -134,7 +149,7 @@
                         <form method="post" action="{{ route('psales.send', $q) }}" class="stack-sm">@csrf
                             <label class="field"><span>{{ __('psales.send_to') }}</span><input type="email" name="to" required value="{{ $q->sent_to ?? $q->contact?->email }}"></label>
                             <label class="field"><span>{{ __('psales.message') }}</span><textarea name="message" rows="3" maxlength="3000"></textarea></label>
-                            <div><button class="primary" type="submit" @disabled($q->needsApproval() || $q->lines->where('kind', 'item')->isEmpty())>{{ $q->needsApproval() ? __('psales.send_blocked') : ($q->status === 'sent' ? __('psales.resend') : __('psales.send')) }}</button></div>
+                            <div><button class="primary" type="submit" @disabled($q->needsApproval() || $q->lines->whereIn('kind', ['item', 'charge'])->isEmpty())>{{ $q->needsApproval() ? __('psales.send_blocked') : ($q->status === 'sent' ? __('psales.resend') : __('psales.send')) }}</button></div>
                         </form>
                     @endif
                     @if ($q->status === 'sent')
