@@ -449,8 +449,13 @@ class PhoneController extends Controller
 
     public function check(Asset $asset): View
     {
-        $asset->load('item.kit');
+        $asset->load('item.kit', 'item.checkProcedure.current.procedure');
         $check = Check::openFor($asset);
+        // Tech Check: the item has a procedure from the Check Builder → one step at a time.
+        if ($v = \App\Services\Warehouse\TechCheck::version($asset, $check)) {
+            return view('warehouse.phone.tech', ['asset' => $asset, 'check' => $check->fresh(), 'v' => $v,
+                'done' => \App\Services\Warehouse\TechCheck::complete($check->fresh(), $v)]);
+        }
 
         return view('warehouse.phone.check', [
             'asset' => $asset, 'check' => $check, 'tests' => Checks::tests($asset),
@@ -488,6 +493,47 @@ class PhoneController extends Controller
             }
         }
         $check = Checks::finish($asset, $d['tests'] ?? [], $missing, $damages, $request->boolean('reset'), $request->user());
+        \App\Services\Warehouse\CostNotices::refresh($check->order);
+        $request->session()->put('w.pending', $asset->id);
+
+        return redirect()->route('w.scan')->with('status', __($check->result === 'ok' ? 'warehouse.check.ok' : 'warehouse.check.repair', ['code' => $asset->code]));
+    }
+
+    /** Tech Check: answer the step on screen; the next one shows only when this one is answered. */
+    public function techStep(Request $request, Asset $asset): RedirectResponse
+    {
+        $d = $request->validate([
+            'answer' => ['nullable', 'string', 'max:10'], 'value' => ['nullable', 'string', 'max:120'], 'note' => ['nullable', 'string', 'max:500'],
+            'costs' => ['array'], 'costs.*' => ['integer'], 'extra_label' => ['nullable', 'string', 'max:120'], 'extra_amount' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'photos' => ['array', 'max:6'], 'photos.*' => Images::rule(),
+        ]);
+        $check = Check::openFor($asset->load('item'));
+        $v = \App\Services\Warehouse\TechCheck::version($asset, $check);
+        abort_unless($v, 404);
+        if ($request->boolean('photo_only')) {
+            Checks::addPhotos($check, $request->file('photos', []), 'step:'.($v->steps[$check->step]['key'] ?? 'x'));
+
+            return back()->withInput();
+        }
+        \App\Services\Warehouse\TechCheck::answer($check, $v, $d, $request->file('photos', []));
+
+        return redirect()->route('w.check', $asset);
+    }
+
+    public function techBack(Asset $asset): RedirectResponse
+    {
+        \App\Services\Warehouse\TechCheck::back(Check::openFor($asset));
+
+        return redirect()->route('w.check', $asset);
+    }
+
+    public function techFinish(Request $request, Asset $asset): RedirectResponse
+    {
+        $d = $request->validate(['missing' => ['array'], 'missing.*' => ['nullable', 'integer', 'min:0', 'max:999'], 'photos' => ['array', 'max:6'], 'photos.*' => Images::rule()]);
+        $check = Check::openFor($asset);
+        Checks::addPhotos($check, $request->file('photos', []), 'check');
+        $check = Checks::finishSteps($asset, array_map('intval', array_filter($d['missing'] ?? [])), $request->user());
+        \App\Services\Warehouse\CostNotices::refresh($check->order);
         $request->session()->put('w.pending', $asset->id);
 
         return redirect()->route('w.scan')->with('status', __($check->result === 'ok' ? 'warehouse.check.ok' : 'warehouse.check.repair', ['code' => $asset->code]));

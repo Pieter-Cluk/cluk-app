@@ -178,6 +178,8 @@ class WarehouseTest extends TestCase
 
         $this->actingAs($this->crew)->post('/warehouse/charges/'.$o->id.'/approve')->assertForbidden();
         $sales = $this->as('sales');
+        $this->actingAs($sales)->post('/warehouse/charges/'.$o->id.'/approve')->assertForbidden(); // not the customer's account owner
+        $o->company->update(['account_owner_id' => $sales->id]);
         $this->actingAs($sales)->post('/warehouse/charges/'.$o->id.'/approve')->assertSessionHasErrors('amount');
         $this->actingAs($sales)->post('/warehouse/charges/line/'.$c2->id, ['action' => 'price', 'amount' => '85.50']);
         $this->actingAs($sales)->post('/warehouse/charges/line/'.$c1->id, ['action' => 'half']);

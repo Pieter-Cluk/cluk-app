@@ -61,6 +61,8 @@ use App\Http\Controllers\Warehouse\PhoneAfrit6Controller;
 use App\Http\Controllers\Warehouse\PhoneController;
 use App\Http\Controllers\Warehouse\PhoneSubhireController;
 use App\Http\Controllers\Warehouse\WarehouseController;
+use App\Http\Controllers\Warehouse\TechCheckController;
+use App\Http\Controllers\Warehouse\CheckBuilderController;
 use App\Http\Controllers\Web\CustomerVerifyController;
 use App\Http\Controllers\WebAccountController;
 use App\Http\Controllers\WebStatsController;
@@ -119,6 +121,11 @@ Route::middleware(['signed', 'throttle:120,1'])->group(function () {
     Route::match(['get', 'post'], '/unsubscribe/{list}/{send}', [MessagePublicController::class, 'unsubscribe'])->whereIn('list', ['newsletter', 'promo'])->whereNumber('send')->name('messages.unsubscribe');
 });
 
+Route::prefix('costs/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Warehouse\CostsPublicController::class, 'show'])->name('costs.public');
+    Route::get('/photo/{check}/{i}', [\App\Http\Controllers\Warehouse\CostsPublicController::class, 'photo'])->whereNumber(['check', 'i'])->name('costs.photo');
+    Route::post('/react', [\App\Http\Controllers\Warehouse\CostsPublicController::class, 'react'])->middleware('throttle:10,1')->name('costs.react');
+});
 Route::prefix('q/{token}')->where(['token' => '[A-Za-z0-9]{48}'])->middleware('throttle:60,1')->group(function () {
     Route::get('/', [QuotePublicController::class, 'show'])->name('quote.public');
     Route::get('/print', [QuotePublicController::class, 'print'])->name('quote.public.print');
@@ -614,6 +621,9 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/return/{order}/carrier-done', [PhoneController::class, 'returnCarrierDone'])->whereNumber('order')->name('return.carrier_done');
             Route::post('/clean/{asset}', [PhoneController::class, 'cleanSave'])->whereNumber('asset')->name('clean.save');
             Route::post('/check/{asset}', [PhoneController::class, 'checkSave'])->whereNumber('asset')->name('check.save');
+            Route::post('/check/{asset}/step', [PhoneController::class, 'techStep'])->whereNumber('asset')->name('check.step');
+            Route::post('/check/{asset}/back', [PhoneController::class, 'techBack'])->whereNumber('asset')->name('check.back');
+            Route::post('/check/{asset}/finish', [PhoneController::class, 'techFinish'])->whereNumber('asset')->name('check.finish');
             Route::post('/delivery', [PhoneAfrit6Controller::class, 'deliveryStore'])->name('delivery.store');
             Route::post('/subhire/{subhire}/{dir}/lines/{line}', [PhoneSubhireController::class, 'count'])->whereNumber(['subhire', 'line'])->whereIn('dir', PhoneSubhireController::DIRS)->name('sub.count');
             Route::post('/subhire/{subhire}/{dir}/photo', [PhoneSubhireController::class, 'photo'])->whereNumber('subhire')->whereIn('dir', PhoneSubhireController::DIRS)->name('sub.photo');
@@ -635,10 +645,31 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/labels/items', [WarehouseLabelController::class, 'items'])->middleware('level:warehouse,2')->name('warehouse.labels.items');
         Route::post('/assets/{asset}/release', [WarehouseController::class, 'release'])->whereNumber('asset')->middleware('right:warehouse.release_repair')->name('warehouse.release');
         Route::post('/deliveries/{delivery}', [PhoneAfrit6Controller::class, 'assign'])->whereNumber('delivery')->middleware('level:warehouse,2')->name('warehouse.delivery.assign');
+        // Tech Check: pieces waiting for their check. Check Builder: the procedures (right warehouse.build_checks).
+        Route::get('/tech-check', [TechCheckController::class, 'index'])->name('warehouse.tech');
+        Route::prefix('check-builder')->middleware('right:warehouse.build_checks')->name('checks.')->group(function () {
+            Route::get('/', [CheckBuilderController::class, 'index'])->name('index');
+            Route::post('/', [CheckBuilderController::class, 'store'])->name('store');
+            Route::get('/{procedure}', [CheckBuilderController::class, 'edit'])->whereNumber('procedure')->name('edit');
+            Route::put('/{procedure}', [CheckBuilderController::class, 'update'])->whereNumber('procedure')->name('update');
+            Route::post('/{procedure}/steps', [CheckBuilderController::class, 'saveStep'])->whereNumber('procedure')->name('step');
+            Route::post('/{procedure}/steps/{key}/move', [CheckBuilderController::class, 'moveStep'])->whereNumber('procedure')->name('step.move');
+            Route::delete('/{procedure}/steps/{key}', [CheckBuilderController::class, 'deleteStep'])->whereNumber('procedure')->name('step.delete');
+            Route::post('/{procedure}/publish', [CheckBuilderController::class, 'publish'])->whereNumber('procedure')->name('publish');
+            Route::post('/{procedure}/copy', [CheckBuilderController::class, 'copy'])->whereNumber('procedure')->name('copy');
+            Route::post('/{procedure}/items', [CheckBuilderController::class, 'assign'])->whereNumber('procedure')->name('assign');
+            Route::delete('/{procedure}/items/{item}', [CheckBuilderController::class, 'unassign'])->whereNumber(['procedure', 'item'])->name('unassign');
+        });
+        Route::get('/check-photo', [CheckBuilderController::class, 'photo'])->name('checks.photo');
+    });
+    // Return costs: the warehouse and the customer's account owner (who may not use the warehouse module).
+    Route::prefix('warehouse')->group(function () {
         Route::get('/charges/{order}', [WarehouseController::class, 'charges'])->whereNumber('order')->name('warehouse.charges');
         Route::post('/charges/line/{charge}', [WarehouseController::class, 'updateCharge'])->whereNumber('charge')->name('warehouse.charge.update');
         Route::post('/charges/{order}/approve', [WarehouseController::class, 'approveCharges'])->whereNumber('order')->name('warehouse.charges.approve');
+        Route::post('/charges/{order}/inform', [WarehouseController::class, 'informCharges'])->whereNumber('order')->name('warehouse.charges.inform');
         Route::get('/charges/{order}/proforma', [WarehouseController::class, 'proforma'])->whereNumber('order')->name('warehouse.charges.proforma');
+        Route::get('/charges/photo/{charge}/{i}', [WarehouseController::class, 'chargePhoto'])->whereNumber(['charge', 'i'])->name('warehouse.charges.photo');
     });
 
     // Settings › Product categories: the fixed lists behind the catalogue and the website.
@@ -824,7 +855,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'labour', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks', 'meetings', 'todos', 'website'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'labour', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks', 'meetings', 'todos', 'website', 'techcheck', 'checkbuilder'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

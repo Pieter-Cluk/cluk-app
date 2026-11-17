@@ -54,6 +54,12 @@ Artisan::command('cluk:mail-test {to}', function (string $to) {
     }
 })->purpose('Send a test email');
 
+// Return costs: the customer did not react before the deadline → to pre-invoicing.
+Artisan::command('cluk:return-costs', function () {
+    $this->info(\App\Services\Warehouse\CostNotices::invoiceDue().' return cost notice(s) invoiced.');
+})->purpose('Invoice return costs after the reaction deadline');
+Schedule::command('cluk:return-costs')->dailyAt('07:30')->timezone('Europe/Brussels')->withoutOverlapping();
+
 // Birthday cards for ticked contacts, every morning at 9:00 (Brussels).
 Artisan::command('cluk:birthdays', function () {
     $this->info(Birthdays::sendToday().' birthday card(s) sent.');

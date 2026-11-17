@@ -69,6 +69,7 @@ return [
             'manage' => 'Gebruikers en rollen beheren',
         ],
         'warehouse' => [
+            'build_checks' => 'Magazijn: de Tech Check-procedures bouwen (Check Builder)',
             'release_repair' => 'Magazijn: items vrijgeven uit herstelling',
             'setup_locations' => 'Magazijn: locaties instellen en labels printen',
             'sign_delivery' => 'Magazijn: leveringsbonnen tekenen en overhandigen',

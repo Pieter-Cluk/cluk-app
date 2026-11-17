@@ -69,6 +69,7 @@ return [
             'manage' => 'Gérer les utilisateurs et les rôles',
         ],
         'warehouse' => [
+            'build_checks' => 'Entrepôt : construire les procédures du Tech Check (Check Builder)',
             'release_repair' => 'Entrepôt : libérer les articles de réparation',
             'setup_locations' => 'Entrepôt : configurer les emplacements et imprimer les étiquettes',
             'sign_delivery' => 'Entrepôt : signer les bons de livraison et remettre',

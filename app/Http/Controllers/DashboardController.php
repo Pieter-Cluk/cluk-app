@@ -126,8 +126,13 @@ class DashboardController extends Controller
             $t[] = ['n' => Order::where('status', 'approved')->whereNull('loaded_at')->where('out_from', '<=', today()->addDay()->endOfDay())->count(), 'key' => 'picks', 'url' => route('w.home'), 'tone' => 'info'];
             $t[] = ['n' => Delivery::where('status', 'open')->count(), 'key' => 'unknown_goods', 'url' => route('warehouse.index'), 'tone' => 'warn'];
         }
-        if ($u->canUseModule('sales', 2) || $u->hasRight('orders.approve')) {
-            $t[] = ['n' => Charge::where('status', 'pending')->distinct()->count('order_id'), 'key' => 'charges', 'url' => route('warehouse.index'), 'tone' => 'warn'];
+        // Return costs: every piece checked, waiting for the customer's account owner (or reacted on by the customer).
+        $mine = \App\Models\Warehouse\ChargeNotice::whereIn('status', ['review', 'objected'])
+            ->when(! $u->hasRight('orders.approve') || $who === 'me', fn ($q) => $q->whereHas('order.company', fn ($c) => $c->where('account_owner_id', $u->id)));
+        $first = (clone $mine)->value('order_id');
+        $t[] = ['n' => $mine->count(), 'key' => 'charges', 'url' => $first ? route('warehouse.charges', $first) : route('warehouse.tech'), 'tone' => 'warn'];
+        if ($u->canUseModule('warehouse')) {
+            $t[] = ['n' => \App\Models\Warehouse\Check::whereNull('finished_at')->count(), 'key' => 'tech_checks', 'url' => route('warehouse.tech'), 'tone' => 'info'];
         }
         if ($u->canUseModule('factory')) {
             $t[] = ['n' => Task::open()->when($who === 'me', fn ($q) => $q->where('assignee_id', $u->id))->where('due_at', '<=', now()->addDays(7))->count(), 'key' => 'venue_tasks', 'url' => route('factory.index', ['tasks' => $who === 'me' ? 'mine' : null]), 'tone' => 'info'];

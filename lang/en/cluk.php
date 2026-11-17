@@ -69,6 +69,7 @@ return [
             'manage' => 'Manage users and roles',
         ],
         'warehouse' => [
+            'build_checks' => 'Warehouse: build the Tech Check procedures (Check Builder)',
             'release_repair' => 'Warehouse: release items from repair',
             'setup_locations' => 'Warehouse: set up locations and print labels',
             'sign_delivery' => 'Warehouse: sign delivery notes and hand over',

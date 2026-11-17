@@ -69,6 +69,7 @@ return [
             'manage' => 'Gestionar usuarios y roles',
         ],
         'warehouse' => [
+            'build_checks' => 'Almacén: crear los procedimientos del Tech Check (Check Builder)',
             'release_repair' => 'Almacén: liberar artículos de reparación',
             'setup_locations' => 'Almacén: configurar ubicaciones e imprimir etiquetas',
             'sign_delivery' => 'Almacén: firmar albaranes y entregar',

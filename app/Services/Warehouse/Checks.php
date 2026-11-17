@@ -105,6 +105,64 @@ class Checks
         });
     }
 
+    /**
+     * Finish a Tech Check that followed a procedure: the costs chosen per step go to the account owner, missing parts
+     * are written off, and any "not OK" sends the piece to Repair.
+     *
+     * @param  array<int, int>  $missing  item id => qty
+     */
+    public static function finishSteps(Asset $asset, array $missing, User $by): Check
+    {
+        $check = Check::openFor($asset);
+        $v = $check->procedureVersion;
+        if (! $v || ! TechCheck::complete($check, $v)) {
+            throw ValidationException::withMessages(['steps' => __('checks.run.not_done')]);
+        }
+        if (array_filter($missing) && self::photoCount($check) === 0) {
+            throw ValidationException::withMessages(['photos' => __('warehouse.errors.photo_needed')]);
+        }
+
+        return DB::transaction(function () use ($check, $asset, $missing, $by, $v) {
+            $order = $check->order;
+            $loc = $order ? self::loc($order) : 'en';
+            $broken = false;
+            $tests = [];
+            foreach ($v->steps as $s) {
+                $a = $check->answers[$s['key']];
+                $tests[$s['key']] = $a['answer'];
+                $broken = $broken || $a['answer'] === 'fail';
+                if (! $order) {
+                    continue;
+                }
+                $title = \App\Models\Warehouse\CheckProcedure::say($s['title'], $loc);
+                foreach ($a['costs'] as $ci) {
+                    $c = $s['costs'][$ci];
+                    self::charge($check, $order, 'damage', \App\Models\Warehouse\CheckProcedure::say($c['label'], $loc).' · '.$asset->code, isset($c['cents']) ? (int) $c['cents'] : null);
+                }
+                if ($a['extra']) {
+                    self::charge($check, $order, 'damage', $a['extra']['label'].' ('.$title.') · '.$asset->code, $a['extra']['cents']);
+                }
+            }
+            $missingList = [];
+            foreach (array_filter($missing) as $itemId => $qty) {
+                if ($item = Item::find($itemId)) {
+                    $missingList[] = ['item_id' => $item->id, 'qty' => (int) $qty];
+                    Moves::writeOff($item, (int) $qty, $order, $by, $asset->code);
+                    if ($order) {
+                        self::charge($check, $order, 'missing', __('warehouse.charge.missing_on', ['name' => $item->name, 'number' => $item->number, 'code' => $asset->code], $loc), $item->catalog_price_cents ? $item->catalog_price_cents * (int) $qty : null, $item, (int) $qty);
+                    }
+                }
+            }
+            if ($order && ($cost = (int) (config('warehouse.cleaning')[$check->dirt ?? 1] ?? 0)) > 0) {
+                self::charge($check, $order, 'cleaning', __('warehouse.charge.cleaning', ['stage' => $check->dirt, 'code' => $asset->code], $loc), $cost);
+            }
+            $check->update(['tests' => $tests, 'missing' => $missingList, 'damages' => [], 'reset' => true, 'result' => $broken ? 'repair' : 'ok', 'finished_at' => now(), 'checked_by_id' => $by->id]);
+            AuditLog::record('warehouse.checked', $asset, ['code' => $asset->code, 'result' => $broken ? 'repair' : 'ok', 'order' => $order?->number, 'procedure' => $v->procedure?->name('en').' v'.$v->version], $by);
+
+            return $check;
+        });
+    }
+
     private static function loc(Order $order): string
     {
         return array_key_exists($order->language, config('cluk.locales')) ? $order->language : 'en';

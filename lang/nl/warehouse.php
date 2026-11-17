@@ -156,6 +156,7 @@ return [
         'damage' => 'Schade · :type · :code',
     ],
     'charge_status' => [
+        'informed' => 'Klant op de hoogte',
         'pending' => 'Wacht op goedkeuring',
         'approved' => 'Goedgekeurd',
         'waived' => 'Kwijtgescholden als gebaar',

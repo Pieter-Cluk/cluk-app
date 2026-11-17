@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** Cleaning and the bench check of one piece after a job. */
-#[Fillable(['asset_id', 'order_id', 'dirt', 'cleaned_at', 'cleaned_by_id', 'tests', 'missing', 'damages', 'photos', 'reset', 'result', 'finished_at', 'checked_by_id'])]
+#[Fillable(['asset_id', 'order_id', 'dirt', 'cleaned_at', 'cleaned_by_id', 'tests', 'missing', 'damages', 'photos', 'reset', 'result', 'finished_at', 'checked_by_id', 'procedure_version_id', 'step', 'answers'])]
 class Check extends Model
 {
     protected $table = 'warehouse_checks';
@@ -20,7 +20,7 @@ class Check extends Model
     {
         return [
             'tests' => 'array', 'missing' => 'array', 'damages' => 'array', 'photos' => 'array', 'reset' => 'boolean',
-            'cleaned_at' => 'datetime', 'finished_at' => 'datetime', 'dirt' => 'integer',
+            'cleaned_at' => 'datetime', 'finished_at' => 'datetime', 'dirt' => 'integer', 'answers' => 'array', 'step' => 'integer',
         ];
     }
 
@@ -42,6 +42,11 @@ class Check extends Model
     public function checkedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'checked_by_id');
+    }
+
+    public function procedureVersion(): BelongsTo
+    {
+        return $this->belongsTo(CheckProcedureVersion::class, 'procedure_version_id');
     }
 
     public function charges(): HasMany

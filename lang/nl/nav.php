@@ -19,6 +19,8 @@ return [
         'productsales' => 'Verkoopproducten',
         'purchasing' => 'Aankoop',
         'dryhire' => 'Dry-hire',
+        'techcheck' => 'Tech Check',
+        'checkbuilder' => 'Check Builder',
         'warehouse' => 'Magazijn',
         'factory' => 'Cluk Factory',
         'afrit6' => 'Cluk Workspace',

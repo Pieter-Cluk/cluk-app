@@ -25,6 +25,9 @@ return [
         'default' => ['power', 'function'],
     ],
 
+    // Return costs: days the customer has to react before the costs are invoiced.
+    'costs_days' => 7,
+
     'damage_types' => ['housing', 'lens', 'connector', 'display', 'other'],
 
     // How many days ahead the phone shows jobs to pick, and returns due.

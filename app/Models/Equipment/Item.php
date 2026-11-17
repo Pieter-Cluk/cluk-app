@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'number', 'kind', 'category', 'subcategory', 'brand', 'type', 'name', 'unit', 'serial', 'stock_qty', 'position_code',
     'day_price_cents', 'price_unit', 'catalog_price_cents', 'weight_kg', 'width_m', 'length_m', 'height_m', 'origin', 'hs_code',
-    'descriptions', 'photo_path', 'in_search', 'on_website', 'active', 'category_id', 'subcategory_id', 'search_words',
+    'descriptions', 'photo_path', 'in_search', 'on_website', 'active', 'category_id', 'subcategory_id', 'search_words', 'check_procedure_id',
 ])]
 class Item extends Model
 {
@@ -108,6 +108,12 @@ class Item extends Model
     public function children(): BelongsToMany
     {
         return $this->belongsToMany(Item::class, 'equipment_components', 'parent_id', 'child_id')->withPivot(['qty', 'role'])->orderBy('number');
+    }
+
+    /** Check Builder: how a piece of this item is checked after a job. */
+    public function checkProcedure(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Warehouse\CheckProcedure::class, 'check_procedure_id');
     }
 
     public function kit(): BelongsToMany

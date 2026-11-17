@@ -36,6 +36,11 @@ class Charge extends Model
         return $this->belongsTo(Item::class);
     }
 
+    public function check(): BelongsTo
+    {
+        return $this->belongsTo(Check::class);
+    }
+
     public function decidedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'decided_by_id');

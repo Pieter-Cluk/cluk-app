@@ -156,6 +156,7 @@ return [
         'damage' => 'Dégât · :type · :code',
     ],
     'charge_status' => [
+        'informed' => 'Client informé',
         'pending' => 'En attente d’accord',
         'approved' => 'Approuvé',
         'waived' => 'Offert en geste commercial',

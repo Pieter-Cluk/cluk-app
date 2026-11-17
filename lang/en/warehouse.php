@@ -156,6 +156,7 @@ return [
         'damage' => 'Damage · :type · :code',
     ],
     'charge_status' => [
+        'informed' => 'Customer informed',
         'pending' => 'Waiting for approval',
         'approved' => 'Approved',
         'waived' => 'Waived as a gesture',

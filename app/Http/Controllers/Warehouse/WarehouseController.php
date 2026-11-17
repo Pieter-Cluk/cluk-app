@@ -64,23 +64,27 @@ class WarehouseController extends Controller
 
     // ------------------------------------------------------------------ charges
 
-    private function canDecide(Request $request): bool
+    /** The customer's account owner decides (or someone who may approve orders). */
+    private function canDecide(Request $request, Order $order): bool
     {
-        return $request->user()->canUseModule('sales', 2) || $request->user()->hasRight('orders.approve');
+        return \App\Services\Warehouse\CostNotices::canReview($request->user(), $order);
     }
 
     public function charges(Request $request, Order $order): View
     {
+        abort_unless($this->canDecide($request, $order) || $request->user()->canUseModule('warehouse', 1), 403);
+
         return view('warehouse.charges', [
-            'order' => $order->load('company'), 'charges' => Charge::with(['asset', 'decidedBy'])->where('order_id', $order->id)->orderBy('id')->get(),
-            'canDecide' => $this->canDecide($request),
+            'order' => $order->load(['company.accountOwner', 'contact', 'quote']), 'charges' => Charge::with(['asset', 'decidedBy', 'check'])->where('order_id', $order->id)->orderBy('id')->get(),
+            'canDecide' => $this->canDecide($request, $order), 'notice' => \App\Models\Warehouse\ChargeNotice::where('order_id', $order->id)->first(),
+            'allChecked' => \App\Services\Warehouse\CostNotices::allChecked($order), 'owner' => \App\Services\Warehouse\CostNotices::owner($order),
         ]);
     }
 
     /** Change one line before approval: a price, half price as a gesture, or waive it. */
     public function updateCharge(Request $request, Charge $charge): RedirectResponse
     {
-        abort_unless($this->canDecide($request) && $charge->status === 'pending', 403);
+        abort_unless($this->canDecide($request, $charge->order) && $charge->status === 'pending', 403);
         $d = $request->validate(['action' => ['required', 'in:price,half,waive'], 'amount' => ['nullable', 'numeric', 'min:0', 'max:100000']]);
         match ($d['action']) {
             'price' => $charge->update(['amount_cents' => isset($d['amount']) ? (int) round($d['amount'] * 100) : null, 'original_cents' => $charge->original_cents ?? (isset($d['amount']) ? (int) round($d['amount'] * 100) : null)]),
@@ -91,21 +95,33 @@ class WarehouseController extends Controller
         return back();
     }
 
-    /** Approve: the lines go on a separate proforma for the customer. */
+    /** Invoice now (after the customer reacted, or without informing): the lines go on a separate proforma. */
     public function approveCharges(Request $request, Order $order): RedirectResponse
     {
-        abort_unless($this->canDecide($request), 403);
-        $pending = Charge::where('order_id', $order->id)->where('status', 'pending')->get();
-        if ($pending->contains(fn ($c) => $c->amount_cents === null)) {
-            return back()->withErrors(['amount' => __('warehouse.office.price_first')]);
-        }
-        foreach ($pending as $c) {
-            $c->update(['status' => 'approved', 'decided_by_id' => $request->user()->id, 'decided_at' => now()]);
-        }
-        PreInvoices::make('charges', $order, $request->user());
-        AuditLog::record('warehouse.charges_approved', $order, ['total' => Pricing::eur((int) $pending->sum('amount_cents')), 'lines' => $pending->count()], $request->user());
+        abort_unless($this->canDecide($request, $order), 403);
+        \App\Services\Warehouse\CostNotices::invoice($order, $request->user());
 
         return back()->with('status', __('warehouse.office.approved', ['code' => self::code($order)]));
+    }
+
+    /** A photo of the check behind a cost, for the warehouse and the account owner. */
+    public function chargePhoto(Request $request, Charge $charge, int $i)
+    {
+        abort_unless($this->canDecide($request, $charge->order) || $request->user()->canUseModule('warehouse', 1), 403);
+        $path = $charge->check?->photos[$i]['path'] ?? null;
+        abort_unless($path && \Illuminate\Support\Facades\Storage::disk('local')->exists($path), 404);
+
+        return response()->file(\Illuminate\Support\Facades\Storage::disk('local')->path($path));
+    }
+
+    /** The account owner informs the customer; invoiced after the deadline unless they react. */
+    public function informCharges(Request $request, Order $order): RedirectResponse
+    {
+        abort_unless($this->canDecide($request, $order), 403);
+        $d = $request->validate(['to' => ['nullable', 'email', 'max:190']]);
+        $notice = \App\Services\Warehouse\CostNotices::send($order, $request->user(), $d['to'] ?? null);
+
+        return back()->with('status', __('checks.notice.sent', ['to' => $notice->sent_to, 'date' => $notice->deadline->format('d/m/Y')]));
     }
 
     public static function code(Order $order): string
