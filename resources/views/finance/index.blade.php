@@ -7,6 +7,7 @@
             <h1>{{ __('nav.items.preinvoice') }}</h1>
             <p class="muted">{{ __('finance.intro') }}</p>
         </div>
+        @if (\App\Services\Finance\DirectInvoices::canMake(auth()->user()))<div class="pagehead-actions"><a class="btn primary" href="{{ route('finance.direct.create') }}">{{ __('finance.direct.new') }}</a></div>@endif
     </div>
     @include('partials.flash')
     @if ($ready->isNotEmpty())
@@ -57,7 +58,9 @@
                     <div class="kicker">{{ mb_strtoupper(__('finance.proforma')) }} · {{ mb_strtoupper(__('finance.modules.'.$sel->module)) }}</div>
                     <h2>{{ $sel->number }} · {{ $sel->customerName() }}</h2>
                     <p class="muted">{{ $sel->description }} · {{ __('finance.made_by', ['name' => $sel->madeBy?->name ?? '—']) }} · {{ __('finance.from') }} {{ $sel->source_code }}</p>
-                    <p><span @class(['pill', 'pill-warn' => $sel->status === 'check', 'pill-danger' => $sel->status === 'back', 'pill-info' => $sel->status === 'sent', 'pill-ok' => $sel->status === 'paid'])>{{ __('finance.statuses.'.$sel->status) }}@if ($sel->invoice_number) · {{ $sel->invoice_number }}@endif</span></p>
+                    <p><span @class(['pill', 'pill-warn' => $sel->status === 'check', 'pill-danger' => $sel->status === 'back', 'pill-info' => $sel->status === 'sent', 'pill-ok' => $sel->status === 'paid'])>{{ __('finance.statuses.'.$sel->status) }}@if ($sel->invoice_number) · {{ $sel->invoice_number }}@endif</span>
+                        @if ($sel->source_type === 'direct') <span class="pill">{{ __('finance.direct.badge') }}</span>@endif
+                        @if (\App\Services\Finance\DirectInvoices::canEdit($sel, auth()->user())) <a class="btn btn-sm" href="{{ route('finance.direct.edit', $sel) }}">{{ __('finance.direct.edit') }}</a>@endif</p>
                     @if ($sel->reds() && $sel->status === 'check')<div class="flash flash-err">⚑ {{ trans_choice('finance.banner', $sel->reds(), ['n' => $sel->reds()]) }}</div>@endif
                     <dl class="facts">
                         <dt>{{ __('finance.facts.vat_id') }}</dt><dd>{{ $sel->company?->vat_number ? \App\Support\VatNumber::format($sel->company->vat_number) : __('finance.missing') }}</dd>

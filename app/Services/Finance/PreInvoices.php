@@ -264,7 +264,7 @@ class PreInvoices
         abort_unless($pf->status === 'back', 409);
         $src = self::source($pf);
         $new = $src ? self::make($pf->source_type, $src, $by) : $pf;
-        $new->update(['status' => 'check']);
+        $new->update(['status' => 'check', 'checks' => self::checks($new->fresh(['company', 'member']))]);
         AuditLog::record('finance.pf_resent', $new, ['reply' => $reply], $by);
 
         return $new;

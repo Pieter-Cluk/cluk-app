@@ -102,6 +102,41 @@ class PreInvoiceTest extends TestCase
         $this->actingAs($boss)->get('/pre-invoicing/'.$pf->id.'/print')->assertOk()->assertSee('PO-7781');
     }
 
+    /** Hours, a repair, extra costs: a pre-invoice made by hand, without a deal, through the same checks. */
+    public function test_a_pre_invoice_without_a_deal(): void
+    {
+        $boss = $this->as('manager');
+        $co = $this->order($boss)->company; // Belgian, wants a PO number
+        $tech = \App\Models\Sales\LabourType::where('used_for', 'sales')->firstOrFail();
+
+        $this->actingAs($boss)->get('/pre-invoicing')->assertSee('New pre-invoice');
+        $this->actingAs($boss)->get('/pre-invoicing/new')->assertOk()->assertSee('Technician · repair &amp; maintenance', false);
+        $this->actingAs($boss)->post('/pre-invoicing/new', ['company_id' => $co->id, 'module' => 'sales', 'description' => 'Repair Midas M32', 'service_date' => '2026-11-16', 'lines' => [['d' => '', 'q' => '', 'unit' => '']]])
+            ->assertSessionHasErrors('lines');
+        $this->actingAs($boss)->post('/pre-invoicing/new', ['company_id' => $co->id, 'module' => 'sales', 'description' => 'Repair Midas M32', 'service_date' => '2026-11-16', 'lines' => [
+            ['d' => $tech->name('en'), 'q' => '2.5', 'unit' => '60'],
+            ['d' => 'Fan 12V', 'q' => '1', 'unit' => '18.40'],
+            ['d' => 'Goodwill', 'q' => '1', 'unit' => '-10'],
+            ['d' => '', 'q' => '', 'unit' => ''],
+        ]])->assertRedirect();
+        $pf = PreInvoice::where('source_type', 'direct')->firstOrFail();
+        $this->assertSame(['check', 'sales', 15000 + 1840 - 1000, 2100, 'D-'.$pf->number], [$pf->status, $pf->module, $pf->net_cents, $pf->vat_rate_bp, $pf->source_code]);
+        $this->assertSame(['2.5', 6000, 15000], [$pf->lines[0]['q'], $pf->lines[0]['unit_cents'], $pf->lines[0]['amount_cents']]);
+        $this->assertSame(1, $pf->reds()); // the customer wants a PO number
+
+        // Sent back, fixed by hand, sent again; then the accountant accepts it like any other.
+        $this->actingAs($boss)->post('/pre-invoicing/'.$pf->id.'/back', ['reason' => 'po', 'note' => 'PO please'])->assertRedirect();
+        $this->actingAs($boss)->get('/pre-invoicing?pf='.$pf->id)->assertSee('/pre-invoicing/'.$pf->id.'/edit', false);
+        $this->actingAs($boss)->put('/pre-invoicing/'.$pf->id, ['company_id' => $co->id, 'module' => 'sales', 'description' => 'Repair Midas M32', 'service_date' => '2026-11-16', 'po_number' => 'PO-77',
+            'lines' => [['d' => 'Repair', 'q' => '1', 'unit' => '150']]])->assertRedirect();
+        $this->actingAs($boss)->post('/pre-invoicing/'.$pf->id.'/resend')->assertRedirect();
+        $pf->refresh();
+        $this->assertSame(['check', 15000, 0, 'PO-77'], [$pf->status, $pf->net_cents, $pf->reds(), $pf->po_number]);
+        $this->actingAs($boss)->post('/pre-invoicing/'.$pf->id.'/accept', ['invoice_number' => 'INV 2026/0099'])->assertRedirect();
+        $this->assertSame('sent', $pf->fresh()->status);
+        $this->actingAs($boss)->get('/pre-invoicing/'.$pf->id.'/edit')->assertForbidden(); // the invoice exists now
+    }
+
     public function test_override_sends_with_red_flags_and_the_page_speaks_four_languages(): void
     {
         $sales = $this->as('sales');

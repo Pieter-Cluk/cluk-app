@@ -1190,3 +1190,5 @@ details.card>summary::after{content:"";margin-left:auto;flex:none;width:30px;hei
 details.card[open]>summary::after{transform:rotate(180deg)}
 details.card>summary:hover::after{background-color:var(--brand-tint);border-color:var(--brand)}
 details.card[open]>summary{margin-bottom:12px}
+.card-pad{padding:14px 18px}
+#direct-lines td:first-child{width:56%}#direct-lines td:first-child input{width:100%}#direct-lines input[name$="[q]"]{width:90px}#direct-lines input[name$="[unit]"]{width:120px}

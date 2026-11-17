@@ -751,6 +751,10 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/pre-invoicing/{pf}/resend', [PreInvoiceController::class, 'resend'])->whereNumber('pf')->name('finance.resend');
     Route::prefix('pre-invoicing')->middleware('nav:preinvoice')->group(function () {
         Route::get('/', [PreInvoiceController::class, 'index'])->name('finance.index');
+        Route::get('/new', [PreInvoiceController::class, 'create'])->name('finance.direct.create');
+        Route::post('/new', [PreInvoiceController::class, 'store'])->name('finance.direct.store');
+        Route::get('/{pf}/edit', [PreInvoiceController::class, 'edit'])->whereNumber('pf')->name('finance.direct.edit');
+        Route::put('/{pf}', [PreInvoiceController::class, 'update'])->whereNumber('pf')->name('finance.direct.update');
         Route::get('/{pf}/print', [PreInvoiceController::class, 'print'])->whereNumber('pf')->name('finance.print');
         Route::get('/{pf}/invoice.pdf', [PreInvoiceController::class, 'pdf'])->whereNumber('pf')->name('finance.pdf');
         Route::middleware('level:preinvoice,2')->group(function () {

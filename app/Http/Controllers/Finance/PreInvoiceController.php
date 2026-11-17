@@ -50,6 +50,68 @@ class PreInvoiceController extends Controller
         ]);
     }
 
+    /** A pre-invoice without a deal or quote: hours, a repair, extra costs. */
+    public function create(Request $request): View
+    {
+        abort_unless(\App\Services\Finance\DirectInvoices::canMake($request->user()), 403);
+
+        return $this->directForm(new PreInvoice(['module' => 'sales', 'service_date' => today(), 'lines' => []]));
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        abort_unless(\App\Services\Finance\DirectInvoices::canMake($request->user()), 403);
+        $pf = \App\Services\Finance\DirectInvoices::save(null, $this->directData($request), $request->user());
+
+        return redirect()->route('finance.index', ['pf' => $pf->id, 'f' => 'check'])->with('status', __('finance.direct.made', ['number' => $pf->number]));
+    }
+
+    public function edit(Request $request, PreInvoice $pf): View
+    {
+        abort_unless(\App\Services\Finance\DirectInvoices::canEdit($pf, $request->user()), 403);
+
+        return $this->directForm($pf);
+    }
+
+    public function update(Request $request, PreInvoice $pf): RedirectResponse
+    {
+        abort_unless(\App\Services\Finance\DirectInvoices::canEdit($pf, $request->user()), 403);
+        $pf = \App\Services\Finance\DirectInvoices::save($pf, $this->directData($request), $request->user());
+
+        return redirect()->route('finance.index', ['pf' => $pf->id])->with('status', __('finance.direct.saved', ['number' => $pf->number]));
+    }
+
+    private function directForm(PreInvoice $pf): View
+    {
+        return view('finance.direct', [
+            'pf' => $pf,
+            'companies' => \App\Models\Company::active()->orderBy('name')->get(['id', 'name']),
+            'labour' => \App\Models\Sales\LabourType::offered()->get(),
+        ]);
+    }
+
+    private function directData(Request $request): array
+    {
+        $d = $request->validate([
+            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'module' => ['required', \Illuminate\Validation\Rule::in(PreInvoice::MODULES)],
+            'description' => ['required', 'string', 'max:200'],
+            'po_number' => ['nullable', 'string', 'max:60'],
+            'service_date' => ['required', 'date'],
+            'lines' => ['array'],
+            'lines.*.d' => ['nullable', 'string', 'max:200'],
+            'lines.*.q' => ['nullable', 'numeric', 'min:-100000', 'max:100000'],
+            'lines.*.unit' => ['nullable', 'numeric', 'min:-1000000', 'max:1000000'],
+        ]);
+        $lines = collect($d['lines'] ?? [])->filter(fn ($l) => trim((string) ($l['d'] ?? '')) !== '')
+            ->map(fn ($l) => ['d' => trim($l['d']), 'q' => (float) ($l['q'] ?? 1) ?: 1.0, 'unit_cents' => (int) round(((float) ($l['unit'] ?? 0)) * 100)])->values()->all();
+        if (! $lines) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['lines' => __('finance.direct.no_lines')]);
+        }
+
+        return ['lines' => $lines] + $d;
+    }
+
     /** Send a source document to pre-invoicing (button on the order, booking, sale). */
     public function make(Request $request, string $type, int $id): RedirectResponse
     {
