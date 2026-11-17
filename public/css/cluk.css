@@ -1192,3 +1192,4 @@ details.card>summary:hover::after{background-color:var(--brand-tint);border-colo
 details.card[open]>summary{margin-bottom:12px}
 .card-pad{padding:14px 18px}
 #direct-lines td:first-child{width:56%}#direct-lines td:first-child input{width:100%}#direct-lines input[name$="[q]"]{width:90px}#direct-lines input[name$="[unit]"]{width:120px}
+.direct-transport td{border-top:1px solid var(--line)}.direct-transport td:first-child{display:flex;align-items:center;gap:10px}.direct-transport input[name="transport_note"]{flex:1}.direct-transport input[name="transport"]{width:120px}

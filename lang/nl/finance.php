@@ -206,6 +206,7 @@ return [
         'made' => 'Interestproforma :number gemaakt (:amount)',
     ],
     'direct' => [
+        'transport_hint' => 'bv. levering Gent, 1 bestelwagen',
         'new' => 'Nieuwe pre-factuur',
         'title' => 'Nieuwe pre-factuur zonder deal',
         'edit_title' => ':number wijzigen',

@@ -1,5 +1,6 @@
 {{-- A pre-invoice without a deal or quote: hours, a repair, extra costs. Same road as every pre-invoice: checks, accountant, OkiOki. --}}
-@php($rows = collect(old('lines', collect($pf->lines ?? [])->map(fn ($l) => ['d' => $l['d'], 'q' => $l['q'], 'unit' => number_format(($l['unit_cents'] ?? 0) / 100, 2, '.', '')])->all())))
+@php($tr = collect($pf->lines ?? [])->firstWhere('kind', 'transport'))
+@php($rows = collect(old('lines', collect($pf->lines ?? [])->reject(fn ($l) => ($l['kind'] ?? null) === 'transport')->map(fn ($l) => ['d' => $l['d'], 'q' => $l['q'], 'unit' => number_format(($l['unit_cents'] ?? 0) / 100, 2, '.', '')])->all())))
 @php($rows = $rows->concat(array_fill(0, max(3, 8 - $rows->count()), ['d' => '', 'q' => '', 'unit' => '']))->values())
 <x-layouts.app :title="__('finance.direct.title')">
     <div class="pagehead"><div>
@@ -32,7 +33,9 @@
                             <td class="num nowrap" data-amount></td></tr>
                     @endforeach
                 </tbody>
-                <tfoot><tr><td colspan="3" class="num">{{ __('finance.direct.net') }}</td><td class="num nowrap"><b data-net>€ 0,00</b></td></tr></tfoot>
+                <tfoot><tr class="direct-transport"><td><b>{{ __('quotes.transport.title') }}</b> <input name="transport_note" maxlength="120" value="{{ old('transport_note', $tr['transport_note'] ?? '') }}" placeholder="{{ __('finance.direct.transport_hint') }}" aria-label="{{ __('finance.direct.transport_hint') }}"></td>
+                    <td class="num">1</td><td class="num nowrap">€ <input type="number" step="0.01" min="0" name="transport" value="{{ old('transport', $tr ? number_format($tr['unit_cents'] / 100, 2, '.', '') : '') }}" aria-label="{{ __('quotes.transport.title') }}"></td><td class="num nowrap" data-tamount></td></tr>
+                    <tr><td colspan="3" class="num">{{ __('finance.direct.net') }}</td><td class="num nowrap"><b data-net>€ 0,00</b></td></tr></tfoot>
             </table>
             <div class="card-pad">
                 <div class="inline-form">
@@ -60,6 +63,9 @@
                 tr.querySelector('[data-amount]').textContent = has ? eur(a) : '';
                 net += a;
             });
+            var t = Math.round((parseFloat(table.querySelector('[name="transport"]').value) || 0) * 100);
+            table.querySelector('[data-tamount]').textContent = t > 0 ? eur(t) : '';
+            net += t;
             table.querySelector('[data-net]').textContent = eur(net);
         }
         function addRow() {
@@ -85,7 +91,7 @@
             sum();
             tr.querySelector('[name$="[q]"]').focus();
         });
-        body.addEventListener('input', sum);
+        table.addEventListener('input', sum);
         sum();
     })();
     </script>

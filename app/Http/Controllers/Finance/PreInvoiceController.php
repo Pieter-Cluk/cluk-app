@@ -102,14 +102,17 @@ class PreInvoiceController extends Controller
             'lines.*.d' => ['nullable', 'string', 'max:200'],
             'lines.*.q' => ['nullable', 'numeric', 'min:-100000', 'max:100000'],
             'lines.*.unit' => ['nullable', 'numeric', 'min:-1000000', 'max:1000000'],
+            'transport' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'transport_note' => ['nullable', 'string', 'max:120'],
         ]);
         $lines = collect($d['lines'] ?? [])->filter(fn ($l) => trim((string) ($l['d'] ?? '')) !== '')
             ->map(fn ($l) => ['d' => trim($l['d']), 'q' => (float) ($l['q'] ?? 1) ?: 1.0, 'unit_cents' => (int) round(((float) ($l['unit'] ?? 0)) * 100)])->values()->all();
-        if (! $lines) {
+        $transport = (int) round(((float) ($d['transport'] ?? 0)) * 100);
+        if (! $lines && $transport <= 0) {
             throw \Illuminate\Validation\ValidationException::withMessages(['lines' => __('finance.direct.no_lines')]);
         }
 
-        return ['lines' => $lines] + $d;
+        return ['lines' => $lines, 'transport_cents' => $transport] + $d;
     }
 
     /** Send a source document to pre-invoicing (button on the order, booking, sale). */

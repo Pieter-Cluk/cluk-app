@@ -46,7 +46,14 @@ class DirectInvoices
             : $company->vatRate($date->toDateString());
         $fmt = fn (float $q) => rtrim(rtrim(number_format($q, 2, '.', ''), '0'), '.');
         $lines = collect($d['lines'])->map(fn ($l) => ['d' => $l['d'], 'q' => $fmt((float) $l['q']), 'unit_cents' => (int) $l['unit_cents'],
-            'amount_cents' => (int) round((float) $l['q'] * (int) $l['unit_cents']), 'note' => null])->values()->all();
+            'amount_cents' => (int) round((float) $l['q'] * (int) $l['unit_cents']), 'note' => null])->values();
+        // Transport: one line at the end, in the customer's language.
+        if (($t = (int) ($d['transport_cents'] ?? 0)) > 0) {
+            $note = trim((string) ($d['transport_note'] ?? ''));
+            $lines->push(['d' => __('quotes.transport.title', [], $company->language ?: 'nl').($note !== '' ? ' · '.$note : ''), 'q' => '1', 'unit_cents' => $t, 'amount_cents' => $t,
+                'note' => null, 'kind' => 'transport', 'transport_note' => $note]);
+        }
+        $lines = $lines->all();
         $net = (int) collect($lines)->sum('amount_cents');
         $vat = (int) round($net * ($rate?->rate_bp ?? 0) / 10000);
         $data = [

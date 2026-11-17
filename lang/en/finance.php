@@ -206,6 +206,7 @@ return [
         'made' => 'Interest proforma :number made (:amount)',
     ],
     'direct' => [
+        'transport_hint' => 'e.g. delivery Ghent, 1 van',
         'new' => 'New pre-invoice',
         'title' => 'New pre-invoice without a deal',
         'edit_title' => 'Change :number',

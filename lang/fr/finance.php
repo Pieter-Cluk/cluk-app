@@ -206,6 +206,7 @@ return [
         'made' => 'Pro forma d’intérêts :number créé (:amount)',
     ],
     'direct' => [
+        'transport_hint' => 'ex. livraison Gand, 1 camionnette',
         'new' => 'Nouvelle pré-facture',
         'title' => 'Nouvelle pré-facture sans deal',
         'edit_title' => 'Modifier :number',

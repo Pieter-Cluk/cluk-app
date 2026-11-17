@@ -206,6 +206,7 @@ return [
         'made' => 'Proforma de intereses :number creada (:amount)',
     ],
     'direct' => [
+        'transport_hint' => 'p. ej. entrega en Gante, 1 furgoneta',
         'new' => 'Nueva prefactura',
         'title' => 'Nueva prefactura sin deal',
         'edit_title' => 'Cambiar :number',

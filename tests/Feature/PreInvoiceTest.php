@@ -128,10 +128,12 @@ class PreInvoiceTest extends TestCase
         $this->actingAs($boss)->post('/pre-invoicing/'.$pf->id.'/back', ['reason' => 'po', 'note' => 'PO please'])->assertRedirect();
         $this->actingAs($boss)->get('/pre-invoicing?pf='.$pf->id)->assertSee('/pre-invoicing/'.$pf->id.'/edit', false);
         $this->actingAs($boss)->put('/pre-invoicing/'.$pf->id, ['company_id' => $co->id, 'module' => 'sales', 'description' => 'Repair Midas M32', 'service_date' => '2026-11-16', 'po_number' => 'PO-77',
-            'lines' => [['d' => 'Repair', 'q' => '1', 'unit' => '150']]])->assertRedirect();
+            'lines' => [['d' => 'Repair', 'q' => '1', 'unit' => '150']], 'transport' => '85', 'transport_note' => 'pick-up Ghent'])->assertRedirect();
+        $this->assertSame(['Transport · pick-up Ghent', 8500], [$pf->fresh()->lines[1]['d'], $pf->fresh()->lines[1]['amount_cents']]);
+        $this->actingAs($boss)->get('/pre-invoicing/'.$pf->id.'/edit')->assertSee('value="85.00"', false)->assertSee('value="pick-up Ghent"', false);
         $this->actingAs($boss)->post('/pre-invoicing/'.$pf->id.'/resend')->assertRedirect();
         $pf->refresh();
-        $this->assertSame(['check', 15000, 0, 'PO-77'], [$pf->status, $pf->net_cents, $pf->reds(), $pf->po_number]);
+        $this->assertSame(['check', 23500, 0, 'PO-77'], [$pf->status, $pf->net_cents, $pf->reds(), $pf->po_number]);
         $this->actingAs($boss)->post('/pre-invoicing/'.$pf->id.'/accept', ['invoice_number' => 'INV 2026/0099'])->assertRedirect();
         $this->assertSame('sent', $pf->fresh()->status);
         $this->actingAs($boss)->get('/pre-invoicing/'.$pf->id.'/edit')->assertForbidden(); // the invoice exists now
