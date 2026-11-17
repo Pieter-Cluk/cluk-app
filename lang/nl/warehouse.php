@@ -349,6 +349,7 @@ return [
         'occupied' => 'Bezet',
         'free' => 'Vrij',
         'uses' => [
+            'customer' => 'Klantstockage',
             'rental' => 'Verhuur',
             'afrit6' => 'Verhuurd aan Afrit 6',
             'sales' => 'Verkoopstock',

@@ -26,16 +26,17 @@ class Checks
     }
 
     /** @param  UploadedFile[]  $files */
-    public static function addPhotos(Check $check, array $files, string $stage): void
+    public static function addPhotos(Check|\App\Models\Storage\StorageCheck $check, array $files, string $stage): void
     {
         $photos = $check->photos ?? [];
+        $dir = ($check instanceof Check ? 'warehouse/checks/' : 'warehouse/storage-checks/').$check->id;
         foreach ($files as $f) {
-            $photos[] = ['path' => Images::store($f, 'warehouse/checks/'.$check->id, 1600), 'stage' => $stage];
+            $photos[] = ['path' => Images::store($f, $dir, 1600), 'stage' => $stage];
         }
         $check->update(['photos' => $photos]);
     }
 
-    public static function photoCount(Check $check, ?string $stage = null): int
+    public static function photoCount(Check|\App\Models\Storage\StorageCheck $check, ?string $stage = null): int
     {
         return collect($check->photos ?? [])->when($stage, fn ($c) => $c->where('stage', $stage))->count();
     }

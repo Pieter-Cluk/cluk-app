@@ -349,6 +349,7 @@ return [
         'occupied' => 'Occupied',
         'free' => 'Free',
         'uses' => [
+            'customer' => 'Customer storage',
             'rental' => 'Rental',
             'afrit6' => 'Rented to Afrit 6',
             'sales' => 'Sales stock',

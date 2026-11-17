@@ -11,7 +11,7 @@ class Position extends Model
 {
     protected $table = 'warehouse_positions';
 
-    public const USES = ['rental', 'afrit6', 'sales', 'spare'];
+    public const USES = ['rental', 'afrit6', 'sales', 'spare', 'customer'];
 
     protected function casts(): array
     {

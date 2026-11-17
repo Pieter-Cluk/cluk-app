@@ -34,6 +34,9 @@ return [
         'choice' => 'Choose one',
     ],
     'builder' => [
+        'minutes' => 'Duration of the check (minutes)',
+        'minutes_hint' => 'Used to bill checks on customers’ equipment.',
+        'duration' => ':n min',
         'intro' => 'Step-by-step procedures for the Tech Check, per item. Edit the draft, then publish a version: checks in progress keep the version they started with.',
         'procedure' => 'Procedure',
         'steps' => 'Steps',
@@ -93,6 +96,7 @@ No price = priced later',
         'two_choices' => 'Give at least two choices.',
     ],
     'tech' => [
+        'customer_gear' => 'Customers’ equipment',
         'intro' => 'Pieces back from a job wait here for their check. With a procedure from the Check Builder the check goes step by step.',
         'open' => 'Waiting or busy',
         'piece' => 'Piece',

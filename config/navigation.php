@@ -32,6 +32,7 @@ return [
             ['key' => 'productsales', 'path' => '/sales-products', 'icon' => 'tag', 'module' => ['sales', 1]],
             ['key' => 'warehouse', 'path' => '/warehouse', 'icon' => 'warehouse', 'module' => ['warehouse', 1]],
             ['key' => 'techcheck', 'path' => '/warehouse/tech-check', 'icon' => 'check', 'module' => ['warehouse', 1]],
+            ['key' => 'storage', 'path' => '/warehouse/storage', 'icon' => 'box', 'module' => ['warehouse', 1]],
             ['key' => 'checkbuilder', 'path' => '/warehouse/check-builder', 'icon' => 'notes', 'right' => 'warehouse.build_checks'],
             ['key' => 'factory', 'path' => '/factory', 'icon' => 'stage', 'module' => ['factory', 1]],
             ['key' => 'afrit6', 'path' => '/afrit6-staff', 'icon' => 'desk', 'module' => ['afrit6', 1]],

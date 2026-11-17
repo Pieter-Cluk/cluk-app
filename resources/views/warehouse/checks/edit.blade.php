@@ -4,7 +4,7 @@
     <div class="pagehead"><div>
         <div class="kicker"><a href="{{ route('checks.index') }}">{{ mb_strtoupper(__('nav.items.checkbuilder')) }}</a></div>
         <h1>{{ $p->name() }}</h1>
-        <p class="muted">@if ($p->current){{ __('checks.builder.live', ['n' => $p->current->version, 'date' => $p->current->created_at->format('d/m/Y')]) }}@else{{ __('checks.builder.not_published') }}@endif
+        <p class="muted">@if ($p->minutes)⏱ {{ __('checks.builder.duration', ['n' => $p->minutes]) }} · @endif @if ($p->current){{ __('checks.builder.live', ['n' => $p->current->version, 'date' => $p->current->created_at->format('d/m/Y')]) }}@else{{ __('checks.builder.not_published') }}@endif
             @if ($p->draftChanged()) · <b class="txt-warn">{{ __('checks.builder.changes_hint') }}</b>@endif</p>
     </div>
         <form method="post" action="{{ route('checks.copy', $p) }}">@csrf<button class="btn" type="submit">{{ __('checks.builder.copy') }}</button></form>
@@ -66,6 +66,7 @@
                 <form method="post" action="{{ route('checks.update', $p) }}" class="stack-sm">@csrf @method('PUT')
                     <label class="field"><span>{{ __('checks.builder.name') }} (NL)</span><input name="name_nl" maxlength="120" value="{{ $p->names['nl'] ?? '' }}"></label>
                     <label class="field"><span>{{ __('checks.builder.name') }} (EN)</span><input name="name_en" maxlength="120" value="{{ $p->names['en'] ?? '' }}"></label>
+                    <label class="field"><span>{{ __('checks.builder.minutes') }}</span><input type="number" name="minutes" min="1" max="600" class="w-xs" value="{{ $p->minutes }}"><small class="muted">{{ __('checks.builder.minutes_hint') }}</small></label>
                     <input type="hidden" name="active" value="0"><label class="check"><input type="checkbox" name="active" value="1" @checked($p->active)> {{ __('checks.builder.active') }}</label>
                     <div><button class="btn" type="submit">{{ __('checks.builder.save') }}</button></div>
                 </form>

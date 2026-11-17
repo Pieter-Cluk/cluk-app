@@ -349,6 +349,7 @@ return [
         'occupied' => 'Ocupado',
         'free' => 'Libre',
         'uses' => [
+            'customer' => 'Almacenaje de clientes',
             'rental' => 'Alquiler',
             'afrit6' => 'Alquilado a Afrit 6',
             'sales' => 'Stock de venta',

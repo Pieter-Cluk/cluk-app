@@ -54,6 +54,12 @@ Artisan::command('cluk:mail-test {to}', function (string $to) {
     }
 })->purpose('Send a test email');
 
+// Customer storage: last month's statement for every contract, on the 1st at 06:30.
+Artisan::command('cluk:storage-statements', function () {
+    $this->info(\App\Services\Storage\CustomerStorage::monthly().' storage statement(s) made.');
+})->purpose('Monthly statements for customer storage');
+Schedule::command('cluk:storage-statements')->monthlyOn(1, '06:30')->timezone('Europe/Brussels')->withoutOverlapping();
+
 // Return costs: the customer did not react before the deadline → to pre-invoicing.
 Artisan::command('cluk:return-costs', function () {
     $this->info(\App\Services\Warehouse\CostNotices::invoiceDue().' return cost notice(s) invoiced.');

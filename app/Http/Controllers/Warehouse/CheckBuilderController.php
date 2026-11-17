@@ -41,8 +41,8 @@ class CheckBuilderController extends Controller
 
     public function update(Request $request, CheckProcedure $procedure): RedirectResponse
     {
-        $d = $request->validate(['name_nl' => ['nullable', 'string', 'max:120'], 'name_en' => ['nullable', 'string', 'max:120'], 'active' => ['boolean']]);
-        $procedure->update(['names' => ['nl' => $d['name_nl'] ?? '', 'en' => $d['name_en'] ?? ''], 'active' => $request->boolean('active')]);
+        $d = $request->validate(['name_nl' => ['nullable', 'string', 'max:120'], 'name_en' => ['nullable', 'string', 'max:120'], 'active' => ['boolean'], 'minutes' => ['nullable', 'integer', 'min:1', 'max:600']]);
+        $procedure->update(['names' => ['nl' => $d['name_nl'] ?? '', 'en' => $d['name_en'] ?? ''], 'active' => $request->boolean('active'), 'minutes' => $d['minutes'] ?? null]);
 
         return back()->with('status', __('checks.builder.saved'));
     }

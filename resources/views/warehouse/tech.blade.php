@@ -28,6 +28,18 @@
             </tbody>
         </table>
     </section>
+    @if ($stored->isNotEmpty())
+        <section class="card card-flush mt">
+            <div class="card-head pad"><h2>{{ __('checks.tech.customer_gear') }} <small class="muted">{{ $stored->count() }}</small></h2></div>
+            <table class="table"><tbody>
+                @foreach ($stored as $sc)
+                    <tr><td><b>{{ $sc->piece->item->name }}</b><br><small class="muted">{{ $sc->piece->code }}</small></td><td>{{ $sc->piece->item->contract->company->name }}</td>
+                        <td>@if ($sc->procedureVersion){{ __('checks.tech.step_n', ['n' => min($sc->step, count($sc->procedureVersion->steps)), 'total' => count($sc->procedureVersion->steps)]) }}@endif</td>
+                        <td><a class="btn btn-sm" href="{{ route('w.stored', $sc->piece) }}">{{ __('checks.tech.continue') }}</a></td></tr>
+                @endforeach
+            </tbody></table>
+        </section>
+    @endif
     @if ($notices->isNotEmpty())
         <section class="card card-flush mt">
             <div class="card-head pad"><h2>{{ __('checks.tech.costs') }}</h2></div>
@@ -49,7 +61,7 @@
                 @foreach ($done as $c)
                     <tr><td>{{ $c->asset?->item?->name }} <small class="muted">{{ $c->asset?->code }}</small></td><td>{{ $c->order?->number ?? '—' }}</td>
                         <td><span @class(['pill', 'pill-ok' => $c->result === 'ok', 'pill-danger' => $c->result === 'repair'])>{{ __('checks.tech.result.'.$c->result) }}</span></td>
-                        <td class="muted">{{ $c->checkedBy?->first_name }} · {{ $c->finished_at->format('d/m H:i') }}</td></tr>
+                        <td class="muted">{{ $c->checkedBy?->first_name }} · {{ $c->finished_at->format('d/m H:i') }}@if ($c->started_at) · ⏱ {{ __('checks.builder.duration', ['n' => max(1, (int) $c->started_at->diffInMinutes($c->finished_at))]) }}@endif</td></tr>
                 @endforeach
             </tbody>
         </table>

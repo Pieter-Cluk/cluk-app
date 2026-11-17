@@ -1,15 +1,18 @@
 {{-- Tech Check: the item's procedure, one step per screen. The next step shows only when this one is answered. --}}
+{{-- Our piece ($asset) or a storage customer's piece ($piece): the same steps, other routes and wrap-up. --}}
+@php($stored = isset($piece))
+@php($sub = $stored ? ['name' => $piece->item->name, 'code' => $piece->code, 'serial' => $piece->serial_number, 'from' => __('storage.phone.of', ['customer' => $piece->item->contract->company->name]), 'kit' => collect(), 'step' => route('w.stored.step', $piece), 'back' => route('w.stored.back', $piece), 'finish' => route('w.stored.finish', $piece), 'photo' => 'w.stored.photo'] : ['name' => $asset->item->name, 'code' => $asset->code, 'serial' => $asset->serial_number, 'from' => $check->order ? __('warehouse.check.from', ['order' => $check->order->number, 'customer' => $check->order->customerName()]) : __('warehouse.check.no_order'), 'kit' => $asset->item->kit, 'step' => route('w.check.step', $asset), 'back' => route('w.check.back', $asset), 'finish' => route('w.check.finish', $asset), 'photo' => 'w.photo'])
 @php($say = fn ($t) => \App\Models\Warehouse\CheckProcedure::say($t))
 @php($eur = fn ($c) => \App\Services\Afrit6\Pricing::eur((int) $c))
 @php($steps = $v->steps)
 @php($n = count($steps))
 @php($step = $done ? null : $steps[$check->step] ?? null)
 @php($prev = $step ? (($check->answers ?? [])[$step['key']] ?? null) : null)
-<x-layouts.phone :title="__('checks.run.title', ['code' => $asset->code])" :back="route('w.home')">
+<x-layouts.phone :title="__('checks.run.title', ['code' => $sub['code']])" :back="route('w.home')">
     <section class="ph-card">
-        <b>{{ $asset->item->name }} · {{ $asset->code }}</b>
-        <small>@if ($asset->serial_number)S/N {{ $asset->serial_number }} · @endif{{ $check->order ? __('warehouse.check.from', ['order' => $check->order->number, 'customer' => $check->order->customerName()]) : __('warehouse.check.no_order') }}</small>
-        <small>{{ $v->procedure->name() }} · v{{ $v->version }} · {{ $check->cleaned_at ? '✓ '.__('warehouse.check.cleaned', ['stage' => $check->dirt, 'stage_name' => __('warehouse.clean.stages.'.$check->dirt)]) : __('warehouse.check.not_cleaned') }}</small>
+        <b>{{ $sub['name'] }} · {{ $sub['code'] }}</b>
+        <small>@if ($sub['serial'])S/N {{ $sub['serial'] }} · @endif{{ $sub['from'] }}</small>
+        <small>{{ $v->procedure->name() }} · v{{ $v->version }}@if ($v->procedure->minutes) · ⏱ {{ __('checks.builder.duration', ['n' => $v->procedure->minutes]) }}@endif @unless ($stored) · {{ $check->cleaned_at ? '✓ '.__('warehouse.check.cleaned', ['stage' => $check->dirt, 'stage_name' => __('warehouse.clean.stages.'.$check->dirt)]) : __('warehouse.check.not_cleaned') }}@endunless</small>
     </section>
     <ol class="tc-progress" aria-label="{{ __('checks.run.progress') }}">
         @foreach ($steps as $i => $s)
@@ -19,7 +22,7 @@
     </ol>
 
     @if ($step)
-        <form method="post" action="{{ route('w.check.step', $asset) }}" enctype="multipart/form-data" class="tc-step">
+        <form method="post" action="{{ $sub['step'] }}" enctype="multipart/form-data" class="tc-step">
             @csrf
             <input type="hidden" name="photo_only" value="0" data-photo-only>
             <div class="tc-kicker">{{ __('checks.run.step_of', ['n' => $check->step + 1, 'total' => $n]) }}</div>
@@ -53,7 +56,7 @@
             </div>
 
             <h3 class="ph-h">{{ __('warehouse.check.photos') }}</h3>
-            @include('warehouse.phone._photos', ['stage' => 'step:'.$step['key']])
+            @include('warehouse.phone._photos', ['stage' => 'step:'.$step['key'], 'photoRoute' => $sub['photo']])
 
             <div class="tc-fail-box" @if ($step['answer'] === 'okfail') data-fail-box @endif>
                 <label class="field"><span>{{ $step['answer'] === 'okfail' ? __('checks.run.note_fail') : __('checks.run.note') }}</span><textarea name="note" rows="2" maxlength="500">{{ old('note', $prev['note'] ?? '') }}</textarea></label>
@@ -75,11 +78,11 @@
             <button class="primary ph-big" type="submit">{{ $check->step + 1 < $n ? __('checks.run.next') : __('checks.run.last') }}</button>
         </form>
         @if ($check->step > 0)
-            <form method="post" action="{{ route('w.check.back', $asset) }}">@csrf<button class="btn ph-big" type="submit">← {{ __('checks.run.back') }}</button></form>
+            <form method="post" action="{{ $sub['back'] }}">@csrf<button class="btn ph-big" type="submit">← {{ __('checks.run.back') }}</button></form>
         @endif
     @else
         {{-- All steps answered: the summary, missing kit parts, finish. --}}
-        <form method="post" action="{{ route('w.check.finish', $asset) }}" enctype="multipart/form-data">
+        <form method="post" action="{{ $sub['finish'] }}" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="photo_only" value="0" data-photo-only>
             <h2 class="ph-h">{{ __('checks.run.summary') }}</h2>
@@ -94,18 +97,25 @@
                     </li>
                 @endforeach
             </ul>
+            @if ($stored)
+                <h2 class="ph-h">{{ __('storage.phone.who') }}</h2>
+                <label class="tc-big"><input type="radio" name="done_by" value="cluk" checked> {{ __('storage.phone.by_cluk', ['n' => $v->procedure->minutes ?? '—']) }}</label>
+                <label class="tc-big"><input type="radio" name="done_by" value="customer"> {{ __('storage.phone.by_customer') }}</label>
+                <label class="field"><span>{{ __('storage.phone.minutes') }}</span><input type="number" name="minutes" min="1" max="600" class="ph-qty" value="{{ $v->procedure->minutes ?? max(5, (int) ceil(($check->started_at ?? now())->diffInMinutes(now()) / 5) * 5) }}"></label>
+            @else
             <h2 class="ph-h">{{ __('warehouse.check.accessories') }}</h2>
-            @forelse ($asset->item->kit as $k)
+            @forelse ($sub['kit'] as $k)
                 <label class="ph-acc"><span><b>{{ $k->name }}</b><small>{{ $k->number }} · {{ __('warehouse.check.per_piece', ['n' => $k->pivot->qty]) }}@if ($k->catalog_price_cents) · {{ $eur($k->catalog_price_cents) }}@endif</small></span>
                     <select name="missing[{{ $k->id }}]" aria-label="{{ __('warehouse.check.missing_of', ['name' => $k->name]) }}"><option value="0">{{ __('warehouse.check.complete') }}</option>@for ($i = 1; $i <= max(1, $k->pivot->qty); $i++)<option value="{{ $i }}">{{ __('warehouse.check.missing_n', ['n' => $i]) }}</option>@endfor</select></label>
             @empty
                 <p class="muted small">{{ __('warehouse.check.no_kit') }}</p>
             @endforelse
+            @endif
             @error('photos')<p class="flash flash-err">{{ $message }}</p>@enderror
             @error('steps')<p class="flash flash-err">{{ $message }}</p>@enderror
             <button class="primary ph-big" type="submit">{{ __('warehouse.check.finish') }}</button>
         </form>
-        <form method="post" action="{{ route('w.check.back', $asset) }}">@csrf<button class="btn ph-big" type="submit">← {{ __('checks.run.back') }}</button></form>
+        <form method="post" action="{{ $sub['back'] }}">@csrf<button class="btn ph-big" type="submit">← {{ __('checks.run.back') }}</button></form>
     @endif
     <script>
     (function () {

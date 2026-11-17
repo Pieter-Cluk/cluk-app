@@ -34,6 +34,9 @@ return [
         'choice' => 'Eén keuze',
     ],
     'builder' => [
+        'minutes' => 'Duur van de check (minuten)',
+        'minutes_hint' => 'Gebruikt om checks op materiaal van klanten te factureren.',
+        'duration' => ':n min',
         'intro' => 'Stap-voor-stap procedures voor de Tech Check, per artikel. Pas het concept aan en publiceer een versie: lopende checks houden de versie waarmee ze begonnen.',
         'procedure' => 'Procedure',
         'steps' => 'Stappen',
@@ -93,6 +96,7 @@ Geen prijs = later prijzen',
         'two_choices' => 'Geef minstens twee keuzes.',
     ],
     'tech' => [
+        'customer_gear' => 'Materiaal van klanten',
         'intro' => 'Stuks terug van een job wachten hier op hun check. Met een procedure uit de Check Builder gaat de check stap voor stap.',
         'open' => 'Wachtend of bezig',
         'piece' => 'Stuk',

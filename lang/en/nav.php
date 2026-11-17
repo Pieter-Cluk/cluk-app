@@ -19,6 +19,7 @@ return [
         'productsales' => 'Sales products',
         'purchasing' => 'Purchasing',
         'dryhire' => 'Dry-hire',
+        'storage' => 'Customer storage',
         'techcheck' => 'Tech Check',
         'checkbuilder' => 'Check Builder',
         'warehouse' => 'Warehouse',

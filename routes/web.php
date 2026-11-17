@@ -624,6 +624,11 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/check/{asset}/step', [PhoneController::class, 'techStep'])->whereNumber('asset')->name('check.step');
             Route::post('/check/{asset}/back', [PhoneController::class, 'techBack'])->whereNumber('asset')->name('check.back');
             Route::post('/check/{asset}/finish', [PhoneController::class, 'techFinish'])->whereNumber('asset')->name('check.finish');
+            Route::get('/stored/{piece}', [\App\Http\Controllers\Warehouse\StoredCheckController::class, 'show'])->whereNumber('piece')->name('stored');
+            Route::post('/stored/{piece}/step', [\App\Http\Controllers\Warehouse\StoredCheckController::class, 'step'])->whereNumber('piece')->name('stored.step');
+            Route::post('/stored/{piece}/back', [\App\Http\Controllers\Warehouse\StoredCheckController::class, 'back'])->whereNumber('piece')->name('stored.back');
+            Route::post('/stored/{piece}/finish', [\App\Http\Controllers\Warehouse\StoredCheckController::class, 'finish'])->whereNumber('piece')->name('stored.finish');
+            Route::get('/stored-photo/{check}/{i}', [\App\Http\Controllers\Warehouse\StoredCheckController::class, 'photo'])->whereNumber(['check', 'i'])->name('stored.photo');
             Route::post('/delivery', [PhoneAfrit6Controller::class, 'deliveryStore'])->name('delivery.store');
             Route::post('/subhire/{subhire}/{dir}/lines/{line}', [PhoneSubhireController::class, 'count'])->whereNumber(['subhire', 'line'])->whereIn('dir', PhoneSubhireController::DIRS)->name('sub.count');
             Route::post('/subhire/{subhire}/{dir}/photo', [PhoneSubhireController::class, 'photo'])->whereNumber('subhire')->whereIn('dir', PhoneSubhireController::DIRS)->name('sub.photo');
@@ -661,6 +666,19 @@ Route::middleware('auth:web')->group(function () {
             Route::delete('/{procedure}/items/{item}', [CheckBuilderController::class, 'unassign'])->whereNumber(['procedure', 'item'])->name('unassign');
         });
         Route::get('/check-photo', [CheckBuilderController::class, 'photo'])->name('checks.photo');
+        // Customer storage: their equipment, places, goods in and out, checks, monthly statements.
+        Route::prefix('storage')->name('storage.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Warehouse\StorageController::class, 'index'])->name('index');
+            Route::post('/', [\App\Http\Controllers\Warehouse\StorageController::class, 'store'])->name('store');
+            Route::get('/{contract}', [\App\Http\Controllers\Warehouse\StorageController::class, 'show'])->whereNumber('contract')->name('show');
+            Route::post('/{contract}/places', [\App\Http\Controllers\Warehouse\StorageController::class, 'addPlace'])->whereNumber('contract')->name('place');
+            Route::post('/{contract}/places/{place}/end', [\App\Http\Controllers\Warehouse\StorageController::class, 'endPlace'])->whereNumber(['contract', 'place'])->name('place.end');
+            Route::post('/{contract}/items', [\App\Http\Controllers\Warehouse\StorageController::class, 'addItem'])->whereNumber('contract')->name('item');
+            Route::post('/{contract}/items/{item}', [\App\Http\Controllers\Warehouse\StorageController::class, 'updateItem'])->whereNumber(['contract', 'item'])->name('item.update');
+            Route::post('/{contract}/moves', [\App\Http\Controllers\Warehouse\StorageController::class, 'move'])->whereNumber('contract')->name('move');
+            Route::post('/{contract}/statement', [\App\Http\Controllers\Warehouse\StorageController::class, 'statement'])->whereNumber('contract')->name('statement');
+            Route::post('/{contract}/end', [\App\Http\Controllers\Warehouse\StorageController::class, 'end'])->whereNumber('contract')->name('end');
+        });
     });
     // Return costs: the warehouse and the customer's account owner (who may not use the warehouse module).
     Route::prefix('warehouse')->group(function () {
@@ -855,7 +873,7 @@ Route::middleware('auth:web')->group(function () {
     // "coming soon". Access is checked against the same rules as the menu.
     $items = array_merge(config('navigation.top'), config('navigation.account'), ...array_values(config('navigation.groups')));
     foreach ($items as $item) {
-        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'labour', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks', 'meetings', 'todos', 'website', 'techcheck', 'checkbuilder'], true)) {
+        if (in_array($item['key'], ['dashboard', 'management', 'messages', 'wallscreens', 'labour', 'warehouse', 'locations', 'documents', 'productsales', 'purchasing', 'preinvoice', 'companies', 'sales', 'orders', 'subhire', 'factory', 'afrit6', 'dryhire', 'users', 'company', 'vat', 'import', 'preferences', 'profile', 'notifications', 'help', 'productlists', 'social', 'salestasks', 'meetings', 'todos', 'website', 'techcheck', 'checkbuilder', 'storage'], true)) {
             continue; // real screens, registered above
         }
         Route::view($item['path'], 'coming-soon', ['navKey' => $item['key']])

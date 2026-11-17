@@ -3,6 +3,8 @@
 namespace App\Services\Warehouse;
 
 use App\Models\Equipment\Asset;
+use App\Models\Storage\StorageCheck;
+use App\Models\Storage\StoredPiece;
 use App\Models\Warehouse\Check;
 use App\Models\Warehouse\CheckProcedure;
 use App\Models\Warehouse\CheckProcedureVersion;
@@ -23,6 +25,22 @@ class TechCheck
         }
         $v = $asset->item?->checkProcedure?->current;
         if ($v && $v->procedure->active && $v->steps) {
+            $check->update(['procedure_version_id' => $v->id, 'step' => 0, 'answers' => [], 'started_at' => now()]);
+
+            return $v;
+        }
+
+        return null;
+    }
+
+    /** The same for a storage customer's piece: the procedure of their item. */
+    public static function versionForStored(StoredPiece $piece, StorageCheck $check): ?CheckProcedureVersion
+    {
+        if ($check->procedure_version_id) {
+            return $check->procedureVersion;
+        }
+        $v = $piece->item?->checkProcedure?->current;
+        if ($v && $v->procedure->active && $v->steps) {
             $check->update(['procedure_version_id' => $v->id, 'step' => 0, 'answers' => []]);
 
             return $v;
@@ -35,7 +53,7 @@ class TechCheck
      * @param  array{answer?: string, value?: string, note?: string, costs?: int[], extra_label?: string, extra_amount?: string}  $d
      * @param  UploadedFile[]  $files
      */
-    public static function answer(Check $check, CheckProcedureVersion $v, array $d, array $files): void
+    public static function answer(Check|StorageCheck $check, CheckProcedureVersion $v, array $d, array $files): void
     {
         $steps = $v->steps;
         $step = $steps[$check->step] ?? null;
@@ -73,12 +91,12 @@ class TechCheck
         $check->update(['answers' => $answers, 'step' => $check->step + 1]);
     }
 
-    public static function back(Check $check): void
+    public static function back(Check|StorageCheck $check): void
     {
         $check->update(['step' => max(0, $check->step - 1)]);
     }
 
-    public static function complete(Check $check, CheckProcedureVersion $v): bool
+    public static function complete(Check|StorageCheck $check, CheckProcedureVersion $v): bool
     {
         return $check->step >= count($v->steps)
             && collect($v->steps)->every(fn ($s) => isset(($check->answers ?? [])[$s['key']]));

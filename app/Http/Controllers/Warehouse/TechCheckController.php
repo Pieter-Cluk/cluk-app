@@ -17,6 +17,8 @@ class TechCheckController extends Controller
         $done = Check::with(['asset.item', 'order', 'checkedBy'])->whereNotNull('finished_at')->latest('finished_at')->limit(15)->get();
         $notices = ChargeNotice::with('order.company.accountOwner')->whereIn('status', ['review', 'sent', 'objected'])->latest('id')->get();
 
-        return view('warehouse.tech', ['open' => $open, 'done' => $done, 'notices' => $notices]);
+        $stored = \App\Models\Storage\StorageCheck::with('piece.item.contract.company', 'procedureVersion.procedure')->whereNull('finished_at')->latest('id')->get();
+
+        return view('warehouse.tech', ['open' => $open, 'done' => $done, 'notices' => $notices, 'stored' => $stored]);
     }
 }

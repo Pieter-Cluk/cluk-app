@@ -34,6 +34,9 @@ return [
         'choice' => 'Una opción',
     ],
     'builder' => [
+        'minutes' => 'Duración del control (minutos)',
+        'minutes_hint' => 'Se usa para facturar controles del material de clientes.',
+        'duration' => ':n min',
         'intro' => 'Procedimientos paso a paso para el Tech Check, por artículo. Edite el borrador y publique una versión: los controles en curso mantienen la versión con la que empezaron.',
         'procedure' => 'Procedimiento',
         'steps' => 'Pasos',
@@ -93,6 +96,7 @@ Sin precio = se valora después',
         'two_choices' => 'Indique al menos dos opciones.',
     ],
     'tech' => [
+        'customer_gear' => 'Material de clientes',
         'intro' => 'Las piezas que vuelven de un trabajo esperan aquí su control. Con un procedimiento del Check Builder, el control va paso a paso.',
         'open' => 'En espera o en curso',
         'piece' => 'Pieza',

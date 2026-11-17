@@ -34,6 +34,9 @@ return [
         'choice' => 'Un choix',
     ],
     'builder' => [
+        'minutes' => 'Durée du contrôle (minutes)',
+        'minutes_hint' => 'Sert à facturer les contrôles sur le matériel des clients.',
+        'duration' => ':n min',
         'intro' => 'Procédures pas à pas pour le Tech Check, par article. Modifiez le brouillon, puis publiez une version : les contrôles en cours gardent la version de départ.',
         'procedure' => 'Procédure',
         'steps' => 'Étapes',
@@ -93,6 +96,7 @@ Sans prix = chiffré plus tard',
         'two_choices' => 'Donnez au moins deux choix.',
     ],
     'tech' => [
+        'customer_gear' => 'Matériel des clients',
         'intro' => 'Les pièces revenues d’un job attendent ici leur contrôle. Avec une procédure du Check Builder, le contrôle se fait pas à pas.',
         'open' => 'En attente ou en cours',
         'piece' => 'Pièce',

@@ -19,6 +19,7 @@ return [
         'productsales' => 'Verkoopproducten',
         'purchasing' => 'Aankoop',
         'dryhire' => 'Dry-hire',
+        'storage' => 'Klantstockage',
         'techcheck' => 'Tech Check',
         'checkbuilder' => 'Check Builder',
         'warehouse' => 'Magazijn',

@@ -118,6 +118,10 @@ class PhoneController extends Controller
         if (preg_match('#/w/do/([a-z0-9]+)/?$#i', trim($code), $m)) {
             return $this->task($request, $m[1]);
         }
+        // A storage customer's piece (ST- label): its Tech Check.
+        if ($piece = \App\Models\Storage\StoredPiece::where('code', strtoupper(trim($code)))->first()) {
+            return redirect()->route('w.stored', $piece);
+        }
         $found = Moves::resolve($code);
         if (! $found) {
             return redirect()->route('w.scan')->withErrors(['code' => __('warehouse.errors.unknown', ['code' => mb_strimwidth($code, 0, 40, '…')])]);

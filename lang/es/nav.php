@@ -19,6 +19,7 @@ return [
         'productsales' => 'Productos de venta',
         'purchasing' => 'Compras',
         'dryhire' => 'Alquiler en seco',
+        'storage' => 'Almacenaje de clientes',
         'techcheck' => 'Tech Check',
         'checkbuilder' => 'Check Builder',
         'warehouse' => 'Almacén',

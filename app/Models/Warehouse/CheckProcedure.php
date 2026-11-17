@@ -15,14 +15,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * A step: ['key', 'title' => {nl, en}, 'text' => {nl, en}, 'photos' => [path], 'answer' => confirm|okfail|value|photo|choice,
  *          'choices' => [{nl, en}], 'costs' => [['label' => {nl, en}, 'cents' => ?int]]]
  */
-#[Fillable(['names', 'draft_steps', 'current_version_id', 'active', 'updated_by_id'])]
+#[Fillable(['names', 'minutes', 'draft_steps', 'current_version_id', 'active', 'updated_by_id'])]
 class CheckProcedure extends Model
 {
     public const ANSWERS = ['confirm', 'okfail', 'value', 'photo', 'choice'];
 
     protected function casts(): array
     {
-        return ['names' => 'array', 'draft_steps' => 'array', 'active' => 'boolean'];
+        return ['names' => 'array', 'draft_steps' => 'array', 'active' => 'boolean', 'minutes' => 'integer'];
     }
 
     public function versions(): HasMany
