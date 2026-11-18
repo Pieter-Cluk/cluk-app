@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['item_id', 'names', 'minutes', 'draft_steps', 'current_version_id', 'active', 'updated_by_id'])]
 class CheckProcedure extends Model
 {
-    public const ANSWERS = ['confirm', 'okfail', 'value', 'photo', 'choice'];
+    public const ANSWERS = ['confirm', 'okfail', 'value', 'runtime', 'photo', 'choice'];
 
     protected function casts(): array
     {

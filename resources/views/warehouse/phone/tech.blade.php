@@ -23,6 +23,9 @@
         @if ($view && ! $onView)<small>✓ {{ __('checks.run.view_by', ['by' => $view['by'] ?? '—', 'at' => $view['at'] ?? '', 'level' => __('checks.run.dirt.'.$view['dirt'])]) }}</small>@endif
         <small>{{ $v->procedure->name() }} · v{{ $v->version }}@if ($v->procedure->minutes) · ⏱ {{ __('checks.builder.duration', ['n' => $v->procedure->minutes]) }}@endif</small>
     </section>
+    @foreach (\App\Services\Warehouse\TechCheck::runtimeWarnings($check) as $w)
+        <p class="flash flash-warn">⚠ {{ $w['warn'] === 'over' ? __('checks.run.runtime_over', ['used' => $w['used'], 'allowed' => $w['allowed']]) : __('checks.run.runtime_lower', ['now' => $w['runtime'], 'prev' => $w['prev']]) }}</p>
+    @endforeach
     <ol class="tc-progress" aria-label="{{ __('checks.run.progress') }}">
         <li @class(['is-done' => $view, 'is-fail' => $view['broken'] ?? false, 'is-now' => $onView])></li>
         @foreach ($steps as $i => $s)
@@ -89,6 +92,12 @@
                         @break
                     @case('value')
                         <label class="field"><span>{{ __('checks.run.value') }}</span><input name="value" required maxlength="120" value="{{ old('value', $prev['value'] ?? '') }}" inputmode="text"></label>
+                        @break
+                    @case('runtime')
+                        @php($rt = \App\Services\Warehouse\TechCheck::runtime($check, 0))
+                        <label class="field"><span>{{ __('checks.run.runtime') }}</span><input name="value" required inputmode="decimal" value="{{ old('value', $prev['value'] ?? '') }}" data-runtime data-prev="{{ $rt['prev'] }}" data-allowed="{{ $rt['allowed'] }}"></label>
+                        <p class="muted small">@if ($rt['prev'] !== null){{ __('checks.run.runtime_prev', ['h' => $rt['prev'], 'date' => $rt['prev_at']]) }}@else{{ __('checks.run.runtime_first') }}@endif @if ($rt['allowed']) · {{ __('checks.run.runtime_allowed', ['h' => $rt['allowed']]) }}@endif</p>
+                        <p class="flash flash-warn" data-runtime-warn hidden></p>
                         @break
                     @case('choice')
                         @foreach ($step['choices'] as $ci => $c)
@@ -166,7 +175,7 @@
                 @foreach ($steps as $s)
                     @php($a = $check->answers[$s['key']] ?? [])
                     <li @class(['is-fail' => ($a['answer'] ?? null) === 'fail'])><b>{{ ($a['answer'] ?? null) === 'fail' ? '✕' : '✓' }} {{ $say($s['title']) }}</b>@if ($a['by'] ?? null)<small class="muted">{{ $a['by'] }} · {{ $a['at'] }}</small>@endif
-                        @if ($a['value'] ?? null)<small>{{ $a['value'] }}</small>@endif
+                        @if ($a['value'] ?? null)<small>{{ $a['value'] }}@if (isset($a['used']) && $a['used'] !== null) · {{ __('checks.run.runtime_used', ['h' => $a['used']]) }}@endif</small>@endif
                         @if ($a['note'] ?? null)<small>{{ $a['note'] }}</small>@endif
                         @foreach ($a['costs'] ?? [] as $ci)<small class="txt-warn">€ {{ $say($s['costs'][$ci]['label'] ?? []) }}@if (isset($s['costs'][$ci]['cents'])) · {{ $eur($s['costs'][$ci]['cents']) }}@endif</small>@endforeach
                         @if ($a['extra'] ?? null)<small class="txt-warn">€ {{ $a['extra']['label'] }}@if ($a['extra']['cents'] !== null) · {{ $eur($a['extra']['cents']) }}@endif</small>@endif
@@ -192,6 +201,20 @@
         <form method="post" action="{{ $sub['back'] }}">@csrf<button class="btn ph-big" type="submit">← {{ __('checks.run.back') }}</button></form>
     @endif
     <script>
+    (function () {
+        var rt = document.querySelector('[data-runtime]'), w = document.querySelector('[data-runtime-warn]');
+        if (!rt || !w) return;
+        var prev = parseFloat(rt.dataset.prev), allowed = parseFloat(rt.dataset.allowed);
+        var over = @js(__('checks.run.runtime_over')), lower = @js(__('checks.run.runtime_lower'));
+        function check() {
+            var now = parseFloat(rt.value.replace(',', '.')), used = now - prev;
+            w.hidden = true;
+            if (isNaN(now) || isNaN(prev)) return;
+            if (used < 0) { w.textContent = '⚠ ' + lower.replace(':now', now).replace(':prev', prev); w.hidden = false; }
+            else if (!isNaN(allowed) && used > allowed) { w.textContent = '⚠ ' + over.replace(':used', Math.round(used * 10) / 10).replace(':allowed', allowed); w.hidden = false; }
+        }
+        rt.addEventListener('input', check); check();
+    })();
     (function () {
         var box = document.querySelector('[data-fail-box]');
         if (!box) return;

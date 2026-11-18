@@ -10,6 +10,11 @@
         @if ($charges->where('status', 'approved')->isNotEmpty())<a class="btn" href="{{ route('warehouse.charges.proforma', $order) }}" target="_blank" rel="noopener">{{ \App\Http\Controllers\Warehouse\WarehouseController::code($order) }}</a>@endif
     </div>
     @include('partials.flash')
+    @foreach (\App\Models\Warehouse\Check::with('asset')->where('order_id', $order->id)->whereNotNull('finished_at')->get() as $ck)
+        @foreach (\App\Services\Warehouse\TechCheck::runtimeWarnings($ck) as $w)
+            @if ($w['warn'] === 'over')<p class="flash flash-warn">⚠ <b>{{ $ck->asset?->code }}</b> · {{ __('checks.run.runtime_over', ['used' => $w['used'], 'allowed' => $w['allowed']]) }} {{ __('checks.run.runtime_owner') }}</p>@endif
+        @endforeach
+    @endforeach
     @if ($charges->contains('kind', 'missing'))<p class="flash flash-warn"><b>{{ __('checks.notice.incomplete_title') }}</b> · {{ __('checks.notice.incomplete_hint') }}</p>@endif
     @if ($notice)
         <p @class(['flash', 'flash-warn' => in_array($notice->status, ['review', 'objected'], true), 'flash-ok' => in_array($notice->status, ['sent', 'invoiced'], true)])>

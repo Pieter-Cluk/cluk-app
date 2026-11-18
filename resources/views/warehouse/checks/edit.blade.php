@@ -19,15 +19,19 @@
                 <p class="muted small">{{ __('checks.builder.view_hint', ['c2' => \App\Services\Afrit6\Pricing::eur((int) config('warehouse.cleaning')[2]), 'c3' => \App\Services\Afrit6\Pricing::eur((int) config('warehouse.cleaning')[3])]) }}</p>
             </section>
             @forelse ($steps as $i => $s)
+                <div class="cb-row">
+                <div class="cb-move" aria-label="{{ __('checks.builder.order') }}">
+                    <form method="post" action="{{ route('checks.step.move', [$p, $s['key']]) }}">@csrf<input type="hidden" name="dir" value="up"><button class="iconbtn" type="submit" title="{{ __('checks.builder.up') }}" aria-label="{{ __('checks.builder.up') }}" @disabled($i === 0)>↑</button></form>
+                    <form method="post" action="{{ route('checks.step.move', [$p, $s['key']]) }}">@csrf<input type="hidden" name="dir" value="down"><button class="iconbtn" type="submit" title="{{ __('checks.builder.down') }}" aria-label="{{ __('checks.builder.down') }}" @disabled($i === count($steps) - 1)>↓</button></form>
+                </div>
                 <details class="card cb-step" id="step-{{ $s['key'] }}" @if (session('open') === $s['key']) open @endif>
                     <summary><span class="cb-n">{{ $i + 2 }}</span><b>{{ $say($s['title']) ?: '—' }}</b> <span class="muted small">{{ __('checks.answers.'.$s['answer']) }}@if (! empty($s['photos'])) · 📷 {{ count($s['photos']) }}@endif @if (! empty($s['costs'])) · € {{ count($s['costs']) }}@endif</span></summary>
                     @include('warehouse.checks._step-form', ['s' => $s])
                     <div class="inline-form mt">
-                        @if ($i > 0)<form method="post" action="{{ route('checks.step.move', [$p, $s['key']]) }}">@csrf<input type="hidden" name="dir" value="up"><button class="btn btn-sm" type="submit">↑ {{ __('checks.builder.up') }}</button></form>@endif
-                        @if ($i < count($steps) - 1)<form method="post" action="{{ route('checks.step.move', [$p, $s['key']]) }}">@csrf<input type="hidden" name="dir" value="down"><button class="btn btn-sm" type="submit">↓ {{ __('checks.builder.down') }}</button></form>@endif
                         <form method="post" action="{{ route('checks.step.delete', [$p, $s['key']]) }}">@csrf @method('DELETE')<button class="linkbtn danger" type="submit">{{ __('checks.builder.delete_step') }}</button></form>
                     </div>
                 </details>
+                </div>
             @empty
                 <p class="muted">{{ __('checks.builder.no_steps_yet') }}</p>
             @endforelse

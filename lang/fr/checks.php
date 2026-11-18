@@ -3,6 +3,14 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'runtime' => 'Compteur d’heures',
+        'runtime_prev' => 'Dernier contrôle : :h h le :date',
+        'runtime_first' => 'Pas de relevé antérieur pour cette pièce',
+        'runtime_allowed' => 'la location couvrait :h h d’utilisation',
+        'runtime_over' => ':used h utilisées depuis le dernier contrôle, la location couvrait :allowed h.',
+        'runtime_lower' => 'Le compteur (:now h) est plus bas qu’au dernier contrôle (:prev h) : remis à zéro ou remplacé ?',
+        'runtime_used' => ':h h utilisées',
+        'runtime_owner' => 'Facturez l’utilisation supplémentaire au client si nécessaire.',
         'scan_hint' => 'Scannez le QR code de l’appareil : son Tech Check s’ouvre. Un contrôle inachevé reprend là où il s’est arrêté.',
         'busy' => 'En cours',
         'status_view' => 'En attente de la vue complète (nettoyage)',
@@ -62,6 +70,7 @@ return [
         'not_done' => 'Répondez d’abord à chaque étape.',
     ],
     'answers' => [
+        'runtime' => 'Compteur d’heures (comparé à la période de location)',
         'confirm' => 'Confirmer (fait)',
         'okfail' => 'OK / pas OK',
         'value' => 'Saisir une valeur (ex. heures de lampe)',
@@ -69,6 +78,7 @@ return [
         'choice' => 'Un choix',
     ],
     'builder' => [
+        'order' => 'Ordre des étapes',
         'automatic' => 'automatique, chaque contrôle',
         'view_hint' => 'Se fait au poste de nettoyage : propreté (1 propre € 0 · 2 pas propre :c2 · 3 sale :c3, facturé au client) et quelque chose de cassé. Les étapes techniques ci-dessous peuvent être faites plus tard par quelqu’un d’autre.',
         'delete' => 'Supprimer ce Tech Check',

@@ -243,6 +243,31 @@ class TechCheckTest extends TestCase
         $this->actingAs($boss)->get('/dry-hire/items/'.$spiider->id)->assertDontSee('not a standard configuration');
     }
 
+    /** Hours meter: the hours since the last check against the use days of the rental (2 days = 48 h). */
+    public function test_runtime_is_checked_against_the_rental_period(): void
+    {
+        [$spiider, $order, $assets] = $this->returned(); // use: 2 days
+        $p = $this->procedure($spiider);
+        $key = $p->draft_steps[1]['key'];
+        $this->actingAs($this->builder)->post('/warehouse/check-builder/'.$p->id.'/steps', ['key' => $key, 'title_en' => 'Lamp hours', 'answer' => 'runtime'])->assertSessionHasNoErrors();
+        $this->actingAs($this->builder)->get('/warehouse/check-builder/'.$p->id)->assertSee('aria-label="Up"', false)->assertSee('aria-label="Down"', false);
+        $this->actingAs($this->builder)->post('/warehouse/check-builder/'.$p->id.'/publish');
+        $a = $assets[0];
+        Check::create(['asset_id' => $a->id, 'finished_at' => now()->subDays(10), 'result' => 'ok', 'answers' => ['old' => ['answer' => 'ok', 'runtime' => 1000.0]]]);
+
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['dirt' => 1, 'broken' => 'no']);
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['answer' => 'ok']);
+        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertSee('Vorige check: 1000 u')->assertSee('de huur dekte 48 u gebruik');
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['value' => 'abc'])->assertSessionHasErrors('answer');
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['value' => '1130,5'])->assertRedirect();
+        $ans = Check::where('asset_id', $a->id)->whereNull('finished_at')->first()->answers[$key];
+        $this->assertSame([1130.5, 130.5, 48, 'over'], [$ans['runtime'], $ans['used'], $ans['allowed'], $ans['warn']]);
+        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertSee('130.5 u gebruikt sinds de vorige check, de huur dekte 48 u.');
+
+        // A lower meter than last time is flagged too.
+        $this->assertSame('lower', \App\Services\Warehouse\TechCheck::runtime(Check::where('asset_id', $a->id)->whereNull('finished_at')->first(), 900)['warn']);
+    }
+
     public function test_pages_speak_every_language(): void
     {
         [$spiider, $order, $assets] = $this->returned();

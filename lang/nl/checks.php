@@ -3,6 +3,14 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'runtime' => 'Urenteller (looptijd)',
+        'runtime_prev' => 'Vorige check: :h u op :date',
+        'runtime_first' => 'Geen eerdere stand voor dit stuk',
+        'runtime_allowed' => 'de huur dekte :h u gebruik',
+        'runtime_over' => ':used u gebruikt sinds de vorige check, de huur dekte :allowed u.',
+        'runtime_lower' => 'De teller (:now u) staat lager dan bij de vorige check (:prev u): gereset of vervangen?',
+        'runtime_used' => ':h u gebruikt',
+        'runtime_owner' => 'Reken het extra gebruik aan de klant aan indien nodig.',
         'scan_hint' => 'Scan de QR-code van de fixture: de Tech Check opent. Een onafgewerkte check gaat verder waar hij stopte.',
         'busy' => 'Bezig',
         'status_view' => 'Wacht op het volledige zicht (reiniging)',
@@ -62,6 +70,7 @@ return [
         'not_done' => 'Beantwoord eerst elke stap.',
     ],
     'answers' => [
+        'runtime' => 'Urenteller (getoetst aan de huurperiode)',
         'confirm' => 'Bevestigen (gedaan)',
         'okfail' => 'OK / niet OK',
         'value' => 'Waarde invullen (bv. lampuren)',
@@ -69,6 +78,7 @@ return [
         'choice' => 'Eén keuze',
     ],
     'builder' => [
+        'order' => 'Volgorde van de stappen',
         'automatic' => 'automatisch, elke check',
         'view_hint' => 'Gebeurt aan de reinigingsplaats: hoe proper (1 proper € 0 · 2 niet proper :c2 · 3 vuil :c3, aangerekend aan de klant) en is er iets kapot. De technische stappen hieronder kan later iemand anders doen.',
         'delete' => 'Deze Tech Check verwijderen',

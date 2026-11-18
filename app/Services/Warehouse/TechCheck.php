@@ -67,6 +67,7 @@ class TechCheck
             'confirm' => $answer === 'done',
             'okfail' => in_array($answer, ['ok', 'fail'], true),
             'value' => trim((string) ($d['value'] ?? '')) !== '',
+            'runtime' => is_numeric(str_replace(',', '.', (string) ($d['value'] ?? ''))),
             'photo' => $photos > 0,
             'choice' => isset($step['choices'][(int) ($d['value'] ?? -1)]),
             default => true,
@@ -89,7 +90,50 @@ class TechCheck
             'costs' => $costs,
             'extra' => $extra !== '' ? ['label' => mb_substr($extra, 0, 120), 'cents' => ($d['extra_amount'] ?? '') !== '' ? (int) round((float) $d['extra_amount'] * 100) : null] : null,
         ];
+        if ($step['answer'] === 'runtime') {
+            $answers[$step['key']] += self::runtime($check, (float) str_replace(',', '.', (string) $d['value']));
+        }
         $check->update(['answers' => $answers, 'step' => $check->step + 1]);
+    }
+
+    /**
+     * Runtime (hours meter): the hours since the last check of this piece, against the hours the rental covered
+     * (use days × 24). More than that, or a lower meter than last time, gives a warning.
+     *
+     * @return array{runtime: float, prev: ?float, prev_at: ?string, used: ?float, allowed: ?int, warn: ?string}
+     */
+    public static function runtime(Check|StorageCheck $check, float $now): array
+    {
+        $prev = self::lastRuntime($check);
+        $allowed = null;
+        if ($check instanceof Check && ($o = $check->order) && $o->use_from && $o->use_until) {
+            $allowed = ($o->use_from->copy()->startOfDay()->diffInDays($o->use_until->copy()->startOfDay()) + 1) * 24;
+        }
+        $used = $prev ? round($now - $prev['value'], 1) : null;
+        $warn = $used === null ? null : ($used < 0 ? 'lower' : ($allowed !== null && $used > $allowed ? 'over' : null));
+
+        return ['runtime' => $now, 'prev' => $prev['value'] ?? null, 'prev_at' => $prev['at'] ?? null, 'used' => $used, 'allowed' => $allowed, 'warn' => $warn];
+    }
+
+    /** The meter reading of the last finished check of this piece. */
+    public static function lastRuntime(Check|StorageCheck $check): ?array
+    {
+        $q = $check instanceof Check ? Check::where('asset_id', $check->asset_id) : StorageCheck::where('stored_piece_id', $check->stored_piece_id);
+        foreach ($q->whereNotNull('finished_at')->where('id', '!=', $check->id)->latest('finished_at')->limit(20)->get() as $c) {
+            foreach ($c->answers ?? [] as $a) {
+                if (is_array($a) && isset($a['runtime'])) {
+                    return ['value' => (float) $a['runtime'], 'at' => $c->finished_at->format('d/m/Y')];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /** Runtime warnings of a check (for the summary and the account owner). */
+    public static function runtimeWarnings(Check|StorageCheck $check): array
+    {
+        return collect($check->answers ?? [])->filter(fn ($a) => is_array($a) && ! empty($a['warn']))->values()->all();
     }
 
     /**

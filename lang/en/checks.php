@@ -3,6 +3,14 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'runtime' => 'Hours meter (runtime)',
+        'runtime_prev' => 'Last check: :h h on :date',
+        'runtime_first' => 'No earlier reading for this piece',
+        'runtime_allowed' => 'the rental covered :h h of use',
+        'runtime_over' => 'Used :used h since the last check, the rental covered :allowed h.',
+        'runtime_lower' => 'The meter (:now h) is lower than at the last check (:prev h): reset or replaced?',
+        'runtime_used' => ':h h used',
+        'runtime_owner' => 'Charge the extra use to the customer if needed.',
         'scan_hint' => 'Scan the QR code of the fixture: its Tech Check opens. An unfinished check continues where it stopped.',
         'busy' => 'In progress',
         'status_view' => 'Waiting for the complete view (cleaning)',
@@ -62,6 +70,7 @@ return [
         'not_done' => 'Answer every step first.',
     ],
     'answers' => [
+        'runtime' => 'Hours meter (checked against the rental period)',
         'confirm' => 'Confirm (done)',
         'okfail' => 'OK / not OK',
         'value' => 'Fill in a value (e.g. lamp hours)',
@@ -69,6 +78,7 @@ return [
         'choice' => 'Choose one',
     ],
     'builder' => [
+        'order' => 'Order of the steps',
         'automatic' => 'automatic, every check',
         'view_hint' => 'Done at the cleaning place: how clean (1 clean € 0 · 2 not clean :c2 · 3 dirty :c3, charged to the customer) and is anything broken. The technical steps below can be done later by someone else.',
         'delete' => 'Delete this Tech Check',
