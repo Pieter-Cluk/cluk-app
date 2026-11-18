@@ -460,7 +460,7 @@ class PhoneController extends Controller
             $check = $check->fresh();
 
             return view('warehouse.phone.tech', ['asset' => $asset, 'check' => $check, 'v' => $v, 'kit' => \App\Services\Warehouse\TechCheck::kit($check),
-                'onKit' => \App\Services\Warehouse\TechCheck::proceduresDone($check, $v), 'done' => \App\Services\Warehouse\TechCheck::complete($check, $v)]);
+                'onKit' => \App\Services\Warehouse\TechCheck::proceduresDone($check, $v), 'onView' => ! \App\Services\Warehouse\TechCheck::viewDone($check), 'done' => \App\Services\Warehouse\TechCheck::complete($check, $v)]);
         }
 
         return view('warehouse.phone.check', [
@@ -473,7 +473,7 @@ class PhoneController extends Controller
     {
         $d = $request->validate([
             'tests' => ['array'], 'tests.*' => [Rule::in(['ok', 'fail'])],
-            'missing' => ['array'], 'missing.*' => ['nullable', 'integer', 'min:0', 'max:999'],
+            'missing' => ['array'], 'missing.*' => ['nullable', 'integer', 'min:0', 'max:999'], 'dirt' => ['nullable', 'integer'], 'broken' => ['nullable', 'in:no,yes'],
             'extra_item' => ['nullable', 'string', 'max:60'], 'extra_qty' => ['nullable', 'integer', 'min:1', 'max:999'],
             'damage_type' => ['array'], 'damage_type.*' => ['nullable', Rule::in(config('warehouse.damage_types'))],
             'damage_note' => ['array'], 'damage_note.*' => ['nullable', 'string', 'max:200'],
@@ -516,13 +516,16 @@ class PhoneController extends Controller
         $check = Check::openFor($asset->load('item'));
         $v = \App\Services\Warehouse\TechCheck::version($asset, $check);
         abort_unless($v, 404);
+        $onView = ! \App\Services\Warehouse\TechCheck::viewDone($check);
         $onKit = \App\Services\Warehouse\TechCheck::proceduresDone($check, $v);
         if ($request->boolean('photo_only')) {
-            Checks::addPhotos($check, $request->file('photos', []), $onKit ? 'kit' : 'step:'.($v->steps[$check->step]['key'] ?? 'x'));
+            Checks::addPhotos($check, $request->file('photos', []), $onView ? 'view' : ($onKit ? 'kit' : 'step:'.($v->steps[$check->step]['key'] ?? 'x')));
 
             return back()->withInput();
         }
-        if ($onKit) {
+        if ($onView) {
+            \App\Services\Warehouse\TechCheck::answerView($check, $request->only(['dirt', 'broken', 'note', 'extra_label', 'extra_amount']), $request->file('photos', []));
+        } elseif ($onKit) {
             Checks::addPhotos($check, $request->file('photos', []), 'kit');
             \App\Services\Warehouse\TechCheck::answerKit($check, (array) $request->input('missing', []));
         } else {

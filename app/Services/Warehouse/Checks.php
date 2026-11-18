@@ -146,6 +146,14 @@ class Checks
                     self::charge($check, $order, 'damage', $a['extra']['label'].' ('.$title.') · '.$asset->code, $a['extra']['cents']);
                 }
             }
+            $view = $check->answers['_view'] ?? [];
+            if (! empty($view['broken'])) {
+                $broken = true;
+                $tests['_view'] = 'fail';
+                if ($order && ! empty($view['extra'])) {
+                    self::charge($check, $order, 'damage', $view['extra']['label'].' · '.$asset->code, $view['extra']['cents']);
+                }
+            }
             $missingList = [];
             foreach (array_filter($missing) as $itemId => $qty) {
                 if ($item = Item::find($itemId)) {

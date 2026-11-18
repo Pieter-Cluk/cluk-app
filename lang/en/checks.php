@@ -3,6 +3,24 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'view_title' => 'Complete view of the fixture',
+        'view_text' => 'Look at the whole fixture from all sides before you start.',
+        'view_clean' => 'How clean is it?',
+        'dirt' => [
+            '1' => 'Clean',
+            '2' => 'Not clean',
+            '3' => 'Dirty',
+        ],
+        'dirt_hint' => [
+            '1' => 'only a dry cloth',
+            '2' => 'wet cloth and products',
+            '3' => 'in depth: products, air pressure, open the fixture',
+        ],
+        'view_broken' => 'Is anything broken?',
+        'nothing_broken' => 'Nothing broken',
+        'something_broken' => 'Something is broken',
+        'view_photo_hint' => 'A photo is needed for "not clean", "dirty" or anything broken.',
+        'view_photo' => 'Take a photo first (not clean or dirty is charged to the customer).',
         'open_card' => 'Dry-hire card :number',
         'kit_title' => 'Accessories complete?',
         'kit_text' => 'These always go with this item. Check each one: complete, or how many are missing.',

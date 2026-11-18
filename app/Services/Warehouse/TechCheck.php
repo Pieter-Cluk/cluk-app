@@ -91,10 +91,47 @@ class TechCheck
         $check->update(['answers' => $answers, 'step' => $check->step + 1]);
     }
 
+    /**
+     * Always the first step: the complete view of the fixture. How clean is it (1 clean, 2 not clean, 3 dirty: the
+     * cleaning cost for the customer) and is anything broken (a note, a photo and optionally a cost)?
+     */
+    public static function answerView(Check|StorageCheck $check, array $d, array $files): void
+    {
+        Checks::addPhotos($check, $files, 'view');
+        $dirt = (int) ($d['dirt'] ?? 0);
+        if (! in_array($dirt, [1, 2, 3], true) || ! in_array($d['broken'] ?? null, ['no', 'yes'], true)) {
+            throw ValidationException::withMessages(['answer' => __('checks.run.answer_first')]);
+        }
+        $photos = Checks::photoCount($check, 'view');
+        if ($dirt >= (int) config('warehouse.photo_stage') && $photos === 0) {
+            throw ValidationException::withMessages(['note' => __('checks.run.view_photo')]);
+        }
+        $broken = $d['broken'] === 'yes';
+        if ($broken && (trim((string) ($d['note'] ?? '')) === '' || $photos === 0)) {
+            throw ValidationException::withMessages(['note' => __('checks.run.fail_needs')]);
+        }
+        $extra = trim((string) ($d['extra_label'] ?? ''));
+        $answers = $check->answers ?? [];
+        $answers['_view'] = ['dirt' => $dirt, 'broken' => $broken, 'note' => trim((string) ($d['note'] ?? '')) ?: null,
+            'extra' => $broken && $extra !== '' ? ['label' => mb_substr($extra, 0, 120), 'cents' => ($d['extra_amount'] ?? '') !== '' ? (int) round((float) $d['extra_amount'] * 100) : null] : null];
+        $check->update(['answers' => $answers] + ($check instanceof Check ? ['dirt' => $dirt, 'cleaned_at' => now()] : []));
+    }
+
+    public static function viewDone(Check|StorageCheck $check): bool
+    {
+        return isset(($check->answers ?? [])['_view']);
+    }
+
     public static function back(Check|StorageCheck $check): void
     {
         $answers = $check->answers ?? [];
-        if ($check->step >= self::stepCount($check) - 1 && isset($answers['_kit'])) {
+        if ($check->step === 0 && isset($answers['_view']) && ! isset($answers['_kit'])) {
+            unset($answers['_view']); // back from the first procedure step to the complete view
+            $check->update(['answers' => $answers]);
+
+            return;
+        }
+        if (isset($answers['_kit'])) {
             unset($answers['_kit']); // back from the summary to the accessories
             $check->update(['answers' => $answers]);
 
@@ -116,12 +153,12 @@ class TechCheck
     {
         $v = $check->procedureVersion;
 
-        return count($v?->steps ?? []) + (self::kit($check)->isNotEmpty() ? 1 : 0);
+        return 1 + count($v?->steps ?? []) + (self::kit($check)->isNotEmpty() ? 1 : 0);
     }
 
     public static function proceduresDone(Check|StorageCheck $check, CheckProcedureVersion $v): bool
     {
-        return $check->step >= count($v->steps) && collect($v->steps)->every(fn ($s) => isset(($check->answers ?? [])[$s['key']]));
+        return self::viewDone($check) && $check->step >= count($v->steps) && collect($v->steps)->every(fn ($s) => isset(($check->answers ?? [])[$s['key']]));
     }
 
     public static function complete(Check|StorageCheck $check, CheckProcedureVersion $v): bool

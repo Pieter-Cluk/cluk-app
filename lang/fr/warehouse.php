@@ -84,9 +84,9 @@ return [
         'room' => 'pièce fermée, pas de poussière vers les zones de contrôle',
         'how_dirty' => 'Quel niveau de saleté ?',
         'stages' => [
-            '1' => 'Normal',
-            '2' => 'Un peu sale',
-            '3' => 'Très sale',
+            '1' => 'Propre',
+            '2' => 'Pas propre',
+            '3' => 'Sale',
         ],
         'no_cost' => 'sans frais',
         'stage_hint' => 'Le niveau 1 est un nettoyage normal. Les niveaux 2 et 3 demandent du temps ou des produits en plus, facturés après accord du bureau.',

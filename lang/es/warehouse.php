@@ -84,9 +84,9 @@ return [
         'room' => 'sala cerrada, sin polvo hacia las zonas de control',
         'how_dirty' => '¿Qué tan sucio estaba?',
         'stages' => [
-            '1' => 'Normal',
-            '2' => 'Algo sucio',
-            '3' => 'Muy sucio',
+            '1' => 'Limpio',
+            '2' => 'No limpio',
+            '3' => 'Sucio',
         ],
         'no_cost' => 'sin coste',
         'stage_hint' => 'La fase 1 es una limpieza normal. Las fases 2 y 3 suponen tiempo extra o productos especiales, cobrados tras la aprobación de la oficina.',

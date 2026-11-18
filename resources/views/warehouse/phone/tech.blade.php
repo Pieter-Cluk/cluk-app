@@ -6,8 +6,10 @@
 @php($eur = fn ($c) => \App\Services\Afrit6\Pricing::eur((int) $c))
 @php($steps = $v->steps)
 @php($kit = $kit ?? collect())
-@php($n = count($steps) + ($kit->isNotEmpty() ? 1 : 0))
-@php($step = ($onKit ?? false) ? null : $steps[$check->step] ?? null)
+@php($onView = $onView ?? false)
+@php($n = 1 + count($steps) + ($kit->isNotEmpty() ? 1 : 0))
+@php($step = ($onView || ($onKit ?? false)) ? null : $steps[$check->step] ?? null)
+@php($view = $check->answers['_view'] ?? null)
 @php($kitStep = ($onKit ?? false) && ! $done)
 @php($card = $stored ? $piece->item->sameAs : $asset->item)
 @php($prev = $step ? (($check->answers ?? [])[$step['key']] ?? null) : null)
@@ -18,21 +20,56 @@
         @if ($card)
             <a class="tc-card" href="{{ route('equipment.show', $card) }}" target="_blank" rel="noopener">@if ($card->photo_path)<img src="{{ route('equipment.photo', $card) }}" alt="" loading="lazy">@endif<span>{{ __('checks.run.open_card', ['number' => $card->number]) }} ↗</span></a>
         @endif
-        <small>{{ $v->procedure->name() }} · v{{ $v->version }}@if ($v->procedure->minutes) · ⏱ {{ __('checks.builder.duration', ['n' => $v->procedure->minutes]) }}@endif @unless ($stored) · {{ $check->cleaned_at ? '✓ '.__('warehouse.check.cleaned', ['stage' => $check->dirt, 'stage_name' => __('warehouse.clean.stages.'.$check->dirt)]) : __('warehouse.check.not_cleaned') }}@endunless</small>
+        <small>{{ $v->procedure->name() }} · v{{ $v->version }}@if ($v->procedure->minutes) · ⏱ {{ __('checks.builder.duration', ['n' => $v->procedure->minutes]) }}@endif</small>
     </section>
     <ol class="tc-progress" aria-label="{{ __('checks.run.progress') }}">
+        <li @class(['is-done' => $view, 'is-fail' => $view['broken'] ?? false, 'is-now' => $onView])></li>
         @foreach ($steps as $i => $s)
             @php($a = ($check->answers ?? [])[$s['key']] ?? null)
-            <li @class(['is-done' => $a && $i < $check->step, 'is-fail' => ($a['answer'] ?? null) === 'fail', 'is-now' => ! ($onKit ?? false) && $i === $check->step])></li>
+            <li @class(['is-done' => $a && $i < $check->step, 'is-fail' => ($a['answer'] ?? null) === 'fail', 'is-now' => ! $onView && ! ($onKit ?? false) && $i === $check->step])></li>
         @endforeach
         @if ($kit->isNotEmpty())<li @class(['is-done' => $done, 'is-fail' => $done && array_filter($check->answers['_kit'] ?? []), 'is-now' => $kitStep])></li>@endif
     </ol>
 
-    @if ($step)
+    @if ($onView)
+        {{-- Step 1, always: the complete view of the fixture. How clean is it, is anything broken? --}}
+        @php($pre = (int) old('dirt', $check->dirt ?? 0))
         <form method="post" action="{{ $sub['step'] }}" enctype="multipart/form-data" class="tc-step">
             @csrf
             <input type="hidden" name="photo_only" value="0" data-photo-only>
-            <div class="tc-kicker">{{ __('checks.run.step_of', ['n' => $check->step + 1, 'total' => $n]) }}</div>
+            <div class="tc-kicker">{{ __('checks.run.step_of', ['n' => 1, 'total' => $n]) }}</div>
+            <h2 class="tc-title">{{ __('checks.run.view_title') }}</h2>
+            <p class="tc-text">{{ __('checks.run.view_text') }}</p>
+            <h3 class="ph-h">{{ __('checks.run.view_clean') }}</h3>
+            <div class="tc-answer">
+                @foreach ([1, 2, 3] as $lvl)
+                    @php($cost = (int) (config('warehouse.cleaning')[$lvl] ?? 0))
+                    <label @class(['tc-big', 'tc-ok' => $lvl === 1, 'tc-fail' => $lvl === 3])><input type="radio" name="dirt" value="{{ $lvl }}" required @checked($pre === $lvl)>
+                        <span><b>{{ $lvl }} · {{ __('checks.run.dirt.'.$lvl) }}</b><small class="tc-sub">{{ __('checks.run.dirt_hint.'.$lvl) }}@unless ($stored) · {{ $cost ? $eur($cost) : __('warehouse.clean.no_cost') }}@endunless</small></span></label>
+                @endforeach
+            </div>
+            <h3 class="ph-h">{{ __('checks.run.view_broken') }}</h3>
+            <div class="tc-answer">
+                <label class="tc-big tc-ok"><input type="radio" name="broken" value="no" required @checked(old('broken') === 'no') data-fail-off> ✓ {{ __('checks.run.nothing_broken') }}</label>
+                <label class="tc-big tc-fail"><input type="radio" name="broken" value="yes" @checked(old('broken') === 'yes') data-fail-on> ✕ {{ __('checks.run.something_broken') }}</label>
+            </div>
+            <h3 class="ph-h">{{ __('warehouse.check.photos') }}</h3>
+            <p class="muted small">{{ __('checks.run.view_photo_hint') }}</p>
+            @include('warehouse.phone._photos', ['stage' => 'view', 'photoRoute' => $sub['photo']])
+            <div class="tc-fail-box" data-fail-box>
+                <label class="field"><span>{{ __('checks.run.note_fail') }}</span><textarea name="note" rows="2" maxlength="500">{{ old('note') }}</textarea></label>
+                <div class="ph-row"><input name="extra_label" maxlength="120" value="{{ old('extra_label') }}" placeholder="{{ __('checks.run.other_cost_hint') }}" aria-label="{{ __('checks.run.other_cost') }}">
+                    <input name="extra_amount" type="number" step="0.01" min="0" class="ph-qty" value="{{ old('extra_amount') }}" placeholder="€" aria-label="{{ __('warehouse.office.amount') }}"></div>
+            </div>
+            @error('answer')<p class="flash flash-err">{{ $message }}</p>@enderror
+            @error('note')<p class="flash flash-err">{{ $message }}</p>@enderror
+            <button class="primary ph-big" type="submit">{{ __('checks.run.next') }}</button>
+        </form>
+    @elseif ($step)
+        <form method="post" action="{{ $sub['step'] }}" enctype="multipart/form-data" class="tc-step">
+            @csrf
+            <input type="hidden" name="photo_only" value="0" data-photo-only>
+            <div class="tc-kicker">{{ __('checks.run.step_of', ['n' => $check->step + 2, 'total' => $n]) }}</div>
             <h2 class="tc-title">{{ $say($step['title']) }}</h2>
             @if ($say($step['text']))<p class="tc-text">{!! nl2br(e($say($step['text']))) !!}</p>@endif
             @if (! empty($step['photos']))
@@ -82,11 +119,9 @@
             @error('answer')<p class="flash flash-err">{{ $message }}</p>@enderror
             @error('note')<p class="flash flash-err">{{ $message }}</p>@enderror
 
-            <button class="primary ph-big" type="submit">{{ $check->step + 1 < $n ? __('checks.run.next') : __('checks.run.last') }}</button>
+            <button class="primary ph-big" type="submit">{{ $check->step + 2 < $n ? __('checks.run.next') : __('checks.run.last') }}</button>
         </form>
-        @if ($check->step > 0)
-            <form method="post" action="{{ $sub['back'] }}">@csrf<button class="btn ph-big" type="submit">← {{ __('checks.run.back') }}</button></form>
-        @endif
+        <form method="post" action="{{ $sub['back'] }}">@csrf<button class="btn ph-big" type="submit">← {{ __('checks.run.back') }}</button></form>
     @elseif ($kitStep)
         {{-- The accessories that always go with this item: each one complete, or how many are missing. --}}
         <form method="post" action="{{ $sub['step'] }}" enctype="multipart/form-data" class="tc-step">
@@ -120,6 +155,12 @@
             <input type="hidden" name="photo_only" value="0" data-photo-only>
             <h2 class="ph-h">{{ __('checks.run.summary') }}</h2>
             <ul class="tc-sum">
+                @if ($view)
+                    <li @class(['is-fail' => $view['broken']])><b>{{ $view['broken'] ? '✕' : '✓' }} {{ __('checks.run.view_title') }}</b>
+                        <small>{{ $view['dirt'] }} · {{ __('checks.run.dirt.'.$view['dirt']) }}@if (! $stored && ($c = (int) (config('warehouse.cleaning')[$view['dirt']] ?? 0))) · {{ $eur($c) }}@endif</small>
+                        @if ($view['note'])<small>{{ $view['note'] }}</small>@endif
+                        @if ($view['extra'])<small class="txt-warn">€ {{ $view['extra']['label'] }}@if ($view['extra']['cents'] !== null) · {{ $eur($view['extra']['cents']) }}@endif</small>@endif</li>
+                @endif
                 @foreach ($steps as $s)
                     @php($a = $check->answers[$s['key']] ?? [])
                     <li @class(['is-fail' => ($a['answer'] ?? null) === 'fail'])><b>{{ ($a['answer'] ?? null) === 'fail' ? '✕' : '✓' }} {{ $say($s['title']) }}</b>

@@ -84,9 +84,9 @@ return [
         'room' => 'closed room, so no dust reaches the check areas',
         'how_dirty' => 'How dirty was it?',
         'stages' => [
-            '1' => 'Normal',
-            '2' => 'Slightly dirty',
-            '3' => 'Very dirty',
+            '1' => 'Clean',
+            '2' => 'Not clean',
+            '3' => 'Dirty',
         ],
         'no_cost' => 'no cost',
         'stage_hint' => 'Stage 1 is a normal clean. Stages 2 and 3 mean extra time or special products, charged to the customer after the office approves.',

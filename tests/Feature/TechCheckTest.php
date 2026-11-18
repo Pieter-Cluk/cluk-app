@@ -125,18 +125,22 @@ class TechCheckTest extends TestCase
         [$a, $b] = $assets;
 
         // Step 1 on screen (Dutch for this crew member), the next one only after answering.
-        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertOk()->assertSee('Stap 1 van 3')->assertSee('Ventilator controleren')->assertDontSee('Lampuren noteren');
+        // Step 1, always: the complete view. Not clean (€ 10) needs a photo.
+        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertOk()->assertSee('Stap 1 van 4')->assertSee('Volledig zicht op de fixture')->assertSee('€ 10,00')->assertDontSee('Ventilator controleren');
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['dirt' => 2, 'broken' => 'no'])->assertSessionHasErrors('note');
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['dirt' => 2, 'broken' => 'no', 'photos' => [UploadedFile::fake()->image('dust.jpg')]])->assertRedirect();
+        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertOk()->assertSee('Stap 2 van 4')->assertSee('Ventilator controleren')->assertDontSee('Lampuren noteren');
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', [])->assertSessionHasErrors('answer');
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['answer' => 'fail'])->assertSessionHasErrors('note'); // note and photo needed
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['answer' => 'fail', 'note' => 'Fan blocked', 'costs' => [0], 'photos' => [UploadedFile::fake()->image('blocked.jpg')]])->assertRedirect('/w/check/'.$a->id);
-        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertSee('Stap 2 van 3')->assertSee('Lampuren noteren');
+        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertSee('Stap 3 van 4')->assertSee('Lampuren noteren');
 
         // The procedure changes now: this check keeps version 1.
         $this->actingAs($this->builder)->post('/warehouse/check-builder/'.$p->id.'/steps', ['title_nl' => 'Extra', 'answer' => 'confirm']);
         $this->actingAs($this->builder)->post('/warehouse/check-builder/'.$p->id.'/publish');
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['value' => '1240'])->assertRedirect();
         // Last step: the accessories from the dry-hire card; the card itself is one tap away.
-        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertSee('Stap 3 van 3')->assertSee('Toebehoren volledig?')->assertSee('1 × Safety cable')->assertSee('/dry-hire/items/'.$spiider->id, false);
+        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertSee('Stap 4 van 4')->assertSee('Toebehoren volledig?')->assertSee('1 × Safety cable')->assertSee('/dry-hire/items/'.$spiider->id, false);
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', [])->assertSessionHasErrors('missing');
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['missing' => [Item::where('number', 'RIG-SAFETY')->value('id') => 1]])->assertSessionHasErrors('missing'); // photo first
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['missing' => [Item::where('number', 'RIG-SAFETY')->value('id') => 1], 'photos' => [UploadedFile::fake()->image('back.jpg')]])->assertRedirect();
@@ -145,10 +149,12 @@ class TechCheckTest extends TestCase
         $check = Check::where('asset_id', $a->id)->firstOrFail();
         $this->assertSame(['repair', 1], [$check->result, $check->procedureVersion->version]);
         $this->assertSame(['Ventilator vervangen · LT-0142', 4500], [Charge::first()->label, Charge::first()->amount_cents]); // customer's language
+        $this->assertSame(1000, Charge::where('kind', 'cleaning')->value('amount_cents')); // not clean
         $this->assertSame(['missing', 800], [Charge::where('kind', 'missing')->value('kind'), Charge::where('kind', 'missing')->value('amount_cents')]);
         $this->assertNull(ChargeNotice::first()); // the second piece is not checked yet
 
         // The second piece (version 2 now: 3 steps), all OK: every piece checked → the account owner gets it.
+        $this->actingAs($this->crew)->post('/w/check/'.$b->id.'/step', ['dirt' => 1, 'broken' => 'no']);
         $this->actingAs($this->crew)->post('/w/check/'.$b->id.'/step', ['answer' => 'ok']);
         $this->actingAs($this->crew)->post('/w/check/'.$b->id.'/step', ['value' => '300']);
         $this->actingAs($this->crew)->post('/w/check/'.$b->id.'/step', ['answer' => 'done']);
@@ -181,7 +187,7 @@ class TechCheckTest extends TestCase
         $this->artisan('cluk:return-costs')->assertSuccessful();
         $this->assertSame(['invoiced', 'approved'], [$notice->fresh()->status, Charge::first()->status]);
         $pf = PreInvoice::where('source_type', 'charges')->firstOrFail();
-        $this->assertSame([2250 + 800, 'R-CH-2026-0102'], [$pf->net_cents, $pf->source_code]);
+        $this->assertSame([2250 + 800 + 1000, 'R-CH-2026-0102'], [$pf->net_cents, $pf->source_code]);
     }
 
     public function test_pages_speak_every_language(): void

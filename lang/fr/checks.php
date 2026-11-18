@@ -3,6 +3,24 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'view_title' => 'Vue complète de l’appareil',
+        'view_text' => 'Regardez l’appareil entier sous tous les angles avant de commencer.',
+        'view_clean' => 'Est-il propre ?',
+        'dirt' => [
+            '1' => 'Propre',
+            '2' => 'Pas propre',
+            '3' => 'Sale',
+        ],
+        'dirt_hint' => [
+            '1' => 'seulement un chiffon sec',
+            '2' => 'chiffon humide et produits',
+            '3' => 'en profondeur : produits, air comprimé, ouvrir l’appareil',
+        ],
+        'view_broken' => 'Quelque chose est-il cassé ?',
+        'nothing_broken' => 'Rien de cassé',
+        'something_broken' => 'Quelque chose est cassé',
+        'view_photo_hint' => 'Une photo est nécessaire pour « pas propre », « sale » ou quelque chose de cassé.',
+        'view_photo' => 'Prenez d’abord une photo (pas propre ou sale est facturé au client).',
         'open_card' => 'Fiche dry-hire :number',
         'kit_title' => 'Accessoires complets ?',
         'kit_text' => 'Ils vont toujours avec cet article. Contrôlez chacun : complet, ou combien manquent.',

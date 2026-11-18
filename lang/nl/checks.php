@@ -3,6 +3,24 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'view_title' => 'Volledig zicht op de fixture',
+        'view_text' => 'Bekijk de hele fixture van alle kanten voor je begint.',
+        'view_clean' => 'Hoe proper is hij?',
+        'dirt' => [
+            '1' => 'Proper',
+            '2' => 'Niet proper',
+            '3' => 'Vuil',
+        ],
+        'dirt_hint' => [
+            '1' => 'enkel met een droge doek',
+            '2' => 'natte doek en producten',
+            '3' => 'grondig: producten, perslucht, fixture openen',
+        ],
+        'view_broken' => 'Is er iets kapot?',
+        'nothing_broken' => 'Niets kapot',
+        'something_broken' => 'Er is iets kapot',
+        'view_photo_hint' => 'Een foto is nodig bij "niet proper", "vuil" of iets kapot.',
+        'view_photo' => 'Neem eerst een foto (niet proper of vuil wordt aan de klant aangerekend).',
         'open_card' => 'Dry-hirefiche :number',
         'kit_title' => 'Toebehoren volledig?',
         'kit_text' => 'Deze horen altijd bij dit artikel. Controleer elk: volledig, of hoeveel er ontbreken.',

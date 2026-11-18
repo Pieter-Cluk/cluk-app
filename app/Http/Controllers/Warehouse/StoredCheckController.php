@@ -29,26 +29,29 @@ class StoredCheckController extends Controller
 
         $check = $check->fresh();
 
-        return view('warehouse.phone.tech', ['piece' => $piece, 'check' => $check, 'v' => $v, 'kit' => TechCheck::kit($check), 'onKit' => TechCheck::proceduresDone($check, $v), 'done' => TechCheck::complete($check, $v)]);
+        return view('warehouse.phone.tech', ['piece' => $piece, 'check' => $check, 'v' => $v, 'kit' => TechCheck::kit($check), 'onKit' => TechCheck::proceduresDone($check, $v), 'onView' => ! TechCheck::viewDone($check), 'done' => TechCheck::complete($check, $v)]);
     }
 
     public function step(Request $request, StoredPiece $piece): RedirectResponse
     {
         $d = $request->validate([
             'answer' => ['nullable', 'string', 'max:10'], 'value' => ['nullable', 'string', 'max:120'], 'note' => ['nullable', 'string', 'max:500'],
-            'costs' => ['array'], 'costs.*' => ['integer'], 'missing' => ['array'], 'missing.*' => ['nullable', 'integer', 'min:0', 'max:999'], 'extra_label' => ['nullable', 'string', 'max:120'], 'extra_amount' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'costs' => ['array'], 'costs.*' => ['integer'], 'missing' => ['array'], 'missing.*' => ['nullable', 'integer', 'min:0', 'max:999'], 'dirt' => ['nullable', 'integer'], 'broken' => ['nullable', 'in:no,yes'], 'extra_label' => ['nullable', 'string', 'max:120'], 'extra_amount' => ['nullable', 'numeric', 'min:0', 'max:100000'],
             'photos' => ['array', 'max:6'], 'photos.*' => Images::rule(),
         ]);
         $check = StorageCheck::openFor($piece);
         $v = TechCheck::versionForStored($piece, $check);
         abort_unless($v, 404);
+        $onView = ! TechCheck::viewDone($check);
         $onKit = TechCheck::proceduresDone($check, $v);
         if ($request->boolean('photo_only')) {
-            Checks::addPhotos($check, $request->file('photos', []), $onKit ? 'kit' : 'step:'.($v->steps[$check->step]['key'] ?? 'x'));
+            Checks::addPhotos($check, $request->file('photos', []), $onView ? 'view' : ($onKit ? 'kit' : 'step:'.($v->steps[$check->step]['key'] ?? 'x')));
 
             return back()->withInput();
         }
-        if ($onKit) {
+        if ($onView) {
+            TechCheck::answerView($check, $request->only(['dirt', 'broken', 'note', 'extra_label', 'extra_amount']), $request->file('photos', []));
+        } elseif ($onKit) {
             Checks::addPhotos($check, $request->file('photos', []), 'kit');
             TechCheck::answerKit($check, (array) $request->input('missing', []));
         } else {

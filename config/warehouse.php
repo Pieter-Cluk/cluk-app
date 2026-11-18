@@ -10,10 +10,11 @@
 
 return [
     // Cleaning stage => extra cost for the customer. Stage 1 is a normal clean.
-    'cleaning' => [1 => 0, 2 => 1500, 3 => 3000],
+    // 1 clean (a dry cloth), 2 not clean (wet cloth and products), 3 dirty (in depth: products, air pressure, opened).
+    'cleaning' => [1 => 0, 2 => 1000, 3 => 3000],
 
-    // A photo is required for cleaning stage 3, and at the check when something is missing, broken or damaged.
-    'photo_stage' => 3,
+    // A photo is required from cleaning stage 2 (it is charged), and at the check when something is missing, broken or damaged.
+    'photo_stage' => 2,
 
     // Function tests per item category (lower case); "default" for the others.
     'tests' => [

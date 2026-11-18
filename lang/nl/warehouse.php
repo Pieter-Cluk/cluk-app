@@ -84,9 +84,9 @@ return [
         'room' => 'gesloten ruimte, zodat er geen stof in de controlezones komt',
         'how_dirty' => 'Hoe vuil was het?',
         'stages' => [
-            '1' => 'Normaal',
-            '2' => 'Wat vuil',
-            '3' => 'Erg vuil',
+            '1' => 'Proper',
+            '2' => 'Niet proper',
+            '3' => 'Vuil',
         ],
         'no_cost' => 'geen kost',
         'stage_hint' => 'Stap 1 is een normale opkuis. Stap 2 en 3 betekenen extra tijd of speciale producten, aangerekend na goedkeuring van kantoor.',

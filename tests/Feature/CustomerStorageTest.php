@@ -72,7 +72,8 @@ class CustomerStorageTest extends TestCase
         // The phone: scanning the label opens its Tech Check; by CLUK, billed at the procedure's 30 minutes.
         $piece = StoredPiece::firstOrFail();
         $this->actingAs($crew)->post('/w/scan', ['code' => 'st-00001'])->assertRedirect('/w/stored/'.$piece->id);
-        $this->actingAs($crew)->get('/w/stored/'.$piece->id)->assertOk()->assertSee('Storage of Sound Rental NV')->assertSee('Fan');
+        $this->actingAs($crew)->get('/w/stored/'.$piece->id)->assertOk()->assertSee('Storage of Sound Rental NV')->assertSee('Complete view of the fixture');
+        $this->actingAs($crew)->post('/w/stored/'.$piece->id.'/step', ['dirt' => 1, 'broken' => 'no'])->assertRedirect();
         $this->actingAs($crew)->post('/w/stored/'.$piece->id.'/step', ['answer' => 'ok'])->assertRedirect();
         $this->actingAs($crew)->get('/w/stored/'.$piece->id)->assertSee('Who did the check?');
         $this->actingAs($crew)->post('/w/stored/'.$piece->id.'/finish', ['done_by' => 'cluk', 'minutes' => 30])->assertRedirect('/w/scan');
@@ -80,6 +81,7 @@ class CustomerStorageTest extends TestCase
         // The second one by their own staff: not billed.
         $two = StoredPiece::where('code', 'ST-00002')->first();
         $this->actingAs($crew)->get('/w/stored/'.$two->id);
+        $this->actingAs($crew)->post('/w/stored/'.$two->id.'/step', ['dirt' => 1, 'broken' => 'no']);
         $this->actingAs($crew)->post('/w/stored/'.$two->id.'/step', ['answer' => 'ok']);
         $this->actingAs($crew)->post('/w/stored/'.$two->id.'/finish', ['done_by' => 'customer']);
 
