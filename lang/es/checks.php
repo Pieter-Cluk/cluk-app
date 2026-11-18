@@ -3,6 +3,14 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'scan_hint' => 'Escanee el código QR del aparato: se abre su Tech Check. Un control sin terminar sigue donde se quedó.',
+        'busy' => 'En curso',
+        'status_view' => 'Esperando la vista completa (limpieza)',
+        'status_tech' => 'Limpieza hecha por :by · control técnico: paso :n de :total',
+        'not_a_fixture' => ':code no es un aparato.',
+        'view_stop' => 'Guardar · control técnico por otra persona',
+        'view_saved' => ':code: limpieza guardada. El control técnico sigue cuando se escanee el aparato en el banco.',
+        'view_by' => 'Vista completa: :level · :by :at',
         'view_title' => 'Vista completa del aparato',
         'view_text' => 'Mire el aparato entero por todos los lados antes de empezar.',
         'view_clean' => '¿Está limpio?',
@@ -61,6 +69,8 @@ return [
         'choice' => 'Una opción',
     ],
     'builder' => [
+        'automatic' => 'automático, cada control',
+        'view_hint' => 'Se hace en el puesto de limpieza: limpieza (1 limpio € 0 · 2 no limpio :c2 · 3 sucio :c3, se cobra al cliente) y si hay algo roto. Los pasos técnicos de abajo puede hacerlos después otra persona.',
         'delete' => 'Eliminar este Tech Check',
         'delete_hint' => 'Los artículos se desvinculan: sus piezas pasan al control simple hasta que construya uno nuevo. Los controles terminados guardan sus resultados; los que están en curso empiezan de nuevo.',
         'delete_go' => 'Eliminar definitivamente',
@@ -138,6 +148,8 @@ Sin precio = se valora después',
         'two_choices' => 'Indique al menos dos opciones.',
     ],
     'tech' => [
+        'open_check' => 'Abrir su Tech Check',
+        'on_phone' => 'Escanear con el móvil',
         'customer_gear' => 'Material de clientes',
         'intro' => 'Las piezas que vuelven de un trabajo esperan aquí su control. Con un procedimiento del Check Builder, el control va paso a paso.',
         'open' => 'En espera o en curso',

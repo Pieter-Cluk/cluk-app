@@ -51,6 +51,9 @@ class StoredCheckController extends Controller
         }
         if ($onView) {
             TechCheck::answerView($check, $request->only(['dirt', 'broken', 'note', 'extra_label', 'extra_amount']), $request->file('photos', []));
+            if ($request->boolean('stop')) {
+                return redirect()->route('w.tech')->with('status', __('checks.run.view_saved', ['code' => $check->asset?->code ?? $check->piece?->code]));
+            }
         } elseif ($onKit) {
             Checks::addPhotos($check, $request->file('photos', []), 'kit');
             TechCheck::answerKit($check, (array) $request->input('missing', []));
@@ -82,7 +85,7 @@ class StoredCheckController extends Controller
         $check->update(['done_by' => $d['done_by'], 'minutes' => $minutes, 'result' => $broken ? 'repair' : 'ok', 'finished_at' => now(), 'checked_by_id' => $request->user()->id]);
         AuditLog::record('storage.checked', $piece->item->contract, ['code' => $piece->code, 'by' => $d['done_by'], 'minutes' => $minutes, 'result' => $check->result], $request->user());
 
-        return redirect()->route('w.scan')->with('status', __($broken ? 'storage.phone.done_repair' : 'storage.phone.done_ok', ['code' => $piece->code]));
+        return redirect()->route('w.tech')->with('status', __($broken ? 'storage.phone.done_repair' : 'storage.phone.done_ok', ['code' => $piece->code]));
     }
 
     public function photo(StorageCheck $check, int $i)

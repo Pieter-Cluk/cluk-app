@@ -76,7 +76,7 @@ class CustomerStorageTest extends TestCase
         $this->actingAs($crew)->post('/w/stored/'.$piece->id.'/step', ['dirt' => 1, 'broken' => 'no'])->assertRedirect();
         $this->actingAs($crew)->post('/w/stored/'.$piece->id.'/step', ['answer' => 'ok'])->assertRedirect();
         $this->actingAs($crew)->get('/w/stored/'.$piece->id)->assertSee('Who did the check?');
-        $this->actingAs($crew)->post('/w/stored/'.$piece->id.'/finish', ['done_by' => 'cluk', 'minutes' => 30])->assertRedirect('/w/scan');
+        $this->actingAs($crew)->post('/w/stored/'.$piece->id.'/finish', ['done_by' => 'cluk', 'minutes' => 30])->assertRedirect('/w/tech');
         $this->assertSame(['ok', 30, 'cluk'], [StorageCheck::first()->result, StorageCheck::first()->minutes, StorageCheck::first()->done_by]);
         // The second one by their own staff: not billed.
         $two = StoredPiece::where('code', 'ST-00002')->first();

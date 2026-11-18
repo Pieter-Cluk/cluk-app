@@ -505,6 +505,32 @@ class PhoneController extends Controller
         return redirect()->route('w.scan')->with('status', __($check->result === 'ok' ? 'warehouse.check.ok' : 'warehouse.check.repair', ['code' => $asset->code]));
     }
 
+    /** Tech Check on the phone: scan the fixture, its check opens (the unfinished one first, to work further on it). */
+    public function tech(): View
+    {
+        $open = Check::with(['asset.item', 'order', 'procedureVersion'])->whereNull('finished_at')->latest('updated_at')->limit(40)->get()->filter(fn ($c) => $c->asset);
+        $stored = \App\Models\Storage\StorageCheck::with(['piece.item.contract.company', 'procedureVersion'])->whereNull('finished_at')->latest('updated_at')->get();
+
+        return view('warehouse.phone.tech-scan', ['open' => $open, 'stored' => $stored]);
+    }
+
+    public function techScan(Request $request): RedirectResponse
+    {
+        $code = strtoupper(trim((string) $request->validate(['code' => ['required', 'string', 'max:200']])['code']));
+        if (preg_match('#/(ST-\d+|[A-Z]{2,4}-\d+)/?$#', $code, $m)) {
+            $code = $m[1]; // a label QR with a link
+        }
+        if ($piece = \App\Models\Storage\StoredPiece::where('code', $code)->first()) {
+            return redirect()->route('w.stored', $piece);
+        }
+        $found = Moves::resolve($code);
+        if ($found && $found['type'] === 'asset' && ! $found['model']->isContainer()) {
+            return redirect()->route('w.check', $found['model']);
+        }
+
+        return redirect()->route('w.tech')->withErrors(['code' => __('checks.run.not_a_fixture', ['code' => mb_strimwidth($code, 0, 40, '…')])]);
+    }
+
     /** Tech Check: answer the step on screen; the next one shows only when this one is answered. */
     public function techStep(Request $request, Asset $asset): RedirectResponse
     {
@@ -525,6 +551,9 @@ class PhoneController extends Controller
         }
         if ($onView) {
             \App\Services\Warehouse\TechCheck::answerView($check, $request->only(['dirt', 'broken', 'note', 'extra_label', 'extra_amount']), $request->file('photos', []));
+            if ($request->boolean('stop')) {
+                return redirect()->route('w.tech')->with('status', __('checks.run.view_saved', ['code' => $check->asset?->code ?? $check->piece?->code]));
+            }
         } elseif ($onKit) {
             Checks::addPhotos($check, $request->file('photos', []), 'kit');
             \App\Services\Warehouse\TechCheck::answerKit($check, (array) $request->input('missing', []));
@@ -548,7 +577,7 @@ class PhoneController extends Controller
         \App\Services\Warehouse\CostNotices::refresh($check->order);
         $request->session()->put('w.pending', $asset->id);
 
-        return redirect()->route('w.scan')->with('status', __($check->result === 'ok' ? 'warehouse.check.ok' : 'warehouse.check.repair', ['code' => $asset->code]));
+        return redirect()->route('w.tech')->with('status', __($check->result === 'ok' ? 'warehouse.check.ok' : 'warehouse.check.repair', ['code' => $asset->code]));
     }
 
     /** A photo of a check, for staff. */

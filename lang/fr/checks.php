@@ -3,6 +3,14 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'scan_hint' => 'Scannez le QR code de l’appareil : son Tech Check s’ouvre. Un contrôle inachevé reprend là où il s’est arrêté.',
+        'busy' => 'En cours',
+        'status_view' => 'En attente de la vue complète (nettoyage)',
+        'status_tech' => 'Nettoyage fait par :by · contrôle technique : étape :n sur :total',
+        'not_a_fixture' => ':code n’est pas un appareil.',
+        'view_stop' => 'Enregistrer · contrôle technique par quelqu’un d’autre',
+        'view_saved' => ':code : nettoyage enregistré. Le contrôle technique reprend quand l’appareil est scanné à l’établi.',
+        'view_by' => 'Vue complète : :level · :by :at',
         'view_title' => 'Vue complète de l’appareil',
         'view_text' => 'Regardez l’appareil entier sous tous les angles avant de commencer.',
         'view_clean' => 'Est-il propre ?',
@@ -61,6 +69,8 @@ return [
         'choice' => 'Un choix',
     ],
     'builder' => [
+        'automatic' => 'automatique, chaque contrôle',
+        'view_hint' => 'Se fait au poste de nettoyage : propreté (1 propre € 0 · 2 pas propre :c2 · 3 sale :c3, facturé au client) et quelque chose de cassé. Les étapes techniques ci-dessous peuvent être faites plus tard par quelqu’un d’autre.',
         'delete' => 'Supprimer ce Tech Check',
         'delete_hint' => 'Les articles sont détachés : leurs pièces passent au contrôle simple jusqu’à ce que vous en construisiez un nouveau. Les contrôles terminés gardent leurs résultats ; ceux en cours recommencent.',
         'delete_go' => 'Supprimer définitivement',
@@ -138,6 +148,8 @@ Sans prix = chiffré plus tard',
         'two_choices' => 'Donnez au moins deux choix.',
     ],
     'tech' => [
+        'open_check' => 'Ouvrir son Tech Check',
+        'on_phone' => 'Scanner avec le téléphone',
         'customer_gear' => 'Matériel des clients',
         'intro' => 'Les pièces revenues d’un job attendent ici leur contrôle. Avec une procédure du Check Builder, le contrôle se fait pas à pas.',
         'open' => 'En attente ou en cours',

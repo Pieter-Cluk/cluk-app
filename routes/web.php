@@ -621,6 +621,8 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/return/{order}/carrier-done', [PhoneController::class, 'returnCarrierDone'])->whereNumber('order')->name('return.carrier_done');
             Route::post('/clean/{asset}', [PhoneController::class, 'cleanSave'])->whereNumber('asset')->name('clean.save');
             Route::post('/check/{asset}', [PhoneController::class, 'checkSave'])->whereNumber('asset')->name('check.save');
+            Route::get('/tech', [PhoneController::class, 'tech'])->name('tech');
+            Route::post('/tech', [PhoneController::class, 'techScan'])->middleware('throttle:120,1')->name('tech.scan');
             Route::post('/check/{asset}/step', [PhoneController::class, 'techStep'])->whereNumber('asset')->name('check.step');
             Route::post('/check/{asset}/back', [PhoneController::class, 'techBack'])->whereNumber('asset')->name('check.back');
             Route::post('/check/{asset}/finish', [PhoneController::class, 'techFinish'])->whereNumber('asset')->name('check.finish');

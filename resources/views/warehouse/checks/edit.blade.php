@@ -14,9 +14,13 @@
 
     <div class="cb-grid">
         <div class="stack">
+            <section class="card cb-fixed">
+                <div class="cb-fixed-head"><span class="cb-n">1</span><b>{{ __('checks.run.view_title') }}</b> <span class="pill">{{ __('checks.builder.automatic') }}</span></div>
+                <p class="muted small">{{ __('checks.builder.view_hint', ['c2' => \App\Services\Afrit6\Pricing::eur((int) config('warehouse.cleaning')[2]), 'c3' => \App\Services\Afrit6\Pricing::eur((int) config('warehouse.cleaning')[3])]) }}</p>
+            </section>
             @forelse ($steps as $i => $s)
                 <details class="card cb-step" id="step-{{ $s['key'] }}" @if (session('open') === $s['key']) open @endif>
-                    <summary><span class="cb-n">{{ $i + 1 }}</span><b>{{ $say($s['title']) ?: '—' }}</b> <span class="muted small">{{ __('checks.answers.'.$s['answer']) }}@if (! empty($s['photos'])) · 📷 {{ count($s['photos']) }}@endif @if (! empty($s['costs'])) · € {{ count($s['costs']) }}@endif</span></summary>
+                    <summary><span class="cb-n">{{ $i + 2 }}</span><b>{{ $say($s['title']) ?: '—' }}</b> <span class="muted small">{{ __('checks.answers.'.$s['answer']) }}@if (! empty($s['photos'])) · 📷 {{ count($s['photos']) }}@endif @if (! empty($s['costs'])) · € {{ count($s['costs']) }}@endif</span></summary>
                     @include('warehouse.checks._step-form', ['s' => $s])
                     <div class="inline-form mt">
                         @if ($i > 0)<form method="post" action="{{ route('checks.step.move', [$p, $s['key']]) }}">@csrf<input type="hidden" name="dir" value="up"><button class="btn btn-sm" type="submit">↑ {{ __('checks.builder.up') }}</button></form>@endif
@@ -28,9 +32,15 @@
                 <p class="muted">{{ __('checks.builder.no_steps_yet') }}</p>
             @endforelse
             <section class="card">
-                <h2>{{ __('checks.builder.new_step', ['n' => count($steps) + 1]) }}</h2>
+                <h2>{{ __('checks.builder.new_step', ['n' => count($steps) + 2]) }}</h2>
                 @include('warehouse.checks._step-form', ['s' => null])
             </section>
+            @if ($p->item && $p->item->kit->isNotEmpty())
+                <section class="card cb-fixed">
+                    <div class="cb-fixed-head"><span class="cb-n">{{ count($steps) + 2 }}</span><b>{{ __('checks.run.kit_title') }}</b> <span class="pill">{{ __('checks.builder.automatic') }}</span></div>
+                    <p class="muted small">{{ $p->item->kit->map(fn ($k) => $k->pivot->qty.' × '.$k->name)->implode(' · ') }}</p>
+                </section>
+            @endif
         </div>
 
         <aside class="stack">

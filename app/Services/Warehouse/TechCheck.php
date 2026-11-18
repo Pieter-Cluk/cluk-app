@@ -82,6 +82,7 @@ class TechCheck
         $extra = trim((string) ($d['extra_label'] ?? ''));
         $answers = $check->answers ?? [];
         $answers[$step['key']] = [
+            'by' => auth()->user()?->first_name, 'at' => now()->format('d/m H:i'),
             'answer' => $step['answer'] === 'okfail' ? $answer : ($step['answer'] === 'confirm' ? 'done' : 'ok'),
             'value' => $step['answer'] === 'choice' ? CheckProcedure::say($step['choices'][(int) $d['value']] ?? null) : (trim((string) ($d['value'] ?? '')) ?: null),
             'note' => trim((string) ($d['note'] ?? '')) ?: null,
@@ -112,7 +113,7 @@ class TechCheck
         }
         $extra = trim((string) ($d['extra_label'] ?? ''));
         $answers = $check->answers ?? [];
-        $answers['_view'] = ['dirt' => $dirt, 'broken' => $broken, 'note' => trim((string) ($d['note'] ?? '')) ?: null,
+        $answers['_view'] = ['by' => auth()->user()?->first_name, 'at' => now()->format('d/m H:i'), 'dirt' => $dirt, 'broken' => $broken, 'note' => trim((string) ($d['note'] ?? '')) ?: null,
             'extra' => $broken && $extra !== '' ? ['label' => mb_substr($extra, 0, 120), 'cents' => ($d['extra_amount'] ?? '') !== '' ? (int) round((float) $d['extra_amount'] * 100) : null] : null];
         $check->update(['answers' => $answers] + ($check instanceof Check ? ['dirt' => $dirt, 'cleaned_at' => now()] : []));
     }

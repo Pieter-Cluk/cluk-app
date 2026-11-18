@@ -8,7 +8,15 @@
         @if (auth()->user()->hasRight('warehouse.build_checks'))<a class="btn" href="{{ route('checks.index') }}">{{ __('nav.items.checkbuilder') }}</a>@endif
     </div>
     @include('partials.flash')
-    <section class="card card-flush">
+    <section class="card">
+        <form method="post" action="{{ route('w.tech.scan') }}" class="inline-form">@csrf
+            <input name="code" class="w-md" autofocus autocomplete="off" placeholder="{{ __('warehouse.scan.type_code') }}" aria-label="{{ __('warehouse.scan.type_code') }}">
+            <button class="primary" type="submit">{{ __('checks.tech.open_check') }}</button>
+            <a class="btn" href="{{ route('w.tech') }}">{{ __('checks.tech.on_phone') }}</a>
+        </form>
+        <p class="muted small mt">{{ __('checks.run.scan_hint') }}</p>
+    </section>
+    <section class="card card-flush mt">
         <div class="card-head pad"><h2>{{ __('checks.tech.open') }} <small class="muted">{{ $open->count() }}</small></h2></div>
         <table class="table">
             <thead><tr><th>{{ __('checks.tech.piece') }}</th><th>{{ __('checks.tech.from') }}</th><th>{{ __('checks.tech.procedure') }}</th><th>{{ __('checks.tech.progress') }}</th><th></th></tr></thead>

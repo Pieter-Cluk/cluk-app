@@ -3,6 +3,7 @@
     <p class="ph-hello">{{ __('warehouse.hello', ['name' => auth()->user()->first_name, 'date' => $fmt(now(), 'D j M')]) }}</p>
     <a class="primary ph-big" href="{{ route('w.scan') }}">▣ {{ __('warehouse.tabs.scan') }}</a>
     <a class="btn ph-big" href="{{ route('w.delivery') }}">📦 {{ __('warehouse.delivery.title') }}</a>
+    <a class="btn ph-big" href="{{ route('w.tech') }}">✓ {{ __('nav.items.techcheck') }}</a>
     @if (auth()->user()->canUseModule('afrit6'))
         @php($a6 = \App\Models\Afrit6\ServiceRequest::whereIn('kind', \App\Http\Controllers\Warehouse\PhoneAfrit6Controller::KINDS)->whereIn('status', ['pending', 'confirmed', 'waiting'])->whereDate('date', '<=', today()->addDays(2))->count())
         <a class="ph-task" href="{{ route('w.a6') }}"><span class="tag tag-a6">AFRIT 6</span><b>{{ __('warehouse.a6.title') }}</b><small>{{ __('warehouse.a6.sub') }}</small><small class="ph-prog">{{ trans_choice('warehouse.a6.open_n', $a6, ['n' => $a6]) }}</small></a>

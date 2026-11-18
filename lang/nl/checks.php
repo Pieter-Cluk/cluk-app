@@ -3,6 +3,14 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'scan_hint' => 'Scan de QR-code van de fixture: de Tech Check opent. Een onafgewerkte check gaat verder waar hij stopte.',
+        'busy' => 'Bezig',
+        'status_view' => 'Wacht op het volledige zicht (reiniging)',
+        'status_tech' => 'Reiniging gedaan door :by · technische check: stap :n van :total',
+        'not_a_fixture' => ':code is geen fixture.',
+        'view_stop' => 'Opslaan · technische check door iemand anders',
+        'view_saved' => ':code: reiniging opgeslagen. De technische check gaat verder als de fixture aan de werkbank gescand wordt.',
+        'view_by' => 'Volledig zicht: :level · :by :at',
         'view_title' => 'Volledig zicht op de fixture',
         'view_text' => 'Bekijk de hele fixture van alle kanten voor je begint.',
         'view_clean' => 'Hoe proper is hij?',
@@ -61,6 +69,8 @@ return [
         'choice' => 'Eén keuze',
     ],
     'builder' => [
+        'automatic' => 'automatisch, elke check',
+        'view_hint' => 'Gebeurt aan de reinigingsplaats: hoe proper (1 proper € 0 · 2 niet proper :c2 · 3 vuil :c3, aangerekend aan de klant) en is er iets kapot. De technische stappen hieronder kan later iemand anders doen.',
         'delete' => 'Deze Tech Check verwijderen',
         'delete_hint' => 'De artikels worden losgekoppeld: hun stuks krijgen de eenvoudige check tot je een nieuwe bouwt. Afgewerkte checks houden hun resultaat; lopende checks beginnen opnieuw.',
         'delete_go' => 'Definitief verwijderen',
@@ -138,6 +148,8 @@ Geen prijs = later prijzen',
         'two_choices' => 'Geef minstens twee keuzes.',
     ],
     'tech' => [
+        'open_check' => 'Tech Check openen',
+        'on_phone' => 'Scannen met de gsm',
         'customer_gear' => 'Materiaal van klanten',
         'intro' => 'Stuks terug van een job wachten hier op hun check. Met een procedure uit de Check Builder gaat de check stap voor stap.',
         'open' => 'Wachtend of bezig',

@@ -20,6 +20,7 @@
         @if ($card)
             <a class="tc-card" href="{{ route('equipment.show', $card) }}" target="_blank" rel="noopener">@if ($card->photo_path)<img src="{{ route('equipment.photo', $card) }}" alt="" loading="lazy">@endif<span>{{ __('checks.run.open_card', ['number' => $card->number]) }} ↗</span></a>
         @endif
+        @if ($view && ! $onView)<small>✓ {{ __('checks.run.view_by', ['by' => $view['by'] ?? '—', 'at' => $view['at'] ?? '', 'level' => __('checks.run.dirt.'.$view['dirt'])]) }}</small>@endif
         <small>{{ $v->procedure->name() }} · v{{ $v->version }}@if ($v->procedure->minutes) · ⏱ {{ __('checks.builder.duration', ['n' => $v->procedure->minutes]) }}@endif</small>
     </section>
     <ol class="tc-progress" aria-label="{{ __('checks.run.progress') }}">
@@ -64,6 +65,7 @@
             @error('answer')<p class="flash flash-err">{{ $message }}</p>@enderror
             @error('note')<p class="flash flash-err">{{ $message }}</p>@enderror
             <button class="primary ph-big" type="submit">{{ __('checks.run.next') }}</button>
+            <button class="btn ph-big" type="submit" name="stop" value="1">{{ __('checks.run.view_stop') }}</button>
         </form>
     @elseif ($step)
         <form method="post" action="{{ $sub['step'] }}" enctype="multipart/form-data" class="tc-step">
@@ -156,14 +158,14 @@
             <h2 class="ph-h">{{ __('checks.run.summary') }}</h2>
             <ul class="tc-sum">
                 @if ($view)
-                    <li @class(['is-fail' => $view['broken']])><b>{{ $view['broken'] ? '✕' : '✓' }} {{ __('checks.run.view_title') }}</b>
+                    <li @class(['is-fail' => $view['broken']])><b>{{ $view['broken'] ? '✕' : '✓' }} {{ __('checks.run.view_title') }}</b>@if ($view['by'] ?? null)<small class="muted">{{ $view['by'] }} · {{ $view['at'] }}</small>@endif
                         <small>{{ $view['dirt'] }} · {{ __('checks.run.dirt.'.$view['dirt']) }}@if (! $stored && ($c = (int) (config('warehouse.cleaning')[$view['dirt']] ?? 0))) · {{ $eur($c) }}@endif</small>
                         @if ($view['note'])<small>{{ $view['note'] }}</small>@endif
                         @if ($view['extra'])<small class="txt-warn">€ {{ $view['extra']['label'] }}@if ($view['extra']['cents'] !== null) · {{ $eur($view['extra']['cents']) }}@endif</small>@endif</li>
                 @endif
                 @foreach ($steps as $s)
                     @php($a = $check->answers[$s['key']] ?? [])
-                    <li @class(['is-fail' => ($a['answer'] ?? null) === 'fail'])><b>{{ ($a['answer'] ?? null) === 'fail' ? '✕' : '✓' }} {{ $say($s['title']) }}</b>
+                    <li @class(['is-fail' => ($a['answer'] ?? null) === 'fail'])><b>{{ ($a['answer'] ?? null) === 'fail' ? '✕' : '✓' }} {{ $say($s['title']) }}</b>@if ($a['by'] ?? null)<small class="muted">{{ $a['by'] }} · {{ $a['at'] }}</small>@endif
                         @if ($a['value'] ?? null)<small>{{ $a['value'] }}</small>@endif
                         @if ($a['note'] ?? null)<small>{{ $a['note'] }}</small>@endif
                         @foreach ($a['costs'] ?? [] as $ci)<small class="txt-warn">€ {{ $say($s['costs'][$ci]['label'] ?? []) }}@if (isset($s['costs'][$ci]['cents'])) · {{ $eur($s['costs'][$ci]['cents']) }}@endif</small>@endforeach

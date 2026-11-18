@@ -3,6 +3,14 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'scan_hint' => 'Scan the QR code of the fixture: its Tech Check opens. An unfinished check continues where it stopped.',
+        'busy' => 'In progress',
+        'status_view' => 'Waiting for the complete view (cleaning)',
+        'status_tech' => 'Cleaning done by :by · technical check: step :n of :total',
+        'not_a_fixture' => ':code is not a fixture.',
+        'view_stop' => 'Save · technical check by someone else',
+        'view_saved' => ':code: cleaning saved. The technical check continues when the fixture is scanned at the bench.',
+        'view_by' => 'Complete view: :level · :by :at',
         'view_title' => 'Complete view of the fixture',
         'view_text' => 'Look at the whole fixture from all sides before you start.',
         'view_clean' => 'How clean is it?',
@@ -61,6 +69,8 @@ return [
         'choice' => 'Choose one',
     ],
     'builder' => [
+        'automatic' => 'automatic, every check',
+        'view_hint' => 'Done at the cleaning place: how clean (1 clean € 0 · 2 not clean :c2 · 3 dirty :c3, charged to the customer) and is anything broken. The technical steps below can be done later by someone else.',
         'delete' => 'Delete this Tech Check',
         'delete_hint' => 'The items are unlinked: their pieces get the simple check until you build a new one. Finished checks keep their results; checks in progress start again.',
         'delete_go' => 'Delete for good',
@@ -138,6 +148,8 @@ No price = priced later',
         'two_choices' => 'Give at least two choices.',
     ],
     'tech' => [
+        'open_check' => 'Open its Tech Check',
+        'on_phone' => 'Scan with the phone',
         'customer_gear' => 'Customers’ equipment',
         'intro' => 'Pieces back from a job wait here for their check. With a procedure from the Check Builder the check goes step by step.',
         'open' => 'Waiting or busy',

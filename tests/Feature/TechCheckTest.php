@@ -103,6 +103,7 @@ class TechCheckTest extends TestCase
         $this->assertNull($p->current->steps[0]['costs'][1]['cents']); // priced later
         $this->assertCount(1, $p->current->steps[0]['photos']);
         $this->actingAs($this->builder)->get('/warehouse/check-builder/'.$p->id)->assertOk()->assertSee('Check the fan')->assertSee('Version 1 live')
+            ->assertSee('Complete view of the fixture')->assertSee('automatic, every check')
             ->assertSee('1 × Safety cable')->assertSee('open the dry-hire card');
         $this->actingAs($this->builder)->get('/warehouse/check-photo?p='.urlencode($p->current->steps[0]['photos'][0]))->assertOk();
         $this->actingAs($this->builder)->get('/warehouse/check-photo?p=../../.env')->assertNotFound();
@@ -145,8 +146,16 @@ class TechCheckTest extends TestCase
         // Step 1, always: the complete view. Not clean (€ 10) needs a photo.
         $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertOk()->assertSee('Stap 1 van 4')->assertSee('Volledig zicht op de fixture')->assertSee('€ 10,00')->assertDontSee('Ventilator controleren');
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['dirt' => 2, 'broken' => 'no'])->assertSessionHasErrors('note');
-        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['dirt' => 2, 'broken' => 'no', 'photos' => [UploadedFile::fake()->image('dust.jpg')]])->assertRedirect();
-        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertOk()->assertSee('Stap 2 van 4')->assertSee('Ventilator controleren')->assertDontSee('Lampuren noteren');
+        // Cleaned at the cleaning place by someone else, who stops after step 1.
+        $cleaner = $this->as('warehouse', 'nl', ['first_name' => 'Kobe']);
+        $this->actingAs($cleaner)->get('/w')->assertSee('/w/tech', false);
+        $this->actingAs($cleaner)->post('/w/tech', ['code' => 'lt-0142'])->assertRedirect('/w/check/'.$a->id);
+        $this->actingAs($cleaner)->post('/w/check/'.$a->id.'/step', ['dirt' => 2, 'broken' => 'no', 'stop' => '1', 'photos' => [UploadedFile::fake()->image('dust.jpg')]])->assertRedirect('/w/tech');
+        $this->actingAs($this->crew)->get('/w/tech')->assertSee('LT-0142')->assertSee('Reiniging gedaan door Kobe');
+        // The technician scans it at the bench: the unfinished check continues at step 2.
+        $this->actingAs($this->crew)->post('/w/tech', ['code' => 'LT-0142'])->assertRedirect('/w/check/'.$a->id);
+        $this->actingAs($this->crew)->post('/w/tech', ['code' => 'NOPE-1'])->assertSessionHasErrors('code');
+        $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertSee('Volledig zicht: Niet proper · Kobe')->assertOk()->assertSee('Stap 2 van 4')->assertSee('Ventilator controleren')->assertDontSee('Lampuren noteren');
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', [])->assertSessionHasErrors('answer');
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['answer' => 'fail'])->assertSessionHasErrors('note'); // note and photo needed
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['answer' => 'fail', 'note' => 'Fan blocked', 'costs' => [0], 'photos' => [UploadedFile::fake()->image('blocked.jpg')]])->assertRedirect('/w/check/'.$a->id);
@@ -162,7 +171,7 @@ class TechCheckTest extends TestCase
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['missing' => [Item::where('number', 'RIG-SAFETY')->value('id') => 1]])->assertSessionHasErrors('missing'); // photo first
         $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['missing' => [Item::where('number', 'RIG-SAFETY')->value('id') => 1], 'photos' => [UploadedFile::fake()->image('back.jpg')]])->assertRedirect();
         $this->actingAs($this->crew)->get('/w/check/'.$a->id)->assertSee('Overzicht')->assertSee('Fan blocked')->assertSee('1240')->assertSee('Onvolledige retour');
-        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/finish')->assertRedirect('/w/scan');
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/finish')->assertRedirect('/w/tech');
         $check = Check::where('asset_id', $a->id)->firstOrFail();
         $this->assertSame(['repair', 1], [$check->result, $check->procedureVersion->version]);
         $this->assertSame(['Ventilator vervangen · LT-0142', 4500], [Charge::first()->label, Charge::first()->amount_cents]); // customer's language
