@@ -266,4 +266,5 @@ return [
         'mailed' => 'The confirmation was sent again.',
         'log' => ':code: invoice moved from :from to :to.',
     ],
+    'deal_lost_note' => 'Deal lost: :reason',
 ];

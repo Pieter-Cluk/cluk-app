@@ -266,4 +266,5 @@ return [
         'mailed' => 'La confirmación se ha enviado de nuevo.',
         'log' => ':code: factura movida de :from a :to.',
     ],
+    'deal_lost_note' => 'Deal perdido: :reason',
 ];

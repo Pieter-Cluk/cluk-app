@@ -219,6 +219,29 @@ class DealController extends Controller
         $deal->update(['stage' => $stage, 'closed_at' => now(), 'closed_by_id' => $by->id] + $extra);
         $text = __('deals.log.closed_'.$stage, ['reason' => $deal->lost_reason ? __('deals.lost_reasons.'.$deal->lost_reason) : '', 'competitor' => $deal->competitor ?? '']);
         $deal->log('stage', trim($text.($deal->close_note ? ' · '.$deal->close_note : '')).' ('.__('deals.stages.'.$from).')', $by);
+        if (in_array($stage, ['lost', 'disqualified'], true)) {
+            $this->closeQuotes($deal, $by);
+        }
+    }
+
+    /**
+     * Lost or disqualified: the open quotes of the deal are lost too (declined, no mail to the customer), a held
+     * Cluk Factory option is released, so they leave the lists and tasks.
+     */
+    private function closeQuotes(Deal $deal, User $by): void
+    {
+        $reason = in_array($deal->lost_reason, ['price', 'competitor', 'cancelled'], true) ? $deal->lost_reason : 'other';
+        $note = __('quotes.deal_lost_note', ['reason' => $deal->lost_reason ? __('deals.lost_reasons.'.$deal->lost_reason) : __('deals.stages.'.$deal->stage)]);
+        foreach ($deal->quotes()->whereIn('status', ['draft', 'sent', 'change'])->get() as $q) {
+            \App\Services\Rental\QuoteAnswer::declineByStaff($q, $reason, $note, $by);
+            if (($b = \App\Services\Factory\Bookings::forQuote($q)) && in_array($b->status, ['request', 'option'], true)) {
+                $b->update(['status' => 'cancelled', 'decline_reason' => $note, 'option_until' => null]);
+                \App\Models\AuditLog::record('factory.cancelled', $b, ['reason' => $note], $by);
+            }
+        }
+        foreach ($deal->salesQuotes()->whereIn('status', ['draft', 'sent'])->get() as $q) {
+            \App\Services\ProductSales\SalesFlow::decline($q, $note);
+        }
     }
 
     public function reopen(Request $request, Deal $deal): RedirectResponse

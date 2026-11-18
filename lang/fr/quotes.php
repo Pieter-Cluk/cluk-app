@@ -266,4 +266,5 @@ return [
         'mailed' => 'La confirmation a été renvoyée.',
         'log' => ':code : facture déplacée de :from vers :to.',
     ],
+    'deal_lost_note' => 'Deal perdu : :reason',
 ];

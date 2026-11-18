@@ -380,6 +380,34 @@ class QuotesTest extends TestCase
         $this->assertSame(1, $new->lines()->count());
     }
 
+    /** A lost deal: its open quotes are lost too (no mail), and leave the tasks. */
+    public function test_losing_a_deal_closes_its_open_quotes(): void
+    {
+        Notification::fake();
+        $this->spiider();
+        $sent = $this->quote();
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$sent->id.'/lines', ['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 1]);
+        $sent = $this->sendIt($sent);
+        $deal = $sent->deal;
+        $this->actingAs($this->sales)->post('/sales/deals/'.$deal->id.'/quotes');
+        $draft = Quote::where('deal_id', $deal->id)->where('status', 'draft')->firstOrFail();
+        $tasks = function () {
+            $m = new \ReflectionMethod(\App\Services\Sales\CommercialTasks::class, 'quoteTasks');
+
+            return collect($m->invoke(null))->pluck('quote_id')->filter()->all();
+        };
+        $this->travel(10)->days();
+        $this->assertContains($sent->id, $tasks()); // a follow-up task for the sent quote
+
+        Notification::fake(); // only what happens now
+        $this->actingAs($this->sales)->post('/sales/deals/'.$deal->id.'/lose', ['reason' => 'price', 'note' => 'Too expensive for them'])->assertRedirect();
+        $this->assertSame(['declined', 'price'], [$sent->fresh()->status, $sent->fresh()->decline_reason]);
+        $this->assertSame('declined', $draft->fresh()->status);
+        $this->assertStringContainsString('Deal lost', $sent->fresh()->answer_note);
+        Notification::assertNothingSent(); // the customer gets no mail
+        $this->assertNotContains($sent->id, $tasks()); // gone from the tasks
+    }
+
     public function test_staff_can_record_a_decline_by_phone(): void
     {
         Notification::fake();

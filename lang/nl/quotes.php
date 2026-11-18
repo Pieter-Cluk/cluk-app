@@ -266,4 +266,5 @@ return [
         'mailed' => 'De bevestiging is opnieuw verstuurd.',
         'log' => ':code: factuur verplaatst van :from naar :to.',
     ],
+    'deal_lost_note' => 'Deal verloren: :reason',
 ];
