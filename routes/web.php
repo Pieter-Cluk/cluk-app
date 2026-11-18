@@ -429,6 +429,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/photos-found/bulk', [PhotoSuggestionController::class, 'bulk'])->name('equipment.photos.found.bulk');
         });
         Route::post('/assets/{asset}/retire', [AssetController::class, 'retire'])->whereNumber('asset')->name('equipment.assets.retire');
+        Route::post('/assets/{asset}/kit-complete', [AssetController::class, 'kitComplete'])->whereNumber('asset')->name('equipment.assets.kit_complete');
     });
     // A scanned QR label opens the asset card.
     Route::get('/a/{code}', [AssetController::class, 'byCode'])->where('code', '[A-Za-z0-9\-]+')->middleware('nav:dryhire')->name('equipment.scan');

@@ -244,4 +244,12 @@ return [
         'unplaced' => 'Nog niet geplaatst: :n van :stock (niet op een rekplaats en niet in een box of case).',
         'unknown' => '“:code” is geen rekplaats of opslagzone. Kies er een uit de lijst.',
     ],
+    'kitcheck' => [
+        'not_standard' => 'Geen standaardconfiguratie',
+        'missing' => 'ontbreekt: :list',
+        'banner' => '{1} 1 stuk is geen standaardconfiguratie (toebehoren ontbreken)|[2,*] :n stuks zijn geen standaardconfiguratie (toebehoren ontbreken)',
+        'list_title' => '{1} 1 stuk zonder al zijn toebehoren|[2,*] :n stuks zonder al hun toebehoren',
+        'complete_again' => 'Toebehoren weer volledig',
+        'completed' => ':code is weer een standaardconfiguratie.',
+    ],
 ];

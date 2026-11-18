@@ -50,6 +50,7 @@
             <small class="ph-step">{{ __('warehouse.scan.step2') }}</small>
             <b>{{ $pending->code }} · {{ $pending->item->name }}</b>
             <small>{{ __('warehouse.scan.now', ['place' => \App\Services\Warehouse\Moves::label($pending->location)]) }} · {{ __('equipment.statuses.'.$pending->statusKey()) }}</small>
+            @if ($pending->isIncomplete())<small class="kit-warn">⚠ {{ __('equipment.kitcheck.not_standard') }}: {{ __('equipment.kitcheck.missing', ['list' => $pending->missingLabel()]) }}</small>@endif
             @if ($next)<small>{{ __('warehouse.scan.next', ['places' => implode(', ', $next)]) }}</small>@endif
             <form method="post" action="{{ route('w.scan.cancel') }}">@csrf<button class="btn btn-sm" type="submit">{{ __('warehouse.scan.cancel') }}</button></form>
         </section>

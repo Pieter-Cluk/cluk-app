@@ -98,6 +98,7 @@ class Checks
                     self::charge($check, $order, 'damage', __('warehouse.charge.damage', ['type' => __('warehouse.damage.'.$d['type'], [], self::loc($order)), 'code' => $asset->code], self::loc($order)).($d['note'] ? ' · '.$d['note'] : ''), null);
                 }
             }
+            $asset->update(['missing_kit' => $missingList ?: null]); // not a standard configuration until completed
             $check->update(['tests' => $tests, 'missing' => $missingList, 'damages' => $damages, 'reset' => $reset, 'result' => $broken ? 'repair' : 'ok',
                 'finished_at' => now(), 'checked_by_id' => $by->id]);
             AuditLog::record('warehouse.checked', $asset, ['code' => $asset->code, 'result' => $broken ? 'repair' : 'ok', 'order' => $order?->number], $by);
@@ -167,6 +168,7 @@ class Checks
             if ($order && ($cost = (int) (config('warehouse.cleaning')[$check->dirt ?? 1] ?? 0)) > 0) {
                 self::charge($check, $order, 'cleaning', __('warehouse.charge.cleaning', ['stage' => $check->dirt, 'code' => $asset->code], $loc), $cost);
             }
+            $asset->update(['missing_kit' => $missingList ?: null]); // not a standard configuration until completed
             $check->update(['tests' => $tests, 'missing' => $missingList, 'damages' => [], 'reset' => true, 'result' => $broken ? 'repair' : 'ok', 'finished_at' => now(), 'checked_by_id' => $by->id]);
             AuditLog::record('warehouse.checked', $asset, ['code' => $asset->code, 'result' => $broken ? 'repair' : 'ok', 'order' => $order?->number, 'procedure' => $v->procedure?->name('en').' v'.$v->version], $by);
 

@@ -244,4 +244,12 @@ return [
         'unplaced' => 'Pas encore placés : :n sur :stock (ni sur un emplacement, ni dans une boîte ou un flight).',
         'unknown' => '« :code » n’est pas un emplacement ni une zone de stockage. Choisissez-en un dans la liste.',
     ],
+    'kitcheck' => [
+        'not_standard' => 'Pas une configuration standard',
+        'missing' => 'manque : :list',
+        'banner' => '{1} 1 pièce n’est pas en configuration standard (accessoires manquants)|[2,*] :n pièces ne sont pas en configuration standard (accessoires manquants)',
+        'list_title' => '{1} 1 pièce sans tous ses accessoires|[2,*] :n pièces sans tous leurs accessoires',
+        'complete_again' => 'Accessoires de nouveau complets',
+        'completed' => ':code est de nouveau en configuration standard.',
+    ],
 ];

@@ -1207,3 +1207,4 @@ details.card[open]>summary{margin-bottom:12px}
 .w-md{width:240px}
 .st-codes .pill{margin:0 2px 2px 0}.st-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px;max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:6px;padding:8px}
 .cb-fixed{border-style:dashed;background:var(--surface-subtle)}.cb-fixed-head{display:flex;align-items:center;gap:10px}
+.kit-warn{color:var(--warning-text);font-weight:700;white-space:nowrap}.kit-banner ul{margin:6px 0 0 18px;padding:0}

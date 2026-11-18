@@ -128,3 +128,4 @@
 .tc-sum li.is-fail{border-color:var(--danger-text)}
 .tc-card{display:flex;align-items:center;gap:10px;margin:6px 0;color:var(--brand-strong);font-weight:600;text-decoration:none}.tc-card img{width:56px;height:56px;object-fit:contain;border-radius:6px;border:1px solid var(--line);background:#fff}.tc-kit{display:flex;flex-direction:column;gap:6px;padding:10px;border:1px solid var(--line);border-radius:10px}.tc-kit-pick{display:flex;flex-wrap:wrap;gap:6px}.tc-kit-pick .tc-big{min-height:44px;font-size:15px;flex:1 1 140px}
 .tc-big span{display:flex;flex-direction:column}.tc-sub{font-size:13px;font-weight:400;color:var(--muted)}
+.kit-warn{color:#b45309;font-weight:700}

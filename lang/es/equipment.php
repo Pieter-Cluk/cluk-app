@@ -244,4 +244,12 @@ return [
         'unplaced' => 'Aún sin ubicar: :n de :stock (ni en una ubicación ni en una caja o flight).',
         'unknown' => '«:code» no es una ubicación ni una zona de almacén. Elige una de la lista.',
     ],
+    'kitcheck' => [
+        'not_standard' => 'No es una configuración estándar',
+        'missing' => 'falta: :list',
+        'banner' => '{1} 1 pieza no está en configuración estándar (faltan accesorios)|[2,*] :n piezas no están en configuración estándar (faltan accesorios)',
+        'list_title' => '{1} 1 pieza sin todos sus accesorios|[2,*] :n piezas sin todos sus accesorios',
+        'complete_again' => 'Accesorios completos de nuevo',
+        'completed' => ':code vuelve a estar en configuración estándar.',
+    ],
 ];

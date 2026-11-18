@@ -19,6 +19,11 @@
         </div>
     </div>
     @include('partials.flash')
+    @php($incomplete = $item->assets->filter(fn ($a) => $a->isIncomplete() && $a->status !== \App\Models\Equipment\Asset::RETIRED))
+    @if ($incomplete->isNotEmpty())
+        <div class="flash flash-warn kit-banner"><b>⚠ {{ trans_choice('equipment.kitcheck.banner', $incomplete->count(), ['n' => $incomplete->count()]) }}</b>
+            <ul>@foreach ($incomplete as $a)<li><a href="{{ route('equipment.assets.show', $a) }}">{{ $a->code }}</a>: {{ __('equipment.kitcheck.missing', ['list' => $a->missingLabel()]) }}</li>@endforeach</ul></div>
+    @endif
     @if ($canEdit && ! $item->serial && $item->kind === 'item')
         <section class="card">
             <h2>{{ __('equipment.stock_in.delivery_title') }}</h2>
@@ -165,7 +170,7 @@
                                         @if ($canEdit)<td>@if ($a->status !== 'retired')<input type="checkbox" name="assets[]" value="{{ $a->id }}" aria-label="{{ $a->code }}">@endif</td>@endif
                                         <td><a href="{{ route('equipment.assets.show', $a) }}"><b>{{ $a->code }}</b></a></td>
                                         <td>{{ $a->serial_number ?? '—' }}</td>
-                                        <td><span @class(['pill', 'pill-ok' => $a->statusKey() === 'available', 'pill-info' => in_array($a->statusKey(), ['out', 'venue'], true), 'pill-warn' => $a->status === 'repair', 'pill-off' => in_array($a->status, ['retired', 'label'], true)])>{{ __('equipment.statuses.'.$a->statusKey()) }}</span></td>
+                                        <td>@if ($a->isIncomplete())<span class="kit-warn" title="{{ __('equipment.kitcheck.missing', ['list' => $a->missingLabel()]) }}">⚠</span> @endif<span @class(['pill', 'pill-ok' => $a->statusKey() === 'available', 'pill-info' => in_array($a->statusKey(), ['out', 'venue'], true), 'pill-warn' => $a->status === 'repair', 'pill-off' => in_array($a->status, ['retired', 'label'], true)])>{{ __('equipment.statuses.'.$a->statusKey()) }}</span></td>
                                         <td>{{ $a->location ?? '—' }}@if ($a->case_id) <small class="muted">· {{ __('warehouse.carriers.in_it', ['carrier' => $a->container?->code]) }}</small>@endif</td>
                                         <td class="muted small">{{ $a->label_printed_at ? $a->label_printed_at->format('d/m/Y') : __('equipment.not_printed') }}</td>
                                     </tr>

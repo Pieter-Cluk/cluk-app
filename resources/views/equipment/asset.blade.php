@@ -10,6 +10,12 @@
         </div>
     </div>
     @include('partials.flash')
+    @if ($asset->isIncomplete())
+        <div class="flash flash-warn kit-banner"><b>⚠ {{ __('equipment.kitcheck.not_standard') }}</b> {{ __('equipment.kitcheck.missing', ['list' => $asset->missingLabel()]) }}
+            @if (auth()->user()->canUseModule('warehouse', 2) || auth()->user()->canUseModule('dryhire', 2))
+                <form method="post" action="{{ route('equipment.assets.kit_complete', $asset) }}" class="mt">@csrf<button class="btn btn-sm" type="submit">{{ __('equipment.kitcheck.complete_again') }}</button></form>
+            @endif</div>
+    @endif
 
     <div class="split">
         <div class="stack">

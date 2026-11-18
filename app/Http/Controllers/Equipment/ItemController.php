@@ -52,6 +52,7 @@ class ItemController extends Controller
         }
 
         $items = (clone $base)
+            ->withCount(['assets as incomplete_count' => fn ($a) => $a->whereNotNull('missing_kit')->where('status', '!=', Asset::RETIRED)])
             ->when($kind !== 'all', fn ($w) => $w->where('kind', $kind))
             ->when($cat, fn ($w) => $w->where('category_id', $cat))
             ->when($subcategory, fn ($w) => $w->where('subcategory_id', $subcategory->id))

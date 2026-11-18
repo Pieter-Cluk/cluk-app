@@ -216,6 +216,33 @@ class TechCheckTest extends TestCase
         $this->assertSame([2250 + 800 + 1000, 'R-CH-2026-0102'], [$pf->net_cents, $pf->source_code]);
     }
 
+    /** Technically OK but an accessory missing: rentable, with a clear warning that it is not a standard configuration. */
+    public function test_ok_but_missing_accessories_is_not_a_standard_configuration(): void
+    {
+        [$spiider, $order, $assets] = $this->returned();
+        $this->procedure($spiider);
+        $a = $assets[0];
+        $cable = Item::where('number', 'RIG-SAFETY')->value('id');
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['dirt' => 1, 'broken' => 'no']);
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['answer' => 'ok']);
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['value' => '800']);
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/step', ['missing' => [$cable => 1], 'photos' => [UploadedFile::fake()->image('x.jpg')]]);
+        $this->actingAs($this->crew)->post('/w/check/'.$a->id.'/finish')->assertRedirect('/w/tech');
+        $a->refresh();
+        $this->assertSame('ok', Check::where('asset_id', $a->id)->value('result'));
+        $this->assertTrue($a->isIncomplete());
+        $this->assertSame('1 × Safety cable', $a->missingLabel());
+
+        $boss = $this->as('manager');
+        $this->actingAs($boss)->get('/dry-hire')->assertSee('⚠ 1');
+        $this->actingAs($boss)->get('/dry-hire/items/'.$spiider->id)->assertSee('1 piece is not a standard configuration')->assertSee('LT-0142</a>: missing 1 × Safety cable', false);
+        $this->actingAs($boss)->get('/dry-hire/assets/'.$a->id)->assertSee('Not a standard configuration')->assertSee('Accessories complete again');
+        $this->actingAs($boss)->post('/dry-hire/assets/'.$a->id.'/kit-complete')->assertSessionHas('status');
+        $this->assertFalse($a->fresh()->isIncomplete());
+        $this->assertTrue(\App\Models\AuditLog::where('action', 'equipment.asset_kit_complete')->exists());
+        $this->actingAs($boss)->get('/dry-hire/items/'.$spiider->id)->assertDontSee('not a standard configuration');
+    }
+
     public function test_pages_speak_every_language(): void
     {
         [$spiider, $order, $assets] = $this->returned();

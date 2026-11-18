@@ -244,4 +244,12 @@ return [
         'unplaced' => 'Not placed yet: :n of :stock (not on a rack place and not in a box or case).',
         'unknown' => '“:code” is not a rack place or storage zone. Pick one from the list.',
     ],
+    'kitcheck' => [
+        'not_standard' => 'Not a standard configuration',
+        'missing' => 'missing :list',
+        'banner' => '{1} 1 piece is not a standard configuration (accessories missing)|[2,*] :n pieces are not a standard configuration (accessories missing)',
+        'list_title' => '{1} 1 piece without all its accessories|[2,*] :n pieces without all their accessories',
+        'complete_again' => 'Accessories complete again',
+        'completed' => ':code is a standard configuration again.',
+    ],
 ];

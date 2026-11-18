@@ -90,6 +90,17 @@ class AssetController extends Controller
         return back()->with('status', __('equipment.flash.saved'));
     }
 
+    /** The missing accessories were put back: a standard configuration again. */
+    public function kitComplete(Request $request, Asset $asset): RedirectResponse
+    {
+        abort_unless($request->user()->canUseModule('warehouse', 2) || $request->user()->canUseModule('dryhire', 2), 403);
+        $was = $asset->missingLabel();
+        $asset->update(['missing_kit' => null]);
+        AuditLog::record('equipment.asset_kit_complete', $asset, ['code' => $asset->code, 'was' => $was], $request->user());
+
+        return back()->with('status', __('equipment.kitcheck.completed', ['code' => $asset->code]));
+    }
+
     /** Sold, lost, stolen or broken: the piece stays in the history but can no longer be rented. */
     public function retire(Request $request, Asset $asset): RedirectResponse
     {

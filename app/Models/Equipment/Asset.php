@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 /** One physical piece of a serial item, with its own code and QR label. */
 #[Fillable([
     'item_id', 'code', 'serial_number', 'status', 'location', 'out_order_id', 'repair_released_at', 'purchase_date', 'purchase_price_cents',
-    'supplier', 'warranty_until', 'note', 'retired_reason', 'retired_at', 'label_printed_at', 'case_id',
+    'supplier', 'warranty_until', 'note', 'retired_reason', 'retired_at', 'label_printed_at', 'case_id', 'missing_kit',
 ])]
 class Asset extends Model
 {
@@ -59,8 +59,22 @@ class Asset extends Model
     {
         return [
             'purchase_date' => 'date', 'warranty_until' => 'date', 'retired_at' => 'datetime',
-            'label_printed_at' => 'datetime', 'purchase_price_cents' => 'integer', 'repair_released_at' => 'datetime',
+            'label_printed_at' => 'datetime', 'purchase_price_cents' => 'integer', 'repair_released_at' => 'datetime', 'missing_kit' => 'array',
         ];
+    }
+
+    /** Technically OK but without some of its accessories: rentable, not a standard configuration. */
+    public function isIncomplete(): bool
+    {
+        return ! empty($this->missing_kit);
+    }
+
+    /** "1 × Safety cable, 2 × Barndoor" */
+    public function missingLabel(): string
+    {
+        $names = Item::whereIn('id', collect($this->missing_kit ?? [])->pluck('item_id'))->pluck('name', 'id');
+
+        return collect($this->missing_kit ?? [])->map(fn ($m) => $m['qty'].' × '.($names[$m['item_id']] ?? '?'))->implode(', ');
     }
 
     public function item(): BelongsTo
