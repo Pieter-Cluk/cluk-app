@@ -3,6 +3,15 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'open_card' => 'Ficha dry-hire :number',
+        'kit_title' => '¿Accesorios completos?',
+        'kit_text' => 'Siempre van con este artículo. Compruebe cada uno: completo, o cuántos faltan.',
+        'kit_complete' => 'Completo',
+        'each' => 'unidad',
+        'kit_photo_hint' => 'Falta algo: haga una foto de lo que ha vuelto.',
+        'kit_each' => 'Compruebe cada accesorio: completo o cuántos faltan.',
+        'kit_photo' => 'Falta algo: haga primero una foto.',
+        'incomplete' => 'Devolución incompleta: los accesorios que faltan van a los costes de devolución del cliente.',
         'title' => 'Tech Check · :code',
         'progress' => 'Progreso',
         'step_of' => 'Paso :n de :total',
@@ -34,6 +43,12 @@ return [
         'choice' => 'Una opción',
     ],
     'builder' => [
+        'new_hint' => 'Elija el artículo dry-hire: el nombre viene de él y el artículo queda vinculado. Sus accesorios se comprueban como último paso.',
+        'dryhire_item' => 'Artículo dry-hire…',
+        'open_card' => 'abrir la ficha dry-hire',
+        'kit_title' => 'Accesorios (último paso)',
+        'kit_hint' => 'De la ficha dry-hire. En el Tech Check se comprueba cada uno; los que faltan van a los costes de devolución.',
+        'kit_none' => 'No hay accesorios en la ficha dry-hire.',
         'minutes' => 'Duración del control (minutos)',
         'minutes_hint' => 'Se usa para facturar controles del material de clientes.',
         'duration' => ':n min',
@@ -118,6 +133,9 @@ Sin precio = se valora después',
         ],
     ],
     'notice' => [
+        'incomplete' => 'La devolución estaba incompleta: faltaban accesorios.',
+        'incomplete_title' => 'Devolución incompleta',
+        'incomplete_hint' => 'los accesorios que faltan están en las líneas de abajo.',
         'owner_subject' => 'Costes de devolución por revisar · :order',
         'owner_intro' => 'Cada pieza de :order (:customer) está controlada. Revise los costes e informe al cliente.',
         'owner_button' => 'Abrir los costes de devolución',

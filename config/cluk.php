@@ -53,7 +53,7 @@ return [
         'dryhire',     // Dry-hire items & assets
         'warehouse',   // Warehouse
         'factory',     // Cluk Factory
-        'afrit6',      // Cluk Workspace (Afrit 6)
+        'afrit6',      // Afrit 6 (co-working)
         'preinvoice',  // Pre-invoicing / finance
         'settings',    // Users & settings
     ],

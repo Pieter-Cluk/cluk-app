@@ -3,7 +3,8 @@
 <x-layouts.app :title="$p->name()">
     <div class="pagehead"><div>
         <div class="kicker"><a href="{{ route('checks.index') }}">{{ mb_strtoupper(__('nav.items.checkbuilder')) }}</a></div>
-        <h1>{{ $p->name() }}</h1>
+        <h1>{{ $p->item?->name ?? $p->name() }}</h1>
+        @if ($p->item)<p class="muted"><a href="{{ route('equipment.show', $p->item) }}">{{ $p->item->number }} · {{ __('checks.builder.open_card') }} →</a></p>@endif
         <p class="muted">@if ($p->minutes)⏱ {{ __('checks.builder.duration', ['n' => $p->minutes]) }} · @endif @if ($p->current){{ __('checks.builder.live', ['n' => $p->current->version, 'date' => $p->current->created_at->format('d/m/Y')]) }}@else{{ __('checks.builder.not_published') }}@endif
             @if ($p->draftChanged()) · <b class="txt-warn">{{ __('checks.builder.changes_hint') }}</b>@endif</p>
     </div>
@@ -45,6 +46,13 @@
                     <ul class="cb-versions">@foreach ($p->versions as $v)<li>v{{ $v->version }} · {{ $v->created_at->format('d/m/Y') }} · {{ $v->publishedBy?->first_name }}@if ($v->note) · <span class="muted">{{ $v->note }}</span>@endif</li>@endforeach</ul>
                 @endif
             </section>
+            @if ($p->item)
+                <section class="card">
+                    <h2>{{ __('checks.builder.kit_title') }}</h2>
+                    <p class="muted small">{{ __('checks.builder.kit_hint') }}</p>
+                    <ul class="cb-items">@forelse ($p->item->kit as $k)<li>{{ $k->pivot->qty }} × {{ $k->name }} <small class="muted">{{ $k->number }}</small></li>@empty<li class="muted">{{ __('checks.builder.kit_none') }}</li>@endforelse</ul>
+                </section>
+            @endif
             <section class="card">
                 <h2>{{ __('checks.builder.items') }} <small class="muted">{{ $p->items->count() }}</small></h2>
                 <p class="muted small">{{ __('checks.builder.items_hint') }}</p>

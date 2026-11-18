@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'footer' => 'Afrit 6 · Cluk Workspace de CLUK',
+    'footer' => 'Afrit 6 · de CLUK',
     'logout' => 'Cerrar sesión',
     'login' => [
         'title' => 'Iniciar sesión',

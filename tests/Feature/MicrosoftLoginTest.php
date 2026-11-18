@@ -109,7 +109,7 @@ class MicrosoftLoginTest extends TestCase
 
         $this->actingAs($user)->get('/dashboard')
             ->assertOk()
-            ->assertSee('Cluk Workspace')->assertDontSee('Your modules')
+            ->assertSee('Afrit 6')->assertDontSee('Your modules')
             ->assertDontSee('Pre-invoicing');
 
         $this->post('/logout')->assertRedirect('/login');

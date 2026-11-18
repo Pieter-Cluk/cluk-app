@@ -96,7 +96,7 @@ class CostNotices
         $mail = InLocale::run($lang, fn () => new Confirmation(
             subject: __('checks.notice.subject', ['order' => $order->number, 'title' => $order->title]),
             greeting: $order->contact?->first_name ? __('mails.hello', ['name' => $order->contact->first_name]) : __('mails.hello_plain'),
-            intro: [__('checks.notice.intro', ['title' => $order->title])],
+            intro: array_values(array_filter([__('checks.notice.intro', ['title' => $order->title]), $charges->contains('kind', 'missing') ? __('checks.notice.incomplete') : null])),
             next: [__('checks.notice.next', ['date' => $notice->deadline->locale($lang)->translatedFormat('j F Y')])],
             button: ['label' => __('checks.notice.button'), 'url' => route('costs.public', $notice->token)],
             signer: $by,

@@ -36,7 +36,7 @@ return [
     'kpi' => [
         'jobs' => 'Trabajos confirmados · :month',
         'jobs_s' => '{0} sin IVA · aún sin trabajos|{1} sin IVA · 1 trabajo|[2,*] sin IVA · :n trabajos',
-        'desks' => 'Cluk Workspace · hoy',
+        'desks' => 'Afrit 6 · hoy',
         'desks_s' => '{0} puestos ocupados · ningún contrato termina esta semana|{1} puestos ocupados · 1 contrato termina en 7 días|[2,*] puestos ocupados · :n contratos terminan en 7 días',
         'quotes' => 'Presupuestos en seguimiento',
         'quotes_s' => '{0} ninguno espera más de 5 días|{1} 1 espera más de 5 días|[2,*] :n esperan más de 5 días',

@@ -24,7 +24,7 @@ return [
         'checkbuilder' => 'Check Builder',
         'warehouse' => 'Entrepôt',
         'factory' => 'Cluk Factory',
-        'afrit6' => 'Cluk Workspace',
+        'afrit6' => 'Afrit 6',
         'preinvoice' => 'Préfacturation',
         'users' => 'Utilisateurs',
         'company' => 'Coordonnées de l’entreprise',
@@ -42,6 +42,7 @@ return [
     'groups' => [
         'media' => 'Médias',
         'commercial' => 'Commercial',
+        'warehouse' => 'Entrepôt',
         'operations' => 'Opérations',
         'finance' => 'Finances',
         'settings' => 'Paramètres',

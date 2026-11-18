@@ -9,7 +9,7 @@ return [
         'dryhire' => 'Dry-hire',
         'warehouse' => 'Magazijn',
         'factory' => 'Cluk Factory',
-        'afrit6' => 'Cluk Workspace (Afrit 6)',
+        'afrit6' => 'Afrit 6',
         'preinvoice' => 'Voorfacturatie',
         'settings' => 'Gebruikers & instellingen',
     ],

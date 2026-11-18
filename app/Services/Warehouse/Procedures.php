@@ -15,9 +15,10 @@ use Illuminate\Support\Str;
 /** Check Builder: edit the draft steps of a procedure, publish versions, choose the items it is for. */
 class Procedures
 {
-    public static function create(array $names, User $by, array $steps = []): CheckProcedure
+    public static function create(array $names, User $by, array $steps = [], ?Item $item = null): CheckProcedure
     {
-        $p = CheckProcedure::create(['names' => $names, 'draft_steps' => $steps, 'updated_by_id' => $by->id]);
+        $p = CheckProcedure::create(['item_id' => $item?->id, 'names' => $names, 'draft_steps' => $steps, 'updated_by_id' => $by->id]);
+        $item?->update(['check_procedure_id' => $p->id]);
         AuditLog::record('checks.procedure_created', $p, ['name' => $p->name('en')], $by);
 
         return $p;
@@ -90,7 +91,7 @@ class Procedures
         $names = collect($p->names)->map(fn ($n) => $n.' (2)')->all();
         $steps = collect($p->draft_steps ?? [])->map(fn ($s) => ['key' => Str::lower(Str::random(8))] + $s)->all();
 
-        return self::create($names, $by, $steps);
+        return self::create($names, $by, $steps, null);
     }
 
     /** @param  int[]  $itemIds */

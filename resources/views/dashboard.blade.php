@@ -131,7 +131,7 @@
                         <div class="db-days">@foreach ($week['days'] as $i => $d)<span class="db-cell db-{{ $week['factory'][$i] }}"><small>{{ $d->locale(app()->getLocale())->translatedFormat('D') }}</small>{{ $d->day }}</span>@endforeach</div>
                     @endisset
                     @isset($week['desks'])
-                        <div class="db-place"><b>Cluk Workspace</b><small class="muted">{{ __('dashboard.desks_free', ['total' => $week['desks_total']]) }}</small></div>
+                        <div class="db-place"><b>Afrit 6</b><small class="muted">{{ __('dashboard.desks_free', ['total' => $week['desks_total']]) }}</small></div>
                         <div class="db-days">@foreach ($week['days'] as $i => $d)@php($n = $week['desks'][$i])<span @class(['db-cell', 'db-free' => $n !== null && $n > 0, 'db-booked' => $n === 0, 'db-closed' => $n === null])><small>{{ $d->locale(app()->getLocale())->translatedFormat('D') }}</small>{{ $n ?? '—' }}</span>@endforeach</div>
                     @endisset
                     <p class="muted small">{{ __('dashboard.legend') }}</p>

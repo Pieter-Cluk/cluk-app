@@ -37,6 +37,7 @@
     @endif
     <section class="card">
         <p>{{ __('checks.public.intro') }}</p>
+        @if ($charges->contains('kind', 'missing'))<p><b>{{ __('checks.notice.incomplete') }}</b></p>@endif
         <div class="table-wrap"><table class="doc-table">
             <thead><tr><th>{{ __('checks.public.what') }}</th><th class="num">{{ __('checks.public.qty') }}</th><th class="num">{{ __('checks.public.amount') }}</th></tr></thead>
             <tbody>

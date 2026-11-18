@@ -1,7 +1,7 @@
 @php($say = fn ($t) => \App\Models\Warehouse\CheckProcedure::say($t))
 <x-layouts.app :title="__('nav.items.techcheck')">
     <div class="pagehead"><div>
-        <div class="kicker">{{ mb_strtoupper(__('nav.groups.operations')) }} / {{ mb_strtoupper(__('nav.items.techcheck')) }}</div>
+        <div class="kicker">{{ mb_strtoupper(__('nav.groups.warehouse')) }} / {{ mb_strtoupper(__('nav.items.techcheck')) }}</div>
         <h1>{{ __('nav.items.techcheck') }}</h1>
         <p class="muted">{{ __('checks.tech.intro') }}</p>
     </div>

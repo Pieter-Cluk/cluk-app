@@ -36,7 +36,7 @@ return [
     'kpi' => [
         'jobs' => 'Bevestigde jobs · :month',
         'jobs_s' => '{0} excl. btw · nog geen jobs|{1} excl. btw · 1 job|[2,*] excl. btw · :n jobs',
-        'desks' => 'Cluk Workspace · vandaag',
+        'desks' => 'Afrit 6 · vandaag',
         'desks_s' => '{0} bureaus bezet · geen contract loopt af deze week|{1} bureaus bezet · 1 contract loopt af binnen 7 dagen|[2,*] bureaus bezet · :n contracten lopen af binnen 7 dagen',
         'quotes' => 'Offertes in opvolging',
         'quotes_s' => '{0} geen enkele wacht langer dan 5 dagen|{1} 1 wacht langer dan 5 dagen|[2,*] :n wachten langer dan 5 dagen',

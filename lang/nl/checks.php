@@ -3,6 +3,15 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'open_card' => 'Dry-hirefiche :number',
+        'kit_title' => 'Toebehoren volledig?',
+        'kit_text' => 'Deze horen altijd bij dit artikel. Controleer elk: volledig, of hoeveel er ontbreken.',
+        'kit_complete' => 'Volledig',
+        'each' => 'per stuk',
+        'kit_photo_hint' => 'Er ontbreekt iets: neem een foto van wat terugkwam.',
+        'kit_each' => 'Controleer elk toebehoren: volledig of hoeveel er ontbreken.',
+        'kit_photo' => 'Er ontbreekt iets: neem eerst een foto.',
+        'incomplete' => 'Onvolledige retour: de ontbrekende toebehoren komen op de retourkosten voor de klant.',
         'title' => 'Tech Check · :code',
         'progress' => 'Voortgang',
         'step_of' => 'Stap :n van :total',
@@ -34,6 +43,12 @@ return [
         'choice' => 'Eén keuze',
     ],
     'builder' => [
+        'new_hint' => 'Kies het dry-hireartikel: de naam komt daarvan en het artikel wordt gekoppeld. De toebehoren worden als laatste stap gecontroleerd.',
+        'dryhire_item' => 'Dry-hireartikel…',
+        'open_card' => 'dry-hirefiche openen',
+        'kit_title' => 'Toebehoren (laatste stap)',
+        'kit_hint' => 'Van de dry-hirefiche. In de Tech Check wordt elk gecontroleerd; ontbrekende komen op de retourkosten.',
+        'kit_none' => 'Geen toebehoren op de dry-hirefiche.',
         'minutes' => 'Duur van de check (minuten)',
         'minutes_hint' => 'Gebruikt om checks op materiaal van klanten te factureren.',
         'duration' => ':n min',
@@ -118,6 +133,9 @@ Geen prijs = later prijzen',
         ],
     ],
     'notice' => [
+        'incomplete' => 'De retour was onvolledig: er ontbraken toebehoren.',
+        'incomplete_title' => 'Onvolledige retour',
+        'incomplete_hint' => 'ontbrekende toebehoren staan op de lijnen hieronder.',
         'owner_subject' => 'Retourkosten na te kijken · :order',
         'owner_intro' => 'Elk stuk van :order (:customer) is gecontroleerd. Kijk de kosten na en breng de klant op de hoogte.',
         'owner_button' => 'Open de retourkosten',

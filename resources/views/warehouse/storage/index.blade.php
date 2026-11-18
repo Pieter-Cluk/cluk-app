@@ -1,6 +1,6 @@
 <x-layouts.app :title="__('nav.items.storage')">
     <div class="pagehead"><div>
-        <div class="kicker">{{ mb_strtoupper(__('nav.groups.operations')) }} / {{ mb_strtoupper(__('nav.items.storage')) }}</div>
+        <div class="kicker">{{ mb_strtoupper(__('nav.groups.warehouse')) }} / {{ mb_strtoupper(__('nav.items.storage')) }}</div>
         <h1>{{ __('nav.items.storage') }}</h1>
         <p class="muted">{{ __('storage.intro') }}</p>
     </div></div>

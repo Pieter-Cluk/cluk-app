@@ -3,6 +3,15 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'open_card' => 'Fiche dry-hire :number',
+        'kit_title' => 'Accessoires complets ?',
+        'kit_text' => 'Ils vont toujours avec cet article. Contrôlez chacun : complet, ou combien manquent.',
+        'kit_complete' => 'Complet',
+        'each' => 'pièce',
+        'kit_photo_hint' => 'Il manque quelque chose : prenez une photo de ce qui est revenu.',
+        'kit_each' => 'Contrôlez chaque accessoire : complet ou combien manquent.',
+        'kit_photo' => 'Il manque quelque chose : prenez d’abord une photo.',
+        'incomplete' => 'Retour incomplet : les accessoires manquants vont sur les frais de retour du client.',
         'title' => 'Tech Check · :code',
         'progress' => 'Progression',
         'step_of' => 'Étape :n sur :total',
@@ -34,6 +43,12 @@ return [
         'choice' => 'Un choix',
     ],
     'builder' => [
+        'new_hint' => 'Choisissez l’article dry-hire : le nom vient de lui et l’article est lié. Ses accessoires sont contrôlés en dernière étape.',
+        'dryhire_item' => 'Article dry-hire…',
+        'open_card' => 'ouvrir la fiche dry-hire',
+        'kit_title' => 'Accessoires (dernière étape)',
+        'kit_hint' => 'De la fiche dry-hire. Dans le Tech Check chacun est contrôlé ; les manquants vont sur les frais de retour.',
+        'kit_none' => 'Pas d’accessoires sur la fiche dry-hire.',
         'minutes' => 'Durée du contrôle (minutes)',
         'minutes_hint' => 'Sert à facturer les contrôles sur le matériel des clients.',
         'duration' => ':n min',
@@ -118,6 +133,9 @@ Sans prix = chiffré plus tard',
         ],
     ],
     'notice' => [
+        'incomplete' => 'Le retour était incomplet : des accessoires manquaient.',
+        'incomplete_title' => 'Retour incomplet',
+        'incomplete_hint' => 'les accessoires manquants sont sur les lignes ci-dessous.',
         'owner_subject' => 'Frais de retour à vérifier · :order',
         'owner_intro' => 'Chaque pièce de :order (:customer) est contrôlée. Vérifiez les frais et informez le client.',
         'owner_button' => 'Ouvrir les frais de retour',

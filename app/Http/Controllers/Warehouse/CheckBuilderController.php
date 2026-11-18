@@ -18,20 +18,26 @@ class CheckBuilderController extends Controller
 {
     public function index(): View
     {
-        return view('warehouse.checks.index', ['procedures' => CheckProcedure::with('current')->withCount('items')->orderBy('id')->get()]);
+        return view('warehouse.checks.index', [
+            'procedures' => CheckProcedure::with(['current', 'item'])->withCount('items')->orderBy('id')->get(),
+            'dryHire' => Item::where('active', true)->where('kind', 'item')->whereNull('check_procedure_id')->orderBy('name')->get(['id', 'number', 'name']),
+        ]);
     }
 
+    /** A new procedure for a dry-hire item: its name and number come from the item, and the item is linked. */
     public function store(Request $request): RedirectResponse
     {
-        $d = $request->validate(['name_nl' => ['required_without:name_en', 'nullable', 'string', 'max:120'], 'name_en' => ['nullable', 'string', 'max:120']]);
-        $p = Procedures::create(['nl' => $d['name_nl'] ?? '', 'en' => $d['name_en'] ?? ''], $request->user());
+        $d = $request->validate(['item_id' => ['required', 'integer', 'exists:equipment_items,id']]);
+        $item = Item::findOrFail($d['item_id']);
+        $name = $item->name.' · '.$item->number;
+        $p = Procedures::create(['nl' => $name, 'en' => $name], $request->user(), [], $item);
 
         return redirect()->route('checks.edit', $p)->with('status', __('checks.builder.created'));
     }
 
     public function edit(CheckProcedure $procedure): View
     {
-        $procedure->load(['current', 'versions.publishedBy', 'items' => fn ($q) => $q->orderBy('name')]);
+        $procedure->load(['current', 'item.kit', 'versions.publishedBy', 'items' => fn ($q) => $q->orderBy('name')]);
 
         return view('warehouse.checks.edit', [
             'p' => $procedure,

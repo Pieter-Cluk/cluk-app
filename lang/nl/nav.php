@@ -24,7 +24,7 @@ return [
         'checkbuilder' => 'Check Builder',
         'warehouse' => 'Magazijn',
         'factory' => 'Cluk Factory',
-        'afrit6' => 'Cluk Workspace',
+        'afrit6' => 'Afrit 6',
         'preinvoice' => 'Voorfacturatie',
         'users' => 'Gebruikers',
         'company' => 'Bedrijfsgegevens',
@@ -42,6 +42,7 @@ return [
     'groups' => [
         'media' => 'Media',
         'commercial' => 'Commercieel',
+        'warehouse' => 'Magazijn',
         'operations' => 'Operaties',
         'finance' => 'Financiën',
         'settings' => 'Instellingen',

@@ -119,9 +119,8 @@ class Checks
         if (! $v || ! TechCheck::complete($check, $v)) {
             throw ValidationException::withMessages(['steps' => __('checks.run.not_done')]);
         }
-        if (array_filter($missing) && self::photoCount($check) === 0) {
-            throw ValidationException::withMessages(['photos' => __('warehouse.errors.photo_needed')]);
-        }
+        // The accessories step decides what is missing (an incomplete return).
+        $missing = array_filter(($check->answers['_kit'] ?? []) ?: $missing);
 
         return DB::transaction(function () use ($check, $asset, $missing, $by, $v) {
             $order = $check->order;
@@ -130,6 +129,9 @@ class Checks
             $tests = [];
             foreach ($v->steps as $s) {
                 $a = $check->answers[$s['key']];
+                if (! is_array($a)) {
+                    continue;
+                }
                 $tests[$s['key']] = $a['answer'];
                 $broken = $broken || $a['answer'] === 'fail';
                 if (! $order) {

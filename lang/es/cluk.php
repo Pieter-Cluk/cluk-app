@@ -9,7 +9,7 @@ return [
         'dryhire' => 'Alquiler en seco',
         'warehouse' => 'Almacén',
         'factory' => 'Cluk Factory',
-        'afrit6' => 'Cluk Workspace (Afrit 6)',
+        'afrit6' => 'Afrit 6',
         'preinvoice' => 'Prefacturación',
         'settings' => 'Usuarios y ajustes',
     ],

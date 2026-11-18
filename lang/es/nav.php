@@ -24,7 +24,7 @@ return [
         'checkbuilder' => 'Check Builder',
         'warehouse' => 'Almacén',
         'factory' => 'Cluk Factory',
-        'afrit6' => 'Cluk Workspace',
+        'afrit6' => 'Afrit 6',
         'preinvoice' => 'Prefacturación',
         'users' => 'Usuarios',
         'company' => 'Datos de la empresa',
@@ -42,6 +42,7 @@ return [
     'groups' => [
         'media' => 'Medios',
         'commercial' => 'Comercial',
+        'warehouse' => 'Almacén',
         'operations' => 'Operaciones',
         'finance' => 'Finanzas',
         'settings' => 'Ajustes',

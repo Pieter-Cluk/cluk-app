@@ -30,12 +30,13 @@ return [
         'operations' => [
             ['key' => 'dryhire', 'path' => '/dry-hire', 'icon' => 'box', 'module' => ['dryhire', 1]],
             ['key' => 'productsales', 'path' => '/sales-products', 'icon' => 'tag', 'module' => ['sales', 1]],
-            ['key' => 'warehouse', 'path' => '/warehouse', 'icon' => 'warehouse', 'module' => ['warehouse', 1]],
-            ['key' => 'techcheck', 'path' => '/warehouse/tech-check', 'icon' => 'check', 'module' => ['warehouse', 1]],
-            ['key' => 'storage', 'path' => '/warehouse/storage', 'icon' => 'box', 'module' => ['warehouse', 1]],
-            ['key' => 'checkbuilder', 'path' => '/warehouse/check-builder', 'icon' => 'notes', 'right' => 'warehouse.build_checks'],
             ['key' => 'factory', 'path' => '/factory', 'icon' => 'stage', 'module' => ['factory', 1]],
             ['key' => 'afrit6', 'path' => '/afrit6-staff', 'icon' => 'desk', 'module' => ['afrit6', 1]],
+        ],
+        'warehouse' => [
+            ['key' => 'warehouse', 'path' => '/warehouse', 'icon' => 'warehouse', 'module' => ['warehouse', 1], 'except' => ['/warehouse/tech-check', '/warehouse/storage', '/warehouse/check-builder', '/warehouse/check-photo']],
+            ['key' => 'techcheck', 'path' => '/warehouse/tech-check', 'icon' => 'check', 'module' => ['warehouse', 1]],
+            ['key' => 'storage', 'path' => '/warehouse/storage', 'icon' => 'box', 'module' => ['warehouse', 1]],
         ],
         'media' => [
             ['key' => 'messages', 'path' => '/media/messages', 'icon' => 'message', 'module' => ['sales', 1]],
@@ -53,6 +54,7 @@ return [
             ['key' => 'labour', 'path' => '/settings/labour-rates', 'icon' => 'user', 'module' => ['settings', 2]],
             ['key' => 'locations', 'path' => '/settings/warehouse-locations', 'icon' => 'pin', 'right' => 'warehouse.setup_locations'],
             ['key' => 'productlists', 'path' => '/settings/product-categories', 'icon' => 'tag', 'right' => 'products.classify'],
+            ['key' => 'checkbuilder', 'path' => '/warehouse/check-builder', 'icon' => 'notes', 'right' => 'warehouse.build_checks'],
             ['key' => 'import', 'path' => '/settings/import', 'icon' => 'upload', 'module' => ['settings', 2]],
         ],
     ],

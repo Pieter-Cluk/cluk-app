@@ -10,6 +10,7 @@
         @if ($charges->where('status', 'approved')->isNotEmpty())<a class="btn" href="{{ route('warehouse.charges.proforma', $order) }}" target="_blank" rel="noopener">{{ \App\Http\Controllers\Warehouse\WarehouseController::code($order) }}</a>@endif
     </div>
     @include('partials.flash')
+    @if ($charges->contains('kind', 'missing'))<p class="flash flash-warn"><b>{{ __('checks.notice.incomplete_title') }}</b> · {{ __('checks.notice.incomplete_hint') }}</p>@endif
     @if ($notice)
         <p @class(['flash', 'flash-warn' => in_array($notice->status, ['review', 'objected'], true), 'flash-ok' => in_array($notice->status, ['sent', 'invoiced'], true)])>
             <b>{{ __('checks.notice.status.'.$notice->status) }}</b>

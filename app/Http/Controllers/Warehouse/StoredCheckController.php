@@ -27,25 +27,33 @@ class StoredCheckController extends Controller
             return redirect()->route('w.scan')->withErrors(['code' => __('storage.phone.no_procedure', ['code' => $piece->code])]);
         }
 
-        return view('warehouse.phone.tech', ['piece' => $piece, 'check' => $check->fresh(), 'v' => $v, 'done' => TechCheck::complete($check->fresh(), $v)]);
+        $check = $check->fresh();
+
+        return view('warehouse.phone.tech', ['piece' => $piece, 'check' => $check, 'v' => $v, 'kit' => TechCheck::kit($check), 'onKit' => TechCheck::proceduresDone($check, $v), 'done' => TechCheck::complete($check, $v)]);
     }
 
     public function step(Request $request, StoredPiece $piece): RedirectResponse
     {
         $d = $request->validate([
             'answer' => ['nullable', 'string', 'max:10'], 'value' => ['nullable', 'string', 'max:120'], 'note' => ['nullable', 'string', 'max:500'],
-            'costs' => ['array'], 'costs.*' => ['integer'], 'extra_label' => ['nullable', 'string', 'max:120'], 'extra_amount' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'costs' => ['array'], 'costs.*' => ['integer'], 'missing' => ['array'], 'missing.*' => ['nullable', 'integer', 'min:0', 'max:999'], 'extra_label' => ['nullable', 'string', 'max:120'], 'extra_amount' => ['nullable', 'numeric', 'min:0', 'max:100000'],
             'photos' => ['array', 'max:6'], 'photos.*' => Images::rule(),
         ]);
         $check = StorageCheck::openFor($piece);
         $v = TechCheck::versionForStored($piece, $check);
         abort_unless($v, 404);
+        $onKit = TechCheck::proceduresDone($check, $v);
         if ($request->boolean('photo_only')) {
-            Checks::addPhotos($check, $request->file('photos', []), 'step:'.($v->steps[$check->step]['key'] ?? 'x'));
+            Checks::addPhotos($check, $request->file('photos', []), $onKit ? 'kit' : 'step:'.($v->steps[$check->step]['key'] ?? 'x'));
 
             return back()->withInput();
         }
-        TechCheck::answer($check, $v, $d, $request->file('photos', []));
+        if ($onKit) {
+            Checks::addPhotos($check, $request->file('photos', []), 'kit');
+            TechCheck::answerKit($check, (array) $request->input('missing', []));
+        } else {
+            TechCheck::answer($check, $v, $d, $request->file('photos', []));
+        }
 
         return redirect()->route('w.stored', $piece);
     }

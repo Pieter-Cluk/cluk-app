@@ -93,12 +93,60 @@ class TechCheck
 
     public static function back(Check|StorageCheck $check): void
     {
+        $answers = $check->answers ?? [];
+        if ($check->step >= self::stepCount($check) - 1 && isset($answers['_kit'])) {
+            unset($answers['_kit']); // back from the summary to the accessories
+            $check->update(['answers' => $answers]);
+
+            return;
+        }
         $check->update(['step' => max(0, $check->step - 1)]);
+    }
+
+    /** The accessories that always go with this item (kit in the dry-hire card): checked as the last step. */
+    public static function kit(Check|StorageCheck $check): \Illuminate\Support\Collection
+    {
+        $item = $check instanceof Check ? $check->asset?->item : $check->piece?->item?->sameAs;
+
+        return $item ? $item->kit()->get() : collect();
+    }
+
+    /** Steps of the procedure, plus the accessories step when the item has accessories. */
+    public static function stepCount(Check|StorageCheck $check): int
+    {
+        $v = $check->procedureVersion;
+
+        return count($v?->steps ?? []) + (self::kit($check)->isNotEmpty() ? 1 : 0);
+    }
+
+    public static function proceduresDone(Check|StorageCheck $check, CheckProcedureVersion $v): bool
+    {
+        return $check->step >= count($v->steps) && collect($v->steps)->every(fn ($s) => isset(($check->answers ?? [])[$s['key']]));
     }
 
     public static function complete(Check|StorageCheck $check, CheckProcedureVersion $v): bool
     {
-        return $check->step >= count($v->steps)
-            && collect($v->steps)->every(fn ($s) => isset(($check->answers ?? [])[$s['key']]));
+        return self::proceduresDone($check, $v) && (self::kit($check)->isEmpty() || isset(($check->answers ?? [])['_kit']));
+    }
+
+    /**
+     * The accessories step: every accessory is ticked as complete or with the number missing. Missing ones need a photo.
+     *
+     * @param  array<int, string|int>  $missing  kit item id => missing qty ('' = not answered)
+     */
+    public static function answerKit(Check|StorageCheck $check, array $missing): void
+    {
+        $kit = self::kit($check);
+        $out = [];
+        foreach ($kit as $k) {
+            if (! isset($missing[$k->id]) || $missing[$k->id] === '') {
+                throw ValidationException::withMessages(['missing' => __('checks.run.kit_each')]);
+            }
+            $out[$k->id] = max(0, min((int) $missing[$k->id], max(1, (int) $k->pivot->qty)));
+        }
+        if (array_filter($out) && Checks::photoCount($check, 'kit') === 0) {
+            throw ValidationException::withMessages(['missing' => __('checks.run.kit_photo')]);
+        }
+        $check->update(['answers' => ($check->answers ?? []) + ['_kit' => $out]]);
     }
 }

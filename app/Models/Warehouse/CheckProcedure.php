@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * A step: ['key', 'title' => {nl, en}, 'text' => {nl, en}, 'photos' => [path], 'answer' => confirm|okfail|value|photo|choice,
  *          'choices' => [{nl, en}], 'costs' => [['label' => {nl, en}, 'cents' => ?int]]]
  */
-#[Fillable(['names', 'minutes', 'draft_steps', 'current_version_id', 'active', 'updated_by_id'])]
+#[Fillable(['item_id', 'names', 'minutes', 'draft_steps', 'current_version_id', 'active', 'updated_by_id'])]
 class CheckProcedure extends Model
 {
     public const ANSWERS = ['confirm', 'okfail', 'value', 'photo', 'choice'];
@@ -23,6 +23,12 @@ class CheckProcedure extends Model
     protected function casts(): array
     {
         return ['names' => 'array', 'draft_steps' => 'array', 'active' => 'boolean', 'minutes' => 'integer'];
+    }
+
+    /** The dry-hire item it was built for. */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
     }
 
     public function versions(): HasMany

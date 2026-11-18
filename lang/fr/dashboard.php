@@ -36,7 +36,7 @@ return [
     'kpi' => [
         'jobs' => 'Jobs confirmés · :month',
         'jobs_s' => '{0} HTVA · aucun job|{1} HTVA · 1 job|[2,*] HTVA · :n jobs',
-        'desks' => 'Cluk Workspace · aujourd’hui',
+        'desks' => 'Afrit 6 · aujourd’hui',
         'desks_s' => '{0} bureaux occupés · aucun contrat ne finit cette semaine|{1} bureaux occupés · 1 contrat finit sous 7 jours|[2,*] bureaux occupés · :n contrats finissent sous 7 jours',
         'quotes' => 'Devis en suivi',
         'quotes_s' => '{0} aucun n’attend plus de 5 jours|{1} 1 attend depuis plus de 5 jours|[2,*] :n attendent depuis plus de 5 jours',

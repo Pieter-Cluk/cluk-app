@@ -457,8 +457,10 @@ class PhoneController extends Controller
         $check = Check::openFor($asset);
         // Tech Check: the item has a procedure from the Check Builder → one step at a time.
         if ($v = \App\Services\Warehouse\TechCheck::version($asset, $check)) {
-            return view('warehouse.phone.tech', ['asset' => $asset, 'check' => $check->fresh(), 'v' => $v,
-                'done' => \App\Services\Warehouse\TechCheck::complete($check->fresh(), $v)]);
+            $check = $check->fresh();
+
+            return view('warehouse.phone.tech', ['asset' => $asset, 'check' => $check, 'v' => $v, 'kit' => \App\Services\Warehouse\TechCheck::kit($check),
+                'onKit' => \App\Services\Warehouse\TechCheck::proceduresDone($check, $v), 'done' => \App\Services\Warehouse\TechCheck::complete($check, $v)]);
         }
 
         return view('warehouse.phone.check', [
@@ -508,18 +510,24 @@ class PhoneController extends Controller
     {
         $d = $request->validate([
             'answer' => ['nullable', 'string', 'max:10'], 'value' => ['nullable', 'string', 'max:120'], 'note' => ['nullable', 'string', 'max:500'],
-            'costs' => ['array'], 'costs.*' => ['integer'], 'extra_label' => ['nullable', 'string', 'max:120'], 'extra_amount' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'costs' => ['array'], 'costs.*' => ['integer'], 'missing' => ['array'], 'missing.*' => ['nullable', 'integer', 'min:0', 'max:999'], 'extra_label' => ['nullable', 'string', 'max:120'], 'extra_amount' => ['nullable', 'numeric', 'min:0', 'max:100000'],
             'photos' => ['array', 'max:6'], 'photos.*' => Images::rule(),
         ]);
         $check = Check::openFor($asset->load('item'));
         $v = \App\Services\Warehouse\TechCheck::version($asset, $check);
         abort_unless($v, 404);
+        $onKit = \App\Services\Warehouse\TechCheck::proceduresDone($check, $v);
         if ($request->boolean('photo_only')) {
-            Checks::addPhotos($check, $request->file('photos', []), 'step:'.($v->steps[$check->step]['key'] ?? 'x'));
+            Checks::addPhotos($check, $request->file('photos', []), $onKit ? 'kit' : 'step:'.($v->steps[$check->step]['key'] ?? 'x'));
 
             return back()->withInput();
         }
-        \App\Services\Warehouse\TechCheck::answer($check, $v, $d, $request->file('photos', []));
+        if ($onKit) {
+            Checks::addPhotos($check, $request->file('photos', []), 'kit');
+            \App\Services\Warehouse\TechCheck::answerKit($check, (array) $request->input('missing', []));
+        } else {
+            \App\Services\Warehouse\TechCheck::answer($check, $v, $d, $request->file('photos', []));
+        }
 
         return redirect()->route('w.check', $asset);
     }
@@ -533,10 +541,7 @@ class PhoneController extends Controller
 
     public function techFinish(Request $request, Asset $asset): RedirectResponse
     {
-        $d = $request->validate(['missing' => ['array'], 'missing.*' => ['nullable', 'integer', 'min:0', 'max:999'], 'photos' => ['array', 'max:6'], 'photos.*' => Images::rule()]);
-        $check = Check::openFor($asset);
-        Checks::addPhotos($check, $request->file('photos', []), 'check');
-        $check = Checks::finishSteps($asset, array_map('intval', array_filter($d['missing'] ?? [])), $request->user());
+        $check = Checks::finishSteps($asset, [], $request->user());
         \App\Services\Warehouse\CostNotices::refresh($check->order);
         $request->session()->put('w.pending', $asset->id);
 

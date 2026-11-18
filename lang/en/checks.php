@@ -3,6 +3,15 @@
 // Check Builder, Tech Check and return costs.
 return [
     'run' => [
+        'open_card' => 'Dry-hire card :number',
+        'kit_title' => 'Accessories complete?',
+        'kit_text' => 'These always go with this item. Check each one: complete, or how many are missing.',
+        'kit_complete' => 'Complete',
+        'each' => 'each',
+        'kit_photo_hint' => 'Something missing: take a photo of what came back.',
+        'kit_each' => 'Check every accessory: complete or how many are missing.',
+        'kit_photo' => 'Something is missing: take a photo first.',
+        'incomplete' => 'Incomplete return: the missing accessories go on the return costs for the customer.',
         'title' => 'Tech Check · :code',
         'progress' => 'Progress',
         'step_of' => 'Step :n of :total',
@@ -34,6 +43,12 @@ return [
         'choice' => 'Choose one',
     ],
     'builder' => [
+        'new_hint' => 'Choose the dry-hire item: the name comes from it and the item is linked. Its accessories are checked as the last step.',
+        'dryhire_item' => 'Dry-hire item…',
+        'open_card' => 'open the dry-hire card',
+        'kit_title' => 'Accessories (last step)',
+        'kit_hint' => 'From the dry-hire card. In the Tech Check each one is checked; missing ones go on the return costs.',
+        'kit_none' => 'No accessories on the dry-hire card.',
         'minutes' => 'Duration of the check (minutes)',
         'minutes_hint' => 'Used to bill checks on customers’ equipment.',
         'duration' => ':n min',
@@ -118,6 +133,9 @@ No price = priced later',
         ],
     ],
     'notice' => [
+        'incomplete' => 'The return was incomplete: some accessories were missing.',
+        'incomplete_title' => 'Incomplete return',
+        'incomplete_hint' => 'missing accessories are on the lines below.',
         'owner_subject' => 'Return costs to review · :order',
         'owner_intro' => 'Every piece of :order (:customer) is checked. Look at the costs and inform the customer.',
         'owner_button' => 'Open the return costs',
