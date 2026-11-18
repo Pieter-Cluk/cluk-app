@@ -94,6 +94,28 @@ class Procedures
         return self::create($names, $by, $steps, null);
     }
 
+    /**
+     * Delete a procedure (e.g. a completely new one is written, or the item is no longer used). The items are unlinked,
+     * finished checks keep their answers, checks still in progress start again. Returns the number restarted.
+     */
+    public static function delete(CheckProcedure $p, User $by): int
+    {
+        return DB::transaction(function () use ($p, $by) {
+            $versions = $p->versions()->pluck('id');
+            $restart = 0;
+            foreach ([\App\Models\Warehouse\Check::class, \App\Models\Storage\StorageCheck::class] as $model) {
+                $restart += $model::whereIn('procedure_version_id', $versions)->whereNull('finished_at')->update(['procedure_version_id' => null, 'step' => 0, 'answers' => null]);
+            }
+            $items = Item::where('check_procedure_id', $p->id)->count();
+            Item::where('check_procedure_id', $p->id)->update(['check_procedure_id' => null]);
+            \App\Models\Storage\StoredItem::where('check_procedure_id', $p->id)->update(['check_procedure_id' => null]);
+            AuditLog::record('checks.procedure_deleted', $p, ['name' => $p->name('en'), 'versions' => $versions->count(), 'items' => $items, 'restarted' => $restart], $by);
+            $p->delete();
+
+            return $restart;
+        });
+    }
+
     /** @param  int[]  $itemIds */
     public static function assign(CheckProcedure $p, array $itemIds, User $by): int
     {

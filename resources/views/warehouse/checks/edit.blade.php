@@ -79,6 +79,13 @@
                     <div><button class="btn" type="submit">{{ __('checks.builder.save') }}</button></div>
                 </form>
             </section>
+            <details class="card">
+                <summary class="linkbtn danger">{{ __('checks.builder.delete') }}</summary>
+                <form method="post" action="{{ route('checks.destroy', $p) }}" class="stack-sm" onsubmit="return confirm(@js(__('checks.builder.delete_confirm')))">@csrf @method('DELETE')
+                    <p class="muted small">{{ __('checks.builder.delete_hint') }}</p>
+                    <div><button class="btn danger" type="submit">{{ __('checks.builder.delete_go') }}</button></div>
+                </form>
+            </details>
         </aside>
     </div>
     <script>(function () { var d = location.hash && document.querySelector(location.hash + '.cb-step'); if (d) d.open = true; })();</script>

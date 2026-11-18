@@ -662,6 +662,7 @@ Route::middleware('auth:web')->group(function () {
             Route::delete('/{procedure}/steps/{key}', [CheckBuilderController::class, 'deleteStep'])->whereNumber('procedure')->name('step.delete');
             Route::post('/{procedure}/publish', [CheckBuilderController::class, 'publish'])->whereNumber('procedure')->name('publish');
             Route::post('/{procedure}/copy', [CheckBuilderController::class, 'copy'])->whereNumber('procedure')->name('copy');
+            Route::delete('/{procedure}', [CheckBuilderController::class, 'destroy'])->whereNumber('procedure')->name('destroy');
             Route::post('/{procedure}/items', [CheckBuilderController::class, 'assign'])->whereNumber('procedure')->name('assign');
             Route::delete('/{procedure}/items/{item}', [CheckBuilderController::class, 'unassign'])->whereNumber(['procedure', 'item'])->name('unassign');
         });

@@ -16,10 +16,14 @@ use Illuminate\View\View;
 /** Check Builder: the step-by-step procedures the Tech Check follows (right warehouse.build_checks). */
 class CheckBuilderController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $all = CheckProcedure::with(['current', 'item'])->withCount('items')->orderBy('id')->get();
+        // Items no longer in use (not active any more) are left out, unless asked.
+        $gone = $all->filter(fn ($p) => $p->item && ! $p->item->active);
+
         return view('warehouse.checks.index', [
-            'procedures' => CheckProcedure::with(['current', 'item'])->withCount('items')->orderBy('id')->get(),
+            'procedures' => $request->boolean('all') ? $all : $all->diff($gone), 'gone' => $gone->count(), 'showAll' => $request->boolean('all'),
             'dryHire' => Item::where('active', true)->where('kind', 'item')->whereNull('check_procedure_id')->orderBy('name')->get(['id', 'number', 'name']),
         ]);
     }
@@ -106,6 +110,14 @@ class CheckBuilderController extends Controller
         $v = Procedures::publish($procedure, $request->validate(['note' => ['nullable', 'string', 'max:200']])['note'] ?? null, $request->user());
 
         return back()->with('status', __('checks.builder.published', ['n' => $v->version]));
+    }
+
+    public function destroy(Request $request, CheckProcedure $procedure): RedirectResponse
+    {
+        $name = $procedure->item?->name ?? $procedure->name();
+        $n = Procedures::delete($procedure, $request->user());
+
+        return redirect()->route('checks.index')->with('status', __('checks.builder.deleted', ['name' => $name]).($n ? ' '.trans_choice('checks.builder.restarted', $n, ['n' => $n]) : ''));
     }
 
     public function copy(Request $request, CheckProcedure $procedure): RedirectResponse

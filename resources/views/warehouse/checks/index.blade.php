@@ -11,7 +11,7 @@
             <tbody>
                 @forelse ($procedures as $p)
                     <tr>
-                        <td><a href="{{ route('checks.edit', $p) }}"><b>{{ $p->item?->name ?? $p->name() }}</b></a>@if ($p->item) <small class="muted">{{ $p->item->number }}</small>@endif @unless ($p->active) <span class="pill">{{ __('checks.builder.off') }}</span>@endunless</td>
+                        <td><a href="{{ route('checks.edit', $p) }}"><b>{{ $p->item?->name ?? $p->name() }}</b></a>@if ($p->item) <small class="muted">{{ $p->item->number }}</small>@endif @unless ($p->active) <span class="pill">{{ __('checks.builder.off') }}</span>@endunless @if ($p->item && ! $p->item->active) <span class="pill">{{ __('checks.builder.item_gone') }}</span>@endif</td>
                         <td class="num">{{ count($p->draft_steps ?? []) }}</td>
                         <td class="num">{{ $p->items_count }}</td>
                         <td>@if ($p->current)v{{ $p->current->version }}@else<span class="pill pill-warn">{{ __('checks.builder.not_published') }}</span>@endif @if ($p->current && $p->draftChanged()) <span class="pill pill-warn">{{ __('checks.builder.changes') }}</span>@endif</td>
@@ -22,6 +22,9 @@
             </tbody>
         </table>
     </section>
+    @if ($gone)
+        <p class="muted small mt">@if ($showAll)<a href="{{ route('checks.index') }}">{{ __('checks.builder.hide_gone') }}</a>@else<a href="{{ route('checks.index', ['all' => 1]) }}">{{ trans_choice('checks.builder.show_gone', $gone, ['n' => $gone]) }}</a>@endif</p>
+    @endif
     <section class="card mt">
         <h2>{{ __('checks.builder.new') }}</h2>
         <p class="muted small">{{ __('checks.builder.new_hint') }}</p>

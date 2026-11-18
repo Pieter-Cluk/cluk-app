@@ -116,6 +116,23 @@ class TechCheckTest extends TestCase
         $this->actingAs($this->builder)->post('/warehouse/check-builder/'.$p->id.'/publish');
         $this->assertSame(2, $p->fresh()->current->version);
         $this->actingAs($this->builder)->get('/warehouse/tech-check')->assertOk()->assertSee('LT-0142')->assertSee('Robe Spiider · LT-SPIIDER · v2');
+
+        // An item no longer in use: left out of the list unless asked.
+        $spiider->update(['active' => false]);
+        $this->actingAs($this->builder)->get('/warehouse/check-builder')->assertDontSee('/warehouse/check-builder/'.$p->id.'"', false)->assertSee('Show 1 Tech Check');
+        $this->actingAs($this->builder)->get('/warehouse/check-builder?all=1')->assertSee('/warehouse/check-builder/'.$p->id.'"', false);
+        $spiider->update(['active' => true]);
+
+        // Deleted (a completely new one will be written): items unlinked, a check in progress starts again.
+        $this->actingAs($this->crew)->get('/w/check/'.$spiider->assets()->first()->id); // starts with v2
+        $this->actingAs($this->crew)->delete('/warehouse/check-builder/'.$p->id)->assertForbidden();
+        $this->actingAs($this->builder)->delete('/warehouse/check-builder/'.$p->id)->assertRedirect('/warehouse/check-builder')
+            ->assertSessionHas('status', fn ($m) => str_contains($m, 'deleted') && str_contains($m, 'starts again'));
+        $this->assertSame(0, CheckProcedure::count());
+        $this->assertNull($spiider->fresh()->check_procedure_id);
+        $this->assertNull(Check::whereNull('finished_at')->value('procedure_version_id'));
+        $this->assertTrue(\App\Models\AuditLog::where('action', 'checks.procedure_deleted')->exists());
+        $this->actingAs($this->crew)->get('/w/check/'.$spiider->assets()->first()->id)->assertOk(); // the simple check again
     }
 
     public function test_a_step_by_step_check_and_the_return_costs_to_the_customer(): void
