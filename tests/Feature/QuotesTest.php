@@ -102,7 +102,7 @@ class QuotesTest extends TestCase
         $this->spiider();
         Item::create(['number' => 'WH-LOAD-PALLET', 'kind' => 'service', 'name' => 'Loading truck', 'category' => 'Warehouse', 'serial' => false, 'stock_qty' => 0, 'day_price_cents' => 200, 'price_unit' => 'pallet']);
         $quote = $this->quote();
-        $quote->company->update(['rental_discount_bp' => 1000]);
+        $quote->company->forceFill(['rental_discount_bp' => 1000])->save();
         $add = fn (array $l) => $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/lines', $l)->assertSessionHasNoErrors();
         $add(['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 1]);
         $add(['kind' => 'item', 'number' => 'WH-LOAD-PALLET', 'qty' => 10]);
