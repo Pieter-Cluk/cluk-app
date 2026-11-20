@@ -169,7 +169,7 @@ class ItemController extends Controller
             'tags' => ['nullable', 'array'],
             'tags.*' => ['integer'],
             'search_words' => ['nullable', 'string', 'max:1000'],
-            'service_group' => ['nullable', 'required_if:kind,service', Rule::in(array_keys(Item::SERVICE_GROUPS))],
+            'service_group' => ['nullable', Rule::in(array_keys(Item::SERVICE_GROUPS))],
             'service_sub' => ['nullable', 'string', 'max:80'],
             'brand' => ['nullable', 'string', 'max:80'],
             'type' => ['nullable', 'string', 'max:255'],
@@ -198,7 +198,7 @@ class ItemController extends Controller
         $class = $service
             ? Classification::check(null, null, [], $d['tags'] ?? [])
             : Classification::check(isset($d['category_id']) ? (int) $d['category_id'] : null, isset($d['subcategory_id']) ? (int) $d['subcategory_id'] : null, $d['attr'] ?? [], $d['tags'] ?? []);
-        $class['group'] = $service ? [Item::SERVICE_GROUPS[$d['service_group']], trim((string) ($d['service_sub'] ?? '')) ?: null] : null;
+        $class['group'] = $service ? [Item::SERVICE_GROUPS[$d['service_group'] ?? ''] ?? null, trim((string) ($d['service_sub'] ?? '')) ?: null] : null;
         if (! $class['sub'] && $d['kind'] !== 'service') {
             throw ValidationException::withMessages(['subcategory_id' => __('products.errors.subcategory_required')]);
         }

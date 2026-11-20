@@ -103,7 +103,8 @@ class EquipmentTest extends TestCase
         $this->actingAs($am)->get('/dry-hire/items/new?kind=service')->assertOk()->assertSee(__('equipment.fields.service_group'));
 
         $this->actingAs($am)->post('/dry-hire/items', ['number' => 'wh-test', 'kind' => 'service', 'name' => 'Check & Clean', 'unit' => 'pcs', 'day_price' => '13', 'price_unit' => 'piece', 'active' => 1])
-            ->assertSessionHasErrors('service_group');
+            ->assertSessionHasNoErrors(); // the group is optional
+        Item::where('number', 'WH-TEST')->delete();
 
         $this->actingAs($am)->post('/dry-hire/items', [
             'number' => 'wh-test', 'kind' => 'service', 'name' => 'Check & Clean', 'unit' => 'pcs', 'day_price' => '13', 'price_unit' => 'piece', 'active' => 1,
