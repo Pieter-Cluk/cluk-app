@@ -14,7 +14,7 @@
             @else
                 <tr>
                     <td class="num">{{ $line->qtyLabel() }}</td>
-                    <td>{{ $line->name }}@if ($line->discount_bp) <small>({{ __('quotes.line_discount', ['pct' => $num($line->discount_bp / 100)]) }})</small>@endif @if ($line->note)<br><small class="doc-note">{!! nl2br(e($line->note)) !!}</small>@endif</td>
+                    <td>{{ $line->name }}@if ($line->discount_bp) <small>({{ __('quotes.line_discount', ['pct' => $num($line->discount_bp / 100)]) }})</small>@endif @if ($line->serial)<br><small class="doc-note">{{ __('quotes.repair.sn') }} {{ $line->serial }}</small>@endif @if ($line->note)<br><small class="doc-note">{!! nl2br(e($line->note)) !!}</small>@endif</td>
                     <td class="num">{{ number_format($line->effectiveFactor($def), 2, ',', '.') }}</td>
                     <td class="num nowrap">{{ $eur($line->unit_price_cents) }}</td>
                     <td class="num nowrap">{{ $eur($line->amount_cents) }}</td>

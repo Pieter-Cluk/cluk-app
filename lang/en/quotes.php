@@ -63,6 +63,12 @@ return [
     'net_hint' => 'Services are net prices: no discount.',
     'net_project' => 'Not on services: these are net prices.',
     'net_doc' => '(not on services)',
+    'repair' => [
+        'serial' => 'Serial number',
+        'sn' => 'S/N',
+        'placeholder' => 'Serial number or piece code',
+        'needed' => 'Fill in the serial number of the repaired piece',
+    ],
     'note' => [
         'label' => 'Extra information',
         'add' => '+ Add information',

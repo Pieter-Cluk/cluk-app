@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** A line on a quote: an item from the catalogue, a free charge (transport…), or a text line. */
-#[Fillable(['quote_id', 'position', 'kind', 'heading', 'item_id', 'labour_type_id', 'number', 'name', 'note', 'qty', 'unit_price_cents', 'factor', 'discount_bp', 'amount_cents'])]
+#[Fillable(['quote_id', 'position', 'kind', 'heading', 'item_id', 'labour_type_id', 'number', 'name', 'note', 'serial', 'qty', 'unit_price_cents', 'factor', 'discount_bp', 'amount_cents'])]
 class QuoteLine extends Model
 {
     public const KINDS = ['item', 'charge', 'text'];
@@ -49,6 +49,18 @@ class QuoteLine extends Model
         return $this->kind === 'item' && $this->item_id && $this->item?->kind === 'service';
     }
 
+    /** A repair (service in sub-group Repair): always its own line, for one piece with its serial number. */
+    public function isRepair(): bool
+    {
+        return $this->kind === 'item' && $this->item?->kind === 'service' && strcasecmp((string) $this->item->subcategory, 'Repair') === 0;
+    }
+
+    /** The piece this repair is for, when the serial number or piece code is known in Dry-hire. */
+    public function repairedAsset(): ?\App\Models\Equipment\Asset
+    {
+        return $this->serial ? once(fn () => \App\Models\Equipment\Asset::with('item')->where('serial_number', $this->serial)->orWhere('code', strtoupper($this->serial))->first()) : null;
+    }
+
     /** Does the rental factor apply? Only to equipment priced per day. */
     public function usesFactor(): bool
     {
@@ -73,12 +85,13 @@ class QuoteLine extends Model
         return (int) round((float) $this->qty * $this->unit_price_cents * $this->effectiveFactor($defaultFactor) * (1 - ($this->isNet() ? 0 : $this->discount_bp) / 10000));
     }
 
-    /** The name with the extra information on one line (mails, pre-invoice). */
+    /** The name with the serial number and the extra information on one line (mails, pre-invoice). */
     public function nameWithNote(): string
     {
         $note = trim(preg_replace('/\s+/', ' ', (string) $this->note));
+        $name = (string) $this->name.($this->serial ? ' · '.__('quotes.repair.sn').' '.$this->serial : '');
 
-        return $note === '' ? (string) $this->name : $this->name.' — '.$note;
+        return $note === '' ? $name : $name.' — '.$note;
     }
 
     /** Qty as shown: 12 instead of 12.00. */

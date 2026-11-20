@@ -63,6 +63,12 @@ return [
     'net_hint' => 'Diensten zijn nettoprijzen: geen korting.',
     'net_project' => 'Niet op diensten: dat zijn nettoprijzen.',
     'net_doc' => '(niet op diensten)',
+    'repair' => [
+        'serial' => 'Serienummer',
+        'sn' => 'S/N',
+        'placeholder' => 'Serienummer of stukcode',
+        'needed' => 'Vul het serienummer van het herstelde stuk in',
+    ],
     'note' => [
         'label' => 'Extra informatie',
         'add' => '+ Informatie toevoegen',

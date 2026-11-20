@@ -141,6 +141,7 @@ class QuoteController extends Controller
             'lines.*.qty' => ['required', 'numeric', 'min:0', 'max:100000'],
             'lines.*.name' => ['required', 'string', 'max:200'],
             'lines.*.note' => ['nullable', 'string', 'max:2000'],
+            'lines.*.serial' => ['nullable', 'string', 'max:80'],
             'lines.*.price' => ['nullable', 'numeric', 'min:-1000000', 'max:1000000'],
             'lines.*.factor' => ['nullable', 'numeric', 'min:0', 'max:999'],
             'lines.*.discount' => ['nullable', 'numeric', 'min:0', 'max:100'],
@@ -172,6 +173,7 @@ class QuoteController extends Controller
                 }
                 $line->fill([
                     'qty' => $l['qty'], 'name' => $l['name'], 'note' => array_key_exists('note', $l) ? (trim((string) $l['note']) ?: null) : $line->note,
+                    'serial' => array_key_exists('serial', $l) ? (trim((string) $l['serial']) ?: null) : $line->serial,
                     'factor' => ($l['factor'] ?? '') === '' ? null : $l['factor'],
                     'discount_bp' => (int) round(((float) ($l['discount'] ?? 0)) * 100),
                     'position' => $l['position'] ?? $line->position,
@@ -219,7 +221,8 @@ class QuoteController extends Controller
             // The new line goes at the end, so under the last subtitle: the same item only adds up
             // with a line under that subtitle (each room keeps its own line).
             $lastHeading = $quote->lines()->where('heading', true)->max('position');
-            $existing = $quote->lines()->where('item_id', $item->id)
+            $repair = $item->kind === 'service' && strcasecmp((string) $item->subcategory, 'Repair') === 0;
+            $existing = $repair ? null : $quote->lines()->where('item_id', $item->id) // a repair is always its own line (one piece)
                 ->when($lastHeading !== null, fn ($q) => $q->where('position', '>', $lastHeading))->first();
             if ($existing) {
                 $existing->update(['qty' => (float) $existing->qty + $qty]);

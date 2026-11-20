@@ -123,6 +123,13 @@
                                                 </span>
                                                 <input name="lines[{{ $line->id }}][name]" value="{{ $line->name }}" maxlength="200" required aria-label="{{ $line->heading ? __('quotes.subtitle') : __('quotes.cols.item') }}">
                                             </div>
+                                            @if ($line->isRepair())
+                                                @php($piece = $line->repairedAsset())
+                                                <label class="line-serial"><span>{{ __('quotes.repair.serial') }}</span>
+                                                    <input name="lines[{{ $line->id }}][serial]" value="{{ $line->serial }}" maxlength="80" placeholder="{{ __('quotes.repair.placeholder') }}">
+                                                </label>
+                                                @if ($piece)<small class="muted">{{ $piece->item?->name }} · {{ $piece->code }}</small>@elseif (! $line->serial)<span class="avail av-short">{{ __('quotes.repair.needed') }}</span>@endif
+                                            @endif
                                             @if ($line->kind !== 'text')
                                                 <details class="line-note" @if ($line->note) open @endif>
                                                     <summary>{{ $line->note ? __('quotes.note.label') : __('quotes.note.add') }}</summary>
@@ -131,6 +138,7 @@
                                             @endif
                                         @else
                                             <b>{{ $line->name }}</b>
+                                            @if ($line->serial)<br><small class="muted">{{ __('quotes.repair.sn') }} {{ $line->serial }}</small>@endif
                                             @if ($line->note)<br><small class="muted">{!! nl2br(e($line->note)) !!}</small>@endif
                                         @endif
                                         @if ($line->number)<br><small class="muted">{{ $line->number }}@if ($line->item?->kind === 'package') · {{ $line->item->contents->map(fn ($c) => $c->pivot->qty.' × '.$c->name)->implode(' · ') }}@endif</small>@endif

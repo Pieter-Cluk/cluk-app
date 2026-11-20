@@ -63,6 +63,12 @@ return [
     'net_hint' => 'Les services sont des prix nets : pas de remise.',
     'net_project' => 'Pas sur les services : ce sont des prix nets.',
     'net_doc' => '(hors services)',
+    'repair' => [
+        'serial' => 'Numéro de série',
+        'sn' => 'N/S',
+        'placeholder' => 'Numéro de série ou code de la pièce',
+        'needed' => 'Indiquez le numéro de série de la pièce réparée',
+    ],
     'note' => [
         'label' => 'Informations supplémentaires',
         'add' => '+ Ajouter des informations',

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** A line of a rental order, covered by own stock (serial numbers or a count) and/or sub-hire. */
-#[Fillable(['order_id', 'position', 'kind', 'heading', 'item_id', 'number', 'name', 'note', 'qty', 'unit_price_cents', 'factor', 'discount_bp', 'amount_cents', 'own_qty', 'picked_qty', 'returned_qty'])]
+#[Fillable(['order_id', 'position', 'kind', 'heading', 'item_id', 'number', 'name', 'note', 'serial', 'qty', 'unit_price_cents', 'factor', 'discount_bp', 'amount_cents', 'own_qty', 'picked_qty', 'returned_qty'])]
 class OrderLine extends Model
 {
     protected function casts(): array
@@ -99,11 +99,12 @@ class OrderLine extends Model
         return rtrim(rtrim(number_format((float) $this->qty, 2, '.', ''), '0'), '.');
     }
 
-    /** The name with the extra information on one line (mails, pre-invoice). */
+    /** The name with the serial number and the extra information on one line (mails, pre-invoice). */
     public function nameWithNote(): string
     {
         $note = trim(preg_replace('/\s+/', ' ', (string) $this->note));
+        $name = (string) $this->name.($this->serial ? ' · '.__('quotes.repair.sn').' '.$this->serial : '');
 
-        return $note === '' ? (string) $this->name : $this->name.' — '.$note;
+        return $note === '' ? $name : $name.' — '.$note;
     }
 }
