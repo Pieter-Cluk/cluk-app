@@ -215,7 +215,11 @@ class QuoteController extends Controller
             if (! $item) {
                 throw ValidationException::withMessages(['number' => __('quotes.errors.unknown_item', ['number' => $d['number']])]);
             }
-            $existing = $quote->lines()->where('item_id', $item->id)->first();
+            // The new line goes at the end, so under the last subtitle: the same item only adds up
+            // with a line under that subtitle (each room keeps its own line).
+            $lastHeading = $quote->lines()->where('heading', true)->max('position');
+            $existing = $quote->lines()->where('item_id', $item->id)
+                ->when($lastHeading !== null, fn ($q) => $q->where('position', '>', $lastHeading))->first();
             if ($existing) {
                 $existing->update(['qty' => (float) $existing->qty + $qty]);
             } else {

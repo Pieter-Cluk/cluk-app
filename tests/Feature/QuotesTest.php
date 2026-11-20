@@ -117,6 +117,16 @@ class QuotesTest extends TestCase
         $line = $quote->lines()->where('kind', 'item')->first();
         $this->assertSame('10.00', $line->qty);
 
+        // Under a subtitle the same item gets its own line, and adds up only within that subtitle.
+        $other = $this->quote();
+        $add = fn (array $l) => $this->actingAs($this->sales)->post('/sales/quotes/'.$other->id.'/lines', $l)->assertSessionHasNoErrors();
+        $add(['kind' => 'text', 'name' => 'Room 1', 'heading' => 1]);
+        $add(['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 4]);
+        $add(['kind' => 'text', 'name' => 'Room 2', 'heading' => 1]);
+        $add(['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 2]);
+        $add(['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 1]);
+        $this->assertSame(['4.00', '3.00'], $other->lines()->where('kind', 'item')->orderBy('position')->pluck('qty')->all());
+
         // Manual factor 1.2, 10% line discount, 3% project discount.
         $charge = $quote->lines()->where('kind', 'charge')->first();
         $text = $quote->lines()->where('kind', 'text')->first();
