@@ -137,7 +137,7 @@
                                         <td class="num"><input type="number" step="0.01" min="0" name="lines[{{ $line->id }}][qty]" value="{{ $line->qtyLabel() }}" class="in-num" aria-label="{{ __('quotes.cols.qty') }}"></td>
                                         <td class="num">@if ($line->usesFactor())<input type="number" step="0.01" min="0" name="lines[{{ $line->id }}][factor]" value="{{ $line->factor !== null ? $num($line->factor) : '' }}" placeholder="{{ $num($def) }}" class="in-num" aria-label="{{ __('quotes.factor') }}"><small class="muted">{{ $line->factor !== null ? __('quotes.manual') : __('quotes.auto') }}</small>@else<input type="hidden" name="lines[{{ $line->id }}][factor]" value="{{ $line->factor !== null ? $num($line->factor) : '' }}">—@endif</td>
                                         <td class="num"><input type="number" step="0.01" name="lines[{{ $line->id }}][price]" value="{{ number_format($line->unit_price_cents / 100, 2, '.', '') }}" class="in-num" aria-label="{{ __('quotes.cols.price') }}"></td>
-                                        <td class="num"><input type="number" step="0.1" min="0" max="100" name="lines[{{ $line->id }}][discount]" value="{{ $line->discount_bp ? $num($line->discount_bp / 100) : '' }}" placeholder="0" class="in-num in-sm" aria-label="{{ __('quotes.cols.discount') }}"></td>
+                                        <td class="num">@if ($line->isNet())<small class="muted" title="{{ __('quotes.net_hint') }}">{{ __('quotes.net') }}</small>@else<input type="number" step="0.1" min="0" max="100" name="lines[{{ $line->id }}][discount]" value="{{ $line->discount_bp ? $num($line->discount_bp / 100) : '' }}" placeholder="0" class="in-num in-sm" aria-label="{{ __('quotes.cols.discount') }}">@endif</td>
                                         <td class="num nowrap"><b>{{ $eur($line->amount_cents) }}</b></td>
                                     @else
                                         <td class="num">{{ $line->qtyLabel() }}</td>
@@ -247,6 +247,7 @@
                         <span>{{ __('quotes.project_discount') }} @if ($canEdit)<input type="number" step="0.1" min="0" max="100" name="project_discount" value="{{ $quote->project_discount_bp ? $num($quote->project_discount_bp / 100) : '' }}" placeholder="0" class="in-num in-sm" aria-label="{{ __('quotes.project_discount') }}"> %@elseif ($quote->project_discount_bp) {{ $num($quote->project_discount_bp / 100) }}%@endif</span>
                         <span>− {{ $eur($quote->discount_cents) }}</span>
                     </div>
+                    @if ($quote->project_discount_bp && $quote->lines->contains(fn ($l) => $l->isNet()))<small class="muted">{{ __('quotes.net_project') }}</small>@endif
                     @if ($quote->logistics === 'delivery')
                         <div class="tot"><span>{{ __('quotes.transport.transport_line') }}</span><span>{{ $quote->transportToPrice() ? __('quotes.transport.price_follows') : $eur($quote->transport_cents) }}</span></div>
                     @endif

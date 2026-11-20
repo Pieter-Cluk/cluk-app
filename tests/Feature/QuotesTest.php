@@ -97,6 +97,30 @@ class QuotesTest extends TestCase
         $this->assertSame(1, $quote->deal->activities()->count());
     }
 
+    public function test_service_items_are_net_prices(): void
+    {
+        $this->spiider();
+        Item::create(['number' => 'WH-LOAD-PALLET', 'kind' => 'service', 'name' => 'Loading truck', 'category' => 'Warehouse', 'serial' => false, 'stock_qty' => 0, 'day_price_cents' => 200, 'price_unit' => 'pallet']);
+        $quote = $this->quote();
+        $quote->company->update(['rental_discount_bp' => 1000]);
+        $add = fn (array $l) => $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/lines', $l)->assertSessionHasNoErrors();
+        $add(['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 1]);
+        $add(['kind' => 'item', 'number' => 'WH-LOAD-PALLET', 'qty' => 10]);
+        $service = $quote->lines()->where('number', 'WH-LOAD-PALLET')->first();
+        $this->assertSame(0, $service->discount_bp, 'no customer discount on a service');
+        $this->assertSame(1000, $quote->lines()->where('number', 'LT-SPIIDER')->value('discount_bp'));
+
+        $service->update(['discount_bp' => 2500]);
+        $this->assertSame(0, $service->fresh()->discount_bp, 'a line discount on a service is refused');
+
+        $quote->refresh()->forceFill(['project_discount_bp' => 1000])->save();
+        $quote->recalculate();
+        $spiider = $quote->lines()->where('number', 'LT-SPIIDER')->first();
+        $this->assertSame(2000, $service->fresh()->amount_cents);
+        $this->assertSame((int) round($spiider->amount_cents * 0.1), $quote->fresh()->discount_cents, 'project discount only on the equipment');
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertSee(__('quotes.net_project'));
+    }
+
     public function test_lines_prices_factor_discounts_and_vat(): void
     {
         $this->spiider();

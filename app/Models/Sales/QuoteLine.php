@@ -33,6 +33,22 @@ class QuoteLine extends Model
         return $this->belongsTo(Item::class);
     }
 
+    protected static function booted(): void
+    {
+        // Services are net prices: never a line discount.
+        static::saving(function (self $line) {
+            if ($line->discount_bp && $line->isNet()) {
+                $line->discount_bp = 0;
+            }
+        });
+    }
+
+    /** A service item (Afrit 6, Warehouse, Cluk Factory…): a net price, no line or project discount. */
+    public function isNet(): bool
+    {
+        return $this->kind === 'item' && $this->item_id && $this->item?->kind === 'service';
+    }
+
     /** Does the rental factor apply? Only to equipment priced per day. */
     public function usesFactor(): bool
     {
@@ -54,7 +70,7 @@ class QuoteLine extends Model
             return 0;
         }
 
-        return (int) round((float) $this->qty * $this->unit_price_cents * $this->effectiveFactor($defaultFactor) * (1 - $this->discount_bp / 10000));
+        return (int) round((float) $this->qty * $this->unit_price_cents * $this->effectiveFactor($defaultFactor) * (1 - ($this->isNet() ? 0 : $this->discount_bp) / 10000));
     }
 
     /** Qty as shown: 12 instead of 12.00. */

@@ -173,12 +173,14 @@ class Quote extends Model
     {
         $factor = $this->defaultFactor();
         $sub = 0;
+        $discountable = 0;
         foreach ($this->lines()->with('item')->get() as $line) {
             $line->amount_cents = $line->computeAmount($factor);
             $line->save();
             $sub += $line->amount_cents;
+            $discountable += $line->isNet() ? 0 : $line->amount_cents; // services are net prices
         }
-        $discount = (int) round($sub * $this->project_discount_bp / 10000);
+        $discount = (int) round($discountable * $this->project_discount_bp / 10000);
         $net = $sub - $discount + $this->transportCharged(); // no project discount on transport
         $rate = $this->vatRateNow();
         $this->forceFill([

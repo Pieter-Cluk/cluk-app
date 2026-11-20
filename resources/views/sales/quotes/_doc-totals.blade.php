@@ -6,7 +6,7 @@
         <div><span>{{ __('quotes.subtotal_plain') }}</span><span>{{ $eur($doc->subtotal_cents) }}</span></div>
     @endif
     @if ($doc->discount_cents)
-        <div><span>{{ __('quotes.project_discount') }} {{ $num($doc->project_discount_bp / 100) }}%</span><span>− {{ $eur($doc->discount_cents) }}</span></div>
+        <div><span>{{ __('quotes.project_discount') }} {{ $num($doc->project_discount_bp / 100) }}%@if ((int) round($doc->subtotal_cents * $doc->project_discount_bp / 10000) !== (int) $doc->discount_cents) {{ __('quotes.net_doc') }}@endif</span><span>− {{ $eur($doc->discount_cents) }}</span></div>
     @endif
     @if ($doc->logistics === 'delivery')
         <div><span>{{ __('quotes.transport.transport_line') }}</span><span>{{ $doc->transportToPrice() ? __('quotes.transport.price_follows') : $eur($doc->transport_cents) }}</span></div>
