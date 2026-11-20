@@ -4,7 +4,7 @@
 <x-layouts.app :title="$item->number">
     <div class="pagehead">
         <div>
-            <div class="kicker"><a href="{{ route('equipment.index') }}">{{ mb_strtoupper(__('nav.items.dryhire')) }}</a> · {{ $item->productCategory?->label() ?? $item->category }}</div>
+            <div class="kicker"><a href="{{ route('equipment.index') }}">{{ mb_strtoupper(__('nav.items.dryhire')) }}</a> · {{ $item->productCategory?->label() ?? $item->categoryLabel() }}</div>
             <h1>{{ $item->name }}</h1>
             <p class="muted">{{ $item->number }} · <span class="pill">{{ __('equipment.kinds.'.$item->kind) }}</span>@unless ($item->active) <span class="pill pill-off">{{ __('equipment.inactive') }}</span>@endunless</p>
         </div>
@@ -92,7 +92,7 @@
             <section class="card">
                 <h2>{{ __('equipment.details') }}</h2>
                 <dl class="facts">
-                    <dt>{{ __('equipment.fields.category') }}</dt><dd>@if ($item->productSubcategory){{ $item->productCategory?->label() }} · {{ $item->productSubcategory->label() }}@else{{ $item->category ?? '—' }}@if ($item->subcategory) · {{ $item->subcategory }}@endif @endif
+                    <dt>{{ __('equipment.fields.category') }}</dt><dd>@if ($item->productSubcategory){{ $item->productCategory?->label() }} · {{ $item->productSubcategory->label() }}@else{{ $item->categoryLabel() ?? '—' }}@if ($item->subcategory) · {{ $item->subcategory }}@endif @endif
                         @foreach ($item->optionLabels() as $l)<span class="chip-attr">{{ $l }}</span>@endforeach @foreach ($item->tags as $t)<span class="pill">{{ $t->label() }}</span>@endforeach</dd>
                     <dt>{{ __('equipment.fields.brand') }} / {{ __('equipment.fields.type') }}</dt><dd>{{ trim($item->brand.' '.$item->type) ?: '—' }}</dd>
                     @if ($item->kind === 'service')

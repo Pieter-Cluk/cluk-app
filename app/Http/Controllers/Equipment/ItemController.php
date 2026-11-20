@@ -98,12 +98,20 @@ class ItemController extends Controller
 
     public function create(Request $request): View
     {
-        return view('equipment.form', ['item' => new Item(['kind' => $request->query('kind', 'item'), 'serial' => true, 'unit' => 'pcs', 'in_search' => true, 'active' => true])] + Classification::forForm(Item::CATALOGUE));
+        return view('equipment.form', ['item' => new Item(['kind' => $request->query('kind', 'item'), 'serial' => true, 'unit' => 'pcs', 'in_search' => true, 'active' => true])] + $this->formLists());
     }
 
     public function edit(Item $item): View
     {
-        return view('equipment.form', ['item' => $item->load(['options', 'tags'])] + Classification::forForm(Item::CATALOGUE));
+        return view('equipment.form', ['item' => $item->load(['options', 'tags'])] + $this->formLists());
+    }
+
+    /** Category lists, plus the sub-groups already used by services (suggestions). */
+    private function formLists(): array
+    {
+        return Classification::forForm(Item::CATALOGUE) + [
+            'serviceSubs' => Item::where('kind', 'service')->whereNotNull('subcategory')->distinct()->orderBy('subcategory')->pluck('subcategory'),
+        ];
     }
 
     public function store(Request $request): RedirectResponse
@@ -161,6 +169,8 @@ class ItemController extends Controller
             'tags' => ['nullable', 'array'],
             'tags.*' => ['integer'],
             'search_words' => ['nullable', 'string', 'max:1000'],
+            'service_group' => ['nullable', 'required_if:kind,service', Rule::in(array_keys(Item::SERVICE_GROUPS))],
+            'service_sub' => ['nullable', 'string', 'max:80'],
             'brand' => ['nullable', 'string', 'max:80'],
             'type' => ['nullable', 'string', 'max:255'],
             'unit' => ['required', 'string', 'max:12'],
@@ -183,7 +193,12 @@ class ItemController extends Controller
         ]);
         $serial = in_array($d['kind'], ['item', 'case'], true) && ! empty($d['serial']);
         // Category, subcategory, attributes and tags follow the fixed lists (Settings › Product categories).
-        $class = Classification::check(isset($d['category_id']) ? (int) $d['category_id'] : null, isset($d['subcategory_id']) ? (int) $d['subcategory_id'] : null, $d['attr'] ?? [], $d['tags'] ?? []);
+        // A service has a service group instead (Afrit 6, Warehouse, Cluk Factory).
+        $service = $d['kind'] === 'service';
+        $class = $service
+            ? Classification::check(null, null, [], $d['tags'] ?? [])
+            : Classification::check(isset($d['category_id']) ? (int) $d['category_id'] : null, isset($d['subcategory_id']) ? (int) $d['subcategory_id'] : null, $d['attr'] ?? [], $d['tags'] ?? []);
+        $class['group'] = $service ? [Item::SERVICE_GROUPS[$d['service_group']], trim((string) ($d['service_sub'] ?? '')) ?: null] : null;
         if (! $class['sub'] && $d['kind'] !== 'service') {
             throw ValidationException::withMessages(['subcategory_id' => __('products.errors.subcategory_required')]);
         }
@@ -206,8 +221,10 @@ class ItemController extends Controller
     /** Save category, subcategory, attributes, tags and search words. The item number is never changed. */
     private function classify(Request $request, Item $item, array $class): void
     {
-        if (! $class['sub'] && $item->kind === 'service') {
-            $item->forceFill(['search_words' => trim($class['search_words']) ?: null])->save();
+        if ($class['group'] ?? null) {
+            $item->options()->detach();
+            $item->forceFill(['category_id' => null, 'subcategory_id' => null, 'category' => $class['group'][0], 'subcategory' => $class['group'][1],
+                'search_words' => trim($class['search_words']) ?: null])->save();
             $item->tags()->sync($class['tags']);
 
             return;
@@ -217,7 +234,7 @@ class ItemController extends Controller
 
     private function classSnapshot(Item $item): array
     {
-        return [$item->subcategory_id, $item->search_words, $item->options()->pluck('product_attribute_options.id')->sort()->values()->all(), $item->tags()->pluck('product_tags.id')->sort()->values()->all()];
+        return [$item->subcategory_id, $item->category, $item->subcategory, $item->search_words, $item->options()->pluck('product_attribute_options.id')->sort()->values()->all(), $item->tags()->pluck('product_tags.id')->sort()->values()->all()];
     }
 
     /** Dry-hire list: switch "Show on the website" with one click (extra right "equipment.website"). */

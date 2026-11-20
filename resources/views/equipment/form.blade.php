@@ -14,10 +14,25 @@
             <div class="form-grid">
                 <label class="field"><span>{{ __('equipment.fields.number') }}</span><input name="number" required maxlength="40" value="{{ $v('number', $item->number) }}" placeholder="AUDSPEQSCKLA181" data-codes="1"><small>{{ __('equipment.number_hint') }}</small>@unless ($item->exists)<button type="button" class="linkbtn js-suggest">{{ __('equipment.suggest_number') }}</button>@endunless</label>
                 <label class="field"><span>{{ __('equipment.cols.kind') }}</span>
-                    <select name="kind">@foreach (\App\Models\Equipment\Item::KINDS as $k)<option value="{{ $k }}" @selected($v('kind', $item->kind) === $k)>{{ __('equipment.kinds.'.$k) }}</option>@endforeach</select>
+                    <select name="kind" class="js-kind">@foreach (\App\Models\Equipment\Item::KINDS as $k)<option value="{{ $k }}" @selected($v('kind', $item->kind) === $k)>{{ __('equipment.kinds.'.$k) }}</option>@endforeach</select>
                 </label>
                 <label class="field span-2"><span>{{ __('equipment.fields.name') }}</span><input name="name" required maxlength="255" value="{{ $v('name', $item->name) }}"></label>
-                @include('products._place', ['p' => $item])
+                @php($isService = $v('kind', $item->kind) === 'service')
+                <div class="js-noservice" style="display: {{ $isService ? 'none' : 'contents' }}">
+                    @include('products._place', ['p' => $item])
+                </div>
+                <div class="js-service" style="display: {{ $isService ? 'contents' : 'none' }}">
+                    <label class="field"><span>{{ __('equipment.fields.service_group') }}</span>
+                        <select name="service_group"><option value="">—</option>@foreach (\App\Models\Equipment\Item::SERVICE_GROUPS as $gk => $gname)<option value="{{ $gk }}" @selected($v('service_group', $item->serviceGroup()) === $gk)>{{ __('equipment.service_groups.'.$gk) }}</option>@endforeach</select>
+                        <small>{{ __('equipment.service_group_hint') }}</small>
+                        @error('service_group')<small class="error">{{ $message }}</small>@enderror
+                    </label>
+                    <label class="field"><span>{{ __('equipment.fields.service_sub') }}</span>
+                        <input name="service_sub" maxlength="80" list="service-subs" value="{{ $v('service_sub', $item->kind === 'service' ? $item->subcategory : null) }}">
+                        <datalist id="service-subs">@foreach ($serviceSubs as $ss)<option value="{{ $ss }}">@endforeach</datalist>
+                        <small>{{ __('equipment.service_sub_hint') }}</small>
+                    </label>
+                </div>
                 <label class="field"><span>{{ __('equipment.fields.brand') }}</span><input name="brand" maxlength="80" value="{{ $v('brand', $item->brand) }}"></label>
                 <label class="field"><span>{{ __('equipment.fields.type') }}</span><input name="type" maxlength="255" value="{{ $v('type', $item->type) }}"></label>
                 <label class="field"><span>{{ __('equipment.fields.unit') }}</span><input name="unit" required maxlength="12" value="{{ $v('unit', $item->unit ?? 'pcs') }}"></label>
@@ -80,6 +95,23 @@
         </section>
     </form>
     @include('products._place-js')
+    <script>
+    (() => {
+        // A service gets a service group instead of an equipment category and subcategory.
+        const kind = document.querySelector('.js-kind');
+        if (!kind) return;
+        const set = () => {
+            const service = kind.value === 'service';
+            document.querySelectorAll('.js-noservice, .js-service').forEach(box => {
+                const on = box.classList.contains('js-service') === service;
+                box.style.display = on ? 'contents' : 'none';
+                box.querySelectorAll('select, input').forEach(i => { if (!on) i.disabled = true; else if (!i.closest('.js-attr[hidden]')) i.disabled = false; });
+            });
+        };
+        kind.addEventListener('change', set);
+        set();
+    })();
+    </script>
     <script>
     (() => {
         const cat = document.querySelector('.js-cat'), sub = document.querySelector('.js-sub');

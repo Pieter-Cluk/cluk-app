@@ -32,7 +32,25 @@ class Item extends Model
 
     public const KINDS = ['item', 'package', 'case', 'service'];
 
-    public const PRICE_UNITS = ['month', 'half_day', 'day', 'hour', 'coli', 'pallet', 'event_day', 'event'];
+    public const PRICE_UNITS = ['month', 'half_day', 'day', 'hour', 'piece', 'coli', 'pallet', 'event_day', 'event'];
+
+    /**
+     * Services are not in the equipment categories: they are grouped by the part of
+     * CLUK that sells them. The English name is kept in the old text column "category".
+     */
+    public const SERVICE_GROUPS = ['afrit6' => 'Afrit 6', 'warehouse' => 'Warehouse', 'factory' => 'Cluk Factory'];
+
+    /** Key of the service group this item is in (null when none). */
+    public function serviceGroup(): ?string
+    {
+        return array_search($this->category, self::SERVICE_GROUPS, true) ?: null;
+    }
+
+    /** The old text category, translated when it is a service group. */
+    public function categoryLabel(): ?string
+    {
+        return ($g = $this->serviceGroup()) ? __('equipment.service_groups.'.$g) : $this->category;
+    }
 
     protected function casts(): array
     {

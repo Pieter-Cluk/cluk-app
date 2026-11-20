@@ -97,6 +97,28 @@ class EquipmentTest extends TestCase
         $this->actingAs($am)->post('/dry-hire/items', ['number' => 'LT-MEGAP', 'kind' => 'item', 'name' => 'x', 'unit' => 'pcs'])->assertSessionHasErrors('number');
     }
 
+    public function test_a_service_gets_a_service_group_instead_of_a_category(): void
+    {
+        $am = $this->as('asset-manager');
+        $this->actingAs($am)->get('/dry-hire/items/new?kind=service')->assertOk()->assertSee(__('equipment.fields.service_group'));
+
+        $this->actingAs($am)->post('/dry-hire/items', ['number' => 'wh-test', 'kind' => 'service', 'name' => 'Check & Clean', 'unit' => 'pcs', 'day_price' => '13', 'price_unit' => 'piece', 'active' => 1])
+            ->assertSessionHasErrors('service_group');
+
+        $this->actingAs($am)->post('/dry-hire/items', [
+            'number' => 'wh-test', 'kind' => 'service', 'name' => 'Check & Clean', 'unit' => 'pcs', 'day_price' => '13', 'price_unit' => 'piece', 'active' => 1,
+            'service_group' => 'warehouse', 'service_sub' => 'Cleaning', 'category_id' => 1, 'subcategory_id' => self::sub('MOV'),
+        ])->assertRedirect()->assertSessionHasNoErrors();
+        $item = Item::where('number', 'WH-TEST')->firstOrFail();
+        $this->assertSame(['Warehouse', 'Cleaning', null, null, 'piece', 1300], [$item->category, $item->subcategory, $item->category_id, $item->subcategory_id, $item->price_unit, $item->day_price_cents]);
+        $this->assertSame('warehouse', $item->serviceGroup());
+
+        $this->actingAs($am)->get('/dry-hire/items/'.$item->id.'/edit')->assertOk()->assertSee('value="warehouse" selected', false);
+        $this->actingAs($am)->put('/dry-hire/items/'.$item->id, ['number' => 'WH-TEST', 'kind' => 'service', 'name' => 'Check & Clean', 'unit' => 'pcs', 'day_price' => '13', 'price_unit' => 'piece', 'active' => 1, 'service_group' => 'afrit6'])->assertRedirect();
+        $this->assertSame(['Afrit 6', null], [$item->fresh()->category, $item->fresh()->subcategory]);
+        $this->actingAs($am)->get('/dry-hire?kind=service')->assertOk()->assertSee('WH-TEST');
+    }
+
     public function test_pieces_get_codes_serials_and_labels(): void
     {
         $item = $this->spiider();
