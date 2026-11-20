@@ -166,7 +166,7 @@ class OrderMails
         $o->loadMissing(['lines', 'contact', 'quote']);
 
         return self::send($o->customer_email, $o->language, function () use ($o, $by) {
-            $rows = $o->lines->map(fn ($l) => $l->kind === 'text' ? ['', '*'.$l->name.'*', ''] : [$l->qtyLabel(), $l->name, Pricing::eur($l->amount_cents)])->all();
+            $rows = $o->lines->map(fn ($l) => $l->kind === 'text' ? ['', '*'.$l->name.'*', ''] : [$l->qtyLabel(), $l->nameWithNote(), Pricing::eur($l->amount_cents)])->all();
             $totals = [];
             if ($o->discount_cents) {
                 $totals[__('quotes.project_discount')] = '− '.Pricing::eur($o->discount_cents);

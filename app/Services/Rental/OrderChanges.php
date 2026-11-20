@@ -105,7 +105,7 @@ class OrderChanges
             $copy->fill(['heading_totals' => (bool) $order->heading_totals, 'logistics' => $order->logistics ?? 'open', 'transport_cents' => (int) $order->transport_cents, 'transport_note' => $order->transport_note]);
             $copy->save();
             foreach ($quote->lines as $line) {
-                $copy->lines()->create($line->only(['position', 'kind', 'heading', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
+                $copy->lines()->create($line->only(['position', 'kind', 'heading', 'item_id', 'number', 'name', 'note', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
             }
             $copy->recalculate();
             $quote->update(['status' => 'replaced', 'reserved_until' => null]);
@@ -144,7 +144,7 @@ class OrderChanges
             $factor = $quote->defaultFactor();
             foreach ($quote->lines as $l) {
                 $match = $old->first(fn (OrderLine $o) => ! isset($used[$o->id]) && $o->kind === $l->kind && $o->item_id === $l->item_id && ($l->item_id || $o->name === $l->name));
-                $data = ['position' => $l->position, 'kind' => $l->kind, 'heading' => (bool) $l->heading, 'item_id' => $l->item_id, 'number' => $l->number, 'name' => $l->name, 'qty' => $l->qty,
+                $data = ['position' => $l->position, 'kind' => $l->kind, 'heading' => (bool) $l->heading, 'item_id' => $l->item_id, 'number' => $l->number, 'name' => $l->name, 'note' => $l->note, 'qty' => $l->qty,
                     'unit_price_cents' => $l->unit_price_cents, 'factor' => $l->effectiveFactor($factor), 'discount_bp' => $l->discount_bp, 'amount_cents' => $l->amount_cents];
                 if ($match) {
                     $match->update($data);

@@ -50,7 +50,7 @@ class QuoteMails
         $sections = $quote->heading_totals ? \App\Support\LineSections::totals($quote->lines) : [];
         $rows = [];
         foreach ($quote->lines as $l) {
-            $rows[] = $l->kind === 'text' ? ['', $l->heading ? '**'.$l->name.'**' : '*'.$l->name.'*', ''] : [$l->qtyLabel(), $l->name, Pricing::eur($l->amount_cents)];
+            $rows[] = $l->kind === 'text' ? ['', $l->heading ? '**'.$l->name.'**' : '*'.$l->name.'*', ''] : [$l->qtyLabel(), $l->nameWithNote(), Pricing::eur($l->amount_cents)];
             if (isset($sections[$l->id])) {
                 $rows[] = ['', '*'.__('quotes.subtotal_of', ['name' => $sections[$l->id]['name']]).'*', '**'.Pricing::eur($sections[$l->id]['cents']).'**'];
             }

@@ -121,6 +121,25 @@ class QuotesTest extends TestCase
         $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertSee(__('quotes.net_project'));
     }
 
+    public function test_a_repair_line_takes_a_price_and_extra_information(): void
+    {
+        Item::create(['number' => 'WH-REPAIR', 'kind' => 'service', 'name' => 'Repair', 'category' => 'Warehouse', 'serial' => false, 'stock_qty' => 0, 'day_price_cents' => 0, 'price_unit' => 'event']);
+        $quote = $this->quote();
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/lines', ['kind' => 'item', 'number' => 'WH-REPAIR', 'qty' => 1])->assertSessionHasNoErrors();
+        $line = $quote->lines()->firstOrFail();
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertSee(__('quotes.note.price_needed'))->assertSee(__('quotes.note.add'));
+
+        $this->actingAs($this->sales)->put('/sales/quotes/'.$quote->id, [
+            'title' => 'Repair', 'language' => 'en', 'out_from' => '2026-11-13T14:00', 'out_until' => '2026-11-16T10:00', 'use_from' => '2026-11-14', 'use_until' => '2026-11-15',
+            'lines' => [$line->id => ['name' => 'Repair', 'qty' => 1, 'price' => '145.50', 'note' => "Robe Spiider: new fan\nand cleaning"]],
+        ])->assertSessionHasNoErrors();
+        $line->refresh();
+        $this->assertSame([14550, "Robe Spiider: new fan\nand cleaning"], [$line->unit_price_cents, $line->note]);
+        $this->assertSame('Repair — Robe Spiider: new fan and cleaning', $line->nameWithNote());
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertDontSee(__('quotes.note.price_needed'));
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id.'/print')->assertOk()->assertSee('Robe Spiider: new fan<br />', false);
+    }
+
     public function test_lines_prices_factor_discounts_and_vat(): void
     {
         $this->spiider();

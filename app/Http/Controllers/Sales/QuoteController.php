@@ -140,6 +140,7 @@ class QuoteController extends Controller
             'lines' => ['array'],
             'lines.*.qty' => ['required', 'numeric', 'min:0', 'max:100000'],
             'lines.*.name' => ['required', 'string', 'max:200'],
+            'lines.*.note' => ['nullable', 'string', 'max:2000'],
             'lines.*.price' => ['nullable', 'numeric', 'min:-1000000', 'max:1000000'],
             'lines.*.factor' => ['nullable', 'numeric', 'min:0', 'max:999'],
             'lines.*.discount' => ['nullable', 'numeric', 'min:0', 'max:100'],
@@ -170,7 +171,7 @@ class QuoteController extends Controller
                     continue;
                 }
                 $line->fill([
-                    'qty' => $l['qty'], 'name' => $l['name'],
+                    'qty' => $l['qty'], 'name' => $l['name'], 'note' => array_key_exists('note', $l) ? (trim((string) $l['note']) ?: null) : $line->note,
                     'factor' => ($l['factor'] ?? '') === '' ? null : $l['factor'],
                     'discount_bp' => (int) round(((float) ($l['discount'] ?? 0)) * 100),
                     'position' => $l['position'] ?? $line->position,

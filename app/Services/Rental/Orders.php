@@ -45,7 +45,7 @@ class Orders
             $factor = $quote->defaultFactor();
             foreach ($quote->lines as $l) {
                 $order->lines()->create([
-                    'position' => $l->position, 'kind' => $l->kind, 'heading' => (bool) $l->heading, 'item_id' => $l->item_id, 'number' => $l->number, 'name' => $l->name,
+                    'position' => $l->position, 'kind' => $l->kind, 'heading' => (bool) $l->heading, 'item_id' => $l->item_id, 'number' => $l->number, 'name' => $l->name, 'note' => $l->note,
                     'qty' => $l->qty, 'unit_price_cents' => $l->unit_price_cents, 'factor' => $l->effectiveFactor($factor),
                     'discount_bp' => $l->discount_bp, 'amount_cents' => $l->amount_cents,
                 ]);

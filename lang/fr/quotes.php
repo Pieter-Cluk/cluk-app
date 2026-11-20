@@ -63,6 +63,12 @@ return [
     'net_hint' => 'Les services sont des prix nets : pas de remise.',
     'net_project' => 'Pas sur les services : ce sont des prix nets.',
     'net_doc' => '(hors services)',
+    'note' => [
+        'label' => 'Informations supplémentaires',
+        'add' => '+ Ajouter des informations',
+        'placeholder' => 'Le client le voit sous cette ligne, p. ex. ce qui a été réparé.',
+        'price_needed' => 'Indiquez le prix',
+    ],
     'total_excl' => 'Total HTVA',
     'vat' => 'TVA :pct',
     'total' => 'Total',

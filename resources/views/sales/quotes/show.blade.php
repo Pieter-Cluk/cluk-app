@@ -123,10 +123,20 @@
                                                 </span>
                                                 <input name="lines[{{ $line->id }}][name]" value="{{ $line->name }}" maxlength="200" required aria-label="{{ $line->heading ? __('quotes.subtitle') : __('quotes.cols.item') }}">
                                             </div>
+                                            @if ($line->kind !== 'text')
+                                                <details class="line-note" @if ($line->note) open @endif>
+                                                    <summary>{{ $line->note ? __('quotes.note.label') : __('quotes.note.add') }}</summary>
+                                                    <textarea name="lines[{{ $line->id }}][note]" rows="2" maxlength="2000" placeholder="{{ __('quotes.note.placeholder') }}" aria-label="{{ __('quotes.note.label') }}: {{ $line->name }}">{{ $line->note }}</textarea>
+                                                </details>
+                                            @endif
                                         @else
                                             <b>{{ $line->name }}</b>
+                                            @if ($line->note)<br><small class="muted">{!! nl2br(e($line->note)) !!}</small>@endif
                                         @endif
                                         @if ($line->number)<br><small class="muted">{{ $line->number }}@if ($line->item?->kind === 'package') · {{ $line->item->contents->map(fn ($c) => $c->pivot->qty.' × '.$c->name)->implode(' · ') }}@endif</small>@endif
+                                        @if ($line->kind === 'item' && ! $line->unit_price_cents && $line->item && ! $line->item->day_price_cents)
+                                            <span class="avail av-short">{{ __('quotes.note.price_needed') }}</span>
+                                        @endif
                                         @if ($line->kind === 'item' && $free !== null)
                                             <span @class(['avail', 'av-ok' => ! $short, 'av-short' => $short])>{{ $short ? __('quotes.short', ['free' => max(0, $free), 'missing' => (int) ceil((float) $line->qty) - max(0, $free)]) : __('quotes.free', ['n' => $free]) }}</span>
                                         @endif

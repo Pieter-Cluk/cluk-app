@@ -63,6 +63,12 @@ return [
     'net_hint' => 'Diensten zijn nettoprijzen: geen korting.',
     'net_project' => 'Niet op diensten: dat zijn nettoprijzen.',
     'net_doc' => '(niet op diensten)',
+    'note' => [
+        'label' => 'Extra informatie',
+        'add' => '+ Informatie toevoegen',
+        'placeholder' => 'De klant ziet dit onder deze lijn, bv. wat er hersteld is.',
+        'price_needed' => 'Vul de prijs in',
+    ],
     'total_excl' => 'Totaal excl. btw',
     'vat' => 'Btw :pct',
     'total' => 'Totaal',

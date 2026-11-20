@@ -63,6 +63,12 @@ return [
     'net_hint' => 'Los servicios son precios netos: sin descuento.',
     'net_project' => 'No en los servicios: son precios netos.',
     'net_doc' => '(no en servicios)',
+    'note' => [
+        'label' => 'Información adicional',
+        'add' => '+ Añadir información',
+        'placeholder' => 'El cliente lo ve bajo esta línea, p. ej. qué se reparó.',
+        'price_needed' => 'Indique el precio',
+    ],
     'total_excl' => 'Total sin IVA',
     'vat' => 'IVA :pct',
     'total' => 'Total',

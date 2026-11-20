@@ -81,7 +81,7 @@ class PreInvoices
                 $src->loadMissing(['lines', 'company', 'quote', 'subhires.lines']);
                 $cost = (int) $src->subhires->where('status', 'accepted')->sum(fn (SubhireRequest $r) => $r->lines->sum('amount_cents'));
 
-                $lines = $src->lines->map(fn ($l) => $line($l->name.($l->kind === 'item' && (float) $l->factor !== 1.0 ? ' · factor '.rtrim(rtrim(number_format((float) $l->factor, 2, '.', ''), '0'), '.') : ''), $l->qtyLabel(), (int) $l->unit_price_cents, (int) $l->amount_cents))->values();
+                $lines = $src->lines->map(fn ($l) => $line($l->nameWithNote().($l->kind === 'item' && (float) $l->factor !== 1.0 ? ' · factor '.rtrim(rtrim(number_format((float) $l->factor, 2, '.', ''), '0'), '.') : ''), $l->qtyLabel(), (int) $l->unit_price_cents, (int) $l->amount_cents))->values();
                 if ($src->discount_cents) {
                     $lines->push($line(__('quotes.project_discount', [], $src->language).' '.rtrim(rtrim(number_format($src->project_discount_bp / 100, 2, '.', ''), '0'), '.').'%', 1, -(int) $src->discount_cents, -(int) $src->discount_cents));
                 }
@@ -106,7 +106,7 @@ class PreInvoices
                 $q = $src->currentQuote()?->load('lines');
 
                 return [$src->company, null, $src->owner, 'factory', $src->title.' · '.$src->start_date->format('d/m/Y'),
-                    collect($q?->lines ?? [])->map(fn ($l) => $line($l->name, $l->qtyLabel(), (int) $l->unit_price_cents, (int) $l->amount_cents))->all(),
+                    collect($q?->lines ?? [])->map(fn ($l) => $line($l->nameWithNote(), $l->qtyLabel(), (int) $l->unit_price_cents, (int) $l->amount_cents))->all(),
                     0, $q?->po_number, $src->start_date, 'F-PF-'.Str::after($src->number, 'F-'), $belgian()];
             })(),
             'sales' => (function () use ($src, $line) {
