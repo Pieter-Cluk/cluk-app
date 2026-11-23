@@ -4,9 +4,10 @@
 <x-layouts.app :title="$r->code()">
     <div class="pagehead">
         <div>
-            <div class="kicker"><a href="{{ route('subhire.index') }}">{{ mb_strtoupper(__('orders.subhire_title')) }}</a> · <a href="{{ route('orders.show', $r->order) }}">{{ $r->order->number }}</a></div>
+            <div class="kicker"><a href="{{ route('subhire.index') }}">{{ mb_strtoupper(__('orders.subhire_title')) }}</a> · @php($job = $r->job())<a href="{{ $job->url }}">{{ $job->number }}</a></div>
             <h1>{{ $r->code() }} · {{ $r->supplier->name }}</h1>
-            <p class="muted">{{ __('orders.sub_for', ['title' => $r->order->title, 'customer' => $r->order->customerName(), 'name' => $r->order->assignee?->name ?? '—']) }}</p>
+            <p class="muted">{{ __('orders.sub_for', ['title' => $job->title, 'customer' => $job->customer, 'name' => $job->owner ?? '—']) }}</p>
+            @if ($r->forQuote())<p class="flash">{{ __('quotes.sub.for_quote') }}</p>@endif
         </div>
         @include('rental.subhire._status', ['r' => $r])
     </div>
@@ -118,11 +119,16 @@
                     <h2>{{ __('orders.next_step') }}</h2>
                     @if ($r->status === 'draft')
                         <p class="muted small">{{ __('orders.draft_hint') }}</p>
-                        <a class="btn" href="{{ route('orders.show', $r->order) }}">{{ __('orders.to_order') }}</a>
+                        <a class="btn" href="{{ $job->url }}">{{ $r->forQuote() ? __('quotes.sub.to_quote') : __('orders.to_order') }}</a>
                     @elseif ($r->status === 'sent')
                         <p class="muted small">{{ __('orders.sent_hint') }}</p>
-                        <form method="post" action="{{ route('subhire.accept', $r) }}">@csrf<button class="primary" type="submit" @disabled(! $r->hasPrices())>{{ __('orders.accept_go') }}</button></form>
-                        @unless ($r->hasPrices())<small class="muted">{{ __('orders.errors.prices_first') }}</small>@endunless
+                        @if ($r->forQuote())
+                            <p class="muted small">{{ __('quotes.sub.confirm_later') }}</p>
+                            <a class="btn" href="{{ $job->url }}">{{ __('quotes.sub.to_quote') }}</a>
+                        @else
+                            <form method="post" action="{{ route('subhire.accept', $r) }}">@csrf<button class="primary" type="submit" @disabled(! $r->hasPrices())>{{ __('orders.accept_go') }}</button></form>
+                            @unless ($r->hasPrices())<small class="muted">{{ __('orders.errors.prices_first') }}</small>@endunless
+                        @endif
                         <form method="post" action="{{ route('subhire.na', $r) }}" class="mt">@csrf<button class="btn" type="submit">{{ __('orders.na_go') }}</button></form>
                         <form method="post" action="{{ route('subhire.resend', $r) }}" class="mt">@csrf<button class="btn" type="submit">{{ __('orders.remind') }}</button></form>
                     @endif

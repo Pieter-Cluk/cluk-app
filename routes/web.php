@@ -381,6 +381,8 @@ Route::middleware('auth:web')->group(function () {
             Route::delete('/quotes/{quote}/lines/{line}', [QuoteController::class, 'removeLine'])->whereNumber('quote')->whereNumber('line')->name('quotes.lines.remove');
             Route::get('/quotes/{quote}/search', [QuoteController::class, 'search'])->whereNumber('quote')->name('quotes.search');
             Route::post('/quotes/{quote}/send', [QuoteController::class, 'send'])->whereNumber('quote')->name('quotes.send');
+            Route::post('/quotes/{quote}/subhire', [QuoteController::class, 'subhireAdd'])->whereNumber('quote')->name('quotes.subhire.add');
+            Route::post('/quotes/{quote}/subhire/send', [QuoteController::class, 'subhireSend'])->whereNumber('quote')->name('quotes.subhire.send');
             Route::post('/quotes/{quote}/revise', [QuoteController::class, 'revise'])->whereNumber('quote')->name('quotes.revise');
             Route::post('/quotes/{quote}/accepted', [QuoteController::class, 'markAccepted'])->whereNumber('quote')->name('quotes.accepted');
             Route::post('/quotes/{quote}/bill-to', [QuoteController::class, 'billTo'])->whereNumber('quote')->name('quotes.bill_to');

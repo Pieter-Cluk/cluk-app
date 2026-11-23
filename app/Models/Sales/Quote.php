@@ -77,6 +77,12 @@ class Quote extends Model
         return $this->hasOne(Order::class);
     }
 
+    /** Sub-hire price requests to partners, asked while making this quote. */
+    public function subhires(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Rental\SubhireRequest::class)->whereNull('order_id')->orderBy('id');
+    }
+
     public function lines(): HasMany
     {
         return $this->hasMany(QuoteLine::class)->orderBy('position')->orderBy('id');

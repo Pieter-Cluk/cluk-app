@@ -54,7 +54,46 @@ class QuoteController extends Controller
             'versions' => Quote::where('number', $quote->number)->orderByDesc('version')->get(['id', 'version', 'status', 'sent_at', 'gross_cents']),
             'contacts' => $quote->company ? $quote->company->contacts()->orderBy('first_name')->get() : collect(),
             'logistics' => $quote->loadFigures(),
+            'subOpen' => $canWork && $this->subhireOpen($quote),
+            'subPrices' => \App\Services\Rental\QuoteSubhire::prices($quote),
+            'subRequests' => $quote->subhires()->with(['supplier', 'lines'])->get(),
+            'suppliers' => $canWork && $this->subhireOpen($quote) ? \App\Models\Company::active()->where('is_supplier', true)->orderBy('name')->get(['id', 'name', 'supplies']) : collect(),
         ]);
+    }
+
+    /** Partner prices can be asked while the quote is still being made or discussed. */
+    private function subhireOpen(Quote $quote): bool
+    {
+        return $quote->isLatest() && in_array($quote->status, ['draft', 'sent', 'change'], true);
+    }
+
+    /** Ask a partner's price for a line (sub-hire), before the quote goes out. */
+    public function subhireAdd(Request $request, Quote $quote): RedirectResponse
+    {
+        $this->guard($request, $quote, false);
+        abort_unless($this->subhireOpen($quote), 409);
+        $d = $request->validate([
+            'line_id' => ['required', 'integer'],
+            'supplier_id' => ['required', 'integer', Rule::exists('companies', 'id')->where('is_supplier', true)],
+            'qty' => ['required', 'integer', 'min:1', 'max:100000'],
+            'transport' => ['required', Rule::in(\App\Models\Rental\SubhireRequest::TRANSPORT)],
+        ], ['transport.required' => __('orders.transport_required')]);
+        $line = $quote->lines()->whereKey($d['line_id'])->where('kind', 'item')->firstOrFail();
+        $r = \App\Services\Rental\QuoteSubhire::add($quote, $line, \App\Models\Company::findOrFail($d['supplier_id']), (int) $d['qty'], $d['transport'], $request->user());
+
+        return redirect()->to(route('quotes.show', $quote).'#subhire')->with('status', __('quotes.sub.added', ['supplier' => $r->supplier->name]));
+    }
+
+    public function subhireSend(Request $request, Quote $quote): RedirectResponse
+    {
+        $this->guard($request, $quote, false);
+        abort_unless($this->subhireOpen($quote), 409);
+        $missing = \App\Services\Rental\QuoteSubhire::send($quote, $request->user());
+        if ($missing) {
+            return redirect()->to(route('quotes.show', $quote).'#subhire')->withErrors(['supplier' => __('orders.errors.no_email', ['names' => implode(', ', $missing)])]);
+        }
+
+        return redirect()->to(route('quotes.show', $quote).'#subhire')->with('status', __('orders.flash.requests_sent'));
     }
 
     /** Printable version (browser → PDF). Also used for the customer. */
@@ -359,10 +398,11 @@ class QuoteController extends Controller
                 \App\Services\Sales\InvoiceCompany::apply($copy, $company, $dealContact ?? \App\Services\Sales\InvoiceCompany::contactFor($company));
             }
             foreach ($quote->lines as $line) {
-                $copy->lines()->create($line->only(['position', 'kind', 'heading', 'item_id', 'number', 'name', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
+                $copy->lines()->create($line->only(['position', 'kind', 'heading', 'item_id', 'number', 'name', 'note', 'serial', 'qty', 'unit_price_cents', 'factor', 'discount_bp']));
             }
             $quote->update(['status' => 'replaced', 'reserved_until' => null]);
             $copy->recalculate();
+            \App\Services\Rental\QuoteSubhire::moveToVersion($quote, $copy);
 
             return $copy;
         });

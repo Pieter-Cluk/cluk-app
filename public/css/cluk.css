@@ -1215,3 +1215,9 @@ details.card[open]>summary{margin-bottom:12px}
 .cb-fixed{border-style:dashed;background:var(--surface-subtle)}.cb-fixed-head{display:flex;align-items:center;gap:10px}
 .kit-warn{color:var(--warning-text);font-weight:700;white-space:nowrap}.kit-banner ul{margin:6px 0 0 18px;padding:0}
 .cb-row{display:flex;gap:8px;align-items:flex-start}.cb-row>details{flex:1;min-width:0}.cb-move{display:flex;flex-direction:column;gap:4px;padding-top:10px}.cb-move .iconbtn{width:34px;height:30px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--brand-strong);font-weight:700;cursor:pointer}.cb-move .iconbtn:hover:not(:disabled){background:var(--brand-tint);border-color:var(--brand)}.cb-move .iconbtn:disabled{opacity:.35;cursor:default}
+
+/* Sub-hire prices asked from the quote */
+.sub-req{padding:8px 0;border-bottom:1px solid var(--line)}
+.sub-req:last-of-type{border-bottom:0}
+.sub-req .row-between{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.sub-price{color:var(--muted)}

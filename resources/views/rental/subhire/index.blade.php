@@ -29,7 +29,7 @@
                         <tr>
                             <td class="nowrap"><a href="{{ route('subhire.show', $r) }}"><b>{{ $r->code() }}</b></a><br><small class="muted">{{ $r->sent_at?->format('d/m H:i') ?? $r->created_at->format('d/m') }}</small></td>
                             <td>{{ $r->supplier->name }}@if ($r->their_ref)<br><small class="muted">{{ __('orders.their_ref_short', ['ref' => $r->their_ref]) }}</small>@endif</td>
-                            <td>{{ $r->order->title }}<br><small class="muted">{{ $r->order->number }}</small></td>
+                            @php($job = $r->job())<td>{{ $job->title }}<br><small class="muted">{{ $job->number }}</small></td>
                             <td>{{ $r->lines->map(fn ($l) => $l->qty.' × '.$l->name)->implode(' · ') }}</td>
                             <td class="nowrap">{{ $r->delivery_at?->format('d/m') }} – {{ $r->return_at?->format('d/m') }}</td>
                             <td class="num nowrap">{{ $r->total_cents ? $eur($r->total_cents) : '—' }}</td>

@@ -33,6 +33,12 @@ class QuoteLine extends Model
         return $this->belongsTo(Item::class);
     }
 
+    /** Partner prices asked for this line while making the quote. */
+    public function subhireLines(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Rental\SubhireLine::class);
+    }
+
     protected static function booted(): void
     {
         // Services are net prices: never a line discount.

@@ -126,6 +126,60 @@ class OrdersTest extends TestCase
         $this->actingAs($this->am)->post('/order-allocation/'.$second->id.'/lines/'.$line.'/allocate', ['code' => 'lt-0006'])->assertSessionHasNoErrors();
     }
 
+    public function test_sub_hire_price_asked_from_the_quote_moves_to_the_order(): void
+    {
+        $partner = $this->supplier();
+        $company = Company::create(['name' => 'Demo Agency BV', 'country' => 'BE', 'is_customer' => true, 'is_supplier' => false, 'vat_regime' => 'auto', 'language' => 'en']);
+        $contact = Contact::create(['first_name' => 'Sarah', 'last_name' => 'Peeters', 'email' => 'sarah@demo.be']);
+        $company->contacts()->attach($contact->id);
+        $deal = Deal::create(['number' => Deal::nextNumber(), 'title' => 'Company evening', 'module' => 'dryhire', 'stage' => 'proposal', 'company_id' => $company->id, 'contact_id' => $contact->id, 'owner_id' => $this->sales->id, 'event_start' => '2026-11-14', 'event_end' => '2026-11-15']);
+        $this->actingAs($this->sales)->post('/sales/deals/'.$deal->id.'/quotes');
+        $quote = Quote::latest('id')->first();
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/lines', ['kind' => 'item', 'number' => 'LT-SPIIDER', 'qty' => 8]);
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/lines', ['kind' => 'item', 'number' => 'AC-PT1-03', 'qty' => 10]);
+        $qline = $quote->lines()->where('item_id', $this->spiider->id)->first();
+
+        // While making the quote: the card is there, and a request is drafted for the 2 missing.
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertSee(__('quotes.sub.title'))->assertSee(__('quotes.sub.missing', ['n' => 2]));
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/subhire', ['line_id' => $qline->id, 'supplier_id' => $partner->id, 'qty' => 2])->assertSessionHasErrors('transport');
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/subhire', ['line_id' => $qline->id, 'supplier_id' => $partner->id, 'qty' => 2, 'transport' => 'partner'])->assertSessionHasNoErrors();
+        $request = SubhireRequest::firstOrFail();
+        $this->assertSame([$quote->id, null, 'draft'], [$request->quote_id, $request->order_id, $request->status]);
+        $this->assertTrue($request->forQuote());
+
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/subhire/send')->assertSessionHasNoErrors();
+        $this->assertSame('sent', $request->fresh()->status);
+        Notification::assertSentTo(new AnonymousNotifiable, Confirmation::class, fn ($n, $c, $to) => $to->routes['mail'] === 'hire@demolight.de');
+
+        // The partner's price is typed in; the quote line shows it. It cannot be confirmed yet.
+        $sl = $request->lines()->first();
+        $this->actingAs($this->am)->get('/sub-hire/'.$request->id)->assertOk()->assertSee(__('quotes.sub.for_quote'));
+        $this->actingAs($this->am)->put('/sub-hire/'.$request->id, ['transport' => 'partner', 'delivery_at' => '2026-11-12T16:00', 'return_at' => '2026-11-17T10:00',
+            'lines' => [$sl->id => ['qty' => 2, 'price' => '55', 'factor' => '1', 'discount' => '']]])->assertSessionHasNoErrors();
+        $this->actingAs($this->am)->post('/sub-hire/'.$request->id.'/accept')->assertSessionHasErrors('price');
+        $this->actingAs($this->sales)->get('/sales/quotes/'.$quote->id)->assertOk()->assertSee(__('orders.per_day', ['amount' => '€ 55,00']), false);
+        $this->actingAs($this->am)->get('/sub-hire')->assertOk()->assertSee('Company evening');
+
+        // Sent to the customer, a new version: the request follows the new version.
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/send', ['to' => 'sarah@demo.be']);
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$quote->id.'/revise')->assertRedirect();
+        $v2 = Quote::where('number', $quote->number)->where('version', 2)->firstOrFail();
+        $this->assertSame($v2->id, $request->fresh()->quote_id);
+        $this->assertSame($v2->lines()->where('item_id', $this->spiider->id)->value('id'), $sl->fresh()->quote_line_id);
+
+        // The customer accepts: the order takes the request over, and it can be confirmed there.
+        $this->actingAs($this->sales)->post('/sales/quotes/'.$v2->id.'/send', ['to' => 'sarah@demo.be']);
+        auth('web')->logout();
+        $this->post('/q/'.$v2->fresh()->token.'/accept', ['name' => 'Sarah Peeters', 'po_number' => 'PO 1', 'terms' => '1'])->assertRedirect();
+        $order = Order::where('quote_id', $v2->id)->firstOrFail();
+        $request->refresh();
+        $this->assertSame($order->id, $request->order_id);
+        $this->assertSame($order->lines()->where('item_id', $this->spiider->id)->value('id'), $sl->fresh()->order_line_id);
+        $this->assertFalse($request->forQuote());
+        $this->actingAs($this->am)->post('/sub-hire/'.$request->id.'/accept')->assertSessionHasNoErrors();
+        $this->assertSame('accepted', $request->fresh()->status);
+    }
+
     public function test_sub_hire_from_request_to_confirmation(): void
     {
         $order = $this->order(8);

@@ -50,6 +50,7 @@ class Orders
                     'discount_bp' => $l->discount_bp, 'amount_cents' => $l->amount_cents,
                 ]);
             }
+            QuoteSubhire::toOrder($quote, $order); // partner prices asked while making the quote
             AuditLog::record('order.created', $order, ['quote' => $quote->code(), 'total' => Pricing::eur($order->net_cents)]);
 
             return $order;

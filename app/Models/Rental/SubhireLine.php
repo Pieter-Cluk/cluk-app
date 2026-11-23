@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['request_id', 'order_line_id', 'item_id', 'name', 'qty', 'last_price_cents', 'price_cents', 'factor', 'discount_bp', 'amount_cents', 'received_qty', 'back_qty'])]
+#[Fillable(['request_id', 'order_line_id', 'quote_line_id', 'item_id', 'name', 'qty', 'last_price_cents', 'price_cents', 'factor', 'discount_bp', 'amount_cents', 'received_qty', 'back_qty'])]
 class SubhireLine extends Model
 {
     protected function casts(): array
@@ -23,6 +23,12 @@ class SubhireLine extends Model
     public function orderLine(): BelongsTo
     {
         return $this->belongsTo(OrderLine::class);
+    }
+
+    /** While the request is still for a quote (before the customer accepts). */
+    public function quoteLine(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Sales\QuoteLine::class);
     }
 
     public function item(): BelongsTo

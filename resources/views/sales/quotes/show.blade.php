@@ -148,6 +148,11 @@
                                         @if ($line->kind === 'item' && $free !== null)
                                             <span @class(['avail', 'av-ok' => ! $short, 'av-short' => $short])>{{ $short ? __('quotes.short', ['free' => max(0, $free), 'missing' => (int) ceil((float) $line->qty) - max(0, $free)]) : __('quotes.free', ['n' => $free]) }}</span>
                                         @endif
+                                        @if ($canWork)
+                                            @foreach ($subPrices[$line->id] ?? [] as $sp)
+                                                <br><small class="sub-price">{{ __('quotes.sub.partner') }}: {{ $sp['line']->qty }} × {{ $sp['request']->supplier->name }} · @if ($sp['request']->status === 'not_available'){{ __('quotes.sub.na') }}@elseif ($sp['line']->price_cents !== null)<b>{{ __('orders.per_day', ['amount' => $eur($sp['line']->price_cents)]) }}</b>@elseif ($sp['request']->status === 'sent'){{ __('quotes.sub.waiting') }}@else{{ __('quotes.sub.not_sent') }}@endif</small>
+                                            @endforeach
+                                        @endif
                                     </td>
                                     @if ($line->kind === 'text')
                                         <td colspan="5"></td>
@@ -312,6 +317,59 @@
         </div>
 
         <aside class="stack">
+            @if ($subOpen || $subRequests->isNotEmpty())
+                @php($subDrafts = $subRequests->where('status', 'draft')->filter(fn ($r) => $r->lines->isNotEmpty()))
+                @php($itemLines = $quote->lines->where('kind', 'item'))
+                <section class="card" id="subhire">
+                    <h2>{{ __('quotes.sub.title') }}</h2>
+                    <p class="muted small">{{ __('quotes.sub.hint') }}</p>
+                    @foreach ($subRequests as $r)
+                        <div class="sub-req">
+                            <div class="row-between"><a href="{{ route('subhire.show', $r) }}"><b>{{ $r->code() }}</b> · {{ $r->supplier->name }}</a>@include('rental.subhire._status', ['r' => $r])</div>
+                            @foreach ($r->lines as $l)
+                                <small class="muted">{{ $l->qty }} × {{ $l->name }} · {{ $l->price_cents !== null ? __('orders.per_day', ['amount' => $eur($l->price_cents)]) : ($l->last_price_cents ? __('orders.last_price', ['amount' => $eur($l->last_price_cents)]) : '—') }}</small><br>
+                            @endforeach
+                        </div>
+                    @endforeach
+                    @if ($subOpen && $itemLines->isNotEmpty())
+                        <form method="post" action="{{ route('quotes.subhire.add', $quote) }}" class="stack-sm mt">
+                            @csrf
+                            <select name="line_id" required aria-label="{{ __('quotes.cols.item') }}">
+                                <option value="">{{ __('quotes.sub.choose_line') }}</option>
+                                @foreach ($itemLines as $line)
+                                    @php($free = $line->item ? $avail->free($line->item) : null)
+                                    @php($miss = $free !== null ? max(0, (int) ceil((float) $line->qty) - max(0, $free)) : 0)
+                                    <option value="{{ $line->id }}" data-miss="{{ $miss ?: (int) ceil((float) $line->qty) }}">{{ $line->qtyLabel() }} × {{ $line->name }}{{ $miss ? ' · '.__('quotes.sub.missing', ['n' => $miss]) : '' }}</option>
+                                @endforeach
+                            </select>
+                            <select data-pick name="supplier_id" required aria-label="{{ __('orders.partner') }}">
+                                <option value="">{{ __('orders.choose_partner') }}</option>
+                                @foreach ($suppliers->sortByDesc(fn ($s) => in_array('subhire', $s->supplies ?? [], true)) as $s)<option value="{{ $s->id }}">{{ $s->name }}</option>@endforeach
+                            </select>
+                            <label class="field"><span>{{ __('orders.pieces') }}</span><input type="number" name="qty" min="1" value="1" class="in-num in-sm js-sub-qty"></label>
+                            <fieldset class="tr-pick" aria-label="{{ __('orders.transport.title') }}">
+                                @foreach (\App\Models\Rental\SubhireRequest::TRANSPORT as $opt)<label class="check"><input type="radio" name="transport" value="{{ $opt }}" required> {{ __('orders.transport.short.'.$opt) }}</label>@endforeach
+                            </fieldset>
+                            <button class="btn" type="submit">{{ __('quotes.sub.add') }}</button>
+                            @if ($suppliers->isEmpty())<small class="muted">{{ __('orders.no_suppliers') }}</small>@endif
+                        </form>
+                        @if ($subDrafts->isNotEmpty())
+                            <form method="post" action="{{ route('quotes.subhire.send', $quote) }}" class="mt">@csrf<button class="btn primary" type="submit">{{ __('orders.send_all', ['n' => $subDrafts->count()]) }}</button></form>
+                        @endif
+                        <script>
+                        (() => {
+                            // Pieces: what is missing on the chosen line (or its qty).
+                            const box = document.getElementById('subhire');
+                            const pick = box?.querySelector('select[name=line_id]'), qty = box?.querySelector('.js-sub-qty');
+                            if (!pick || !qty) return;
+                            const set = () => { const o = pick.selectedOptions[0]; if (o && o.dataset.miss) qty.value = o.dataset.miss; };
+                            pick.addEventListener('change', set); set();
+                        })();
+                        </script>
+                    @endif
+                    <p class="muted small mt">{{ __('quotes.sub.after') }}</p>
+                </section>
+            @endif
             @if ($canEdit)
                 <section class="card">
                     <h2>{{ __('quotes.send') }}</h2>

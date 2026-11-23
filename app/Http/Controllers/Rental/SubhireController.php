@@ -21,7 +21,7 @@ class SubhireController extends Controller
     {
         $tab = $request->query('tab') === 'shc' ? 'shc' : 'shq';
         $filter = in_array($request->query('f'), ['draft', 'sent', 'closed', 'running', 'done'], true) ? $request->query('f') : null;
-        $rows = SubhireRequest::with(['supplier', 'order.company', 'lines'])
+        $rows = SubhireRequest::with(['supplier', 'order.company', 'quote.company', 'lines'])
             ->when($tab === 'shq', fn ($q) => $q->whereIn('status', ['draft', 'sent', 'not_available', 'cancelled']), fn ($q) => $q->where('status', 'accepted'))
             ->when($filter === 'draft', fn ($q) => $q->where('status', 'draft'))
             ->when($filter === 'sent', fn ($q) => $q->where('status', 'sent'))
@@ -40,7 +40,7 @@ class SubhireController extends Controller
 
     public function show(Request $request, SubhireRequest $subhire): View
     {
-        $subhire->load(['supplier', 'order.company', 'order.assignee', 'lines.orderLine', 'lines.item', 'acceptedBy']);
+        $subhire->load(['supplier', 'order.company', 'order.assignee', 'quote.company', 'quote.owner', 'lines.orderLine', 'lines.item', 'acceptedBy']);
 
         return view('rental.subhire.show', [
             'r' => $subhire,
@@ -106,10 +106,10 @@ class SubhireController extends Controller
         abort_unless($line->request_id === $subhire->id, 404);
         $line->delete();
         if ($subhire->lines()->count() === 0) {
-            $order = $subhire->order;
+            $back = $subhire->job()->url;
             $subhire->delete();
 
-            return redirect()->route('orders.show', $order)->with('status', __('orders.flash.subhire_removed'));
+            return redirect()->to($back)->with('status', __('orders.flash.subhire_removed'));
         }
         $subhire->load('lines');
         $subhire->recalculate();
@@ -120,6 +120,9 @@ class SubhireController extends Controller
     public function accept(Request $request, SubhireRequest $subhire): RedirectResponse
     {
         $this->guard($request, $subhire, ['sent']);
+        if ($subhire->forQuote()) {
+            return back()->withErrors(['price' => __('quotes.sub.confirm_later')]); // confirmed on the order, once the customer accepts
+        }
         Orders::acceptSubhire($subhire, $request->user());
 
         return back()->with('status', __('orders.flash.subhire_accepted', ['number' => $subhire->confirm_number]));
@@ -130,7 +133,7 @@ class SubhireController extends Controller
         $this->guard($request, $subhire, ['sent']);
         Orders::notAvailable($subhire, $request->user());
 
-        return redirect()->route('orders.show', $subhire->order_id)->with('status', __('orders.flash.subhire_na', ['supplier' => $subhire->supplier->name]));
+        return redirect()->to($subhire->job()->url)->with('status', __('orders.flash.subhire_na', ['supplier' => $subhire->supplier->name]));
     }
 
     public function resend(Request $request, SubhireRequest $subhire): RedirectResponse
@@ -155,7 +158,7 @@ class SubhireController extends Controller
         }
         $subhire->update(['status' => 'cancelled']);
 
-        return redirect()->route('orders.show', $subhire->order_id)->with('status', __('orders.flash.subhire_cancelled'));
+        return redirect()->to($subhire->job()->url)->with('status', __('orders.flash.subhire_cancelled'));
     }
 
     /** Tell the partner what changed on a confirmed sub-hire. */

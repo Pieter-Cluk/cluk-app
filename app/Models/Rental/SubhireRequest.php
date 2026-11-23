@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
  * the confirmation (SHC). One per partner per order.
  */
 #[Fillable([
-    'number', 'confirm_number', 'order_id', 'supplier_id', 'status', 'transport', 'delivery_at', 'return_at', 'sent_to', 'sent_at',
+    'number', 'confirm_number', 'order_id', 'quote_id', 'supplier_id', 'status', 'transport', 'delivery_at', 'return_at', 'sent_to', 'sent_at',
     'their_ref', 'note', 'extra_cents', 'extra_text', 'total_cents', 'answered_at', 'accepted_at', 'accepted_by_id', 'created_by_id',
     'confirmed_snapshot', 'adjusted_at', 'adjust_count', 'received_at', 'received_by_id', 'in_photos', 'in_note', 'handed_back_at', 'handed_back_by_id', 'out_photos', 'out_note',
 ])]
@@ -35,6 +35,31 @@ class SubhireRequest extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    /** Asked while the quote was being made; the order takes over once the customer accepts. */
+    public function quote(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Sales\Quote::class);
+    }
+
+    /** Still a price request for a quote (no order yet). */
+    public function forQuote(): bool
+    {
+        return ! $this->order_id && $this->quote_id;
+    }
+
+    /** Title, customer and owner, from the order or (before it exists) the quote. */
+    public function job(): object
+    {
+        $o = $this->order ?? $this->quote;
+
+        return (object) [
+            'number' => $this->order ? $this->order->number : ($this->quote ? $this->quote->code() : '—'),
+            'title' => $o?->title ?? '—', 'customer' => $o?->customerName() ?? '—',
+            'owner' => $this->order ? $this->order->assignee?->name : $this->quote?->owner?->name,
+            'url' => $this->order ? route('orders.show', $this->order) : ($this->quote ? route('quotes.show', $this->quote) : null),
+        ];
     }
 
     public function supplier(): BelongsTo
@@ -145,7 +170,7 @@ class SubhireRequest extends Model
     public function revenueCents(): int
     {
         return (int) $this->lines->sum(function ($l) {
-            $ol = $l->orderLine;
+            $ol = $l->orderLine ?? $l->quoteLine;
 
             return $ol && (float) $ol->qty > 0 ? (int) round($ol->amount_cents * $l->qty / (float) $ol->qty) : 0;
         });
