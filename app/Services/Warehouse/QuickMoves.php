@@ -117,7 +117,7 @@ class QuickMoves
     {
         return Order::with('company')->whereNull('returned_at')->whereNotIn('status', ['cancelled', 'replaced'])
             ->whereHas('lines', fn ($q) => $q->where('item_id', $itemId))
-            ->where('out_until', '>=', now()->subDays(2))->orderBy('out_from')->take(40)->get();
+            ->where('out_until', '>=', now()->subDays(60))->orderBy('out_from')->take(60)->get();
     }
 
     public static function audit(string $what, $item, array $codes, User $by, array $extra = []): void
