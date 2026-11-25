@@ -68,26 +68,44 @@ class Backups
         }
         $tables = collect(Schema::getTables())->pluck('name')->reject(fn ($t) => str_starts_with($t, 'sqlite_'))->values();
         $rows = 0;
-        foreach ($tables as $table) {
-            $create = $driver === 'sqlite'
-                ? (string) DB::selectOne("select sql from sqlite_master where type = 'table' and name = ?", [$table])->sql
-                : (string) array_values((array) DB::selectOne('SHOW CREATE TABLE '.$q($table)))[1];
-            $write('DROP TABLE IF EXISTS '.$q($table));
-            $write($create);
-            $columns = null;
-            $batch = [];
-            $stmt = $pdo->query('SELECT * FROM '.$q($table));
-            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                $columns ??= '('.implode(', ', array_map($q, array_keys($row))).')';
-                $batch[] = '('.implode(', ', array_map(fn ($v) => $v === null ? 'NULL' : (is_int($v) || is_float($v) ? (string) $v : $pdo->quote((string) $v)), $row)).')';
-                $rows++;
-                if (count($batch) >= 200) {
+        // Stream the rows instead of loading a whole table in memory (tables with photos ran out of memory).
+        $mysql = $driver !== 'sqlite' && defined('PDO::MYSQL_ATTR_USE_BUFFERED_QUERY');
+        if ($mysql) {
+            $pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+        }
+        try {
+            foreach ($tables as $table) {
+                $create = $driver === 'sqlite'
+                    ? (string) DB::selectOne("select sql from sqlite_master where type = 'table' and name = ?", [$table])->sql
+                    : (string) array_values((array) DB::selectOne('SHOW CREATE TABLE '.$q($table)))[1];
+                $write('DROP TABLE IF EXISTS '.$q($table));
+                $write($create);
+                $columns = null;
+                $batch = [];
+                $size = 0;
+                $stmt = $pdo->query('SELECT * FROM '.$q($table));
+                while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                    $columns ??= '('.implode(', ', array_map($q, array_keys($row))).')';
+                    $values = '('.implode(', ', array_map(fn ($v) => $v === null ? 'NULL' : (is_int($v) || is_float($v) ? (string) $v : $pdo->quote((string) $v)), $row)).')';
+                    unset($row);
+                    $size += strlen($values);
+                    $batch[] = $values;
+                    unset($values);
+                    $rows++;
+                    if (count($batch) >= 200 || $size >= 1_000_000) { // at most ~1 MB per statement
+                        $write('INSERT INTO '.$q($table).' '.$columns.' VALUES '.implode(",\n", $batch));
+                        $batch = [];
+                        $size = 0;
+                    }
+                }
+                $stmt->closeCursor();
+                if ($batch) {
                     $write('INSERT INTO '.$q($table).' '.$columns.' VALUES '.implode(",\n", $batch));
-                    $batch = [];
                 }
             }
-            if ($batch) {
-                $write('INSERT INTO '.$q($table).' '.$columns.' VALUES '.implode(",\n", $batch));
+        } finally {
+            if ($mysql) {
+                $pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
             }
         }
         if ($driver !== 'sqlite') {
