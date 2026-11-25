@@ -179,6 +179,7 @@ No price = priced later',
         'result' => [
             'ok' => 'OK',
             'repair' => 'To repair',
+            'skipped' => 'Skipped (quick change)',
         ],
     ],
     'notice' => [

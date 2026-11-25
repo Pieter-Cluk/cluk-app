@@ -158,9 +158,22 @@
                                 onclick="var t = this.form.querySelector('[name=_token]'); t.disabled = true; setTimeout(function () { t.disabled = false; }, 500);">{{ __('warehouse.labels.print') }}</button>
                             <span class="inline-form"><input name="place" list="place-codes" placeholder="{{ __('equipment.place.placeholder') }}" aria-label="{{ __('equipment.place.title') }}" style="width:11em">
                                 <button class="btn" type="submit" data-print disabled>{{ __('equipment.place.go') }}</button></span>
+                            <span class="inline-form quick-bar" title="{{ __('equipment.quick.hint') }}">
+                                <select name="quick" class="js-quick" aria-label="{{ __('equipment.quick.title') }}">
+                                    @foreach (['available', 'handover', 'check'] as $qa)<option value="{{ $qa }}" @selected(old('quick') === $qa)>{{ __('equipment.quick.actions.'.$qa) }}</option>@endforeach
+                                </select>
+                                <select name="order_id" class="js-quick-order" aria-label="{{ __('equipment.quick.order') }}" hidden>
+                                    <option value="">{{ __('equipment.quick.choose_order') }}</option>
+                                    @foreach ($quickOrders as $o)<option value="{{ $o->id }}">{{ $o->number }} · {{ $o->title }} · {{ $o->out_from->format('d/m') }}–{{ $o->out_until->format('d/m') }}</option>@endforeach
+                                </select>
+                                <button class="btn" type="submit" data-print disabled formaction="{{ route('equipment.assets.quick', $item) }}">{{ __('equipment.quick.go') }}</button>
+                            </span>
                         @endif
                     </div>
                     @error('place')<p class="flash flash-err">{{ $message }}</p>@enderror
+                    @error('quick')<p class="flash flash-err">{{ $message }}</p>@enderror
+                    @error('order_id')<p class="flash flash-err">{{ $message }}</p>@enderror
+                    @error('assets')<p class="flash flash-err">{{ $message }}</p>@enderror
                     <div class="table-wrap">
                         <table class="table">
                             <thead><tr>@if ($canEdit)<th class="w-check"></th>@endif<th>{{ __('equipment.fields.code') }}</th><th>{{ __('equipment.fields.serial_number') }}</th><th>{{ __('equipment.fields.status') }}</th><th>{{ __('equipment.fields.location') }}</th><th>{{ __('equipment.label') }}</th></tr></thead>
@@ -274,5 +287,14 @@
             boxes.forEach(function (b) { b.addEventListener('change', update); });
             update();
         });
+    </script>
+    <script>
+    (() => {
+        // Quick change: the order list only for "hand over to the next order".
+        const pick = document.querySelector('.js-quick'), order = document.querySelector('.js-quick-order');
+        if (!pick || !order) return;
+        const set = () => { order.hidden = pick.value !== 'handover'; };
+        pick.addEventListener('change', set); set();
+    })();
     </script>
 </x-layouts.app>

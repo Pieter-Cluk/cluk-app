@@ -179,6 +179,7 @@ Sans prix = chiffré plus tard',
         'result' => [
             'ok' => 'OK',
             'repair' => 'En réparation',
+            'skipped' => 'Ignoré (changement rapide)',
         ],
     ],
     'notice' => [

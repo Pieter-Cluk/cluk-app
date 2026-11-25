@@ -217,7 +217,8 @@ class Moves
         }
         foreach (self::pickLines($order) as $l) {
             if ($l->bySerial()) {
-                if ($l->assets->contains(fn ($oa) => ! ($oa->asset->location === 'DISPATCH' && $oa->asset->out_order_id === $order->id))) {
+                // Picked, or already out with this order (handed over straight from the previous job).
+                if ($l->assets->contains(fn ($oa) => ! ($oa->asset->out_order_id === $order->id && ($oa->asset->location === 'DISPATCH' || $oa->asset->status === Asset::OUT)))) {
                     return false;
                 }
             } elseif ($l->picked_qty < $l->ownAllocated()) {

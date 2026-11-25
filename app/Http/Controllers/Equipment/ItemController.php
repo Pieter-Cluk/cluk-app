@@ -90,6 +90,7 @@ class ItemController extends Controller
             'item' => $item,
             'canEdit' => $user->canUseModule('dryhire', 2),
             'canMoney' => $user->hasRight('finance.see_margins'),
+            'quickOrders' => $item->serial && $user->canUseModule('dryhire', 2) ? \App\Services\Warehouse\QuickMoves::targets($item->id) : collect(),
             'usedIn' => Item::whereHas('children', fn ($q) => $q->whereKey($item->id))->orderBy('number')->get(),
             'options' => Item::where('id', '!=', $item->id)->whereIn('kind', ['item', 'case'])->orderBy('number')->get(['id', 'number', 'name']),
             'activity' => AuditLog::with('actor')->where('subject_type', $item->getMorphClass())->where('subject_id', $item->id)->latest('id')->limit(20)->get(),
@@ -373,6 +374,43 @@ class ItemController extends Controller
         }
 
         return $errors ? $back->withErrors(['place' => implode(' ', array_unique($errors))]) : $back;
+    }
+
+    /**
+     * Quick changes for the selected pieces (no scanning): back and rentable, handed over
+     * to the next order (prolonged or re-rented), or to be checked first.
+     */
+    public function quickPieces(Request $request, Item $item): RedirectResponse
+    {
+        $d = $request->validate([
+            'assets' => ['required', 'array', 'max:500'], 'assets.*' => ['integer'],
+            'quick' => ['required', Rule::in(['available', 'handover', 'check'])],
+            'order_id' => ['nullable', 'required_if:quick,handover', 'integer'],
+        ], ['assets.required' => __('equipment.quick.errors.none'), 'order_id.required_if' => __('equipment.quick.errors.no_order')]);
+        $to = $d['quick'] === 'handover' ? \App\Models\Rental\Order::findOrFail($d['order_id']) : null;
+        $done = [];
+        $errors = [];
+        foreach ($item->assets()->whereIn('id', $d['assets'])->orderBy('code')->get() as $a) {
+            try {
+                match ($d['quick']) {
+                    'available' => \App\Services\Warehouse\QuickMoves::setAvailable($a, $request->user()),
+                    'handover' => \App\Services\Warehouse\QuickMoves::handOver($a, $to, $request->user()),
+                    'check' => \App\Services\Warehouse\QuickMoves::toCheck($a, $request->user()),
+                };
+                $done[] = $a->code;
+            } catch (ValidationException $e) {
+                $errors[] = $e->validator->errors()->first();
+            }
+        }
+        if ($done) {
+            \App\Services\Warehouse\QuickMoves::audit($d['quick'], $item, $done, $request->user(), $to ? ['order' => $to->number] : []);
+        }
+        $back = redirect()->route('equipment.show', $item);
+        if ($done) {
+            $back->with('status', trans_choice('equipment.quick.done.'.$d['quick'], count($done), ['n' => count($done), 'order' => $to?->number]));
+        }
+
+        return $errors ? $back->withErrors(['quick' => implode(' ', array_unique($errors))]) : $back;
     }
 
     /** From the office: put a number of a counted item in a case (or take them out with a minus). */

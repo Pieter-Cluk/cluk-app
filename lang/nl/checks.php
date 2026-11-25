@@ -179,6 +179,7 @@ Geen prijs = later prijzen',
         'result' => [
             'ok' => 'OK',
             'repair' => 'Naar herstelling',
+            'skipped' => 'Overgeslagen (snelle wijziging)',
         ],
     ],
     'notice' => [

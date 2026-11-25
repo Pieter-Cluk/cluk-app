@@ -179,6 +179,7 @@ Sin precio = se valora después',
         'result' => [
             'ok' => 'OK',
             'repair' => 'A reparación',
+            'skipped' => 'Omitido (cambio rápido)',
         ],
     ],
     'notice' => [

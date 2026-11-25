@@ -6,6 +6,7 @@ use App\Models\AuditLog;
 use App\Models\BankAccount;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\Equipment\Asset;
 use App\Models\Equipment\Item;
 use App\Models\Rental\Order;
 use App\Models\Rental\SubhireLine;
@@ -14,6 +15,7 @@ use App\Models\Role;
 use App\Models\Sales\Deal;
 use App\Models\Sales\Quote;
 use App\Models\User;
+use App\Models\Warehouse\Move;
 use App\Notifications\Confirmation;
 use App\Services\Rental\Availability;
 use Database\Seeders\RoleSeeder;
@@ -178,6 +180,49 @@ class OrdersTest extends TestCase
         $this->assertFalse($request->forQuote());
         $this->actingAs($this->am)->post('/sub-hire/'.$request->id.'/accept')->assertSessionHasNoErrors();
         $this->assertSame('accepted', $request->fresh()->status);
+    }
+
+    public function test_quick_change_from_the_item_card_back_and_out_without_scanning(): void
+    {
+        $first = $this->order(4);
+        $codes = $first->assets()->with('asset')->get()->pluck('asset.code')->sort()->values()->all();
+        $this->assertCount(4, $codes);
+        foreach ($first->assets()->with('asset')->get() as $oa) {
+            $oa->asset->update(['status' => Asset::OUT, 'location' => 'OUT', 'out_order_id' => $first->id]);
+        }
+        $first->update(['loaded_at' => now()]);
+        $second = $this->order(2, '2026-11-16', '2026-11-18'); // prolonged: a second rental
+        $id = fn (string $code) => Asset::where('code', $code)->value('id');
+        $post = fn (array $data) => $this->actingAs($this->am)->post('/dry-hire/items/'.$this->spiider->id.'/quick', $data);
+
+        $this->actingAs($this->am)->get('/dry-hire/items/'.$this->spiider->id)->assertOk()->assertSee(__('equipment.quick.actions.handover'))->assertSee($second->number);
+        $post(['quick' => 'handover', 'assets' => [$id($codes[0])]])->assertSessionHasErrors('order_id');
+
+        // Two pieces stay with the customer and go straight out with the second order.
+        $post(['quick' => 'handover', 'order_id' => $second->id, 'assets' => [$id($codes[0]), $id($codes[1])]])->assertSessionHasNoErrors();
+        foreach ([$codes[0], $codes[1]] as $c) {
+            $a = Asset::where('code', $c)->first();
+            $this->assertSame([Asset::OUT, $second->id], [$a->status, $a->out_order_id]);
+            $this->assertTrue($second->assets()->where('asset_id', $a->id)->exists());
+        }
+        $this->assertSame(2, $second->assets()->count(), 'they took the place of the pieces booked in the warehouse');
+        $this->assertTrue(Move::where('order_id', $first->id)->where('kind', 'return')->exists());
+        $this->assertNull($first->fresh()->returned_at, 'two pieces of the first order are still out');
+
+        // The other two come back without the return scan and the check.
+        $post(['quick' => 'available', 'assets' => [$id($codes[2]), $id($codes[3])]])->assertSessionHasNoErrors();
+        $this->assertSame(Asset::AVAILABLE, Asset::where('code', $codes[2])->value('status'));
+        $this->assertNotNull($first->fresh()->returned_at, 'everything of the first order is back');
+        $post(['quick' => 'handover', 'order_id' => $first->id, 'assets' => [$id($codes[2])]])->assertSessionHasErrors('quick');
+
+        // To check first; a piece in repair cannot be set available here.
+        $post(['quick' => 'check', 'assets' => [$id($codes[2])]])->assertSessionHasNoErrors();
+        $this->assertSame(Asset::CHECK, Asset::where('code', $codes[2])->value('status'));
+        Asset::where('code', $codes[3])->update(['status' => Asset::REPAIR]);
+        $post(['quick' => 'available', 'assets' => [$id($codes[2]), $id($codes[3])]])->assertSessionHasErrors('quick');
+        $this->assertSame(Asset::AVAILABLE, Asset::where('code', $codes[2])->value('status'));
+        $this->assertSame(Asset::REPAIR, Asset::where('code', $codes[3])->value('status'));
+        $this->assertTrue(AuditLog::where('action', 'equipment.quick_handover')->exists());
     }
 
     public function test_sub_hire_from_request_to_confirmation(): void

@@ -415,6 +415,7 @@ Route::middleware('auth:web')->group(function () {
             Route::post('/items/{item}/assets', [ItemController::class, 'addAssets'])->whereNumber('item')->name('equipment.assets.store');
             Route::post('/items/{item}/labels', [ItemController::class, 'reserveLabels'])->whereNumber('item')->name('equipment.assets.reserve');
             Route::post('/items/{item}/place', [ItemController::class, 'placePieces'])->whereNumber('item')->name('equipment.assets.place');
+            Route::post('/items/{item}/quick', [ItemController::class, 'quickPieces'])->whereNumber('item')->name('equipment.assets.quick');
             Route::post('/items/{item}/place-counted', [ItemController::class, 'placeCounted'])->whereNumber('item')->name('equipment.counted.place');
             Route::post('/items/{item}/kept-at', [ItemController::class, 'keptAt'])->whereNumber('item')->name('equipment.counted.kept');
             Route::post('/items/{item}/add-stock', [ItemController::class, 'addStock'])->whereNumber('item')->name('equipment.counted.stock');
