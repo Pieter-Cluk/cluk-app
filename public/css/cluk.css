@@ -42,6 +42,17 @@ a{color:var(--brand-strong)}
 .top{min-height:72px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:12px 34px;position:sticky;top:0;z-index:10}
 .search{display:flex;align-items:center;gap:8px;background:var(--surface-subtle);border-radius:7px;padding:0 14px;flex:0 1 380px;min-height:44px;color:var(--muted)}
 .search input{border:0;background:transparent;font:inherit;color:var(--ink);flex:1;min-width:0;outline:none;min-height:42px}
+.top-search{position:relative;flex:0 1 380px;display:flex}
+.top-search .search{flex:1}
+.top-suggest{position:absolute;top:calc(100% + 6px);left:0;width:min(520px,calc(100vw - 32px));max-height:70vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.14);padding:6px;z-index:40}
+.ts-group{padding:4px 0}
+.ts-group>b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:6px 10px 2px}
+.top-suggest a{display:flex;flex-direction:column;gap:1px;padding:7px 10px;border-radius:7px;color:var(--ink);text-decoration:none}
+.top-suggest a small{color:var(--muted)}
+.top-suggest a:hover,.top-suggest a.on{background:var(--surface-subtle)}
+.top-suggest .ts-all{border-top:1px solid var(--line);margin-top:4px;border-radius:0 0 7px 7px;font-weight:600}
+.ts-empty{margin:0;padding:10px;color:var(--muted)}
+.search-btn{display:none}
 .top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .iconbtn{width:44px;height:44px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font:inherit;font-size:12px;font-weight:700;list-style:none}
 .iconbtn::-webkit-details-marker{display:none}
@@ -78,7 +89,7 @@ a{color:var(--brand-strong)}
   .nav-toggle:checked~.nav-scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:30}
   .menu-btn{display:inline-flex}
   .top{padding:12px 16px}.content{padding:20px 16px 40px}
-  .search{display:none}.um-name{display:none}
+  .top-search{display:none}.search-btn{display:inline-flex}.um-name{display:none}
 }
 
 /* Tabs, flash messages, filters */
@@ -1221,3 +1232,4 @@ details.card[open]>summary{margin-bottom:12px}
 .sub-req:last-of-type{border-bottom:0}
 .sub-req .row-between{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
 .sub-price{color:var(--muted)}
+.search-list{list-style:none;margin:0;padding:0}.search-list li{padding:8px 0;border-bottom:1px solid var(--line)}.search-list li:last-child{border-bottom:0}

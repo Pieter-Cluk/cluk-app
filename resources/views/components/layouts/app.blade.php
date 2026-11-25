@@ -16,6 +16,7 @@
 @include('partials.favicon')
 <script src="{{ asset('js/pick.js') }}?v={{ @filemtime(public_path('js/pick.js')) }}" defer></script>
 <script src="{{ asset('js/suggest.js') }}?v={{ @filemtime(public_path('js/suggest.js')) }}" defer></script>
+<script src="{{ asset('js/top-search.js') }}?v={{ @filemtime(public_path('js/top-search.js')) }}" defer></script>
 </head>
 <body @class(['density-compact' => $user?->density === 'compact'])>
 <div class="app">
@@ -43,10 +44,14 @@
     <main class="main">
         <header class="top">
             <label for="nav-open" class="iconbtn menu-btn" aria-label="{{ __('nav.menu') }}"><x-icon name="menu"/></label>
-            <label class="search">
-                <x-icon name="search"/>
-                <input type="search" placeholder="{{ __('nav.search') }}" aria-label="{{ __('nav.search') }}">
-            </label>
+            <form method="get" action="{{ route('search') }}" class="top-search" role="search" data-suggest="{{ route('search.suggest') }}" data-none="{{ __('search.none') }}" data-all="{{ __('search.all') }}">
+                <label class="search">
+                    <x-icon name="search"/>
+                    <input type="search" name="q" value="{{ request()->routeIs('search') ? request('q') : '' }}" placeholder="{{ __('nav.search') }}" aria-label="{{ __('nav.search') }}" autocomplete="off" enterkeyhint="search">
+                </label>
+                <div class="top-suggest" hidden></div>
+            </form>
+            <a href="{{ route('search') }}" class="iconbtn search-btn" aria-label="{{ __('search.title') }}"><x-icon name="search"/></a>
             <div class="top-right">
                 <button type="button" class="iconbtn" id="theme-btn" data-day="{{ __('nav.day_mode') }}" data-night="{{ __('nav.night_mode') }}" aria-label="{{ __('nav.night_mode') }}" title="{{ __('nav.night_mode') }}">
                     <x-icon name="moon" class="i-moon"/><x-icon name="sun" class="i-sun"/>

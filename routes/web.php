@@ -844,6 +844,10 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/{subhire}/adjust', [SubhireController::class, 'adjust'])->whereNumber('subhire')->name('subhire.adjust');
     });
 
+    // The search in the top bar (each group only for who may open that module).
+    Route::get('/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search');
+    Route::get('/search/suggest', [\App\Http\Controllers\SearchController::class, 'suggest'])->middleware('throttle:120,1')->name('search.suggest');
+
     // Help & shortcuts: search the answers, download forms, ask the admin.
     Route::prefix('help')->group(function () {
         Route::get('/', [HelpController::class, 'index'])->name('help.index');
