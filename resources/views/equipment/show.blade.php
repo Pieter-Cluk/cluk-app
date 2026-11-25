@@ -150,26 +150,46 @@
             @if ($item->serial)
                 <section class="card card-flush">
                     <form method="post" action="{{ route('equipment.assets.place', $item) }}" class="lbl-pick">@csrf
-                    <div class="bill-head lbl-bar"><b>{{ __('equipment.assets') }}</b> <span class="muted">· {{ $item->assets->count() }}</span>
+                    <div class="bill-head pc-head">
+                        <div><b>{{ __('equipment.assets') }}</b> <span class="muted">· {{ $item->assets->count() }}</span></div>
                         @if ($canEdit && $item->assets->isNotEmpty())
-                            <label class="check"><input type="checkbox" data-all><span>{{ __('warehouse.labels.select_all') }}</span></label>
-                            <span class="muted" data-count>0</span>
-                            <button class="btn" type="submit" data-print disabled formaction="{{ route('equipment.labels') }}" formmethod="get" formtarget="_blank"
-                                onclick="var t = this.form.querySelector('[name=_token]'); t.disabled = true; setTimeout(function () { t.disabled = false; }, 500);">{{ __('warehouse.labels.print') }}</button>
-                            <span class="inline-form"><input name="place" list="place-codes" placeholder="{{ __('equipment.place.placeholder') }}" aria-label="{{ __('equipment.place.title') }}" style="width:11em">
-                                <button class="btn" type="submit" data-print disabled>{{ __('equipment.place.go') }}</button></span>
-                            <span class="inline-form quick-bar" title="{{ __('equipment.quick.hint') }}">
-                                <select name="quick" class="js-quick" aria-label="{{ __('equipment.quick.title') }}">
-                                    @foreach (['available', 'handover', 'check'] as $qa)<option value="{{ $qa }}" @selected(old('quick') === $qa)>{{ __('equipment.quick.actions.'.$qa) }}</option>@endforeach
-                                </select>
+                            <div class="pc-select">
+                                <label class="check"><input type="checkbox" data-all><span>{{ __('warehouse.labels.select_all') }}</span></label>
+                                <span class="pill pill-off" data-count>0</span>
+                            </div>
+                        @endif
+                    </div>
+                    @if ($canEdit && $item->assets->isNotEmpty())
+                        <div class="pc-actions is-idle" data-actions>
+                            <div class="pc-act">
+                                <span class="pc-label">{{ __('equipment.bar.labels') }}</span>
+                                <div class="pc-row">
+                                    <button class="btn" type="submit" data-print disabled formaction="{{ route('equipment.labels') }}" formmethod="get" formtarget="_blank"
+                                        onclick="var t = this.form.querySelector('[name=_token]'); t.disabled = true; setTimeout(function () { t.disabled = false; }, 500);">{{ __('equipment.bar.print') }}</button>
+                                </div>
+                            </div>
+                            <div class="pc-act" title="{{ __('equipment.place.hint') }}">
+                                <span class="pc-label">{{ __('equipment.place.title') }}</span>
+                                <div class="pc-row">
+                                    <input name="place" list="place-codes" placeholder="{{ __('equipment.place.placeholder') }}" aria-label="{{ __('equipment.place.title') }}">
+                                    <button class="btn" type="submit" data-print disabled>{{ __('equipment.place.go') }}</button>
+                                </div>
+                            </div>
+                            <div class="pc-act" title="{{ __('equipment.quick.hint') }}">
+                                <span class="pc-label">{{ __('equipment.quick.title') }}</span>
+                                <div class="pc-row">
+                                    <select name="quick" class="js-quick" aria-label="{{ __('equipment.quick.title') }}">
+                                        @foreach (['available', 'handover', 'check'] as $qa)<option value="{{ $qa }}" @selected(old('quick') === $qa)>{{ __('equipment.quick.actions.'.$qa) }}</option>@endforeach
+                                    </select>
+                                    <button class="btn" type="submit" data-print disabled formaction="{{ route('equipment.assets.quick', $item) }}">{{ __('equipment.quick.go') }}</button>
+                                </div>
                                 <select name="order_id" class="js-quick-order" aria-label="{{ __('equipment.quick.order') }}" hidden>
                                     <option value="">{{ __('equipment.quick.choose_order') }}</option>
                                     @foreach ($quickOrders as $o)<option value="{{ $o->id }}">{{ $o->number }} · {{ $o->title }} · {{ $o->out_from->format('d/m') }}–{{ $o->out_until->format('d/m') }}</option>@endforeach
                                 </select>
-                                <button class="btn" type="submit" data-print disabled formaction="{{ route('equipment.assets.quick', $item) }}">{{ __('equipment.quick.go') }}</button>
-                            </span>
-                        @endif
-                    </div>
+                            </div>
+                        </div>
+                    @endif
                     @error('place')<p class="flash flash-err">{{ $message }}</p>@enderror
                     @error('quick')<p class="flash flash-err">{{ $message }}</p>@enderror
                     @error('order_id')<p class="flash flash-err">{{ $message }}</p>@enderror
@@ -281,6 +301,8 @@
                 var n = f.querySelectorAll('tbody input:checked').length;
                 count.textContent = @js(__('warehouse.labels.selected')).replace(':n', n);
                 btns.forEach(function (b) { b.disabled = n === 0; });
+                var bar = f.querySelector('[data-actions]'); if (bar) bar.classList.toggle('is-idle', n === 0);
+                count.classList.toggle('pill-off', n === 0); count.classList.toggle('pill-ok', n > 0);
                 all.checked = n > 0 && n === boxes.length;
             }
             all.addEventListener('change', function () { boxes.forEach(function (b) { b.checked = all.checked; }); update(); });

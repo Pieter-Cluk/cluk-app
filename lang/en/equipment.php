@@ -100,6 +100,10 @@ return [
     ],
     'service_group_hint' => 'Services are not in the equipment categories: choose the part of CLUK that sells it.',
     'service_sub_hint' => 'Optional, e.g. Cleaning, Handling, Storage.',
+    'bar' => [
+        'labels' => 'Labels',
+        'print' => 'Print labels',
+    ],
     'quick' => [
         'title' => 'Quick change',
         'hint' => 'For pieces that don\'t come through the warehouse: back and rentable, straight out with the next order, or to check first.',

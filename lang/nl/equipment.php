@@ -100,6 +100,10 @@ return [
     ],
     'service_group_hint' => 'Diensten staan niet in de materiaalcategorieën: kies het deel van CLUK dat ze verkoopt.',
     'service_sub_hint' => 'Optioneel, bv. Reiniging, Handling, Opslag.',
+    'bar' => [
+        'labels' => 'Labels',
+        'print' => 'Labels afdrukken',
+    ],
     'quick' => [
         'title' => 'Snelle wijziging',
         'hint' => 'Voor stukken die niet via het magazijn passeren: terug en verhuurbaar, meteen weer uit met het volgende order, of eerst te controleren.',

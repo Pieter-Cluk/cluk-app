@@ -100,6 +100,10 @@ return [
     ],
     'service_group_hint' => 'Les services ne sont pas dans les catégories de matériel : choisissez la partie de CLUK qui le vend.',
     'service_sub_hint' => 'Facultatif, p. ex. Nettoyage, Manutention, Stockage.',
+    'bar' => [
+        'labels' => 'Étiquettes',
+        'print' => 'Imprimer les étiquettes',
+    ],
     'quick' => [
         'title' => 'Changement rapide',
         'hint' => 'Pour les pièces qui ne passent pas par l\'entrepôt : de retour et louables, directement ressorties avec la commande suivante, ou à contrôler d\'abord.',

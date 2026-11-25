@@ -100,6 +100,10 @@ return [
     ],
     'service_group_hint' => 'Los servicios no están en las categorías de material: elija la parte de CLUK que lo vende.',
     'service_sub_hint' => 'Opcional, p. ej. Limpieza, Manipulación, Almacenaje.',
+    'bar' => [
+        'labels' => 'Etiquetas',
+        'print' => 'Imprimir etiquetas',
+    ],
     'quick' => [
         'title' => 'Cambio rápido',
         'hint' => 'Para piezas que no pasan por el almacén: de vuelta y alquilables, directamente fuera con el siguiente pedido, o a revisar primero.',
