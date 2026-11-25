@@ -185,6 +185,7 @@ class OrdersTest extends TestCase
     public function test_quick_change_from_the_item_card_back_and_out_without_scanning(): void
     {
         $first = $this->order(4);
+        $this->actingAs($this->am)->post('/order-allocation/'.$first->id.'/auto');
         $codes = $first->assets()->with('asset')->get()->pluck('asset.code')->sort()->values()->all();
         $this->assertCount(4, $codes);
         foreach ($first->assets()->with('asset')->get() as $oa) {
@@ -192,6 +193,8 @@ class OrdersTest extends TestCase
         }
         $first->update(['loaded_at' => now()]);
         $second = $this->order(2, '2026-11-16', '2026-11-18'); // prolonged: a second rental
+        $this->actingAs($this->am)->post('/order-allocation/'.$second->id.'/auto');
+        $this->assertSame(2, $second->assets()->count());
         $id = fn (string $code) => Asset::where('code', $code)->value('id');
         $post = fn (array $data) => $this->actingAs($this->am)->post('/dry-hire/items/'.$this->spiider->id.'/quick', $data);
 
